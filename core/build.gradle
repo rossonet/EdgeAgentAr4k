@@ -1,0 +1,46 @@
+description = "Core componets of Ar4k Semantic Router"
+
+dependencies {
+  compile group: 'io.atomix', name: 'atomix', version: '3.0.0-rc1'
+  compile group: 'io.atomix', name: 'atomix-raft', version: '3.0.0-rc1'
+  compile group: 'io.atomix', name: 'atomix-primary-backup', version: '3.0.0-rc1'
+  // crittografia
+  compile('org.bouncycastle:bcprov-jdk15on:1.59')
+  compile('org.bouncycastle:bcpkix-jdk15on:1.59')
+  // rilevamento hardware e so
+  compile 'com.github.oshi:oshi-core:3.5.0'
+  compile group: 'com.pi4j', name: 'pi4j-core', version: '1.1'
+  // ssh
+  compile "com.jcraft:jsch:0.1.54"
+  // dns
+  compile 'dnsjava:dnsjava:2.1.8'
+  // manipolazione html
+  compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+  // spring
+  compile('org.springframework.boot:spring-boot-starter-mail')
+  compile("org.springframework:spring-jms")
+  compile('org.springframework.boot:spring-boot-starter-logging')
+  compile('org.springframework.boot:spring-boot-starter-webflux')
+  compile('org.springframework.boot:spring-boot-starter-security')
+  compile('org.springframework.boot:spring-boot-starter-integration')
+  // state machine
+  compile "org.springframework.statemachine:spring-statemachine-core:2.0.2.RELEASE"
+  // jabber
+  compile group: 'org.springframework.integration', name: 'spring-integration-xmpp', version: '4.3.15.RELEASE'
+  // jms
+  compile group: 'org.springframework.integration', name: 'spring-integration-jms'
+  // mail
+  compile group: 'org.springframework.integration', name: 'spring-integration-mail'
+  // mqtt
+  compile group: 'org.springframework.integration', name: 'spring-integration-mqtt'
+  // file
+  compile group: 'org.springframework.integration', name: 'spring-integration-file'
+  // git
+  compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.0.2.201807311906-r'
+  // rules engine
+  compile group: 'org.drools', name: 'drools-core', version: '7.11.0.Final'
+  compile group: 'org.drools', name: 'drools-compiler', version: '7.11.0.Final'
+  //ECSS
+  compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
+
+}

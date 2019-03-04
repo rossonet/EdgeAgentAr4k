@@ -1,0 +1,12 @@
+description = "IoT components (serial communication, JavaScad API, OPCUA Eclipse Milo lib, Camel Milo"
+
+dependencies {
+	compile project(':core')
+	compile project(':flow')
+	compile 'com.fazecast:jSerialComm:2.0.2'
+	compile group: 'eu.printingin3d.javascad', name: 'javascad', version: '0.9.1.0'
+	//OPCUA
+	compile('org.eclipse.milo:sdk-client:0.2.3')
+	compile('org.eclipse.milo:stack-client:0.2.3')
+	compile('org.eclipse.milo:stack-core:0.2.3')
+}

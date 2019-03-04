@@ -1,0 +1,11 @@
+description = "Kettle addons"
+
+repositories { maven { url "https://public.nexus.pentaho.org/content/groups/omni" } }
+
+dependencies {
+	compile('log4j:log4j:1.2.17')
+	compile project(':core')
+	compile ('pentaho-kettle:kettle-core:8.2.0.0-190')
+	//compile 'pentaho-kettle:kettle-db:5.0.1-stable'
+	compile ('pentaho-kettle:kettle-engine:8.2.0.0-190')
+}

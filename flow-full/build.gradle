@@ -1,0 +1,38 @@
+description = "Additional capabilities for the flow component, Camel Paho, Camel Jetty, etc..."
+
+dependencies {
+	compile project(':flow')
+	compile("org.apache.camel:camel-paho:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-jetty:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-mail:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-printer:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-ftp:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-git:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-quartz2:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-exec:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-crypto:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-websocket:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-jsch:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-xmpp:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-base64:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-dns:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-sip:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-kubernetes:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-http4:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-weather:${project.ext.camelVersion}")
+	compile group: 'org.apache.camel', name: 'camel-amqp', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-pdf', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-kafka', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-apns', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-aws', version: project.ext.camelVersion
+	//compile group: 'org.apache.camel', name: 'camel-consul', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-docker', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-dropbox', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-spring', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-facebook', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-irc', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-jira', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-salesforce', version: project.ext.camelVersion
+	//compile("org.apache.camel:camel-zookeeper:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-optaplanner:${project.ext.camelVersion}")
+}

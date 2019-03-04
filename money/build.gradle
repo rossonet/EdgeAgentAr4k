@@ -1,0 +1,7 @@
+description = "Ethereum block chain component"
+
+dependencies {
+	compile project(':core')
+	compile('org.ethereum:ethereumj-core:1.7.2-RELEASE')
+	{exclude group: "ch.qos.logback"}
+}

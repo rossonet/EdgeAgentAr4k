@@ -1,0 +1,5 @@
+description = "Add console capabilities to the Ar4k Semantic Router"
+
+dependencies {
+	compile project(':core')
+}

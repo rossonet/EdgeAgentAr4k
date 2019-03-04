@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+	<footer class="footer" th:fragment="footer">
+		<div class="container-fluid">
+			<nav class="pull-left">
+				<ul>
+					<li><a href="http://info.ar4k.net" target="_blank">AR4K</a></li>
+				</ul>
+			</nav>
+			<div class="copyright pull-right">
+				&copy; 2018, made by <a href="http://www.rossonet.com"
+					target="_blank">Rossonet</a>
+			</div>
+		</div>
+	</footer>
+</body>
+<th:block th:fragment="script">
+	<script src="/static/js/core/jquery.min.js"></script>
+	<script src="/static/js/core/popper.min.js"></script>
+	<script src="/static/js/bootstrap-material-design.js"></script>
+	<script src="/static/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+	<script src="/static/js/plugins/chartist.min.js"></script>
+	<script src="/static/js/plugins/arrive.min.js" type="text/javascript"></script>
+	<script src="/static/js/vue/vue.js"></script>
+	<script src="/static/js/material-dashboard.js?v=2.0.0"></script>
+	<script src="/static/js/plugins/bootstrap-notify.js"></script>
+	<script src="/static/js/core/jquery.terminal.min.js"></script>
+	<script src="/static/js/plugins/demo.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//demo.initDashboardPageCharts();
+			//demo.initCharts();
+		});
+	</script>
+</th:block>
+</html>

@@ -1,0 +1,249 @@
+group = 'org.ar4k.agent'
+version = '0.4.4'
+
+ext{
+	sourceCompatibility = 1.8
+	springCloudVersion = 'Finchley.M9'
+	springStatemachineVersion = '2.0.2.RELEASE'
+	camelVersion = '2.17.0'
+	springBootVersion = '2.0.4.RELEASE'
+}
+
+buildscript {
+	ext { springBootVersion = '2.0.4.RELEASE' }
+	repositories {
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
+		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'maven'
+apply plugin: "com.gorylenko.gradle-git-properties"
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url "https://dl.bintray.com/ethereum/maven/" }
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '4.7' }
+
+subprojects {
+	version = rootProject.version
+	group = rootProject.group
+	sourceCompatibility = rootProject.ext.sourceCompatibility
+
+	ext {
+		springCloudVersion = rootProject.ext.springCloudVersion
+		springStatemachineVersion = rootProject.ext.springStatemachineVersion
+		camelVersion = rootProject.ext.camelVersion
+		springBootVersion = rootProject.ext.springBootVersion
+	}
+
+	buildscript {
+		ext {
+			springCloudVersion = rootProject.ext.springCloudVersion
+			springStatemachineVersion = rootProject.ext.springStatemachineVersion
+			camelVersion = rootProject.ext.camelVersion
+			springBootVersion = rootProject.ext.springBootVersion
+		}
+		repositories {
+			mavenCentral()
+			maven { url "https://plugins.gradle.org/m2/" }
+			jcenter()
+		}
+		dependencies {
+			classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
+			classpath('se.transmode.gradle:gradle-docker:1.2')
+			classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+			classpath 'de.undercouch:gradle-download-task:3.1.1'
+		}
+	}
+
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'maven'
+	apply plugin: "com.gorylenko.gradle-git-properties"
+
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/milestone" }
+		maven { url "https://dl.bintray.com/ethereum/maven/" }
+		maven { url "http://nexus.pentaho.org/content/groups/omni"}
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+	}
+
+	task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
+
+	dependencies {
+		// varie utilità
+		compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+		compile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
+		compile group: 'commons-io', name: 'commons-io', version: '2.6'
+		//compile group: 'commons-net', name: 'commons-net', version: '3.6'
+		compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+		compile group: 'joda-time', name: 'joda-time', version: '2.10'
+		compile group: 'com.google.code.gson', name: 'gson', version: '2.8.4'
+		compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+		compile group: 'com.beust', name: 'jcommander', version: '1.48'
+		// strumento dev
+		compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
+		compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+		runtime("org.springframework.boot:spring-boot-devtools")
+		compile("org.springframework.boot:spring-boot-configuration-processor")
+		testCompile('org.springframework.boot:spring-boot-starter-test')
+	}
+
+	jar { enabled = true }
+
+	jar.doLast { task ->
+		ant.checksum file: task.archivePath
+	}
+
+	uploadArchives {
+		repositories {
+			mavenDeployer { repository(url: "file://maven") }
+		}
+	}
+
+	gitProperties {
+		failOnNoGitDirectory = false
+		customProperty 'ar4kComponent', "${project.name}"
+		customProperty 'ar4kVersion', "${version}"
+		dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+		dateFormatTimeZone = 'GMT'
+	}
+
+	task endBootJar {
+		doLast{ println ("You can find the fat jar of ${project.name} in ${jar.archivePath}") }
+	}
+
+	javadoc{
+		destinationDir = file("${rootProject.buildDir}/docs/javadoc/${project.name}/")
+		failOnError=false
+	}
+}
+
+clean {
+	delete "orientdb"
+	delete "logs"
+	delete "build"
+	delete "bin"
+	delete "camel-test"
+	delete "spring-shell.log"
+	delete "Ar4kAgent"
+	delete "ar4kAgent"
+	delete "*.ar4k"
+	delete "*.keystore"
+	delete "ar4k-agent.log"
+	delete "*.keystore"
+}
+
+task cleanGradleCache {
+	group "Ar4k Semantic Router Build"
+	description 'Remove the ar4k artifacts from local Gradle cache'
+	delete "~/.gradle/caches/*/*/org.ar4k.agent"
+	delete "~/.gradle/caches/*/*/ar4k-agent"
+}
+
+task ar4kListProjects{
+	group "Ar4k Semantic Router Build"
+	description 'List all the components of Ar4k Semantic Router.'
+	subprojects { pr ->
+		ar4kListProjects.dependsOn("${pr.path}:view")
+	}
+}
+
+task ar4kPublishLocalMavenProjects{
+	group "Ar4k Semantic Router Build"
+	description 'Publish to local directory ./maven all the artifacts and the pom files of Ar4k Semantic Router.'
+	subprojects { pr ->
+		ar4kPublishLocalMavenProjects.dependsOn("${pr.path}:uploadArchives")
+	}
+}
+
+task ar4kAllJavaDoc(type: Javadoc) {
+	group "Ar4k Semantic Router Build"
+	description 'Generate Java Doc for all the apis.'
+	subprojects { pr ->
+		ar4kAllJavaDoc.dependsOn("${pr.path}:javadoc")
+	}
+}
+
+task ar4kRegenareteStaticWeb{
+	group "Ar4k Semantic Router Build"
+	description 'Rebuild the web interface with Npm in the component reactor-web.'
+	ar4kRegenareteStaticWeb.dependsOn(":reactor-web:uiPublish")
+}
+
+task viewStaticWebInterface{
+	group "Ar4k Semantic Router Build"
+	description 'Local view of Bootstrap/Vue by NPM.'
+	viewStaticWebInterface.dependsOn(":reactor-web:viewDemoSite")
+}
+
+task ar4kBootJar{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is for the standard version.'
+	ar4kBootJar.dependsOn(":agent:bootJar")
+	ar4kBootJar.dependsOn(":agent:endBootJar")
+}
+
+task ar4kDockerContainer{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is for the standard version.'
+	ar4kDockerContainer.dependsOn(":agent:buildDocker")
+}
+
+task ar4kBootJarSmall{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the small version.'
+	ar4kBootJarSmall.dependsOn(":agent-small:bootJar")
+	ar4kBootJarSmall.dependsOn(":agent-small:endBootJar")
+}
+
+task ar4kDockerContainerSmall{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is for the small version.'
+	ar4kDockerContainerSmall.dependsOn(":agent-small:buildDocker")
+}
+
+task ar4kBootJarFull{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the complete, full, version.'
+	ar4kBootJarFull.dependsOn(":agent-full:bootJar")
+	ar4kBootJarFull.dependsOn(":agent-full:endBootJar")
+}
+
+task ar4kDockerContainerFull{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is the complete, full, version.'
+	ar4kDockerContainerFull.dependsOn(":agent-full:buildDocker")
+}
+
+task buildAllDockerContainers{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small and full.'
+	buildAllDockerContainers.dependsOn(":agent-small:buildDocker")
+	buildAllDockerContainers.dependsOn(":agent-full:buildDocker")
+	buildAllDockerContainers.dependsOn(":agent:buildDocker")
+}
+
+task buildAllBootJars{
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This builds all the jars: standard, small and full.'
+	buildAllBootJars.dependsOn("ar4kBootJar")
+	buildAllBootJars.dependsOn("ar4kBootJarFull")
+	buildAllBootJars.dependsOn("ar4kBootJarSmall")
+}

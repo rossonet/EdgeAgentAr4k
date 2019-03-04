@@ -1,0 +1,52 @@
+description = "Fat jar of Ar4k Semantic Router - small version"
+
+apply plugin: 'docker'
+
+dependencies {
+	compile project(':core')
+	//compile project(':flow')
+	//compile project(':cortex')
+	//compile project(':reactor-web')
+	compile project(':terminal')
+}
+
+bootJar {
+	//dependsOn 'uiPublish'
+	launchScript()
+	manifest {
+		attributes('Implementation-Title':'Ar4kAgentSmall',
+		'Implementation-Version': "${project.version}")
+	}
+}
+
+task buildDocker(type: Docker, dependsOn: bootJar) {
+	applicationName = 'ar4k-agent-small'
+	dockerfile = file('Dockerfile.gradle')
+	doFirst {
+		copy {
+			from jar
+			into "${stageDir}/target"
+		}
+	}
+}
+
+bootJar.doLast { task ->
+	ant.checksum file: task.archivePath
+}
+clean {
+        delete "orientdb"
+        delete "logs"
+        delete "build"
+        delete "bin"
+        delete "camel-test"
+        delete "spring-shell.log"
+        delete "Ar4kAgent"
+        delete "ar4kAgent"
+        delete "*.ar4k"
+        delete "*.keystore"
+        delete "ar4k-agent.log"
+        delete "*.keystore"
+        delete "*.conf.base64.ar4k"
+        delete "*.conf.json.ar4k"
+}
+

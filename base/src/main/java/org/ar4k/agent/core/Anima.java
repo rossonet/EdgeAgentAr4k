@@ -1,0 +1,609 @@
+/*
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    */
+package org.ar4k.agent.core;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.ar4k.agent.config.AnimaStateMachineConfig;
+import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.tribe.TribeConfig;
+import org.ar4k.agent.config.tunnel.TunnelConfig;
+import org.ar4k.agent.core.tribe.AtomixTribeComponent;
+import org.ar4k.agent.keystore.KeystoreConfig;
+import org.joda.time.Instant;
+import org.slf4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ansi.AnsiColor;
+import org.springframework.boot.ansi.AnsiOutput;
+//import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.context.annotation.Scope;
+import org.springframework.integration.channel.PublishSubscribeChannel;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.annotation.OnStateChanged;
+import org.springframework.statemachine.annotation.WithStateMachine;
+import org.springframework.stereotype.Component;
+
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
+
+/**
+ * 
+ * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
+ *
+ *         Classe principale singleton Ar4k Agent Gateway. Gestisce la macchina
+ *         a stati dei servizi e funge da Bean principale per l'uso delle API
+ *         Ar4k
+ */
+@ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
+@Component("anima")
+@EnableMBeanExport
+@Scope("singleton")
+@EnableJms
+@WithStateMachine
+//TODO: aggiungere annotazione per interazione con Cortex (intenti, entità, semantica??)
+public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
+  private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(Anima.class.toString());
+
+  @Autowired
+  private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
+
+  @Autowired
+  private AnimaStateMachineConfig animaStateMachineConfig;
+
+  // TODO: implementare exception
+
+  // parametri importate da Spring Boot
+  @Value("${ar4k.fileKeystore}")
+  private String fileKeystore;
+  @Value("${ar4k.webKeystore}")
+  private String webKeystore;
+  @Value("${ar4k.dnsKeystore}")
+  private String dnsKeystore;
+  @Value("${ar4k.keystorePassword}")
+  private String keystorePassword;
+  @Value("${ar4k.keystoreCaAlias}")
+  private String keystoreCaAlias;
+  @Value("${ar4k.confPath}")
+  private String confPath;
+  @Value("${ar4k.fileConfig}")
+  private String fileConfig;
+  @Value("${ar4k.webConfig}")
+  private String webConfig;
+  @Value("${ar4k.dnsConfig}")
+  private String dnsConfig;
+  @Value("${ar4k.baseConfig}")
+  private String base64Config;
+  @Value("${ar4k.otpRegistrationSeed}")
+  private String otpRegistrationSeed;
+  @Value("${ar4k.webRegistrationEndpoint}")
+  private String webRegistrationEndpoint;
+  @Value("${ar4k.dnsRegistrationEndpoint}")
+  private String dnsRegistrationEndpoint;
+  @Value("${ar4k.fileConfigOrder}")
+  private Integer fileConfigOrder;
+  @Value("${ar4k.webConfigOrder}")
+  private Integer webConfigOrder;
+  @Value("${ar4k.dnsConfigOrder}")
+  private Integer dnsConfigOrder;
+  @Value("${ar4k.baseConfigOrder}")
+  private Integer base64ConfigOrder;
+  @Value("${ar4k.threadSleep}")
+  private Long threadSleep;
+  @Value("${ar4k.consoleOnly}")
+  private boolean consoleOnly;
+  @Value("${ar4k.logoUrl}")
+  private String logoUrl;
+
+  // gestione configurazioni
+  // attuale configurazione in runtime
+  private Ar4kConfig runtimeConfig = null;
+  // configurazione obbiettivo durante le transizioni
+  private Ar4kConfig targetConfig = null;
+  // configurazione iniziale di bootStrap derivata dalle variabili Spring
+  private Ar4kConfig bootStrapConfig = null;
+  // array di configurazioni disponibili
+  private Set<Ar4kConfig> configs = new HashSet<Ar4kConfig>();
+  // configurazione di lavoro per editare
+  private Ar4kConfig workingConfig = null;
+
+  // gestione stati
+  private AnimaStates stateTarget = null;
+  private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
+
+  // array keystore disponibili
+  private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
+
+  private Instant timeCounterLambda = null;
+  private Timer timerLambda = null;
+
+  // assegnato da Spring tramite setter al boot
+  private static ApplicationContext applicationContext;
+
+  // private Set<Ar4kService> runtimeServices = new HashSet<Ar4kService>();
+
+  private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
+
+  private Map<String, Object> dataStore = new HashMap<String, Object>();
+
+  // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
+  // Lambda,Google Function o, in generale, in modalità function as a service
+  // STASIS per la funzione di mantenimento a basso consumo,
+  // Bot sistema autonomo (switch tra le configurazioni selezionato da Cortex)
+  public static enum AnimaStates {
+    INIT, STARTING, STAMINAL, CONFIGURED, RUNNING, SERVICE, CONSOLE, LAMBDA, BOT, PAUSED, STOPED, KILLED, FAULTED,
+    STASIS
+  }
+
+  // tipi di router interno supportato
+  public static enum AnimaRouterType {
+    NONE, PRODUCTION, DEVELOP, ROAD
+  }
+
+  public static enum AnimaEvents {
+    BOOTSTRAP, BORN, SETCONF, START, PAUSE, STOP, HIBERNATION, FINALIZE, EXCEPTION
+  }
+
+  // costruttore
+  public Anima() {
+  }
+
+  @ManagedOperation
+  public void sendEvent(AnimaEvents event) {
+    animaStateMachine.sendEvent(event);
+  }
+
+  @ManagedOperation
+  public AnimaStates getState() {
+    return animaStateMachine.getState().getId();
+  }
+
+  public boolean isRunning() {
+    boolean risposta = false;
+    if (animaStateMachineConfig != null && animaStateMachineConfig.getRunningStates() != null
+        && animaStateMachineConfig.getRunningStates().contains(getState())) {
+      risposta = true;
+    }
+    return risposta;
+  }
+
+  @Override
+  protected void finalize() {
+    animaStateMachine.sendEvent(AnimaEvents.FINALIZE);
+    animaStateMachine = null;
+  }
+
+  @OnStateChanged()
+  private synchronized void stateChanged() {
+    statesBefore.put(new Instant(), getState());
+  }
+
+  @OnStateChanged(target = "KILLED")
+  private synchronized void finalizeAgent() {
+    for (Ar4kComponent targetService : components) {
+      targetService.kill();
+    }
+    components = null;
+  }
+
+  @OnStateChanged(target = "INIT")
+  private synchronized void initAgent() {
+
+  }
+
+  @OnStateChanged(target = "STARTING")
+  private synchronized void startingAgent() {
+    new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
+    fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
+    bootStrapConfig = resolveBootstrapConfig();
+    animaStateMachine.sendEvent(AnimaEvents.BORN);
+  }
+
+  // trova la configurazione appropriata per il bootstrap in funzione dei
+  // parametri di configurazione
+  private Ar4kConfig resolveBootstrapConfig() {
+    Ar4kConfig targetConfig = null;
+    // se impostato il flag solo console esclude qualsiasi ragionamento
+    if (consoleOnly == true) {
+      if (logger != null)
+        logger.warn("console only true, run just the command line");
+    } else {
+      // System.out.println("\nResolving bootstrap config...\n");
+      int maxConfig = fileConfigOrder;
+      if (maxConfig < webConfigOrder)
+        maxConfig = webConfigOrder;
+      if (maxConfig < dnsConfigOrder)
+        maxConfig = dnsConfigOrder;
+      if (maxConfig < base64ConfigOrder)
+        maxConfig = base64ConfigOrder;
+      for (int liv = 0; liv <= maxConfig; liv++) {
+        // in caso di parità sui livelli vale questo ordine
+        if (liv == webConfigOrder && targetConfig == null) {
+          // TODO: caricamento da webconfig
+        }
+        if (liv == dnsConfigOrder && targetConfig == null) {
+          // TODO: caricamento da dnsconfig
+        }
+        if (liv == base64ConfigOrder && targetConfig == null && base64Config != null && !base64Config.equals("")) {
+          try {
+            ObjectInputStream ois = null;
+            byte[] data = Base64.getDecoder().decode(base64Config);
+            ois = new ObjectInputStream(new ByteArrayInputStream(data));
+            targetConfig = (Ar4kConfig) ois.readObject();
+            ois.close();
+          } catch (ClassNotFoundException | IOException e) {
+            if (logger != null)
+              logger.warn(e.getMessage());
+          }
+        }
+        if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.equals("")) {
+          try {
+            String config = "";
+            FileReader fileReader = new FileReader(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+              config = config + line;
+            }
+            bufferedReader.close();
+            ObjectInputStream ois = null;
+            byte[] data = Base64.getDecoder().decode(config);
+            ois = new ObjectInputStream(new ByteArrayInputStream(data));
+            targetConfig = (Ar4kConfig) ois.readObject();
+            ois.close();
+          } catch (IOException | ClassNotFoundException e) {
+            if (logger != null)
+              logger.warn(e.getMessage());
+          }
+        }
+      }
+    }
+    return targetConfig;
+  }
+
+  @OnStateChanged(target = "STAMINAL")
+  private synchronized void staminalAgent() {
+    // se non è presente una configurazione runtime e un target ed è presente quella
+    // di boot, utilizzarla per l'avvio
+    if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
+      targetConfig = bootStrapConfig;
+    }
+    if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
+      runtimeConfig = targetConfig;
+      animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+    }
+  }
+
+  @OnStateChanged(target = "CONFIGURED")
+  private synchronized void configureAgent() {
+    if (runtimeConfig == null) {
+      logger.warn("Required running state without conf");
+      animaStateMachine.sendEvent(AnimaEvents.EXCEPTION);
+    }
+    if (stateTarget == null && runtimeConfig != null) {
+      stateTarget = runtimeConfig.targetRunLevel;
+    }
+    runTunnels();
+  }
+
+  private synchronized void runTunnels() {
+    if (runtimeConfig.beans != null && runtimeConfig.beans.size() > 0) {
+      for (ConfigSeed tc : runtimeConfig.beans) {
+        if (tc instanceof TunnelConfig) {
+          Ar4kComponent tunnel = tc.instanziate();
+          tunnel.init();
+          components.add(tunnel);
+        }
+      }
+    }
+  }
+
+  @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
+  private synchronized void runService() {
+    joinTribes();
+    runAgent();
+  }
+
+  @OnStateChanged(source = "CONFIGURED", target = "CONSOLE")
+  private synchronized void runConsole() {
+    joinTribes();
+    runAgent();
+  }
+
+  @OnStateChanged(source = "CONFIGURED", target = "BOT")
+  private synchronized void runBot() {
+    joinTribes();
+    runAgent();
+  }
+
+  @OnStateChanged(source = "CONFIGURED", target = "LAMBDA")
+  private synchronized void runLambda() {
+    joinTribes();
+    timeCounterLambda = new Instant();
+    timerLambda = new Timer("Timer");
+    long delay = 1000L;
+    timerLambda.schedule(task, delay);
+    runAgent();
+  }
+
+  @OnStateChanged(source = "LAMBDA")
+  private synchronized void exitLambda() {
+    if (timerLambda != null) {
+      timerLambda.purge();
+      timerLambda = null;
+    }
+  }
+
+  private boolean checkLambdaFinished() {
+    boolean ritorno = false;
+    if (new Instant().getMillis() - timeCounterLambda.getMillis() > runtimeConfig.clockAfterFinishCallLambda) {
+      ritorno = true;
+    }
+    return ritorno;
+  }
+
+  private TimerTask task = new TimerTask() {
+    public void run() {
+      if (checkLambdaFinished()) {
+        animaStateMachine.sendEvent(AnimaEvents.STOP);
+      }
+    }
+  };
+
+  private synchronized void joinTribes() {
+    if (runtimeConfig.beans != null && runtimeConfig.beans.size() > 0) {
+      for (ConfigSeed tc : runtimeConfig.beans) {
+        if (tc instanceof TribeConfig) {
+          Ar4kComponent tribe = tc.instanziate();
+          tribe.init();
+          components.add(tribe);
+        }
+      }
+    }
+  }
+
+  private synchronized void runAgent() {
+    for (ServiceConfig confServizio : runtimeConfig.services) {
+      try {
+        Method method = confServizio.getClass().getMethod("instanziate");
+        Ar4kService targetService;
+        targetService = (Ar4kService) method.invoke(null);
+        targetService.setConfiguration((ServiceConfig) confServizio);
+        targetService.setAnima(this);
+        components.add(targetService);
+        targetService.start();
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+          | SecurityException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public Map<String, String> getEnvironmentVariables() {
+    Map<String, String> ritorno = new HashMap<String, String>();
+    ritorno.put("ar4k.fileKeystore", fileKeystore);
+    ritorno.put("ar4k.webKeystore", webKeystore);
+    ritorno.put("ar4k.dnsKeystore", dnsKeystore);
+    ritorno.put("ar4k.keystorePassword", keystorePassword);
+    ritorno.put("ar4k.keystoreCaAlias", keystoreCaAlias);
+    ritorno.put("ar4k.confPath", confPath);
+    ritorno.put("ar4k.fileConfig", fileConfig);
+    ritorno.put("ar4k.webConfig", webConfig);
+    ritorno.put("ar4k.dnsConfig", dnsConfig);
+    ritorno.put("ar4k.baseConfig", base64Config);
+    ritorno.put("ar4k.otpRegistrationSeed", otpRegistrationSeed);
+    ritorno.put("ar4k.webRegistrationEndpoint", webRegistrationEndpoint);
+    ritorno.put("ar4k.dnsRegistrationEndpoint", dnsRegistrationEndpoint);
+    ritorno.put("ar4k.fileConfigOrder", String.valueOf(fileConfigOrder));
+    ritorno.put("ar4k.webConfigOrder", String.valueOf(webConfigOrder));
+    ritorno.put("ar4k.dnsConfigOrder", String.valueOf(dnsConfigOrder));
+    ritorno.put("ar4k.baseConfigOrder", String.valueOf(base64ConfigOrder));
+    ritorno.put("ar4k.threadSleep", String.valueOf(threadSleep));
+    ritorno.put("ar4k.consoleOnly", String.valueOf(consoleOnly));
+    return ritorno;
+  }
+
+  public String getEnvironmentVariablesAsString() {
+    String configTxt = AnsiOutput.toString(AnsiColor.GREEN,
+        "ENV found:\n---------------------------------------------------------------\n", AnsiColor.BRIGHT_YELLOW);
+    configTxt += "ar4k.fileKeystore: " + fileKeystore + "\n";
+    configTxt += "ar4k.webKeystore: " + webKeystore + "\n";
+    configTxt += "ar4k.dnsKeystore: " + dnsKeystore + "\n";
+    configTxt += "ar4k.keystorePassword: " + keystorePassword + "\n";
+    configTxt += "ar4k.keystoreCaAlias: " + keystoreCaAlias + "\n";
+    configTxt += "ar4k.confPath: " + confPath + "\n";
+    configTxt += "ar4k.fileConfig: " + fileConfig + "\n";
+    configTxt += "ar4k.webConfig: " + webConfig + "\n";
+    configTxt += "ar4k.dnsConfig: " + dnsConfig + "\n";
+    configTxt += "ar4k.baseConfig: " + base64Config + "\n";
+    configTxt += "ar4k.otpRegistrationSeed: " + otpRegistrationSeed + "\n";
+    configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
+    configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
+    configTxt += "ar4k.fileConfigOrder: " + fileConfigOrder + "\n";
+    configTxt += "ar4k.webConfigOrder: " + webConfigOrder + "\n";
+    configTxt += "ar4k.dnsConfigOrder: " + dnsConfigOrder + "\n";
+    configTxt += "ar4k.baseConfigOrder: " + base64ConfigOrder + "\n";
+    configTxt += "ar4k.threadSleep: " + threadSleep + "\n";
+    configTxt += "ar4k.consoleOnly: " + consoleOnly + AnsiOutput.toString(AnsiColor.GREEN,
+        "\n---------------------------------------------------------------\n", AnsiColor.DEFAULT);
+    return configTxt;
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext ac) throws BeansException {
+    Anima.applicationContext = ac;
+  }
+
+  public static ApplicationContext getApplicationContext() throws BeansException {
+    return applicationContext;
+  }
+
+  public Set<AtomixTribeComponent> getTribes() {
+    Set<AtomixTribeComponent> target = new HashSet<AtomixTribeComponent>();
+    for (Ar4kComponent bean : components) {
+      if (bean instanceof AtomixTribeComponent) {
+        target.add((AtomixTribeComponent) bean);
+      }
+    }
+    return target;
+  }
+
+  public Set<TunnelComponent> getTunnels() {
+    Set<TunnelComponent> target = new HashSet<TunnelComponent>();
+    for (Ar4kComponent bean : components) {
+      if (bean instanceof TunnelComponent) {
+        target.add((TunnelComponent) bean);
+      }
+    }
+    return target;
+  }
+
+  public Set<Ar4kService> getServices() {
+    Set<Ar4kService> target = new HashSet<Ar4kService>();
+    for (Ar4kComponent bean : components) {
+      if (bean instanceof Ar4kService) {
+        target.add((Ar4kService) bean);
+      }
+    }
+    return target;
+  }
+
+  public Set<Ar4kComponent> getComponentBeans() {
+    return components;
+  }
+
+  public void addTribe(AtomixTribeComponent tribe) {
+    this.components.add(tribe);
+  }
+
+  @Override
+  public void onApplicationEvent(ApplicationEvent event) {
+    if (logger != null) {
+      logger.info("spring event: " + event.toString());
+    }
+  }
+
+  public Set<Ar4kConfig> getConfigs() {
+    return configs;
+  }
+
+  public String getLogoUrl() {
+    String logo = "/static/img/ar4k.png";
+    if (logoUrl != null && logoUrl != "") {
+      logo = logoUrl;
+    }
+    if (runtimeConfig != null && runtimeConfig.logoUrl != null) {
+      logo = runtimeConfig.logoUrl;
+    }
+    return logo;
+  }
+
+  public void addConfig(Ar4kConfig config) {
+    this.configs.add(config);
+  }
+
+  public void delConfig(Ar4kConfig config) {
+    this.configs.remove(config);
+  }
+
+  public Set<KeystoreConfig> getKeyStores() {
+    return keyStores;
+  }
+
+  public void addKeyStores(KeystoreConfig keyStore) {
+    this.keyStores.add(keyStore);
+  }
+
+  public void delKeyStores(KeystoreConfig keyStore) {
+    this.keyStores.remove(keyStore);
+  }
+
+  public void setTargetConfig(Ar4kConfig config) {
+    targetConfig = config;
+  }
+
+  public AnimaStates getTargetState() {
+    return stateTarget;
+  }
+
+  public Ar4kConfig getWorkingConfig() {
+    return workingConfig;
+  }
+
+  public Ar4kConfig getRuntimeConfig() {
+    return runtimeConfig;
+  }
+
+  public void setWorkingConfig(Ar4kConfig workingConfig) {
+    this.workingConfig = workingConfig;
+  }
+
+  public Object getContextData(String index) {
+    return dataStore.get(index);
+  }
+
+  public void setContextData(String index, Object data) {
+    dataStore.put(index, data);
+  }
+
+  @Bean
+  public MessageChannel cmdChannel() {
+    return new PublishSubscribeChannel();
+  }
+
+  @Bean
+  public MessageChannel chatChannel() {
+    return new PublishSubscribeChannel();
+  }
+
+  @Bean
+  public MessageChannel cortexChannel() {
+    return new PublishSubscribeChannel();
+  }
+
+  @Bean
+  public MessageChannel camelChannel() {
+    return new PublishSubscribeChannel();
+  }
+}
