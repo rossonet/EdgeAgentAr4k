@@ -4,14 +4,11 @@ apply plugin: 'docker'
 
 dependencies {
 	compile project(':core')
-	//compile project(':cortex')
-	//compile project(':cortex-video')
-	//compile project(':cortex-audio')
 	compile project(':flow')
+	compile project(':cluster')
 	compile project(':flow-full')
-	//compile project(':cluster')
 	compile project(':iot')
-	compile project(':money')
+	compile project(':blockchain')
 	compile project(':kettle')
 	compile project(':onion')
 	compile project(':reactor-web')

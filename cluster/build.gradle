@@ -1,0 +1,7 @@
+description = "Add the JCloud API and Docker Java API to the Semantic Router"
+
+dependencies {
+	compile project(':core')
+	compile group: 'org.apache.jclouds', name: 'jclouds-all', version: '2.1.0'
+	compile group: 'com.github.docker-java', name: 'docker-java', version: '3.0.14'
+}

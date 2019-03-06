@@ -4,17 +4,12 @@ apply plugin: 'docker'
 
 dependencies {
 	compile project(':core')
-	//compile project(':cortex')
 	compile project(':flow')
-	//compile project(':cluster')
-	//compile project(':iot')
-	//compile project(':money')
 	compile project(':reactor-web')
 	compile project(':terminal')
 }
 
 bootJar {
-	//dependsOn 'uiPublish'
 	launchScript()
 	manifest {
 		attributes('Implementation-Title':'Ar4kAgent',

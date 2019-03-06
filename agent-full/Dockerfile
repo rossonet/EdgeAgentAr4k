@@ -11,7 +11,7 @@ COPY cluster/ /ar4kAgent/cluster/
 COPY flow/ /ar4kAgent/flow/
 COPY flow-full/ /ar4kAgent/flow-full/
 COPY iot/ /ar4kAgent/iot/
-COPY money/ /ar4kAgent/money/
+COPY blockchain/ /ar4kAgent/blockchain/
 COPY onion/ /ar4kAgent/onion/
 COPY reactor-web/ /ar4kAgent/reactor-web/
 COPY terminal/ /ar4kAgent/terminal/

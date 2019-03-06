@@ -1,4 +1,4 @@
-description = "Add console capabilities to the Ar4k Semantic Router"
+description = "Add terminal capabilities to the Ar4k Edge Agent"
 
 dependencies {
 	compile project(':core')
