@@ -64,9 +64,6 @@ import org.springframework.statemachine.annotation.OnStateChanged;
 import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.stereotype.Component;
 
-//import com.google.gson.Gson;
-//import com.google.gson.GsonBuilder;
-
 /**
  * 
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -160,8 +157,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
-
-  // private Set<Ar4kService> runtimeServices = new HashSet<Ar4kService>();
 
   private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
 
@@ -520,7 +515,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
     if (logger != null) {
-      logger.info("spring event: " + event.toString());
+      logger.info("state machine event: " + event.toString());
     }
   }
 
