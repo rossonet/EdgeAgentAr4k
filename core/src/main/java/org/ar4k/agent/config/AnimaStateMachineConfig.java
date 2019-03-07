@@ -25,6 +25,12 @@ import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
+/**
+ * State machine per gestore principale del ciclo di vita
+ * 
+ * @author andrea
+ *
+ */
 public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<AnimaStates, AnimaEvents> {
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());

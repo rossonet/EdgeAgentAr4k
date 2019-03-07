@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Ar4kService;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -70,6 +71,18 @@ public class JabberHomunculusService extends Ar4kService {
   @Override
   public void setConfiguration(ConfigSeed configuration) {
     this.configuration = (JabberHomunculusConfig) configuration;
+  }
+
+  @Override
+  public String getStatusString() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getStatusJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -22,7 +22,6 @@ import org.apache.camel.ProducerTemplate;
 import org.ar4k.agent.core.Anima;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -52,98 +51,96 @@ import com.google.gson.GsonBuilder;
 @RequestMapping("/camelInterface")
 @ConditionalOnProperty(name = "ar4k.camel", havingValue = "true")
 public class CamelShellInterface {
+  /*
+   * @Autowired private ApplicationContext applicationContext;
+   */
+  @Autowired
+  private Anima anima;
 
-	@Autowired
-	private ApplicationContext applicationContext;
+  @Autowired
+  public CamelContext camelContext;
 
-	@Autowired
-	private Anima anima;
+  Map<String, String> camelComponents = new HashMap<String, String>();
 
-	@Autowired
-	public CamelContext camelContext;
+  @Override
+  protected void finalize() {
+  }
 
-	Map<String, String> camelComponents = new HashMap<String, String>();
+  @SuppressWarnings("unused")
+  private Availability testSelectedConfigOk() {
+    return anima.getWorkingConfig() != null ? Availability.available()
+        : Availability.unavailable("you have to select a config before");
+  }
 
-	@Override
-	protected void finalize() {
-	}
+  @ShellMethod(value = "List camel endpoints managed by the platflorm", group = "Camel Commands")
+  @ManagedOperation
+  public String listCamelEndpoints() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(camelComponents);
+  }
 
-	@SuppressWarnings("unused")
-	private Availability testSelectedConfigOk() {
-		return anima.getWorkingConfig() != null ? Availability.available()
-				: Availability.unavailable("you have to select a config before");
-	}
+  @ShellMethod(value = "Add a endpoint to the platform", group = "Camel Commands")
+  @ManagedOperation
+  // @ShellMethodAvailability("testSelectedConfigOk")
+  public void addCamelEndpoint(@ShellOption(help = "label assigned to the endpoint") String label,
+      @ShellOption(help = "uri of the endpoint") String uri) {
+    camelComponents.put(label, uri);
+  }
 
-	@ShellMethod(value = "List camel endpoints managed by the platflorm", group = "Camel Commands")
-	@ManagedOperation
-	public String listCamelEndpoints() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		return gson.toJson(camelComponents);
-	}
+  @ShellMethod(value = "Add a camel route to the platform", group = "Camel Commands")
+  @ManagedOperation
+  // @ShellMethodAvailability("testSelectedConfigOk")
+  public void addCamelRoute(@ShellOption(help = "label assigned to the endpoint") String label,
+      @ShellOption(help = "uri of the endpoint") String xml) {
+    // TODO: da implementare addCamelRoute
+  }
 
-	@ShellMethod(value = "Add a endpoint to the platform", group = "Camel Commands")
-	@ManagedOperation
-	// @ShellMethodAvailability("testSelectedConfigOk")
-	public void addCamelEndpoint(@ShellOption(help = "label assigned to the endpoint") String label,
-			@ShellOption(help = "uri of the endpoint") String uri) {
-		camelComponents.put(label, uri);
-	}
+  @ShellMethod(value = "Send message to camel endpoint", group = "Camel Commands")
+  @ManagedOperation
+  // @ShellMethodAvailability("testSelectedConfigOk")
+  public void sendMessageToCamelEndpoint(@ShellOption(help = "label of the endpoint") String label,
+      @ShellOption(help = "message to send") String message) {
+    ProducerTemplate template = camelContext.createProducerTemplate();
+    template.sendBody(camelComponents.get(label), message);
+  }
 
-	@ShellMethod(value = "Add a camel route to the platform", group = "Camel Commands")
-	@ManagedOperation
-	// @ShellMethodAvailability("testSelectedConfigOk")
-	public void addCamelRoute(@ShellOption(help = "label assigned to the endpoint") String label,
-			@ShellOption(help = "uri of the endpoint") String xml) {
-		// TODO: da implementare addCamelRoute
-	}
+  @ShellMethod(value = "Delete camel endpoint", group = "Camel Commands")
+  @ManagedOperation
+  // @ShellMethodAvailability("testSelectedConfigOk")
+  public void deleteCamelEndpoint(@ShellOption(help = "label of the endpoint") String label) {
+    camelComponents.remove(label);
+  }
 
-	@ShellMethod(value = "Send message to camel endpoint", group = "Camel Commands")
-	@ManagedOperation
-	// @ShellMethodAvailability("testSelectedConfigOk")
-	public void sendMessageToCamelEndpoint(@ShellOption(help = "label of the endpoint") String label,
-			@ShellOption(help = "message to send") String message) {
-		ProducerTemplate template = camelContext.createProducerTemplate();
-		template.sendBody(camelComponents.get(label), message);
-	}
+  @SuppressWarnings("unchecked")
+  @ShellMethod(value = "Add (or replace) camel endpoint to the selected config", group = "Camel Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addCamelEndpointToConfiguration(@ShellOption(help = "label of the endpoint") String label) {
+    try {
+      if (((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
+        // ok
+      }
+    } catch (Exception ee) {
+      if (anima.getWorkingConfig() != null && anima.getWorkingConfig().data != null
+          && anima.getWorkingConfig().data.containsKey("camel")) {
+        anima.getWorkingConfig().data.remove("camel");
+      }
+    }
+    if (!anima.getWorkingConfig().data.containsKey("camel")) {
+      Map<String, Object> mapCamel = new HashMap<String, Object>();
+      Map<String, String> eps = new HashMap<String, String>();
+      mapCamel.put("endpoints", eps);
+      anima.getWorkingConfig().data.put("camel", mapCamel);
+    }
+    ((Map<String, String>) ((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel")).get("endpoints"))
+        .put(label, camelComponents.get(label));
+  }
 
-	@ShellMethod(value = "Delete camel endpoint", group = "Camel Commands")
-	@ManagedOperation
-	// @ShellMethodAvailability("testSelectedConfigOk")
-	public void deleteCamelEndpoint(@ShellOption(help = "label of the endpoint") String label) {
-		camelComponents.remove(label);
-	}
-
-	@SuppressWarnings("unchecked")
-	@ShellMethod(value = "Add (or replace) camel endpoint to the selected config", group = "Camel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addCamelEndpointToConfiguration(@ShellOption(help = "label of the endpoint") String label) {
-		try {
-			if (((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel"))
-					.get("endpoints") instanceof HashMap) {
-				// ok
-			}
-		} catch (Exception ee) {
-			if (anima.getWorkingConfig() != null && anima.getWorkingConfig().data != null
-					&& anima.getWorkingConfig().data.containsKey("camel")) {
-				anima.getWorkingConfig().data.remove("camel");
-			}
-		}
-		if (!anima.getWorkingConfig().data.containsKey("camel")) {
-			Map<String, Object> mapCamel = new HashMap<String, Object>();
-			Map<String, String> eps = new HashMap<String, String>();
-			mapCamel.put("endpoints", eps);
-			anima.getWorkingConfig().data.put("camel", mapCamel);
-		}
-		((Map<String, String>) ((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel")).get("endpoints"))
-				.put(label, camelComponents.get(label));
-	}
-
-	@ShellMethod(value = "Add (or replace) camel route to the selected config", group = "Camel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addCamelRouteToConfiguration(@ShellOption(help = "label of the route") String label) {
-		// TODO: da implementare addCamelRouteToConfiguration
-	}
+  @ShellMethod(value = "Add (or replace) camel route to the selected config", group = "Camel Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addCamelRouteToConfiguration(@ShellOption(help = "label of the route") String label) {
+    // TODO: da implementare addCamelRouteToConfiguration
+  }
 
 }

@@ -8,6 +8,7 @@ dependencies {
 	compile project(':cluster')
 	compile project(':flow-full')
 	compile project(':iot')
+	compile project(':pcap')
 	compile project(':blockchain')
 	compile project(':kettle')
 	compile project(':onion')

@@ -17,6 +17,7 @@ import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.helper.Utils;
+import org.json.JSONObject;
 
 import io.atomix.cluster.Member;
 import io.atomix.cluster.MemberConfig;
@@ -195,5 +196,17 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
   public void setConfiguration(ConfigSeed configuration) {
     // TODO Auto-generated method stub
 
+  }
+
+  @Override
+  public String getStatusString() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getStatusJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -20,6 +20,7 @@ import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.TunnelComponent;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -80,5 +81,17 @@ public class NetworkTunnel extends TunnelComponent {
   @Override
   public void init() {
     checkConnession();
+  }
+
+  @Override
+  public String getStatusString() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getStatusJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

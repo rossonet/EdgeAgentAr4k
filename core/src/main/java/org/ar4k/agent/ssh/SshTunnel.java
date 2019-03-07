@@ -20,6 +20,7 @@ import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.TunnelComponent;
+import org.json.JSONObject;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelDirectTCPIP;
@@ -110,6 +111,18 @@ public class SshTunnel extends TunnelComponent {
   @Override
   public void init() {
     checkConnession();
+  }
+
+  @Override
+  public String getStatusString() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getStatusJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
