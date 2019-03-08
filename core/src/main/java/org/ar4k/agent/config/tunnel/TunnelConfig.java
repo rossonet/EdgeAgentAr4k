@@ -14,50 +14,16 @@
     */
 package org.ar4k.agent.config.tunnel;
 
-import java.util.UUID;
-
-import org.ar4k.agent.config.ConfigSeed;
-import org.joda.time.Instant;
-
-import com.beust.jcommander.Parameter;
+import org.ar4k.agent.config.ServiceConfig;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Configurazione astratta servizio con funzionalità di tunnel.
  */
-public abstract class TunnelConfig implements ConfigSeed {
+public abstract class TunnelConfig extends ServiceConfig {
 
   private static final long serialVersionUID = 2256280745924059640L;
 
-  public Instant creationDate = new Instant();
-  public Instant lastUpdate = new Instant();
-  public UUID uniqueId = UUID.randomUUID();
-
-  @Parameter(names = "--name", description = "service name", required = true)
-  public String name;
-
-  @Parameter(names = "--description", description = "service description")
-  public String description;
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public Instant getCreationDate() {
-    return creationDate;
-  }
-
-  @Override
-  public Instant getLastUpdateDate() {
-    return lastUpdate;
-  }
-
-  @Override
-  public UUID getUniqueId() {
-    return uniqueId;
-  }
 
 }

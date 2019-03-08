@@ -24,7 +24,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.TunnelComponent;
+import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.json.JSONObject;
 
@@ -33,7 +33,7 @@ import org.json.JSONObject;
  *
  *         Servizio tunnel SSL.
  */
-public class StunnelTunnel extends TunnelComponent {
+public class StunnelTunnel extends AbstractTunnelComponent {
 
   private SSLContext context = null;
   // TODO: implementare il controllo custom
@@ -61,7 +61,7 @@ public class StunnelTunnel extends TunnelComponent {
       tmf.init(KeystoreLoader.getKeyStoreAfterLoad(configuration.keystoreAuth, anima.getKeyStores()));
       context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
       SSLSocketFactory socketFactory = context.getSocketFactory();
-      socket = socketFactory.createSocket(TunnelComponent.getSocks(configuration.connectionSock),
+      socket = socketFactory.createSocket(AbstractTunnelComponent.getSocks(configuration.connectionSock),
           configuration.redirectServer, configuration.redirectPort, true);
     } catch (Exception e) {
       e.printStackTrace();

@@ -19,7 +19,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.TunnelComponent;
+import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.json.JSONObject;
 
 import com.jcraft.jsch.Channel;
@@ -33,7 +33,7 @@ import com.jcraft.jsch.Session;
  *         Servizio tunnel SSH.
  *
  */
-public class SshTunnel extends TunnelComponent {
+public class SshTunnel extends AbstractTunnelComponent {
 
   private SshConfig configuration = null;
 
@@ -47,9 +47,9 @@ public class SshTunnel extends TunnelComponent {
       jsch = new JSch();
       if (configuration.authkey != null)
         jsch.addIdentity(configuration.authkey);
-      System.out.println(TunnelComponent.getSocks(configuration.connectionSock).getLocalAddress());
-      InetAddress host = TunnelComponent.getSocks(configuration.connectionSock).getLocalAddress();
-      int port = TunnelComponent.getSocks(configuration.connectionSock).getLocalPort();
+      System.out.println(AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalAddress());
+      InetAddress host = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalAddress();
+      int port = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalPort();
       session = jsch.getSession(configuration.username, host.getHostAddress(), port);
       SSHUserInfo ui = new SSHUserInfo();
       if (configuration.password != null)

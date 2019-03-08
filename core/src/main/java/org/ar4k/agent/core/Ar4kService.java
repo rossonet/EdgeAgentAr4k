@@ -17,6 +17,7 @@ package org.ar4k.agent.core;
 import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.slf4j.Logger;
 
 /**

@@ -26,7 +26,7 @@ import org.ar4k.agent.config.tunnel.TunnelConfig;
  *         gestiti dall'agente.
  *
  */
-public abstract class TunnelComponent implements Ar4kComponent {
+public abstract class AbstractTunnelComponent implements Ar4kComponent {
 
   // iniettata vedi set/get
   private TunnelConfig configuration = null;
@@ -36,7 +36,7 @@ public abstract class TunnelComponent implements Ar4kComponent {
   public static Socket getSocks(String alias) {
     Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
     Socket ok = null;
-    for (TunnelComponent b : anima.getTunnels()) {
+    for (AbstractTunnelComponent b : anima.getTunnels()) {
       if (b.getConfiguration().getName().equals(alias)) {
         ok = b.socket;
         System.out.println("ok socks!!");

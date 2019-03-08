@@ -1,9 +1,9 @@
 package org.ar4k.agent.blockchain;
 
-import org.ar4k.agent.core.BlockChainManager;
+import org.ar4k.agent.core.AbstractBlockChainManager;
 import org.json.JSONObject;
 
-public class EthereumBlockChain extends BlockChainManager {
+public class EthereumBlockChain extends AbstractBlockChainManager {
 
   @Override
   public String getStatusString() {

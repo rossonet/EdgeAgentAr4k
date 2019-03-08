@@ -34,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.InvalidKeyException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -48,8 +47,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
@@ -64,16 +61,17 @@ import javax.validation.constraints.Size;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.tunnel.TunnelConfig;
+import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.Ar4kException;
-import org.ar4k.agent.core.Ar4kLogger;
 import org.ar4k.agent.core.Ar4kService;
-import org.ar4k.agent.core.TunnelComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
-import org.ar4k.agent.helper.Utils;
+import org.ar4k.agent.exception.Ar4kException;
+import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.logger.Ar4kLogger;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -128,10 +126,6 @@ public class ShellInterface {
   Anima anima;
 
   private static final Long load = 1500L;
-
-  @Override
-  protected void finalize() {
-  }
 
   @SuppressWarnings("unused")
   private Availability testOk() {
@@ -212,11 +206,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String getSelectedConfigBase64() throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream oos = new ObjectOutputStream(baos);
-    oos.writeObject(anima.getWorkingConfig());
-    oos.close();
-    return Base64.getEncoder().encodeToString(baos.toByteArray());
+    return ConfigHelper.toBase64(anima.getWorkingConfig());
   }
 
   @ShellMethod("Save selected configuration in base64 text file")
@@ -235,11 +225,8 @@ public class ShellInterface {
   public void importSelectedConfigBase64(
       @ShellOption(help = "configuration exported by export-selected-config-base64") String base64Config)
       throws IOException, ClassNotFoundException {
-    byte[] data = Base64.getDecoder().decode(base64Config);
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    anima.setWorkingConfig((Ar4kConfig) ois.readObject());
+    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64(base64Config));
     anima.addConfig(anima.getWorkingConfig());
-    ois.close();
   }
 
   @ShellMethod("Load selected configuration from a base64 text file")
@@ -265,18 +252,7 @@ public class ShellInterface {
   public String getSelectedConfigBase64Rsa(@ShellOption(help = "keystore alias for the key") String alias)
       throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException,
       InvalidKeyException, UnrecoverableEntryException {
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    keyStore.load(null);
-    KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias, null);
-    Cipher inputCipher = Cipher.getInstance("SHA256withRSA");
-    inputCipher.init(Cipher.ENCRYPT_MODE, privateKeyEntry.getCertificate().getPublicKey());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    CipherOutputStream cipherOutputStream = new CipherOutputStream(baos, inputCipher);
-    ObjectOutputStream oos = new ObjectOutputStream(cipherOutputStream);
-    oos.writeObject(anima.getWorkingConfig());
-    cipherOutputStream.close();
-    oos.close();
-    return Base64.getEncoder().encodeToString(baos.toByteArray());
+    return ConfigHelper.toBase64Rsa(anima.getWorkingConfig(), alias);
   }
 
   // TODO: da completare con la crittografia e provare.
@@ -292,17 +268,13 @@ public class ShellInterface {
     return "saved";
   }
 
-  // TODO: da completare con la crittografia e provare
   @ShellMethod("Import the selected configuration from base64 text crypted in RSA")
   @ManagedOperation
   public void importSelectedConfigBase64Rsa(
       @ShellOption(help = "configuration exported by export-selected-config-base64-rsa") String base64Config)
       throws IOException, ClassNotFoundException {
-    byte[] data = Base64.getDecoder().decode(base64Config);
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    anima.setWorkingConfig((Ar4kConfig) ois.readObject());
+    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Rsa(base64Config));
     anima.addConfig(anima.getWorkingConfig());
-    ois.close();
   }
 
   // TODO: aggiungere il salvataggio dell configurazione su DNS con key (provare
@@ -330,8 +302,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String getSelectedConfigJson() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(anima.getWorkingConfig());
+    return ConfigHelper.toJson(anima.getWorkingConfig());
   }
 
   @ShellMethod("Save selected configuration in json text file")
@@ -350,8 +321,7 @@ public class ShellInterface {
   @ManagedOperation
   public void importSelectedConfigJson(
       @ShellOption(help = "configuration exported by export-selected-config-json") String jsonConfig) {
-    Gson gson = new Gson();
-    anima.setWorkingConfig((Ar4kConfig) gson.fromJson(jsonConfig, ConfigSeed.class));
+    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
     anima.addConfig(anima.getWorkingConfig());
   }
 
@@ -399,7 +369,7 @@ public class ShellInterface {
     String risposta = "";
     for (Ar4kComponent configurazione : anima.getComponentBeans()) {
       try {
-        TunnelComponent t = (TunnelComponent) configurazione;
+        AbstractTunnelComponent t = (AbstractTunnelComponent) configurazione;
         TunnelConfig c = ((TunnelConfig) t.getConfiguration());
         risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, c.name, AnsiColor.DEFAULT, " - ",
             t.getClass().getName(), " [", AnsiColor.RED,
@@ -609,7 +579,7 @@ public class ShellInterface {
   public String getHardwareInfo() throws IOException, InterruptedException, ParseException {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      return gson.toJson(Utils.getSystemInfo());
+      return gson.toJson(HardwareHelper.getSystemInfo());
     } catch (Exception ae) {
       ae.printStackTrace();
       return null;
@@ -793,5 +763,13 @@ public class ShellInterface {
       return false;
     }
     return true;
+  }
+
+  public Anima getAnima() {
+    return anima;
+  }
+
+  public void setAnima(Anima anima) {
+    this.anima = anima;
   }
 }

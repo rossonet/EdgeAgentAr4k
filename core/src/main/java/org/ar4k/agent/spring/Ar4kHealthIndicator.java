@@ -16,7 +16,7 @@ package org.ar4k.agent.spring;
 
 import java.util.Map;
 
-import org.ar4k.agent.helper.Utils;
+import org.ar4k.agent.helper.HardwareHelper;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class Ar4kHealthIndicator extends AbstractHealthIndicator {
   @Override
   protected void doHealthCheck(Health.Builder builder) throws Exception {
     try {
-      Map<String, Object> rit = Utils.getSystemInfo();
+      Map<String, Object> rit = HardwareHelper.getSystemInfo();
       for (String chiave : rit.keySet()) {
         builder.withDetail(chiave, rit.get(chiave));
       }

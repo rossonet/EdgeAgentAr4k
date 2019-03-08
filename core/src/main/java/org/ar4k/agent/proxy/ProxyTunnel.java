@@ -22,7 +22,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.TunnelComponent;
+import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.json.JSONObject;
 
 /*
@@ -31,7 +31,7 @@ import org.json.JSONObject;
  *         Servizio di connessione proxy.
  *
  */
-public class ProxyTunnel extends TunnelComponent {
+public class ProxyTunnel extends AbstractTunnelComponent {
 
   // iniettata vedi set/get
   private ProxyConfig configuration = null;

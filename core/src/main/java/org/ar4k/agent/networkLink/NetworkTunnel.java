@@ -19,7 +19,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.TunnelComponent;
+import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.json.JSONObject;
 
 /*
@@ -28,7 +28,7 @@ import org.json.JSONObject;
  *         Gestore servizio per connessioni socket.
  * 
  */
-public class NetworkTunnel extends TunnelComponent {
+public class NetworkTunnel extends AbstractTunnelComponent {
 
   // iniettata vedi set/get
   private NetworkConfig configuration = null;

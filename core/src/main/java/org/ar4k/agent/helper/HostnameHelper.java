@@ -27,7 +27,11 @@ import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 
-public class HostnameUtil {
+public class HostnameHelper {
+
+  private HostnameHelper() {
+    System.out.println("Just for static usage");
+  }
 
   /*
    * @return the local hostname, if possible. Failure results in "localhost".
@@ -67,8 +71,8 @@ public class HostnameUtil {
             });
           }
         } catch (SocketException e) {
-          LoggerFactory.getLogger(HostnameUtil.class).warn("Failed to NetworkInterfaces for bind address: {}", address,
-              e);
+          LoggerFactory.getLogger(HostnameHelper.class).warn("Failed to NetworkInterfaces for bind address: {}",
+              address, e);
         }
       } else {
         hostnames.add(inetAddress.getHostName());
@@ -76,7 +80,7 @@ public class HostnameUtil {
         hostnames.add(inetAddress.getCanonicalHostName());
       }
     } catch (UnknownHostException e) {
-      LoggerFactory.getLogger(HostnameUtil.class).warn("Failed to get InetAddress for bind address: {}", address, e);
+      LoggerFactory.getLogger(HostnameHelper.class).warn("Failed to get InetAddress for bind address: {}", address, e);
     }
     return hostnames;
   }

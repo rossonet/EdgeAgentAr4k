@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.tribe;
+package org.ar4k.agent.tribe;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +16,7 @@ import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.helper.Utils;
+import org.ar4k.agent.helper.HardwareHelper;
 import org.json.JSONObject;
 
 import io.atomix.cluster.Member;
@@ -69,7 +69,7 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
 
   private Map<String, String> produceMembershipMetadata() throws IOException, InterruptedException, ParseException {
     Map<String, String> metadata = new HashMap<String, String>();
-    Map<String, Object> hal = Utils.getSystemInfo();
+    Map<String, Object> hal = HardwareHelper.getSystemInfo();
     for (String chiave : hal.keySet()) {
       metadata.put(chiave, hal.get(chiave).toString());
     }

@@ -2,7 +2,7 @@ package org.ar4k.agent.core;
 
 import org.ar4k.agent.config.ConfigSeed;
 
-public abstract class BlockChainManager implements Ar4kComponent {
+public abstract class AbstractBlockChainManager implements Ar4kComponent {
 
   public static enum Governance {
     MONARCHY, DEMOCRACY, JUNGLE, NONE

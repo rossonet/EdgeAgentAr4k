@@ -15,14 +15,11 @@
 package org.ar4k.agent.core;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,8 +33,10 @@ import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.config.tunnel.TunnelConfig;
-import org.ar4k.agent.core.tribe.AtomixTribeComponent;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
@@ -262,11 +261,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         }
         if (liv == base64ConfigOrder && targetConfig == null && base64Config != null && !base64Config.equals("")) {
           try {
-            ObjectInputStream ois = null;
-            byte[] data = Base64.getDecoder().decode(base64Config);
-            ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            targetConfig = (Ar4kConfig) ois.readObject();
-            ois.close();
+            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(base64Config);
           } catch (ClassNotFoundException | IOException e) {
             if (logger != null)
               logger.warn(e.getMessage());
@@ -282,11 +277,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
               config = config + line;
             }
             bufferedReader.close();
-            ObjectInputStream ois = null;
-            byte[] data = Base64.getDecoder().decode(config);
-            ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            targetConfig = (Ar4kConfig) ois.readObject();
-            ois.close();
+            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
           } catch (IOException | ClassNotFoundException e) {
             if (logger != null)
               logger.warn(e.getMessage());
@@ -484,11 +475,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return target;
   }
 
-  public Set<TunnelComponent> getTunnels() {
-    Set<TunnelComponent> target = new HashSet<TunnelComponent>();
+  public Set<AbstractTunnelComponent> getTunnels() {
+    Set<AbstractTunnelComponent> target = new HashSet<AbstractTunnelComponent>();
     for (Ar4kComponent bean : components) {
-      if (bean instanceof TunnelComponent) {
-        target.add((TunnelComponent) bean);
+      if (bean instanceof AbstractTunnelComponent) {
+        target.add((AbstractTunnelComponent) bean);
       }
     }
     return target;

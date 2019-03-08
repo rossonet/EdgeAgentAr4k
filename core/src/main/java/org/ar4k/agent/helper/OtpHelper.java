@@ -32,7 +32,11 @@ import javax.crypto.spec.SecretKeySpec;
  *         è implementato in Javascript nella pagina in
  *         ui/assets/base/html/otp.html
  */
-class OtpValidator {
+class OtpHelper {
+
+  private OtpHelper() {
+    System.out.println("just for static methods");
+  }
 
   public static boolean verificaOTP(String seedOTP, String otpCode, int finestraOTP) {
     boolean ritorno = false;

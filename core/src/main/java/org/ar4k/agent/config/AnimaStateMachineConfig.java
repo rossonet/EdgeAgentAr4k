@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

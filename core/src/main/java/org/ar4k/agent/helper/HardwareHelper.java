@@ -38,7 +38,7 @@ import oshi.software.os.OperatingSystem;
  *         Helper generico.
  *
  */
-public class Utils {
+public class HardwareHelper {
 
   public static final boolean debugFreezeHal = false;
 
