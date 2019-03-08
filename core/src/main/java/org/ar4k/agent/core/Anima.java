@@ -84,8 +84,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private final String dbDataStorePath = "~/.ar4k/anima_datastore";
-  private final String dbDataStoreName = "datastore_" + UUID.randomUUID().toString();
+  private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
+  private final String dbDataStoreName = "datastore";
 
   public Anima() {
   }
