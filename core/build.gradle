@@ -40,7 +40,8 @@ dependencies {
   // rules engine
   compile group: 'org.drools', name: 'drools-core', version: '7.11.0.Final'
   compile group: 'org.drools', name: 'drools-compiler', version: '7.11.0.Final'
-  //ECSS
+  // debug ECSS ??
   compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
-
+  // datastore
+  compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
 }

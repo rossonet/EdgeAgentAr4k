@@ -15,6 +15,7 @@
 package org.ar4k.agent.core;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
@@ -41,11 +43,9 @@ import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
-//import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -63,6 +63,9 @@ import org.springframework.statemachine.annotation.OnStateChanged;
 import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.stereotype.Component;
 
+import jdbm.RecordManager;
+import jdbm.RecordManagerFactory;
+
 /**
  * 
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -77,10 +80,12 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 @EnableJms
 @WithStateMachine
-//TODO: aggiungere annotazione per interazione con Cortex (intenti, entità, semantica??)
-public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
+public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, Closeable {
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
+
+  private final String dbDataStorePath = "/anima_datastore";
+  private final String dbDataStoreName = "datastore_" + UUID.randomUUID().toString();
 
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
@@ -159,7 +164,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
 
-  private Map<String, Object> dataStore = new HashMap<String, Object>();
+  private Map<String, Object> dataStore = null;
+
+  private transient RecordManager recMan = null;
 
   // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
   // Lambda,Google Function o, in generale, in modalità function as a service
@@ -177,10 +184,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public static enum AnimaEvents {
     BOOTSTRAP, BORN, SETCONF, START, PAUSE, STOP, HIBERNATION, FINALIZE, EXCEPTION
-  }
-
-  // costruttore
-  public Anima() {
   }
 
   @ManagedOperation
@@ -203,7 +206,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @Override
-  protected void finalize() {
+  public void close() {
     animaStateMachine.sendEvent(AnimaEvents.FINALIZE);
     animaStateMachine = null;
   }
@@ -230,6 +233,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private synchronized void startingAgent() {
     new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
     fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
+    try {
+      if (dataStore == null) {
+        recMan = RecordManagerFactory
+            .createRecordManager(confPath.replaceFirst("^~", System.getProperty("user.home") + dbDataStorePath));
+        dataStore = recMan.treeMap(dbDataStoreName);
+      }
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
     bootStrapConfig = resolveBootstrapConfig();
     animaStateMachine.sendEvent(AnimaEvents.BORN);
   }
@@ -573,21 +585,29 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     dataStore.put(index, data);
   }
 
+  public void clearDataStore() {
+    dataStore.clear();
+  }
+
+  // coda eventi cmd in ascolto
   @Bean
   public MessageChannel cmdChannel() {
     return new PublishSubscribeChannel();
   }
 
+  // coda eventi chat in ascolto
   @Bean
   public MessageChannel chatChannel() {
     return new PublishSubscribeChannel();
   }
 
+  // code per AI -usi futuri-
   @Bean
   public MessageChannel cortexChannel() {
     return new PublishSubscribeChannel();
   }
 
+  // coda per i messaggi indirizzati e endpoint camel
   @Bean
   public MessageChannel camelChannel() {
     return new PublishSubscribeChannel();
