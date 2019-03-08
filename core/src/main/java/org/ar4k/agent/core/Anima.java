@@ -84,8 +84,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private final String dbDataStorePath = "/anima_datastore";
+  private final String dbDataStorePath = "~/.ar4k/anima_datastore";
   private final String dbDataStoreName = "datastore_" + UUID.randomUUID().toString();
+
+  public Anima() {
+  }
 
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
@@ -212,12 +215,12 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged()
-  private synchronized void stateChanged() {
+  public synchronized void stateChanged() {
     statesBefore.put(new Instant(), getState());
   }
 
   @OnStateChanged(target = "KILLED")
-  private synchronized void finalizeAgent() {
+  public synchronized void finalizeAgent() {
     for (Ar4kComponent targetService : components) {
       targetService.kill();
     }
@@ -225,19 +228,20 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged(target = "INIT")
-  private synchronized void initAgent() {
+  public synchronized void initAgent() {
 
   }
 
   @OnStateChanged(target = "STARTING")
-  private synchronized void startingAgent() {
+  public synchronized void startingAgent() {
     new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
     fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
     try {
       if (dataStore == null) {
         recMan = RecordManagerFactory
-            .createRecordManager(confPath.replaceFirst("^~", System.getProperty("user.home") + dbDataStorePath));
+            .createRecordManager(dbDataStorePath.replaceFirst("^~", System.getProperty("user.home")));
         dataStore = recMan.treeMap(dbDataStoreName);
+        logger.info("datastore on Anima started");
       }
     } catch (IOException e) {
       logger.warn(e.getMessage());
@@ -301,7 +305,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged(target = "STAMINAL")
-  private synchronized void staminalAgent() {
+  public synchronized void staminalAgent() {
     // se non è presente una configurazione runtime e un target ed è presente quella
     // di boot, utilizzarla per l'avvio
     if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
@@ -314,7 +318,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged(target = "CONFIGURED")
-  private synchronized void configureAgent() {
+  public synchronized void configureAgent() {
     if (runtimeConfig == null) {
       logger.warn("Required running state without conf");
       animaStateMachine.sendEvent(AnimaEvents.EXCEPTION);
@@ -338,25 +342,25 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
-  private synchronized void runService() {
+  public synchronized void runService() {
     joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "CONSOLE")
-  private synchronized void runConsole() {
+  public synchronized void runConsole() {
     joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "BOT")
-  private synchronized void runBot() {
+  public synchronized void runBot() {
     joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "LAMBDA")
-  private synchronized void runLambda() {
+  public synchronized void runLambda() {
     joinTribes();
     timeCounterLambda = new Instant();
     timerLambda = new Timer("Timer");
@@ -366,7 +370,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   @OnStateChanged(source = "LAMBDA")
-  private synchronized void exitLambda() {
+  public synchronized void exitLambda() {
     if (timerLambda != null) {
       timerLambda.purge();
       timerLambda = null;
@@ -578,15 +582,24 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   public Object getContextData(String index) {
-    return dataStore.get(index);
+    if (dataStore != null)
+      return dataStore.get(index);
+    else
+      return null;
   }
 
   public void setContextData(String index, Object data) {
-    dataStore.put(index, data);
+    if (dataStore != null)
+      dataStore.put(index, data);
   }
 
   public void clearDataStore() {
-    dataStore.clear();
+    if (dataStore != null)
+      dataStore.clear();
+  }
+
+  public boolean dataStoreExists() {
+    return (dataStore != null);
   }
 
   // coda eventi cmd in ascolto
