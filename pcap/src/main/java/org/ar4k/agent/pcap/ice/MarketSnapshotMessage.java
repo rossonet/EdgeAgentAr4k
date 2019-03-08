@@ -46,7 +46,7 @@ public class MarketSnapshotMessage implements IceObject {
 
   @Override
   public String toString() {
-    String rit = "-- Market Statistics Message --\nmarketID:" + marketID + "\n";
+    String rit = "-- Market Snapshot Message --\nmarketID:" + marketID + "\n";
     rit += "marketType:" + marketType + "\n";
     rit += "tradingStatus:" + tradingStatus + "\n";
     rit += "volume:" + volume + "\n";

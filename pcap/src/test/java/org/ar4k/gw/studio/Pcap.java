@@ -31,6 +31,7 @@ import org.ar4k.agent.pcap.ice.AddModifyOrderMessage;
 import org.ar4k.agent.pcap.ice.DeleteOrderMessage;
 import org.ar4k.agent.pcap.ice.Helper;
 import org.ar4k.agent.pcap.ice.MarketSnapshotMessage;
+import org.ar4k.agent.pcap.ice.MarketSnapshotOrderMessage;
 import org.ar4k.agent.pcap.ice.MarketStatisticsMessage;
 import org.ar4k.agent.pcap.ice.MessageBundleMarker;
 import org.ar4k.agent.pcap.ice.OpenPriceMessage;
@@ -94,11 +95,18 @@ public class Pcap {
   }
 
   @Test
-  public void filePcap() {
+  public void checkDecoder() {
+    char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm' };
+    for (char test : files) {
+      String nomeFile = "example/" + test + ".pcap";
+      filePcap(nomeFile);
+    }
+  }
+
+  private void filePcap(String file) {
     PcapHandle handle;
     try {
-      handle = Pcaps.openOffline(
-          "/home/andrea/git/EdgeAgentAr4k/pcap/example/PCAP_20190204.080000.090000.ICE_ENDEX.FOD_LU.208_101.A.02.pcap.00014");
+      handle = Pcaps.openOffline(file);
       Packet packet = null;
       boolean continua = true;
       while (continua) {
@@ -153,6 +161,10 @@ public class Pcap {
             MarketSnapshotMessage messageMarketSnapshotMessage = new MarketSnapshotMessage();
             messageMarketSnapshotMessage.valueOf(payload);
             System.out.println(messageMarketSnapshotMessage);
+          } else if (messageType == 'D') {
+            MarketSnapshotOrderMessage messageMarketSnapshotOrderMessage = new MarketSnapshotOrderMessage();
+            messageMarketSnapshotOrderMessage.valueOf(payload);
+            System.out.println(messageMarketSnapshotOrderMessage);
           } else {
             System.out.println("Pacchetto sconosciuto!!");
             System.out.println(Hex.encodeHexString(payload));
