@@ -3,6 +3,8 @@
 bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
+## SONO PRIVATI!
+example
 
 ### OUTPUT ###
 spring-shell.log

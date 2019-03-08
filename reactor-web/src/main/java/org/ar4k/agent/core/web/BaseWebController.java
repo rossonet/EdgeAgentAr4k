@@ -78,6 +78,7 @@ import reactor.core.publisher.Mono;
  */
 @Controller
 @ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
+//TODO: NON FUNZIONA!!!!
 public class BaseWebController {
 
   @Autowired

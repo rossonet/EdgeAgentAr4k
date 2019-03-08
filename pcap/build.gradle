@@ -1,6 +1,7 @@
 description = "PCAP client library"
 
 dependencies {
-	compile project(':core')
-	compile group: 'org.pcap4j', name: 'pcap4j', version: '1.7.5', ext: 'pom'
+  compile project(':core')
+  compile 'org.pcap4j:pcap4j-core:1.+'
+  compile 'org.pcap4j:pcap4j-packetfactory-static:1.+'
 }
