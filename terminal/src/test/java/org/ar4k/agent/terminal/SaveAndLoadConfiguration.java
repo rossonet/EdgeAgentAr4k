@@ -15,6 +15,13 @@
 package org.ar4k.agent.terminal;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.ShellInterface;
@@ -56,7 +63,7 @@ public class SaveAndLoadConfiguration {
   };
 
   @Test
-  public void saveAndRestoreToFromJson() throws InterruptedException {
+  public void saveAndRestoreToFromJson() throws InterruptedException, IOException, ClassNotFoundException {
     Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
     c.name = "test salvataggio json";
@@ -69,12 +76,45 @@ public class SaveAndLoadConfiguration {
     a.setWorkingConfig(c);
     ShellInterface si = new ShellInterface();
     si.setAnima(a);
-    try {
-      si.saveSelectedConfigJson("~/Scrivania/prova");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    si.importSelectedConfigJson("~/Scrivania/prova");
+    si.saveSelectedConfigJson("~/Scrivania/provaJson");
+    si.loadSelectedConfigJson("~/Scrivania/provaJson");
+  }
+
+  @Test
+  public void saveAndRestoreToFromBase64() throws InterruptedException, ClassNotFoundException, IOException {
+    Anima a = new Anima();
+    Ar4kConfig c = new Ar4kConfig();
+    c.name = "test salvataggio base64";
+    SshConfig s1 = new SshConfig();
+    s1.name = "ssh config";
+    StunnelConfig s2 = new StunnelConfig();
+    s2.name = "stunnel config";
+    c.services.add(s1);
+    c.services.add(s2);
+    a.setWorkingConfig(c);
+    ShellInterface si = new ShellInterface();
+    si.setAnima(a);
+    si.saveSelectedConfigBase64("~/Scrivania/provaBase64");
+    si.loadSelectedConfigBase64("~/Scrivania/provaBase64");
+  }
+  
+  @Test
+  public void saveAndRestoreToFromBase64Rsa()
+      throws InterruptedException, ClassNotFoundException, IOException, InvalidKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException {
+    Anima a = new Anima();
+    Ar4kConfig c = new Ar4kConfig();
+    c.name = "test salvataggio base64";
+    SshConfig s1 = new SshConfig();
+    s1.name = "ssh config";
+    StunnelConfig s2 = new StunnelConfig();
+    s2.name = "stunnel config";
+    c.services.add(s1);
+    c.services.add(s2);
+    a.setWorkingConfig(c);
+    ShellInterface si = new ShellInterface();
+    si.setAnima(a);
+    si.saveSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa","root");
+    si.loadSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa");
   }
 
 }
