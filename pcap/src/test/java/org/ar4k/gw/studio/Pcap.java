@@ -14,12 +14,8 @@
     */
 package org.ar4k.gw.studio;
 
-import static org.junit.Assert.assertFalse;
-
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,15 +23,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.codec.binary.Hex;
-import org.ar4k.agent.pcap.ice.AddModifyOrderMessage;
-import org.ar4k.agent.pcap.ice.DeleteOrderMessage;
-import org.ar4k.agent.pcap.ice.Helper;
-import org.ar4k.agent.pcap.ice.MarketSnapshotMessage;
-import org.ar4k.agent.pcap.ice.MarketSnapshotOrderMessage;
-import org.ar4k.agent.pcap.ice.MarketStatisticsMessage;
-import org.ar4k.agent.pcap.ice.MessageBundleMarker;
-import org.ar4k.agent.pcap.ice.OpenPriceMessage;
-import org.ar4k.agent.pcap.ice.TradeMessage;
+import org.ar4k.agent.pcap.ice.IcePacketAnalyzer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,11 +38,10 @@ import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.Pcaps;
+import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.IpV4Packet.IpV4Option;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.UdpPacket;
-import org.pcap4j.packet.namednumber.UdpPort;
 
 public class Pcap {
 
@@ -103,82 +90,76 @@ public class Pcap {
     }
   }
 
+  @Test
+  // necessita dei permessi di root
+  public void checkSender() {
+    char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm' };
+    for (char test : files) {
+      String nomeFile = "example/" + test + ".pcap";
+      sendDataFromPcapFile(nomeFile, "wlp1s0", 200);
+    }
+  }
+
   private void filePcap(String file) {
     PcapHandle handle;
     try {
       handle = Pcaps.openOffline(file);
       Packet packet = null;
       boolean continua = true;
+      IcePacketAnalyzer pa = new IcePacketAnalyzer();
       while (continua) {
         try {
           packet = handle.getNextPacketEx();
         } catch (Exception a) {
           continua = false;
         }
-        IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
-        UdpPacket udpPacket = packet.get(UdpPacket.class);
-        Inet4Address srcAddr = ipV4Packet.getHeader().getSrcAddr();
-        UdpPort srcPort = udpPacket.getHeader().getSrcPort();
-        List<IpV4Option> options = ipV4Packet.getHeader().getOptions();
-        InputStream targetStream = new ByteArrayInputStream(udpPacket.getPayload().getRawData());
-        Short session = Helper.popShort(targetStream);
-        Integer sequence = Helper.popInteger(targetStream);
-        Short count = Helper.popShort(targetStream);
-        Long timestamp = Helper.popLong(targetStream);
-        System.out.println(srcAddr + ":" + srcPort.valueAsString() + " -> " + session + " | " + sequence + " | " + count
-            + " | " + timestamp);
-        for (int m = 0; m < count; m++) {
-          char messageType = Helper.popChar(targetStream);
-          Short messageBodyLength = Helper.popShort(targetStream);
-          byte[] payload = new byte[messageBodyLength];
-          targetStream.read(payload, 0, messageBodyLength);
-          System.out.println(" - " + m + " -> " + messageType + " | " + messageBodyLength);
-          if (messageType == 'T') {
-            MessageBundleMarker messageBundleMarker = new MessageBundleMarker();
-            messageBundleMarker.valueOf(payload);
-            System.out.println(messageBundleMarker);
-          } else if (messageType == 'E') {
-            AddModifyOrderMessage messageAddModifyOrderMessage = new AddModifyOrderMessage();
-            messageAddModifyOrderMessage.valueOf(payload);
-            System.out.println(messageAddModifyOrderMessage);
-          } else if (messageType == 'F') {
-            DeleteOrderMessage messageDeleteOrderMessage = new DeleteOrderMessage();
-            messageDeleteOrderMessage.valueOf(payload);
-            System.out.println(messageDeleteOrderMessage);
-          } else if (messageType == 'G') {
-            TradeMessage messageTradeMessage = new TradeMessage();
-            messageTradeMessage.valueOf(payload);
-            System.out.println(messageTradeMessage);
-          } else if (messageType == 'J') {
-            MarketStatisticsMessage messageMarketStatisticsMessage = new MarketStatisticsMessage();
-            messageMarketStatisticsMessage.valueOf(payload);
-            System.out.println(messageMarketStatisticsMessage);
-          } else if (messageType == 'N') {
-            OpenPriceMessage messageOpenPriceMessage = new OpenPriceMessage();
-            messageOpenPriceMessage.valueOf(payload);
-            System.out.println(messageOpenPriceMessage);
-          } else if (messageType == 'C') {
-            MarketSnapshotMessage messageMarketSnapshotMessage = new MarketSnapshotMessage();
-            messageMarketSnapshotMessage.valueOf(payload);
-            System.out.println(messageMarketSnapshotMessage);
-          } else if (messageType == 'D') {
-            MarketSnapshotOrderMessage messageMarketSnapshotOrderMessage = new MarketSnapshotOrderMessage();
-            messageMarketSnapshotOrderMessage.valueOf(payload);
-            System.out.println(messageMarketSnapshotOrderMessage);
-          } else {
-            System.out.println("Pacchetto sconosciuto!!");
-            System.out.println(Hex.encodeHexString(payload));
-            System.out.println("\n");
-            assertFalse(true);
-          }
-        }
-        // System.out.println(Hex.encodeHexString(udpPacket.getPayload().getRawData()));
-        for (IpV4Option o : options) {
-          System.out.println("option " + o.getType() + " -> " + o.length());
-        }
+        pa.elaboratePacket(packet);
       }
       handle.close();
     } catch (PcapNativeException | IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  // necessita dei permessi di root
+  private void sendDataFromPcapFile(String file, String interfaceName, long waitTime) {
+    PcapHandle handleFile;
+    PcapHandle handleSender;
+    try {
+      handleFile = Pcaps.openOffline(file);
+      int snapLen = 65536;
+      PromiscuousMode mode = PromiscuousMode.NONPROMISCUOUS;
+      PcapNetworkInterface nif = Pcaps.getDevByName(interfaceName);
+      int timeout = 10000;
+      handleSender = nif.openLive(snapLen, mode, timeout);
+      Packet packet = null;
+      boolean continua = true;
+      while (continua) {
+        try {
+          packet = handleFile.getNextPacketEx();
+        } catch (Exception a) {
+          continua = false;
+        }
+        try {
+          IpPacket ipp = packet.get(IpPacket.class);
+          System.out.println("srcAddress: " + ipp.getHeader().getSrcAddr().getHostAddress() + " dstAddress: "
+              + ipp.getHeader().getDstAddr().getHostAddress());
+        } catch (Exception a) {
+        }
+        try {
+          UdpPacket udpp = packet.get(UdpPacket.class);
+          System.out.println("srcPort: " + udpp.getHeader().getSrcPort().valueAsInt() + " dstPort: "
+              + udpp.getHeader().getDstPort().valueAsInt());
+        } catch (Exception a) {
+        }
+        if (packet != null) {
+          System.out.println(Hex.encodeHexString(packet.getRawData()));
+        }
+        handleSender.sendPacket(packet);
+        Thread.sleep(waitTime);
+      }
+      handleFile.close();
+    } catch (PcapNativeException | NotOpenException | InterruptedException e) {
       e.printStackTrace();
     }
   }

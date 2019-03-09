@@ -1,0 +1,8 @@
+description = "Rules Engine component"
+
+dependencies {
+	compile project(':core')
+	  // rules engine
+  	compile group: 'org.drools', name: 'drools-core', version: '7.11.0.Final'
+  	compile group: 'org.drools', name: 'drools-compiler', version: '7.11.0.Final'
+}

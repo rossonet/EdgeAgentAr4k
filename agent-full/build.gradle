@@ -9,6 +9,7 @@ dependencies {
 	compile project(':flow-full')
 	compile project(':iot')
 	compile project(':pcap')
+	compile project(':drools')
 	compile project(':blockchain')
 	compile project(':kettle')
 	compile project(':onion')
