@@ -21,7 +21,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.ar4k.agent.camel.Ar4kCamelCallback;
+
 import org.ar4k.agent.config.ConfigSeed;
 //import org.ar4k.agent.camel.DynamicRouteBuilder;
 import org.ar4k.agent.config.ServiceConfig;
@@ -36,7 +36,7 @@ import com.fazecast.jSerialComm.SerialPort;
  *
  *         Servizio di connessione seriale.
  */
-public class SerialService extends Ar4kService implements Ar4kCamelCallback {
+public class SerialService extends Ar4kService {
 
   // porta serial target
   private SerialPort comPort = null;
