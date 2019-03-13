@@ -25,21 +25,17 @@ import org.springframework.shell.standard.ShellOption;
 @ManagedResource(objectName = "bean:name=marlinInterface", description = "Ar4k Agent Marlin Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "marlinInterface")
 public class MarlinShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
-
-	@ShellMethod(value = "Add a 3D printer with Marlin firmware to the selected configuration", group = "CNC Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
-		anima.getWorkingConfig().services.add(service);
-	}
+  @ShellMethod(value = "Add a 3D printer with Marlin firmware to the selected configuration", group = "CNC Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
+    anima.getWorkingConfig().services.add(service);
+  }
 
 }

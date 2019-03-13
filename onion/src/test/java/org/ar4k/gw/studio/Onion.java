@@ -25,33 +25,33 @@ import org.junit.runner.Description;
 
 public class Onion {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+  }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+  }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+  @Before
+  public void setUp() throws Exception {
+  }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+  @After
+  public void tearDown() throws Exception {
+  }
 
-	@Rule
-	public TestWatcher watcher = new TestWatcher() {
-		protected void starting(Description description) {
-			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-		}
-	};
+  @Rule
+  public TestWatcher watcher = new TestWatcher() {
+    protected void starting(Description description) {
+      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+    }
+  };
 
-	@Test
-	public void test() {
-		// TODO: Primi test per provare le API Java
-		System.out.println("Not yet implemented");
-	}
+  @Test
+  public void test() {
+    // TODO: Primi test per provare le API Java
+    System.out.println("Not yet implemented");
+  }
 
 }

@@ -34,83 +34,85 @@ import org.junit.runner.Description;
 
 public class Camel {
 
-	private CamelContext camelContext;
+  private CamelContext camelContext;
 
-	@SuppressWarnings("unused")
-	private void aggiungiCamel(String da, String a) throws Throwable {
-		RouteBuilder costruttore = new DynamicRouteBuilder(camelContext, da, a);
-		camelContext.addRoutes(costruttore);
-	}
+  @SuppressWarnings("unused")
+  private void aggiungiCamel(String da, String a) throws Throwable {
+    RouteBuilder costruttore = new DynamicRouteBuilder(camelContext, da, a);
+    camelContext.addRoutes(costruttore);
+  }
 
-	private void esempioCamel() throws Exception {
-		// START SNIPPET: e1
-		camelContext = new DefaultCamelContext();
-		// END SNIPPET: e1
-		// Set up the ActiveMQ JMS Components
-		// START SNIPPET: e2
-		//ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
-		// Note we can explicit name the component
-		//camelContext.addComponent("test-jms", JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
-		// END SNIPPET: e2
-		// Add some configuration by hand ...
-		// START SNIPPET: e3
-		camelContext.addRoutes(new RouteBuilder() {
-			public void configure() {
-				from("test-jms:queue:test.queue").to("file://camel-test");
-			}
-		});
-		// END SNIPPET: e3
-		// Camel template - a handy class for kicking off exchanges
-		// START SNIPPET: e4
-		ProducerTemplate template = camelContext.createProducerTemplate();
-		// END SNIPPET: e4
-		// Now everything is set up - lets start the context
-		camelContext.start();
-		// Now send some test text to a component - for this case a JMS Queue
-		// The text get converted to JMS messages - and sent to the Queue
-		// test.queue
-		// The file component is listening for messages from the Queue
-		// test.queue, consumes
-		// them and stores them to disk. The content of each file will be the
-		// test we sent here.
-		// The listener on the file component gets notified when new files are
-		// found ... that's it!
-		// START SNIPPET: e5
-		for (int i = 0; i < 10; i++) {
-			template.sendBody("test-jms:queue:test.queue", "Test Message: " + i);
-		}
-		// END SNIPPET: e5
-		// wait a bit and then stop
-		Thread.sleep(5000);
-		camelContext.stop();
-	}
+  private void esempioCamel() throws Exception {
+    // START SNIPPET: e1
+    camelContext = new DefaultCamelContext();
+    // END SNIPPET: e1
+    // Set up the ActiveMQ JMS Components
+    // START SNIPPET: e2
+    // ConnectionFactory connectionFactory = new
+    // ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
+    // Note we can explicit name the component
+    // camelContext.addComponent("test-jms",
+    // JmsComponent.jmsComponentAutoAcknowledge(connectionFactory));
+    // END SNIPPET: e2
+    // Add some configuration by hand ...
+    // START SNIPPET: e3
+    camelContext.addRoutes(new RouteBuilder() {
+      public void configure() {
+        from("test-jms:queue:test.queue").to("file://camel-test");
+      }
+    });
+    // END SNIPPET: e3
+    // Camel template - a handy class for kicking off exchanges
+    // START SNIPPET: e4
+    ProducerTemplate template = camelContext.createProducerTemplate();
+    // END SNIPPET: e4
+    // Now everything is set up - lets start the context
+    camelContext.start();
+    // Now send some test text to a component - for this case a JMS Queue
+    // The text get converted to JMS messages - and sent to the Queue
+    // test.queue
+    // The file component is listening for messages from the Queue
+    // test.queue, consumes
+    // them and stores them to disk. The content of each file will be the
+    // test we sent here.
+    // The listener on the file component gets notified when new files are
+    // found ... that's it!
+    // START SNIPPET: e5
+    for (int i = 0; i < 10; i++) {
+      template.sendBody("test-jms:queue:test.queue", "Test Message: " + i);
+    }
+    // END SNIPPET: e5
+    // wait a bit and then stop
+    Thread.sleep(5000);
+    camelContext.stop();
+  }
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+  }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+  }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+  @Before
+  public void setUp() throws Exception {
+  }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+  @After
+  public void tearDown() throws Exception {
+  }
 
-	@Rule
-	public TestWatcher watcher = new TestWatcher() {
-		protected void starting(Description description) {
-			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-		}
-	};
+  @Rule
+  public TestWatcher watcher = new TestWatcher() {
+    protected void starting(Description description) {
+      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+    }
+  };
 
-	@Test
-	@Ignore
-	public void test() throws Exception {
-		esempioCamel();
-	}
+  @Test
+  @Ignore
+  public void test() throws Exception {
+    esempioCamel();
+  }
 }

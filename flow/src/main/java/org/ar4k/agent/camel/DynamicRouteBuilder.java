@@ -25,28 +25,28 @@ import org.apache.camel.builder.RouteBuilder;
  */
 public class DynamicRouteBuilder extends RouteBuilder {
 
-	private String from;
-	private String to;
+  private String from;
+  private String to;
 
-	public DynamicRouteBuilder(CamelContext camelContext, String from, String to) {
-		super(camelContext);
-		this.from = from;
-		this.to = to;
-	}
+  public DynamicRouteBuilder(CamelContext camelContext, String from, String to) {
+    super(camelContext);
+    this.from = from;
+    this.to = to;
+  }
 
-	private String idRotta = UUID.randomUUID().toString();
+  private String idRotta = UUID.randomUUID().toString();
 
-	@Override
-	public void configure() throws Exception {
-		try {
-			from(from).routeId(idRotta).to(to);
-		} catch (Exception ee) {
-			ee.printStackTrace();
-		}
-	}
+  @Override
+  public void configure() throws Exception {
+    try {
+      from(from).routeId(idRotta).to(to);
+    } catch (Exception ee) {
+      ee.printStackTrace();
+    }
+  }
 
-	public String getIdRotta() {
-		return idRotta;
-	}
+  public String getIdRotta() {
+    return idRotta;
+  }
 
 }

@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.UUID;
 
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.config.validator.TribeGovernanceValidator;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.tribe.AtomixTribeComponent;
+import org.ar4k.agent.tribe.TribeGovernanceValidator;
 import org.ar4k.agent.tribe.AtomixTribeComponent.Governance;
 import org.joda.time.Instant;
 
@@ -54,7 +54,7 @@ public class TribeConfig extends ServiceConfig {
   }
 
   @Override
-  public Ar4kComponent instanziate() {
+  public Ar4kComponent instantiate() {
     return new AtomixTribeComponent(this);
   }
 

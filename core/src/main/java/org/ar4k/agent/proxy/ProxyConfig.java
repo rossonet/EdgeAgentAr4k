@@ -43,7 +43,7 @@ public class ProxyConfig extends TunnelConfig {
   @Parameter(names = "--password", description = "the password for the connection to the proxy")
   public String password = null;
 
-  public ProxyTunnel instanziate() {
+  public ProxyTunnel instantiate() {
     // System.out.println("Serial service start");
     ProxyTunnel ss = new ProxyTunnel();
     return ss;

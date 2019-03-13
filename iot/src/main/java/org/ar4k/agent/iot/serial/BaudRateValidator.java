@@ -30,18 +30,18 @@ import com.beust.jcommander.ParameterException;
  */
 public class BaudRateValidator implements IParameterValidator {
 
-	@Override
-	public void validate(String name, String value) throws ParameterException {
-		try {
-			BaudRate.valueOf(value);
-		} catch (java.lang.IllegalArgumentException aa) {
-			StringBuilder b = new StringBuilder();
-			EnumSet.allOf(BaudRate.class).forEach(v -> {
-				b.append(v.toString() + " ");
-			});
-			throw new ParameterException("Parameter " + name + " should be in " + b.toString());
-		}
-	}
+  @Override
+  public void validate(String name, String value) throws ParameterException {
+    try {
+      BaudRate.valueOf(value);
+    } catch (java.lang.IllegalArgumentException aa) {
+      StringBuilder b = new StringBuilder();
+      EnumSet.allOf(BaudRate.class).forEach(v -> {
+        b.append(v.toString() + " ");
+      });
+      throw new ParameterException("Parameter " + name + " should be in " + b.toString());
+    }
+  }
 
 }
 

@@ -79,7 +79,7 @@ public class Pcap {
 
   @Test
   public void listAnalyzer() {
-    System.out.println(pcapShellInterface.listPacketAnalyzer("org.ar4k.agent.pcap.ice"));
+    System.out.println(pcapShellInterface.listPacketAnalyzer("org.ar4k"));
   }
 
 }

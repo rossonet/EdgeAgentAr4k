@@ -47,39 +47,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/stunnelInterface")
 public class StunnelShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
+  @SuppressWarnings("unused")
+  private Availability testSelectedConfigOkAndOneKey() {
+    boolean ok = true;
+    String message = "";
+    if (anima.getWorkingConfig() == null) {
+      ok = false;
+      message += "you have to select a config before";
+    }
+    if (anima.getKeyStores().size() < 1) {
+      if (ok == false) {
+        message += " and ";
+      }
+      ok = false;
+      message += "you need a keystore configured on the gateway";
+    }
+    return ok ? Availability.available() : Availability.unavailable(message);
+  }
 
-	@SuppressWarnings("unused")
-	private Availability testSelectedConfigOkAndOneKey() {
-		boolean ok = true;
-		String message = "";
-		if (anima.getWorkingConfig() == null) {
-			ok = false;
-			message += "you have to select a config before";
-		}
-		if (anima.getKeyStores().size() < 1) {
-			if (ok == false) {
-				message += " and ";
-			}
-			ok = false;
-			message += "you need a keystore configured on the gateway";
-		}
-		return ok ? Availability.available() : Availability.unavailable(message);
-	}
-
-	@ShellMethod(value = "Add a Stunnel service to the selected configuration", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOkAndOneKey")
-	public void addStunnelService(@ShellOption(optOut = true) @Valid StunnelConfig service) {
-		anima.getWorkingConfig().beans.add(service);
-	}
+  @ShellMethod(value = "Add a Stunnel service to the selected configuration", group = "Tunnel Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOkAndOneKey")
+  public void addStunnelService(@ShellOption(optOut = true) @Valid StunnelConfig service) {
+    anima.getWorkingConfig().beans.add(service);
+  }
 
 }

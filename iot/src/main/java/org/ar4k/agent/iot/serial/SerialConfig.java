@@ -30,38 +30,38 @@ import com.beust.jcommander.Parameter;
  */
 public class SerialConfig extends ServiceConfig {
 
-	private static final long serialVersionUID = -864164279161787378L;
+  private static final long serialVersionUID = -864164279161787378L;
 
-	@Parameter(names = "--serial", description = "serial port")
-	public String serial = "/dev/ttyACM0";
+  @Parameter(names = "--serial", description = "serial port")
+  public String serial = "/dev/ttyACM0";
 
-	@Parameter(names = "--baudRate", description = "baudrate", validateWith = BaudRateValidator.class)
-	public BaudRate baudRate = BaudRate.bs115200;
+  @Parameter(names = "--baudRate", description = "baudrate", validateWith = BaudRateValidator.class)
+  public BaudRate baudRate = BaudRate.bs115200;
 
-	@Parameter(names = "--convenionalNotation", description = "convenionalNotation", validateWith = ConventionalNotationValidator.class)
-	public ConventionalNotation conventionalNotation = ConventionalNotation._8N1;
+  @Parameter(names = "--convenionalNotation", description = "convenionalNotation", validateWith = ConventionalNotationValidator.class)
+  public ConventionalNotation conventionalNotation = ConventionalNotation._8N1;
 
-	@Parameter(names = "--queueSize", description = "Queue size for the message received", validateWith = ConventionalNotationValidator.class)
-	public int queueSize = 10000;
+  @Parameter(names = "--queueSize", description = "Queue size for the message received", validateWith = ConventionalNotationValidator.class)
+  public int queueSize = 10000;
 
-	@Parameter(names = "--camelEndpointWrite", description = "Camel label for the consumer of the write")
-	public String camelEndpointWriteSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpointWrite", description = "Camel label for the consumer of the write")
+  public String camelEndpointWriteSerial = "log:?level=INFO&showBody=true";
 
-	@Parameter(names = "--camelEndpointRead", description = "Camel label for the producer of the read")
-	public String camelEndpointReadSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpointRead", description = "Camel label for the producer of the read")
+  public String camelEndpointReadSerial = "log:?level=INFO&showBody=true";
 
-	@Parameter(names = "--camelEndpointWriteOk", description = "Camel label for the producer of the write confirm")
-	public String camelEndpointWriteOk = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpointWriteOk", description = "Camel label for the producer of the write confirm")
+  public String camelEndpointWriteOk = "log:?level=INFO&showBody=true";
 
-	@Parameter(names = "--camelEndpointReadByte", description = "Camel label for the producer of the read byte arrived")
-	public String camelEndpointReadOk = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpointReadByte", description = "Camel label for the producer of the read byte arrived")
+  public String camelEndpointReadOk = "log:?level=INFO&showBody=true";
 
-	@Parameter(names = "--camelEndpointResetSerial", description = "Camel label for the consumer queue for reset the serial interface")
-	public String camelResetSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpointResetSerial", description = "Camel label for the consumer queue for reset the serial interface")
+  public String camelResetSerial = "log:?level=INFO&showBody=true";
 
-	public SerialService instanziate() {
-		// System.out.println("Serial service start");
-		SerialService ss = new SerialService();
-		return ss;
-	}
+  public SerialService instantiate() {
+    // System.out.println("Serial service start");
+    SerialService ss = new SerialService();
+    return ss;
+  }
 }

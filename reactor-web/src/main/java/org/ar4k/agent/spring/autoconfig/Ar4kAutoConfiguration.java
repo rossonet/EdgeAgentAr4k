@@ -37,13 +37,13 @@ import org.springframework.context.annotation.Import;
  */
 public class Ar4kAutoConfiguration {
 
-	@SuppressWarnings("unused")
-	@Autowired
-	private Ar4kStarterProperties properties;
+  @SuppressWarnings("unused")
+  @Autowired
+  private Ar4kStarterProperties properties;
 
-	@Bean
-	@ConditionalOnBean(Anima.class)
-	Ar4kHealthIndicator ar4kHealthIndicator() {
-		return new Ar4kHealthIndicator();
-	}
+  @Bean
+  @ConditionalOnBean(Anima.class)
+  Ar4kHealthIndicator ar4kHealthIndicator() {
+    return new Ar4kHealthIndicator();
+  }
 }

@@ -35,16 +35,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeystoreValuesProvider extends ValueProviderSupport {
 
-	@Override
-	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-			String[] hints) {
-		Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
-		String[] risposta = new String[anima.getKeyStores().size()];
-		int cont = 0;
-		for (KeystoreConfig b : anima.getKeyStores()) {
-			risposta[cont] = b.label.toString();
-			cont++;
-		}
-		return Arrays.stream(risposta).map(CompletionProposal::new).collect(Collectors.toList());
-	}
+  @Override
+  public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
+      String[] hints) {
+    Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
+    String[] risposta = new String[anima.getKeyStores().size()];
+    int cont = 0;
+    for (KeystoreConfig b : anima.getKeyStores()) {
+      risposta[cont] = b.label.toString();
+      cont++;
+    }
+    return Arrays.stream(risposta).map(CompletionProposal::new).collect(Collectors.toList());
+  }
 }

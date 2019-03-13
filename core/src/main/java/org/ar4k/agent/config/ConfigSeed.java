@@ -10,7 +10,7 @@ public interface ConfigSeed extends Serializable, Cloneable {
 
   public String getName();
 
-  public Ar4kComponent instanziate();
+  public Ar4kComponent instantiate();
 
   public Instant getCreationDate();
 

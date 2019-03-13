@@ -46,27 +46,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/proxyInterface")
 public class ProxyShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
+  @SuppressWarnings("unused")
+  private Availability testSelectedConfigOk() {
+    return anima.getWorkingConfig() != null ? Availability.available()
+        : Availability.unavailable("you have to select a config before");
+  }
 
-	@SuppressWarnings("unused")
-	private Availability testSelectedConfigOk() {
-		return anima.getWorkingConfig() != null ? Availability.available()
-				: Availability.unavailable("you have to select a config before");
-	}
-
-	@ShellMethod(value = "Add a proxy endpoint to the selected configuration", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addProxyNetworkPoint(@ShellOption(optOut = true) @Valid NetworkConfig service) {
-		anima.getWorkingConfig().beans.add(service);
-	}
+  @ShellMethod(value = "Add a proxy endpoint to the selected configuration", group = "Tunnel Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addProxyNetworkPoint(@ShellOption(optOut = true) @Valid NetworkConfig service) {
+    anima.getWorkingConfig().beans.add(service);
+  }
 
 }

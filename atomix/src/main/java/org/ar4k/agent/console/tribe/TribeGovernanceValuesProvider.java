@@ -36,11 +36,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TribeGovernanceValuesProvider extends ValueProviderSupport {
 
-	private final static String[] VALUES = Stream.of(Governance.values()).map(Governance::name).toArray(String[]::new);
+  private final static String[] VALUES = Stream.of(Governance.values()).map(Governance::name).toArray(String[]::new);
 
-	@Override
-	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-			String[] hints) {
-		return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
-	}
+  @Override
+  public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
+      String[] hints) {
+    return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
+  }
 }

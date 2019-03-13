@@ -46,27 +46,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/jabberInterface")
 public class JabberHomunculusShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
+  @SuppressWarnings("unused")
+  private Availability testSelectedConfigOk() {
+    return anima.getWorkingConfig() != null ? Availability.available()
+        : Availability.unavailable("you have to select a config before");
+  }
 
-	@SuppressWarnings("unused")
-	private Availability testSelectedConfigOk() {
-		return anima.getWorkingConfig() != null ? Availability.available()
-				: Availability.unavailable("you have to select a config before");
-	}
-
-	@ShellMethod(value = "Add a Jabber endpoint to the selected configuration")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addJabberConnection(@ShellOption(optOut = true) @Valid JabberHomunculusConfig service) {
-		anima.getWorkingConfig().services.add(service);
-	}
+  @ShellMethod(value = "Add a Jabber endpoint to the selected configuration")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addJabberConnection(@ShellOption(optOut = true) @Valid JabberHomunculusConfig service) {
+    anima.getWorkingConfig().services.add(service);
+  }
 
 }

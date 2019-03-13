@@ -62,10 +62,6 @@ public class CamelShellInterface {
 
   Map<String, String> camelComponents = new HashMap<String, String>();
 
-  @Override
-  protected void finalize() {
-  }
-
   @SuppressWarnings("unused")
   private Availability testSelectedConfigOk() {
     return anima.getWorkingConfig() != null ? Availability.available()

@@ -41,133 +41,133 @@ import org.junit.runner.Description;
 
 public class Stunnel {
 
-	boolean running = true;
+  boolean running = true;
 
-	/** Stunnel Settings */
-	private String stunnelCert;
-	private String stunnnelKeyPass;
+  /** Stunnel Settings */
+  private String stunnelCert;
+  private String stunnnelKeyPass;
 
-	private Thread connector;
+  private Thread connector;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+  }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+  }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+  @Before
+  public void setUp() throws Exception {
+  }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+  @After
+  public void tearDown() throws Exception {
+  }
 
-	@Test
-	public void test() throws InterruptedException {
-		StunnelConnection("ipa.ar4k.net", 443);
-		connector.start();
-		// while (running) {
-		Thread.sleep(10000L);
-		// }
-	}
+  @Test
+  public void test() throws InterruptedException {
+    StunnelConnection("ipa.ar4k.net", 443);
+    connector.start();
+    // while (running) {
+    Thread.sleep(10000L);
+    // }
+  }
 
-	@Rule
-	public TestWatcher watcher = new TestWatcher() {
-		protected void starting(Description description) {
-			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-		}
-	};
+  @Rule
+  public TestWatcher watcher = new TestWatcher() {
+    protected void starting(Description description) {
+      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+    }
+  };
 
-	@SuppressWarnings("unused")
-	public void StunnelConnection(String server, int port) {
-		String s = server;
-		int i = port;
-		connector = stunnelConnector;
-	}
+  @SuppressWarnings("unused")
+  public void StunnelConnection(String server, int port) {
+    String s = server;
+    int i = port;
+    connector = stunnelConnector;
+  }
 
-	/**
-	 * Set the certificate to use when connecting to stunnel
-	 * 
-	 * @param path - Path to the certificate
-	 */
-	public void setStunnelCert(String path) {
-		stunnelCert = path;
-	}
+  /**
+   * Set the certificate to use when connecting to stunnel
+   * 
+   * @param path - Path to the certificate
+   */
+  public void setStunnelCert(String path) {
+    stunnelCert = path;
+  }
 
-	/**
-	 * Password to open the stunnel key
-	 * 
-	 * @param pass
-	 */
-	public void setStunnelKey(String pass) {
-		stunnnelKeyPass = pass;
-	}
+  /**
+   * Password to open the stunnel key
+   * 
+   * @param pass
+   */
+  public void setStunnelKey(String pass) {
+    stunnnelKeyPass = pass;
+  }
 
-	/**
-	 * Connects to the server(via stunnel) in a new thread, so we can interrupt it
-	 * if we want to cancel the connection
-	 */
+  /**
+   * Connects to the server(via stunnel) in a new thread, so we can interrupt it
+   * if we want to cancel the connection
+   */
 
-	private Thread stunnelConnector = new Thread(new Runnable() {
+  private Thread stunnelConnector = new Thread(new Runnable() {
 
-		@PostConstruct
-		public void post() {
-			System.out.println("Start thread");
-		}
+    @PostConstruct
+    public void post() {
+      System.out.println("Start thread");
+    }
 
-		@SuppressWarnings("unused")
-		@Override
-		public void run() {
-			SSLContext context = null;
-			KeyStore keyStore = null;
-			TrustManagerFactory tmf = null;
-			KeyStore keyStoreCA = null;
-			KeyManagerFactory kmf = null;
-			try {
+    @SuppressWarnings("unused")
+    @Override
+    public void run() {
+      SSLContext context = null;
+      KeyStore keyStore = null;
+      TrustManagerFactory tmf = null;
+      KeyStore keyStoreCA = null;
+      KeyManagerFactory kmf = null;
+      try {
 
-				FileInputStream pkcs12in = new FileInputStream(new File(stunnelCert));
+        FileInputStream pkcs12in = new FileInputStream(new File(stunnelCert));
 
-				context = SSLContext.getInstance("TLS");
+        context = SSLContext.getInstance("TLS");
 
-				// Local client certificate and key and server certificate
-				keyStore = KeyStore.getInstance("PKCS12");
-				keyStore.load(pkcs12in, stunnnelKeyPass.toCharArray());
+        // Local client certificate and key and server certificate
+        keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(pkcs12in, stunnnelKeyPass.toCharArray());
 
-				// Build a TrustManager, that trusts only the server certificate
-				keyStoreCA = KeyStore.getInstance("BKS");
-				keyStoreCA.load(null, null);
-				keyStoreCA.setCertificateEntry("Server", keyStore.getCertificate("Server"));
-				tmf = TrustManagerFactory.getInstance("X509");
-				tmf.init(keyStoreCA);
+        // Build a TrustManager, that trusts only the server certificate
+        keyStoreCA = KeyStore.getInstance("BKS");
+        keyStoreCA.load(null, null);
+        keyStoreCA.setCertificateEntry("Server", keyStore.getCertificate("Server"));
+        tmf = TrustManagerFactory.getInstance("X509");
+        tmf.init(keyStoreCA);
 
-				// Build a KeyManager for Client auth
-				kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-				kmf.init(keyStore, null);
-				context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
+        // Build a KeyManager for Client auth
+        kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, null);
+        context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return;
+      }
 
-			SSLSocketFactory socketFactory = context.getSocketFactory();
-			try {
-				SocketChannel channel = SocketChannel.open();
-				// channel.connect(new InetSocketAddress(server, port));
-				/*
-				 * sock = socketFactory.createSocket(channel.socket(), server, port, true);
-				 * out_stream = sock.getOutputStream(); in_stream = sock.getInputStream();
-				 * connected = true; notifyHandlers(STATE.CONNECTED);
-				 */
-			} catch (ClosedByInterruptException e) {
-				e.printStackTrace();
-				// Thread interrupted during connect.
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	});
+      SSLSocketFactory socketFactory = context.getSocketFactory();
+      try {
+        SocketChannel channel = SocketChannel.open();
+        // channel.connect(new InetSocketAddress(server, port));
+        /*
+         * sock = socketFactory.createSocket(channel.socket(), server, port, true);
+         * out_stream = sock.getOutputStream(); in_stream = sock.getInputStream();
+         * connected = true; notifyHandlers(STATE.CONNECTED);
+         */
+      } catch (ClosedByInterruptException e) {
+        e.printStackTrace();
+        // Thread interrupted during connect.
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  });
 
 }

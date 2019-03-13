@@ -279,7 +279,7 @@ public class KeystoreConfig extends ServiceConfig {
   }
 
   @Override
-  public Ar4kComponent instanziate() {
+  public Ar4kComponent instantiate() {
     return null;
   }
 

@@ -27,7 +27,7 @@ public class JabberHomunculusConfig extends ServiceConfig {
 
   private static final long serialVersionUID = -4642788033911032726L;
 
-  public Ar4kComponent instanziate() {
+  public Ar4kComponent instantiate() {
     // System.out.println("Serial service start");
     JabberHomunculusService ss = new JabberHomunculusService();
     return (Ar4kComponent) ss;

@@ -34,7 +34,7 @@ public class NetworkConfig extends TunnelConfig {
   @Parameter(names = "--port", description = "the port to connect to")
   public int port = 0;
 
-  public NetworkTunnel instanziate() {
+  public NetworkTunnel instantiate() {
     NetworkTunnel ss = new NetworkTunnel();
     return ss;
   }

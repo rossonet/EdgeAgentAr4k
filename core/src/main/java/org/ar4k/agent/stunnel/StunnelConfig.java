@@ -55,7 +55,7 @@ public class StunnelConfig extends TunnelConfig {
   @Parameter(names = "--algorithms", description = "port to connect")
   public String algorithms = "TLS";
 
-  public StunnelTunnel instanziate() {
+  public StunnelTunnel instantiate() {
     StunnelTunnel ss = new StunnelTunnel();
     ss.setConfiguration(this);
     return ss;

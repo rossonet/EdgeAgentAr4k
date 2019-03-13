@@ -14,31 +14,33 @@
     */
 package org.ar4k.agent.pcap;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.Inet4Address;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.codec.binary.Hex;
 import org.ar4k.agent.core.Anima;
+import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
+import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.Pcaps;
+import org.pcap4j.packet.IcmpV4CommonPacket;
 import org.pcap4j.packet.IpPacket;
-import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
+import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
-import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
@@ -68,10 +70,6 @@ public class PcapShellInterface {
   @Autowired
   private Anima anima;
 
-  @Override
-  protected void finalize() {
-  }
-
   @SuppressWarnings("unused")
   private Availability testSelectedConfigOk() {
     return anima.getWorkingConfig() != null ? Availability.available()
@@ -87,20 +85,24 @@ public class PcapShellInterface {
     sendDataFromPcapFile(fileToSend, interfaceName, waitTime);
   }
 
-  @ShellMethod(value = "View all the packets on a interface", group = "Pcap Commands")
+  @ShellMethod(value = "View all the packets on a interface with filter", group = "Pcap Commands")
   @ManagedOperation
-  public void viewAllTrafficsOnInterface(@ShellOption(help = "network interface to sniff") String interfaceName) {
-    basePcap(interfaceName);
+  public void sniffOnInterface(@ShellOption(help = "network interface to sniff") String interfaceName,
+      @ShellOption(help = "pcap filter -https://wiki.wireshark.org/CaptureFilters-") String pcapFilter,
+      @ShellOption(help = "analyzer class -implements PackerAnalyzer-") String analyzer,
+      @ShellOption(help = "number of packets to sniff") int countPackets) {
+    basePcap(interfaceName, pcapFilter, analyzer, countPackets);
   }
 
   @ShellMethod(value = "List packets analyzer", group = "Pcap Commands")
   @ManagedOperation
   public Set<String> listPacketAnalyzer(@ShellOption(help = "package for searching") String packageName) {
     Set<String> rit = new HashSet<>();
-    Reflections reflections = new Reflections(packageName);
-    Set<Class<? extends PackerAnalyzer>> classes = reflections.getSubTypesOf(PackerAnalyzer.class);
-    for (Class<? extends PackerAnalyzer> c : classes) {
-      rit.add(c.getName());
+    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+    provider.addIncludeFilter(new AnnotationTypeFilter(Ar4kPcapAnalyzer.class));
+    Set<BeanDefinition> classes = provider.findCandidateComponents(packageName);
+    for (BeanDefinition c : classes) {
+      rit.add(c.getBeanClassName());
     }
     return rit;
   }
@@ -152,23 +154,37 @@ public class PcapShellInterface {
     }
   }
 
-  private static void basePcap(String interfaceName) {
+  private static void basePcap(String interfaceName, String pcapFilter, String analyzerClass, int count) {
+    if (pcapFilter == null)
+      pcapFilter = "";
+    PcapHandle handle = null;
     try {
+      Class<?> classe = Class.forName(analyzerClass);
+      Constructor<?> con = classe.getConstructor();
+      PackerAnalyzer pa = (PackerAnalyzer) con.newInstance();
+      PacketListener listener = new PacketListener() {
+        @Override
+        public void gotPacket(Packet packet) {
+          try {
+            pa.elaboratePacket(packet);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      };
       PcapNetworkInterface nif = Pcaps.getDevByName(interfaceName);
       int snapLen = 65536;
       PromiscuousMode mode = PromiscuousMode.PROMISCUOUS;
       int timeout = 10;
-      PcapHandle handle = nif.openLive(snapLen, mode, timeout);
-      Packet packet = null;
-      packet = handle.getNextPacketEx();
-      while (packet != null) {
-        packet = handle.getNextPacketEx();
-        IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
-        Inet4Address srcAddr = ipV4Packet.getHeader().getSrcAddr();
-        System.out.println(srcAddr);
-      }
+      handle = nif.openLive(snapLen, mode, timeout);
+      handle.setFilter(pcapFilter, BpfCompileMode.OPTIMIZE);
+      handle.loop(count, listener);
       handle.close();
-    } catch (PcapNativeException | EOFException | TimeoutException | NotOpenException e) {
+    } catch (PcapNativeException | InterruptedException | NotOpenException | ClassNotFoundException
+        | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException
+        | InvocationTargetException e) {
+      if (handle != null)
+        handle.close();
       e.printStackTrace();
     }
   }
@@ -191,17 +207,25 @@ public class PcapShellInterface {
         } catch (Exception a) {
           continua = false;
         }
-        try {
+        if (packet.contains(IpPacket.class)) {
           IpPacket ipp = packet.get(IpPacket.class);
-          System.out.println("srcAddress: " + ipp.getHeader().getSrcAddr().getHostAddress() + " dstAddress: "
+          System.out.println("IP srcAddress: " + ipp.getHeader().getSrcAddr().getHostAddress() + " dstAddress: "
               + ipp.getHeader().getDstAddr().getHostAddress());
-        } catch (Exception a) {
         }
-        try {
+        if (packet.contains(UdpPacket.class)) {
           UdpPacket udpp = packet.get(UdpPacket.class);
-          System.out.println("srcPort: " + udpp.getHeader().getSrcPort().valueAsInt() + " dstPort: "
+          System.out.println("UDP srcPort: " + udpp.getHeader().getSrcPort().valueAsInt() + " dstPort: "
               + udpp.getHeader().getDstPort().valueAsInt());
-        } catch (Exception a) {
+        }
+        if (packet.contains(TcpPacket.class)) {
+          TcpPacket tcpp = packet.get(TcpPacket.class);
+          System.out.println("TCP srcPort: " + tcpp.getHeader().getSrcPort().valueAsInt() + " dstPort: "
+              + tcpp.getHeader().getDstPort().valueAsInt());
+        }
+        if (packet.contains(IcmpV4CommonPacket.class)) {
+          IcmpV4CommonPacket icpp = packet.get(IcmpV4CommonPacket.class);
+          System.out.println("ICMP name: " + icpp.getHeader().getCode().name() + " value: "
+              + icpp.getHeader().getCode().valueAsString());
         }
         if (packet != null) {
           System.out.println(Hex.encodeHexString(packet.getRawData()));

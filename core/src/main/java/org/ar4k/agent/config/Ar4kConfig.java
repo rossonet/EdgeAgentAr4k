@@ -14,9 +14,10 @@
     */
 package org.ar4k.agent.config;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.constraints.Size;
@@ -26,8 +27,8 @@ import org.ar4k.agent.config.validator.Ar4kStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaRouterType;
-import org.joda.time.Instant;
 import org.ar4k.agent.core.Ar4kComponent;
+import org.joda.time.Instant;
 import org.springframework.boot.ansi.AnsiColor;
 
 import com.beust.jcommander.Parameter;
@@ -62,29 +63,32 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--version", description = "version")
   public int version = 0;
 
-  @Parameter(names = "--subVersion", description = "subVersion")
+  @Parameter(names = "--subVersion", description = "sub version")
   public int subVersion = 1;
 
+  @Parameter(names = "--tagVersion", description = "tag version -String-")
+  public String tagVersion = "demo";
+
   @Parameter(names = "--author", description = "author")
-  public String author = "Anonimous";
+  public String author = "Ar4k demo user";
 
   @Parameter(names = "--project", description = "project")
-  public String project = "Ar4k Agent Test Project 1";
+  public String project = "Ar4k Edge Agent Test Project 1";
 
   @Parameter(names = "--license", description = "license")
-  public String license = "GPL2";
+  public String license = "GNU AFFERO GENERAL PUBLIC LICENSE";
 
   @Parameter(names = "--tags", description = "tags", variableArity = true)
-  public Set<String> tags = new HashSet<String>();
+  public Collection<String> tags = new HashSet<String>();
 
   @Parameter(names = "--contexts", description = "contexts", variableArity = true)
-  public Set<String> contexts = new HashSet<String>();
+  public Collection<String> contexts = new HashSet<String>();
 
   @Parameter(names = "--groups", description = "groups", variableArity = true)
-  public Set<String> groups = new HashSet<String>();
+  public Collection<String> groups = new HashSet<String>();
 
   // @Parameter(names = "--data", description = "data")
-  public HashMap<String, Object> data = new HashMap<String, Object>();
+  public Map<String, Object> data = new HashMap<String, Object>();
 
   @Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
   public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
@@ -105,15 +109,15 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--sshdAuthorizedKeysPath", description = "sshd authorizedkeys file path")
   public String sshdAuthorizedKeysPath = "~/.ssh/authorized_keys";
 
-  public Set<ServiceConfig> services = new HashSet<ServiceConfig>();
-
-  public Set<ConfigSeed> beans = new HashSet<ConfigSeed>();
-
   @Parameter(names = "--routerType", description = "routerType", validateWith = RouterTypeValidator.class)
   public AnimaRouterType routerType = AnimaRouterType.NONE;
 
   @Parameter(names = "--logoUrl", description = "default log url")
   public String logoUrl = "/static/img/ar4k.png";
+
+  public Collection<ServiceConfig> services = new HashSet<ServiceConfig>();
+
+  public Collection<ConfigSeed> beans = new HashSet<ConfigSeed>();
 
   @Override
   public String getName() {
@@ -121,7 +125,7 @@ public class Ar4kConfig implements ConfigSeed {
   }
 
   @Override
-  public Ar4kComponent instanziate() {
+  public Ar4kComponent instantiate() {
     Anima a = (Anima) Anima.getApplicationContext().getBean("anima");
     a.setTargetConfig(this);
     return (Ar4kComponent) a;

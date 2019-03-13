@@ -24,6 +24,6 @@ package org.ar4k.agent.camel;
  */
 public interface Ar4kCamelCallback {
 
-	public String onCamelMessage(Object object);
+  public String onCamelMessage(Object object);
 
 }

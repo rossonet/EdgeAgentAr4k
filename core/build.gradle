@@ -1,9 +1,6 @@
 description = "Core componets of Ar4k Semantic Router"
 
 dependencies {
-  compile group: 'io.atomix', name: 'atomix', version: '3.0.0-rc1'
-  compile group: 'io.atomix', name: 'atomix-raft', version: '3.0.0-rc1'
-  compile group: 'io.atomix', name: 'atomix-primary-backup', version: '3.0.0-rc1'
   // crittografia
   compile('org.bouncycastle:bcprov-jdk15on:1.59')
   compile('org.bouncycastle:bcpkix-jdk15on:1.59')
@@ -24,9 +21,9 @@ dependencies {
   compile('org.springframework.boot:spring-boot-starter-security')
   compile('org.springframework.boot:spring-boot-starter-integration')
   // state machine
-  compile "org.springframework.statemachine:spring-statemachine-core:2.0.2.RELEASE"
+  compile "org.springframework.statemachine:spring-statemachine-core:2.1.0.RELEASE"
   // jabber
-  compile group: 'org.springframework.integration', name: 'spring-integration-xmpp', version: '4.3.15.RELEASE'
+  compile group: 'org.springframework.integration', name: 'spring-integration-xmpp', version: '4.3.19.RELEASE'
   // jms
   compile group: 'org.springframework.integration', name: 'spring-integration-jms'
   // mail
@@ -38,10 +35,7 @@ dependencies {
   // git
   compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.0.2.201807311906-r'
   // debug ECSS ??
-  compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
+  //compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
   // datastore
   compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
-  // reflection
-  compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
-
 }

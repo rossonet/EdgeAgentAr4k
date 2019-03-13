@@ -49,28 +49,24 @@ import org.springframework.web.bind.annotation.RestController;
 @ConditionalOnProperty(name = "ar4k.ethereum", havingValue = "true")
 public class EthereumShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	List<Block> genesisBlocks = new ArrayList<Block>();
-	List<Repository> repositories = new ArrayList<Repository>();
+  List<Block> genesisBlocks = new ArrayList<Block>();
+  List<Repository> repositories = new ArrayList<Repository>();
 
-	@Override
-	protected void finalize() {
-	}
-
-	@ShellMethod(value = "Create a Ethereum network", group = "Ethereum Commands")
-	@ManagedOperation
-	public String ethereumGenesis() {
-		Genesis genesis = Genesis.getInstance(null);
-		String risposta = genesis.toFlatString() + " [" + String.valueOf(genesis.getGasUsed()) + "]";
-		genesisBlocks.add(genesis);
-		Repository repository = null;
-		Genesis.populateRepository(repository, genesis);
-		return risposta;
-	}
+  @ShellMethod(value = "Create a Ethereum network", group = "Ethereum Commands")
+  @ManagedOperation
+  public String ethereumGenesis() {
+    Genesis genesis = Genesis.getInstance(null);
+    String risposta = genesis.toFlatString() + " [" + String.valueOf(genesis.getGasUsed()) + "]";
+    genesisBlocks.add(genesis);
+    Repository repository = null;
+    Genesis.populateRepository(repository, genesis);
+    return risposta;
+  }
 
 }

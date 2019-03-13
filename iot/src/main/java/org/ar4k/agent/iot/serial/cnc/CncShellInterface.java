@@ -46,21 +46,17 @@ import org.springframework.web.bind.annotation.RestController;
 @ConditionalOnProperty(name = "ar4k.cnc", havingValue = "true")
 public class CncShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
-
-	@ShellMethod(value = "Add a CNC interface service to the selected configuration", group = "CNC Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addCncService(@ShellOption(optOut = true) @Valid CncConfig service) {
-		anima.getWorkingConfig().services.add(service);
-	}
+  @ShellMethod(value = "Add a CNC interface service to the selected configuration", group = "CNC Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addCncService(@ShellOption(optOut = true) @Valid CncConfig service) {
+    anima.getWorkingConfig().services.add(service);
+  }
 
 }

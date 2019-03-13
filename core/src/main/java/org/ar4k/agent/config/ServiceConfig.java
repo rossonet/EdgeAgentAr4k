@@ -22,7 +22,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 
-import org.ar4k.agent.core.Ar4kService.ServiceStates;
+import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;

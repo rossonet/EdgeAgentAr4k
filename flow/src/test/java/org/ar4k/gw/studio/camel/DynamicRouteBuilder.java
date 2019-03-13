@@ -23,18 +23,18 @@ import org.apache.camel.builder.RouteBuilder;
  */
 public class DynamicRouteBuilder extends RouteBuilder {
 
-	private final String from;
-	private final String to;
+  private final String from;
+  private final String to;
 
-	public DynamicRouteBuilder(CamelContext camelContext, String from, String to) {
-		super(camelContext);
-		this.from = from;
-		this.to = to;
-	}
+  public DynamicRouteBuilder(CamelContext camelContext, String from, String to) {
+    super(camelContext);
+    this.from = from;
+    this.to = to;
+  }
 
-	@Override
-	public void configure() throws Exception {
-		from(from).to(to);
-	}
+  @Override
+  public void configure() throws Exception {
+    from(from).to(to);
+  }
 
 }

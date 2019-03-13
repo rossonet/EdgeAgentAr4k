@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Ar4kService;
+import org.ar4k.agent.core.AbstractAr4kService;
 import org.json.JSONObject;
 
 /*
@@ -27,7 +27,7 @@ import org.json.JSONObject;
  *         Gestore servizio per connessioni socket.
  * 
  */
-public class JabberHomunculusService extends Ar4kService {
+public class JabberHomunculusService extends AbstractAr4kService {
 
   // iniettata vedi set/get
   private JabberHomunculusConfig configuration = null;

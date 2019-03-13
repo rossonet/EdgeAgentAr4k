@@ -31,20 +31,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomPromptProvider implements PromptProvider {
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	public AttributedString getPrompt() {
-		AnsiColor colore = AnsiColor.BLUE;
-		String testo = "AR4K:> ";
-		if (anima.getState() != null)
-			testo = anima.getState().toString() + ":> ";
-		if (anima.getWorkingConfig() != null) {
-			colore = anima.getWorkingConfig().promptColor;
-			testo = anima.getWorkingConfig().prompt + ":# ";
-		}
-		AttributedString prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
-		return prompt;
-	}
+  @Override
+  public AttributedString getPrompt() {
+    AnsiColor colore = AnsiColor.BLUE;
+    String testo = "AR4K:> ";
+    if (anima.getState() != null)
+      testo = anima.getState().toString() + ":> ";
+    if (anima.getWorkingConfig() != null) {
+      colore = anima.getWorkingConfig().promptColor;
+      testo = anima.getWorkingConfig().prompt + ":# ";
+    }
+    AttributedString prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
+    return prompt;
+  }
 }

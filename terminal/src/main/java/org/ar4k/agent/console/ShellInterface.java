@@ -65,7 +65,7 @@ import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.Ar4kService;
+import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.exception.Ar4kException;
@@ -500,7 +500,7 @@ public class ShellInterface {
   @ShellMethodAvailability("testIsRunningOk")
   public String listService() {
     String risposta = "";
-    for (Ar4kService servizio : anima.getServices()) {
+    for (AbstractAr4kService servizio : anima.getServices()) {
       risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, servizio.getConfiguration().getUniqueId().toString(),
           AnsiColor.DEFAULT, " - ", servizio.getConfiguration().name, " [", AnsiColor.RED, servizio.status(),
           AnsiColor.DEFAULT, "]\n");

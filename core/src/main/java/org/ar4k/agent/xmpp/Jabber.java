@@ -73,14 +73,7 @@ public class Jabber implements Runnable, ChatManagerListener, ChatMessageListene
   @SuppressWarnings("unused")
   private XMPPTCPConnection login() throws Exception {
     XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-        .setUsernameAndPassword(username, password).setHost(server).setPort(port).setSecurityMode(SecurityMode.required) // Do
-                                                                                                                         // not
-                                                                                                                         // disable
-                                                                                                                         // TLS
-                                                                                                                         // except
-                                                                                                                         // for
-                                                                                                                         // test
-                                                                                                                         // purposes!
+        .setUsernameAndPassword(username, password).setHost(server).setPort(port).setSecurityMode(SecurityMode.required) 
         .setDebuggerEnabled(false).setServiceName("olark.com").setSendPresence(true).build();
     XMPPTCPConnection.setUseStreamManagementDefault(true);
     XMPPTCPConnection connectionLogin;

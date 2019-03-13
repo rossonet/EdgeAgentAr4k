@@ -52,7 +52,7 @@ public class SshConfig extends TunnelConfig {
   @Parameter(names = "--bindPort", description = "local port to bind for the connection")
   public int bindPort = 2200;
 
-  public SshTunnel instanziate() {
+  public SshTunnel instantiate() {
     // System.out.println("Serial service start");
     SshTunnel ss = new SshTunnel();
     return ss;

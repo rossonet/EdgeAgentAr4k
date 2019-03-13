@@ -18,28 +18,27 @@ import org.springframework.security.web.server.header.XFrameOptionsServerHttpHea
 @ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class Ar4kWebSecurity {
 
-	@Bean
-	public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-		http.headers().frameOptions().mode(Mode.SAMEORIGIN);
-		return http.csrf().disable().authorizeExchange().anyExchange().authenticated().and().httpBasic().and().logout()
-				.logoutUrl("/logout").and().build();
-	}
+  @Bean
+  public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
+    http.headers().frameOptions().mode(Mode.SAMEORIGIN);
+    return http.csrf().disable().authorizeExchange().anyExchange().authenticated().and().httpBasic().and().logout()
+        .logoutUrl("/logout").and().build();
+  }
 
-	@Bean
-	public MapReactiveUserDetailsService userDetailsService() {
-		// System.out.println("MapReactiveUserDetailsService checked");
-		UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("h_5Ee!.")).roles("ADMIN")
-				.build();
-		UserDetails andrea = User.withUsername("andrea").password(passwordEncoder().encode("h_5Ee!."))
-				.roles("ADMIN,ROLE_GUEST").build();
-		UserDetails guest = User.withUsername("guest").password(passwordEncoder().encode("h_5Ee!."))
-				.roles("ADMIN,ROLE_GUEST").build();
-		return new MapReactiveUserDetailsService(andrea, admin, guest);
-	}
+  @Bean
+  public MapReactiveUserDetailsService userDetailsService() {
+    // System.out.println("MapReactiveUserDetailsService checked");
+    UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("h_5Ee!.")).roles("ADMIN").build();
+    UserDetails andrea = User.withUsername("andrea").password(passwordEncoder().encode("h_5Ee!."))
+        .roles("ADMIN,ROLE_GUEST").build();
+    UserDetails guest = User.withUsername("guest").password(passwordEncoder().encode("h_5Ee!."))
+        .roles("ADMIN,ROLE_GUEST").build();
+    return new MapReactiveUserDetailsService(andrea, admin, guest);
+  }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
 }

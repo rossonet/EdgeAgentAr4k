@@ -54,34 +54,30 @@ import com.google.gson.GsonBuilder;
 @ConditionalOnProperty(name = "ar4k.serial", havingValue = "true")
 public class SerialShellInterface {
 
-	@Autowired
-	ApplicationContext applicationContext;
+  @Autowired
+  ApplicationContext applicationContext;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@Override
-	protected void finalize() {
-	}
+  @SuppressWarnings("unused")
+  private Availability testSelectedConfigOk() {
+    return anima.getWorkingConfig() != null ? Availability.available()
+        : Availability.unavailable("you have to select a config before");
+  }
 
-	@SuppressWarnings("unused")
-	private Availability testSelectedConfigOk() {
-		return anima.getWorkingConfig() != null ? Availability.available()
-				: Availability.unavailable("you have to select a config before");
-	}
+  @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
+  @ManagedOperation
+  public String listSerialPorts() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(SerialService.getSerialDevice());
+  }
 
-	@ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
-	@ManagedOperation
-	public String listSerialPorts() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		return gson.toJson(SerialService.getSerialDevice());
-	}
-
-	@ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
-		anima.getWorkingConfig().services.add(service);
-	}
+  @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
+    anima.getWorkingConfig().services.add(service);
+  }
 
 }

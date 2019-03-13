@@ -26,7 +26,7 @@ import org.ar4k.agent.config.ConfigSeed;
 //import org.ar4k.agent.camel.DynamicRouteBuilder;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kService;
+import org.ar4k.agent.core.AbstractAr4kService;
 import org.json.JSONObject;
 
 import com.fazecast.jSerialComm.SerialPort;
@@ -36,7 +36,7 @@ import com.fazecast.jSerialComm.SerialPort;
  *
  *         Servizio di connessione seriale.
  */
-public class SerialService extends Ar4kService {
+public class SerialService extends AbstractAr4kService {
 
   // porta serial target
   private SerialPort comPort = null;

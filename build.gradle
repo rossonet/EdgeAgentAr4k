@@ -1,16 +1,16 @@
 group = 'org.ar4k.agent'
-version = '0.4.4'
+version = '0.5.1'
 
 ext{
   sourceCompatibility = 1.8
   springCloudVersion = 'Finchley.M9'
-  springStatemachineVersion = '2.0.2.RELEASE'
+  springStatemachineVersion = '2.1.3.RELEASE'
   camelVersion = '2.17.0'
-  springBootVersion = '2.0.4.RELEASE'
+  springBootVersion = '2.1.3.RELEASE'
 }
 
 buildscript {
-  ext { springBootVersion = '2.0.4.RELEASE' }
+  ext { springBootVersion = '2.1.3.RELEASE' }
   repositories {
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
@@ -83,8 +83,7 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
-    } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
@@ -160,7 +159,9 @@ task cleanGradleCache {
   group "Ar4k Semantic Router Build"
   description 'Remove the ar4k artifacts from local Gradle cache'
   delete "~/.gradle/caches/*/*/org.ar4k.agent"
+  delete "~/.gradle/caches/*/*/descriptors/org.ar4k.agent"
   delete "~/.gradle/caches/*/*/ar4k-agent"
+  delete "~/.gradle/caches/*/*/descriptors/ar4k-agent"
 }
 
 task ar4kListProjects{

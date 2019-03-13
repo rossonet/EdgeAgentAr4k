@@ -16,7 +16,7 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.core.Ar4kService.ServiceStates;
+import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

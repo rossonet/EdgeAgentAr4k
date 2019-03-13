@@ -30,64 +30,64 @@ import org.ar4k.agent.iot.serial.SerialService;
  */
 public class CncService extends SerialService {
 
-	long conteggioLoop = 0;
+  long conteggioLoop = 0;
 
-	// iniettata vedi set/get
-	private CncConfig configuration = null;
+  // iniettata vedi set/get
+  private CncConfig configuration = null;
 
-	// iniettata vedi set/get
-	private Anima anima = null;
+  // iniettata vedi set/get
+  private Anima anima = null;
 
-	@Override
-	public synchronized void loop() {
-		super.loop();
-		conteggioLoop++;
-		// invia i comandi periodici
-		for (TriggerCommand c : configuration.cronCommands) {
-			c.fire(this);
-		}
+  @Override
+  public synchronized void loop() {
+    super.loop();
+    conteggioLoop++;
+    // invia i comandi periodici
+    for (TriggerCommand c : configuration.cronCommands) {
+      c.fire(this);
+    }
 
-		// elabora il routing delle code per espressione regolare
-		String messaggioDaElaborare = null;
-		if (lastMessage != null && ((ArrayBlockingQueue<String>) lastMessage).size() > 0) {
-			messaggioDaElaborare = lastMessage.poll();
-		}
-		if (messaggioDaElaborare != null && messaggioDaElaborare != "") {
-			for (RouterMessagesCnc ricerca : configuration.replies) {
-				Pattern p = Pattern.compile(ricerca.regExp);
-				Matcher m = p.matcher(messaggioDaElaborare);
-				if (m.find()) {
-					// TODO: gestire con JMS
-					// anima.camelContext.createProducerTemplate().sendBody(ricerca.camelEndpoint,
-					// messaggioDaElaborare);
-				} else {
-					// System.out.println("scarto: [" + messaggioDaElaborare + "] per " +
-					// ricerca.regExp);
-				}
-			}
-		}
-	}
+    // elabora il routing delle code per espressione regolare
+    String messaggioDaElaborare = null;
+    if (lastMessage != null && ((ArrayBlockingQueue<String>) lastMessage).size() > 0) {
+      messaggioDaElaborare = lastMessage.poll();
+    }
+    if (messaggioDaElaborare != null && messaggioDaElaborare != "") {
+      for (RouterMessagesCnc ricerca : configuration.replies) {
+        Pattern p = Pattern.compile(ricerca.regExp);
+        Matcher m = p.matcher(messaggioDaElaborare);
+        if (m.find()) {
+          // TODO: gestire con JMS
+          // anima.camelContext.createProducerTemplate().sendBody(ricerca.camelEndpoint,
+          // messaggioDaElaborare);
+        } else {
+          // System.out.println("scarto: [" + messaggioDaElaborare + "] per " +
+          // ricerca.regExp);
+        }
+      }
+    }
+  }
 
-	@Override
-	public CncConfig getConfiguration() {
-		return configuration;
-	}
+  @Override
+  public CncConfig getConfiguration() {
+    return configuration;
+  }
 
-	@Override
-	public void setConfiguration(ServiceConfig configuration) {
-		super.setConfiguration(configuration);
-		this.configuration = ((CncConfig) configuration);
-	}
+  @Override
+  public void setConfiguration(ServiceConfig configuration) {
+    super.setConfiguration(configuration);
+    this.configuration = ((CncConfig) configuration);
+  }
 
-	@Override
-	public Anima getAnima() {
-		return anima;
-	}
+  @Override
+  public Anima getAnima() {
+    return anima;
+  }
 
-	@Override
-	public void setAnima(Anima anima) {
-		super.setAnima(anima);
-		this.anima = anima;
-	}
+  @Override
+  public void setAnima(Anima anima) {
+    super.setAnima(anima);
+    this.anima = anima;
+  }
 
 }

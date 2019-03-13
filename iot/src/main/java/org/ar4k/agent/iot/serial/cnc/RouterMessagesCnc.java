@@ -27,12 +27,12 @@ import com.beust.jcommander.Parameter;
  */
 public class RouterMessagesCnc implements Serializable {
 
-	private static final long serialVersionUID = 7183637837535639684L;
+  private static final long serialVersionUID = 7183637837535639684L;
 
-	@Parameter(names = "--regExp", description = "regular expression to find")
-	public String regExp = ".*";
+  @Parameter(names = "--regExp", description = "regular expression to find")
+  public String regExp = ".*";
 
-	@Parameter(names = "--camelEndpoint", description = "Camel label that rappresent the destination for the message")
-	public String camelEndpoint = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--camelEndpoint", description = "Camel label that rappresent the destination for the message")
+  public String camelEndpoint = "log:?level=INFO&showBody=true";
 
 }

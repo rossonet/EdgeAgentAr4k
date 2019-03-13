@@ -225,7 +225,7 @@ public class BaseWebController {
     json.put("run-level", (String) anima.getState().name());
     JSONArray runtimeServices = new JSONArray();
     JSONObject runtimeConfig = new JSONObject();
-    for (Ar4kService st : anima.getServices()) {
+    for (AbstractAr4kService st : anima.getServices()) {
       JSONObject sjt = new JSONObject();
       sjt.put("status", st.status());
       sjt.put("status", st.getConfiguration().name);
@@ -254,7 +254,7 @@ public class BaseWebController {
   public Mono<JSONObject> ar4kEthereum() {
     JSONObject json = new JSONObject();
     // TODO: filtrare solo i blockchains
-    for (Ar4kService st : anima.getServices()) {
+    for (AbstractAr4kService st : anima.getServices()) {
       JSONObject sjt = new JSONObject();
       sjt.put("configuration", st.getConfiguration());
     }

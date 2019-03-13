@@ -1,0 +1,8 @@
+description = "Atomix integration component"
+
+dependencies {
+  compile project(':core')
+  compile group: 'io.atomix', name: 'atomix', version: '3.0.0-rc1'
+  compile group: 'io.atomix', name: 'atomix-raft', version: '3.0.0-rc1'
+  compile group: 'io.atomix', name: 'atomix-primary-backup', version: '3.0.0-rc1'
+}

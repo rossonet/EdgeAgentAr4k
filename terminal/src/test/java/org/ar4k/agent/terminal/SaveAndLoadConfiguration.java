@@ -14,12 +14,15 @@
     */
 package org.ar4k.agent.terminal;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
+import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -66,11 +69,15 @@ public class SaveAndLoadConfiguration {
   public void saveAndRestoreToFromJson() throws InterruptedException, IOException, ClassNotFoundException {
     Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
+    String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
+    c.author = check;
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
+    s1.comment = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
+    s2.comment = check;
     c.services.add(s1);
     c.services.add(s2);
     a.setWorkingConfig(c);
@@ -78,17 +85,24 @@ public class SaveAndLoadConfiguration {
     si.setAnima(a);
     si.saveSelectedConfigJson("~/Scrivania/provaJson");
     si.loadSelectedConfigJson("~/Scrivania/provaJson");
+    assertTrue(check.equals(a.getWorkingConfig().author));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
   }
 
   @Test
   public void saveAndRestoreToFromBase64() throws InterruptedException, ClassNotFoundException, IOException {
     Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
+    String check = UUID.randomUUID().toString();
+    c.author = check;
     c.name = "test salvataggio base64";
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
+    s1.comment = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
+    s2.comment = check;
     c.services.add(s1);
     c.services.add(s2);
     a.setWorkingConfig(c);
@@ -96,25 +110,36 @@ public class SaveAndLoadConfiguration {
     si.setAnima(a);
     si.saveSelectedConfigBase64("~/Scrivania/provaBase64");
     si.loadSelectedConfigBase64("~/Scrivania/provaBase64");
+    assertTrue(check.equals(a.getWorkingConfig().author));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
   }
-  
+
   @Test
   public void saveAndRestoreToFromBase64Rsa()
-      throws InterruptedException, ClassNotFoundException, IOException, InvalidKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException {
+      throws InterruptedException, ClassNotFoundException, IOException, InvalidKeyException, KeyStoreException,
+      NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException {
     Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
+    String check = UUID.randomUUID().toString();
     c.name = "test salvataggio base64";
+    c.author = check;
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
+    s1.comment = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
+    s2.comment = check;
     c.services.add(s1);
     c.services.add(s2);
     a.setWorkingConfig(c);
     ShellInterface si = new ShellInterface();
     si.setAnima(a);
-    si.saveSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa","root");
+    si.saveSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa", "root");
     si.loadSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa");
+    assertTrue(check.equals(a.getWorkingConfig().author));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
   }
 
 }

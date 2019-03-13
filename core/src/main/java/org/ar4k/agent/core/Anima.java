@@ -33,12 +33,12 @@ import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.config.tribe.TribeConfig;
+//import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.config.tunnel.TunnelConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.ar4k.agent.tribe.AtomixTribeComponent;
+//import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
@@ -70,7 +70,7 @@ import jdbm.RecordManagerFactory;
  * 
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Classe principale singleton Ar4k Agent Gateway. Gestisce la macchina
+ *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina
  *         a stati dei servizi e funge da Bean principale per l'uso delle API
  *         Ar4k
  */
@@ -152,7 +152,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // configurazione di lavoro per editare
   private Ar4kConfig workingConfig = null;
 
-  // gestione stati
+  // gestione stati TODO: controllare se viene effettivamente usato nel post
+  // config per arrivare allo stato desiderato
   private AnimaStates stateTarget = null;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
 
@@ -169,6 +170,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private Map<String, Object> dataStore = null;
 
+  // per HashMap su disco (map reduction)
   private transient RecordManager recMan = null;
 
   // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
@@ -333,7 +335,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (runtimeConfig.beans != null && runtimeConfig.beans.size() > 0) {
       for (ConfigSeed tc : runtimeConfig.beans) {
         if (tc instanceof TunnelConfig) {
-          Ar4kComponent tunnel = tc.instanziate();
+          Ar4kComponent tunnel = tc.instantiate();
           tunnel.init();
           components.add(tunnel);
         }
@@ -343,25 +345,25 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
   public synchronized void runService() {
-    joinTribes();
+    // joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "CONSOLE")
   public synchronized void runConsole() {
-    joinTribes();
+    // joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "BOT")
   public synchronized void runBot() {
-    joinTribes();
+    // joinTribes();
     runAgent();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "LAMBDA")
   public synchronized void runLambda() {
-    joinTribes();
+    // joinTribes();
     timeCounterLambda = new Instant();
     timerLambda = new Timer("Timer");
     long delay = 1000L;
@@ -393,24 +395,21 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   };
 
-  private synchronized void joinTribes() {
-    if (runtimeConfig.beans != null && runtimeConfig.beans.size() > 0) {
-      for (ConfigSeed tc : runtimeConfig.beans) {
-        if (tc instanceof TribeConfig) {
-          Ar4kComponent tribe = tc.instanziate();
-          tribe.init();
-          components.add(tribe);
-        }
-      }
-    }
-  }
-
+  /*
+   * TODO: implementare in atomix
+   */
+  /*
+   * private synchronized void joinTribes() { if (runtimeConfig.beans != null &&
+   * runtimeConfig.beans.size() > 0) { for (ConfigSeed tc : runtimeConfig.beans) {
+   * if (tc instanceof TribeConfig) { Ar4kComponent tribe = tc.instanziate();
+   * tribe.init(); components.add(tribe); } } } }
+   */
   private synchronized void runAgent() {
     for (ServiceConfig confServizio : runtimeConfig.services) {
       try {
         Method method = confServizio.getClass().getMethod("instanziate");
-        Ar4kService targetService;
-        targetService = (Ar4kService) method.invoke(null);
+        AbstractAr4kService targetService;
+        targetService = (AbstractAr4kService) method.invoke(null);
         targetService.setConfiguration((ServiceConfig) confServizio);
         targetService.setAnima(this);
         components.add(targetService);
@@ -443,6 +442,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     ritorno.put("ar4k.baseConfigOrder", String.valueOf(base64ConfigOrder));
     ritorno.put("ar4k.threadSleep", String.valueOf(threadSleep));
     ritorno.put("ar4k.consoleOnly", String.valueOf(consoleOnly));
+    ritorno.put("ar4k.logoUrl", String.valueOf(logoUrl));
     return ritorno;
   }
 
@@ -467,6 +467,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.dnsConfigOrder: " + dnsConfigOrder + "\n";
     configTxt += "ar4k.baseConfigOrder: " + base64ConfigOrder + "\n";
     configTxt += "ar4k.threadSleep: " + threadSleep + "\n";
+    configTxt += "ar4k.logoUrl: " + logoUrl + "\n";
     configTxt += "ar4k.consoleOnly: " + consoleOnly + AnsiOutput.toString(AnsiColor.GREEN,
         "\n---------------------------------------------------------------\n", AnsiColor.DEFAULT);
     return configTxt;
@@ -481,15 +482,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return applicationContext;
   }
 
-  public Set<AtomixTribeComponent> getTribes() {
-    Set<AtomixTribeComponent> target = new HashSet<AtomixTribeComponent>();
-    for (Ar4kComponent bean : components) {
-      if (bean instanceof AtomixTribeComponent) {
-        target.add((AtomixTribeComponent) bean);
-      }
-    }
-    return target;
-  }
+  /*
+   * TODO: implemntare in atomix
+   */
+  /*
+   * public Set<AtomixTribeComponent> getTribes() { Set<AtomixTribeComponent>
+   * target = new HashSet<AtomixTribeComponent>(); for (Ar4kComponent bean :
+   * components) { if (bean instanceof AtomixTribeComponent) {
+   * target.add((AtomixTribeComponent) bean); } } return target; }
+   */
 
   public Set<AbstractTunnelComponent> getTunnels() {
     Set<AbstractTunnelComponent> target = new HashSet<AbstractTunnelComponent>();
@@ -501,11 +502,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return target;
   }
 
-  public Set<Ar4kService> getServices() {
-    Set<Ar4kService> target = new HashSet<Ar4kService>();
+  public Set<AbstractAr4kService> getServices() {
+    Set<AbstractAr4kService> target = new HashSet<AbstractAr4kService>();
     for (Ar4kComponent bean : components) {
-      if (bean instanceof Ar4kService) {
-        target.add((Ar4kService) bean);
+      if (bean instanceof AbstractAr4kService) {
+        target.add((AbstractAr4kService) bean);
       }
     }
     return target;
@@ -515,10 +516,13 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return components;
   }
 
-  public void addTribe(AtomixTribeComponent tribe) {
-    this.components.add(tribe);
-  }
-
+  /*
+   * TODO: IMPLEMENTARE in atomix
+   */
+  /*
+   * public void addTribe(AtomixTribeComponent tribe) {
+   * this.components.add(tribe); }
+   */
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
     if (logger != null) {
@@ -602,27 +606,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return (dataStore != null);
   }
 
-  // coda eventi cmd in ascolto
+  // coda principale Anima bean
   @Bean
-  public MessageChannel cmdChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  // coda eventi chat in ascolto
-  @Bean
-  public MessageChannel chatChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  // code per AI -usi futuri-
-  @Bean
-  public MessageChannel cortexChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  // coda per i messaggi indirizzati e endpoint camel
-  @Bean
-  public MessageChannel camelChannel() {
+  public MessageChannel mainAnimaChannel() {
     return new PublishSubscribeChannel();
   }
 }

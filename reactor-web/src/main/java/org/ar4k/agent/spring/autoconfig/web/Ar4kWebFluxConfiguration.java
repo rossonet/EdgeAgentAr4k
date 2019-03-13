@@ -37,63 +37,63 @@ import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
 @ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class Ar4kWebFluxConfiguration implements WebFluxConfigurer {
 
-	@Autowired
-	private ApplicationContext applicationContext;
+  @Autowired
+  private ApplicationContext applicationContext;
 
-	@Bean
-	public WebFluxConfigurer corsConfigurer() {
-		return new WebFluxConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*");
-			}
-		};
-	}
+  @Bean
+  public WebFluxConfigurer corsConfigurer() {
+    return new WebFluxConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*");
+      }
+    };
+  }
 
-	/*
-	 * @Bean public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity
-	 * http) throws Exception { return
-	 * http.csrf().disable().authorizeExchange().anyExchange().permitAll() //
-	 * .anyExchange().authenticated() .and().build(); }
-	 */
+  /*
+   * @Bean public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity
+   * http) throws Exception { return
+   * http.csrf().disable().authorizeExchange().anyExchange().permitAll() //
+   * .anyExchange().authenticated() .and().build(); }
+   */
 
-	@Bean
-	RouterFunction<ServerResponse> staticResourceRouter() {
-		return RouterFunctions.resources("/static/**", new ClassPathResource("/static/"));
-	}
+  @Bean
+  RouterFunction<ServerResponse> staticResourceRouter() {
+    return RouterFunctions.resources("/static/**", new ClassPathResource("/static/"));
+  }
 
-	@Bean
-	RouterFunction<ServerResponse> swaggerResourceRouter() {
-		return RouterFunctions.resources("/swagger-ui/**", new ClassPathResource("/swagger/"));
-	}
+  @Bean
+  RouterFunction<ServerResponse> swaggerResourceRouter() {
+    return RouterFunctions.resources("/swagger-ui/**", new ClassPathResource("/swagger/"));
+  }
 
-	@Bean
-	public SpringWebFluxTemplateEngine templateEngine() {
-		SpringWebFluxTemplateEngine templateEngine = new SpringWebFluxTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
-		return templateEngine;
-	}
+  @Bean
+  public SpringWebFluxTemplateEngine templateEngine() {
+    SpringWebFluxTemplateEngine templateEngine = new SpringWebFluxTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver());
+    return templateEngine;
+  }
 
-	@Bean
-	public SpringResourceTemplateResolver templateResolver() {
-		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setApplicationContext(this.applicationContext);
-		templateResolver.setPrefix("classpath:/templates/");
-		templateResolver.setSuffix(".html");
-		return templateResolver;
-	}
+  @Bean
+  public SpringResourceTemplateResolver templateResolver() {
+    SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+    templateResolver.setApplicationContext(this.applicationContext);
+    templateResolver.setPrefix("classpath:/templates/");
+    templateResolver.setSuffix(".html");
+    return templateResolver;
+  }
 
-	@Override
-	public void configureViewResolvers(ViewResolverRegistry registry) {
-		ThymeleafReactiveViewResolver thymeleafReactiveViewResolver = new ThymeleafReactiveViewResolver();
-		thymeleafReactiveViewResolver.setTemplateEngine(templateEngine());
-		thymeleafReactiveViewResolver.setApplicationContext(this.applicationContext);
-		registry.viewResolver(thymeleafReactiveViewResolver);
-	}
+  @Override
+  public void configureViewResolvers(ViewResolverRegistry registry) {
+    ThymeleafReactiveViewResolver thymeleafReactiveViewResolver = new ThymeleafReactiveViewResolver();
+    thymeleafReactiveViewResolver.setTemplateEngine(templateEngine());
+    thymeleafReactiveViewResolver.setApplicationContext(this.applicationContext);
+    registry.viewResolver(thymeleafReactiveViewResolver);
+  }
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
-	}
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
+  }
 
 }

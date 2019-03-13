@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class Ar4kWebServerFactoryCustomizer implements WebServerFactoryCustomizer<NettyReactiveWebServerFactory> {
 
-	@Value("${server.port}")
-	private int targetPort;
+  @Value("${server.port}")
+  private int targetPort;
 
-	@Override
-	public void customize(NettyReactiveWebServerFactory factory) {
-		factory.setPort(targetPort);
-	}
+  @Override
+  public void customize(NettyReactiveWebServerFactory factory) {
+    factory.setPort(targetPort);
+  }
 }

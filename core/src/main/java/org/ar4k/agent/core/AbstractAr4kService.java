@@ -27,7 +27,7 @@ import org.slf4j.Logger;
  * 
  * 
  */
-public abstract class Ar4kService implements Runnable, Ar4kComponent {
+public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
 
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
@@ -52,7 +52,7 @@ public abstract class Ar4kService implements Runnable, Ar4kComponent {
   // iniettata in costruzione (vedi get/set)
   private ServiceConfig configuration;
 
-  public Ar4kService() {
+  public AbstractAr4kService() {
     serviceStatus = ServiceStates.STARTING;
   }
 

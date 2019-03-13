@@ -25,5 +25,4 @@ public abstract class TunnelConfig extends ServiceConfig {
 
   private static final long serialVersionUID = 2256280745924059640L;
 
-
 }

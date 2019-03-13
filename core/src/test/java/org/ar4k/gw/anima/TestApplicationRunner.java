@@ -24,19 +24,19 @@ import org.springframework.util.StringUtils;
 @SpringBootConfiguration
 public class TestApplicationRunner implements ApplicationRunner {
 
-	private static Logger log = LoggerFactory.getLogger(TestApplicationRunner.class);
+  private static Logger log = LoggerFactory.getLogger(TestApplicationRunner.class);
 
-	String[] args = new String[0];
-	String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
-	String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
+  String[] args = new String[0];
+  String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
+  String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
 
-	public TestApplicationRunner() {
-		log.info("Test Application Runner started!");
-	}
+  public TestApplicationRunner() {
+    log.info("Test Application Runner started!");
+  }
 
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		log.info("About to do nothing!");
-		// Do nothing...
-	}
+  @Override
+  public void run(ApplicationArguments args) throws Exception {
+    log.info("About to do nothing!");
+    // Do nothing...
+  }
 }

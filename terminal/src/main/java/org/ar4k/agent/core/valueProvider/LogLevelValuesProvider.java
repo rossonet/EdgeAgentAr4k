@@ -35,12 +35,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogLevelValuesProvider extends ValueProviderSupport {
 
-	private final static String[] VALUES = Stream.of(Ar4kLogger.LogLevel.values()).map(Ar4kLogger.LogLevel::name)
-			.toArray(String[]::new);
+  private final static String[] VALUES = Stream.of(Ar4kLogger.LogLevel.values()).map(Ar4kLogger.LogLevel::name)
+      .toArray(String[]::new);
 
-	@Override
-	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-			String[] hints) {
-		return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
-	}
+  @Override
+  public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
+      String[] hints) {
+    return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
+  }
 }
