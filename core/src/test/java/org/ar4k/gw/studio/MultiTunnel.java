@@ -14,6 +14,8 @@
     */
 package org.ar4k.gw.studio;
 
+import org.ar4k.agent.tunnel.SocketConfig;
+import org.ar4k.agent.tunnel.SocketTunnel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,8 +52,10 @@ public class MultiTunnel {
 
   @Test
   public void test() {
-    // TODO: Primi test per provare le API Java
-    System.out.println("Not yet implemented");
+    SocketConfig socketConfig = new SocketConfig();
+    socketConfig.name = "Test socket";
+    SocketTunnel st = socketConfig.instantiate();
+    
   }
 
 }
