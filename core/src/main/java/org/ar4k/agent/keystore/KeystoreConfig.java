@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -45,7 +45,7 @@ import com.beust.jcommander.Parameter;
  *         Classe configurazione per keystore.
  *
  */
-public class KeystoreConfig extends ServiceConfig {
+public class KeystoreConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = 6291742061764165257L;
 

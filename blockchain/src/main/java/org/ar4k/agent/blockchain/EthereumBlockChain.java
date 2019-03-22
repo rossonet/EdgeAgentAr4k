@@ -1,7 +1,6 @@
 package org.ar4k.agent.blockchain;
 
-import org.ar4k.agent.core.AbstractBlockChainManager;
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
 
 public class EthereumBlockChain extends AbstractBlockChainManager {
 
@@ -12,7 +11,7 @@ public class EthereumBlockChain extends AbstractBlockChainManager {
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

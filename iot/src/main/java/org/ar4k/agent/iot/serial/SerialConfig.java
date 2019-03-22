@@ -14,7 +14,7 @@
     */
 package org.ar4k.agent.iot.serial;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 import org.ar4k.agent.iot.serial.BaudRateValidator;
@@ -28,7 +28,7 @@ import com.beust.jcommander.Parameter;
  * 
  *         Configurazione porta seriale collegata all'agente.
  */
-public class SerialConfig extends ServiceConfig {
+public class SerialConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -864164279161787378L;
 

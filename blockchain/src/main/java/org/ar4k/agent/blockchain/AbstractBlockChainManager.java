@@ -1,6 +1,7 @@
-package org.ar4k.agent.core;
+package org.ar4k.agent.blockchain;
 
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.core.Ar4kComponent;
 
 public abstract class AbstractBlockChainManager implements Ar4kComponent {
 

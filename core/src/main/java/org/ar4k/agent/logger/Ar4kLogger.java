@@ -16,12 +16,13 @@ package org.ar4k.agent.logger;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.messages.LoggerMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.springframework.integration.core.MessagingTemplate;
 
 /**
  * Logger
@@ -30,55 +31,55 @@ import com.google.gson.GsonBuilder;
  *
  */
 
-//TODO: implementare la comunicazione su canali camel per livello
 public class Ar4kLogger implements Logger {
 
   private Logger logger;
 
   public Ar4kLogger(Class<?> clazz) {
     logger = LoggerFactory.getLogger(clazz);
-    Ar4kLogger.level = LogLevel.INFO;
   }
 
   public Ar4kLogger(String label) {
     logger = LoggerFactory.getLogger(label);
-    Ar4kLogger.level = LogLevel.INFO;
   }
 
   public static enum LogLevel {
-    TRACE, DEBUG, INFO, WARN, ERROR, NONE
+    EXCEPTION, TRACE, DEBUG, INFO, WARN, ERROR, NONE
   }
 
   public static LogLevel level = LogLevel.INFO;
 
   public void logException(Exception e) {
-    Map<String, String> o = new HashMap<String, String>();
+    Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
-    o.put("stackTrace", e.getStackTrace().toString());
-    sendEvent("error", o);
+    o.put("exception", e);
+    sendEvent(LogLevel.EXCEPTION, o);
   }
 
   public void logException(int errore, Exception e) {
-    Map<String, String> o = new HashMap<String, String>();
+    Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
-    o.put("stackTrace", e.getStackTrace().toString());
-    o.put("errorCode", String.valueOf(errore));
-    sendEvent("error", o);
+    o.put("exception", e);
+    sendEvent(LogLevel.EXCEPTION, o);
   }
 
-  private boolean sendEvent(String level, String logMessage) {
-    Map<String, String> o = new HashMap<String, String>();
+  private void sendEvent(LogLevel level, String logMessage) {
+    Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", logMessage);
-    return sendEvent(level, o);
+    sendEvent(level, o);
   }
 
-  private boolean sendEvent(String levelA, Map<String, String> logMessage) {
-    boolean risultato = false;
-    // TODO: selezionare i canali di uscita
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    risultato = true;
-    logger.warn(gson.toJson(logMessage));
-    return risultato;
+  private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
+    MessagingTemplate messageTemplate = new MessagingTemplate();
+    LoggerMessage loggerMessage = new LoggerMessage();
+    if (logMessage.containsKey("exception") && logMessage.get("exception") instanceof Exception) {
+      loggerMessage.setException((Exception) logMessage.get("exception"));
+    }
+    if (logMessage.containsKey("msg") && logMessage.get("msg") instanceof String) {
+      loggerMessage.setMessage(logMessage.get("msg").toString());
+    }
+    loggerMessage.setLogLevel(level);
+    messageTemplate.send(((Anima) Anima.getApplicationContext().getBean("anima")).mainLogChannel(), loggerMessage);
   }
 
   @Override
@@ -93,8 +94,8 @@ public class Ar4kLogger implements Logger {
 
   @Override
   public void trace(String msg) {
-    // logger.trace(msg)
-    sendEvent("debug", msg);
+    logger.trace(msg);
+    sendEvent(LogLevel.DEBUG, msg);
   }
 
   @Override
@@ -154,8 +155,8 @@ public class Ar4kLogger implements Logger {
 
   @Override
   public void debug(String msg) {
-    // logger.debug(msg)
-    sendEvent("debug", msg);
+    logger.debug(msg);
+    sendEvent(LogLevel.DEBUG, msg);
   }
 
   @Override
@@ -215,8 +216,8 @@ public class Ar4kLogger implements Logger {
 
   @Override
   public void info(String msg) {
-    // logger.info(msg)
-    sendEvent("info", msg);
+    logger.info(msg);
+    sendEvent(LogLevel.INFO, msg);
   }
 
   @Override
@@ -276,8 +277,8 @@ public class Ar4kLogger implements Logger {
 
   @Override
   public void warn(String msg) {
-    sendEvent("warn", msg);
-    // logger.warn(msg)
+    logger.warn(msg);
+    sendEvent(LogLevel.WARN, msg);
   }
 
   @Override
@@ -337,8 +338,8 @@ public class Ar4kLogger implements Logger {
 
   @Override
   public void error(String msg) {
-    sendEvent("error", msg);
-    // logger.error(msg)
+    logger.error(msg);
+    sendEvent(LogLevel.ERROR, msg);
   }
 
   @Override

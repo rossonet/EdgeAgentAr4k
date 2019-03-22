@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.ar4k.agent.tribe.TribeGovernanceValidator;
@@ -13,7 +13,7 @@ import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
 
-public class TribeConfig extends ServiceConfig {
+public class TribeConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -2924869182396567535L;
 

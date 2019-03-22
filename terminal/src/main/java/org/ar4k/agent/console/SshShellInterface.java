@@ -17,7 +17,7 @@ package org.ar4k.agent.console;
 import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.ssh.SshConfig;
+import org.ar4k.agent.sshClientTunnel.SshConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -62,7 +62,7 @@ public class SshShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshNetworkPoint(@ShellOption(optOut = true) @Valid SshConfig service) {
-    anima.getWorkingConfig().beans.add(service);
+    anima.getWorkingConfig().pots.add(service);
   }
 
 }

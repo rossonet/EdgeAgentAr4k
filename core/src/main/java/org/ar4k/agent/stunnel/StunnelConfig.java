@@ -14,12 +14,9 @@
     */
 package org.ar4k.agent.stunnel;
 
-import java.util.UUID;
-
-import org.ar4k.agent.config.tunnel.TunnelConfig;
-import org.ar4k.agent.config.validator.TunnelValidator;
-import org.joda.time.Instant;
 import org.ar4k.agent.config.validator.KeystoreValidator;
+import org.ar4k.agent.config.validator.PotValidator;
+import org.ar4k.agent.tunnel.AbstractTunnelConfig;
 
 import com.beust.jcommander.Parameter;
 
@@ -29,11 +26,11 @@ import com.beust.jcommander.Parameter;
  * Configurzione tunnel SSL
  *
  */
-public class StunnelConfig extends TunnelConfig {
+public class StunnelConfig extends AbstractTunnelConfig {
 
   private static final long serialVersionUID = 707686741192996924L;
 
-  @Parameter(names = "--connectionSock", description = "the target sock to connect to", validateWith = TunnelValidator.class)
+  @Parameter(names = "--connectionSock", description = "the target sock to connect to", validateWith = PotValidator.class)
   public String connectionSock = null;
 
   // TODO: aggiungere quelle esistenti come possibili TAB
@@ -59,20 +56,5 @@ public class StunnelConfig extends TunnelConfig {
     StunnelTunnel ss = new StunnelTunnel();
     ss.setConfiguration(this);
     return ss;
-  }
-
-  @Override
-  public Instant getCreationDate() {
-    return creationDate;
-  }
-
-  @Override
-  public Instant getLastUpdateDate() {
-    return lastUpdate;
-  }
-
-  @Override
-  public UUID getUniqueId() {
-    return uniqueId;
   }
 }

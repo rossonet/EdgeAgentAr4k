@@ -60,18 +60,16 @@ import javax.validation.constraints.Size;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.tunnel.TunnelConfig;
-import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.tunnel.TunnelComponent;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -367,14 +365,11 @@ public class ShellInterface {
   @ManagedOperation
   public String listTunnelsRuntime() {
     String risposta = "";
-    for (Ar4kComponent configurazione : anima.getComponentBeans()) {
+    for (TunnelComponent tunnels : anima.getTunnels()) {
       try {
-        AbstractTunnelComponent t = (AbstractTunnelComponent) configurazione;
-        TunnelConfig c = ((TunnelConfig) t.getConfiguration());
-        risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, c.name, AnsiColor.DEFAULT, " - ",
-            t.getClass().getName(), " [", AnsiColor.RED,
-            t.socket != null ? (t.socket.isConnected() ? "connected" : "disconnected") : "not implemented",
-            AnsiColor.DEFAULT, "]\n");
+        ConfigSeed c = tunnels.getConfiguration();
+        risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, c.getName(), AnsiColor.DEFAULT, " - ",
+            c.getClass().getName(), " [", AnsiColor.RED, AnsiColor.DEFAULT, "]\n");
       } catch (Exception aa) {
       }
     }
@@ -386,12 +381,11 @@ public class ShellInterface {
   @ShellMethodAvailability("testSelectedConfigOk")
   public String listTunnelsSelectedConfig() {
     String risposta = "";
-    for (ConfigSeed a : anima.getWorkingConfig().beans) {
+    for (ConfigSeed a : anima.getWorkingConfig().pots) {
       try {
-        TunnelConfig b = (TunnelConfig) a;
-        if (b.name != null) {
-          risposta = risposta
-              + AnsiOutput.toString(AnsiColor.GREEN, b.name, AnsiColor.DEFAULT, " - ", b.getClass().getName(), "\n");
+        if (a.getName() != null) {
+          risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, a.getName(), AnsiColor.DEFAULT, " - ",
+              a.getClass().getName(), "\n");
         }
       } catch (Exception ee) {
       }
@@ -500,9 +494,9 @@ public class ShellInterface {
   @ShellMethodAvailability("testIsRunningOk")
   public String listService() {
     String risposta = "";
-    for (AbstractAr4kService servizio : anima.getServices()) {
+    for (ServiceComponent servizio : anima.getServices()) {
       risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, servizio.getConfiguration().getUniqueId().toString(),
-          AnsiColor.DEFAULT, " - ", servizio.getConfiguration().name, " [", AnsiColor.RED, servizio.status(),
+          AnsiColor.DEFAULT, " - ", servizio.getConfiguration().getName(), " [", AnsiColor.RED, servizio.status(),
           AnsiColor.DEFAULT, "]\n");
     }
     return risposta;

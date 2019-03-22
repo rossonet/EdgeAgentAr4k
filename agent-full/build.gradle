@@ -11,6 +11,8 @@ dependencies {
 	compile project(':pcap')
 	compile project(':drools')
 	compile project(':atomix')
+	compile project(':xmpp')
+	compile project(':openoffice-uno')
 	compile project(':blockchain')
 	compile project(':kettle')
 	compile project(':onion')

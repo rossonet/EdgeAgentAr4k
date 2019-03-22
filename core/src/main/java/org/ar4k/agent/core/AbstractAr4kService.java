@@ -16,7 +16,7 @@ package org.ar4k.agent.core;
 
 import javax.annotation.PostConstruct;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.slf4j.Logger;
 
@@ -27,7 +27,7 @@ import org.slf4j.Logger;
  * 
  * 
  */
-public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
+public abstract class AbstractAr4kService implements ServiceComponent {
 
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
@@ -50,7 +50,7 @@ public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
   private Anima anima;
 
   // iniettata in costruzione (vedi get/set)
-  private ServiceConfig configuration;
+  private AbstractServiceConfig configuration;
 
   public AbstractAr4kService() {
     serviceStatus = ServiceStates.STARTING;
@@ -65,6 +65,7 @@ public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
     System.out.println("test loop service");
   }
 
+  @Override
   public void run() {
     while (serviceStatus != ServiceStates.KILLED) {
       if (serviceStatus == ServiceStates.RUNNING) {
@@ -79,6 +80,7 @@ public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
     }
   }
 
+  @Override
   public synchronized void start() {
     if (processo == null && configuration != null && configuration.name != null && configuration.name != "") {
       processo = new Thread(this);
@@ -88,27 +90,32 @@ public abstract class AbstractAr4kService implements Runnable, Ar4kComponent {
     serviceStatus = configuration.targetRunLevel;
   }
 
+  @Override
   public synchronized void kill() {
     serviceStatus = ServiceStates.KILLED;
   }
 
+  @Override
   public String status() {
     return serviceStatus.name();
   }
 
+  @Override
   public Anima getAnima() {
     return anima;
   }
 
+  @Override
   public void setAnima(Anima anima) {
     this.anima = anima;
   }
 
-  public ServiceConfig getConfiguration() {
+  @Override
+  public AbstractServiceConfig getConfiguration() {
     return configuration;
   }
 
-  public void setConfiguration(ServiceConfig configuration) {
+  public void setConfiguration(AbstractServiceConfig configuration) {
     this.configuration = configuration;
   }
 

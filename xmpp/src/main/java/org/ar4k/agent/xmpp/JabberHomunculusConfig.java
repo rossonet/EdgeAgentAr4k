@@ -12,31 +12,24 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.networkLink;
+package org.ar4k.agent.xmpp;
 
-import org.ar4k.agent.config.tunnel.TunnelConfig;
-
-import com.beust.jcommander.Parameter;
+import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  * 
- *         Rappresentazione di singolo socket per connessione.
+ *         Configurazione servizio connessione XMPP.
  *
  */
-public class NetworkConfig extends TunnelConfig {
+public class JabberHomunculusConfig extends AbstractServiceConfig {
 
-  private static final long serialVersionUID = -7113857848013750537L;
+  private static final long serialVersionUID = -4642788033911032726L;
 
-  @Parameter(names = "--ipHost", description = "the host address to connect to")
-  public String ipHost = null;
-
-  @Parameter(names = "--port", description = "the port to connect to")
-  public int port = 0;
-
-  public NetworkTunnel instantiate() {
-    NetworkTunnel ss = new NetworkTunnel();
-    return ss;
+  public Ar4kComponent instantiate() {
+    // System.out.println("Serial service start");
+    JabberHomunculusService ss = new JabberHomunculusService();
+    return (Ar4kComponent) ss;
   }
-
 }

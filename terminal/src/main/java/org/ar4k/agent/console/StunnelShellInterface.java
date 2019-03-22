@@ -75,7 +75,7 @@ public class StunnelShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOkAndOneKey")
   public void addStunnelService(@ShellOption(optOut = true) @Valid StunnelConfig service) {
-    anima.getWorkingConfig().beans.add(service);
+    anima.getWorkingConfig().pots.add(service);
   }
 
 }

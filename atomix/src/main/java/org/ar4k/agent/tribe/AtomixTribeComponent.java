@@ -17,7 +17,8 @@ import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.helper.HardwareHelper;
-import org.json.JSONObject;
+
+import com.google.gson.JsonElement;
 
 import io.atomix.cluster.Member;
 import io.atomix.cluster.MemberConfig;
@@ -205,7 +206,7 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

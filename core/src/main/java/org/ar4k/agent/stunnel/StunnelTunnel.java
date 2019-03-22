@@ -24,9 +24,11 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.AbstractTunnelComponent;
 import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.agent.tunnel.AbstractTunnelComponent;
 import org.json.JSONObject;
+
+import com.google.gson.JsonElement;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -115,7 +117,7 @@ public class StunnelTunnel extends AbstractTunnelComponent {
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

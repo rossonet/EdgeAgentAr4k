@@ -17,7 +17,7 @@ package org.ar4k.agent.console;
 import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.networkLink.NetworkConfig;
+import org.ar4k.agent.tunnel.SocketConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -61,8 +61,8 @@ public class ProxyShellInterface {
   @ShellMethod(value = "Add a proxy endpoint to the selected configuration", group = "Tunnel Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addProxyNetworkPoint(@ShellOption(optOut = true) @Valid NetworkConfig service) {
-    anima.getWorkingConfig().beans.add(service);
+  public void addProxyNetworkPoint(@ShellOption(optOut = true) @Valid SocketConfig service) {
+    anima.getWorkingConfig().pots.add(service);
   }
 
 }

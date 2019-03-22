@@ -18,7 +18,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.iot.serial.SerialService;
 
@@ -74,7 +74,7 @@ public class CncService extends SerialService {
   }
 
   @Override
-  public void setConfiguration(ServiceConfig configuration) {
+  public void setConfiguration(AbstractServiceConfig configuration) {
     super.setConfiguration(configuration);
     this.configuration = ((CncConfig) configuration);
   }

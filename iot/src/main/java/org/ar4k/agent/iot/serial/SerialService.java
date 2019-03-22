@@ -21,15 +21,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringEscapeUtils;
-
-import org.ar4k.agent.config.ConfigSeed;
 //import org.ar4k.agent.camel.DynamicRouteBuilder;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
-import org.json.JSONObject;
+import org.ar4k.agent.core.Anima;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.google.gson.JsonElement;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -214,7 +213,7 @@ public class SerialService extends AbstractAr4kService {
   }
 
   @Override
-  public void setConfiguration(ServiceConfig configuration) {
+  public void setConfiguration(AbstractServiceConfig configuration) {
     super.setConfiguration(configuration);
     this.configuration = ((SerialConfig) configuration);
   }
@@ -254,7 +253,7 @@ public class SerialService extends AbstractAr4kService {
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

@@ -15,7 +15,7 @@
 package org.ar4k.agent.config.validator;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.core.Anima;
 
 import com.beust.jcommander.IParameterValidator;
@@ -28,14 +28,14 @@ import com.beust.jcommander.ParameterException;
  *         Validatore input per i servizi di tipo tunnel nella configurazione
  *         selezionata.
  */
-public class TunnelValidator implements IParameterValidator {
+public class PotValidator implements IParameterValidator {
 
   @Override
   public void validate(String name, String value) throws ParameterException {
     Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
     boolean ok = false;
     StringBuilder r = new StringBuilder();
-    for (ServiceConfig a : anima.getWorkingConfig().services) {
+    for (PotConfig a : anima.getWorkingConfig().pots) {
       try {
         ConfigSeed b = (ConfigSeed) a;
         if (b.getName().equals(value)) {

@@ -136,7 +136,7 @@ public class TribeShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addTribe(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
-    anima.getWorkingConfig().beans.add(tribe);
+    anima.getWorkingConfig().services.add(tribe);
   }
 
 }

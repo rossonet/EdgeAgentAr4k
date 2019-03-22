@@ -21,6 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.ServerSocket;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,13 +33,12 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
-import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
-//import org.ar4k.agent.config.tribe.TribeConfig;
-import org.ar4k.agent.config.tunnel.TunnelConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.tunnel.TunnelComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -70,9 +71,8 @@ import jdbm.RecordManagerFactory;
  * 
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina
- *         a stati dei servizi e funge da Bean principale per l'uso delle API
- *         Ar4k
+ *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina a
+ *         stati dei servizi e funge da Bean principale per l'uso delle API Ar4k
  */
 @ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
 @Component("anima")
@@ -328,19 +328,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (stateTarget == null && runtimeConfig != null) {
       stateTarget = runtimeConfig.targetRunLevel;
     }
-    runTunnels();
-  }
-
-  private synchronized void runTunnels() {
-    if (runtimeConfig.beans != null && runtimeConfig.beans.size() > 0) {
-      for (ConfigSeed tc : runtimeConfig.beans) {
-        if (tc instanceof TunnelConfig) {
-          Ar4kComponent tunnel = tc.instantiate();
-          tunnel.init();
-          components.add(tunnel);
-        }
-      }
-    }
+    runPots();
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
@@ -405,20 +393,50 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
    * tribe.init(); components.add(tribe); } } } }
    */
   private synchronized void runAgent() {
+    runServices();
+  }
+
+  private void runServices() {
     for (ServiceConfig confServizio : runtimeConfig.services) {
       try {
-        Method method = confServizio.getClass().getMethod("instanziate");
-        AbstractAr4kService targetService;
-        targetService = (AbstractAr4kService) method.invoke(null);
-        targetService.setConfiguration((ServiceConfig) confServizio);
-        targetService.setAnima(this);
-        components.add(targetService);
-        targetService.start();
+        runSeedService(confServizio);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
           | SecurityException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private void runPots() {
+    for (PotConfig confVaso : runtimeConfig.pots) {
+      try {
+        runSeedPot(confVaso);
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+          | SecurityException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private void runSeedPot(PotConfig potConfig)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    Method method = potConfig.getClass().getMethod("instantiate");
+    Ar4kComponent targetService;
+    targetService = (Ar4kComponent) method.invoke(null);
+    targetService.setConfiguration((PotConfig) potConfig);
+    components.add(targetService);
+    targetService.init();
+  }
+
+  private void runSeedService(ServiceConfig confServizio)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    Method method = confServizio.getClass().getMethod("instantiate");
+    ServiceComponent targetService;
+    targetService = (ServiceComponent) method.invoke(null);
+    targetService.setConfiguration((ServiceConfig) confServizio);
+    targetService.setAnima(this);
+    components.add(targetService);
+    targetService.start();
   }
 
   public Map<String, String> getEnvironmentVariables() {
@@ -483,7 +501,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   /*
-   * TODO: implemntare in atomix
+   * TODO: implementare in atomix
    */
   /*
    * public Set<AtomixTribeComponent> getTribes() { Set<AtomixTribeComponent>
@@ -492,27 +510,27 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
    * target.add((AtomixTribeComponent) bean); } } return target; }
    */
 
-  public Set<AbstractTunnelComponent> getTunnels() {
-    Set<AbstractTunnelComponent> target = new HashSet<AbstractTunnelComponent>();
+  public Collection<TunnelComponent> getTunnels() {
+    Set<TunnelComponent> target = new HashSet<TunnelComponent>();
     for (Ar4kComponent bean : components) {
-      if (bean instanceof AbstractTunnelComponent) {
-        target.add((AbstractTunnelComponent) bean);
+      if (bean instanceof TunnelComponent) {
+        target.add((TunnelComponent) bean);
       }
     }
     return target;
   }
 
-  public Set<AbstractAr4kService> getServices() {
-    Set<AbstractAr4kService> target = new HashSet<AbstractAr4kService>();
+  public Collection<ServiceComponent> getServices() {
+    Set<ServiceComponent> target = new HashSet<ServiceComponent>();
     for (Ar4kComponent bean : components) {
-      if (bean instanceof AbstractAr4kService) {
-        target.add((AbstractAr4kService) bean);
+      if (bean instanceof ServiceComponent) {
+        target.add((ServiceComponent) bean);
       }
     }
     return target;
   }
 
-  public Set<Ar4kComponent> getComponentBeans() {
+  public Set<Ar4kComponent> getComponents() {
     return components;
   }
 
@@ -526,7 +544,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
     if (logger != null) {
-      logger.info("state machine event: " + event.toString());
+      logger.info(" event: " + event.toString());
     }
   }
 
@@ -606,9 +624,34 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return (dataStore != null);
   }
 
-  // coda principale Anima bean
+  public static int findAvailablePort(int defaultPort) {
+    try {
+      ServerSocket socket = new ServerSocket(0);
+      socket.setReuseAddress(true);
+      int port = socket.getLocalPort();
+      socket.close();
+      return port;
+    } catch (IOException ex) {
+      return defaultPort;
+    }
+  }
+
+  // coda principale Anima (sottoscritto da Anima con IAnimaGateway
   @Bean
   public MessageChannel mainAnimaChannel() {
+    return new PublishSubscribeChannel();
+  }
+  // TODO:implementare IAnimaGateway
+
+  // coda principale logger
+  @Bean
+  public MessageChannel mainLogChannel() {
+    return new PublishSubscribeChannel();
+  }
+
+  // coda principale exceptions
+  @Bean
+  public MessageChannel mainExceptionChannel() {
     return new PublishSubscribeChannel();
   }
 }

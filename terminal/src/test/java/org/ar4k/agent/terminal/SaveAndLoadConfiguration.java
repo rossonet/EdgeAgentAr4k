@@ -29,7 +29,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.ShellInterface;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.ssh.SshConfig;
+import org.ar4k.agent.sshClientTunnel.SshConfig;
 import org.ar4k.agent.stunnel.StunnelConfig;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -74,20 +74,20 @@ public class SaveAndLoadConfiguration {
     c.author = check;
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
-    s1.comment = check;
+    s1.note = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
-    s2.comment = check;
-    c.services.add(s1);
-    c.services.add(s2);
+    s2.note = check;
+    c.pots.add(s1);
+    c.pots.add(s2);
     a.setWorkingConfig(c);
     ShellInterface si = new ShellInterface();
     si.setAnima(a);
     si.saveSelectedConfigJson("~/Scrivania/provaJson");
     si.loadSelectedConfigJson("~/Scrivania/provaJson");
     assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
   }
 
   @Test
@@ -99,20 +99,20 @@ public class SaveAndLoadConfiguration {
     c.name = "test salvataggio base64";
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
-    s1.comment = check;
+    s1.note = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
-    s2.comment = check;
-    c.services.add(s1);
-    c.services.add(s2);
+    s2.note = check;
+    c.pots.add(s1);
+    c.pots.add(s2);
     a.setWorkingConfig(c);
     ShellInterface si = new ShellInterface();
     si.setAnima(a);
     si.saveSelectedConfigBase64("~/Scrivania/provaBase64");
     si.loadSelectedConfigBase64("~/Scrivania/provaBase64");
     assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
   }
 
   @Test
@@ -126,20 +126,20 @@ public class SaveAndLoadConfiguration {
     c.author = check;
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
-    s1.comment = check;
+    s1.note = check;
     StunnelConfig s2 = new StunnelConfig();
     s2.name = "stunnel config";
-    s2.comment = check;
-    c.services.add(s1);
-    c.services.add(s2);
+    s2.note = check;
+    c.pots.add(s1);
+    c.pots.add(s2);
     a.setWorkingConfig(c);
     ShellInterface si = new ShellInterface();
     si.setAnima(a);
     si.saveSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa", "root");
     si.loadSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa");
     assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).comment));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).comment));
+    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
   }
 
 }

@@ -225,13 +225,13 @@ public class BaseWebController {
     json.put("run-level", (String) anima.getState().name());
     JSONArray runtimeServices = new JSONArray();
     JSONObject runtimeConfig = new JSONObject();
-    for (AbstractAr4kService st : anima.getServices()) {
+    for (ServiceComponent st : anima.getServices()) {
       JSONObject sjt = new JSONObject();
       sjt.put("status", st.status());
-      sjt.put("status", st.getConfiguration().name);
-      sjt.put("idProcess", st.getConfiguration().uniqueId.toString());
-      sjt.put("description", st.getConfiguration().description);
-      sjt.put("tags", st.getConfiguration().tags);
+      sjt.put("status", st.getConfiguration().getName());
+      sjt.put("idProcess", st.getConfiguration().getUniqueId());
+      sjt.put("description", st.getConfiguration().getDescription());
+      sjt.put("tags", st.getConfiguration().getTags());
       sjt.put("type", st.getClass().getName());
       runtimeServices.add(sjt);
     }
@@ -254,7 +254,7 @@ public class BaseWebController {
   public Mono<JSONObject> ar4kEthereum() {
     JSONObject json = new JSONObject();
     // TODO: filtrare solo i blockchains
-    for (AbstractAr4kService st : anima.getServices()) {
+    for (ServiceComponent st : anima.getServices()) {
       JSONObject sjt = new JSONObject();
       sjt.put("configuration", st.getConfiguration());
     }

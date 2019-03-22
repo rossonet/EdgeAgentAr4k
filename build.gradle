@@ -83,7 +83,8 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
+    } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
@@ -95,12 +96,12 @@ subprojects {
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
     compile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    //compile group: 'commons-net', name: 'commons-net', version: '3.6'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
     compile group: 'joda-time', name: 'joda-time', version: '2.10'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.4'
     compile group: 'org.json', name: 'json', version: '20180813'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    // per annotazioni console
     compile group: 'com.beust', name: 'jcommander', version: '1.48'
     // strumento dev
     compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')

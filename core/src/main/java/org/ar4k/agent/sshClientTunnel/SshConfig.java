@@ -12,10 +12,10 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.ssh;
+package org.ar4k.agent.sshClientTunnel;
 
-import org.ar4k.agent.config.tunnel.TunnelConfig;
-import org.ar4k.agent.config.validator.TunnelValidator;
+import org.ar4k.agent.config.validator.PotValidator;
+import org.ar4k.agent.tunnel.AbstractTunnelConfig;
 
 import com.beust.jcommander.Parameter;
 
@@ -24,11 +24,11 @@ import com.beust.jcommander.Parameter;
  *
  *         Configurazione servizio tunnel SSH
  */
-public class SshConfig extends TunnelConfig {
+public class SshConfig extends AbstractTunnelConfig {
 
   private static final long serialVersionUID = -5164761698374285171L;
 
-  @Parameter(names = "--connectionSock", description = "the target sock to connect to", validateWith = TunnelValidator.class)
+  @Parameter(names = "--connectionSock", description = "the target sock to connect to", validateWith = PotValidator.class)
   public String connectionSock = null;
 
   @Parameter(names = "--username", description = "username for the connection")

@@ -12,16 +12,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.ssh;
+package org.ar4k.agent.sshClientTunnel;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractTunnelComponent;
+import org.ar4k.agent.tunnel.AbstractTunnelComponent;
 import org.json.JSONObject;
 
+import com.google.gson.JsonElement;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelDirectTCPIP;
 import com.jcraft.jsch.JSch;
@@ -51,6 +52,7 @@ public class SshTunnel extends AbstractTunnelComponent {
       InetAddress host = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalAddress();
       int port = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalPort();
       session = jsch.getSession(configuration.username, host.getHostAddress(), port);
+      //session.setSocketFactory(sfactory);
       SSHUserInfo ui = new SSHUserInfo();
       if (configuration.password != null)
         ui.setPassword(configuration.password);
@@ -120,7 +122,7 @@ public class SshTunnel extends AbstractTunnelComponent {
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

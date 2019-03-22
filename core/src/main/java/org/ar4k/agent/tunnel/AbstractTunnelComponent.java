@@ -12,12 +12,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.core;
+package org.ar4k.agent.tunnel;
 
-import java.net.Socket;
+import javax.net.SocketFactory;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.tunnel.TunnelConfig;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -26,37 +25,24 @@ import org.ar4k.agent.config.tunnel.TunnelConfig;
  *         gestiti dall'agente.
  *
  */
-public abstract class AbstractTunnelComponent implements Ar4kComponent {
+public abstract class AbstractTunnelComponent implements TunnelComponent {
 
-  // iniettata vedi set/get
-  private TunnelConfig configuration = null;
+  private AbstractTunnelConfig configuration = null;
 
-  public Socket socket = null;
-
-  public static Socket getSocks(String alias) {
-    Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
-    Socket ok = null;
-    for (AbstractTunnelComponent b : anima.getTunnels()) {
-      if (b.getConfiguration().getName().equals(alias)) {
-        ok = b.socket;
-        System.out.println("ok socks!!");
-      }
-      System.out.println(((TunnelConfig) b.getConfiguration()).getName());
-    }
-    return ok;
-  }
+  protected SocketFactory socketFactory = null;
 
   @Override
-  public TunnelConfig getConfiguration() {
+  public AbstractTunnelConfig getConfiguration() {
     return configuration;
   }
 
   @Override
   public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = ((TunnelConfig) configuration);
+    this.configuration = ((AbstractTunnelConfig) configuration);
   }
 
-  public int checkConnession() {
-    return 500;
+  @Override
+  public SocketFactory getSocketFactory() {
+    return socketFactory;
   }
 }

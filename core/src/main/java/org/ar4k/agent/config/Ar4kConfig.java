@@ -117,7 +117,7 @@ public class Ar4kConfig implements ConfigSeed {
 
   public Collection<ServiceConfig> services = new HashSet<ServiceConfig>();
 
-  public Collection<ConfigSeed> beans = new HashSet<ConfigSeed>();
+  public Collection<PotConfig> pots = new HashSet<PotConfig>();
 
   @Override
   public String getName() {
@@ -144,5 +144,15 @@ public class Ar4kConfig implements ConfigSeed {
   @Override
   public UUID getUniqueId() {
     return uniqueId;
+  }
+
+  @Override
+  public String getDescription() {
+    return description;
+  }
+
+  @Override
+  public Collection<String> getTags() {
+    return tags;
   }
 }

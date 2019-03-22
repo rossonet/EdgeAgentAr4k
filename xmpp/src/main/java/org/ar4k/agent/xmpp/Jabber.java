@@ -44,7 +44,7 @@ import com.google.gson.GsonBuilder;
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  * 
- *         Helper connessione XMPP JAbber
+ *         Helper connessione XMPP Jabber
  *
  */
 //TODO: Appena eliminato watson. capire come integrare
@@ -73,7 +73,7 @@ public class Jabber implements Runnable, ChatManagerListener, ChatMessageListene
   @SuppressWarnings("unused")
   private XMPPTCPConnection login() throws Exception {
     XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-        .setUsernameAndPassword(username, password).setHost(server).setPort(port).setSecurityMode(SecurityMode.required) 
+        .setUsernameAndPassword(username, password).setHost(server).setPort(port).setSecurityMode(SecurityMode.required)
         .setDebuggerEnabled(false).setServiceName("olark.com").setSendPresence(true).build();
     XMPPTCPConnection.setUseStreamManagementDefault(true);
     XMPPTCPConnection connectionLogin;
