@@ -37,7 +37,7 @@ public class CustomPromptProvider implements PromptProvider {
   @Override
   public AttributedString getPrompt() {
     AnsiColor colore = AnsiColor.BLUE;
-    String testo = "AR4K:> ";
+    String testo = "AGENT:> ";
     if (anima.getState() != null)
       testo = anima.getState().toString() + ":> ";
     if (anima.getWorkingConfig() != null) {

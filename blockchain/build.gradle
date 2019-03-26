@@ -1,7 +1,10 @@
 description = "Ethereum block chain component"
 
 dependencies {
-	compile project(':core')
-	compile('org.ethereum:ethereumj-core:1.7.2-RELEASE')
-	{exclude group: "ch.qos.logback"}
+  compile project(':core')
+  compile('org.ethereum:ethereumj-core:1.7.2-RELEASE') {
+    exclude group: "ch.qos.logback"
+    exclude group: "org.slf4j"
+    exclude group: "log4j"
+  }
 }
