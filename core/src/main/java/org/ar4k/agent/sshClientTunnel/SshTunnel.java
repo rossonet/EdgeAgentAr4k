@@ -48,11 +48,18 @@ public class SshTunnel extends AbstractTunnelComponent {
       jsch = new JSch();
       if (configuration.authkey != null)
         jsch.addIdentity(configuration.authkey);
-      System.out.println(AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalAddress());
-      InetAddress host = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalAddress();
-      int port = AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalPort();
-      session = jsch.getSession(configuration.username, host.getHostAddress(), port);
-      //session.setSocketFactory(sfactory);
+      /*
+       * System.out.println(AbstractTunnelComponent.getSocks(configuration.
+       * connectionSock).getLocalAddress()); InetAddress host =
+       * AbstractTunnelComponent.getSocks(configuration.connectionSock).
+       * getLocalAddress(); int port =
+       * AbstractTunnelComponent.getSocks(configuration.connectionSock).getLocalPort()
+       * ;
+       * 
+       * session = jsch.getSession(configuration.username, host.getHostAddress(),
+       * port);
+       */
+      // session.setSocketFactory(sfactory);
       SSHUserInfo ui = new SSHUserInfo();
       if (configuration.password != null)
         ui.setPassword(configuration.password);
@@ -67,20 +74,10 @@ public class SshTunnel extends AbstractTunnelComponent {
       InetSocketAddress a = new InetSocketAddress("localhost", configuration.bindPort);
       socketChannel = SocketChannel.open();
       socketChannel.connect(a);
-      socket = socketChannel.socket();
+      // socket = socketChannel.socket();
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  @Override
-  public synchronized int checkConnession() {
-    int ritorno = 0;
-    if (socket == null || (!channel.isConnected()) || socket.isClosed()) {
-      ritorno = 100;
-      connetti();
-    }
-    return ritorno;
   }
 
   @Override
@@ -112,7 +109,7 @@ public class SshTunnel extends AbstractTunnelComponent {
 
   @Override
   public void init() {
-    checkConnession();
+    //checkConnession();
   }
 
   @Override

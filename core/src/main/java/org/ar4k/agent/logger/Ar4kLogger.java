@@ -79,7 +79,10 @@ public class Ar4kLogger implements Logger {
       loggerMessage.setMessage(logMessage.get("msg").toString());
     }
     loggerMessage.setLogLevel(level);
-    messageTemplate.send(((Anima) Anima.getApplicationContext().getBean("anima")).mainLogChannel(), loggerMessage);
+    // TODO:riattivare
+    // messageTemplate.send(((Anima)
+    // Anima.getApplicationContext().getBean("anima")).mainLogChannel(),
+    // loggerMessage);
   }
 
   @Override

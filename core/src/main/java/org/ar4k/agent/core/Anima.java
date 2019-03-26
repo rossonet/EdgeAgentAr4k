@@ -465,8 +465,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   public String getEnvironmentVariablesAsString() {
-    String configTxt = AnsiOutput.toString(AnsiColor.GREEN,
-        "ENV found:\n---------------------------------------------------------------\n", AnsiColor.BRIGHT_YELLOW);
+    String configTxt = "ENV found:\n---------------------------------------------------------------\n";
     configTxt += "ar4k.fileKeystore: " + fileKeystore + "\n";
     configTxt += "ar4k.webKeystore: " + webKeystore + "\n";
     configTxt += "ar4k.dnsKeystore: " + dnsKeystore + "\n";
@@ -486,8 +485,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.baseConfigOrder: " + base64ConfigOrder + "\n";
     configTxt += "ar4k.threadSleep: " + threadSleep + "\n";
     configTxt += "ar4k.logoUrl: " + logoUrl + "\n";
-    configTxt += "ar4k.consoleOnly: " + consoleOnly + AnsiOutput.toString(AnsiColor.GREEN,
-        "\n---------------------------------------------------------------\n", AnsiColor.DEFAULT);
+    configTxt += "ar4k.consoleOnly: " + consoleOnly
+        + "\n---------------------------------------------------------------\n";
     return configTxt;
   }
 

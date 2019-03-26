@@ -34,7 +34,4 @@ dependencies {
   //compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
   // datastore
   compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
-  // IRC
-  compile group: 'org.kitteh.irc', name: 'client-lib', version: '7.0.0'
-  
 }

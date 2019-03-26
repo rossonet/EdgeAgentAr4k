@@ -1,5 +1,7 @@
 description = "Add terminal capabilities to the Ar4k Edge Agent"
 
 dependencies {
-	compile project(':core')
+  compile project(':core')
+  // IRC
+  compile group: 'org.kitteh.irc', name: 'client-lib', version: '7.0.0'
 }

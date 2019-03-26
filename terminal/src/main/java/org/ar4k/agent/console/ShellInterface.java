@@ -115,7 +115,7 @@ public class ShellInterface {
   private static final Logger logger = LoggerFactory.getLogger(ShellInterface.class);
 
   @Value("${ar4k.test}")
-  boolean flagTestOk;
+  boolean flagTestOk = false;
 
   @Autowired
   ApplicationContext applicationContext;

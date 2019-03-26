@@ -12,12 +12,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console;
+package org.ar4k.agent.xmpp;
 
 import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.xmpp.JabberHomunculusConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;

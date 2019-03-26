@@ -1,7 +1,7 @@
 description = "OpenOffice UNO module"
 
 dependencies {
-  compile project(':openoffice-uno')
+  compile project(':core')
   // UNO
   compile "org.openoffice:juh:4.1.2"
   compile "org.openoffice:ridl:4.1.2"

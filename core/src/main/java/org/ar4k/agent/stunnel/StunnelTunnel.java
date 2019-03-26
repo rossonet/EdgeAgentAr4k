@@ -62,22 +62,21 @@ public class StunnelTunnel extends AbstractTunnelComponent {
           KeystoreLoader.getPasswordKeystore(configuration.keystoreAuth, anima.getKeyStores()).toCharArray());
       tmf.init(KeystoreLoader.getKeyStoreAfterLoad(configuration.keystoreAuth, anima.getKeyStores()));
       context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-      SSLSocketFactory socketFactory = context.getSocketFactory();
-      socket = socketFactory.createSocket(AbstractTunnelComponent.getSocks(configuration.connectionSock),
-          configuration.redirectServer, configuration.redirectPort, true);
+      // SSLSocketFactory socketFactory = context.getSocketFactory();
+      // socket =
+      // socketFactory.createSocket(AbstractTunnelComponent.getSocks(configuration.connectionSock),
+      // configuration.redirectServer, configuration.redirectPort, true);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   private synchronized void check() {
-    if (context == null || channel == null || socket == null || (!channel.isConnected()) || socket.isClosed()) {
-      try {
-        connetti();
-      } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-      }
-    }
+    /*
+     * if (context == null || channel == null || socket == null ||
+     * (!channel.isConnected()) || socket.isClosed()) { try { connetti(); } catch
+     * (NoSuchAlgorithmException e) { e.printStackTrace(); } }
+     */
   }
 
   @Override
