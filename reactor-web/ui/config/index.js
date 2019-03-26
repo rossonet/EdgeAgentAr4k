@@ -11,7 +11,6 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // proxy all webpack dev-server requests starting with /api to our Spring Boot backend (localhost:8088)
       '/ar4k': {
         target: 'http://localhost:9005/ar4k',
         changeOrigin: true

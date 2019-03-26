@@ -83,8 +83,7 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
-    } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
@@ -103,8 +102,10 @@ subprojects {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     // per annotazioni console
     compile group: 'com.beust', name: 'jcommander', version: '1.48'
+    compile group: 'org.springframework.shell', name: 'spring-shell-standard', version: '2.0.1.RELEASE'
+
     // strumento dev
-    compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
+    //compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     runtime("org.springframework.boot:spring-boot-devtools")
     compile("org.springframework.boot:spring-boot-configuration-processor")
