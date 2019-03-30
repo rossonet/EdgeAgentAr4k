@@ -188,7 +188,7 @@ import {
   OrderedTable
 } from '@/components'
 
-export default{
+export default {
   components: {
     StatsCard,
     ChartCard,

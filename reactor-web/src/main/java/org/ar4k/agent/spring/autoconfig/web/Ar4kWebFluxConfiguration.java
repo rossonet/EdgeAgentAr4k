@@ -14,12 +14,15 @@
     */
 package org.ar4k.agent.spring.autoconfig.web;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.CacheControl;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;
@@ -28,6 +31,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.resource.WebJarsResourceResolver;
 import org.thymeleaf.spring5.SpringWebFluxTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
@@ -63,8 +67,20 @@ public class Ar4kWebFluxConfiguration implements WebFluxConfigurer {
   }
 
   @Bean
+  RouterFunction<ServerResponse> imagesResourceRouter() {
+    return RouterFunctions.resources("/images/**", new ClassPathResource("/images/"));
+  }
+
+  @Bean
   RouterFunction<ServerResponse> swaggerResourceRouter() {
     return RouterFunctions.resources("/swagger-ui/**", new ClassPathResource("/swagger/"));
+  }
+
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
+        .setCacheControl(CacheControl.maxAge(30L, TimeUnit.MINUTES).cachePublic()).resourceChain(true)
+        .addResolver(new WebJarsResourceResolver());
   }
 
   @Bean
@@ -89,11 +105,6 @@ public class Ar4kWebFluxConfiguration implements WebFluxConfigurer {
     thymeleafReactiveViewResolver.setTemplateEngine(templateEngine());
     thymeleafReactiveViewResolver.setApplicationContext(this.applicationContext);
     registry.viewResolver(thymeleafReactiveViewResolver);
-  }
-
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
   }
 
 }

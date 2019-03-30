@@ -9,6 +9,7 @@ ui/dist
 ### OUTPUT ###
 spring-shell.log
 Ar4kAgent
+ar4kAgent
 *.ar4k
 camel-test
 .attach_pid*
@@ -18,9 +19,11 @@ logs/*
 npm-debug.log
 package-lock.json
 node_modules
-ui/node_modules
 maven
 .attach_pid*
+*.conf.base64.ar4k
+*.conf.json.ar4k
+*.keystore
 
 ### STS ###
 .apt_generated

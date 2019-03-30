@@ -34,7 +34,7 @@ import {
   OrderedTable
 } from '@/components'
 
-export default{
+export default {
   components: {
     OrderedTable,
     SimpleTable

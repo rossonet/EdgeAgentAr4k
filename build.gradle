@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.5.1'
+version = '0.5.2'
 
 ext{
   sourceCompatibility = 1.8
@@ -83,7 +83,8 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
+    } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
@@ -175,7 +176,7 @@ task ar4kListProjects{
 }
 
 task ar4kPublishLocalMavenProjects{
-  group "Ar4k Semantic Router Build"
+  group "Ar4k Semantic Router repository MVN"
   description 'Publish to local directory ./maven all the artifacts and the pom files of Ar4k Semantic Router.'
   subprojects { pr ->
     ar4kPublishLocalMavenProjects.dependsOn("${pr.path}:uploadArchives")
@@ -190,16 +191,16 @@ task ar4kAllJavaDoc(type: Javadoc) {
   }
 }
 
-task ar4kRegenareteStaticWeb{
-  group "Ar4k Semantic Router Build"
+task ar4kRegenerateStaticWeb{
+  group "Ar4k frontend web GUI"
   description 'Rebuild the web interface with Npm in the component reactor-web.'
-  ar4kRegenareteStaticWeb.dependsOn(":reactor-web:uiPublish")
+  ar4kRegenerateStaticWeb.dependsOn(":reactor-web:uiPublish")
 }
 
-task viewStaticWebInterface{
-  group "Ar4k Semantic Router Build"
-  description 'Local view of Bootstrap/Vue by NPM.'
-  viewStaticWebInterface.dependsOn(":reactor-web:viewDemoSite")
+task vueGui{
+  group "Ar4k frontend web GUI"
+  description 'Run Vue web UI'
+  vueGui.dependsOn(":reactor-web:vueGui")
 }
 
 task ar4kBootJar{

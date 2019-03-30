@@ -2,33 +2,34 @@ description = "Reactor Spring WebFlux component and admin web UI"
 
 dependencies {
   compile project(':core')
+  testCompile project(':terminal')
   compile('org.springframework.boot:spring-boot-starter-webflux')
   compile('org.springframework.boot:spring-boot-starter-thymeleaf')
   compile group: 'org.springframework.integration', name: 'spring-integration-webflux'
-  // https://mvnrepository.com/artifact/org.webjars.npm/font-awesome
-  // https://mvnrepository.com/artifact/org.webjars/webjars-locator-core
-  compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.37'
-  compile group: 'org.webjars.npm', name: 'font-awesome', version: '4.7.0'
-  // https://mvnrepository.com/artifact/org.webjars.npm/jquery
-  compile group: 'org.webjars.npm', name: 'jquery', version: '3.3.1'
-  // https://mvnrepository.com/artifact/org.webjars.npm/vue
-  //compile group: 'org.webjars.npm', name: 'vue', version: '2.5.17'
-  // https://mvnrepository.com/artifact/org.webjars.npm/popper.js
-  //compile group: 'org.webjars.npm', name: 'popper.js', version: '1.14.4'
-  // https://mvnrepository.com/artifact/org.webjars.npm/chartist
-  // caricato con NPM
+  compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.34'
+  compile group: 'org.webjars', name: 'd3js', version: '5.9.1'
+  //compile group: 'org.webjars.npm', name: 'font-awesome', version: '4.7.0'
+  //compile group: 'org.webjars.npm', name: 'jquery', version: '3.3.1'
+  //compile group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
+  //compile group: 'org.webjars.bower', name: 'popper.js', version: '1.14.6'
+  //compile group: 'org.webjars.bower', name: 'bootstrap-material-design', version: '4.1.1'
+  //compile group: 'org.webjars.npm', name: 'perfect-scrollbar', version: '1.4.0'
+  //compile group: 'org.webjars.npm', name: 'vue', version: '2.6.9'
   //compile group: 'org.webjars.npm', name: 'chartist', version: '0.11.0'
-  // https://mvnrepository.com/artifact/org.webjars.npm/bootstrap
-  compile group: 'org.webjars.npm', name: 'bootstrap', version: '4.1.3'
-  // https://mvnrepository.com/artifact/org.webjars/d3js
-  compile group: 'org.webjars', name: 'd3js', version: '5.5.0'
-  // https://mvnrepository.com/artifact/org.webjars.npm/vis
-  // compile group: 'org.webjars.npm', name: 'vis', version: '4.21.0'
-  // https://mvnrepository.com/artifact/org.webjars.npm/roboto-fontface
-  compile group: 'org.webjars.npm', name: 'roboto-fontface', version: '0.9.0'
-  // https://mvnrepository.com/artifact/org.webjars/material-design-icons
-  compile group: 'org.webjars', name: 'material-design-icons', version: '3.0.1'
+  //compile group: 'org.webjars.npm', name: 'arrive', version: '2.4.1'
+  //compile group: 'org.webjars.npm', name: 'roboto-fontface', version: '0.9.0'
+  //compile group: 'org.webjars.npm', name: 'material-design-icons', version: '3.0.1'
+  //compile group: 'org.webjars', name: 'bootstrap-notify', version: '3.1.3-1'
+  //compile group: 'org.webjars', name: 'jquery.terminal', version: '0.11.2'
 }
+
+task uiPublish() {
+  description 'Build static contents for the web interface'
+  dependsOn 'buildWebContents'
+  finalizedBy 'copyStaticResources'
+}
+
+processResources.dependsOn uiPublish
 
 task createStaticDir {
   doLast{
@@ -38,13 +39,8 @@ task createStaticDir {
 
 createStaticDir.outputs.upToDateWhen { false }
 
-task uiPublish() {
-  description 'Build static contents for the web interface'
-  dependsOn 'buildWebContents'
-  finalizedBy 'copyStaticResources'
-}
-
 task buildWebContents(type: Exec) {
+  dependsOn 'cleanFrontEnd'
   dependsOn 'createStaticDir'
   dependsOn 'lintDemoSite'
   workingDir './ui'
@@ -54,11 +50,11 @@ task buildWebContents(type: Exec) {
     exec {
       workingDir './ui'
       executable 'npm'
-      args ('run','build')
+      args ('run','build','--report')
     }
   }
 }
-
+/*
 task viewDemoSite(type: Exec) {
   dependsOn 'lintDemoSite'
   workingDir './ui'
@@ -72,6 +68,14 @@ task viewDemoSite(type: Exec) {
     }
   }
 }
+*/
+
+task vueGui(type: Exec) {
+  doFirst { environment 'EDITOR', 'atom' }
+  workingDir './ui'
+  executable 'vue'
+  args 'ui'
+}
 
 task lintDemoSite(type: Exec) {
   workingDir './ui'
@@ -82,10 +86,11 @@ task lintDemoSite(type: Exec) {
 task copyStaticResources() {
   dependsOn 'copyDistResources'
   dependsOn 'copyIndexResource'
+  //finalizedBy 'cleanStaticImg'
 }
 
 task copyDistResources(type: Copy) {
-  from "ui/dist"
+  from "./ui/dist"
   into "src/main/resources/static"
 }
 
@@ -93,13 +98,17 @@ task deleteOldIndex(type: Delete) { delete 'src/main/resources/templates/index.h
 
 task copyIndexResource(type: Copy) {
   dependsOn 'deleteOldIndex'
-  from "ui/dist/index.html"
+  from "./ui/dist/index.html"
   into "src/main/resources/templates"
 }
 
-processResources.dependsOn uiPublish
 
-clean {
+
+clean { dependsOn 'cleanFrontEnd' }
+
+task cleanFrontEnd(type: Delete) {
   delete "src/main/resources/static"
-  delete "ui/dist"
+  delete "./ui/dist"
 }
+
+//task cleanStaticImg(type: Delete) { delete "src/main/resources/static/img" }

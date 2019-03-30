@@ -107,7 +107,7 @@ public class BaseWebController {
   public Mono<Void> ar4kAppHome(ServerWebExchange exchange) {
     ServerHttpResponse response = exchange.getResponse();
     response.setStatusCode(HttpStatus.SEE_OTHER);
-    response.getHeaders().add(HttpHeaders.LOCATION, "/ar4k");
+    response.getHeaders().add(HttpHeaders.LOCATION, "/static");
     return response.setComplete();
   }
 

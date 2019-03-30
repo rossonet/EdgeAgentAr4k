@@ -17,7 +17,7 @@ import {
   UserCard
 } from '@/pages'
 
-export default{
+export default {
   components: {
     EditProfileForm,
     UserCard
