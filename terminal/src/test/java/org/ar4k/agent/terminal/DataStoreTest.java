@@ -12,12 +12,13 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.anima;
+package org.ar4k.agent.terminal;
 
 import java.util.UUID;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
+import org.ar4k.gw.anima.TestApplicationRunner;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

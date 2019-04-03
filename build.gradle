@@ -103,8 +103,14 @@ subprojects {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     // per annotazioni console
     compile group: 'com.beust', name: 'jcommander', version: '1.48'
-    compile group: 'org.springframework.shell', name: 'spring-shell-standard', version: '2.0.1.RELEASE'
-
+    // compile group: 'javax.validation', name: 'validation-api'
+    // compile group: 'org.springframework.shell', name: 'spring-shell-jcommander-adapter', version: '2.0.1.RELEASE'
+    // compile group: 'org.springframework.shell', name: 'spring-shell-standard', version: '2.0.1.RELEASE'
+    compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
+    compile group: 'org.springframework.shell', name: 'spring-shell-core', version: '2.0.1.RELEASE'
+    // per annotazione web
+    compile group: 'org.springframework', name: 'spring-webflux'
+    compile group: 'org.thymeleaf', name: 'thymeleaf'
     // strumento dev
     //compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'

@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
+// http method
+import VueResource from 'vue-resource'
 
 // router setup
 import routes from './routes/routes'
@@ -17,17 +19,22 @@ import MaterialDashboard from './material-dashboard'
 
 import Chartist from 'chartist'
 
-// configure router
-const router = new VueRouter({
-  routes, // short for routes: routes
-  linkExactActiveClass: 'nav-item active'
-})
+// import Axios from './http-common.js'
 
 Vue.use(VueRouter)
 Vue.use(MaterialDashboard)
 Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
+Vue.use(VueResource)
+
+Vue.http.options.emulateJSON = false
+
+// configure router
+const router = new VueRouter({
+  routes, // short for routes: routes
+  linkExactActiveClass: 'nav-item active'
+})
 
 // global library setup
 Object.defineProperty(Vue.prototype, '$Chartist', {

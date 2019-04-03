@@ -16,8 +16,8 @@
         </md-autocomplete>
       </div>
       <md-list> <md-list-item to="/"> <i
-        class="material-icons">dashboard</i>
-      <p class="hidden-lg hidden-md">Console</p>
+        class="material-icons">home</i>
+      <p class="hidden-lg hidden-md">Home</p>
       </md-list-item> <md-list-item to="/notifications" class="dropdown">
       <drop-down> <a slot="title" class="dropdown-toggle"
         data-toggle="dropdown"> <i class="material-icons">notifications</i>

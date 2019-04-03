@@ -10,7 +10,7 @@
     </nav>
     <div class="copyright text-center">
       &copy; {{ new Date().getFullYear() }}, made by <a
-        href="http://www.rossonet.com" target="_blank">Rossonet</a>
+        href="https://www.rossonet.net" target="_blank">Rossonet s.c.a r.l.</a>
     </div>
   </div>
 </footer> </template>

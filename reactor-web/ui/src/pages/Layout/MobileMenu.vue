@@ -7,8 +7,8 @@
       </md-field>
     </li>
     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">
-      <i class="material-icons">dashboard</i>
-      <p>Console</p></a>
+      <i class="material-icons">home</i>
+      <p>Home</p></a>
     </li>
     <li>
       <drop-down>
@@ -27,7 +27,7 @@
       </drop-down>
     </li>
     <li>
-      <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="material-icons">person</i>
+      <a href="#/user" data-toggle="dropdown" class="dropdown-toggle"><i class="material-icons">person</i>
       <p>Profile</p></a>
     </li>
   </ul>

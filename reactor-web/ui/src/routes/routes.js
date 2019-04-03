@@ -1,12 +1,25 @@
-import DashboardLayout from '@/pages/Layout/DashboardLayout.vue'
+// import Vue from 'vue'
+// import VueRouter from 'vue-router'
 
-import Dashboard from '@/pages/Dashboard.vue'
+import DashboardLayout from '@/pages/Layout/DashboardLayout.vue'
+// import Dashboard from '@/pages/Dashboard.vue'
 import UserProfile from '@/pages/UserProfile.vue'
 import TableList from '@/pages/TableList.vue'
 import Typography from '@/pages/Typography.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Notifications from '@/pages/Notifications.vue'
+
+// const Dashboard = Vue.component('Dashboard')
+// const Terminal = Vue.component('Terminal')
+
+const Dashboard = () => import(/* webpackIgnore: true */ '/ar4k/dashboard.js')
+const Terminal = () => import(/* webpackIgnore: true */ '/ar4k/terminal.js')
+
+// const routesImport = () => import(/* webpackIgnore: true */ '/ar4k/routes.js').then(m => m.default)
+
+// generare in automatico
+// const routes = new VueRouter(routesImport)
 
 const routes = [
   {
@@ -18,6 +31,11 @@ const routes = [
         path: 'dashboard',
         name: 'Dashboard',
         component: Dashboard
+      },
+      {
+        path: 'terminal',
+        name: 'Terminal',
+        component: Terminal
       },
       {
         path: 'user',

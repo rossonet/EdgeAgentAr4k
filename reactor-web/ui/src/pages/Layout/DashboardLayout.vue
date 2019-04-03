@@ -8,6 +8,11 @@
         <md-icon>dashboard</md-icon>
         <p>Dashboard</p>
       </sidebar-link>
+      <sidebar-link to="/terminal">
+        <md-icon>input</md-icon>
+        <p>Terminal</p>
+      </sidebar-link>
+      <!--
       <sidebar-link to="/user">
         <md-icon>person</md-icon>
         <p>User Profile</p>
@@ -32,6 +37,7 @@
         <md-icon>notifications</md-icon>
         <p>Notifications</p>
       </sidebar-link>
+    -->
     </side-bar>
 
     <div class="main-panel">
@@ -49,9 +55,9 @@
 
 </style>
 <script>
-import TopNavbar from './TopNavbar.vue'
-import ContentFooter from './ContentFooter.vue'
-import DashboardContent from './Content.vue'
+import TopNavbar from '@/pages/Layout/TopNavbar.vue'
+import ContentFooter from '@/pages/Layout/ContentFooter.vue'
+import DashboardContent from '@/pages/Layout/Content.vue'
 import MobileMenu from '@/pages/Layout/MobileMenu.vue'
 
 export default {

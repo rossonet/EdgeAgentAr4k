@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/header :: header (title='Terminal')"></th:block>
+<link href="/webjars/jquery.terminal/jquery.terminal.css" rel="stylesheet" />
+<style>
+.main-panel>.content {
+	margin-top: 70px;
+	padding: unset;
+	min-height: calc(100vh - 123px);
+}
+</style>
+</head>
+<body class="">
+	<div class="wrapper">
+		<div th:replace="fragments/sidebar :: sidebar(${logo},${roles})"></div>
+		<div class="main-panel">
+			<nav th:replace="fragments/header :: navigator(${user},${roles})"></nav>
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-12 col-md-12">
+							<div class="card">
+								<div class="card-header card-header-primary">
+									<div class="nav-tabs-navigation">
+										<div class="nav-tabs-wrapper">
+											<ul class="nav nav-tabs" data-tabs="tabs">
+												<li class="nav-item"><a class="nav-link active"
+													href="#ar4k" data-toggle="tab"> <i
+														class="material-icons">settings</i> Agent
+												</a>
+													<div class="ripple-container"></div></li>
+												<li class="nav-item"><a class="nav-link"
+													href="#javascript" data-toggle="tab"> <i
+														class="material-icons">web</i> Javascript
+												</a>
+													<div class="ripple-container"></div></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<div class="card-body container-fluid">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="tab-content">
+												<div class="tab-pane active" id="ar4k">
+													<div class="rounded" id="terminal"></div>
+
+												</div>
+												<div class="tab-pane" id="javascript">
+													<div class="rounded" id="javascript"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer th:replace="fragments/footer :: footer"></footer>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fragments/footer :: script"></th:block>
+<script type="text/javascript">
+	jQuery(function($, undefined) {
+		$('#terminal').terminal('/ar4k/cmd', {
+			greetings : "Type help to list the available commands\n\n",
+			name : 'ar4k_console',
+			height : 650,
+			//width : 750,
+			prompt : 'ar4k> '
+		});
+	});
+</script>
+<script type="text/javascript">
+	jQuery(function($, undefined) {
+		$('#javascript').terminal(function(command) {
+			if (command !== '') {
+				var result = window.eval(command);
+				if (result != undefined) {
+					this.echo(String(result));
+				}
+			}
+		}, {
+			greetings : "Javascript Interpreter\n\n",
+			name : 'js_console',
+			height : 650,
+			//width: 450,
+			prompt : 'js> '
+		});
+	});
+</script>
+</html>
