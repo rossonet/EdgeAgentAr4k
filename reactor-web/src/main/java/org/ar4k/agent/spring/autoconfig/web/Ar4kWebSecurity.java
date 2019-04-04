@@ -22,14 +22,13 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 @ConditionalOnClass(WebFluxConfigurer.class)
 @ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class Ar4kWebSecurity {
-/*
-  @Bean
-  public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-    http.headers().frameOptions().mode(Mode.SAMEORIGIN);
-    return http.csrf().disable().authorizeExchange().anyExchange().authenticated().and().httpBasic().and().logout()
-        .logoutUrl("/logout").and().build();
-  }
-*/
+  /*
+   * @Bean public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity
+   * http) throws Exception { http.headers().frameOptions().mode(Mode.SAMEORIGIN);
+   * return
+   * http.csrf().disable().authorizeExchange().anyExchange().authenticated().and()
+   * .httpBasic().and().logout() .logoutUrl("/logout").and().build(); }
+   */
   @Bean
   public MapReactiveUserDetailsService userDetailsService() {
     // System.out.println("MapReactiveUserDetailsService checked");
@@ -40,11 +39,11 @@ public class Ar4kWebSecurity {
         .roles("ADMIN,ROLE_GUEST").build();
     return new MapReactiveUserDetailsService(andrea, admin, guest);
   }
-  
+
   @Bean
   public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-      http.authorizeExchange().anyExchange().permitAll();
-      return http.build();
+    http.csrf().disable().authorizeExchange().anyExchange().permitAll();
+    return http.build();
   }
 
   @Bean

@@ -1,0 +1,20 @@
+<div>
+  <md-table @md-selected="onSelect"> <md-table-row>
+  <md-table-head>Prompt</md-table-head> <md-table-head>Name</md-table-head>
+  <md-table-head>Author</md-table-head> <md-table-head>Description</md-table-head>
+  <md-table-head>Project</md-table-head> <md-table-head>Data
+  Center</md-table-head> <md-table-head>License</md-table-head> </md-table-row> <md-table-row
+    th:each="config : ${configs}"> <md-table-cell
+    th:text="${config.prompt}"></md-table-cell> <md-table-cell
+    th:text="${config.name}"></md-table-cell> <md-table-cell
+    th:text="${config.author}"></md-table-cell> <md-table-cell
+    th:text="${config.description}"></md-table-cell> <md-table-cell
+    th:text="${config.project}"></md-table-cell> <md-table-cell
+    th:text="${config.dataCenter}"></md-table-cell> <md-table-cell
+    th:text="${config.license}"></md-table-cell> <md-table-cell>
+  <a th:href="@{'/conf/json/'+${config.uniqueId}}"
+    class="md-button md-dense md-raised md-info" target="_json">JSON</a>
+  <a th:href="@{'/conf/base64/'+${config.uniqueId}}"
+    class="md-button md-dense md-raised md-primary" target="_base64">BASE64</a></md-table-cell>
+  </md-table-row></md-table>
+</div>

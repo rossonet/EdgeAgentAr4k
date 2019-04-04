@@ -53,13 +53,7 @@ public class Ar4kWebFluxConfiguration implements WebFluxConfigurer {
       }
     };
   }
-/*
-  @Bean
-  public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-    return http.csrf().disable().authorizeExchange().anyExchange().permitAll()
-        .anyExchange().authenticated().and().build();
-  }
-*/
+
   @Bean
   RouterFunction<ServerResponse> staticResourceRouter() {
     return RouterFunctions.resources("/static/**", new ClassPathResource("/static/"));

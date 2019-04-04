@@ -2,7 +2,7 @@ description = "Reactor Spring WebFlux component and admin web UI"
 
 dependencies {
   compile project(':core')
-  // testCompile project(':terminal')
+  compile project(':terminal')
   compile('org.springframework.boot:spring-boot-starter-webflux')
   compile('org.springframework.boot:spring-boot-starter-thymeleaf')
   compile group: 'org.springframework.integration', name: 'spring-integration-webflux'
@@ -10,7 +10,7 @@ dependencies {
   compile group: 'org.webjars', name: 'd3js', version: '5.9.1'
   //compile group: 'org.webjars.npm', name: 'axios', version: '0.18.0'
   //compile group: 'org.webjars.npm', name: 'font-awesome', version: '4.7.0'
-  //compile group: 'org.webjars.npm', name: 'jquery', version: '3.3.1'
+  compile group: 'org.webjars.npm', name: 'jquery', version: '3.3.1'
   //compile group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
   //compile group: 'org.webjars.bower', name: 'popper.js', version: '1.14.6'
   //compile group: 'org.webjars.bower', name: 'bootstrap-material-design', version: '4.1.1'

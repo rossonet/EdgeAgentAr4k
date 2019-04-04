@@ -65,6 +65,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.beust.jcommander.ParameterException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -133,6 +134,65 @@ public class DashboardWebController {
   }
 
   @SuppressWarnings("unchecked")
+  @RequestMapping(path = "/ar4k/dashtable/{table}")
+  public Mono<String> ar4kTerminalJs(Authentication authentication, Model model, ServerHttpResponse response,
+      @PathVariable("table") String table) {
+    String targetPage = "";
+    Context ctx = new Context();
+    switch (table) {
+    case "env":
+      ctx.setVariable("properties", getProperties());
+      targetPage = "tableEnv.html";
+      break;
+    case "keystores":
+      ctx.setVariable("keys", anima.getKeyStores());
+      targetPage = "tableKeyStores.html";
+      break;
+    case "conf":
+      ctx.setVariable("configs", anima.getConfigs());
+      targetPage = "tableConf.html";
+      break;
+    case "logger":
+      Map<String, LoggerLevels> loggers = new HashMap<String, LoggerLevels>();
+      for (LoggersEndpoint log : loggersEndpoint) {
+        for (String linea : ((Map<String, LoggerLevels>) log.loggers().get("loggers")).keySet()) {
+          loggers.put(linea, ((Map<String, LoggerLevels>) log.loggers().get("loggers")).get(linea));
+        }
+      }
+      ctx.setVariable("loggers", loggers);
+      targetPage = "tableLogger.html";
+      break;
+    case "web":
+      List<RequestMappingInfo> map = new ArrayList<RequestMappingInfo>();
+      for (RequestMappingInfoHandlerMapping rm : listRequestMapping) {
+        for (RequestMappingInfo a : rm.getHandlerMethods().keySet()) {
+          map.add(a);
+        }
+      }
+      ctx.setVariable("mappings", map);
+      targetPage = "tableWeb.html";
+      break;
+    case "metrics":
+      List<Meter> meters = new ArrayList<Meter>();
+      for (MeterRegistry mr : listMetrics) {
+        for (Meter m : mr.getMeters()) {
+          meters.add(m);
+        }
+      }
+      ctx.setVariable("meters", meters);
+      targetPage = "tableMetrics.html";
+      break;
+    case "blockchain":
+      targetPage = "tableBlockchain.html";
+      break;
+    default:
+      throw new ParameterException("table not found...");
+    }
+    model.addAttribute("template", templateEngine.process(targetPage, ctx));
+    response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
+    return Mono.just("table.js");
+  }
+
   @RequestMapping("/ar4k/dashboard.js")
   public Mono<String> ar4kDashboardJs(Authentication authentication, Model model, ServerHttpResponse response) {
     Context ctx = new Context();
@@ -141,31 +201,7 @@ public class DashboardWebController {
       ctx.setVariable("user", authentication.getName());
       ctx.setVariable("roles", authentication.getAuthorities());
     }
-    ctx.setVariable("properties", getProperties());
-    ctx.setVariable("keys", anima.getKeyStores());
-    ctx.setVariable("configs", anima.getConfigs());
     ctx.setVariable("logo", anima.getLogoUrl());
-    Map<String, LoggerLevels> loggers = new HashMap<String, LoggerLevels>();
-    for (LoggersEndpoint log : loggersEndpoint) {
-      for (String linea : ((Map<String, LoggerLevels>) log.loggers().get("loggers")).keySet()) {
-        loggers.put(linea, ((Map<String, LoggerLevels>) log.loggers().get("loggers")).get(linea));
-      }
-    }
-    ctx.setVariable("loggers", loggers);
-    List<RequestMappingInfo> map = new ArrayList<RequestMappingInfo>();
-    for (RequestMappingInfoHandlerMapping rm : listRequestMapping) {
-      for (RequestMappingInfo a : rm.getHandlerMethods().keySet()) {
-        map.add(a);
-      }
-    }
-    List<Meter> meters = new ArrayList<Meter>();
-    for (MeterRegistry mr : listMetrics) {
-      for (Meter m : mr.getMeters()) {
-        meters.add(m);
-      }
-    }
-    ctx.setVariable("mappings", map);
-    ctx.setVariable("meters", meters);
     model.addAttribute("template", templateEngine.process("dashboard.html", ctx));
     response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
     return Mono.just("dashboard.js");

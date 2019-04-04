@@ -2,10 +2,10 @@ import DropDown from './components/Dropdown.vue'
 
 import {
   StatsCard,
-  ChartCard,
-  NavTabsCard,
-  NavTabsTable,
-  OrderedTable
+  // ChartCard,
+  NavTabsCard
+  // NavTabsTable,
+  // OrderedTable
 } from '@/components'
 
 import DashboardLayout from '@/pages/Layout/DashboardLayout.vue'
@@ -16,11 +16,14 @@ import Typography from '@/pages/Typography.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Notifications from '@/pages/Notifications.vue'
+import VueTerminal from 'vue-terminal-ui'
 
-import { AXIOS } from './http-common.js'
+window.vueTerminal = VueTerminal
 
-const Dashboard = () => import(/* webpackIgnore: true */ '/ar4k/dashboard.js')
-const Terminal = () => import(/* webpackIgnore: true */ '/ar4k/terminal.js')
+// import { AXIOS } from './http-common.js'
+
+// const Dashboard = () => import(/* webpackIgnore: true */ '/ar4k/dashboard.js')
+// const Terminal = () => import(/* webpackIgnore: true */ '/ar4k/terminal.js')
 
 /**
  * You can register global components here and use them as a plugin in your main Vue instance
@@ -28,15 +31,16 @@ const Terminal = () => import(/* webpackIgnore: true */ '/ar4k/terminal.js')
 
 const GlobalComponents = {
   install (Vue) {
+    // Vue.component('vueTerminal', VueTerminal)
     Vue.component('drop-down', DropDown)
     Vue.component('statsCard', StatsCard)
-    Vue.component('chartCard', ChartCard)
+    // Vue.component('chartCard', ChartCard)
     Vue.component('navTabsCard', NavTabsCard)
-    Vue.component('navTabsTable', NavTabsTable)
-    Vue.component('orderedTable', OrderedTable)
-    Vue.component('AXIOS', AXIOS)
-    Vue.component('Dashboard', Dashboard)
-    Vue.component('Terminal', Terminal)
+    // Vue.component('navTabsTable', NavTabsTable)
+    // Vue.component('orderedTable', OrderedTable)
+    // Vue.component('AXIOS', AXIOS)
+    // Vue.component('Dashboard', Dashboard)
+    // Vue.component('Terminal', Terminal)
     Vue.component('Notifications', Notifications)
     Vue.component('Maps', Maps)
     Vue.component('Icons', Icons)

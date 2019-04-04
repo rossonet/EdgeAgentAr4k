@@ -18,7 +18,8 @@
 		"vue-clickaway": "2.2.2",
 		"vue-material": "1.0.0-beta-8",
 		"vue-resource": "^1.5.1",
-		"vue-router": "3.0.1"
+		"vue-router": "3.0.1",
+		"vue-terminal-ui": "^0.1.5"
 	},
 	"devDependencies": {
 		"@vue/cli-plugin-babel": "^3.5.3",
