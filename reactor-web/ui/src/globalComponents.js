@@ -16,9 +16,15 @@ import Typography from '@/pages/Typography.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Notifications from '@/pages/Notifications.vue'
-import VueTerminal from 'vue-terminal-ui'
 
-window.vueTerminal = VueTerminal
+import VueTerminal from 'vue-terminal'
+import D3Network from 'vue-d3-network'
+
+import VueC3 from 'vue-c3'
+
+import OpenApiClient from '@apitte/openapi-toolkit'
+
+// import OpenApi from 'vue-openapi'
 
 // import { AXIOS } from './http-common.js'
 
@@ -48,6 +54,10 @@ const GlobalComponents = {
     Vue.component('TableList', TableList)
     Vue.component('UserProfile', UserProfile)
     Vue.component('DashboardLayout', DashboardLayout)
+    Vue.component('vueTerminal', VueTerminal)
+    Vue.component('d3Network', D3Network)
+    Vue.component('vueC3', VueC3)
+    Vue.component('openApiClient', OpenApiClient)
   }
 }
 

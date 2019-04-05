@@ -1,11 +1,10 @@
-window.jQuery = import('/webjars/jquery/dist/jquery.min.js');
-const NavTabsEnviroment = () => import('/ar4k/dashtable/env');
-const NavTabsConfiguration = () => import('/ar4k/dashtable/conf');
-const NavTabsWebMapping = () => import('/ar4k/dashtable/web');
-const NavTabsLogger = () => import('/ar4k/dashtable/logger');
-const NavTabsMetrics = () => import('/ar4k/dashtable/metrics');
-const NavTabsKeyStores = () => import('/ar4k/dashtable/keystores');
-const NavTabsBlockChain = () => import('/ar4k/dashtable/blockchain');
+const NavTabsEnviroment = () => import('/ar4k/dashtable/env.vue');
+const NavTabsConfiguration = () => import('/ar4k/dashtable/conf.vue');
+const NavTabsWebMapping = () => import('/ar4k/dashtable/web.vue');
+const NavTabsLogger = () => import('/ar4k/dashtable/logger.vue');
+const NavTabsMetrics = () => import('/ar4k/dashtable/metrics.vue');
+const NavTabsKeyStores = () => import('/ar4k/dashtable/keystores.vue');
+const NavTabsBlockChain = () => import('/ar4k/dashtable/blockchain.vue');
 
 export default {
   data () {
@@ -15,12 +14,9 @@ export default {
   },
   template: [[${template}]],
   components: { NavTabsEnviroment,NavTabsConfiguration,NavTabsWebMapping,NavTabsLogger,NavTabsMetrics,NavTabsKeyStores,NavTabsBlockChain },
-  /*
-   * components: { StatsCard, ChartCard, NavTabsCard, NavTabsTable, OrderedTable },
-   */
   created () {
     this.poll = setInterval(function() {
-      jQuery.ajax({
+      window.jQuery.ajax({
         url : "/control/health",
         dataType : "json",
         success : function(data) {
@@ -35,7 +31,7 @@ export default {
           $("#ar4k_net_gw").html(data.details.ar4k.details['operating-system'].networkParams['ipv4DefaultGateway']);
         }
       });
-      jQuery.ajax({
+      window.jQuery.ajax({
         url : "/ar4k/status",
         dataType : "json",
         success : function(data) {
@@ -44,21 +40,21 @@ export default {
           $("#ar4k_services_count").html(data['run-services'].length);
         }
       });
-      jQuery.ajax({
+      window.jQuery.ajax({
         url : "/control/beans",
         dataType : "json",
         success : function(data) {
           $("#ar4k_beans_count").html(Object.keys(data.contexts.application.beans).length);
         }
       });
-      jQuery.ajax({
+      window.jQuery.ajax({
         url : "/control/threaddump",
         dataType : "json",
         success : function(data) {
           $("#ar4k_threads_count").html(data.threads.length);
         }
       });
-      jQuery.ajax({
+      window.jQuery.ajax({
         url : "/control/info",
         dataType : "json",
         success : function(data) {
@@ -76,6 +72,5 @@ export default {
     clearInterval(this.poll)
   },
   methods: {
-   
   }
 }

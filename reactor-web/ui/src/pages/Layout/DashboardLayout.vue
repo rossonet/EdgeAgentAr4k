@@ -12,6 +12,10 @@
         <md-icon>input</md-icon>
         <p>Terminal</p>
       </sidebar-link>
+      <sidebar-link to="/swagger">
+        <md-icon>usb</md-icon>
+        <p>Open API Client</p>
+      </sidebar-link>
       <!--
       <sidebar-link to="/user">
         <md-icon>person</md-icon>

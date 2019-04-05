@@ -19,7 +19,20 @@ import MaterialDashboard from './material-dashboard'
 
 import Chartist from 'chartist'
 
+import HttpVueLoader from 'http-vue-loader'
+
+// const DashboardTxt = import(/* webpackIgnore: true */ '/ar4k/dashboard.js')
+// const TerminalTxt = import(/* webpackIgnore: true */ '/ar4k/terminal.js')
 // import Axios from './http-common.js'
+
+import JQuery from 'jquery'
+// import VueTerminal from 'vue-terminal'
+
+import VueQriously from 'vue-qriously'
+
+window.jQuery = JQuery
+window.$ = JQuery
+// window.vueTerminal = VueTerminal
 
 Vue.use(VueRouter)
 Vue.use(MaterialDashboard)
@@ -27,9 +40,12 @@ Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(VueResource)
+Vue.use(HttpVueLoader)
+Vue.use(VueQriously)
 
 Vue.http.options.emulateJSON = false
-
+// window.vueDashboard = Vue.component('Dashboard', DashboardTxt)
+// window.vueTerminal = Vue.component('Terminal', TerminalTxt)
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes

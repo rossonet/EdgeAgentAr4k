@@ -120,7 +120,7 @@ public class DashboardWebController {
   public Mono<Void> ar4kAppHome(ServerWebExchange exchange) {
     ServerHttpResponse response = exchange.getResponse();
     response.setStatusCode(HttpStatus.SEE_OTHER);
-    response.getHeaders().add(HttpHeaders.LOCATION, "/static");
+    response.getHeaders().add(HttpHeaders.LOCATION, "/static/index.html");
     return response.setComplete();
   }
 
@@ -134,7 +134,7 @@ public class DashboardWebController {
   }
 
   @SuppressWarnings("unchecked")
-  @RequestMapping(path = "/ar4k/dashtable/{table}")
+  @RequestMapping(path = "/ar4k/dashtable/{table}.vue")
   public Mono<String> ar4kTerminalJs(Authentication authentication, Model model, ServerHttpResponse response,
       @PathVariable("table") String table) {
     String targetPage = "";
@@ -190,10 +190,10 @@ public class DashboardWebController {
     }
     model.addAttribute("template", templateEngine.process(targetPage, ctx));
     response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
-    return Mono.just("table.js");
+    return Mono.just("table.vue.js");
   }
 
-  @RequestMapping("/ar4k/dashboard.js")
+  @RequestMapping("/ar4k/dashboard.vue")
   public Mono<String> ar4kDashboardJs(Authentication authentication, Model model, ServerHttpResponse response) {
     Context ctx = new Context();
     ctx.setVariable("selectedMenu", "dashboard");
@@ -204,7 +204,7 @@ public class DashboardWebController {
     ctx.setVariable("logo", anima.getLogoUrl());
     model.addAttribute("template", templateEngine.process("dashboard.html", ctx));
     response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
-    return Mono.just("dashboard.js");
+    return Mono.just("dashboard.vue.js");
   }
 
   @SuppressWarnings("unchecked")
@@ -241,24 +241,6 @@ public class DashboardWebController {
     risposta.put("mappings", map);
     risposta.put("meters", meters);
     return Mono.just(risposta);
-  }
-
-  @RequestMapping("/ar4k/swagger")
-  public Mono<String> ar4kSwagger(Authentication authentication, Model model) {
-    model.addAttribute("selectedMenu", "swagger");
-    model.addAttribute("logo", anima.getLogoUrl());
-    model.addAttribute("user", authentication.getName());
-    model.addAttribute("roles", authentication.getAuthorities());
-    return Mono.just("swagger");
-  }
-
-  @RequestMapping("/ar4k/beans")
-  public Mono<String> ar4kBeans(Authentication authentication, Model model) {
-    model.addAttribute("selectedMenu", "beans");
-    model.addAttribute("logo", anima.getLogoUrl());
-    model.addAttribute("user", authentication.getName());
-    model.addAttribute("roles", authentication.getAuthorities());
-    return Mono.just("beans");
   }
 
   @SuppressWarnings("unchecked")

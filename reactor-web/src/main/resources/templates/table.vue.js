@@ -5,13 +5,6 @@ export default {
     }
   },
   template: [[${template}]],
-  /*
-   * components: { StatsCard, ChartCard, NavTabsCard, NavTabsTable, OrderedTable },
-   */
-  created () {
-  },
-  beforeDestroy () {
-  },
   methods: {
     onSelect: function (items) {
       this.selected = items

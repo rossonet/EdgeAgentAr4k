@@ -30,7 +30,7 @@
 import SidebarLink from './SidebarLink.vue'
 import MobileMenu from '@/pages/Layout/MobileMenu.vue'
 
-export default{
+export default {
   components: {
     SidebarLink,
     MobileMenu

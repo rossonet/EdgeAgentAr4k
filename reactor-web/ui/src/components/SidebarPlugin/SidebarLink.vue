@@ -8,7 +8,7 @@
   </md-list-item>
 </template>
 <script>
-export default{
+export default {
   inject: {
     autoClose: {
       default: true

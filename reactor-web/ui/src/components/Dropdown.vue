@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-export default{
+export default {
   name: 'drop-down',
   props: {
     title: String,
