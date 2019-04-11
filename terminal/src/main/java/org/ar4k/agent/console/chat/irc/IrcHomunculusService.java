@@ -19,8 +19,6 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
-import org.ar4k.agent.rpc.Ar4kSession;
-import org.springframework.session.SessionRepository;
 
 import com.google.gson.JsonElement;
 
@@ -30,7 +28,7 @@ import com.google.gson.JsonElement;
  *         Gestore servizio per connessioni irc.
  * 
  */
-public class IrcHomunculusService extends AbstractAr4kService implements SessionRepository<Ar4kSession> {
+public class IrcHomunculusService extends AbstractAr4kService {
 
   // iniettata vedi set/get
   private IrcHomunculusConfig configuration = null;
@@ -88,27 +86,4 @@ public class IrcHomunculusService extends AbstractAr4kService implements Session
     return null;
   }
 
-  @Override
-  public Ar4kSession createSession() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void save(Ar4kSession session) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public Ar4kSession getSession(String id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void delete(String id) {
-    // TODO Auto-generated method stub
-    
-  }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.codec.binary.Hex;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
@@ -36,14 +36,12 @@ import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -63,18 +61,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ManagedResource(objectName = "bean:name=pcapInterface", description = "Ar4k Agent pcap interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "pcapInterface")
 @RestController
 @RequestMapping("/pcapInterface")
-public class PcapShellInterface {
-  /*
-   * @Autowired private ApplicationContext applicationContext;
-   */
-  @Autowired
-  private Anima anima;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
+public class PcapShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Send a register pcap file from a network interface", group = "Pcap Commands")
   @ManagedOperation

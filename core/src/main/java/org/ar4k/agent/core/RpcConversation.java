@@ -19,7 +19,8 @@ public class RpcConversation implements RpcExecutor {
   private Map<String, Ar4kConfig> configurations = new HashMap<>();
   private Map<String, KeystoreConfig> keyStores = new HashMap<String, KeystoreConfig>();
   private Map<String, PotConfig> components = new HashMap<String, PotConfig>();
-  Homunculus homunculus = null;
+  private Homunculus homunculus = null;
+  private String workingConfig = null;
 
   @Override
   public String elaborateMessage(String message) {
@@ -68,6 +69,18 @@ public class RpcConversation implements RpcExecutor {
 
   public void setComponents(Map<String, PotConfig> components) {
     this.components = components;
+  }
+
+  protected Homunculus getHomunculus() {
+    return homunculus;
+  }
+
+  public Ar4kConfig getWorkingConfig() {
+    return workingConfig != null ? configurations.get(workingConfig) : null;
+  }
+
+  public void setWorkingConfig(String workingConfig) {
+    this.workingConfig = workingConfig;
   }
 
 }

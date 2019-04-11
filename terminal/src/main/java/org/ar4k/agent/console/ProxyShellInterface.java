@@ -16,14 +16,11 @@ package org.ar4k.agent.console;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnel.SocketConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -44,25 +41,13 @@ import org.springframework.web.bind.annotation.RestController;
 @ManagedResource(objectName = "bean:name=proxyInterface", description = "Ar4k Agent Proxy Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "proxyInterface")
 @RestController
 @RequestMapping("/proxyInterface")
-public class ProxyShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
+public class ProxyShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Add a proxy endpoint to the selected configuration", group = "Tunnel Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addProxyNetworkPoint(@ShellOption(optOut = true) @Valid SocketConfig service) {
-    anima.getWorkingConfig().pots.add(service);
+    getWorkingConfig().pots.add(service);
   }
 
 }

@@ -19,11 +19,10 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.Client.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -49,24 +48,11 @@ import org.springframework.web.bind.annotation.RestController;
 @ManagedResource(objectName = "bean:name=ircInterface", description = "Ar4k Agent IRC RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "ircInterface")
 @RestController
 @RequestMapping("/ircInterface")
-public class IrcShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
+public class IrcShellInterface extends AbstractShellHelper {
   @Autowired
   Shell shell;
 
   Client client = null;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
 
   @SuppressWarnings("unused")
   private Availability testClientUsed() {
@@ -83,7 +69,7 @@ public class IrcShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addIrcManagerToSelectedConfig(@ShellOption(optOut = true) @Valid IrcHomunculusConfig service) {
-    anima.getWorkingConfig().services.add(service);
+    getWorkingConfig().services.add(service);
   }
 
   @ShellMethod(value = "Start IRC remote management connection", group = "IRC Commands")

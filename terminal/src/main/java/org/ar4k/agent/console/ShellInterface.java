@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -66,6 +67,7 @@ import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.exception.Ar4kException;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -74,15 +76,13 @@ import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -110,48 +110,37 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 @ManagedResource(objectName = "bean:name=mainInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "mainInterface")
 @RestController
 @RequestMapping("/anima")
-public class ShellInterface {
+public class ShellInterface extends AbstractShellHelper {
 
   private static final Logger logger = LoggerFactory.getLogger(ShellInterface.class);
 
-  @Value("${ar4k.test}")
-  boolean flagTestOk = false;
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
   private static final Long load = 1500L;
 
-  @SuppressWarnings("unused")
-  private Availability testOk() {
-    return flagTestOk ? Availability.available()
-        : Availability.unavailable("test command not available in this version");
+  @ShellMethod(value = "Login in the agent", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionFalse")
+  public boolean login(@ShellOption(help = "username", defaultValue = "admin") String username,
+      @ShellOption(help = "password") String password) {
+    boolean result = false;
+    sessionId = anima.login(username, password);
+    if (sessionId != null)
+      result = true;
+    return result;
   }
 
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
+  @ShellMethod(value = "Logout to the agent", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public boolean logout() {
+    sessionId = null;
+    return true;
   }
 
-  @SuppressWarnings("unused")
-  private Availability testRuntimeConfigOk() {
-    return anima.getRuntimeConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to configure a runtime config before");
-  }
-
-  @SuppressWarnings("unused")
-  private Availability testListConfigOk() {
-    return anima.getConfigs().size() > 0 ? Availability.available()
-        : Availability.unavailable("there are no configs in memory");
-  }
-
-  @SuppressWarnings("unused")
-  private Availability testIsRunningOk() {
-    return anima.isRunning() ? Availability.available() : Availability.unavailable("there are no configs in memory");
+  @ShellMethod(value = "get your info", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public Authentication me() {
+    return SecurityContextHolder.getContext().getAuthentication();
   }
 
   @ShellMethod(value = "Test method. Just return the string parameter", group = "Testing Commands")
@@ -204,7 +193,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String getSelectedConfigBase64() throws IOException {
-    return ConfigHelper.toBase64(anima.getWorkingConfig());
+    return ConfigHelper.toBase64(getWorkingConfig());
   }
 
   @ShellMethod("Save selected configuration in base64 text file")
@@ -220,15 +209,16 @@ public class ShellInterface {
 
   @ShellMethod("Import configuration from base64 text to selected configuration")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigBase64(
       @ShellOption(help = "configuration exported by export-selected-config-base64") String base64Config)
       throws IOException, ClassNotFoundException {
-    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64(base64Config));
-    anima.addConfig(anima.getWorkingConfig());
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64(base64Config));
   }
 
   @ShellMethod("Load selected configuration from a base64 text file")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void loadSelectedConfigBase64(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
@@ -250,7 +240,7 @@ public class ShellInterface {
   public String getSelectedConfigBase64Rsa(@ShellOption(help = "keystore alias for the key") String alias)
       throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException,
       InvalidKeyException, UnrecoverableEntryException {
-    return ConfigHelper.toBase64Rsa(anima.getWorkingConfig(), alias);
+    return ConfigHelper.toBase64Rsa(getWorkingConfig(), alias);
   }
 
   // TODO: da completare con la crittografia e provare.
@@ -268,11 +258,11 @@ public class ShellInterface {
 
   @ShellMethod("Import the selected configuration from base64 text crypted in RSA")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigBase64Rsa(
       @ShellOption(help = "configuration exported by export-selected-config-base64-rsa") String base64Config)
       throws IOException, ClassNotFoundException {
-    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Rsa(base64Config));
-    anima.addConfig(anima.getWorkingConfig());
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Rsa(base64Config));
   }
 
   // TODO: aggiungere il salvataggio dell configurazione su DNS con key (provare
@@ -281,6 +271,7 @@ public class ShellInterface {
 
   @ShellMethod("Load selected configuration from a base64 text file crypted in RSA")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void loadSelectedConfigBase64Rsa(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.rsa.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
@@ -300,7 +291,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String getSelectedConfigJson() {
-    return ConfigHelper.toJson(anima.getWorkingConfig());
+    return ConfigHelper.toJson(getWorkingConfig());
   }
 
   @ShellMethod("Save selected configuration in json text file")
@@ -317,15 +308,16 @@ public class ShellInterface {
   // TODO: risolvere gli oggetti annidati
   @ShellMethod("Import the selected configuration from json text")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigJson(
       @ShellOption(help = "configuration exported by export-selected-config-json") String jsonConfig) {
-    anima.setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
-    anima.addConfig(anima.getWorkingConfig());
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
   }
 
   // TODO: risolvere gli oggetti annidati
   @ShellMethod("Load selected configuration from a json text file")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void loadSelectedConfigJson(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.json.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
@@ -343,9 +335,9 @@ public class ShellInterface {
 
   @ShellMethod("Create new configuration as selected configuration")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public void createSelectedConfig(@ShellOption() @Valid Ar4kConfig confCreated) {
-    anima.setWorkingConfig(confCreated);
-    anima.addConfig(anima.getWorkingConfig());
+    setWorkingConfig(confCreated);
   }
 
   @ShellMethod("List configs in runtime")
@@ -353,10 +345,10 @@ public class ShellInterface {
   @ShellMethodAvailability("testListConfigOk")
   public String listConfig() {
     String risposta = "";
-    for (Ar4kConfig configurazione : anima.getConfigs()) {
-      risposta = risposta
-          + AnsiOutput.toString(AnsiColor.GREEN, configurazione.uniqueId.toString(), AnsiColor.DEFAULT, " - ",
-              configurazione.name, " [", configurazione.promptColor, configurazione.prompt, AnsiColor.DEFAULT, "]\n");
+    for (Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+      risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, configurazione.getValue().uniqueId.toString(),
+          AnsiColor.DEFAULT, " - ", configurazione.getValue().name, " [", configurazione.getValue().promptColor,
+          configurazione.getValue().prompt, AnsiColor.DEFAULT, "]\n");
     }
     return risposta;
   }
@@ -381,7 +373,7 @@ public class ShellInterface {
   @ShellMethodAvailability("testSelectedConfigOk")
   public String listTunnelsSelectedConfig() {
     String risposta = "";
-    for (ConfigSeed a : anima.getWorkingConfig().pots) {
+    for (ConfigSeed a : getWorkingConfig().pots) {
       try {
         if (a.getName() != null) {
           risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, a.getName(), AnsiColor.DEFAULT, " - ",
@@ -398,13 +390,13 @@ public class ShellInterface {
   @ShellMethodAvailability("testListConfigOk")
   public void selectConfig(@ShellOption(help = "the id of the config to select") String idConfig) {
     Ar4kConfig target = null;
-    for (Ar4kConfig configurazione : anima.getConfigs()) {
-      if (configurazione.uniqueId.toString().equals(idConfig)) {
-        target = configurazione;
+    for (Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+      if (configurazione.getValue().uniqueId.toString().equals(idConfig)) {
+        target = configurazione.getValue();
         break;
       }
     }
-    anima.setWorkingConfig(target);
+    setWorkingConfig(target);
   }
 
   @ShellMethod("Clone a config in the list with a new id, name and prompt")
@@ -414,9 +406,9 @@ public class ShellInterface {
       @ShellOption(help = "the name of the new config") String newName,
       @ShellOption(help = "the promp for the new config") String newPrompt) throws IOException, ClassNotFoundException {
     Ar4kConfig target = null;
-    for (Ar4kConfig configurazione : anima.getConfigs()) {
-      if (configurazione.uniqueId.toString().equals(idConfig)) {
-        target = configurazione;
+    for (Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+      if (configurazione.getValue().uniqueId.toString().equals(idConfig)) {
+        target = configurazione.getValue();
         break;
       }
     }
@@ -431,7 +423,7 @@ public class ShellInterface {
     newTarget.uniqueId = UUID.randomUUID();
     newTarget.name = newName;
     newTarget.prompt = newPrompt;
-    anima.getConfigs().add(newTarget);
+    getConfigs().put(newTarget.getName(), newTarget);
     return "cloned";
   }
 
@@ -439,7 +431,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String unsetSelectedConfig() {
-    anima.setWorkingConfig(null);
+    setWorkingConfig(null);
     return "unseted";
   }
 
@@ -447,7 +439,7 @@ public class ShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String setSelectedConfigAsRuntime() {
-    anima.setTargetConfig(anima.getWorkingConfig());
+    anima.setTargetConfig(getWorkingConfig());
     return "set";
   }
 
@@ -459,6 +451,7 @@ public class ShellInterface {
 
   @ShellMethod(value = "Set a event to the agent", group = "Run Commands")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
   public void setAr4kAgentStatus(
       @ShellOption(help = "target status", valueProvider = Ar4kEventsValuesProvider.class) AnimaEvents target) {
     anima.sendEvent(target);
@@ -466,6 +459,7 @@ public class ShellInterface {
 
   @ShellMethod(value = "Shutdown agent", group = "Run Commands")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
   public void goodbye() {
     setAr4kAgentStatus(AnimaEvents.FINALIZE);
     System.exit(0);
@@ -519,11 +513,12 @@ public class ShellInterface {
     newTarget.uniqueId = UUID.randomUUID();
     newTarget.name = newName;
     newTarget.prompt = newPrompt;
-    anima.addConfig(newTarget);
+    addConfig(newTarget);
   }
 
   @ShellMethod(value = "Set the log filter for the console", group = "Monitoring Commands")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
   public String setLogLevel(
       @ShellOption(help = "the new log level to set", defaultValue = "INFO", valueProvider = LogLevelValuesProvider.class) String newLogLevel) {
     Ar4kLogger.level = Ar4kLogger.LogLevel.valueOf(newLogLevel);
@@ -592,6 +587,7 @@ public class ShellInterface {
 
   @ShellMethod(value = "Run shell command on the system. CTRL-E exit", group = "Run Commands")
   @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
   public String runCommandLine(
       @ShellOption(help = "the command to start in the shell", defaultValue = "/bin/bash -login") String shellCommand,
       @ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {

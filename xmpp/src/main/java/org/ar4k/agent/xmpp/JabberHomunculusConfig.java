@@ -32,4 +32,9 @@ public class JabberHomunculusConfig extends AbstractServiceConfig {
     JabberHomunculusService ss = new JabberHomunculusService();
     return (Ar4kComponent) ss;
   }
+
+  @Override
+  public int getPriority() {
+    return 6;
+  }
 }

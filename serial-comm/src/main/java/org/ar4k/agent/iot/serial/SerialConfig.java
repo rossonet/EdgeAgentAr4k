@@ -64,4 +64,9 @@ public class SerialConfig extends AbstractServiceConfig {
     SerialService ss = new SerialService();
     return ss;
   }
+
+  @Override
+  public int getPriority() {
+    return 5;
+  }
 }

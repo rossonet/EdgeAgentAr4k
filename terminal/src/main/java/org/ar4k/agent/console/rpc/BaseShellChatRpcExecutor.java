@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.validation.ConstraintViolation;
 
-import org.ar4k.agent.rpc.Ar4kSession;
+import org.ar4k.agent.rpc.Homunculus;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.shell.CompletionContext;
@@ -77,13 +77,7 @@ public class BaseShellChatRpcExecutor implements RpcExecutor {
   }
 
   @Override
-  public Ar4kSession getSession() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void setSession(Ar4kSession session) {
+  public void setHomunculus(Homunculus homunculus) {
     // TODO Auto-generated method stub
     
   }

@@ -72,4 +72,9 @@ public class TribeConfig extends AbstractServiceConfig {
   public UUID getUniqueId() {
     return uniqueId;
   }
+
+  @Override
+  public int getPriority() {
+    return 7;
+  }
 }

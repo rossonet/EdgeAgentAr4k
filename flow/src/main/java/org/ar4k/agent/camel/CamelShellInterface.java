@@ -19,13 +19,12 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -50,23 +49,12 @@ import com.google.gson.GsonBuilder;
 @RestController
 @RequestMapping("/camelInterface")
 @ConditionalOnProperty(name = "ar4k.camel", havingValue = "true")
-public class CamelShellInterface {
-  /*
-   * @Autowired private ApplicationContext applicationContext;
-   */
-  @Autowired
-  private Anima anima;
+public class CamelShellInterface extends AbstractShellHelper {
 
   @Autowired
   public CamelContext camelContext;
 
   Map<String, String> camelComponents = new HashMap<String, String>();
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
 
   @ShellMethod(value = "List camel endpoints managed by the platflorm", group = "Camel Commands")
   @ManagedOperation
@@ -113,23 +101,23 @@ public class CamelShellInterface {
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addCamelEndpointToConfiguration(@ShellOption(help = "label of the endpoint") String label) {
     try {
-      if (((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
+      if (((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
         // ok
       }
     } catch (Exception ee) {
-      if (anima.getWorkingConfig() != null && anima.getWorkingConfig().data != null
-          && anima.getWorkingConfig().data.containsKey("camel")) {
-        anima.getWorkingConfig().data.remove("camel");
+      if (getWorkingConfig() != null && getWorkingConfig().data != null
+          && getWorkingConfig().data.containsKey("camel")) {
+        getWorkingConfig().data.remove("camel");
       }
     }
-    if (!anima.getWorkingConfig().data.containsKey("camel")) {
+    if (!getWorkingConfig().data.containsKey("camel")) {
       Map<String, Object> mapCamel = new HashMap<String, Object>();
       Map<String, String> eps = new HashMap<String, String>();
       mapCamel.put("endpoints", eps);
-      anima.getWorkingConfig().data.put("camel", mapCamel);
+      getWorkingConfig().data.put("camel", mapCamel);
     }
-    ((Map<String, String>) ((HashMap<String, Object>) anima.getWorkingConfig().data.get("camel")).get("endpoints"))
-        .put(label, camelComponents.get(label));
+    ((Map<String, String>) ((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints")).put(label,
+        camelComponents.get(label));
   }
 
   @ShellMethod(value = "Add (or replace) camel route to the selected config", group = "Camel Commands")

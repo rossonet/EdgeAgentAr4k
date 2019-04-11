@@ -20,14 +20,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.ar4k.agent.config.tribe.TribeConfig;
-import org.ar4k.agent.core.Anima;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -57,21 +54,9 @@ import io.atomix.utils.net.Address;
 @RestController
 @RequestMapping("/tribeInterface")
 @ConditionalOnProperty(name = "ar4k.tribe", havingValue = "true")
-public class TribeShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
+public class TribeShellInterface extends AbstractShellHelper {
 
   List<Atomix> selectedAtomix = new ArrayList<Atomix>();
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
 
   @ShellMethod(value = "Create a Atomix cluster with 3 local nodes on different ports", group = "Tribe Commands")
   @ManagedOperation
@@ -136,7 +121,7 @@ public class TribeShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addTribe(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
-    anima.getWorkingConfig().services.add(tribe);
+    getWorkingConfig().services.add(tribe);
   }
 
 }

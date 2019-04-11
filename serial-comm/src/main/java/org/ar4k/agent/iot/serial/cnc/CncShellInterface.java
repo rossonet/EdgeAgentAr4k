@@ -16,10 +16,8 @@ package org.ar4k.agent.iot.serial.cnc;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -44,19 +42,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cncInterface")
 @ConditionalOnProperty(name = "ar4k.cnc", havingValue = "true")
-public class CncShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
+public class CncShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Add a CNC interface service to the selected configuration", group = "CNC Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addCncService(@ShellOption(optOut = true) @Valid CncConfig service) {
-    anima.getWorkingConfig().services.add(service);
+    getWorkingConfig().services.add(service);
   }
 
 }

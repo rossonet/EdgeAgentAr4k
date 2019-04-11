@@ -17,6 +17,7 @@ package org.ar4k.agent.console;
 import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.stunnel.StunnelConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ManagedResource(objectName = "bean:name=stunnelInterface", description = "Ar4k Agent Stunnel Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "stunnelInterface")
 @RestController
 @RequestMapping("/stunnelInterface")
-public class StunnelShellInterface {
+public class StunnelShellInterface extends AbstractShellHelper {
 
   @Autowired
   ApplicationContext applicationContext;
@@ -57,7 +58,7 @@ public class StunnelShellInterface {
   private Availability testSelectedConfigOkAndOneKey() {
     boolean ok = true;
     String message = "";
-    if (anima.getWorkingConfig() == null) {
+    if (getWorkingConfig() == null) {
       ok = false;
       message += "you have to select a config before";
     }
@@ -75,7 +76,7 @@ public class StunnelShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOkAndOneKey")
   public void addStunnelService(@ShellOption(optOut = true) @Valid StunnelConfig service) {
-    anima.getWorkingConfig().pots.add(service);
+    getWorkingConfig().pots.add(service);
   }
 
 }

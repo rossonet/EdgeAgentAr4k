@@ -16,13 +16,10 @@ package org.ar4k.agent.xmpp;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -43,25 +40,13 @@ import org.springframework.web.bind.annotation.RestController;
 @ManagedResource(objectName = "bean:name=jabberInterface", description = "Ar4k Agent Jabber Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "jabberInterface")
 @RestController
 @RequestMapping("/jabberInterface")
-public class JabberHomunculusShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
+public class JabberHomunculusShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Add a Jabber endpoint to the selected configuration")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addJabberConnection(@ShellOption(optOut = true) @Valid JabberHomunculusConfig service) {
-    anima.getWorkingConfig().services.add(service);
+    getWorkingConfig().services.add(service);
   }
 
 }

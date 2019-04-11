@@ -14,11 +14,17 @@
     */
 package org.ar4k.agent.console;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.RpcConversation;
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
@@ -34,15 +40,24 @@ public class CustomPromptProvider implements PromptProvider {
   @Autowired
   Anima anima;
 
+  @Autowired
+  private AnimaHomunculus animaHomunculus;
+
   @Override
   public AttributedString getPrompt() {
+    Ar4kConfig wc = null;
+    Authentication a = SecurityContextHolder.getContext().getAuthentication();
+    if (a != null) {
+      SessionInformation session = animaHomunculus.getAllSessions(a, false).get(0);
+      wc = ((RpcConversation) anima.getRpc(session.getSessionId())).getWorkingConfig();
+    }
     AnsiColor colore = AnsiColor.BLUE;
     String testo = "AGENT:> ";
     if (anima.getState() != null)
       testo = anima.getState().toString() + ":> ";
-    if (anima.getWorkingConfig() != null) {
-      colore = anima.getWorkingConfig().promptColor;
-      testo = anima.getWorkingConfig().prompt + ":# ";
+    if (wc != null) {
+      colore = wc.promptColor;
+      testo = wc.prompt + ":# ";
     }
     AttributedString prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
     return prompt;

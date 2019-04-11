@@ -16,16 +16,11 @@ package org.ar4k.agent.iot.serial;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.iot.serial.SerialConfig;
-import org.ar4k.agent.iot.serial.SerialService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -52,19 +47,7 @@ import com.google.gson.GsonBuilder;
 @RestController
 @RequestMapping("/serialInterface")
 @ConditionalOnProperty(name = "ar4k.serial", havingValue = "true")
-public class SerialShellInterface {
-
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOk() {
-    return anima.getWorkingConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to select a config before");
-  }
+public class SerialShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
   @ManagedOperation
@@ -77,7 +60,7 @@ public class SerialShellInterface {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
-    anima.getWorkingConfig().services.add(service);
+    getWorkingConfig().services.add(service);
   }
 
 }

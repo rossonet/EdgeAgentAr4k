@@ -32,4 +32,9 @@ public class IrcHomunculusConfig extends AbstractServiceConfig {
     IrcHomunculusService ss = new IrcHomunculusService();
     return (Ar4kComponent) ss;
   }
+
+  @Override
+  public int getPriority() {
+    return 15;
+  }
 }
