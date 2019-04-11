@@ -52,6 +52,8 @@ public abstract class AbstractAr4kService implements ServiceComponent {
   // iniettata in costruzione (vedi get/set)
   private AbstractServiceConfig configuration;
 
+  private String beanName = null;
+
   public AbstractAr4kService() {
     serviceStatus = ServiceStates.STARTING;
   }
@@ -125,5 +127,14 @@ public abstract class AbstractAr4kService implements ServiceComponent {
 
   public void setTested(boolean tested) {
     this.tested = tested;
+  }
+
+  @Override
+  public void setBeanName(String name) {
+    beanName = name;
+  }
+
+  public String getBeanName() {
+    return beanName;
   }
 }

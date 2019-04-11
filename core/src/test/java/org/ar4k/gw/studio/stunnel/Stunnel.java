@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -39,6 +40,7 @@ import org.junit.runner.Description;
 
 ////////////////////////////////////////////////////
 
+@Ignore
 public class Stunnel {
 
   boolean running = true;

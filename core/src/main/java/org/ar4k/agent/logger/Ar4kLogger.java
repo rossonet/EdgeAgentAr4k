@@ -17,12 +17,11 @@ package org.ar4k.agent.logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.messages.LoggerMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.springframework.integration.core.MessagingTemplate;
+//import org.springframework.integration.core.MessagingTemplate;
 
 /**
  * Logger
@@ -70,7 +69,7 @@ public class Ar4kLogger implements Logger {
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    MessagingTemplate messageTemplate = new MessagingTemplate();
+    // MessagingTemplate messageTemplate = new MessagingTemplate();
     LoggerMessage loggerMessage = new LoggerMessage();
     if (logMessage.containsKey("exception") && logMessage.get("exception") instanceof Exception) {
       loggerMessage.setException((Exception) logMessage.get("exception"));

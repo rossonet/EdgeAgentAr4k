@@ -34,7 +34,4 @@ dependencies {
   //compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
   // datastore
   compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
-  // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-gateway
-  compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-gateway', version: '2.1.1.RELEASE'
-  
 }

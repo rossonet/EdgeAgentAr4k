@@ -14,9 +14,11 @@
     */
 package org.ar4k.agent.console;
 
+import org.ar4k.agent.spring.autoconfig.web.Ar4kWebFluxConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,6 +28,7 @@ import org.springframework.util.StringUtils;
  */
 @SpringBootApplication
 @ComponentScan("org.ar4k.agent")
+@Import(Ar4kWebFluxConfiguration.class)
 public class Ar4kAgent {
 
 	static final boolean running = true;

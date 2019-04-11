@@ -35,7 +35,7 @@ public class PotValidator implements IParameterValidator {
     Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
     boolean ok = false;
     StringBuilder r = new StringBuilder();
-    for (PotConfig a : anima.getWorkingConfig().pots) {
+    for (PotConfig a : anima.getRuntimeConfig().pots) {
       try {
         ConfigSeed b = (ConfigSeed) a;
         if (b.getName().equals(value)) {

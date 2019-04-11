@@ -1,7 +1,9 @@
 package org.ar4k.agent.console.chat.irc;
 
-import org.ar4k.agent.console.chat.BaseShellChatRpcExecutor;
+import org.ar4k.agent.console.rpc.BaseShellChatRpcExecutor;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.rpc.Ar4kSession;
+import org.ar4k.agent.rpc.Homunculus;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.element.Channel;
 import org.kitteh.irc.client.library.element.User;
@@ -13,12 +15,12 @@ import org.springframework.shell.Shell;
 
 import net.engio.mbassy.listener.Handler;
 
-public class IrcConnectionHandler {
+public class IrcConnectionHandlerHomunculus implements Homunculus<Ar4kSession> {
 
   private Client client = null;
   private BaseShellChatRpcExecutor executor = new BaseShellChatRpcExecutor();
 
-  public IrcConnectionHandler(Client client, Shell shell) {
+  public IrcConnectionHandlerHomunculus(Client client, Shell shell) {
     this.client = client;
     executor.setShell(shell);
   }

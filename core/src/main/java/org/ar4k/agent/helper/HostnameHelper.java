@@ -16,9 +16,11 @@ package org.ar4k.agent.helper;
 
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.ServerSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Collections;
@@ -83,6 +85,18 @@ public class HostnameHelper {
       LoggerFactory.getLogger(HostnameHelper.class).warn("Failed to get InetAddress for bind address: {}", address, e);
     }
     return hostnames;
+  }
+
+  public static int findAvailablePort(int defaultPort) {
+    try {
+      ServerSocket socket = new ServerSocket(0);
+      socket.setReuseAddress(true);
+      int port = socket.getLocalPort();
+      socket.close();
+      return port;
+    } catch (IOException ex) {
+      return defaultPort;
+    }
   }
 
 }

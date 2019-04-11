@@ -16,4 +16,10 @@ public class EthereumBlockChain extends AbstractBlockChainManager {
     return null;
   }
 
+  @Override
+  public void setBeanName(String name) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

@@ -109,8 +109,10 @@ subprojects {
     compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.shell', name: 'spring-shell-core', version: '2.0.1.RELEASE'
     // per annotazione web
-    compile group: 'org.springframework', name: 'spring-webflux'
+    //compile group: 'org.springframework', name: 'spring-webflux'
     //compile group: 'org.thymeleaf', name: 'thymeleaf'
+    // spring-session
+    compile group: 'org.springframework.session', name: 'spring-session', version: '1.0.0.RELEASE'
     // strumento dev
     //compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'

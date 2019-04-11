@@ -1,8 +1,9 @@
-package org.ar4k.agent.console.chat;
+package org.ar4k.agent.console.rpc;
 
+import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class StringChatRpcMessage<S> implements ChatRpcMessage<String> {
+public class StringChatRpcMessage<S> implements RpcMessage<String> {
 
   private String rawString = null;
   private MessageHeaders header = null;

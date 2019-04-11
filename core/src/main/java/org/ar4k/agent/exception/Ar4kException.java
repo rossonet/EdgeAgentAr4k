@@ -42,7 +42,7 @@ public class Ar4kException extends java.lang.RuntimeException {
 
   public Ar4kException(String s) {
     super(s);
-    logger.error("AR4K " + s);
+    logger.error("AR4K: " + s);
   }
 
   public Ar4kException(String s, Throwable throwable) {

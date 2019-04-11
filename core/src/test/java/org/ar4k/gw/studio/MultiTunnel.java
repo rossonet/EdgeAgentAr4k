@@ -15,16 +15,17 @@
 package org.ar4k.gw.studio;
 
 import org.ar4k.agent.tunnel.SocketConfig;
-import org.ar4k.agent.tunnel.SocketTunnel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+@Ignore
 public class MultiTunnel {
 
   @BeforeClass
@@ -54,7 +55,7 @@ public class MultiTunnel {
   public void test() {
     SocketConfig socketConfig = new SocketConfig();
     socketConfig.name = "Test socket";
-    SocketTunnel st = socketConfig.instantiate();
+    //SocketTunnel st = socketConfig.instantiate();
     
   }
 

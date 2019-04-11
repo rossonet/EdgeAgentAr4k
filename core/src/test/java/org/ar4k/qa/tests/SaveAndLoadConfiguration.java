@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.terminal;
+package org.ar4k.qa.tests;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,28 +27,31 @@ import java.util.UUID;
 import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
-import org.ar4k.agent.console.ShellInterface;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.sshClientTunnel.SshConfig;
 import org.ar4k.agent.stunnel.StunnelConfig;
+import org.ar4k.gw.anima.TestApplicationRunner;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.junit.runner.RunWith;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@ComponentScan("org.ar4k.agent")
+@Import(TestApplicationRunner.class)
+@TestPropertySource(locations="classpath:application.properties")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class SaveAndLoadConfiguration {
-
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
 
   @Before
   public void setUp() throws Exception {
@@ -67,7 +70,6 @@ public class SaveAndLoadConfiguration {
 
   @Test
   public void saveAndRestoreToFromJson() throws InterruptedException, IOException, ClassNotFoundException {
-    Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
@@ -80,23 +82,18 @@ public class SaveAndLoadConfiguration {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    a.setWorkingConfig(c);
-    ShellInterface si = new ShellInterface();
-    si.setAnima(a);
-    si.saveSelectedConfigJson("~/Scrivania/provaJson");
-    si.loadSelectedConfigJson("~/Scrivania/provaJson");
-    assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
+    ConfigSeed a = ConfigHelper.fromJson(ConfigHelper.toJson(c));
+    assertTrue(check.equals(((Ar4kConfig) a).author));
+    assertTrue(check.equals(((SshConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
   }
 
   @Test
   public void saveAndRestoreToFromBase64() throws InterruptedException, ClassNotFoundException, IOException {
-    Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
+    c.name = "test salvataggio json";
     c.author = check;
-    c.name = "test salvataggio base64";
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
     s1.note = check;
@@ -105,24 +102,21 @@ public class SaveAndLoadConfiguration {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    a.setWorkingConfig(c);
-    ShellInterface si = new ShellInterface();
-    si.setAnima(a);
-    si.saveSelectedConfigBase64("~/Scrivania/provaBase64");
-    si.loadSelectedConfigBase64("~/Scrivania/provaBase64");
-    assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
+    String checkText = ConfigHelper.toBase64(c);
+    System.out.println("base64 config: " + checkText);
+    ConfigSeed a = ConfigHelper.fromBase64(checkText);
+    assertTrue(check.equals(((Ar4kConfig) a).author));
+    assertTrue(check.equals(((SshConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
   }
 
   @Test
   public void saveAndRestoreToFromBase64Rsa()
       throws InterruptedException, ClassNotFoundException, IOException, InvalidKeyException, KeyStoreException,
       NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException {
-    Anima a = new Anima();
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
-    c.name = "test salvataggio base64";
+    c.name = "test salvataggio json";
     c.author = check;
     SshConfig s1 = new SshConfig();
     s1.name = "ssh config";
@@ -132,14 +126,10 @@ public class SaveAndLoadConfiguration {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    a.setWorkingConfig(c);
-    ShellInterface si = new ShellInterface();
-    si.setAnima(a);
-    si.saveSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa", "root");
-    si.loadSelectedConfigBase64Rsa("~/Scrivania/provaBase64Rsa");
-    assertTrue(check.equals(a.getWorkingConfig().author));
-    assertTrue(check.equals(((SshConfig) a.getWorkingConfig().services.toArray()[0]).note));
-    assertTrue(check.equals(((StunnelConfig) a.getWorkingConfig().services.toArray()[1]).note));
+    ConfigSeed a = ConfigHelper.fromBase64Rsa(ConfigHelper.toBase64Rsa(c, "privateKeyAlias"));
+    assertTrue(check.equals(((Ar4kConfig) a).author));
+    assertTrue(check.equals(((SshConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((StunnelConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
   }
 
 }

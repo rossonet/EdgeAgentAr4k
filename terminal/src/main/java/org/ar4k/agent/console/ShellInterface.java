@@ -590,7 +590,7 @@ public class ShellInterface {
   // servizio di notifica regolare con camel dei valori.
   // TODO: runCommandLine in package command line interface
 
-  @ShellMethod(value = "Run shell command on the system. CTRL-D exit", group = "Run Commands")
+  @ShellMethod(value = "Run shell command on the system. CTRL-E exit", group = "Run Commands")
   @ManagedOperation
   public String runCommandLine(
       @ShellOption(help = "the command to start in the shell", defaultValue = "/bin/bash -login") String shellCommand,
@@ -724,7 +724,7 @@ public class ShellInterface {
       errori++;
       logger.warn(e.getMessage());
       if (errori > 0) {
-        throw new Ar4kException("running shell terminated");
+        logger.info("running shell terminated");
       }
     }
 

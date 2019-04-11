@@ -98,7 +98,7 @@ public class IrcShellInterface {
       @ShellOption(help = "true for print the debug message in terminal", defaultValue = "false", arity = 0) boolean debug) {
     client = connectToServer(nickName, host, port, ssl, debug);
     client.addChannel(stanza);
-    client.getEventManager().registerEventListener(new IrcConnectionHandler(client, shell));
+    client.getEventManager().registerEventListener(new IrcConnectionHandlerHomunculus(client, shell));
   }
 
   @ShellMethod(value = "Stop IRC remote management connection", group = "IRC Commands")

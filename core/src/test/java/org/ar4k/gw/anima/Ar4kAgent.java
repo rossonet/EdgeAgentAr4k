@@ -12,13 +12,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console;
+package org.ar4k.gw.anima;
 
-import org.ar4k.agent.spring.autoconfig.web.Ar4kWebFluxConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +26,6 @@ import org.springframework.util.StringUtils;
  */
 @SpringBootApplication
 @ComponentScan("org.ar4k.agent")
-@Import(Ar4kWebFluxConfiguration.class)
 public class Ar4kAgent {
 
 	static final boolean running = true;

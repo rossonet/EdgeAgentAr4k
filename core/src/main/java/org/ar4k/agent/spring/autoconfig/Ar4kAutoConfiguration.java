@@ -15,6 +15,7 @@
 package org.ar4k.agent.spring.autoconfig;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kHealthIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -22,12 +23,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 
 @Configuration
 @ConditionalOnClass(Anima.class)
 @EnableConfigurationProperties(Ar4kStarterProperties.class)
-//@Import(Ar4kWebFluxConfiguration.class)
-
 /**
  * Classe starter per inclusione come libreria in ambiente Spring Boot.
  * 
@@ -43,5 +43,11 @@ public class Ar4kAutoConfiguration {
   @ConditionalOnBean(Anima.class)
   Ar4kHealthIndicator ar4kHealthIndicator() {
     return new Ar4kHealthIndicator();
+  }
+  
+  @Bean
+  @ConditionalOnBean(Anima.class)
+  AuthenticationManager ar4kAuthenticationManager() {
+    return new Ar4kAuthenticationManager();
   }
 }

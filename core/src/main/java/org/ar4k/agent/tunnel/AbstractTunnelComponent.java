@@ -27,6 +27,8 @@ import org.ar4k.agent.config.ConfigSeed;
  */
 public abstract class AbstractTunnelComponent implements TunnelComponent {
 
+  private String beanName = null;
+
   private AbstractTunnelConfig configuration = null;
 
   protected SocketFactory socketFactory = null;
@@ -44,5 +46,14 @@ public abstract class AbstractTunnelComponent implements TunnelComponent {
   @Override
   public SocketFactory getSocketFactory() {
     return socketFactory;
+  }
+
+  @Override
+  public void setBeanName(String name) {
+    beanName = name;
+  }
+
+  public String getBeanName() {
+    return beanName;
   }
 }

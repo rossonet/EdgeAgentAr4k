@@ -21,7 +21,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.ServerSocket;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,15 +37,16 @@ import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.rpc.RpcExecutor;
+import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.tunnel.TunnelComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ansi.AnsiColor;
-import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -59,6 +59,11 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.OnStateChanged;
 import org.springframework.statemachine.annotation.WithStateMachine;
@@ -80,7 +85,7 @@ import jdbm.RecordManagerFactory;
 @Scope("singleton")
 @EnableJms
 @WithStateMachine
-public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, Closeable {
+public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, Closeable {
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
@@ -95,6 +100,12 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @Autowired
   private AnimaStateMachineConfig animaStateMachineConfig;
+
+  @Autowired
+  private AnimaHomunculus animaHomunculus;
+
+  @Autowired
+  AuthenticationManager authenticationManager;
 
   // TODO: implementare exception
 
@@ -118,9 +129,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @Value("${ar4k.dnsConfig}")
   private String dnsConfig;
   @Value("${ar4k.baseConfig}")
-  private String base64Config;
+  private String baseConfig;
   @Value("${ar4k.otpRegistrationSeed}")
   private String otpRegistrationSeed;
+  @Value("${ar4k.adminPassword}")
+  private String adminPassword;
   @Value("${ar4k.webRegistrationEndpoint}")
   private String webRegistrationEndpoint;
   @Value("${ar4k.dnsRegistrationEndpoint}")
@@ -147,10 +160,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private Ar4kConfig targetConfig = null;
   // configurazione iniziale di bootStrap derivata dalle variabili Spring
   private Ar4kConfig bootStrapConfig = null;
+
   // array di configurazioni disponibili
-  private Set<Ar4kConfig> configs = new HashSet<Ar4kConfig>();
+  // private Set<Ar4kConfig> configs = new HashSet<Ar4kConfig>();
   // configurazione di lavoro per editare
-  private Ar4kConfig workingConfig = null;
+  // private Ar4kConfig workingConfig = null;
 
   // gestione stati TODO: controllare se viene effettivamente usato nel post
   // config per arrivare allo stato desiderato
@@ -170,8 +184,14 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private Map<String, Object> dataStore = null;
 
+  private Collection<Ar4kUserDetails> localUsers = new HashSet<>();
+
   // per HashMap su disco (map reduction)
   private transient RecordManager recMan = null;
+
+  private boolean init = false;
+
+  private String beanName = null;
 
   // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
   // Lambda,Google Function o, in generale, in modalità function as a service
@@ -229,9 +249,19 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     components = null;
   }
 
-  @OnStateChanged(target = "INIT")
-  public synchronized void initAgent() {
-
+  @SuppressWarnings("unchecked")
+  private void setInitialAuth() {
+    if (adminPassword != null && !adminPassword.isEmpty()) {
+      Ar4kUserDetails admin = new Ar4kUserDetails();
+      admin.setUsername("admin");
+      admin.setPassword(adminPassword);
+      SimpleGrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+      SimpleGrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
+      ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
+      ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityUser);
+      localUsers.add(admin);
+    }
+    init = true;
   }
 
   @OnStateChanged(target = "STARTING")
@@ -248,6 +278,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
+    setInitialAuth();
     bootStrapConfig = resolveBootstrapConfig();
     animaStateMachine.sendEvent(AnimaEvents.BORN);
   }
@@ -277,9 +308,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         if (liv == dnsConfigOrder && targetConfig == null) {
           // TODO: caricamento da dnsconfig
         }
-        if (liv == base64ConfigOrder && targetConfig == null && base64Config != null && !base64Config.equals("")) {
+        if (liv == base64ConfigOrder && targetConfig == null && baseConfig != null && !baseConfig.equals("")) {
           try {
-            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(base64Config);
+            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
           } catch (ClassNotFoundException | IOException e) {
             if (logger != null)
               logger.warn(e.getMessage());
@@ -450,7 +481,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     ritorno.put("ar4k.fileConfig", fileConfig);
     ritorno.put("ar4k.webConfig", webConfig);
     ritorno.put("ar4k.dnsConfig", dnsConfig);
-    ritorno.put("ar4k.baseConfig", base64Config);
+    ritorno.put("ar4k.baseConfig", baseConfig);
     ritorno.put("ar4k.otpRegistrationSeed", otpRegistrationSeed);
     ritorno.put("ar4k.webRegistrationEndpoint", webRegistrationEndpoint);
     ritorno.put("ar4k.dnsRegistrationEndpoint", dnsRegistrationEndpoint);
@@ -475,7 +506,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.fileConfig: " + fileConfig + "\n";
     configTxt += "ar4k.webConfig: " + webConfig + "\n";
     configTxt += "ar4k.dnsConfig: " + dnsConfig + "\n";
-    configTxt += "ar4k.baseConfig: " + base64Config + "\n";
+    configTxt += "ar4k.baseConfig: " + baseConfig + "\n";
     configTxt += "ar4k.otpRegistrationSeed: " + otpRegistrationSeed + "\n";
     configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
     configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
@@ -488,6 +519,17 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.consoleOnly: " + consoleOnly
         + "\n---------------------------------------------------------------\n";
     return configTxt;
+  }
+
+  public void waitFirstState() {
+    while (init == false) {
+      try {
+        System.out.println("wait first status " + getState());
+        Thread.sleep(1000L);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
@@ -547,10 +589,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  public Set<Ar4kConfig> getConfigs() {
-    return configs;
-  }
-
   public String getLogoUrl() {
     String logo = "/static/img/ar4k.png";
     if (logoUrl != null && logoUrl != "") {
@@ -560,14 +598,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       logo = runtimeConfig.logoUrl;
     }
     return logo;
-  }
-
-  public void addConfig(Ar4kConfig config) {
-    this.configs.add(config);
-  }
-
-  public void delConfig(Ar4kConfig config) {
-    this.configs.remove(config);
   }
 
   public Set<KeystoreConfig> getKeyStores() {
@@ -590,16 +620,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return stateTarget;
   }
 
-  public Ar4kConfig getWorkingConfig() {
-    return workingConfig;
-  }
-
   public Ar4kConfig getRuntimeConfig() {
     return runtimeConfig;
-  }
-
-  public void setWorkingConfig(Ar4kConfig workingConfig) {
-    this.workingConfig = workingConfig;
   }
 
   public Object getContextData(String index) {
@@ -623,18 +645,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return (dataStore != null);
   }
 
-  public static int findAvailablePort(int defaultPort) {
-    try {
-      ServerSocket socket = new ServerSocket(0);
-      socket.setReuseAddress(true);
-      int port = socket.getLocalPort();
-      socket.close();
-      return port;
-    } catch (IOException ex) {
-      return defaultPort;
-    }
-  }
-
   // coda principale Anima (sottoscritto da Anima con IAnimaGateway
   @Bean
   public MessageChannel mainAnimaChannel() {
@@ -652,5 +662,55 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @Bean
   public MessageChannel mainExceptionChannel() {
     return new PublishSubscribeChannel();
+  }
+
+  @Override
+  public void setBeanName(String name) {
+    beanName = name;
+  }
+
+  public Collection<Ar4kUserDetails> getLocalUsers() {
+    return localUsers;
+  }
+
+  public String login(String username, String password) {
+    String sessionId = null;
+    UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
+    Authentication result = authenticationManager.authenticate(request);
+    SecurityContextHolder.getContext().setAuthentication(result);
+    sessionId = UUID.randomUUID().toString();
+    animaHomunculus.registerNewSession(sessionId, result);
+    return sessionId;
+  }
+
+  public void logout(String sessionId) {
+    animaHomunculus.removeSessionInformation(sessionId);
+  }
+
+  public AnimaSession getSession(String sessionId) {
+    return (AnimaSession) animaHomunculus.getSessionInformation(sessionId);
+  }
+
+  public boolean isSessionValid(String sessionId) {
+    return animaHomunculus.getSessionInformation(sessionId) != null;
+  }
+
+  public RpcExecutor getRpc(String sessionId) {
+    return animaHomunculus.getRpc(sessionId);
+  }
+
+  public AnimaHomunculus getAnimaHomunculus() {
+    return animaHomunculus;
+  }
+
+  protected String getBeanName() {
+    return beanName;
+  }
+
+  @Override
+  public String toString() {
+    return "Anima [runtimeConfig=" + runtimeConfig + ", stateTarget=" + stateTarget + ", init=" + init + ", getState()="
+        + getState() + ", isRunning()=" + isRunning() + ", getEnvironmentVariablesAsString()="
+        + getEnvironmentVariablesAsString() + ", getBeanName()=" + getBeanName() + ", hashCode()=" + hashCode() + "]";
   }
 }

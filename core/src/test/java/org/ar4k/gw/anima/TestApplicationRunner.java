@@ -33,7 +33,7 @@ public class TestApplicationRunner implements ApplicationRunner {
   public TestApplicationRunner() {
     log.info("Test Application Runner started!");
   }
-
+  
   @Override
   public void run(ApplicationArguments args) throws Exception {
     log.info("About to do nothing!");

@@ -155,4 +155,9 @@ public class Ar4kConfig implements ConfigSeed {
   public Collection<String> getTags() {
     return tags;
   }
+
+  @Override
+  public int getPriority() {
+    return 0;
+  }
 }

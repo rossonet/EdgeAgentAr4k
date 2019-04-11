@@ -28,6 +28,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -39,6 +40,7 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 /*
  * Studio classloader e annotation lib
  */
+@Ignore
 public class ClassLoaderTest {
 
   // private Logger logger = Logger.getLogger(ClassLoaderTest.class);

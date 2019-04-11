@@ -298,4 +298,9 @@ public class KeystoreConfig extends AbstractServiceConfig {
     return uniqueId;
   }
 
+  @Override
+  public int getPriority() {
+    return 4;
+  }
+
 }

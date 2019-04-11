@@ -12,35 +12,38 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.studio;
+package org.ar4k.qa.tests;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.gw.anima.TestApplicationRunner;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.junit.runner.RunWith;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+@RunWith(SpringRunner.class)
+@ComponentScan("org.ar4k.agent")
+@Import(TestApplicationRunner.class)
+@TestPropertySource(locations = "classpath:application.properties")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class Keystore {
-
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
 
   @Before
   public void setUp() throws Exception {
@@ -52,7 +55,6 @@ public class Keystore {
 
   @After
   public void tearDown() throws Exception {
-
   }
 
   @Rule

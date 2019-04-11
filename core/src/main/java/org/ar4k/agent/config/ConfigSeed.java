@@ -22,5 +22,7 @@ public interface ConfigSeed extends Serializable, Cloneable {
   public Instant getLastUpdateDate();
 
   public UUID getUniqueId();
+  
+  public int getPriority();
 
 }
