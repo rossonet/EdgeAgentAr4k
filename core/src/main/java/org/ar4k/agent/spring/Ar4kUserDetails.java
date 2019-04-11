@@ -79,4 +79,11 @@ public class Ar4kUserDetails implements UserDetails {
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
+
+  @Override
+  public String toString() {
+    return "Ar4kUserDetails [authorities=" + authorities + ", username=" + username + ", accountNonExpired="
+        + accountNonExpired + ", accountNonLocked=" + accountNonLocked + ", credentialsNonExpired="
+        + credentialsNonExpired + ", enabled=" + enabled + "]";
+  }
 }

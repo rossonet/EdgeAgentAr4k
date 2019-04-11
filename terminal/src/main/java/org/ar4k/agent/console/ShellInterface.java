@@ -42,6 +42,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -71,6 +73,7 @@ import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.tunnel.TunnelComponent;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -82,6 +85,8 @@ import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -126,6 +131,64 @@ public class ShellInterface extends AbstractShellHelper {
     if (sessionId != null)
       result = true;
     return result;
+  }
+
+  @ShellMethod(value = "create user", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
+  public boolean createUser(@ShellOption(help = "username") String username,
+      @ShellOption(help = "password") String password,
+      @ShellOption(help = "authorities for the account separated by comma, must starts with ROLE_ For example: ROLE_USER,ROLE_ADMIN", defaultValue = "ROLE_USER") String authorities) {
+    Ar4kUserDetails u = new Ar4kUserDetails();
+    u.setUsername(username);
+    u.setPassword(password);
+    List<SimpleGrantedAuthority> a = new ArrayList<>();
+    for (String p : authorities.split(",")) {
+      SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
+      a.add(g);
+    }
+    u.setAuthorities(a);
+    anima.getLocalUsers().add(u);
+    return true;
+  }
+
+  @ShellMethod(value = "get local users list", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
+  public Collection<Ar4kUserDetails> getUsers() {
+    return anima.getLocalUsers();
+  }
+
+  @ShellMethod(value = "drop user from local users list", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
+  public boolean deleteUser(@ShellOption(help = "username") String username) {
+    boolean result = false;
+    Ar4kUserDetails t = null;
+    for (Ar4kUserDetails u : anima.getLocalUsers()) {
+      if (u.getUsername().equals(username)) {
+        t = u;
+        break;
+      }
+    }
+    if (t != null) {
+      anima.getLocalUsers().remove(t);
+      t = null;
+      result = true;
+    }
+    return result;
+  }
+
+  @ShellMethod(value = "get all roles configured in the users list", group = "Authentication")
+  @ManagedOperation
+  public Collection<GrantedAuthority> getRoles() {
+    Set<GrantedAuthority> roles = new HashSet<>();
+    for (Ar4kUserDetails u : anima.getLocalUsers()) {
+      for (GrantedAuthority a : u.getAuthorities()) {
+        roles.add(a);
+      }
+    }
+    return roles;
   }
 
   @ShellMethod(value = "Logout to the agent", group = "Authentication")
@@ -528,7 +591,8 @@ public class ShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "List jmx endpoints", group = "Monitoring Commands")
   @ManagedOperation
-  public List<String> listJmxEndpoints() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+  public Collection<String> listJmxEndpoints()
+      throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     List<String> ritorno = new ArrayList<String>();
     MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
     Set<ObjectInstance> instances = mbs.queryMBeans(null, null);
@@ -559,7 +623,7 @@ public class ShellInterface extends AbstractShellHelper {
     return ContextSelectorStaticBinder.getSingleton().getContextSelector().getLoggerContext();
   }
 
-  public List<ch.qos.logback.classic.Logger> findAllLogger() {
+  public Collection<ch.qos.logback.classic.Logger> findAllLogger() {
     return getLoggerContext().getLoggerList();
   }
 

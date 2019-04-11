@@ -259,7 +259,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       SimpleGrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
       ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
       ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityUser);
-      localUsers.add(admin);
+      boolean free = true;
+      for (Ar4kUserDetails q : localUsers) {
+        if (q.getUsername().equals("admin")) {
+          free = false;
+          break;
+        }
+      }
+      if (free == true)
+        localUsers.add(admin);
     }
     init = true;
   }
