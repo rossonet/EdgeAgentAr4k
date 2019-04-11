@@ -84,10 +84,12 @@ import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -127,10 +129,22 @@ public class ShellInterface extends AbstractShellHelper {
   public boolean login(@ShellOption(help = "username", defaultValue = "admin") String username,
       @ShellOption(help = "password") String password) {
     boolean result = false;
-    sessionId = anima.login(username, password);
-    if (sessionId != null)
+    anima.login(username, password, null);
+    if (getSessionId() != null)
       result = true;
     return result;
+  }
+
+  @ShellMethod(value = "list sessions attached to the user", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public Collection<String> listSessions() {
+    List<String> sessions = new ArrayList<>();
+    for (SessionInformation s : sr.getAllSessions(SecurityContextHolder.getContext().getAuthentication(), false)) {
+      sessions.add(((UsernamePasswordAuthenticationToken) s.getPrincipal()).getPrincipal() + ": " + s.getSessionId()
+          + " [last used: " + s.getLastRequest() + "]");
+    }
+    return sessions;
   }
 
   @ShellMethod(value = "create user", group = "Authentication")
@@ -195,7 +209,15 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public boolean logout() {
-    sessionId = null;
+    anima.logout();
+    return true;
+  }
+
+  @ShellMethod(value = "Logout to the agent and delete the session", group = "Authentication")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public boolean closeSessionAndLogout() {
+    anima.terminateSession(getSessionId());
     return true;
   }
 

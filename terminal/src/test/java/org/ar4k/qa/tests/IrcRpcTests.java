@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.terminal;
+package org.ar4k.qa.tests;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.ar4k.agent.console.ShellInterface;
+import org.ar4k.agent.console.chat.irc.IrcConnectionHandlerHomunculus;
 import org.jline.builtins.Commands;
 import org.jline.reader.LineReader;
 import org.junit.After;
@@ -59,12 +59,14 @@ import org.springframework.shell.legacy.LegacyAdapterAutoConfiguration;
 import org.springframework.shell.standard.FileValueProvider;
 import org.springframework.shell.standard.StandardAPIAutoConfiguration;
 import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.StringUtils;
 
 import net.engio.mbassy.listener.Handler;
 
 @Configuration
-//@ComponentScan("org.ar4k.agent")
 @Import({
     // Core runtime
     SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class,
@@ -75,11 +77,14 @@ import net.engio.mbassy.listener.Handler;
     StandardCommandsAutoConfiguration.class,
     // Sample Commands
     Commands.class, FileValueProvider.class })
-public class Irc {
+@TestPropertySource(locations = "classpath:application.properties")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+public class IrcRpcTests {
+
   Client client = null;
+
   public BeanFactory context = null;
-  @Autowired
-  ShellInterface shellInterface;
+
   Shell shell;
 
   @Bean
@@ -88,45 +93,6 @@ public class Irc {
     return new InteractiveShellApplicationRunner.JLineInputProvider(lineReader, promptProvider);
   }
 
-  /*
-   * @Bean public CommandLineRunner
-   * exampleCommandLineRunner(ConfigurableEnvironment environment) { return new
-   * ExampleCommandLineRunner(shell, environment); }
-   * 
-   * @Order(InteractiveShellApplicationRunner.PRECEDENCE - 200) class
-   * ExampleCommandLineRunner implements CommandLineRunner {
-   * 
-   * private Shell shell;
-   * 
-   * private final ConfigurableEnvironment environment;
-   * 
-   * public ExampleCommandLineRunner(Shell shell, ConfigurableEnvironment
-   * environment) { this.shell = shell; this.environment = environment; }
-   * 
-   * @Override public void run(String... args) throws Exception { List<String>
-   * commandsToRun = Arrays.stream(args).filter(w ->
-   * !w.startsWith("@")).collect(Collectors.toList()); if
-   * (!commandsToRun.isEmpty()) {
-   * InteractiveShellApplicationRunner.disable(environment); shell.run(new
-   * StringInputProvider(commandsToRun)); } } }
-   * 
-   * class StringInputProvider implements InputProvider {
-   * 
-   * private final List<String> words;
-   * 
-   * private boolean done;
-   * 
-   * public StringInputProvider(List<String> words) { this.words = words; }
-   * 
-   * @Override public Input readInput() { if (!done) { done = true; return new
-   * Input() {
-   * 
-   * @Override public List<String> words() { return words; }
-   * 
-   * @Override public String rawText() { return
-   * StringUtils.collectionToDelimitedString(words, " "); } }; } else { return
-   * null; } } }
-   */
   @Before
   public void setUp() throws Exception {
     connectToServer();
@@ -286,6 +252,21 @@ public class Irc {
     System.out.println(client.getServerInfo().toString());
     Thread.sleep(2400000L);
     client.shutdown();
+  }
+
+  @Test
+  public void testHelp() {
+    IrcConnectionHandlerHomunculus rpc = new IrcConnectionHandlerHomunculus(client, shell);
+    System.out.println(rpc.executeMessage("help"));
+  }
+  
+  @Test
+  public void testComplete() {
+    IrcConnectionHandlerHomunculus rpc = new IrcConnectionHandlerHomunculus(client, shell);
+    System.out.println(rpc.completeMessage("h?"));
+    System.out.println(rpc.completeMessage("history --fi?"));
+    System.out.println(rpc.completeMessage("history --file?"));
+    System.out.println(rpc.completeMessage("history --file ?"));
   }
 
   private void connectToServer() {

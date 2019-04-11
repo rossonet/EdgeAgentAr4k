@@ -35,10 +35,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
@@ -59,6 +58,9 @@ public class AuthenticationTests {
 
   @Autowired
   AuthenticationManager authenticationManager;
+
+  @Autowired
+  protected SessionRegistry sessionRegistry;
 
   @Before
   public void setUp() throws Exception {
@@ -102,7 +104,7 @@ public class AuthenticationTests {
     anima.waitFirstState();
     printBeans();
     checkAuthentication();
-    anima.login("admin", "a4c8ff551a");
+    anima.login("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
@@ -110,7 +112,7 @@ public class AuthenticationTests {
 
   @Test
   public void baseSessionManagerTest() {
-    String sessionId = anima.login("admin", "a4c8ff551a");
+    String sessionId = anima.login("admin", "a4c8ff551a", null);
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     RpcConversation rpc = (RpcConversation) anima.getRpc(sessionId);
@@ -122,24 +124,12 @@ public class AuthenticationTests {
     anima.waitFirstState();
     printBeans();
     checkAuthentication();
-    String sessionId = anima.login("admin", "a4c8ff551a");
+    String sessionId = anima.login("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-    anima.getAnimaHomunculus().onApplicationEvent(new SessionDestroyedEvent("") {
-      private static final long serialVersionUID = 7749600721378250259L;
-
-      @Override
-      public String getId() {
-        return sessionId;
-      }
-
-      @Override
-      public List<SecurityContext> getSecurityContexts() {
-        return null;
-      }
-    });
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId)).isNull();
+    anima.terminateSession(sessionId);
+    assertThat(sessionRegistry.getSessionInformation(sessionId)).isNull();
   }
 
   @Test
@@ -150,13 +140,13 @@ public class AuthenticationTests {
     String sessionId2 = "9876543210";
     String sessionId3 = "5432109876";
 
-    anima.getAnimaHomunculus().registerNewSession(sessionId1, principal1);
-    anima.getAnimaHomunculus().registerNewSession(sessionId2, principal1);
-    anima.getAnimaHomunculus().registerNewSession(sessionId3, principal2);
+    sessionRegistry.registerNewSession(sessionId1, principal1);
+    sessionRegistry.registerNewSession(sessionId2, principal1);
+    sessionRegistry.registerNewSession(sessionId3, principal2);
 
-    assertThat(anima.getAnimaHomunculus().getAllPrincipals()).hasSize(2);
-    assertThat(anima.getAnimaHomunculus().getAllPrincipals().contains(principal1)).isTrue();
-    assertThat(anima.getAnimaHomunculus().getAllPrincipals().contains(principal2)).isTrue();
+    assertThat(sessionRegistry.getAllPrincipals()).hasSize(2);
+    assertThat(sessionRegistry.getAllPrincipals().contains(principal1)).isTrue();
+    assertThat(sessionRegistry.getAllPrincipals().contains(principal2)).isTrue();
   }
 
   @Test
@@ -164,36 +154,35 @@ public class AuthenticationTests {
     Object principal = "Some principal object";
     String sessionId = "1234567890";
     // Register new Session
-    anima.getAnimaHomunculus().registerNewSession(sessionId, principal);
+    sessionRegistry.registerNewSession(sessionId, principal);
 
     // Retrieve existing session by session ID
-    Date currentDateTime = anima.getAnimaHomunculus().getSessionInformation(sessionId).getLastRequest();
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId).getPrincipal()).isEqualTo(principal);
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId).getSessionId()).isEqualTo(sessionId);
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId).getLastRequest()).isNotNull();
+    Date currentDateTime = sessionRegistry.getSessionInformation(sessionId).getLastRequest();
+    assertThat(sessionRegistry.getSessionInformation(sessionId).getPrincipal()).isEqualTo(principal);
+    assertThat(sessionRegistry.getSessionInformation(sessionId).getSessionId()).isEqualTo(sessionId);
+    assertThat(sessionRegistry.getSessionInformation(sessionId).getLastRequest()).isNotNull();
 
     // Retrieve existing session by principal
-    assertThat(anima.getAnimaHomunculus().getAllSessions(principal, false)).hasSize(1);
+    assertThat(sessionRegistry.getAllSessions(principal, false)).hasSize(1);
 
     // Sleep to ensure SessionRegistryImpl will update time
     Thread.sleep(1000);
 
     // Update request date/time
-    anima.getAnimaHomunculus().refreshLastRequest(sessionId);
+    sessionRegistry.refreshLastRequest(sessionId);
 
-    Date retrieved = anima.getAnimaHomunculus().getSessionInformation(sessionId).getLastRequest();
+    Date retrieved = sessionRegistry.getSessionInformation(sessionId).getLastRequest();
     assertThat(retrieved.after(currentDateTime)).isTrue();
 
     // Check it retrieves correctly when looked up via principal
-    assertThat(anima.getAnimaHomunculus().getAllSessions(principal, false).get(0).getLastRequest()).isCloseTo(retrieved,
-        2000L);
+    assertThat(sessionRegistry.getAllSessions(principal, false).get(0).getLastRequest()).isCloseTo(retrieved, 2000L);
 
     // Clear session information
-    anima.getAnimaHomunculus().removeSessionInformation(sessionId);
+    sessionRegistry.removeSessionInformation(sessionId);
 
     // Check attempts to retrieve cleared session return null
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId)).isNull();
-    assertThat(anima.getAnimaHomunculus().getAllSessions(principal, false)).isEmpty();
+    assertThat(sessionRegistry.getSessionInformation(sessionId)).isNull();
+    assertThat(sessionRegistry.getAllSessions(principal, false)).isEmpty();
   }
 
   @Test
@@ -202,23 +191,23 @@ public class AuthenticationTests {
     String sessionId1 = "1234567890";
     String sessionId2 = "9876543210";
 
-    anima.getAnimaHomunculus().registerNewSession(sessionId1, principal);
-    List<SessionInformation> sessions = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    sessionRegistry.registerNewSession(sessionId1, principal);
+    List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
     assertThat(sessions).hasSize(1);
     assertThat(contains(sessionId1, principal)).isTrue();
 
-    anima.getAnimaHomunculus().registerNewSession(sessionId2, principal);
-    sessions = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    sessionRegistry.registerNewSession(sessionId2, principal);
+    sessions = sessionRegistry.getAllSessions(principal, false);
     assertThat(sessions).hasSize(2);
     assertThat(contains(sessionId2, principal)).isTrue();
 
     // Expire one session
-    SessionInformation session = anima.getAnimaHomunculus().getSessionInformation(sessionId2);
+    SessionInformation session = sessionRegistry.getSessionInformation(sessionId2);
     session.expireNow();
 
     // Check retrieval still correct
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId2).isExpired()).isTrue();
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId1).isExpired()).isFalse();
+    assertThat(sessionRegistry.getSessionInformation(sessionId2).isExpired()).isTrue();
+    assertThat(sessionRegistry.getSessionInformation(sessionId1).isExpired()).isFalse();
   }
 
   @Test
@@ -227,28 +216,28 @@ public class AuthenticationTests {
     String sessionId1 = "1234567890";
     String sessionId2 = "9876543210";
 
-    anima.getAnimaHomunculus().registerNewSession(sessionId1, principal);
-    List<SessionInformation> sessions = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    sessionRegistry.registerNewSession(sessionId1, principal);
+    List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
     assertThat(sessions).hasSize(1);
     assertThat(contains(sessionId1, principal)).isTrue();
 
-    anima.getAnimaHomunculus().registerNewSession(sessionId2, principal);
-    sessions = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    sessionRegistry.registerNewSession(sessionId2, principal);
+    sessions = sessionRegistry.getAllSessions(principal, false);
     assertThat(sessions).hasSize(2);
     assertThat(contains(sessionId2, principal)).isTrue();
 
-    anima.getAnimaHomunculus().removeSessionInformation(sessionId1);
-    sessions = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    sessionRegistry.removeSessionInformation(sessionId1);
+    sessions = sessionRegistry.getAllSessions(principal, false);
     assertThat(sessions).hasSize(1);
     assertThat(contains(sessionId2, principal)).isTrue();
 
-    anima.getAnimaHomunculus().removeSessionInformation(sessionId2);
-    assertThat(anima.getAnimaHomunculus().getSessionInformation(sessionId2)).isNull();
-    assertThat(anima.getAnimaHomunculus().getAllSessions(principal, false)).isEmpty();
+    sessionRegistry.removeSessionInformation(sessionId2);
+    assertThat(sessionRegistry.getSessionInformation(sessionId2)).isNull();
+    assertThat(sessionRegistry.getAllSessions(principal, false)).isEmpty();
   }
 
   private boolean contains(String sessionId, Object principal) {
-    List<SessionInformation> info = anima.getAnimaHomunculus().getAllSessions(principal, false);
+    List<SessionInformation> info = sessionRegistry.getAllSessions(principal, false);
 
     for (int i = 0; i < info.size(); i++) {
       if (sessionId.equals(info.get(i).getSessionId())) {

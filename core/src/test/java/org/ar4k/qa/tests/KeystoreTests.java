@@ -43,7 +43,7 @@ import com.google.gson.GsonBuilder;
 @Import(TestApplicationRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class Keystore {
+public class KeystoreTests {
 
   @Before
   public void setUp() throws Exception {

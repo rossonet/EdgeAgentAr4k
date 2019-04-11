@@ -1,4 +1,4 @@
-package org.ar4k.agent.console.rpc;
+package org.ar4k.agent.core;
 
 import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.messaging.MessageHeaders;

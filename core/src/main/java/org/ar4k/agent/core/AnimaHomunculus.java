@@ -49,19 +49,24 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
   }
 
   public List<SessionInformation> getAllSessions(Object principal, boolean includeExpiredSessions) {
-    final Set<String> sessionsUsedByPrincipal = principals.get(principal);
-    if (sessionsUsedByPrincipal == null) {
-      return Collections.emptyList();
-    }
-    List<SessionInformation> list = new ArrayList<>(sessionsUsedByPrincipal.size());
-    for (String sessionId : sessionsUsedByPrincipal) {
-      SessionInformation sessionInformation = getSessionInformation(sessionId);
-      if (sessionInformation == null) {
-        continue;
+    List<SessionInformation> list = null;
+    if (principal != null && principals.containsKey(principal)) {
+      final Set<String> sessionsUsedByPrincipal = principals.get(principal);
+      if (sessionsUsedByPrincipal == null) {
+        return Collections.emptyList();
       }
-      if (includeExpiredSessions || !sessionInformation.isExpired()) {
-        list.add(sessionInformation);
+      list = new ArrayList<>(sessionsUsedByPrincipal.size());
+      for (String sessionId : sessionsUsedByPrincipal) {
+        SessionInformation sessionInformation = getSessionInformation(sessionId);
+        if (sessionInformation == null) {
+          continue;
+        }
+        if (includeExpiredSessions || !sessionInformation.isExpired()) {
+          list.add(sessionInformation);
+        }
       }
+    } else {
+      list = new ArrayList<>();
     }
     return list;
   }

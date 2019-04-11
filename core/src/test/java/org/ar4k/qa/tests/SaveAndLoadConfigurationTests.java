@@ -51,7 +51,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(TestApplicationRunner.class)
 @TestPropertySource(locations="classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class SaveAndLoadConfiguration {
+public class SaveAndLoadConfigurationTests {
 
   @Before
   public void setUp() throws Exception {

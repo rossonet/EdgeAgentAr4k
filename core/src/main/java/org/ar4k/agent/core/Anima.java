@@ -681,18 +681,33 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return localUsers;
   }
 
-  public String login(String username, String password) {
-    String sessionId = null;
+  public String login(String username, String password, String sessionId) {
     UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
     Authentication result = authenticationManager.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
-    sessionId = UUID.randomUUID().toString();
-    animaHomunculus.registerNewSession(sessionId, result);
+    if (sessionId == null || sessionId.isEmpty()) {
+      if (animaHomunculus.getAllSessions(result, false).isEmpty()) {
+        sessionId = UUID.randomUUID().toString();
+        animaHomunculus.registerNewSession(sessionId, result);
+      } else {
+        sessionId = animaHomunculus.getAllSessions(result, false).get(0).getSessionId();
+      }
+    } else {
+      if (animaHomunculus.getSessionInformation(sessionId) == null
+          || animaHomunculus.getSessionInformation(sessionId).isExpired()) {
+        animaHomunculus.registerNewSession(sessionId, result);
+      }
+    }
     return sessionId;
   }
 
-  public void logout(String sessionId) {
+  public void terminateSession(String sessionId) {
     animaHomunculus.removeSessionInformation(sessionId);
+    logout();
+  }
+
+  public void logout() {
+    SecurityContextHolder.clearContext();
   }
 
   public AnimaSession getSession(String sessionId) {
@@ -705,10 +720,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public RpcExecutor getRpc(String sessionId) {
     return animaHomunculus.getRpc(sessionId);
-  }
-
-  public AnimaHomunculus getAnimaHomunculus() {
-    return animaHomunculus;
   }
 
   protected String getBeanName() {

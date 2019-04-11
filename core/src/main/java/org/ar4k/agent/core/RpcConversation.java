@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.ConstraintViolation;
+
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.keystore.KeystoreConfig;
@@ -12,7 +14,12 @@ import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.Input;
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.ParameterValidationException;
+import org.springframework.shell.Shell;
+
+import com.beust.jcommander.ParameterException;
 
 public class RpcConversation implements RpcExecutor {
 
@@ -22,24 +29,51 @@ public class RpcConversation implements RpcExecutor {
   private Homunculus homunculus = null;
   private String workingConfig = null;
 
+  private Shell shell = null;
+
   @Override
   public String elaborateMessage(String message) {
-    return message;
+    Input i = new Input() {
+      @Override
+      public String rawText() {
+        return message;
+      }
+    };
+    String result = "";
+    try {
+      Object o = shell.evaluate(i);
+      if (o != null)
+        result = o.toString();
+      else
+        result = "ok";
+    } catch (ParameterValidationException | ParameterException a) {
+      if (a instanceof ParameterValidationException)
+        for (ConstraintViolation<Object> s : ((ParameterValidationException) a).getConstraintViolations()) {
+          result += s.getMessage() + "\n";
+        }
+      if (a instanceof ParameterException) {
+        result += ((ParameterException) a).getMessage();
+      }
+      result += "Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.";
+    }
+    return result;
   }
 
   @Override
   public RpcMessage<? extends String> elaborateMessage(RpcMessage<? extends String> message) {
-    return message;
+    StringChatRpcMessage<String> reply = new StringChatRpcMessage<>();
+    reply.setPayload(elaborateMessage(message.getPayload()));
+    return reply;
   }
 
   @Override
   public Map<String, MethodTarget> listCommands() {
-    return null;
+    return shell.listCommands();
   }
 
   @Override
   public List<CompletionProposal> complete(CompletionContext context) {
-    return null;
+    return shell.complete(context);
   }
 
   @Override
@@ -81,6 +115,14 @@ public class RpcConversation implements RpcExecutor {
 
   public void setWorkingConfig(String workingConfig) {
     this.workingConfig = workingConfig;
+  }
+
+  public Shell getShell() {
+    return shell;
+  }
+
+  public void setShell(Shell shell) {
+    this.shell = shell;
   }
 
 }
