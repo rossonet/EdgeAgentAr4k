@@ -21,7 +21,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -48,7 +47,6 @@ import com.google.gson.GsonBuilder;
 @ManagedResource(objectName = "bean:name=camelInterface", description = "Ar4k Agent camel interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "camelInterface")
 @RestController
 @RequestMapping("/camelInterface")
-@ConditionalOnProperty(name = "ar4k.camel", havingValue = "true")
 public class CamelShellInterface extends AbstractShellHelper {
 
   @Autowired

@@ -2,19 +2,20 @@ package org.ar4k.agent.spring;
 
 import org.ar4k.agent.core.Anima;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import reactor.core.publisher.Mono;
+
 @Component
-public class Ar4kuserDetailsService implements UserDetailsService {
+public class Ar4kuserDetailsService implements ReactiveUserDetailsService {
 
   @Autowired
   Anima anima;
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public Mono<UserDetails> findByUsername(String username) {
     UserDetails result = null; // anonymous for spring
     for (Ar4kUserDetails q : anima.getLocalUsers()) {
       if (q.getUsername().equals(username)) {
@@ -22,7 +23,7 @@ public class Ar4kuserDetailsService implements UserDetailsService {
         break;
       }
     }
-    return result;
+    return Mono.just(result);
   }
 
 }

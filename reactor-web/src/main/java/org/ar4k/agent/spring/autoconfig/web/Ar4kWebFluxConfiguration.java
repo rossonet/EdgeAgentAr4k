@@ -17,7 +17,6 @@ package org.ar4k.agent.spring.autoconfig.web;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +37,6 @@ import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
 
 @Configuration
 @EnableWebFlux
-@ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class Ar4kWebFluxConfiguration implements WebFluxConfigurer {
 
   @Autowired

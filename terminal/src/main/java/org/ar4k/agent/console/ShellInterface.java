@@ -79,6 +79,7 @@ import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -90,6 +91,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -119,6 +121,9 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 @RequestMapping("/anima")
 public class ShellInterface extends AbstractShellHelper {
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   private static final Logger logger = LoggerFactory.getLogger(ShellInterface.class);
 
   private static final Long load = 1500L;
@@ -129,7 +134,7 @@ public class ShellInterface extends AbstractShellHelper {
   public boolean login(@ShellOption(help = "username", defaultValue = "admin") String username,
       @ShellOption(help = "password") String password) {
     boolean result = false;
-    anima.login(username, password, null);
+    anima.loginAgent(username, password, null);
     if (getSessionId() != null)
       result = true;
     return result;
@@ -140,7 +145,8 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("sessionOk")
   public Collection<String> listSessions() {
     List<String> sessions = new ArrayList<>();
-    for (SessionInformation s : sr.getAllSessions(SecurityContextHolder.getContext().getAuthentication(), false)) {
+    for (SessionInformation s : sessionRegistry.getAllSessions(SecurityContextHolder.getContext().getAuthentication(),
+        false)) {
       sessions.add(((UsernamePasswordAuthenticationToken) s.getPrincipal()).getPrincipal() + ": " + s.getSessionId()
           + " [last used: " + s.getLastRequest() + "]");
     }
@@ -150,12 +156,12 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "create user", group = "Authentication")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
-  public boolean createUser(@ShellOption(help = "username") String username,
+  public boolean createUserAccount(@ShellOption(help = "username") String username,
       @ShellOption(help = "password") String password,
       @ShellOption(help = "authorities for the account separated by comma, must starts with ROLE_ For example: ROLE_USER,ROLE_ADMIN", defaultValue = "ROLE_USER") String authorities) {
     Ar4kUserDetails u = new Ar4kUserDetails();
     u.setUsername(username);
-    u.setPassword(password);
+    u.setPassword(passwordEncoder.encode((CharSequence) password));
     List<SimpleGrantedAuthority> a = new ArrayList<>();
     for (String p : authorities.split(",")) {
       SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
@@ -169,7 +175,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "get local users list", group = "Authentication")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
-  public Collection<Ar4kUserDetails> getUsers() {
+  public Collection<Ar4kUserDetails> getUsersList() {
     return anima.getLocalUsers();
   }
 
@@ -195,7 +201,7 @@ public class ShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "get all roles configured in the users list", group = "Authentication")
   @ManagedOperation
-  public Collection<GrantedAuthority> getRoles() {
+  public Collection<GrantedAuthority> getRolesAuthority() {
     Set<GrantedAuthority> roles = new HashSet<>();
     for (Ar4kUserDetails u : anima.getLocalUsers()) {
       for (GrantedAuthority a : u.getAuthorities()) {
@@ -209,7 +215,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public boolean logout() {
-    anima.logout();
+    anima.logoutFromAgent();
     return true;
   }
 
@@ -659,6 +665,20 @@ public class ShellInterface extends AbstractShellHelper {
       ae.printStackTrace();
       return null;
     }
+  }
+
+  private String printBeans() {
+    StringBuilder sb = new StringBuilder();
+    for (String s : applicationContext.getBeanDefinitionNames()) {
+      sb.append(s + "\n");
+    }
+    return sb.toString();
+  }
+
+  @ShellMethod(value = "Get info about Beans on the system", group = "Monitoring Commands")
+  @ManagedOperation
+  public String getBeansInfo() throws IOException, InterruptedException, ParseException {
+    return printBeans();
   }
 
   @ShellMethod(value = "Get ar4k variable from Spring Framework", group = "Monitoring Commands")

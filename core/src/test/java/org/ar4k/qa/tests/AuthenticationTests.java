@@ -104,7 +104,7 @@ public class AuthenticationTests {
     anima.waitFirstState();
     printBeans();
     checkAuthentication();
-    anima.login("admin", "a4c8ff551a", null);
+    anima.loginAgent("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
@@ -112,7 +112,7 @@ public class AuthenticationTests {
 
   @Test
   public void baseSessionManagerTest() {
-    String sessionId = anima.login("admin", "a4c8ff551a", null);
+    String sessionId = anima.loginAgent("admin", "a4c8ff551a", null);
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     RpcConversation rpc = (RpcConversation) anima.getRpc(sessionId);
@@ -124,7 +124,7 @@ public class AuthenticationTests {
     anima.waitFirstState();
     printBeans();
     checkAuthentication();
-    String sessionId = anima.login("admin", "a4c8ff551a", null);
+    String sessionId = anima.loginAgent("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());

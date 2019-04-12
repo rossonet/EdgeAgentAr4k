@@ -24,6 +24,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @ConditionalOnClass(Anima.class)
@@ -44,10 +46,16 @@ public class Ar4kAutoConfiguration {
   Ar4kHealthIndicator ar4kHealthIndicator() {
     return new Ar4kHealthIndicator();
   }
-  
+
   @Bean
   @ConditionalOnBean(Anima.class)
   AuthenticationManager ar4kAuthenticationManager() {
     return new Ar4kAuthenticationManager();
   }
+  
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
 }

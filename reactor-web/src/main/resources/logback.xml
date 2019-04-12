@@ -3,5 +3,6 @@
 	<root level="error" />
 	<include
 		resource="org/springframework/boot/logging/logback/base.xml" />
-	<logger name="org.springframework.web" level="DEBUG" />
+	<logger name="org.springframework.web" level="ERROR" />
+	<logger name="org.springframework.beans.factory" level="ERROR" />
 </configuration>

@@ -14,8 +14,6 @@
     */
 package org.ar4k.agent.helper;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -25,6 +23,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ public class HostnameHelper {
    * @return the addresses and hostnames that were resolved from {@code address}.
    */
   public static Set<String> getHostnames(String address) {
-    Set<String> hostnames = newHashSet();
+    Set<String> hostnames = new HashSet<>();
     try {
       InetAddress inetAddress = InetAddress.getByName(address);
 

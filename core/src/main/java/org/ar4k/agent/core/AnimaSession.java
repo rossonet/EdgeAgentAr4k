@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.security.core.session.SessionInformation;
-import org.springframework.session.Session;
+//import org.springframework.session.Session;
 
 public class AnimaSession extends SessionInformation {
 
@@ -43,7 +43,7 @@ public class AnimaSession extends SessionInformation {
 
   @Override
   public boolean equals(Object obj) {
-    return obj instanceof SessionInformation && getSessionId().equals(((Session) obj).getId());
+    return obj instanceof SessionInformation && getSessionId().equals(((SessionInformation) obj).getSessionId());
   }
 
   @Override

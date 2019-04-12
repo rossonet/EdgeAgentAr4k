@@ -27,12 +27,10 @@ public abstract class AbstractShellHelper {
   protected Anima anima;
 
   @Autowired
-  protected SessionRegistry sr;
-
-  // protected String getSessionId() = null;
+  protected SessionRegistry sessionRegistry;
 
   protected String getSessionId() {
-    List<SessionInformation> ss = sr.getAllSessions(SecurityContextHolder.getContext().getAuthentication(), false);
+    List<SessionInformation> ss = sessionRegistry.getAllSessions(SecurityContextHolder.getContext().getAuthentication(), false);
     return ss.isEmpty() ? null : ss.get(0).getSessionId();
   }
 

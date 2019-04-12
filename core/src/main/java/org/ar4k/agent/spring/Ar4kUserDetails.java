@@ -86,4 +86,5 @@ public class Ar4kUserDetails implements UserDetails {
         + accountNonExpired + ", accountNonLocked=" + accountNonLocked + ", credentialsNonExpired="
         + credentialsNonExpired + ", enabled=" + enabled + "]";
   }
+  
 }

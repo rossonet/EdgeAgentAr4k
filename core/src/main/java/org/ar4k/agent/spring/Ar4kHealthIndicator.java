@@ -19,6 +19,7 @@ import java.util.Map;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
+//import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Component;
 
 /**

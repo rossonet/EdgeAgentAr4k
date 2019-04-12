@@ -26,10 +26,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.ServiceComponent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,7 +40,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.boot.actuate.logging.LoggersEndpoint.LoggerLevels;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
@@ -51,6 +52,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,17 +86,16 @@ import reactor.core.publisher.Mono;
 @Controller
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(WebFluxConfigurer.class)
-@ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class DashboardWebController {
 
   @Autowired
   private Anima anima;
 
   @Autowired
-  private Environment env;
+  private SessionRegistry sessionRegistry;
 
-  // @Autowired
-  // private Shell shell;
+  @Autowired
+  private Environment env;
 
   @Value("${logging.file}")
   private String targetLogFile;
@@ -133,6 +136,16 @@ public class DashboardWebController {
     return Mono.just("index");
   }
 
+  private String getSessionId() {
+    List<SessionInformation> ss = sessionRegistry.getAllSessions(SecurityContextHolder.getContext().getAuthentication(),
+        false);
+    return ss.isEmpty() ? null : ss.get(0).getSessionId();
+  }
+
+  private Map<String, Ar4kConfig> getConfigs() {
+    return ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
+  }
+
   @SuppressWarnings("unchecked")
   @RequestMapping(path = "/ar4k/dashtable/{table}.vue")
   public Mono<String> ar4kTerminalJs(Authentication authentication, Model model, ServerHttpResponse response,
@@ -149,7 +162,7 @@ public class DashboardWebController {
       targetPage = "tableKeyStores.html";
       break;
     case "conf":
-      ctx.setVariable("configs", anima.getConfigs());
+      ctx.setVariable("configs", getConfigs());
       targetPage = "tableConf.html";
       break;
     case "logger":
@@ -217,7 +230,7 @@ public class DashboardWebController {
     risposta.put("roles", authentication.getAuthorities());
     risposta.put("properties", getProperties());
     risposta.put("keys", anima.getKeyStores());
-    risposta.put("configs", anima.getConfigs());
+    risposta.put("configs", getConfigs());
     risposta.put("logo", anima.getLogoUrl());
     Map<String, LoggerLevels> loggers = new HashMap<String, LoggerLevels>();
     for (LoggersEndpoint log : loggersEndpoint) {
@@ -305,8 +318,8 @@ public class DashboardWebController {
   @ResponseBody
   public Mono<String> getConfigJson(@PathVariable("id") String id) {
     String found = "";
-    for (Ar4kConfig t : anima.getConfigs()) {
-      if (t.uniqueId.toString().equals(id)) {
+    for (Entry<String, Ar4kConfig> t : getConfigs().entrySet()) {
+      if (t.getValue().uniqueId.toString().equals(id)) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         found = gson.toJson(t);
       }
@@ -318,8 +331,8 @@ public class DashboardWebController {
   @ResponseBody
   public Mono<String> getConfigBase64(@PathVariable("id") String id) {
     String found = "";
-    for (Ar4kConfig t : anima.getConfigs()) {
-      if (t.uniqueId.toString().equals(id)) {
+    for (Entry<String, Ar4kConfig> t : getConfigs().entrySet()) {
+      if (t.getValue().uniqueId.toString().equals(id)) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos;
         try {

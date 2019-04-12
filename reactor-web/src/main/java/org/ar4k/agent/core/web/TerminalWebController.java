@@ -18,7 +18,6 @@ import org.ar4k.agent.core.Anima;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -46,7 +45,6 @@ import reactor.core.publisher.Mono;
 @Controller
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(WebFluxConfigurer.class)
-@ConditionalOnProperty(name = "ar4k.web", havingValue = "true")
 public class TerminalWebController {
 
   @Autowired

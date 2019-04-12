@@ -64,6 +64,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.OnStateChanged;
 import org.springframework.statemachine.annotation.WithStateMachine;
@@ -105,7 +106,10 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private AnimaHomunculus animaHomunculus;
 
   @Autowired
-  AuthenticationManager authenticationManager;
+  private AuthenticationManager authenticationManager;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   // TODO: implementare exception
 
@@ -254,7 +258,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (adminPassword != null && !adminPassword.isEmpty()) {
       Ar4kUserDetails admin = new Ar4kUserDetails();
       admin.setUsername("admin");
-      admin.setPassword(adminPassword);
+      admin.setPassword(passwordEncoder.encode((CharSequence) adminPassword));
       SimpleGrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
       SimpleGrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
       ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
@@ -681,7 +685,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return localUsers;
   }
 
-  public String login(String username, String password, String sessionId) {
+  public String loginAgent(String username, String password, String sessionId) {
     UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
     Authentication result = authenticationManager.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
@@ -703,10 +707,10 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public void terminateSession(String sessionId) {
     animaHomunculus.removeSessionInformation(sessionId);
-    logout();
+    logoutFromAgent();
   }
 
-  public void logout() {
+  public void logoutFromAgent() {
     SecurityContextHolder.clearContext();
   }
 
