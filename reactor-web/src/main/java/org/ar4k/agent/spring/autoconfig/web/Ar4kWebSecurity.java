@@ -19,11 +19,17 @@ public class Ar4kWebSecurity {
   // @Autowired
   // PasswordEncoder passwordEncoder;
 
-  @Bean
+  //@Bean
   public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
     http.headers().frameOptions().mode(Mode.SAMEORIGIN);
     return http.authorizeExchange().anyExchange().authenticated().and().httpBasic().and().logout()
         .logoutUrl("/logout").and().build();
+  }
+  
+  @Bean
+  public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    http.csrf().disable().authorizeExchange().anyExchange().permitAll();
+    return http.build();
   }
 
 }

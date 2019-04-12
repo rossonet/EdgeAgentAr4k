@@ -6,6 +6,9 @@ import Typography from '@/pages/Typography.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Notifications from '@/pages/Notifications.vue'
+const Dashboard = () => import(/* webpackIgnore: true */'/ar4k/dashboard.vue')
+const Terminal = () => import(/* webpackIgnore: true */'/ar4k/terminal.vue')
+const Swagger = () => import(/* webpackIgnore: true */'/ar4k/swagger.vue')
 // console.log(httpVueLoader)
 // import httpVueLoader from 'http-vue-loader'
 // const routesImport = () => import(/* webpackIgnore: true */ '/ar4k/routes.js').then(m => m.default)
@@ -22,12 +25,12 @@ const routes = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: window.dashboard
+        component: Dashboard
       },
       {
         path: 'terminal',
         name: 'Terminal',
-        component: window.terminal,
+        component: Terminal,
         meta: {
           hideFooter: true
         }
@@ -35,7 +38,7 @@ const routes = [
       {
         path: 'swagger',
         name: 'Swagger',
-        component: window.swagger,
+        component: Swagger,
         meta: {
           hideFooter: true
         }

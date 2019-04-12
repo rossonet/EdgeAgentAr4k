@@ -1,6 +1,7 @@
 {
   "presets": [
-    "@vue/app"
+    "@vue/app",
+    "@babel/preset-env"
   ],
   "plugins": [
     [
@@ -17,6 +18,7 @@
           "src": "./src"
         }
       }
-    ]
+    ],
+    ["@babel/plugin-syntax-dynamic-import"]
   ]
 }

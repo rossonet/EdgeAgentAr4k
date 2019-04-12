@@ -30,28 +30,8 @@ import JQuery from 'jquery'
 
 import VueQriously from 'vue-qriously'
 
-const Dashboard = ({
-  component: () => import(/* webpackIgnore: true */'/ar4k/dashboard.vue'),
-  delay: 200,
-  // loading: LoadingComponent,
-  // error: ErrorComponent,
-  timeout: 3000
-})
-
-const Terminal = ({
-  component: () => import(/* webpackIgnore: true */'/ar4k/terminal.vue'),
-  delay: 200,
-  timeout: 3000
-})
-
-const Swagger = ({
-  component: () => import(/* webpackIgnore: true */'/ar4k/swagger.vue'),
-  delay: 200,
-  timeout: 3000
-})
-window.dashboard = Dashboard
-window.terminal = Terminal
-window.swagger = Swagger
+import 'core-js/modules/es6.promise'
+import 'core-js/modules/es6.array.iterator'
 
 window.jQuery = JQuery
 window.$ = JQuery
