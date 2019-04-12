@@ -22,12 +22,12 @@ const routes = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import(/* webpackIgnore: true */ '/ar4k/dashboard.vue')
+        component: window.dashboard
       },
       {
         path: 'terminal',
         name: 'Terminal',
-        component: () => import(/* webpackIgnore: true */ '/ar4k/terminal.vue'),
+        component: window.terminal,
         meta: {
           hideFooter: true
         }
@@ -35,7 +35,7 @@ const routes = [
       {
         path: 'swagger',
         name: 'Swagger',
-        component: () => import(/* webpackIgnore: true */ '/ar4k/swagger.vue'),
+        component: window.swagger,
         meta: {
           hideFooter: true
         }
