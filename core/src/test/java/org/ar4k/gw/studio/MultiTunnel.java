@@ -14,7 +14,7 @@
     */
 package org.ar4k.gw.studio;
 
-import org.ar4k.agent.tunnel.SocketConfig;
+import org.ar4k.agent.tunnels.core.SocketConfig;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

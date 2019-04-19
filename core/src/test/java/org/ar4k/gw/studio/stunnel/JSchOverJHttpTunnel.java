@@ -39,9 +39,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.ar4k.agent.stunnel.jhttptunnel.InBoundSocket;
-import org.ar4k.agent.stunnel.jhttptunnel.JHttpTunnelClient;
-import org.ar4k.agent.stunnel.jhttptunnel.OutBoundSocket;
+import org.ar4k.agent.tunnels.jHttpTunnel.InBoundSocket;
+import org.ar4k.agent.tunnels.jHttpTunnel.JHttpTunnelClient;
+import org.ar4k.agent.tunnels.jHttpTunnel.OutBoundSocket;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;

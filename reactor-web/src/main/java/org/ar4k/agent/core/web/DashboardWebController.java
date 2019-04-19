@@ -66,8 +66,6 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.RequestMappingInfo;
 import org.springframework.web.reactive.result.method.RequestMappingInfoHandlerMapping;
 import org.springframework.web.server.ServerWebExchange;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import com.beust.jcommander.ParameterException;
 import com.google.gson.Gson;
@@ -109,8 +107,8 @@ public class DashboardWebController {
   @Autowired
   private List<? extends LoggersEndpoint> loggersEndpoint;
 
-  @Autowired
-  private TemplateEngine templateEngine;
+  // @Autowired
+  // private TemplateEngine templateEngine;
 
   @RequestMapping("/ar4k/routes.js")
   public Mono<String> ar4kRoutesJs(Authentication authentication, Model model, ServerHttpResponse response) {
@@ -147,22 +145,22 @@ public class DashboardWebController {
   }
 
   @SuppressWarnings("unchecked")
-  @RequestMapping(path = "/ar4k/dashtable/{table}.vue")
+  @RequestMapping(path = "/ar4k/dashtable/{table}.html")
   public Mono<String> ar4kTerminalJs(Authentication authentication, Model model, ServerHttpResponse response,
       @PathVariable("table") String table) {
     String targetPage = "";
-    Context ctx = new Context();
+    // Context ctx = new Context();
     switch (table) {
     case "env":
-      ctx.setVariable("properties", getProperties());
+      model.addAttribute("properties", getProperties());
       targetPage = "tableEnv.html";
       break;
     case "keystores":
-      ctx.setVariable("keys", anima.getKeyStores());
+      model.addAttribute("keys", anima.getKeyStores());
       targetPage = "tableKeyStores.html";
       break;
     case "conf":
-      ctx.setVariable("configs", getConfigs());
+      model.addAttribute("configs", getConfigs());
       targetPage = "tableConf.html";
       break;
     case "logger":
@@ -172,7 +170,7 @@ public class DashboardWebController {
           loggers.put(linea, ((Map<String, LoggerLevels>) log.loggers().get("loggers")).get(linea));
         }
       }
-      ctx.setVariable("loggers", loggers);
+      model.addAttribute("loggers", loggers);
       targetPage = "tableLogger.html";
       break;
     case "web":
@@ -182,7 +180,7 @@ public class DashboardWebController {
           map.add(a);
         }
       }
-      ctx.setVariable("mappings", map);
+      model.addAttribute("mappings", map);
       targetPage = "tableWeb.html";
       break;
     case "metrics":
@@ -192,7 +190,7 @@ public class DashboardWebController {
           meters.add(m);
         }
       }
-      ctx.setVariable("meters", meters);
+      model.addAttribute("meters", meters);
       targetPage = "tableMetrics.html";
       break;
     case "blockchain":
@@ -201,24 +199,24 @@ public class DashboardWebController {
     default:
       throw new ParameterException("table not found...");
     }
-    model.addAttribute("template", templateEngine.process(targetPage, ctx));
-    response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
-    return Mono.just("table.vue.js");
+    // model.addAttribute("template", templateEngine.process(targetPage, ctx));
+    // response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript;
+    // charset=utf-8");
+    return Mono.just(targetPage);
   }
-
-  @RequestMapping("/ar4k/dashboard.vue")
-  public Mono<String> ar4kDashboardJs(Authentication authentication, Model model, ServerHttpResponse response) {
-    Context ctx = new Context();
-    ctx.setVariable("selectedMenu", "dashboard");
-    if (authentication != null) {
-      ctx.setVariable("user", authentication.getName());
-      ctx.setVariable("roles", authentication.getAuthorities());
-    }
-    ctx.setVariable("logo", anima.getLogoUrl());
-    model.addAttribute("template", templateEngine.process("dashboard.html", ctx));
-    response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/javascript; charset=utf-8");
-    return Mono.just("dashboard.vue.js");
-  }
+  /*
+   * @RequestMapping("/ar4k/dashboard.vue") public Mono<String>
+   * ar4kDashboardJs(Authentication authentication, Model model,
+   * ServerHttpResponse response) { Context ctx = new Context();
+   * ctx.setVariable("selectedMenu", "dashboard"); if (authentication != null) {
+   * ctx.setVariable("user", authentication.getName()); ctx.setVariable("roles",
+   * authentication.getAuthorities()); } ctx.setVariable("logo",
+   * anima.getLogoUrl()); model.addAttribute("template",
+   * templateEngine.process("dashboard.html", ctx));
+   * response.getHeaders().add(HttpHeaders.CONTENT_TYPE,
+   * "application/javascript; charset=utf-8"); return
+   * Mono.just("dashboard.vue.js"); }
+   */
 
   @SuppressWarnings("unchecked")
   @RequestMapping("/ar4k/data/base")

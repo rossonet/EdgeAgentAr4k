@@ -16,15 +16,11 @@ package org.ar4k.agent.console;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.stunnel.StunnelConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.ar4k.agent.tunnels.stunnel.StunnelConfig;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -48,33 +44,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/stunnelInterface")
 public class StunnelShellInterface extends AbstractShellHelper {
 
-  @Autowired
-  ApplicationContext applicationContext;
-
-  @Autowired
-  Anima anima;
-
-  @SuppressWarnings("unused")
-  private Availability testSelectedConfigOkAndOneKey() {
-    boolean ok = true;
-    String message = "";
-    if (getWorkingConfig() == null) {
-      ok = false;
-      message += "you have to select a config before";
-    }
-    if (anima.getKeyStores().size() < 1) {
-      if (ok == false) {
-        message += " and ";
-      }
-      ok = false;
-      message += "you need a keystore configured on the gateway";
-    }
-    return ok ? Availability.available() : Availability.unavailable(message);
-  }
-
   @ShellMethod(value = "Add a Stunnel service to the selected configuration", group = "Tunnel Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOkAndOneKey")
+  @ShellMethodAvailability("selectedConfigurationAndOneSslKey")
   public void addStunnelService(@ShellOption(optOut = true) @Valid StunnelConfig service) {
     getWorkingConfig().pots.add(service);
   }

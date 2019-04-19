@@ -4,7 +4,6 @@ apply plugin: 'docker'
 
 dependencies {
 	compile project(':core')
-	compile project(':flow')
 	compile project(':reactor-web')
 	compile project(':terminal')
 }

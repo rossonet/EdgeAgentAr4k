@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 import javax.security.auth.x500.X500Principal;
 
-import org.ar4k.agent.helper.HostnameHelper;
+import org.ar4k.agent.helper.NetworkHelper;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -107,7 +107,7 @@ public class KeystoreLoader {
           .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
           .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
       // Get as many hostnames and IP addresses as we can listed in the certificate.
-      for (String hostname : HostnameHelper.getHostnames("0.0.0.0")) {
+      for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
         if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
           builder.addIpAddress(hostname);
         } else {
@@ -189,7 +189,7 @@ public class KeystoreLoader {
           .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
           .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
       // Get as many hostnames and IP addresses as we can listed in the certificate.
-      for (String hostname : HostnameHelper.getHostnames("0.0.0.0")) {
+      for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
         if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
           builder.addIpAddress(hostname);
         } else {

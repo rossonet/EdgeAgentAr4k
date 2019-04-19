@@ -6,9 +6,12 @@ import Typography from '@/pages/Typography.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Notifications from '@/pages/Notifications.vue'
-const Dashboard = () => import(/* webpackIgnore: true */'/ar4k/dashboard.vue')
-const Terminal = () => import(/* webpackIgnore: true */'/ar4k/terminal.vue')
-const Swagger = () => import(/* webpackIgnore: true */'/ar4k/swagger.vue')
+import Dashboard from '@/pages/Dashboard.vue'
+import Terminal from '@/pages/Terminal.vue'
+import Swagger from '@/pages/Swagger.vue'
+// const Dashboard = () => import(/* webpackIgnore: true */'/ar4k/dashboard.vue')
+// const Terminal = () => import(/* webpackIgnore: true */'/ar4k/terminal.vue')
+// const Swagger = () => import(/* webpackIgnore: true */'/ar4k/swagger.vue')
 // console.log(httpVueLoader)
 // import httpVueLoader from 'http-vue-loader'
 // const routesImport = () => import(/* webpackIgnore: true */ '/ar4k/routes.js').then(m => m.default)

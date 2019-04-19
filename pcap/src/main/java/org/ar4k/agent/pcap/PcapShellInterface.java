@@ -109,7 +109,7 @@ public class PcapShellInterface extends AbstractShellHelper {
     return rit;
   }
 
-  @ShellMethod(value = "Send a register pcap file from a network interface", group = "Pcap Commands")
+  @ShellMethod(value = "Exec a PacketAnalizer filter on a pcap file", group = "Pcap Commands")
   @ManagedOperation
   public void analyzePcapFile(@ShellOption(help = "complete path of pcap file to analyze") String fileToScan,
       @ShellOption(help = "analyzer class -implements PackerAnalyzer-") String analyzer) {

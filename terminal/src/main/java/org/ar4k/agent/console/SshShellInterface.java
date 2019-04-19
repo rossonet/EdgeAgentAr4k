@@ -17,7 +17,7 @@ package org.ar4k.agent.console;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.sshClientTunnel.SshConfig;
+import org.ar4k.agent.tunnels.sshClient.SshConfig;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;

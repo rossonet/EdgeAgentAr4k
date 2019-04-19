@@ -12,6 +12,7 @@ import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.rpc.Homunculus;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.RpcMessage;
+import org.ar4k.agent.rpc.process.AgentProcess;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Input;
@@ -26,6 +27,7 @@ public class RpcConversation implements RpcExecutor {
   private Map<String, Ar4kConfig> configurations = new HashMap<>();
   private Map<String, KeystoreConfig> keyStores = new HashMap<String, KeystoreConfig>();
   private Map<String, PotConfig> components = new HashMap<String, PotConfig>();
+  private Map<String, AgentProcess> scriptSessions = new HashMap<>();
   private Homunculus homunculus = null;
   private String workingConfig = null;
 
@@ -82,7 +84,7 @@ public class RpcConversation implements RpcExecutor {
   }
 
   public Map<String, Ar4kConfig> getConfigurations() {
-    return configurations;
+    return configurations.isEmpty() ? null : configurations;
   }
 
   public void setConfigurations(Map<String, Ar4kConfig> configurations) {
@@ -123,6 +125,14 @@ public class RpcConversation implements RpcExecutor {
 
   public void setShell(Shell shell) {
     this.shell = shell;
+  }
+
+  public Map<String, AgentProcess> getScriptSessions() {
+    return scriptSessions;
+  }
+
+  public void setScriptSessions(Map<String, AgentProcess> scriptSessions) {
+    this.scriptSessions = scriptSessions;
   }
 
 }

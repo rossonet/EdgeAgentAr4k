@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.net.ServerSocket;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,13 +56,14 @@ public class HardwareHelper {
       rootFs.put("freeSpace", root.getFreeSpace());
       rootFs.put("totalSpace", root.getTotalSpace());
       List<Map<String, Object>> childs = new ArrayList<Map<String, Object>>();
-      for (File figlio : root.listFiles()) {
-        Map<String, Object> figlioFs = new HashMap<String, Object>();
-        figlioFs.put("absolutePath", figlio.getAbsoluteFile());
-        figlioFs.put("freeSpace", figlio.getFreeSpace());
-        figlioFs.put("totalSpace", figlio.getTotalSpace());
-        childs.add(figlioFs);
-      }
+      if (root != null && root.listFiles() != null)
+        for (File figlio : root.listFiles()) {
+          Map<String, Object> figlioFs = new HashMap<String, Object>();
+          figlioFs.put("absolutePath", figlio.getAbsoluteFile());
+          figlioFs.put("freeSpace", figlio.getFreeSpace());
+          figlioFs.put("totalSpace", figlio.getTotalSpace());
+          childs.add(figlioFs);
+        }
       rootFs.put("childs", childs);
       fileSystem.add(rootFs);
     }
@@ -186,10 +186,11 @@ public class HardwareHelper {
       dato.put("pi-Hardware-Revision", SystemInfo.getRevision());
     } catch (Exception ex) {
     }
-    try {
-      dato.put("pi-Is-Hard-Float-ABI", SystemInfo.isHardFloatAbi());
-    } catch (Exception ex) {
-    }
+    // in windows da errore
+    /*
+     * try { dato.put("pi-Is-Hard-Float-ABI", SystemInfo.isHardFloatAbi()); } catch
+     * (Exception ex) { }
+     */
     try {
       dato.put("pi-Board-Type", SystemInfo.getBoardType().name());
     } catch (Exception ex) {
@@ -336,22 +337,5 @@ public class HardwareHelper {
     } catch (Exception ex) {
     }
     return dato;
-  }
-
-  public static boolean checkLocalPortAvailable(int port) {
-    boolean portTaken = false;
-    ServerSocket socket = null;
-    try {
-      socket = new ServerSocket(port);
-    } catch (IOException e) {
-      portTaken = true;
-    } finally {
-      if (socket != null)
-        try {
-          socket.close();
-        } catch (IOException e) {
-        }
-    }
-    return !portTaken;
   }
 }

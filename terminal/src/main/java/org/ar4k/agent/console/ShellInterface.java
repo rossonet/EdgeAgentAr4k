@@ -14,22 +14,7 @@
     */
 package org.ar4k.agent.console;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.lang.management.ManagementFactory;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -38,25 +23,18 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanOperationInfo;
-import javax.management.MBeanServer;
-import javax.management.ObjectInstance;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -64,19 +42,21 @@ import javax.validation.constraints.Size;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
-import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.rpc.process.AgentProcess;
+import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
+import org.ar4k.agent.rpc.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.tunnel.TunnelComponent;
-import org.joda.time.Duration;
-import org.joda.time.Instant;
+import org.ar4k.agent.tunnels.core.TunnelComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +68,6 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -126,9 +105,7 @@ public class ShellInterface extends AbstractShellHelper {
 
   private static final Logger logger = LoggerFactory.getLogger(ShellInterface.class);
 
-  private static final Long load = 1500L;
-
-  @ShellMethod(value = "Login in the agent", group = "Authentication")
+  @ShellMethod(value = "Login in the agent", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionFalse")
   public boolean login(@ShellOption(help = "username", defaultValue = "admin") String username,
@@ -140,7 +117,7 @@ public class ShellInterface extends AbstractShellHelper {
     return result;
   }
 
-  @ShellMethod(value = "list sessions attached to the user", group = "Authentication")
+  @ShellMethod(value = "List sessions attached to the user", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public Collection<String> listSessions() {
@@ -153,53 +130,30 @@ public class ShellInterface extends AbstractShellHelper {
     return sessions;
   }
 
-  @ShellMethod(value = "create user", group = "Authentication")
+  @ShellMethod(value = "Create user", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public boolean createUserAccount(@ShellOption(help = "username") String username,
       @ShellOption(help = "password") String password,
       @ShellOption(help = "authorities for the account separated by comma, must starts with ROLE_ For example: ROLE_USER,ROLE_ADMIN", defaultValue = "ROLE_USER") String authorities) {
-    Ar4kUserDetails u = new Ar4kUserDetails();
-    u.setUsername(username);
-    u.setPassword(passwordEncoder.encode((CharSequence) password));
-    List<SimpleGrantedAuthority> a = new ArrayList<>();
-    for (String p : authorities.split(",")) {
-      SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
-      a.add(g);
-    }
-    u.setAuthorities(a);
-    anima.getLocalUsers().add(u);
-    return true;
+    return addUser(username, password, authorities, passwordEncoder);
   }
 
-  @ShellMethod(value = "get local users list", group = "Authentication")
+  @ShellMethod(value = "Get local users list", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public Collection<Ar4kUserDetails> getUsersList() {
     return anima.getLocalUsers();
   }
 
-  @ShellMethod(value = "drop user from local users list", group = "Authentication")
+  @ShellMethod(value = "Drop user from local users list", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public boolean deleteUser(@ShellOption(help = "username") String username) {
-    boolean result = false;
-    Ar4kUserDetails t = null;
-    for (Ar4kUserDetails u : anima.getLocalUsers()) {
-      if (u.getUsername().equals(username)) {
-        t = u;
-        break;
-      }
-    }
-    if (t != null) {
-      anima.getLocalUsers().remove(t);
-      t = null;
-      result = true;
-    }
-    return result;
+    return removeUser(username);
   }
 
-  @ShellMethod(value = "get all roles configured in the users list", group = "Authentication")
+  @ShellMethod(value = "Get all roles configured in the users list", group = "Authentication Commands")
   @ManagedOperation
   public Collection<GrantedAuthority> getRolesAuthority() {
     Set<GrantedAuthority> roles = new HashSet<>();
@@ -211,7 +165,7 @@ public class ShellInterface extends AbstractShellHelper {
     return roles;
   }
 
-  @ShellMethod(value = "Logout to the agent", group = "Authentication")
+  @ShellMethod(value = "Logout from the agent", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public boolean logout() {
@@ -219,7 +173,7 @@ public class ShellInterface extends AbstractShellHelper {
     return true;
   }
 
-  @ShellMethod(value = "Logout to the agent and delete the session", group = "Authentication")
+  @ShellMethod(value = "Logout from the agent and delete the session", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public boolean closeSessionAndLogout() {
@@ -227,7 +181,7 @@ public class ShellInterface extends AbstractShellHelper {
     return true;
   }
 
-  @ShellMethod(value = "get your info", group = "Authentication")
+  @ShellMethod(value = "Get your info", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public Authentication me() {
@@ -240,44 +194,7 @@ public class ShellInterface extends AbstractShellHelper {
   @GetMapping("test")
   public String test(@Size(min = 1, max = 40) @ShellOption(help = "example string for test method") String testString)
       throws InterruptedException {
-    char[] animationChars = new char[] { '|', '/', '-', '\\' };
-    int totali = 1000;
-    Instant inizio = new Instant();
-    for (int conto = 0; conto <= totali; conto++) {
-      Duration trascorso = new Duration(inizio, new Instant());
-      String circle = "";
-      final String spazii = "                            ";
-      if (conto > 0 && trascorso.getMillis() > 0 && trascorso.getMillis() / 1000 > 0) {
-        circle = AnsiOutput.toString("  ", AnsiColor.GREEN, animationChars[conto % 4], AnsiColor.DEFAULT, " [ ",
-            AnsiColor.GREEN, String.valueOf(conto), AnsiColor.DEFAULT, "/", AnsiColor.RED,
-            String.valueOf(totali - conto), AnsiColor.DEFAULT, " - ", AnsiColor.YELLOW,
-            String.valueOf(trascorso.getStandardSeconds()), AnsiColor.DEFAULT, " sec - ", AnsiColor.YELLOW,
-            new DecimalFormat("#.###").format(Double.valueOf(conto) / trascorso.getStandardSeconds()),
-            AnsiColor.DEFAULT, " x sec ]", spazii);
-      } else {
-        circle = "  starting..." + spazii;
-      }
-      System.out.print("Running:  " + testString + " " + String.valueOf(conto % testString.length()) + circle + "\r");
-      fib(load);
-    }
-    System.out.println("\n\n");
-    return "Processing: Done!";
-  }
-
-  private static BigInteger fib(long nth) {
-    nth = nth - 1;
-    long count = 0;
-    BigInteger first = BigInteger.ZERO;
-    BigInteger second = BigInteger.ONE;
-
-    BigInteger third = null;
-    while (count < nth) {
-      third = new BigInteger(first.add(second).toString());
-      first = new BigInteger(second.toString());
-      second = new BigInteger(third.toString());
-      count++;
-    }
-    return third;
+    return runShellTest(testString);
   }
 
   @ShellMethod("View the selected configuration in base64 text")
@@ -313,15 +230,7 @@ public class ShellInterface extends AbstractShellHelper {
   public void loadSelectedConfigBase64(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
-    String config = "";
-    FileReader fileReader = new FileReader(
-        filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.base64.ar4k");
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-    String line = null;
-    while ((line = bufferedReader.readLine()) != null) {
-      config = config + line;
-    }
-    bufferedReader.close();
+    String config = readFromFile(filename, ".conf.base64.ar4k");
     importSelectedConfigBase64(config);
   }
 
@@ -366,15 +275,7 @@ public class ShellInterface extends AbstractShellHelper {
   public void loadSelectedConfigBase64Rsa(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.rsa.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
-    String config = "";
-    FileReader fileReader = new FileReader(
-        filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.base64.rsa.ar4k");
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-    String line = null;
-    while ((line = bufferedReader.readLine()) != null) {
-      config = config + line;
-    }
-    bufferedReader.close();
+    String config = readFromFile(filename, ".conf.base64.rsa.ar4k");
     importSelectedConfigBase64Rsa(config);
   }
 
@@ -412,15 +313,7 @@ public class ShellInterface extends AbstractShellHelper {
   public void loadSelectedConfigJson(
       @ShellOption(help = "file in where the configuration is saved. The system will add .conf.json.ar4k to the string") String filename)
       throws IOException, ClassNotFoundException {
-    String config = "";
-    FileReader fileReader = new FileReader(
-        filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.json.ar4k");
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-    String line = null;
-    while ((line = bufferedReader.readLine()) != null) {
-      config = config + line;
-    }
-    bufferedReader.close();
+    String config = readFromFile(filename, ".conf.json.ar4k");
     importSelectedConfigJson(config);
   }
 
@@ -431,7 +324,7 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig(confCreated);
   }
 
-  @ShellMethod("List configs in runtime")
+  @ShellMethod("List configs in runtime session")
   @ManagedOperation
   @ShellMethodAvailability("testListConfigOk")
   public String listConfig() {
@@ -476,7 +369,7 @@ public class ShellInterface extends AbstractShellHelper {
     return risposta;
   }
 
-  @ShellMethod("Select a config in the list")
+  @ShellMethod("Select a config in the runtime list")
   @ManagedOperation
   @ShellMethodAvailability("testListConfigOk")
   public void selectConfig(@ShellOption(help = "the id of the config to select") String idConfig) {
@@ -490,7 +383,7 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig(target);
   }
 
-  @ShellMethod("Clone a config in the list with a new id, name and prompt")
+  @ShellMethod("Clone a config in the runtime list with a new id, name and prompt")
   @ManagedOperation
   @ShellMethodAvailability("testListConfigOk")
   public String cloneConfig(@ShellOption(help = "the id of the config to clone from") String idConfig,
@@ -503,17 +396,7 @@ public class ShellInterface extends AbstractShellHelper {
         break;
       }
     }
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream oos = new ObjectOutputStream(baos);
-    oos.writeObject(target);
-    oos.close();
-    byte[] data = Base64.getDecoder().decode(Base64.getEncoder().encodeToString(baos.toByteArray()));
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    Ar4kConfig newTarget = (Ar4kConfig) ois.readObject();
-    ois.close();
-    newTarget.uniqueId = UUID.randomUUID();
-    newTarget.name = newName;
-    newTarget.prompt = newPrompt;
+    Ar4kConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
     getConfigs().put(newTarget.getName(), newTarget);
     return "cloned";
   }
@@ -526,7 +409,7 @@ public class ShellInterface extends AbstractShellHelper {
     return "unseted";
   }
 
-  @ShellMethod(value = "Set selected config as target config for the agent", group = "Run Commands")
+  @ShellMethod(value = "Set selected config as target config for the agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String setSelectedConfigAsRuntime() {
@@ -534,13 +417,13 @@ public class ShellInterface extends AbstractShellHelper {
     return "set";
   }
 
-  @ShellMethod(value = "View the actual status", group = "Run Commands")
+  @ShellMethod(value = "View the actual status", group = "Agent Life Cycle Commands")
   @ManagedOperation
   public String getAr4kAgentStatus() {
     return anima.getState().name();
   }
 
-  @ShellMethod(value = "Set a event to the agent", group = "Run Commands")
+  @ShellMethod(value = "Set a event to the agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public void setAr4kAgentStatus(
@@ -548,7 +431,7 @@ public class ShellInterface extends AbstractShellHelper {
     anima.sendEvent(target);
   }
 
-  @ShellMethod(value = "Shutdown agent", group = "Run Commands")
+  @ShellMethod(value = "Shutdown agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public void goodbye() {
@@ -556,14 +439,14 @@ public class ShellInterface extends AbstractShellHelper {
     System.exit(0);
   }
 
-  @ShellMethod(value = "Pause agent", group = "Run Commands")
+  @ShellMethod(value = "Pause agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("testIsRunningOk")
   public void pause() {
     setAr4kAgentStatus(AnimaEvents.PAUSE);
   }
 
-  @ShellMethod(value = "Restart agent", group = "Run Commands")
+  @ShellMethod(value = "Restart agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("testIsRunningOk")
   public void restart() {
@@ -574,7 +457,7 @@ public class ShellInterface extends AbstractShellHelper {
     }
   }
 
-  @ShellMethod(value = "List runtime services", group = "Run Commands")
+  @ShellMethod(value = "List runtime services", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("testIsRunningOk")
   public String listService() {
@@ -587,23 +470,13 @@ public class ShellInterface extends AbstractShellHelper {
     return risposta;
   }
 
-  @ShellMethod(value = "Clone runtime config in the list with a new id, name and prompt", group = "Run Commands")
+  @ShellMethod(value = "Clone runtime config in the runtime list with a new id, name and prompt", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("testRuntimeConfigOk")
   public void cloneRuntimeConfig(@ShellOption(help = "the name of the new config") String newName,
       @ShellOption(help = "the promp for the new config") String newPrompt) throws IOException, ClassNotFoundException {
     Ar4kConfig target = anima.getRuntimeConfig();
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream oos = new ObjectOutputStream(baos);
-    oos.writeObject(target);
-    oos.close();
-    byte[] data = Base64.getDecoder().decode(Base64.getEncoder().encodeToString(baos.toByteArray()));
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    Ar4kConfig newTarget = (Ar4kConfig) ois.readObject();
-    ois.close();
-    newTarget.uniqueId = UUID.randomUUID();
-    newTarget.name = newName;
-    newTarget.prompt = newPrompt;
+    Ar4kConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
     addConfig(newTarget);
   }
 
@@ -617,22 +490,11 @@ public class ShellInterface extends AbstractShellHelper {
     return Ar4kLogger.level.name();
   }
 
-  @ShellMethod(value = "List jmx endpoints", group = "Monitoring Commands")
+  @ShellMethod(value = "List JMX endpoints", group = "Monitoring Commands")
   @ManagedOperation
   public Collection<String> listJmxEndpoints()
       throws IntrospectionException, InstanceNotFoundException, ReflectionException {
-    List<String> ritorno = new ArrayList<String>();
-    MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-    Set<ObjectInstance> instances = mbs.queryMBeans(null, null);
-    Iterator<ObjectInstance> iterator = instances.iterator();
-    while (iterator.hasNext()) {
-      ObjectInstance instance = iterator.next();
-      MBeanInfo mbi = mbs.getMBeanInfo(instance.getObjectName());
-      for (MBeanOperationInfo op : mbi.getOperations()) {
-        ritorno.add(instance.getClassName() + "." + op.getName() + " [" + op.getDescription() + "]");
-      }
-    }
-    return ritorno;
+    return listMbeans();
   }
 
   @ShellMethod(value = "Get the log filter for the console", group = "Monitoring Commands")
@@ -681,184 +543,62 @@ public class ShellInterface extends AbstractShellHelper {
     return printBeans();
   }
 
-  @ShellMethod(value = "Get ar4k variable from Spring Framework", group = "Monitoring Commands")
+  @ShellMethod(value = "Get variable from Spring Framework", group = "Monitoring Commands")
   @ManagedOperation
-  public void printEnvironmentVariables() {
+  public void getEnvironmentVariables() {
     System.out.println(anima.getEnvironmentVariablesAsString());
   }
 
-  // TODO: visualizzazione contatori camel con possibilità di impostare un
-  // servizio di notifica regolare con camel dei valori.
-  // TODO: runCommandLine in package command line interface
+  @ShellMethod(value = "Run Xpra server on the enviroment in where the agent is running", group = "Remote Management Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("isUnixAndSessionOk")
+  public boolean runXpraServer(@ShellOption(help = "label to identify the xpra server") String executorLabel,
+      @ShellOption(help = "the tcp port for the HTML5 console", defaultValue = "0") int port,
+      @ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd) {
+    XpraSessionProcess p = new XpraSessionProcess();
+    p.setLabel(executorLabel);
+    p.setTcpPort(port);
+    p.setCommand(cmd);
+    p.start();
+    ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
+    return true;
+  }
 
-  @ShellMethod(value = "Run shell command on the system. CTRL-E exit", group = "Run Commands")
+  @ShellMethod(value = "Run a text script in JSR 223 engine", group = "Remote Management Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public boolean runJsr223Script(@ShellOption(help = "label to identify the script") String executorLabel,
+      @ShellOption(help = "script engine. you can find the list with list-jsr223-script-engines-in-runtime") String scriptEngine,
+      @ShellOption(help = "the script for the engine language") String script) {
+    ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
+    p.setLabel(executorLabel);
+    p.setEngine(scriptEngine);
+    p.eval(script);
+    ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
+    return true;
+  }
+
+  @ShellMethod(value = "List runtime engine JSR 223 on the system", group = "Remote Management Commands")
+  @ManagedOperation
+  public List<Map<String, Object>> listJsr223ScriptEnginesInRuntime() {
+    return ScriptEngineManagerProcess.listScriptEngines();
+  }
+
+  @ShellMethod(value = "List active processes", group = "Remote Management Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public Map<String, AgentProcess> listActiveProcesses() {
+    return ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions();
+  }
+
+  @ShellMethod(value = "Run shell command on the enviroment in where the agent is running. The default code to terminate the session is CTRL-E exit, you can change it", group = "Remote Management Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public String runCommandLine(
       @ShellOption(help = "the command to start in the shell", defaultValue = "/bin/bash -login") String shellCommand,
       @ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {
-    Integer errori = 0;
-    boolean running = true;
-    Process pr = null;
-    Runtime rt = Runtime.getRuntime();
-    try {
-      pr = rt.exec(shellCommand);
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
-    InputStream is = pr.getInputStream();
-    OutputStream os = pr.getOutputStream();
-    InputStream es = pr.getErrorStream();
-    Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-    Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-    Writer rout = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-    Reader si = new InputStreamReader(System.in, StandardCharsets.UTF_8);
-    Writer so = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
-    while (running && errori < 10) {
-      try {
-        if (rin != null && rin.ready()) {
-          char[] c = new char[1];
-          rin.read(c, 0, 1);
-          so.write(c);
-          so.flush();
-        }
-      } catch (IOException e) {
-        errori++;
-        // logger.logException(e);
-      }
-      try {
-        if (rerr != null && rerr.ready()) {
-          char[] c = new char[1];
-          rerr.read(c, 0, 1);
-          so.write(c);
-          so.flush();
-        }
-      } catch (IOException e) {
-        errori++;
-        // logger.logException(e);
-      }
-      try {
-        if (si.ready()) {
-          char c[] = new char[1];// System.in.read();
-          // if (c > -1) {
-          si.read(c, 0, 1);
-          // System.out.println(String.valueOf((int) Character.valueOf(c[0]).charValue())
-          // + " "
-          // + (Integer.parseInt(endCharacter) == Character.valueOf(c[0]).charValue()));
-          // System.out.println(c);
-          if (Integer.parseInt(endCharacter) == Character.valueOf(c[0]).charValue()) {
-            running = false;
-            Thread.sleep(500L);
-          }
-          if (rout != null) {
-            rout.write(c);
-            rout.flush();
-          }
-        }
-      } catch (IOException | InterruptedException e) {
-        errori++;
-        // logger.logException(e);
-      }
-    }
-    System.out.println("close the readers after " + String.valueOf(errori) + " errors. wait...");
-    if (pr != null) {
-      pr.destroyForcibly();
-      pr = null;
-    }
-    if (rin != null) {
-      try {
-        rin.close();
-        rin = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (rerr != null) {
-      try {
-        rerr.close();
-        rerr = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (rout != null) {
-      try {
-        rout.close();
-        rout = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (es != null) {
-      try {
-        es.close();
-        es = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (is != null) {
-      try {
-        is.close();
-        is = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (os != null) {
-      try {
-        os.close();
-        os = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    try {
-      System.in.reset();
-      throw new Ar4kException("running shell terminated");
-    } catch (Ar4kException | IOException e) {
-      errori++;
-      logger.warn(e.getMessage());
-      if (errori > 0) {
-        logger.info("running shell terminated");
-      }
-    }
-
-    if (si != null) {
-      try {
-        si.close();
-        si = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    if (so != null) {
-      try {
-        so.close();
-        so = null;
-      } catch (IOException e) {
-        errori++;
-        logger.warn(e.getMessage());
-      }
-    }
-    return "session terminated with " + String.valueOf(errori) + " errors";
-  }
-
-  @SuppressWarnings("unused")
-  private boolean processIsTerminated(Process process) {
-    try {
-      process.exitValue();
-    } catch (IllegalThreadStateException itse) {
-      return false;
-    }
-    return true;
+    return UserSpaceByteSystemCommandHelper.runShellCommandLineByteToByte(shellCommand, endCharacter, logger, System.in,
+        System.out);
   }
 
   public Anima getAnima() {

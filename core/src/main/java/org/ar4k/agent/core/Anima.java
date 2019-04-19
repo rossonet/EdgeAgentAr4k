@@ -39,7 +39,7 @@ import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.tunnel.TunnelComponent;
+import org.ar4k.agent.tunnels.core.TunnelComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;

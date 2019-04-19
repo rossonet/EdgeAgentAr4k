@@ -31,10 +31,10 @@ package org.ar4k.gw.studio.stunnel;
 
 import java.net.*;
 
-import org.ar4k.agent.stunnel.jhttptunnel.InBoundSocket;
-import org.ar4k.agent.stunnel.jhttptunnel.JHttpTunnelClient;
-import org.ar4k.agent.stunnel.jhttptunnel.JHttpTunnelException;
-import org.ar4k.agent.stunnel.jhttptunnel.OutBoundSocket;
+import org.ar4k.agent.tunnels.jHttpTunnel.InBoundSocket;
+import org.ar4k.agent.tunnels.jHttpTunnel.JHttpTunnelClient;
+import org.ar4k.agent.tunnels.jHttpTunnel.JHttpTunnelException;
+import org.ar4k.agent.tunnels.jHttpTunnel.OutBoundSocket;
 
 import java.io.*;
 

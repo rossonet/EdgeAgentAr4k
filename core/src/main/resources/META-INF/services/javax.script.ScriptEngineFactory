@@ -1,0 +1,2 @@
+org.ar4k.agent.rpc.process.bash.UserSpaceBashScriptEngineFactory
+org.ar4k.agent.rpc.process.powershell.UserSpacePowerShellScriptEngineFactory
