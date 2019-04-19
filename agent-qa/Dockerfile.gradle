@@ -1,0 +1,4 @@
+FROM openjdk:8-jdk-alpine
+RUN apk add --no-cache bash gawk sed grep bc coreutils wget binutils
+COPY target/agent-qa-*.jar ar4kAgent.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/ar4kAgent.jar"]

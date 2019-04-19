@@ -34,7 +34,7 @@ task uiPublish() {
   finalizedBy 'copyStaticResources'
 }
 
-// processResources.dependsOn uiPublish
+processResources.dependsOn uiPublish
 
 task createStaticDir {
   doLast{

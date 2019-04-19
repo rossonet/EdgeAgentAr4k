@@ -239,24 +239,33 @@ task ar4kBootJarFull{
   ar4kBootJarFull.dependsOn(":agent-full:endBootJar")
 }
 
-task ar4kDockerContainerFull{
+task ar4kBootJarQa{
   group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a docker container. This is the complete, full, version.'
-  ar4kDockerContainerFull.dependsOn(":agent-full:buildDocker")
+  description 'Build Ar4k Semantic Router as a single fat jar. This is the quality assurance version for testing.'
+  ar4kBootJarQa.dependsOn(":agent-qa:bootJar")
+  ar4kBootJarQa.dependsOn(":agent-qa:endBootJar")
+}
+
+task ar4kDockerContainerQa{
+  group "Ar4k Semantic Router Build"
+  description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
+  ar4kDockerContainerQa.dependsOn(":agent-qa:buildDocker")
 }
 
 task buildAllDockerContainers{
   group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small and full.'
+  description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small, qa and full.'
   buildAllDockerContainers.dependsOn(":agent-small:buildDocker")
   buildAllDockerContainers.dependsOn(":agent-full:buildDocker")
+  buildAllDockerContainers.dependsOn(":agent-qa:buildDocker")
   buildAllDockerContainers.dependsOn(":agent:buildDocker")
 }
 
 task buildAllBootJars{
   group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a single fat jar. This builds all the jars: standard, small and full.'
+  description 'Build Ar4k Semantic Router as a single fat jar. This builds all the jars: standard, small, qa and full.'
   buildAllBootJars.dependsOn("ar4kBootJar")
   buildAllBootJars.dependsOn("ar4kBootJarFull")
   buildAllBootJars.dependsOn("ar4kBootJarSmall")
+  buildAllBootJars.dependsOn("ar4kBootJarQa")
 }

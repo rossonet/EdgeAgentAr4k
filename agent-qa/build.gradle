@@ -1,0 +1,69 @@
+description = "Fat jar of Ar4k Semantic Router - QA version"
+
+apply plugin: 'docker'
+
+dependencies {
+	compile project(':core')
+	//compile project(':flow')
+	//compile project(':cluster')
+	//compile project(':flow-full')
+	//compile project(':pcap')
+	//compile project(':drools')
+	//compile project(':atomix')
+	//compile project(':xmpp')
+	//compile project(':openoffice-uno')
+	//compile project(':blockchain')
+	//compile project(':kettle')
+	//compile project(':onion')
+	//compile project(':paho')
+	//compile project(':serial-comm')
+	//compile project(':opcua')
+	//compile project(':zeromq')
+	//compile project(':kafka')
+	//compile project(':zeroc-ice')
+	//compile project(':grpc')
+	//compile project(':reactor-web')
+	compile project(':terminal')
+}
+
+bootJar {
+	//TODO: in bootJar forzare uiPublish solo se src/main/resources/static è vuoto
+	//dependsOn 'uiPublish'
+	launchScript()
+	manifest {
+		attributes('Implementation-Title':'Ar4kAgentFull',
+		'Implementation-Version': "${project.version}")
+	}
+}
+
+task buildDocker(type: Docker, dependsOn: bootJar) {
+	applicationName = 'ar4k-agent-full'
+	dockerfile = file('Dockerfile.gradle')
+	doFirst {
+		copy {
+			from jar
+			into "${stageDir}/target"
+		}
+	}
+}
+
+bootJar.doLast { task ->
+	ant.checksum file: task.archivePath
+}
+
+clean {
+        delete "orientdb"
+        delete "logs"
+        delete "build"
+        delete "bin"
+        delete "camel-test"
+        delete "spring-shell.log"
+        delete "Ar4kAgent"
+        delete "ar4kAgent"
+        delete "*.ar4k"
+        delete "*.keystore"
+        delete "ar4k-agent.log"
+        delete "*.keystore"
+        delete "*.conf.base64.ar4k"
+        delete "*.conf.json.ar4k"
+}

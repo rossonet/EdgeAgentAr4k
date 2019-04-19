@@ -25,7 +25,7 @@ export default {
     onCommand (data, resolve, reject) {
       // typed command is available in data.text
       // don't forget to resolve or reject the Promise
-      $.post('/ar4k/cmd', data.text, function (dataQuery, status) {
+      window.jQuery.post('/ar4k/cmd', data.text, function (dataQuery, status) {
         if (status === 'success') {
           resolve({ text: dataQuery })
         } else {
