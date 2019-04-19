@@ -15,6 +15,10 @@
 package org.ar4k.agent.console;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -26,6 +30,7 @@ import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +47,8 @@ import javax.validation.constraints.Size;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.Anima.AnimaEvents;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
@@ -589,6 +594,33 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("sessionOk")
   public Map<String, AgentProcess> listActiveProcesses() {
     return ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions();
+  }
+
+  @ShellMethod(value = "List active Xpra endpoint ipv4", group = "Remote Management Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public List<String> listActiveXpraServers() {
+    List<String> result = new ArrayList<>();
+    try {
+      for (Entry<String, AgentProcess> d : listActiveProcesses().entrySet()) {
+        if (d.getValue().isAlive() && d.getValue() instanceof XpraSessionProcess) {
+          XpraSessionProcess dataXpra = (XpraSessionProcess) d.getValue();
+          if (dataXpra.getTcpPort() != 0) {
+            for (NetworkInterface n : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+              for (InetAddress i : Collections.list(n.getInetAddresses())) {
+                if (i instanceof Inet4Address) {
+                  result.add(
+                      d.getKey() + " => http://" + i.getHostAddress() + ":" + String.valueOf(dataXpra.getTcpPort()));
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (SocketException e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 
   @ShellMethod(value = "Run shell command on the enviroment in where the agent is running. The default code to terminate the session is CTRL-E exit, you can change it", group = "Remote Management Commands")
