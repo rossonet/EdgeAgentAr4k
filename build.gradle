@@ -208,14 +208,14 @@ task vueGui{
 task ar4kBootJar{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is for the standard version.'
-  ar4kBootJar.dependsOn(":ar4k-agent:bootJar")
-  ar4kBootJar.dependsOn(":ar4k-agent:endBootJar")
+  ar4kBootJar.dependsOn(":ar4k-agent-base:bootJar")
+  ar4kBootJar.dependsOn(":ar4k-agent-base:endBootJar")
 }
 
 task ar4kDockerContainer{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is for the standard version.'
-  ar4kDockerContainer.dependsOn(":ar4k-agent:buildDocker")
+  ar4kDockerContainer.dependsOn(":ar4k-agent-base:buildDocker")
 }
 
 task ar4kBootJarSmall{
@@ -257,7 +257,7 @@ task buildAllDockerContainers{
   buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
   buildAllDockerContainers.dependsOn(":ar4k-agent-full:buildDocker")
   buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
-  buildAllDockerContainers.dependsOn(":ar4k-agent:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent-base:buildDocker")
 }
 
 task buildAllBootJars{
