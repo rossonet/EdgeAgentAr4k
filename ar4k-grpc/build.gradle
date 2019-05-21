@@ -2,7 +2,7 @@ description = "IoT components GRPC"
 
 dependencies {
   compile project(':ar4k-core')
-  compile 'io.grpc:grpc-netty-shaded:1.19.0'
-  compile 'io.grpc:grpc-protobuf:1.19.0'
-  compile 'io.grpc:grpc-stub:1.19.0'
+  compile 'io.grpc:grpc-netty-shaded:1.20.0'
+  compile 'io.grpc:grpc-protobuf:1.20.0'
+  compile 'io.grpc:grpc-stub:1.20.0'
 }
