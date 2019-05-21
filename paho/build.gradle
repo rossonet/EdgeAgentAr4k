@@ -1,7 +1,0 @@
-description = "IoT components Paho"
-
-dependencies {
-  compile project(':core')
-  // in realtà già incluso da Spring in core
-  compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.1'
-}

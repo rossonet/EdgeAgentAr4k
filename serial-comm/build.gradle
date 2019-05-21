@@ -1,8 +1,0 @@
-description = "IoT components serial communication"
-
-dependencies {
-  compile project(':core')
-  // gestione seriale
-  compile 'com.fazecast:jSerialComm:2.5.0'
-  compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-}

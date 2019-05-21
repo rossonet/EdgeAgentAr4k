@@ -3,7 +3,6 @@
 bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
-orientdb
 training-data/*
 
 ### OUTPUT ###

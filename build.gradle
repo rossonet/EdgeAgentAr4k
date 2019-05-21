@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.5.2'
+version = '0.6.1'
 
 ext{
   sourceCompatibility = 1.8
@@ -147,7 +147,6 @@ subprojects {
 }
 
 clean {
-  delete "orientdb"
   delete "logs"
   delete "build"
   delete "bin"
@@ -197,68 +196,68 @@ task ar4kAllJavaDoc(type: Javadoc) {
 task ar4kRegenerateStaticWeb{
   group "Ar4k frontend web GUI"
   description 'Rebuild the web interface with Npm in the component reactor-web.'
-  ar4kRegenerateStaticWeb.dependsOn(":reactor-web:uiPublish")
+  ar4kRegenerateStaticWeb.dependsOn(":ar4k-reactor-web:uiPublish")
 }
 
 task vueGui{
   group "Ar4k frontend web GUI"
   description 'Run Vue web UI'
-  vueGui.dependsOn(":reactor-web:vueGui")
+  vueGui.dependsOn(":ar4k-reactor-web:vueGui")
 }
 
 task ar4kBootJar{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is for the standard version.'
-  ar4kBootJar.dependsOn(":agent:bootJar")
-  ar4kBootJar.dependsOn(":agent:endBootJar")
+  ar4kBootJar.dependsOn(":ar4k-agent:bootJar")
+  ar4kBootJar.dependsOn(":ar4k-agent:endBootJar")
 }
 
 task ar4kDockerContainer{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is for the standard version.'
-  ar4kDockerContainer.dependsOn(":agent:buildDocker")
+  ar4kDockerContainer.dependsOn(":ar4k-agent:buildDocker")
 }
 
 task ar4kBootJarSmall{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is the small version.'
-  ar4kBootJarSmall.dependsOn(":agent-small:bootJar")
-  ar4kBootJarSmall.dependsOn(":agent-small:endBootJar")
+  ar4kBootJarSmall.dependsOn(":ar4k-agent-small:bootJar")
+  ar4kBootJarSmall.dependsOn(":ar4k-agent-small:endBootJar")
 }
 
 task ar4kDockerContainerSmall{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is for the small version.'
-  ar4kDockerContainerSmall.dependsOn(":agent-small:buildDocker")
+  ar4kDockerContainerSmall.dependsOn(":ar4k-agent-small:buildDocker")
 }
 
 task ar4kBootJarFull{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is the complete, full, version.'
-  ar4kBootJarFull.dependsOn(":agent-full:bootJar")
-  ar4kBootJarFull.dependsOn(":agent-full:endBootJar")
+  ar4kBootJarFull.dependsOn(":ar4k-agent-full:bootJar")
+  ar4kBootJarFull.dependsOn(":ar4k-agent-full:endBootJar")
 }
 
 task ar4kBootJarQa{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is the quality assurance version for testing.'
-  ar4kBootJarQa.dependsOn(":agent-qa:bootJar")
-  ar4kBootJarQa.dependsOn(":agent-qa:endBootJar")
+  ar4kBootJarQa.dependsOn(":ar4k-agent-qa:bootJar")
+  ar4kBootJarQa.dependsOn(":ar4k-agent-qa:endBootJar")
 }
 
 task ar4kDockerContainerQa{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
-  ar4kDockerContainerQa.dependsOn(":agent-qa:buildDocker")
+  ar4kDockerContainerQa.dependsOn(":ar4k-agent-qa:buildDocker")
 }
 
 task buildAllDockerContainers{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small, qa and full.'
-  buildAllDockerContainers.dependsOn(":agent-small:buildDocker")
-  buildAllDockerContainers.dependsOn(":agent-full:buildDocker")
-  buildAllDockerContainers.dependsOn(":agent-qa:buildDocker")
-  buildAllDockerContainers.dependsOn(":agent:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent-full:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent:buildDocker")
 }
 
 task buildAllBootJars{

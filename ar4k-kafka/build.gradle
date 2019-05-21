@@ -1,0 +1,7 @@
+description = "IoT components Kafka"
+
+dependencies {
+  compile project(':ar4k-core')
+  // Kafka
+  compile group: 'org.apache.kafka', name: 'kafka-clients', version: '1.0.0'
+}

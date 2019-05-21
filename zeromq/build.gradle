@@ -1,7 +1,0 @@
-description = "IoT components ZeroMq"
-
-dependencies {
-  compile project(':core')
-  // Zero MQ
-  compile('org.zeromq:jeromq:0.5.0')
-}

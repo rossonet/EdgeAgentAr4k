@@ -1,0 +1,6 @@
+description = "IoT components ZeroC Ice"
+
+dependencies {
+  compile project(':ar4k-core')
+  compile group: 'com.zeroc', name: 'ice', version: '3.7.2'
+}

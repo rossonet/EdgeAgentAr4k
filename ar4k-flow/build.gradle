@@ -1,0 +1,13 @@
+description = "Apache Camel addons"
+
+dependencies {
+	compile project(':ar4k-core')
+	compile group: 'org.apache.camel', name: 'camel-core', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-jms', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-jmx', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-netty4', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: project.ext.camelVersion
+	compile group: 'org.apache.camel', name: 'camel-stream', version: project.ext.camelVersion
+	compile("org.apache.camel:camel-syslog:${project.ext.camelVersion}")
+	compile("org.apache.camel:camel-gson:${project.ext.camelVersion}")
+}
