@@ -8,11 +8,11 @@ package org.ar4k.agent.tunnels.http.grpc.beacon;
  * The request message containing the user's name.
  * </pre>
  *
- * Protobuf type {@code manualflowcontrol.HelloRequest}
+ * Protobuf type {@code beacon.HelloRequest}
  */
 public  final class HelloRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:manualflowcontrol.HelloRequest)
+    // @@protoc_insertion_point(message_implements:beacon.HelloRequest)
     HelloRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use HelloRequest.newBuilder() to construct.
@@ -74,13 +74,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto.internal_static_manualflowcontrol_HelloRequest_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreaming.internal_static_beacon_HelloRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto.internal_static_manualflowcontrol_HelloRequest_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreaming.internal_static_beacon_HelloRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest.Builder.class);
   }
@@ -278,21 +278,21 @@ private static final long serialVersionUID = 0L;
    * The request message containing the user's name.
    * </pre>
    *
-   * Protobuf type {@code manualflowcontrol.HelloRequest}
+   * Protobuf type {@code beacon.HelloRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:manualflowcontrol.HelloRequest)
+      // @@protoc_insertion_point(builder_implements:beacon.HelloRequest)
       org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto.internal_static_manualflowcontrol_HelloRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreaming.internal_static_beacon_HelloRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto.internal_static_manualflowcontrol_HelloRequest_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreaming.internal_static_beacon_HelloRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest.Builder.class);
     }
@@ -323,7 +323,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto.internal_static_manualflowcontrol_HelloRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreaming.internal_static_beacon_HelloRequest_descriptor;
     }
 
     @java.lang.Override
@@ -506,10 +506,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:manualflowcontrol.HelloRequest)
+    // @@protoc_insertion_point(builder_scope:beacon.HelloRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:manualflowcontrol.HelloRequest)
+  // @@protoc_insertion_point(class_scope:beacon.HelloRequest)
   private static final org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.HelloRequest();

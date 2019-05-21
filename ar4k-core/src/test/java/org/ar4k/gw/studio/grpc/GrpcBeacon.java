@@ -16,6 +16,7 @@ package org.ar4k.gw.studio.grpc;
 
 import java.io.IOException;
 
+import org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -52,7 +53,7 @@ public class GrpcBeacon {
 
   @Test
   public void implementTestClass() throws InterruptedException, IOException {
-    HelloStreamingProto j;
+    HelloStreamingProto
   }
 
 }

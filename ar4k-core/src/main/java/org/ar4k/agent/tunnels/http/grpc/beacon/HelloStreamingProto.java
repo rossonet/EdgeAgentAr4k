@@ -15,15 +15,15 @@ public final class HelloStreamingProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_manualflowcontrol_HelloRequest_descriptor;
+    internal_static_beacon_HelloRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_manualflowcontrol_HelloRequest_fieldAccessorTable;
+      internal_static_beacon_HelloRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_manualflowcontrol_HelloReply_descriptor;
+    internal_static_beacon_HelloReply_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_manualflowcontrol_HelloReply_fieldAccessorTable;
+      internal_static_beacon_HelloReply_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -33,14 +33,14 @@ public final class HelloStreamingProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025hello_streaming.proto\022\021manualflowcontr" +
-      "ol\"\034\n\014HelloRequest\022\014\n\004name\030\001 \001(\t\"\035\n\nHell" +
-      "oReply\022\017\n\007message\030\001 \001(\t2m\n\020StreamingGree" +
-      "ter\022Y\n\021SayHelloStreaming\022\037.manualflowcon" +
-      "trol.HelloRequest\032\035.manualflowcontrol.He" +
-      "lloReply\"\000(\0010\001BG\n\'org.ar4k.agent.tunnels" +
-      ".http.grpc.beaconB\023HelloStreamingProtoP\001" +
-      "\242\002\004HLWSb\006proto3"
+      "\n\025hello_streaming.proto\022\006beacon\"\034\n\014Hello" +
+      "Request\022\014\n\004name\030\001 \001(\t\"\035\n\nHelloReply\022\017\n\007m" +
+      "essage\030\001 \001(\t2\217\001\n\020StreamingGreeter\022C\n\021Say" +
+      "HelloStreaming\022\024.beacon.HelloRequest\032\022.b" +
+      "eacon.HelloReply\"\000(\0010\001\0226\n\010SayHello\022\024.bea" +
+      "con.HelloRequest\032\022.beacon.HelloReply\"\000BG" +
+      "\n\'org.ar4k.agent.tunnels.http.grpc.beaco" +
+      "nB\023HelloStreamingProtoP\001\242\002\004HLWSb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -54,17 +54,17 @@ public final class HelloStreamingProto {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_manualflowcontrol_HelloRequest_descriptor =
+    internal_static_beacon_HelloRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_manualflowcontrol_HelloRequest_fieldAccessorTable = new
+    internal_static_beacon_HelloRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_manualflowcontrol_HelloRequest_descriptor,
+        internal_static_beacon_HelloRequest_descriptor,
         new java.lang.String[] { "Name", });
-    internal_static_manualflowcontrol_HelloReply_descriptor =
+    internal_static_beacon_HelloReply_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_manualflowcontrol_HelloReply_fieldAccessorTable = new
+    internal_static_beacon_HelloReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_manualflowcontrol_HelloReply_descriptor,
+        internal_static_beacon_HelloReply_descriptor,
         new java.lang.String[] { "Message", });
   }
 

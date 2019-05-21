@@ -15,15 +15,16 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "org.ar4k.agent.tunnels.http.grpc.beacon";
-option java_outer_classname = "HelloStreamingProto";
+option java_outer_classname = "HelloStreaming";
 option objc_class_prefix = "HLWS";
 
-package manualflowcontrol;
+package beacon;
 
 // The greeting service definition.
 service StreamingGreeter {
   // Streams a many greetings
   rpc SayHelloStreaming (stream HelloRequest) returns (stream HelloReply) {}
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
 // The request message containing the user's name.

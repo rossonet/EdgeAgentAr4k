@@ -4,7 +4,7 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 public interface HelloReplyOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:manualflowcontrol.HelloReply)
+    // @@protoc_insertion_point(interface_extends:beacon.HelloReply)
     com.google.protobuf.MessageOrBuilder {
 
   /**
