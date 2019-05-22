@@ -73,7 +73,7 @@ public class GrpcBeacon {
     assertEquals("READY", ls);
     // server.blockUntilShutdown();
     String status = client.registerToBeacon(Anima.generateNewUniqueName());
-    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getRegisterCode());
+    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
     assertEquals("GOOD", status);
   }
 

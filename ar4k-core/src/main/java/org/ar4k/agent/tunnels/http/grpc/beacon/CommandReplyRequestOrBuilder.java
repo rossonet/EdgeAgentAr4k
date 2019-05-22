@@ -44,22 +44,40 @@ public interface CommandReplyRequestOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentDestinationOrBuilder();
 
   /**
-   * <code>string reply = 4;</code>
+   * <code>repeated string replies = 4;</code>
    */
-  java.lang.String getReply();
+  java.util.List<java.lang.String>
+      getRepliesList();
   /**
-   * <code>string reply = 4;</code>
+   * <code>repeated string replies = 4;</code>
+   */
+  int getRepliesCount();
+  /**
+   * <code>repeated string replies = 4;</code>
+   */
+  java.lang.String getReplies(int index);
+  /**
+   * <code>repeated string replies = 4;</code>
    */
   com.google.protobuf.ByteString
-      getReplyBytes();
+      getRepliesBytes(int index);
 
   /**
-   * <code>string errors = 5;</code>
+   * <code>repeated string errors = 5;</code>
    */
-  java.lang.String getErrors();
+  java.util.List<java.lang.String>
+      getErrorsList();
   /**
-   * <code>string errors = 5;</code>
+   * <code>repeated string errors = 5;</code>
+   */
+  int getErrorsCount();
+  /**
+   * <code>repeated string errors = 5;</code>
+   */
+  java.lang.String getErrors(int index);
+  /**
+   * <code>repeated string errors = 5;</code>
    */
   com.google.protobuf.ByteString
-      getErrorsBytes();
+      getErrorsBytes(int index);
 }

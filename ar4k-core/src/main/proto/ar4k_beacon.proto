@@ -147,8 +147,8 @@ message CommandReplyRequest {
   string uniqueIdRequest = 1;
   Agent agentSender = 2;
   Agent agentDestination = 3;
-  string reply = 4;
-  string errors = 5;
+  repeated string replies = 4;
+  repeated string errors = 5;
 }
 
 message HealthRequest {

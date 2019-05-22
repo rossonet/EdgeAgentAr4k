@@ -333,9 +333,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       String ret = beaconClient.registerToBeacon(getAgentUniqueName());
       if (ret.equals("GOOD")) {
         logger.info("found Beacon endpoint: " + urlBeacon);
-        if (!getAgentUniqueName().equals(beaconClient.getRegisterCode())) {
-          setAgentUniqueName(beaconClient.getRegisterCode());
-          logger.info("the unique name is changed: " + getAgentUniqueName());
+        if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
+          setAgentUniqueName(beaconClient.getAgentUniqueName());
+          logger.info("the unique name is changed in " + getAgentUniqueName());
         }
       } else {
         logger.info("the Beacon endpoint " + urlBeacon + " return " + ret);

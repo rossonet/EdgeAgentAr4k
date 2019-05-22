@@ -248,139 +248,139 @@ public final class BeaconMirrorService {
       "quest\030\004 \001(\t\"n\n\013ChatMessage\022\"\n\013agentSende" +
       "r\030\001 \001(\0132\r.beacon.Agent\022\'\n\020agentDestinati" +
       "on\030\002 \001(\0132\r.beacon.Agent\022\022\n\nmessageTxt\030\003 " +
-      "\001(\t\"\232\001\n\023CommandReplyRequest\022\027\n\017uniqueIdR" +
+      "\001(\t\"\234\001\n\023CommandReplyRequest\022\027\n\017uniqueIdR" +
       "equest\030\001 \001(\t\022\"\n\013agentSender\030\002 \001(\0132\r.beac" +
       "on.Agent\022\'\n\020agentDestination\030\003 \001(\0132\r.bea" +
-      "con.Agent\022\r\n\005reply\030\004 \001(\t\022\016\n\006errors\030\005 \001(\t" +
-      "\"I\n\rHealthRequest\022\"\n\013agentSender\030\001 \001(\0132\r" +
-      ".beacon.Agent\022\024\n\014hardwareInfo\030\002 \001(\t\"h\n\nL" +
-      "ogRequest\022\"\n\013agentSender\030\001 \001(\0132\r.beacon." +
-      "Agent\022%\n\010severity\030\002 \001(\0162\023.beacon.LogSeve" +
-      "rity\022\017\n\007logLine\030\003 \001(\t\"m\n\020ExceptionReques" +
-      "t\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022\030\n" +
-      "\020messageException\030\002 \001(\t\022\033\n\023stackTraceExc" +
-      "eption\030\003 \001(\t\"\\\n\nStreamData\022 \n\tfromAgent\030" +
-      "\001 \001(\0132\r.beacon.Agent\022\036\n\007toAgent\030\002 \001(\0132\r." +
-      "beacon.Agent\022\014\n\004data\030\003 \001(\014\"\007\n\005Empty\"P\n\017L" +
-      "istAgentsReply\022\036\n\006result\030\001 \001(\0162\016.beacon." +
-      "Status\022\035\n\006agents\030\002 \003(\0132\r.beacon.Agent\"d\n" +
-      "\027ListSslAuthoritiesReply\022\036\n\006result\030\001 \001(\016" +
-      "2\016.beacon.Status\022)\n\013authorities\030\002 \003(\0132\024." +
-      "beacon.SslAuthority\"G\n\014SslAuthority\022\r\n\005l" +
-      "abel\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\023\n\013autho" +
-      "rityCa\030\003 \001(\t\"y\n\027ElaborateMessageRequest\022" +
-      "\"\n\013agentTarget\030\001 \001(\0132\r.beacon.Agent\022\"\n\013a" +
-      "gentSender\030\002 \001(\0132\r.beacon.Agent\022\026\n\016comma" +
-      "ndMessage\030\003 \001(\t\"6\n\025ElaborateMessageReply" +
-      "\022\r\n\005reply\030\001 \001(\t\022\016\n\006errors\030\002 \003(\t\"]\n\023ListC" +
-      "ommandsRequest\022\"\n\013agentTarget\030\001 \001(\0132\r.be" +
-      "acon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.beacon" +
-      ".Agent\"6\n\021ListCommandsReply\022!\n\010commands\030" +
-      "\001 \003(\0132\017.beacon.Command\"[\n\007Command\022\"\n\013age" +
-      "ntSender\030\001 \001(\0132\r.beacon.Agent\022\017\n\007command" +
-      "\030\002 \001(\t\022\r\n\005group\030\003 \001(\t\022\014\n\004help\030\004 \001(\t\"\202\001\n\026" +
-      "CompleteCommandRequest\022\"\n\013agentTarget\030\001 " +
-      "\001(\0132\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132" +
-      "\r.beacon.Agent\022 \n\030commandMessageToComple" +
-      "te\030\003 \001(\t\"5\n\024CompleteCommandReply\022\r\n\005repl" +
-      "y\030\001 \001(\t\022\016\n\006errors\030\002 \003(\t\"\347\001\n\036CreateProxyS" +
-      "ocksOnAgentRequest\022\"\n\013agentTarget\030\001 \001(\0132" +
-      "\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.be" +
-      "acon.Agent\022J\n\nparameters\030\003 \003(\01326.beacon." +
-      "CreateProxySocksOnAgentRequest.Parameter" +
-      "sEntry\0321\n\017ParametersEntry\022\013\n\003key\030\001 \001(\t\022\r" +
-      "\n\005value\030\002 \001(\t:\0028\001\"l\n\022TunnelCreatedReply\022" +
-      "\026\n\016uniqueTunnelId\030\001 \001(\t\022\036\n\006status\030\002 \001(\0162" +
-      "\016.beacon.Status\022\036\n\006tunnel\030\003 \001(\0132\016.beacon" +
-      ".Tunnel\"\327\001\n\026ExposeAgentPortRequest\022\"\n\013ag" +
-      "entTarget\030\001 \001(\0132\r.beacon.Agent\022\"\n\013agentS" +
-      "ender\030\002 \001(\0132\r.beacon.Agent\022B\n\nparameters" +
-      "\030\003 \003(\0132..beacon.ExposeAgentPortRequest.P" +
+      "con.Agent\022\017\n\007replies\030\004 \003(\t\022\016\n\006errors\030\005 \003" +
+      "(\t\"I\n\rHealthRequest\022\"\n\013agentSender\030\001 \001(\013" +
+      "2\r.beacon.Agent\022\024\n\014hardwareInfo\030\002 \001(\t\"h\n" +
+      "\nLogRequest\022\"\n\013agentSender\030\001 \001(\0132\r.beaco" +
+      "n.Agent\022%\n\010severity\030\002 \001(\0162\023.beacon.LogSe" +
+      "verity\022\017\n\007logLine\030\003 \001(\t\"m\n\020ExceptionRequ" +
+      "est\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022" +
+      "\030\n\020messageException\030\002 \001(\t\022\033\n\023stackTraceE" +
+      "xception\030\003 \001(\t\"\\\n\nStreamData\022 \n\tfromAgen" +
+      "t\030\001 \001(\0132\r.beacon.Agent\022\036\n\007toAgent\030\002 \001(\0132" +
+      "\r.beacon.Agent\022\014\n\004data\030\003 \001(\014\"\007\n\005Empty\"P\n" +
+      "\017ListAgentsReply\022\036\n\006result\030\001 \001(\0162\016.beaco" +
+      "n.Status\022\035\n\006agents\030\002 \003(\0132\r.beacon.Agent\"" +
+      "d\n\027ListSslAuthoritiesReply\022\036\n\006result\030\001 \001" +
+      "(\0162\016.beacon.Status\022)\n\013authorities\030\002 \003(\0132" +
+      "\024.beacon.SslAuthority\"G\n\014SslAuthority\022\r\n" +
+      "\005label\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\023\n\013aut" +
+      "horityCa\030\003 \001(\t\"y\n\027ElaborateMessageReques" +
+      "t\022\"\n\013agentTarget\030\001 \001(\0132\r.beacon.Agent\022\"\n" +
+      "\013agentSender\030\002 \001(\0132\r.beacon.Agent\022\026\n\016com" +
+      "mandMessage\030\003 \001(\t\"6\n\025ElaborateMessageRep" +
+      "ly\022\r\n\005reply\030\001 \001(\t\022\016\n\006errors\030\002 \003(\t\"]\n\023Lis" +
+      "tCommandsRequest\022\"\n\013agentTarget\030\001 \001(\0132\r." +
+      "beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.beac" +
+      "on.Agent\"6\n\021ListCommandsReply\022!\n\010command" +
+      "s\030\001 \003(\0132\017.beacon.Command\"[\n\007Command\022\"\n\013a" +
+      "gentSender\030\001 \001(\0132\r.beacon.Agent\022\017\n\007comma" +
+      "nd\030\002 \001(\t\022\r\n\005group\030\003 \001(\t\022\014\n\004help\030\004 \001(\t\"\202\001" +
+      "\n\026CompleteCommandRequest\022\"\n\013agentTarget\030" +
+      "\001 \001(\0132\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(" +
+      "\0132\r.beacon.Agent\022 \n\030commandMessageToComp" +
+      "lete\030\003 \001(\t\"5\n\024CompleteCommandReply\022\r\n\005re" +
+      "ply\030\001 \001(\t\022\016\n\006errors\030\002 \003(\t\"\347\001\n\036CreateProx" +
+      "ySocksOnAgentRequest\022\"\n\013agentTarget\030\001 \001(" +
+      "\0132\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r." +
+      "beacon.Agent\022J\n\nparameters\030\003 \003(\01326.beaco" +
+      "n.CreateProxySocksOnAgentRequest.Paramet" +
+      "ersEntry\0321\n\017ParametersEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"l\n\022TunnelCreatedRepl" +
+      "y\022\026\n\016uniqueTunnelId\030\001 \001(\t\022\036\n\006status\030\002 \001(" +
+      "\0162\016.beacon.Status\022\036\n\006tunnel\030\003 \001(\0132\016.beac" +
+      "on.Tunnel\"\327\001\n\026ExposeAgentPortRequest\022\"\n\013" +
+      "agentTarget\030\001 \001(\0132\r.beacon.Agent\022\"\n\013agen" +
+      "tSender\030\002 \001(\0132\r.beacon.Agent\022B\n\nparamete" +
+      "rs\030\003 \003(\0132..beacon.ExposeAgentPortRequest" +
+      ".ParametersEntry\0321\n\017ParametersEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\353\001\n\006Tunnel\022\026" +
+      "\n\016uniqueTunnelId\030\001 \001(\t\022 \n\tagentFrom\030\002 \001(" +
+      "\0132\r.beacon.Agent\022\036\n\007agentTo\030\003 \001(\0132\r.beac" +
+      "on.Agent\022 \n\004type\030\004 \001(\0162\022.beacon.TunnelTy" +
+      "pe\0222\n\nparameters\030\005 \003(\0132\036.beacon.Tunnel.P" +
       "arametersEntry\0321\n\017ParametersEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\353\001\n\006Tunnel\022\026\n\016" +
-      "uniqueTunnelId\030\001 \001(\t\022 \n\tagentFrom\030\002 \001(\0132" +
-      "\r.beacon.Agent\022\036\n\007agentTo\030\003 \001(\0132\r.beacon" +
-      ".Agent\022 \n\004type\030\004 \001(\0162\022.beacon.TunnelType" +
-      "\0222\n\nparameters\030\005 \003(\0132\036.beacon.Tunnel.Par" +
-      "ametersEntry\0321\n\017ParametersEntry\022\013\n\003key\030\001" +
-      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"3\n\020ListTunnelsRe" +
-      "ply\022\037\n\007tunnels\030\001 \003(\0132\016.beacon.Tunnel\"t\n\022" +
-      "CloseTunnelRequest\022\"\n\013agentTarget\030\001 \001(\0132" +
-      "\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.be" +
-      "acon.Agent\022\026\n\016uniqueTunnelId\030\003 \001(\t\"@\n\005Co" +
-      "lor\022\013\n\003red\030\001 \001(\002\022\r\n\005green\030\002 \001(\002\022\014\n\004blue\030" +
-      "\003 \001(\002\022\r\n\005alpha\030\004 \001(\002\"0\n\004Date\022\014\n\004year\030\001 \001" +
-      "(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\"G\n\010DateTi" +
-      "me\022\032\n\004date\030\001 \001(\0132\014.beacon.Date\022\037\n\004time\030\002" +
-      " \001(\0132\021.beacon.TimeOfDay\"-\n\006LatLng\022\020\n\010lat" +
-      "itude\030\001 \001(\001\022\021\n\tlongitude\030\002 \001(\001\"<\n\005Money\022" +
-      "\025\n\rcurrency_code\030\001 \001(\t\022\r\n\005units\030\002 \001(\003\022\r\n" +
-      "\005nanos\030\003 \001(\005\"\375\001\n\rPostalAddress\022\020\n\010revisi" +
-      "on\030\001 \001(\005\022\023\n\013region_code\030\002 \001(\t\022\025\n\rlanguag" +
-      "e_code\030\003 \001(\t\022\023\n\013postal_code\030\004 \001(\t\022\024\n\014sor" +
-      "ting_code\030\005 \001(\t\022\033\n\023administrative_area\030\006" +
-      " \001(\t\022\020\n\010locality\030\007 \001(\t\022\023\n\013sublocality\030\010 " +
-      "\001(\t\022\025\n\raddress_lines\030\t \003(\t\022\022\n\nrecipients" +
-      "\030\n \003(\t\022\024\n\014organization\030\013 \001(\t\"K\n\tTimeOfDa" +
-      "y\022\r\n\005hours\030\001 \001(\005\022\017\n\007minutes\030\002 \001(\005\022\017\n\007sec" +
-      "onds\030\003 \001(\005\022\r\n\005nanos\030\004 \001(\005*3\n\006Status\022\013\n\007U" +
-      "NKNOWN\020\000\022\010\n\004GOOD\020\001\022\007\n\003BAD\020\002\022\t\n\005FAULT\020\003*\274" +
-      "\001\n\013AnimaStates\022\010\n\004INIT\020\000\022\014\n\010STARTING\020\001\022\014" +
-      "\n\010STAMINAL\020\002\022\016\n\nCONFIGURED\020\003\022\013\n\007RUNNING\020" +
-      "\004\022\013\n\007SERVICE\020\005\022\013\n\007CONSOLE\020\006\022\n\n\006LAMBDA\020\007\022" +
-      "\007\n\003BOT\020\010\022\n\n\006PAUSED\020\t\022\n\n\006STOPED\020\n\022\n\n\006KILL" +
-      "ED\020\013\022\013\n\007FAULTED\020\014\022\n\n\006STASIS\020\r*|\n\013Command" +
-      "Type\022\035\n\031ELABORATE_MESSAGE_COMMAND\020\000\022\021\n\rL" +
-      "IST_COMMANDS\020\001\022\024\n\020COMPLETE_COMMAND\020\002\022\024\n\020" +
-      "OPEN_PROXY_SOCKS\020\003\022\017\n\013EXPOSE_PORT\020\004*\202\001\n\013" +
-      "LogSeverity\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n\004I" +
-      "NFO\020\310\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005ERR" +
-      "OR\020\364\003\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEMER" +
-      "GENCY\020\240\006*9\n\nTunnelType\022\023\n\017EXPOSE_TCP_POR" +
-      "T\020\000\022\026\n\022GRANT_SOCKS_ACCESS\020\001*\204\001\n\tDayOfWee" +
-      "k\022\033\n\027DAY_OF_WEEK_UNSPECIFIED\020\000\022\n\n\006MONDAY" +
-      "\020\001\022\013\n\007TUESDAY\020\002\022\r\n\tWEDNESDAY\020\003\022\014\n\010THURSD" +
-      "AY\020\004\022\n\n\006FRIDAY\020\005\022\014\n\010SATURDAY\020\006\022\n\n\006SUNDAY" +
-      "\020\0072\321\013\n\014RpcServiceV1\022<\n\010Register\022\027.beacon" +
-      ".RegisterRequest\032\025.beacon.RegisterReply\"" +
-      "\000\0227\n\017GetConfigTarget\022\r.beacon.Agent\032\023.be" +
-      "acon.ConfigReply\"\000\022/\n\007Polling\022\r.beacon.A" +
-      "gent\032\023.beacon.FlowMessage\"\000\0226\n\014Subscript" +
-      "ion\022\r.beacon.Agent\032\023.beacon.FlowMessage\"" +
-      "\0000\001\022=\n\017SendChatMessage\022\023.beacon.ChatMess" +
-      "age\032\023.beacon.StatusReply\"\000\022F\n\020SendComman" +
-      "dReply\022\033.beacon.CommandReplyRequest\032\023.be" +
-      "acon.StatusReply\"\000\022:\n\nSendHealth\022\025.beaco" +
-      "n.HealthRequest\032\023.beacon.StatusReply\"\000\0224" +
-      "\n\007SendLog\022\022.beacon.LogRequest\032\023.beacon.S" +
-      "tatusReply\"\000\022@\n\rSendException\022\030.beacon.E" +
-      "xceptionRequest\032\023.beacon.StatusReply\"\000\022M" +
-      "\n\035OpenBidirectionalSocketTunnel\022\022.beacon" +
-      ".StreamData\032\022.beacon.StreamData\"\000(\0010\001\0226\n" +
-      "\nListAgents\022\r.beacon.Empty\032\027.beacon.List" +
-      "AgentsReply\"\000\022F\n\022ListSslAuthorities\022\r.be" +
-      "acon.Empty\032\037.beacon.ListSslAuthoritiesRe" +
-      "ply\"\000\022@\n\021AddSslAuthorities\022\024.beacon.SslA" +
-      "uthority\032\023.beacon.StatusReply\"\000\022A\n\022DropS" +
-      "slAuthorities\022\024.beacon.SslAuthority\032\023.be" +
-      "acon.StatusReply\"\000\0221\n\tKickAgent\022\r.beacon" +
-      ".Agent\032\023.beacon.StatusReply\"\000\022T\n\020Elabora" +
-      "teMessage\022\037.beacon.ElaborateMessageReque" +
-      "st\032\035.beacon.ElaborateMessageReply\"\000\022H\n\014L" +
-      "istCommands\022\033.beacon.ListCommandsRequest" +
-      "\032\031.beacon.ListCommandsReply\"\000\022Q\n\017Complet" +
-      "eCommand\022\036.beacon.CompleteCommandRequest" +
-      "\032\034.beacon.CompleteCommandReply\"\000\022_\n\027Crea" +
-      "teProxySocksOnAgent\022&.beacon.CreateProxy" +
-      "SocksOnAgentRequest\032\032.beacon.TunnelCreat" +
-      "edReply\"\000\022O\n\017ExposeAgentPort\022\036.beacon.Ex" +
-      "poseAgentPortRequest\032\032.beacon.TunnelCrea" +
-      "tedReply\"\000\0228\n\013ListTunnels\022\r.beacon.Empty" +
-      "\032\030.beacon.ListTunnelsReply\"\000\022@\n\013CloseTun" +
-      "nel\022\032.beacon.CloseTunnelRequest\032\023.beacon" +
-      ".StatusReply\"\000BG\n\'org.ar4k.agent.tunnels" +
-      ".http.grpc.beaconB\023BeaconMirrorServiceP\001" +
-      "\242\002\004AR4Kb\006proto3"
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"3\n\020ListTunnels" +
+      "Reply\022\037\n\007tunnels\030\001 \003(\0132\016.beacon.Tunnel\"t" +
+      "\n\022CloseTunnelRequest\022\"\n\013agentTarget\030\001 \001(" +
+      "\0132\r.beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r." +
+      "beacon.Agent\022\026\n\016uniqueTunnelId\030\003 \001(\t\"@\n\005" +
+      "Color\022\013\n\003red\030\001 \001(\002\022\r\n\005green\030\002 \001(\002\022\014\n\004blu" +
+      "e\030\003 \001(\002\022\r\n\005alpha\030\004 \001(\002\"0\n\004Date\022\014\n\004year\030\001" +
+      " \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\"G\n\010Date" +
+      "Time\022\032\n\004date\030\001 \001(\0132\014.beacon.Date\022\037\n\004time" +
+      "\030\002 \001(\0132\021.beacon.TimeOfDay\"-\n\006LatLng\022\020\n\010l" +
+      "atitude\030\001 \001(\001\022\021\n\tlongitude\030\002 \001(\001\"<\n\005Mone" +
+      "y\022\025\n\rcurrency_code\030\001 \001(\t\022\r\n\005units\030\002 \001(\003\022" +
+      "\r\n\005nanos\030\003 \001(\005\"\375\001\n\rPostalAddress\022\020\n\010revi" +
+      "sion\030\001 \001(\005\022\023\n\013region_code\030\002 \001(\t\022\025\n\rlangu" +
+      "age_code\030\003 \001(\t\022\023\n\013postal_code\030\004 \001(\t\022\024\n\014s" +
+      "orting_code\030\005 \001(\t\022\033\n\023administrative_area" +
+      "\030\006 \001(\t\022\020\n\010locality\030\007 \001(\t\022\023\n\013sublocality\030" +
+      "\010 \001(\t\022\025\n\raddress_lines\030\t \003(\t\022\022\n\nrecipien" +
+      "ts\030\n \003(\t\022\024\n\014organization\030\013 \001(\t\"K\n\tTimeOf" +
+      "Day\022\r\n\005hours\030\001 \001(\005\022\017\n\007minutes\030\002 \001(\005\022\017\n\007s" +
+      "econds\030\003 \001(\005\022\r\n\005nanos\030\004 \001(\005*3\n\006Status\022\013\n" +
+      "\007UNKNOWN\020\000\022\010\n\004GOOD\020\001\022\007\n\003BAD\020\002\022\t\n\005FAULT\020\003" +
+      "*\274\001\n\013AnimaStates\022\010\n\004INIT\020\000\022\014\n\010STARTING\020\001" +
+      "\022\014\n\010STAMINAL\020\002\022\016\n\nCONFIGURED\020\003\022\013\n\007RUNNIN" +
+      "G\020\004\022\013\n\007SERVICE\020\005\022\013\n\007CONSOLE\020\006\022\n\n\006LAMBDA\020" +
+      "\007\022\007\n\003BOT\020\010\022\n\n\006PAUSED\020\t\022\n\n\006STOPED\020\n\022\n\n\006KI" +
+      "LLED\020\013\022\013\n\007FAULTED\020\014\022\n\n\006STASIS\020\r*|\n\013Comma" +
+      "ndType\022\035\n\031ELABORATE_MESSAGE_COMMAND\020\000\022\021\n" +
+      "\rLIST_COMMANDS\020\001\022\024\n\020COMPLETE_COMMAND\020\002\022\024" +
+      "\n\020OPEN_PROXY_SOCKS\020\003\022\017\n\013EXPOSE_PORT\020\004*\202\001" +
+      "\n\013LogSeverity\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n" +
+      "\004INFO\020\310\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005E" +
+      "RROR\020\364\003\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEM" +
+      "ERGENCY\020\240\006*9\n\nTunnelType\022\023\n\017EXPOSE_TCP_P" +
+      "ORT\020\000\022\026\n\022GRANT_SOCKS_ACCESS\020\001*\204\001\n\tDayOfW" +
+      "eek\022\033\n\027DAY_OF_WEEK_UNSPECIFIED\020\000\022\n\n\006MOND" +
+      "AY\020\001\022\013\n\007TUESDAY\020\002\022\r\n\tWEDNESDAY\020\003\022\014\n\010THUR" +
+      "SDAY\020\004\022\n\n\006FRIDAY\020\005\022\014\n\010SATURDAY\020\006\022\n\n\006SUND" +
+      "AY\020\0072\321\013\n\014RpcServiceV1\022<\n\010Register\022\027.beac" +
+      "on.RegisterRequest\032\025.beacon.RegisterRepl" +
+      "y\"\000\0227\n\017GetConfigTarget\022\r.beacon.Agent\032\023." +
+      "beacon.ConfigReply\"\000\022/\n\007Polling\022\r.beacon" +
+      ".Agent\032\023.beacon.FlowMessage\"\000\0226\n\014Subscri" +
+      "ption\022\r.beacon.Agent\032\023.beacon.FlowMessag" +
+      "e\"\0000\001\022=\n\017SendChatMessage\022\023.beacon.ChatMe" +
+      "ssage\032\023.beacon.StatusReply\"\000\022F\n\020SendComm" +
+      "andReply\022\033.beacon.CommandReplyRequest\032\023." +
+      "beacon.StatusReply\"\000\022:\n\nSendHealth\022\025.bea" +
+      "con.HealthRequest\032\023.beacon.StatusReply\"\000" +
+      "\0224\n\007SendLog\022\022.beacon.LogRequest\032\023.beacon" +
+      ".StatusReply\"\000\022@\n\rSendException\022\030.beacon" +
+      ".ExceptionRequest\032\023.beacon.StatusReply\"\000" +
+      "\022M\n\035OpenBidirectionalSocketTunnel\022\022.beac" +
+      "on.StreamData\032\022.beacon.StreamData\"\000(\0010\001\022" +
+      "6\n\nListAgents\022\r.beacon.Empty\032\027.beacon.Li" +
+      "stAgentsReply\"\000\022F\n\022ListSslAuthorities\022\r." +
+      "beacon.Empty\032\037.beacon.ListSslAuthorities" +
+      "Reply\"\000\022@\n\021AddSslAuthorities\022\024.beacon.Ss" +
+      "lAuthority\032\023.beacon.StatusReply\"\000\022A\n\022Dro" +
+      "pSslAuthorities\022\024.beacon.SslAuthority\032\023." +
+      "beacon.StatusReply\"\000\0221\n\tKickAgent\022\r.beac" +
+      "on.Agent\032\023.beacon.StatusReply\"\000\022T\n\020Elabo" +
+      "rateMessage\022\037.beacon.ElaborateMessageReq" +
+      "uest\032\035.beacon.ElaborateMessageReply\"\000\022H\n" +
+      "\014ListCommands\022\033.beacon.ListCommandsReque" +
+      "st\032\031.beacon.ListCommandsReply\"\000\022Q\n\017Compl" +
+      "eteCommand\022\036.beacon.CompleteCommandReque" +
+      "st\032\034.beacon.CompleteCommandReply\"\000\022_\n\027Cr" +
+      "eateProxySocksOnAgent\022&.beacon.CreatePro" +
+      "xySocksOnAgentRequest\032\032.beacon.TunnelCre" +
+      "atedReply\"\000\022O\n\017ExposeAgentPort\022\036.beacon." +
+      "ExposeAgentPortRequest\032\032.beacon.TunnelCr" +
+      "eatedReply\"\000\0228\n\013ListTunnels\022\r.beacon.Emp" +
+      "ty\032\030.beacon.ListTunnelsReply\"\000\022@\n\013CloseT" +
+      "unnel\022\032.beacon.CloseTunnelRequest\032\023.beac" +
+      "on.StatusReply\"\000BG\n\'org.ar4k.agent.tunne" +
+      "ls.http.grpc.beaconB\023BeaconMirrorService" +
+      "P\001\242\002\004AR4Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -453,7 +453,7 @@ public final class BeaconMirrorService {
     internal_static_beacon_CommandReplyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CommandReplyRequest_descriptor,
-        new java.lang.String[] { "UniqueIdRequest", "AgentSender", "AgentDestination", "Reply", "Errors", });
+        new java.lang.String[] { "UniqueIdRequest", "AgentSender", "AgentDestination", "Replies", "Errors", });
     internal_static_beacon_HealthRequest_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_beacon_HealthRequest_fieldAccessorTable = new
