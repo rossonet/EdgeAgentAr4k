@@ -92,6 +92,38 @@ public final class RpcServiceV1Grpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Subscription",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod;
+    if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
+          RpcServiceV1Grpc.getSubscriptionMethod = getSubscriptionMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "Subscription"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Subscription"))
+                  .build();
+          }
+        }
+     }
+     return getSubscriptionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
       org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendHealthMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
@@ -191,7 +223,7 @@ public final class RpcServiceV1Grpc {
       org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getGetConfigTargetMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "getConfigTarget",
+      fullMethodName = SERVICE_NAME + '/' + "GetConfigTarget",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -205,13 +237,13 @@ public final class RpcServiceV1Grpc {
               io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "getConfigTarget"))
+                  "beacon.RpcServiceV1", "GetConfigTarget"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("getConfigTarget"))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetConfigTarget"))
                   .build();
           }
         }
@@ -777,6 +809,13 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSubscriptionMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
       asyncUnimplementedUnaryCall(getSendHealthMethod(), responseObserver);
@@ -934,6 +973,13 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
                 org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
                   this, METHODID_POLLING)))
+          .addMethod(
+            getSubscriptionMethod(),
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                  this, METHODID_SUBSCRIPTION)))
           .addMethod(
             getSendHealthMethod(),
             asyncUnaryCall(
@@ -1113,6 +1159,14 @@ public final class RpcServiceV1Grpc {
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getPollingMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(getSubscriptionMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -1312,6 +1366,14 @@ public final class RpcServiceV1Grpc {
     public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply polling(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
       return blockingUnaryCall(
           getChannel(), getPollingMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> subscription(
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+      return blockingServerStreamingCall(
+          getChannel(), getSubscriptionMethod(), getCallOptions(), request);
     }
 
     /**
@@ -1646,26 +1708,27 @@ public final class RpcServiceV1Grpc {
 
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_POLLING = 1;
-  private static final int METHODID_SEND_HEALTH = 2;
-  private static final int METHODID_SEND_LOG = 3;
-  private static final int METHODID_SEND_EXCEPTION = 4;
-  private static final int METHODID_GET_CONFIG_TARGET = 5;
-  private static final int METHODID_LIST_AGENTS = 6;
-  private static final int METHODID_LIST_SSL_AUTHORITIES = 7;
-  private static final int METHODID_ADD_SSL_AUTHORITIES = 8;
-  private static final int METHODID_DROP_SSL_AUTHORITIES = 9;
-  private static final int METHODID_KICK_AGENT = 10;
-  private static final int METHODID_CREATE_RPC_WORKSPACE = 11;
-  private static final int METHODID_DROP_RPC_WORKSPACE = 12;
-  private static final int METHODID_LIST_RPC_WORKSPACE = 13;
-  private static final int METHODID_ELABORATE_MESSAGE = 14;
-  private static final int METHODID_LIST_COMMANDS = 15;
-  private static final int METHODID_COMPLETE_COMMAND = 16;
-  private static final int METHODID_CREATE_PROXY_SOCKS_ON_AGENT = 17;
-  private static final int METHODID_EXPOSE_AGENT_PORT = 18;
-  private static final int METHODID_LIST_TUNNELS = 19;
-  private static final int METHODID_CLOSE_TUNNEL = 20;
-  private static final int METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL = 21;
+  private static final int METHODID_SUBSCRIPTION = 2;
+  private static final int METHODID_SEND_HEALTH = 3;
+  private static final int METHODID_SEND_LOG = 4;
+  private static final int METHODID_SEND_EXCEPTION = 5;
+  private static final int METHODID_GET_CONFIG_TARGET = 6;
+  private static final int METHODID_LIST_AGENTS = 7;
+  private static final int METHODID_LIST_SSL_AUTHORITIES = 8;
+  private static final int METHODID_ADD_SSL_AUTHORITIES = 9;
+  private static final int METHODID_DROP_SSL_AUTHORITIES = 10;
+  private static final int METHODID_KICK_AGENT = 11;
+  private static final int METHODID_CREATE_RPC_WORKSPACE = 12;
+  private static final int METHODID_DROP_RPC_WORKSPACE = 13;
+  private static final int METHODID_LIST_RPC_WORKSPACE = 14;
+  private static final int METHODID_ELABORATE_MESSAGE = 15;
+  private static final int METHODID_LIST_COMMANDS = 16;
+  private static final int METHODID_COMPLETE_COMMAND = 17;
+  private static final int METHODID_CREATE_PROXY_SOCKS_ON_AGENT = 18;
+  private static final int METHODID_EXPOSE_AGENT_PORT = 19;
+  private static final int METHODID_LIST_TUNNELS = 20;
+  private static final int METHODID_CLOSE_TUNNEL = 21;
+  private static final int METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL = 22;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1690,6 +1753,10 @@ public final class RpcServiceV1Grpc {
           break;
         case METHODID_POLLING:
           serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          break;
+        case METHODID_SUBSCRIPTION:
+          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
           break;
         case METHODID_SEND_HEALTH:
@@ -1834,6 +1901,7 @@ public final class RpcServiceV1Grpc {
               .setSchemaDescriptor(new RpcServiceV1FileDescriptorSupplier())
               .addMethod(getRegisterMethod())
               .addMethod(getPollingMethod())
+              .addMethod(getSubscriptionMethod())
               .addMethod(getSendHealthMethod())
               .addMethod(getSendLogMethod())
               .addMethod(getSendExceptionMethod())

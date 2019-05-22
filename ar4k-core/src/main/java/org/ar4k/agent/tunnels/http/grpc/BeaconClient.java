@@ -18,17 +18,18 @@ package org.ar4k.agent.tunnels.http.grpc;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,20 +71,17 @@ public class BeaconClient {
     return channel.getState(true);
   }
 
-  public String registerToBeacon(String uniqueName) {
+  public String registerToBeacon(String uniqueName) throws IOException, InterruptedException, ParseException {
     RegisterRequest request;
     String result = "BAD";
-    try {
-      request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
-          .setSecretKey(secretKey).setName(uniqueName).build();
-      RegisterReply reply = null;
-      reply = blockingStub.register(request);
-      pollingFreq = reply.getMonitoringFrequency();
-      registerCode = reply.getRegisterCode();
-      result = reply.getResult().name();
-    } catch (IOException | InterruptedException | ParseException e) {
-      e.printStackTrace();
-    }
+    request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
+        .setSecretKey(secretKey).setName(uniqueName)
+        .setTime(Timestamp.newBuilder().setSeconds(new Date().getTime()).build()).build();
+    RegisterReply reply = null;
+    reply = blockingStub.register(request);
+    pollingFreq = reply.getMonitoringFrequency();
+    registerCode = reply.getRegisterCode();
+    result = reply.getResult().name();
     return result;
   }
 

@@ -200,6 +200,13 @@ task ar4kRegenerateStaticWeb{
   ar4kRegenerateStaticWeb.dependsOn(":ar4k-reactor-web:uiPublish")
 }
 
+task ar4kRegenerateProtoBuf{
+  group "Ar4k Semantic Router Build"
+  description 'Rebuild the GRPC classes from the proto file in core project.'
+  ar4kRegenerateProtoBuf.dependsOn(":ar4k-core:generateProto")
+}
+
+
 task vueGui{
   group "Ar4k frontend web GUI"
   description 'Run Vue web UI'

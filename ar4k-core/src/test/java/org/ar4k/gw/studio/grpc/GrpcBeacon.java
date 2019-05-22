@@ -17,6 +17,7 @@ package org.ar4k.gw.studio.grpc;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
@@ -65,7 +66,7 @@ public class GrpcBeacon {
   }
 
   @Test
-  public void testRegistration() throws InterruptedException, IOException {
+  public void testRegistration() throws InterruptedException, IOException, ParseException {
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);

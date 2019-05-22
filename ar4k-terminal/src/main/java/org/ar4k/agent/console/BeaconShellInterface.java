@@ -15,10 +15,12 @@
 package org.ar4k.agent.console;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServiceConfig;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -51,14 +53,14 @@ public class BeaconShellInterface extends AbstractShellHelper {
 
   protected Availability testBeaconNull() {
     return tmpServer == null ? Availability.available()
-        : Availability.unavailable("a Beacom server exist on port " + tmpServer.getPort());
+        : Availability.unavailable("a Beacom server exists on port " + tmpServer.getPort());
   }
 
   protected Availability testBeaconRunning() {
     return tmpServer != null ? Availability.available() : Availability.unavailable("no Beacon servers are running");
   }
 
-  @ShellMethod(value = "Add Beacon configuration", group = "Beacon Commands")
+  @ShellMethod(value = "Add Beacon service to the selected configuration", group = "Beacon Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addBeaconService(@ShellOption(optOut = true) @Valid BeaconServiceConfig service) {
@@ -81,6 +83,21 @@ public class BeaconShellInterface extends AbstractShellHelper {
   public boolean stopBeaconServer() {
     tmpServer.stop();
     tmpServer = null;
+    return true;
+  }
+
+  @ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconRunning")
+  public List<BeaconAgent> listBeaconAgents() {
+    return tmpServer.getAgentLabelRegisterReplies();
+  }
+
+  @ShellMethod(value = "Connect to a Beacon service as a agent", group = "Beacon Commands")
+  @ManagedOperation
+  public boolean connectToBeaconService(
+      @ShellOption(help = "the target Beacon Serve URL", defaultValue = "http://127.0.0.1:6599") String beaconServer) {
+    anima.connectToBeaconService(beaconServer);
     return true;
   }
 

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +44,7 @@ import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
@@ -215,6 +218,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private String beanName = null;
 
+  private BeaconClient beaconClient = null;
+
   // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
   // Lambda,Google Function o, in generale, in modalità function as a service
   // STASIS per la funzione di mantenimento a basso consumo,
@@ -291,7 +296,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       if (free == true)
         localUsers.add(admin);
     }
-    init = true;
   }
 
   @OnStateChanged(target = "STARTING")
@@ -309,8 +313,36 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       logger.warn(e.getMessage());
     }
     setInitialAuth();
+    checkBeaconClient();
     bootStrapConfig = resolveBootstrapConfig();
     animaStateMachine.sendEvent(AnimaEvents.BORN);
+    init = true;
+  }
+
+  private void checkBeaconClient() {
+    if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) {
+      connectToBeaconService(webRegistrationEndpoint);
+    }
+  }
+
+  public void connectToBeaconService(String urlBeacon) {
+    URL urlTarget;
+    try {
+      urlTarget = new URL(urlBeacon);
+      beaconClient = new BeaconClient(urlTarget.getHost(), urlTarget.getPort());
+      String ret = beaconClient.registerToBeacon(getAgentUniqueName());
+      if (ret.equals("GOOD")) {
+        logger.info("found Beacon endpoint: " + urlBeacon);
+        if (!getAgentUniqueName().equals(beaconClient.getRegisterCode())) {
+          setAgentUniqueName(beaconClient.getRegisterCode());
+          logger.info("the unique name is changed: " + getAgentUniqueName());
+        }
+      } else {
+        logger.info("the Beacon endpoint " + urlBeacon + " return " + ret);
+      }
+    } catch (IOException | InterruptedException | ParseException e) {
+      logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
+    }
   }
 
   // trova la configurazione appropriata per il bootstrap in funzione dei

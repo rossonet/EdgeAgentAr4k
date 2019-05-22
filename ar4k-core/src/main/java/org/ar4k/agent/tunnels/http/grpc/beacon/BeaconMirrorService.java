@@ -109,47 +109,49 @@ public final class BeaconMirrorService {
       "INAL\020\002\022\016\n\nCONFIGURED\020\003\022\013\n\007RUNNING\020\004\022\013\n\007S" +
       "ERVICE\020\005\022\013\n\007CONSOLE\020\006\022\n\n\006LAMBDA\020\007\022\007\n\003BOT" +
       "\020\010\022\n\n\006PAUSED\020\t\022\n\n\006STOPED\020\n\022\n\n\006KILLED\020\013\022\013" +
-      "\n\007FAULTED\020\014\022\n\n\006STASIS\020\r2\360\013\n\014RpcServiceV1" +
+      "\n\007FAULTED\020\014\022\n\n\006STASIS\020\r2\264\014\n\014RpcServiceV1" +
       "\022<\n\010Register\022\027.beacon.RegisterRequest\032\025." +
       "beacon.RegisterReply\"\000\022;\n\007Polling\022\027.beac" +
       "on.RegisterRequest\032\025.beacon.RegisterRepl" +
-      "y\"\000\022>\n\nSendHealth\022\027.beacon.RegisterReque" +
-      "st\032\025.beacon.RegisterReply\"\000\022;\n\007SendLog\022\027" +
-      ".beacon.RegisterRequest\032\025.beacon.Registe" +
-      "rReply\"\000\022A\n\rSendException\022\027.beacon.Regis" +
-      "terRequest\032\025.beacon.RegisterReply\"\000\022C\n\017g" +
-      "etConfigTarget\022\027.beacon.RegisterRequest\032" +
-      "\025.beacon.RegisterReply\"\000\022U\n\035OpenBidirect" +
-      "ionalSocketTunnel\022\027.beacon.RegisterReque" +
-      "st\032\025.beacon.RegisterReply\"\000(\0010\001\022>\n\nListA" +
-      "gents\022\027.beacon.RegisterRequest\032\025.beacon." +
-      "RegisterReply\"\000\022F\n\022ListSslAuthorities\022\027." +
-      "beacon.RegisterRequest\032\025.beacon.Register" +
-      "Reply\"\000\022E\n\021AddSslAuthorities\022\027.beacon.Re" +
-      "gisterRequest\032\025.beacon.RegisterReply\"\000\022F" +
-      "\n\022DropSslAuthorities\022\027.beacon.RegisterRe" +
-      "quest\032\025.beacon.RegisterReply\"\000\022=\n\tKickAg" +
-      "ent\022\027.beacon.RegisterRequest\032\025.beacon.Re" +
-      "gisterReply\"\000\022F\n\022CreateRpcWorkspace\022\027.be" +
-      "acon.RegisterRequest\032\025.beacon.RegisterRe" +
-      "ply\"\000\022D\n\020DropRpcWorkspace\022\027.beacon.Regis" +
-      "terRequest\032\025.beacon.RegisterReply\"\000\022D\n\020L" +
-      "istRpcWorkspace\022\027.beacon.RegisterRequest" +
-      "\032\025.beacon.RegisterReply\"\000\022D\n\020ElaborateMe" +
-      "ssage\022\027.beacon.RegisterRequest\032\025.beacon." +
-      "RegisterReply\"\000\022@\n\014ListCommands\022\027.beacon" +
+      "y\"\000\022B\n\014Subscription\022\027.beacon.RegisterReq" +
+      "uest\032\025.beacon.RegisterReply\"\0000\001\022>\n\nSendH" +
+      "ealth\022\027.beacon.RegisterRequest\032\025.beacon." +
+      "RegisterReply\"\000\022;\n\007SendLog\022\027.beacon.Regi" +
+      "sterRequest\032\025.beacon.RegisterReply\"\000\022A\n\r" +
+      "SendException\022\027.beacon.RegisterRequest\032\025" +
+      ".beacon.RegisterReply\"\000\022C\n\017GetConfigTarg" +
+      "et\022\027.beacon.RegisterRequest\032\025.beacon.Reg" +
+      "isterReply\"\000\022U\n\035OpenBidirectionalSocketT" +
+      "unnel\022\027.beacon.RegisterRequest\032\025.beacon." +
+      "RegisterReply\"\000(\0010\001\022>\n\nListAgents\022\027.beac" +
+      "on.RegisterRequest\032\025.beacon.RegisterRepl" +
+      "y\"\000\022F\n\022ListSslAuthorities\022\027.beacon.Regis" +
+      "terRequest\032\025.beacon.RegisterReply\"\000\022E\n\021A" +
+      "ddSslAuthorities\022\027.beacon.RegisterReques" +
+      "t\032\025.beacon.RegisterReply\"\000\022F\n\022DropSslAut" +
+      "horities\022\027.beacon.RegisterRequest\032\025.beac" +
+      "on.RegisterReply\"\000\022=\n\tKickAgent\022\027.beacon" +
       ".RegisterRequest\032\025.beacon.RegisterReply\"" +
-      "\000\022C\n\017CompleteCommand\022\027.beacon.RegisterRe" +
-      "quest\032\025.beacon.RegisterReply\"\000\022K\n\027Create" +
-      "ProxySocksOnAgent\022\027.beacon.RegisterReque" +
-      "st\032\025.beacon.RegisterReply\"\000\022C\n\017ExposeAge" +
-      "ntPort\022\027.beacon.RegisterRequest\032\025.beacon" +
-      ".RegisterReply\"\000\022?\n\013ListTunnels\022\027.beacon" +
-      ".RegisterRequest\032\025.beacon.RegisterReply\"" +
-      "\000\022?\n\013CloseTunnel\022\027.beacon.RegisterReques" +
-      "t\032\025.beacon.RegisterReply\"\000BG\n\'org.ar4k.a" +
-      "gent.tunnels.http.grpc.beaconB\023BeaconMir" +
-      "rorServiceP\001\242\002\004AR4Kb\006proto3"
+      "\000\022F\n\022CreateRpcWorkspace\022\027.beacon.Registe" +
+      "rRequest\032\025.beacon.RegisterReply\"\000\022D\n\020Dro" +
+      "pRpcWorkspace\022\027.beacon.RegisterRequest\032\025" +
+      ".beacon.RegisterReply\"\000\022D\n\020ListRpcWorksp" +
+      "ace\022\027.beacon.RegisterRequest\032\025.beacon.Re" +
+      "gisterReply\"\000\022D\n\020ElaborateMessage\022\027.beac" +
+      "on.RegisterRequest\032\025.beacon.RegisterRepl" +
+      "y\"\000\022@\n\014ListCommands\022\027.beacon.RegisterReq" +
+      "uest\032\025.beacon.RegisterReply\"\000\022C\n\017Complet" +
+      "eCommand\022\027.beacon.RegisterRequest\032\025.beac" +
+      "on.RegisterReply\"\000\022K\n\027CreateProxySocksOn" +
+      "Agent\022\027.beacon.RegisterRequest\032\025.beacon." +
+      "RegisterReply\"\000\022C\n\017ExposeAgentPort\022\027.bea" +
+      "con.RegisterRequest\032\025.beacon.RegisterRep" +
+      "ly\"\000\022?\n\013ListTunnels\022\027.beacon.RegisterReq" +
+      "uest\032\025.beacon.RegisterReply\"\000\022?\n\013CloseTu" +
+      "nnel\022\027.beacon.RegisterRequest\032\025.beacon.R" +
+      "egisterReply\"\000BG\n\'org.ar4k.agent.tunnels" +
+      ".http.grpc.beaconB\023BeaconMirrorServiceP\001" +
+      "\242\002\004AR4Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

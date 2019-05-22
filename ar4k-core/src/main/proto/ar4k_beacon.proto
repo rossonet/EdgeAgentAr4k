@@ -24,10 +24,11 @@ service RpcServiceV1 {
   // for agent
   rpc Register (RegisterRequest) returns (RegisterReply) {}
   rpc Polling (RegisterRequest) returns (RegisterReply) {}
+  rpc Subscription (RegisterRequest) returns (stream RegisterReply) {}
   rpc SendHealth (RegisterRequest) returns (RegisterReply) {}
   rpc SendLog (RegisterRequest) returns (RegisterReply) {}
   rpc SendException (RegisterRequest) returns (RegisterReply) {}
-  rpc getConfigTarget (RegisterRequest) returns (RegisterReply) {}
+  rpc GetConfigTarget (RegisterRequest) returns (RegisterReply) {}
   rpc OpenBidirectionalSocketTunnel (stream RegisterRequest) returns (stream RegisterReply) {}
   // for console
   rpc ListAgents (RegisterRequest) returns (RegisterReply) {}
@@ -263,3 +264,5 @@ message RegisterReply {
   int32 monitoringFrequency = 3;
   AnimaStates targetState = 4;
 }
+
+

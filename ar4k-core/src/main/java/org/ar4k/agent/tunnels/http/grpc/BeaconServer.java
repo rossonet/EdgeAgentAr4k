@@ -17,6 +17,8 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
@@ -33,7 +35,8 @@ public class BeaconServer {
 
   private final int port;
   private final Server server;
-  private static int defaultPollTime = 6000;
+  private int defaultPollTime = 6000;
+  private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>();
 
   public BeaconServer(int port) throws IOException {
     this(ServerBuilder.forPort(port), port);
@@ -70,11 +73,13 @@ public class BeaconServer {
     }
   }
 
-  private static class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
+  private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
-      responseObserver.onNext(RegisterReply.newBuilder().setResult(Status.GOOD).setRegisterCode(request.getName())
-          .setMonitoringFrequency(defaultPollTime).build());
+      RegisterReply reply = RegisterReply.newBuilder().setResult(Status.GOOD).setRegisterCode(request.getName())
+          .setMonitoringFrequency(defaultPollTime).build();
+      agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
+      responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
 
@@ -90,5 +95,17 @@ public class BeaconServer {
 
   public int getPort() {
     return port;
+  }
+
+  public int getDefaultPollTime() {
+    return defaultPollTime;
+  }
+
+  public void setDefaultPollTime(int defaultPollTime) {
+    this.defaultPollTime = defaultPollTime;
+  }
+
+  public List<BeaconAgent> getAgentLabelRegisterReplies() {
+    return agentLabelRegisterReplies;
   }
 }
