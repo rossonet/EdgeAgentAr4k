@@ -18,7 +18,8 @@ private static final long serialVersionUID = 0L;
   private RequestToAgent() {
     type_ = 0;
     uniqueIdRequest_ = "";
-    request_ = "";
+    requestCommand_ = "";
+    words_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -73,7 +74,26 @@ private static final long serialVersionUID = 0L;
           case 34: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            request_ = s;
+            requestCommand_ = s;
+            break;
+          }
+          case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+              words_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000010;
+            }
+            words_.add(s);
+            break;
+          }
+          case 48: {
+
+            wordIndex_ = input.readInt32();
+            break;
+          }
+          case 56: {
+
+            position_ = input.readInt32();
             break;
           }
           default: {
@@ -91,6 +111,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000010) != 0)) {
+        words_ = words_.getUnmodifiableView();
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -108,6 +131,7 @@ private static final long serialVersionUID = 0L;
             org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent.class, org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent.Builder.class);
   }
 
+  private int bitField0_;
   public static final int TYPE_FIELD_NUMBER = 1;
   private int type_;
   /**
@@ -180,38 +204,85 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int REQUEST_FIELD_NUMBER = 4;
-  private volatile java.lang.Object request_;
+  public static final int REQUESTCOMMAND_FIELD_NUMBER = 4;
+  private volatile java.lang.Object requestCommand_;
   /**
-   * <code>string request = 4;</code>
+   * <code>string requestCommand = 4;</code>
    */
-  public java.lang.String getRequest() {
-    java.lang.Object ref = request_;
+  public java.lang.String getRequestCommand() {
+    java.lang.Object ref = requestCommand_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      request_ = s;
+      requestCommand_ = s;
       return s;
     }
   }
   /**
-   * <code>string request = 4;</code>
+   * <code>string requestCommand = 4;</code>
    */
   public com.google.protobuf.ByteString
-      getRequestBytes() {
-    java.lang.Object ref = request_;
+      getRequestCommandBytes() {
+    java.lang.Object ref = requestCommand_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      request_ = b;
+      requestCommand_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
+  }
+
+  public static final int WORDS_FIELD_NUMBER = 5;
+  private com.google.protobuf.LazyStringList words_;
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  public com.google.protobuf.ProtocolStringList
+      getWordsList() {
+    return words_;
+  }
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  public int getWordsCount() {
+    return words_.size();
+  }
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  public java.lang.String getWords(int index) {
+    return words_.get(index);
+  }
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  public com.google.protobuf.ByteString
+      getWordsBytes(int index) {
+    return words_.getByteString(index);
+  }
+
+  public static final int WORDINDEX_FIELD_NUMBER = 6;
+  private int wordIndex_;
+  /**
+   * <code>int32 wordIndex = 6;</code>
+   */
+  public int getWordIndex() {
+    return wordIndex_;
+  }
+
+  public static final int POSITION_FIELD_NUMBER = 7;
+  private int position_;
+  /**
+   * <code>int32 position = 7;</code>
+   */
+  public int getPosition() {
+    return position_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -237,8 +308,17 @@ private static final long serialVersionUID = 0L;
     if (!getUniqueIdRequestBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, uniqueIdRequest_);
     }
-    if (!getRequestBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, request_);
+    if (!getRequestCommandBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, requestCommand_);
+    }
+    for (int i = 0; i < words_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, words_.getRaw(i));
+    }
+    if (wordIndex_ != 0) {
+      output.writeInt32(6, wordIndex_);
+    }
+    if (position_ != 0) {
+      output.writeInt32(7, position_);
     }
     unknownFields.writeTo(output);
   }
@@ -260,8 +340,24 @@ private static final long serialVersionUID = 0L;
     if (!getUniqueIdRequestBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, uniqueIdRequest_);
     }
-    if (!getRequestBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, request_);
+    if (!getRequestCommandBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, requestCommand_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < words_.size(); i++) {
+        dataSize += computeStringSizeNoTag(words_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getWordsList().size();
+    }
+    if (wordIndex_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, wordIndex_);
+    }
+    if (position_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(7, position_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -286,8 +382,14 @@ private static final long serialVersionUID = 0L;
     }
     if (!getUniqueIdRequest()
         .equals(other.getUniqueIdRequest())) return false;
-    if (!getRequest()
-        .equals(other.getRequest())) return false;
+    if (!getRequestCommand()
+        .equals(other.getRequestCommand())) return false;
+    if (!getWordsList()
+        .equals(other.getWordsList())) return false;
+    if (getWordIndex()
+        != other.getWordIndex()) return false;
+    if (getPosition()
+        != other.getPosition()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -307,8 +409,16 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + UNIQUEIDREQUEST_FIELD_NUMBER;
     hash = (53 * hash) + getUniqueIdRequest().hashCode();
-    hash = (37 * hash) + REQUEST_FIELD_NUMBER;
-    hash = (53 * hash) + getRequest().hashCode();
+    hash = (37 * hash) + REQUESTCOMMAND_FIELD_NUMBER;
+    hash = (53 * hash) + getRequestCommand().hashCode();
+    if (getWordsCount() > 0) {
+      hash = (37 * hash) + WORDS_FIELD_NUMBER;
+      hash = (53 * hash) + getWordsList().hashCode();
+    }
+    hash = (37 * hash) + WORDINDEX_FIELD_NUMBER;
+    hash = (53 * hash) + getWordIndex();
+    hash = (37 * hash) + POSITION_FIELD_NUMBER;
+    hash = (53 * hash) + getPosition();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -452,7 +562,13 @@ private static final long serialVersionUID = 0L;
       }
       uniqueIdRequest_ = "";
 
-      request_ = "";
+      requestCommand_ = "";
+
+      words_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      wordIndex_ = 0;
+
+      position_ = 0;
 
       return this;
     }
@@ -480,6 +596,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent result = new org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.type_ = type_;
       if (callerBuilder_ == null) {
         result.caller_ = caller_;
@@ -487,7 +605,15 @@ private static final long serialVersionUID = 0L;
         result.caller_ = callerBuilder_.build();
       }
       result.uniqueIdRequest_ = uniqueIdRequest_;
-      result.request_ = request_;
+      result.requestCommand_ = requestCommand_;
+      if (((bitField0_ & 0x00000010) != 0)) {
+        words_ = words_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000010);
+      }
+      result.words_ = words_;
+      result.wordIndex_ = wordIndex_;
+      result.position_ = position_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -546,9 +672,25 @@ private static final long serialVersionUID = 0L;
         uniqueIdRequest_ = other.uniqueIdRequest_;
         onChanged();
       }
-      if (!other.getRequest().isEmpty()) {
-        request_ = other.request_;
+      if (!other.getRequestCommand().isEmpty()) {
+        requestCommand_ = other.requestCommand_;
         onChanged();
+      }
+      if (!other.words_.isEmpty()) {
+        if (words_.isEmpty()) {
+          words_ = other.words_;
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          ensureWordsIsMutable();
+          words_.addAll(other.words_);
+        }
+        onChanged();
+      }
+      if (other.getWordIndex() != 0) {
+        setWordIndex(other.getWordIndex());
+      }
+      if (other.getPosition() != 0) {
+        setPosition(other.getPosition());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -578,6 +720,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int type_ = 0;
     /**
@@ -810,71 +953,217 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object request_ = "";
+    private java.lang.Object requestCommand_ = "";
     /**
-     * <code>string request = 4;</code>
+     * <code>string requestCommand = 4;</code>
      */
-    public java.lang.String getRequest() {
-      java.lang.Object ref = request_;
+    public java.lang.String getRequestCommand() {
+      java.lang.Object ref = requestCommand_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        request_ = s;
+        requestCommand_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string request = 4;</code>
+     * <code>string requestCommand = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getRequestBytes() {
-      java.lang.Object ref = request_;
+        getRequestCommandBytes() {
+      java.lang.Object ref = requestCommand_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        request_ = b;
+        requestCommand_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string request = 4;</code>
+     * <code>string requestCommand = 4;</code>
      */
-    public Builder setRequest(
+    public Builder setRequestCommand(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      request_ = value;
+      requestCommand_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string request = 4;</code>
+     * <code>string requestCommand = 4;</code>
      */
-    public Builder clearRequest() {
+    public Builder clearRequestCommand() {
       
-      request_ = getDefaultInstance().getRequest();
+      requestCommand_ = getDefaultInstance().getRequestCommand();
       onChanged();
       return this;
     }
     /**
-     * <code>string request = 4;</code>
+     * <code>string requestCommand = 4;</code>
      */
-    public Builder setRequestBytes(
+    public Builder setRequestCommandBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      request_ = value;
+      requestCommand_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.LazyStringList words_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureWordsIsMutable() {
+      if (!((bitField0_ & 0x00000010) != 0)) {
+        words_ = new com.google.protobuf.LazyStringArrayList(words_);
+        bitField0_ |= 0x00000010;
+       }
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getWordsList() {
+      return words_.getUnmodifiableView();
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public int getWordsCount() {
+      return words_.size();
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public java.lang.String getWords(int index) {
+      return words_.get(index);
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWordsBytes(int index) {
+      return words_.getByteString(index);
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public Builder setWords(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWordsIsMutable();
+      words_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public Builder addWords(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWordsIsMutable();
+      words_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public Builder addAllWords(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureWordsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, words_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public Builder clearWords() {
+      words_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string words = 5;</code>
+     */
+    public Builder addWordsBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureWordsIsMutable();
+      words_.add(value);
+      onChanged();
+      return this;
+    }
+
+    private int wordIndex_ ;
+    /**
+     * <code>int32 wordIndex = 6;</code>
+     */
+    public int getWordIndex() {
+      return wordIndex_;
+    }
+    /**
+     * <code>int32 wordIndex = 6;</code>
+     */
+    public Builder setWordIndex(int value) {
+      
+      wordIndex_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 wordIndex = 6;</code>
+     */
+    public Builder clearWordIndex() {
+      
+      wordIndex_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int position_ ;
+    /**
+     * <code>int32 position = 7;</code>
+     */
+    public int getPosition() {
+      return position_;
+    }
+    /**
+     * <code>int32 position = 7;</code>
+     */
+    public Builder setPosition(int value) {
+      
+      position_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 position = 7;</code>
+     */
+    public Builder clearPosition() {
+      
+      position_ = 0;
       onChanged();
       return this;
     }

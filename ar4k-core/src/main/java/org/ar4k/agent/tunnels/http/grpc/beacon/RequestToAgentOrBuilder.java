@@ -40,12 +40,41 @@ public interface RequestToAgentOrBuilder extends
       getUniqueIdRequestBytes();
 
   /**
-   * <code>string request = 4;</code>
+   * <code>string requestCommand = 4;</code>
    */
-  java.lang.String getRequest();
+  java.lang.String getRequestCommand();
   /**
-   * <code>string request = 4;</code>
+   * <code>string requestCommand = 4;</code>
    */
   com.google.protobuf.ByteString
-      getRequestBytes();
+      getRequestCommandBytes();
+
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  java.util.List<java.lang.String>
+      getWordsList();
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  int getWordsCount();
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  java.lang.String getWords(int index);
+  /**
+   * <code>repeated string words = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getWordsBytes(int index);
+
+  /**
+   * <code>int32 wordIndex = 6;</code>
+   */
+  int getWordIndex();
+
+  /**
+   * <code>int32 position = 7;</code>
+   */
+  int getPosition();
 }
