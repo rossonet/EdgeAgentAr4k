@@ -14,13 +14,15 @@
     */
 package org.ar4k.gw.studio.grpc;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.ar4k.agent.tunnels.http.grpc.beacon.HelloStreamingProto;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
+import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -28,20 +30,22 @@ import org.junit.runner.Description;
 
 public class GrpcBeacon {
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
+  BeaconServer server = null;
+  BeaconClient client = null;
+  int port = 2569;
 
   @Before
   public void setUp() throws Exception {
+    server = new BeaconServer(port);
+    server.start();
+    Thread.sleep(3000L);
+    client = new BeaconClient("127.0.0.1", port);
   }
 
   @After
   public void tearDown() throws Exception {
+    client.shutdown();
+    server.stop();
   }
 
   @Rule
@@ -53,7 +57,23 @@ public class GrpcBeacon {
 
   @Test
   public void implementTestClass() throws InterruptedException, IOException {
-    HelloStreamingProto
+    Thread.sleep(6000L);
+    String ls = client.getStateConnection().name();
+    System.out.println("LAST STATE: " + ls);
+    assertEquals("READY", ls);
+    // server.blockUntilShutdown();
+  }
+
+  @Test
+  public void testRegistration() throws InterruptedException, IOException {
+    Thread.sleep(6000L);
+    String ls = client.getStateConnection().name();
+    System.out.println("LAST STATE: " + ls);
+    assertEquals("READY", ls);
+    // server.blockUntilShutdown();
+    String status = client.registerToBeacon(Anima.generateNewUniqueName());
+    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getRegisterCode());
+    assertEquals("GOOD", status);
   }
 
 }

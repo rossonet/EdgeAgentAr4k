@@ -47,7 +47,7 @@ public class SshShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshNetworkPoint(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
-    getWorkingConfig().pots.add(service);
+    getWorkingConfig().services.add(service);
   }
 
 }

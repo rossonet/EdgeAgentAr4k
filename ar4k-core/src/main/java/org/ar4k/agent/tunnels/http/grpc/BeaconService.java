@@ -12,82 +12,101 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console.chat.sshd;
+package org.ar4k.agent.tunnels.http.grpc;
 
 import java.io.IOException;
-
-import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.core.Anima;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
- *         Gestore servizio per connessioni irc.
- * 
+ *
+ *         Servizio Beacon per telemetria
+ *
  */
-public class SshdHomunculusService extends AbstractAr4kService {
+public class BeaconService extends AbstractAr4kService {
 
   // iniettata vedi set/get
-  private SshdHomunculusConfig configuration = null;
+  private BeaconServiceConfig configuration = null;
 
-  @Override
-  @PostConstruct
-  public void postCostructor() {
-    super.postCostructor();
-  }
+  // iniettata vedi set/get
+  private Anima anima = null;
+
+  private BeaconServer beaconServer = null;
 
   @Override
   public synchronized void loop() {
-
+    if (beaconServer == null) {
+      init();
+    } else {
+      if (beaconServer.isStopped()) {
+        beaconServer.stop();
+        beaconServer = null;
+        init();
+      }
+    }
   }
 
   @Override
-  public SshdHomunculusConfig getConfiguration() {
+  public BeaconServiceConfig getConfiguration() {
     return configuration;
   }
 
   @Override
   public void setConfiguration(AbstractServiceConfig configuration) {
     super.setConfiguration(configuration);
-    this.configuration = ((SshdHomunculusConfig) configuration);
+    this.configuration = ((BeaconServiceConfig) configuration);
   }
 
   @Override
-  public void kill() {
-    super.kill();
+  public Anima getAnima() {
+    return anima;
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    super.setAnima(anima);
+    this.anima = anima;
   }
 
   @Override
   public void init() {
+    try {
+      beaconServer = new BeaconServer(configuration.port);
+      beaconServer.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
   }
 
   @Override
   public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (SshdHomunculusConfig) configuration;
+    this.configuration = (BeaconServiceConfig) configuration;
   }
 
   @Override
   public String getStatusString() {
-    // TODO Auto-generated method stub
-    return null;
+    return beaconServer != null ? beaconServer.getStatus() : "NaN";
   }
 
   @Override
   public JsonElement getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJsonTree(getStatusString());
   }
 
   @Override
   public void close() throws IOException {
-    // TODO Auto-generated method stub
-
+    if (beaconServer != null)
+      beaconServer.stop();
   }
 
 }

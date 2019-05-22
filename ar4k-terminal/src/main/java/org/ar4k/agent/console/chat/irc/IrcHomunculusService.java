@@ -14,6 +14,8 @@
     */
 package org.ar4k.agent.console.chat.irc;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
@@ -61,10 +63,6 @@ public class IrcHomunculusService extends AbstractAr4kService {
   }
 
   @Override
-  protected void finalize() {
-  }
-
-  @Override
   public void init() {
 
   }
@@ -84,6 +82,12 @@ public class IrcHomunculusService extends AbstractAr4kService {
   public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void close() throws IOException {
+    // TODO Auto-generated method stub
+
   }
 
 }

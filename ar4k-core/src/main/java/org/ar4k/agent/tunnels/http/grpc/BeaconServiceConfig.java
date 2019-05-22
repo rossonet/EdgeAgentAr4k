@@ -12,25 +12,28 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console.chat.irc;
+package org.ar4k.agent.tunnels.http.grpc;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+
+import com.beust.jcommander.Parameter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
- *         Configurazione servizio connessione IRC.
  *
+ *         Configurazione Beacon Server.
  */
-public class IrcHomunculusConfig extends AbstractServiceConfig {
+public class BeaconServiceConfig extends AbstractServiceConfig {
 
-  private static final long serialVersionUID = 6301077946480730173L;
+  private static final long serialVersionUID = -8036646566388899515L;
 
-  public Ar4kComponent instantiate() {
-    // System.out.println("Serial service start");
-    IrcHomunculusService ss = new IrcHomunculusService();
-    return (Ar4kComponent) ss;
+  @Parameter(names = "--port", description = "the port for run the Beacon endpoint", required = true)
+  public int port = 6599;
+
+  public BeaconService instantiate() {
+    BeaconService ss = new BeaconService();
+    ss.setConfiguration(this);
+    return ss;
   }
 
 }

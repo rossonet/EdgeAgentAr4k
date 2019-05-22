@@ -170,6 +170,12 @@ public class ShellInterface extends AbstractShellHelper {
     return roles;
   }
 
+  @ShellMethod(value = "Get the unique name for the agent", group = "Monitoring Commands")
+  @ManagedOperation
+  public String getUniqueName() {
+    return anima.getAgentUniqueName();
+  }
+
   @ShellMethod(value = "Logout from the agent", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")

@@ -21,6 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -95,7 +97,23 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private final String dbDataStoreName = "datastore";
 
   public Anima() {
+    agentUniqueName = generateNewUniqueName();
+    // System.err.println("\t*** [AGENT UNIQUE NAME] " + agentUniqueName + " ***");
   }
+
+  public static String generateNewUniqueName() {
+    String result = null;
+    try {
+      result = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      System.out.println("no hostname found...");
+      result = "";
+    }
+    result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
+    return result;
+  }
+
+  private String agentUniqueName = null;
 
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
@@ -710,5 +728,14 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return "Anima [runtimeConfig=" + runtimeConfig + ", stateTarget=" + stateTarget + ", init=" + init + ", getState()="
         + getState() + ", isRunning()=" + isRunning() + ", getEnvironmentVariablesAsString()="
         + getEnvironmentVariablesAsString() + ", getBeanName()=" + getBeanName() + ", hashCode()=" + hashCode() + "]";
+  }
+
+  public String getAgentUniqueName() {
+    return agentUniqueName;
+  }
+
+  public void setAgentUniqueName(String agentUniqueName) {
+    if (agentUniqueName != null && !agentUniqueName.isEmpty())
+      this.agentUniqueName = agentUniqueName;
   }
 }
