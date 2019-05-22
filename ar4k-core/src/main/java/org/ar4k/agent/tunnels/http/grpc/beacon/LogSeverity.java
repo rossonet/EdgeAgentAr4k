@@ -212,7 +212,7 @@ public enum LogSeverity
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.getDescriptor().getEnumTypes().get(0);
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.getDescriptor().getEnumTypes().get(3);
   }
 
   private static final LogSeverity[] VALUES = values();

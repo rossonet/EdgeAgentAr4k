@@ -59,190 +59,30 @@ public final class RpcServiceV1Grpc {
      return getRegisterMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getPollingMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Polling",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getPollingMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getPollingMethod;
-    if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
-          RpcServiceV1Grpc.getPollingMethod = getPollingMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "Polling"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Polling"))
-                  .build();
-          }
-        }
-     }
-     return getPollingMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Subscription",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSubscriptionMethod;
-    if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
-          RpcServiceV1Grpc.getSubscriptionMethod = getSubscriptionMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "Subscription"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Subscription"))
-                  .build();
-          }
-        }
-     }
-     return getSubscriptionMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendHealthMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SendHealth",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendHealthMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendHealthMethod;
-    if ((getSendHealthMethod = RpcServiceV1Grpc.getSendHealthMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getSendHealthMethod = RpcServiceV1Grpc.getSendHealthMethod) == null) {
-          RpcServiceV1Grpc.getSendHealthMethod = getSendHealthMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "SendHealth"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendHealth"))
-                  .build();
-          }
-        }
-     }
-     return getSendHealthMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendLogMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SendLog",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendLogMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendLogMethod;
-    if ((getSendLogMethod = RpcServiceV1Grpc.getSendLogMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getSendLogMethod = RpcServiceV1Grpc.getSendLogMethod) == null) {
-          RpcServiceV1Grpc.getSendLogMethod = getSendLogMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "SendLog"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendLog"))
-                  .build();
-          }
-        }
-     }
-     return getSendLogMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendExceptionMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SendException",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendExceptionMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getSendExceptionMethod;
-    if ((getSendExceptionMethod = RpcServiceV1Grpc.getSendExceptionMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getSendExceptionMethod = RpcServiceV1Grpc.getSendExceptionMethod) == null) {
-          RpcServiceV1Grpc.getSendExceptionMethod = getSendExceptionMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "SendException"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendException"))
-                  .build();
-          }
-        }
-     }
-     return getSendExceptionMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getGetConfigTargetMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "GetConfigTarget",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getGetConfigTargetMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getGetConfigTargetMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod;
     if ((getGetConfigTargetMethod = RpcServiceV1Grpc.getGetConfigTargetMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getGetConfigTargetMethod = RpcServiceV1Grpc.getGetConfigTargetMethod) == null) {
           RpcServiceV1Grpc.getGetConfigTargetMethod = getGetConfigTargetMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "GetConfigTarget"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetConfigTarget"))
                   .build();
           }
@@ -251,30 +91,254 @@ public final class RpcServiceV1Grpc {
      return getGetConfigTargetMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getOpenBidirectionalSocketTunnelMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Polling",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod;
+    if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
+          RpcServiceV1Grpc.getPollingMethod = getPollingMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "Polling"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Polling"))
+                  .build();
+          }
+        }
+     }
+     return getPollingMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Subscription",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod;
+    if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
+          RpcServiceV1Grpc.getSubscriptionMethod = getSubscriptionMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "Subscription"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Subscription"))
+                  .build();
+          }
+        }
+     }
+     return getSubscriptionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendChatMessageMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendChatMessage",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendChatMessageMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendChatMessageMethod;
+    if ((getSendChatMessageMethod = RpcServiceV1Grpc.getSendChatMessageMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSendChatMessageMethod = RpcServiceV1Grpc.getSendChatMessageMethod) == null) {
+          RpcServiceV1Grpc.getSendChatMessageMethod = getSendChatMessageMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "SendChatMessage"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendChatMessage"))
+                  .build();
+          }
+        }
+     }
+     return getSendChatMessageMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendCommandReplyMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendCommandReply",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendCommandReplyMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendCommandReplyMethod;
+    if ((getSendCommandReplyMethod = RpcServiceV1Grpc.getSendCommandReplyMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSendCommandReplyMethod = RpcServiceV1Grpc.getSendCommandReplyMethod) == null) {
+          RpcServiceV1Grpc.getSendCommandReplyMethod = getSendCommandReplyMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "SendCommandReply"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendCommandReply"))
+                  .build();
+          }
+        }
+     }
+     return getSendCommandReplyMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendHealthMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendHealth",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendHealthMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendHealthMethod;
+    if ((getSendHealthMethod = RpcServiceV1Grpc.getSendHealthMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSendHealthMethod = RpcServiceV1Grpc.getSendHealthMethod) == null) {
+          RpcServiceV1Grpc.getSendHealthMethod = getSendHealthMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "SendHealth"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendHealth"))
+                  .build();
+          }
+        }
+     }
+     return getSendHealthMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendLogMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendLog",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendLogMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendLogMethod;
+    if ((getSendLogMethod = RpcServiceV1Grpc.getSendLogMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSendLogMethod = RpcServiceV1Grpc.getSendLogMethod) == null) {
+          RpcServiceV1Grpc.getSendLogMethod = getSendLogMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "SendLog"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendLog"))
+                  .build();
+          }
+        }
+     }
+     return getSendLogMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendExceptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendException",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendExceptionMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getSendExceptionMethod;
+    if ((getSendExceptionMethod = RpcServiceV1Grpc.getSendExceptionMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getSendExceptionMethod = RpcServiceV1Grpc.getSendExceptionMethod) == null) {
+          RpcServiceV1Grpc.getSendExceptionMethod = getSendExceptionMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "SendException"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendException"))
+                  .build();
+          }
+        }
+     }
+     return getSendExceptionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "OpenBidirectionalSocketTunnel",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.class,
       methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getOpenBidirectionalSocketTunnelMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getOpenBidirectionalSocketTunnelMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData, org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod;
     if ((getOpenBidirectionalSocketTunnelMethod = RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getOpenBidirectionalSocketTunnelMethod = RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod) == null) {
           RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod = getOpenBidirectionalSocketTunnelMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData, org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "OpenBidirectionalSocketTunnel"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("OpenBidirectionalSocketTunnel"))
                   .build();
           }
@@ -283,30 +347,30 @@ public final class RpcServiceV1Grpc {
      return getOpenBidirectionalSocketTunnelMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListAgentsMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> getListAgentsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListAgents",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListAgentsMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListAgentsMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> getListAgentsMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> getListAgentsMethod;
     if ((getListAgentsMethod = RpcServiceV1Grpc.getListAgentsMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListAgentsMethod = RpcServiceV1Grpc.getListAgentsMethod) == null) {
           RpcServiceV1Grpc.getListAgentsMethod = getListAgentsMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListAgents"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListAgents"))
                   .build();
           }
@@ -315,30 +379,30 @@ public final class RpcServiceV1Grpc {
      return getListAgentsMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListSslAuthoritiesMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListSslAuthorities",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListSslAuthoritiesMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod;
     if ((getListSslAuthoritiesMethod = RpcServiceV1Grpc.getListSslAuthoritiesMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListSslAuthoritiesMethod = RpcServiceV1Grpc.getListSslAuthoritiesMethod) == null) {
           RpcServiceV1Grpc.getListSslAuthoritiesMethod = getListSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListSslAuthorities"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListSslAuthorities"))
                   .build();
           }
@@ -347,30 +411,30 @@ public final class RpcServiceV1Grpc {
      return getListSslAuthoritiesMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getAddSslAuthoritiesMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getAddSslAuthoritiesMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "AddSslAuthorities",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getAddSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getAddSslAuthoritiesMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getAddSslAuthoritiesMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getAddSslAuthoritiesMethod;
     if ((getAddSslAuthoritiesMethod = RpcServiceV1Grpc.getAddSslAuthoritiesMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getAddSslAuthoritiesMethod = RpcServiceV1Grpc.getAddSslAuthoritiesMethod) == null) {
           RpcServiceV1Grpc.getAddSslAuthoritiesMethod = getAddSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "AddSslAuthorities"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("AddSslAuthorities"))
                   .build();
           }
@@ -379,30 +443,30 @@ public final class RpcServiceV1Grpc {
      return getAddSslAuthoritiesMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropSslAuthoritiesMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getDropSslAuthoritiesMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "DropSslAuthorities",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropSslAuthoritiesMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getDropSslAuthoritiesMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getDropSslAuthoritiesMethod;
     if ((getDropSslAuthoritiesMethod = RpcServiceV1Grpc.getDropSslAuthoritiesMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getDropSslAuthoritiesMethod = RpcServiceV1Grpc.getDropSslAuthoritiesMethod) == null) {
           RpcServiceV1Grpc.getDropSslAuthoritiesMethod = getDropSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "DropSslAuthorities"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("DropSslAuthorities"))
                   .build();
           }
@@ -411,30 +475,30 @@ public final class RpcServiceV1Grpc {
      return getDropSslAuthoritiesMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getKickAgentMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getKickAgentMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "KickAgent",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getKickAgentMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getKickAgentMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getKickAgentMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getKickAgentMethod;
     if ((getKickAgentMethod = RpcServiceV1Grpc.getKickAgentMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getKickAgentMethod = RpcServiceV1Grpc.getKickAgentMethod) == null) {
           RpcServiceV1Grpc.getKickAgentMethod = getKickAgentMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "KickAgent"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("KickAgent"))
                   .build();
           }
@@ -443,126 +507,30 @@ public final class RpcServiceV1Grpc {
      return getKickAgentMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateRpcWorkspaceMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "CreateRpcWorkspace",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateRpcWorkspaceMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateRpcWorkspaceMethod;
-    if ((getCreateRpcWorkspaceMethod = RpcServiceV1Grpc.getCreateRpcWorkspaceMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getCreateRpcWorkspaceMethod = RpcServiceV1Grpc.getCreateRpcWorkspaceMethod) == null) {
-          RpcServiceV1Grpc.getCreateRpcWorkspaceMethod = getCreateRpcWorkspaceMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "CreateRpcWorkspace"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CreateRpcWorkspace"))
-                  .build();
-          }
-        }
-     }
-     return getCreateRpcWorkspaceMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropRpcWorkspaceMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "DropRpcWorkspace",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropRpcWorkspaceMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getDropRpcWorkspaceMethod;
-    if ((getDropRpcWorkspaceMethod = RpcServiceV1Grpc.getDropRpcWorkspaceMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getDropRpcWorkspaceMethod = RpcServiceV1Grpc.getDropRpcWorkspaceMethod) == null) {
-          RpcServiceV1Grpc.getDropRpcWorkspaceMethod = getDropRpcWorkspaceMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "DropRpcWorkspace"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("DropRpcWorkspace"))
-                  .build();
-          }
-        }
-     }
-     return getDropRpcWorkspaceMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListRpcWorkspaceMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ListRpcWorkspace",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListRpcWorkspaceMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListRpcWorkspaceMethod;
-    if ((getListRpcWorkspaceMethod = RpcServiceV1Grpc.getListRpcWorkspaceMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getListRpcWorkspaceMethod = RpcServiceV1Grpc.getListRpcWorkspaceMethod) == null) {
-          RpcServiceV1Grpc.getListRpcWorkspaceMethod = getListRpcWorkspaceMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "ListRpcWorkspace"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListRpcWorkspace"))
-                  .build();
-          }
-        }
-     }
-     return getListRpcWorkspaceMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getElaborateMessageMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> getElaborateMessageMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ElaborateMessage",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getElaborateMessageMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getElaborateMessageMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> getElaborateMessageMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest, org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> getElaborateMessageMethod;
     if ((getElaborateMessageMethod = RpcServiceV1Grpc.getElaborateMessageMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getElaborateMessageMethod = RpcServiceV1Grpc.getElaborateMessageMethod) == null) {
           RpcServiceV1Grpc.getElaborateMessageMethod = getElaborateMessageMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest, org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ElaborateMessage"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ElaborateMessage"))
                   .build();
           }
@@ -571,30 +539,30 @@ public final class RpcServiceV1Grpc {
      return getElaborateMessageMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListCommandsMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> getListCommandsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListCommands",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListCommandsMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListCommandsMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> getListCommandsMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest, org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> getListCommandsMethod;
     if ((getListCommandsMethod = RpcServiceV1Grpc.getListCommandsMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListCommandsMethod = RpcServiceV1Grpc.getListCommandsMethod) == null) {
           RpcServiceV1Grpc.getListCommandsMethod = getListCommandsMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest, org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListCommands"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListCommands"))
                   .build();
           }
@@ -603,30 +571,30 @@ public final class RpcServiceV1Grpc {
      return getListCommandsMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCompleteCommandMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> getCompleteCommandMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "CompleteCommand",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCompleteCommandMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCompleteCommandMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> getCompleteCommandMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest, org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> getCompleteCommandMethod;
     if ((getCompleteCommandMethod = RpcServiceV1Grpc.getCompleteCommandMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getCompleteCommandMethod = RpcServiceV1Grpc.getCompleteCommandMethod) == null) {
           RpcServiceV1Grpc.getCompleteCommandMethod = getCompleteCommandMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest, org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "CompleteCommand"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CompleteCommand"))
                   .build();
           }
@@ -635,30 +603,30 @@ public final class RpcServiceV1Grpc {
      return getCompleteCommandMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateProxySocksOnAgentMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "CreateProxySocksOnAgent",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateProxySocksOnAgentMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCreateProxySocksOnAgentMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod;
     if ((getCreateProxySocksOnAgentMethod = RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getCreateProxySocksOnAgentMethod = RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod) == null) {
           RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod = getCreateProxySocksOnAgentMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "CreateProxySocksOnAgent"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CreateProxySocksOnAgent"))
                   .build();
           }
@@ -667,30 +635,30 @@ public final class RpcServiceV1Grpc {
      return getCreateProxySocksOnAgentMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getExposeAgentPortMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ExposeAgentPort",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getExposeAgentPortMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getExposeAgentPortMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod;
     if ((getExposeAgentPortMethod = RpcServiceV1Grpc.getExposeAgentPortMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getExposeAgentPortMethod = RpcServiceV1Grpc.getExposeAgentPortMethod) == null) {
           RpcServiceV1Grpc.getExposeAgentPortMethod = getExposeAgentPortMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ExposeAgentPort"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ExposeAgentPort"))
                   .build();
           }
@@ -699,30 +667,30 @@ public final class RpcServiceV1Grpc {
      return getExposeAgentPortMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListTunnelsMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListTunnels",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListTunnelsMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getListTunnelsMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod;
     if ((getListTunnelsMethod = RpcServiceV1Grpc.getListTunnelsMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListTunnelsMethod = RpcServiceV1Grpc.getListTunnelsMethod) == null) {
           RpcServiceV1Grpc.getListTunnelsMethod = getListTunnelsMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListTunnels"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListTunnels"))
                   .build();
           }
@@ -731,30 +699,30 @@ public final class RpcServiceV1Grpc {
      return getListTunnelsMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCloseTunnelMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getCloseTunnelMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "CloseTunnel",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCloseTunnelMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getCloseTunnelMethod;
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getCloseTunnelMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> getCloseTunnelMethod;
     if ((getCloseTunnelMethod = RpcServiceV1Grpc.getCloseTunnelMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getCloseTunnelMethod = RpcServiceV1Grpc.getCloseTunnelMethod) == null) {
           RpcServiceV1Grpc.getCloseTunnelMethod = getCloseTunnelMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest, org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "CloseTunnel"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CloseTunnel"))
                   .build();
           }
@@ -792,7 +760,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * for agent
+     * for agent registration
      * </pre>
      */
     public void register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
@@ -802,158 +770,164 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getPollingMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getSubscriptionMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getSendHealthMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getSendLogMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void sendException(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getSendExceptionMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
       asyncUnimplementedUnaryCall(getGetConfigTargetMethod(), responseObserver);
     }
 
     /**
      */
-    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest> openBidirectionalSocketTunnel(
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getPollingMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getSubscriptionMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendChatMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendChatMessageMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendCommandReply(org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendCommandReplyMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendHealthMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendLogMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendException(org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendExceptionMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> openBidirectionalSocketTunnel(
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> responseObserver) {
       return asyncUnimplementedStreamingCall(getOpenBidirectionalSocketTunnelMethod(), responseObserver);
     }
 
     /**
      * <pre>
      * for console
+     * list agents connected 
      * </pre>
      */
-    public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListAgentsMethod(), responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO gestione ssl con Beacon
+     * </pre>
      */
-    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListSslAuthoritiesMethod(), responseObserver);
     }
 
     /**
      */
-    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnimplementedUnaryCall(getAddSslAuthoritiesMethod(), responseObserver);
     }
 
     /**
      */
-    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnimplementedUnaryCall(getDropSslAuthoritiesMethod(), responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO gestione kick agent con Beacon
+     * </pre>
      */
-    public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnimplementedUnaryCall(getKickAgentMethod(), responseObserver);
     }
 
     /**
+     * <pre>
+     * RPC on agent
+     * </pre>
      */
-    public void createRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getCreateRpcWorkspaceMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void dropRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getDropRpcWorkspaceMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void listRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getListRpcWorkspaceMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> responseObserver) {
       asyncUnimplementedUnaryCall(getElaborateMessageMethod(), responseObserver);
     }
 
     /**
      */
-    public void listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListCommandsMethod(), responseObserver);
     }
 
     /**
      */
-    public void completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> responseObserver) {
       asyncUnimplementedUnaryCall(getCompleteCommandMethod(), responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO network tunnels 
+     * </pre>
      */
-    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
       asyncUnimplementedUnaryCall(getCreateProxySocksOnAgentMethod(), responseObserver);
     }
 
     /**
      */
-    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
       asyncUnimplementedUnaryCall(getExposeAgentPortMethod(), responseObserver);
     }
 
     /**
      */
-    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListTunnelsMethod(), responseObserver);
     }
 
     /**
      */
-    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnimplementedUnaryCall(getCloseTunnelMethod(), responseObserver);
     }
 
@@ -967,158 +941,151 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
                   this, METHODID_REGISTER)))
           .addMethod(
+            getGetConfigTargetMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
+                  this, METHODID_GET_CONFIG_TARGET)))
+          .addMethod(
             getPollingMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>(
                   this, METHODID_POLLING)))
           .addMethod(
             getSubscriptionMethod(),
             asyncServerStreamingCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>(
                   this, METHODID_SUBSCRIPTION)))
+          .addMethod(
+            getSendChatMessageMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
+                  this, METHODID_SEND_CHAT_MESSAGE)))
+          .addMethod(
+            getSendCommandReplyMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
+                  this, METHODID_SEND_COMMAND_REPLY)))
           .addMethod(
             getSendHealthMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_SEND_HEALTH)))
           .addMethod(
             getSendLogMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_SEND_LOG)))
           .addMethod(
             getSendExceptionMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_SEND_EXCEPTION)))
-          .addMethod(
-            getGetConfigTargetMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
-                  this, METHODID_GET_CONFIG_TARGET)))
           .addMethod(
             getOpenBidirectionalSocketTunnelMethod(),
             asyncBidiStreamingCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>(
                   this, METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL)))
           .addMethod(
             getListAgentsMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply>(
                   this, METHODID_LIST_AGENTS)))
           .addMethod(
             getListSslAuthoritiesMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>(
                   this, METHODID_LIST_SSL_AUTHORITIES)))
           .addMethod(
             getAddSslAuthoritiesMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_ADD_SSL_AUTHORITIES)))
           .addMethod(
             getDropSslAuthoritiesMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_DROP_SSL_AUTHORITIES)))
           .addMethod(
             getKickAgentMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_KICK_AGENT)))
-          .addMethod(
-            getCreateRpcWorkspaceMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
-                  this, METHODID_CREATE_RPC_WORKSPACE)))
-          .addMethod(
-            getDropRpcWorkspaceMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
-                  this, METHODID_DROP_RPC_WORKSPACE)))
-          .addMethod(
-            getListRpcWorkspaceMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
-                  this, METHODID_LIST_RPC_WORKSPACE)))
           .addMethod(
             getElaborateMessageMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply>(
                   this, METHODID_ELABORATE_MESSAGE)))
           .addMethod(
             getListCommandsMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply>(
                   this, METHODID_LIST_COMMANDS)))
           .addMethod(
             getCompleteCommandMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply>(
                   this, METHODID_COMPLETE_COMMAND)))
           .addMethod(
             getCreateProxySocksOnAgentMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>(
                   this, METHODID_CREATE_PROXY_SOCKS_ON_AGENT)))
           .addMethod(
             getExposeAgentPortMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>(
                   this, METHODID_EXPOSE_AGENT_PORT)))
           .addMethod(
             getListTunnelsMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>(
                   this, METHODID_LIST_TUNNELS)))
           .addMethod(
             getCloseTunnelMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
+                org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>(
                   this, METHODID_CLOSE_TUNNEL)))
           .build();
     }
@@ -1144,7 +1111,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * for agent
+     * for agent registration
      * </pre>
      */
     public void register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
@@ -1155,56 +1122,72 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getPollingMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncServerStreamingCall(
-          getChannel().newCall(getSubscriptionMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getSendHealthMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getSendLogMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void sendException(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getSendExceptionMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getGetConfigTargetMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest> openBidirectionalSocketTunnel(
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getPollingMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(getSubscriptionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendChatMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendChatMessageMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendCommandReply(org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendCommandReplyMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendHealthMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendLogMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendException(org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendExceptionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> openBidirectionalSocketTunnel(
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> responseObserver) {
       return asyncBidiStreamingCall(
           getChannel().newCall(getOpenBidirectionalSocketTunnelMethod(), getCallOptions()), responseObserver);
     }
@@ -1212,122 +1195,111 @@ public final class RpcServiceV1Grpc {
     /**
      * <pre>
      * for console
+     * list agents connected 
      * </pre>
      */
-    public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListAgentsMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO gestione ssl con Beacon
+     * </pre>
      */
-    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getAddSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getDropSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO gestione kick agent con Beacon
+     * </pre>
      */
-    public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getKickAgentMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
+     * <pre>
+     * RPC on agent
+     * </pre>
      */
-    public void createRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getCreateRpcWorkspaceMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void dropRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getDropRpcWorkspaceMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void listRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getListRpcWorkspaceMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getElaborateMessageMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListCommandsMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getCompleteCommandMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
+     * <pre>
+     * TODO network tunnels 
+     * </pre>
      */
-    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getCreateProxySocksOnAgentMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getExposeAgentPortMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListTunnelsMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
+    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getCloseTunnelMethod(), getCallOptions()), request, responseObserver);
     }
@@ -1353,7 +1325,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * for agent
+     * for agent registration
      * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
@@ -1363,151 +1335,157 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply polling(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return blockingUnaryCall(
+          getChannel(), getGetConfigTargetMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingUnaryCall(
           getChannel(), getPollingMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> subscription(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> subscription(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingServerStreamingCall(
           getChannel(), getSubscriptionMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply sendChatMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage request) {
+      return blockingUnaryCall(
+          getChannel(), getSendChatMessageMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply sendCommandReply(org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getSendCommandReplyMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply sendHealth(org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest request) {
       return blockingUnaryCall(
           getChannel(), getSendHealthMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply sendLog(org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest request) {
       return blockingUnaryCall(
           getChannel(), getSendLogMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply sendException(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply sendException(org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request) {
       return blockingUnaryCall(
           getChannel(), getSendExceptionMethod(), getCallOptions(), request);
     }
 
     /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getGetConfigTargetMethod(), getCallOptions(), request);
-    }
-
-    /**
      * <pre>
      * for console
+     * list agents connected 
      * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListAgentsMethod(), getCallOptions(), request);
     }
 
     /**
+     * <pre>
+     * TODO gestione ssl con Beacon
+     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListSslAuthoritiesMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
       return blockingUnaryCall(
           getChannel(), getAddSslAuthoritiesMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
       return blockingUnaryCall(
           getChannel(), getDropSslAuthoritiesMethod(), getCallOptions(), request);
     }
 
     /**
+     * <pre>
+     * TODO gestione kick agent con Beacon
+     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingUnaryCall(
           getChannel(), getKickAgentMethod(), getCallOptions(), request);
     }
 
     /**
+     * <pre>
+     * RPC on agent
+     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply createRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getCreateRpcWorkspaceMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply dropRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getDropRpcWorkspaceMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply listRpcWorkspace(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getListRpcWorkspaceMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request) {
       return blockingUnaryCall(
           getChannel(), getElaborateMessageMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply listCommands(org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest request) {
       return blockingUnaryCall(
           getChannel(), getListCommandsMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply completeCommand(org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest request) {
       return blockingUnaryCall(
           getChannel(), getCompleteCommandMethod(), getCallOptions(), request);
     }
 
     /**
+     * <pre>
+     * TODO network tunnels 
+     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request) {
       return blockingUnaryCall(
           getChannel(), getCreateProxySocksOnAgentMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request) {
       return blockingUnaryCall(
           getChannel(), getExposeAgentPortMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListTunnelsMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request) {
       return blockingUnaryCall(
           getChannel(), getCloseTunnelMethod(), getCallOptions(), request);
     }
@@ -1533,7 +1511,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * for agent
+     * for agent registration
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> register(
@@ -1544,191 +1522,195 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> polling(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getConfigTarget(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetConfigTargetMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> polling(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return futureUnaryCall(
           getChannel().newCall(getPollingMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> sendHealth(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> sendChatMessage(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSendChatMessageMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> sendCommandReply(
+        org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSendCommandReplyMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> sendHealth(
+        org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getSendHealthMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> sendLog(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> sendLog(
+        org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getSendLogMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> sendException(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> sendException(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getSendExceptionMethod(), getCallOptions()), request);
     }
 
     /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> getConfigTarget(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getGetConfigTargetMethod(), getCallOptions()), request);
-    }
-
-    /**
      * <pre>
      * for console
+     * list agents connected 
      * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> listAgents(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> listAgents(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(getListAgentsMethod(), getCallOptions()), request);
     }
 
     /**
+     * <pre>
+     * TODO gestione ssl con Beacon
+     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> listSslAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> listSslAuthorities(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(getListSslAuthoritiesMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> addSslAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> addSslAuthorities(
+        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
       return futureUnaryCall(
           getChannel().newCall(getAddSslAuthoritiesMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> dropSslAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> dropSslAuthorities(
+        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
       return futureUnaryCall(
           getChannel().newCall(getDropSslAuthoritiesMethod(), getCallOptions()), request);
     }
 
     /**
+     * <pre>
+     * TODO gestione kick agent con Beacon
+     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> kickAgent(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> kickAgent(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return futureUnaryCall(
           getChannel().newCall(getKickAgentMethod(), getCallOptions()), request);
     }
 
     /**
+     * <pre>
+     * RPC on agent
+     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> createRpcWorkspace(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getCreateRpcWorkspaceMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> dropRpcWorkspace(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getDropRpcWorkspaceMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> listRpcWorkspace(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getListRpcWorkspaceMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> elaborateMessage(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> elaborateMessage(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getElaborateMessageMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> listCommands(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply> listCommands(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getListCommandsMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> completeCommand(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply> completeCommand(
+        org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getCompleteCommandMethod(), getCallOptions()), request);
     }
 
     /**
+     * <pre>
+     * TODO network tunnels 
+     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> createProxySocksOnAgent(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> createProxySocksOnAgent(
+        org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getCreateProxySocksOnAgentMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> exposeAgentPort(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> exposeAgentPort(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getExposeAgentPortMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> listTunnels(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> listTunnels(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(getListTunnelsMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> closeTunnel(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply> closeTunnel(
+        org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getCloseTunnelMethod(), getCallOptions()), request);
     }
   }
 
   private static final int METHODID_REGISTER = 0;
-  private static final int METHODID_POLLING = 1;
-  private static final int METHODID_SUBSCRIPTION = 2;
-  private static final int METHODID_SEND_HEALTH = 3;
-  private static final int METHODID_SEND_LOG = 4;
-  private static final int METHODID_SEND_EXCEPTION = 5;
-  private static final int METHODID_GET_CONFIG_TARGET = 6;
-  private static final int METHODID_LIST_AGENTS = 7;
-  private static final int METHODID_LIST_SSL_AUTHORITIES = 8;
-  private static final int METHODID_ADD_SSL_AUTHORITIES = 9;
-  private static final int METHODID_DROP_SSL_AUTHORITIES = 10;
-  private static final int METHODID_KICK_AGENT = 11;
-  private static final int METHODID_CREATE_RPC_WORKSPACE = 12;
-  private static final int METHODID_DROP_RPC_WORKSPACE = 13;
-  private static final int METHODID_LIST_RPC_WORKSPACE = 14;
-  private static final int METHODID_ELABORATE_MESSAGE = 15;
-  private static final int METHODID_LIST_COMMANDS = 16;
-  private static final int METHODID_COMPLETE_COMMAND = 17;
-  private static final int METHODID_CREATE_PROXY_SOCKS_ON_AGENT = 18;
-  private static final int METHODID_EXPOSE_AGENT_PORT = 19;
-  private static final int METHODID_LIST_TUNNELS = 20;
-  private static final int METHODID_CLOSE_TUNNEL = 21;
-  private static final int METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL = 22;
+  private static final int METHODID_GET_CONFIG_TARGET = 1;
+  private static final int METHODID_POLLING = 2;
+  private static final int METHODID_SUBSCRIPTION = 3;
+  private static final int METHODID_SEND_CHAT_MESSAGE = 4;
+  private static final int METHODID_SEND_COMMAND_REPLY = 5;
+  private static final int METHODID_SEND_HEALTH = 6;
+  private static final int METHODID_SEND_LOG = 7;
+  private static final int METHODID_SEND_EXCEPTION = 8;
+  private static final int METHODID_LIST_AGENTS = 9;
+  private static final int METHODID_LIST_SSL_AUTHORITIES = 10;
+  private static final int METHODID_ADD_SSL_AUTHORITIES = 11;
+  private static final int METHODID_DROP_SSL_AUTHORITIES = 12;
+  private static final int METHODID_KICK_AGENT = 13;
+  private static final int METHODID_ELABORATE_MESSAGE = 14;
+  private static final int METHODID_LIST_COMMANDS = 15;
+  private static final int METHODID_COMPLETE_COMMAND = 16;
+  private static final int METHODID_CREATE_PROXY_SOCKS_ON_AGENT = 17;
+  private static final int METHODID_EXPOSE_AGENT_PORT = 18;
+  private static final int METHODID_LIST_TUNNELS = 19;
+  private static final int METHODID_CLOSE_TUNNEL = 20;
+  private static final int METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL = 21;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1751,89 +1733,85 @@ public final class RpcServiceV1Grpc {
           serviceImpl.register((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
           break;
+        case METHODID_GET_CONFIG_TARGET:
+          serviceImpl.getConfigTarget((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
+          break;
         case METHODID_POLLING:
-          serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>) responseObserver);
           break;
         case METHODID_SUBSCRIPTION:
-          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>) responseObserver);
+          break;
+        case METHODID_SEND_CHAT_MESSAGE:
+          serviceImpl.sendChatMessage((org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
+          break;
+        case METHODID_SEND_COMMAND_REPLY:
+          serviceImpl.sendCommandReply((org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_SEND_HEALTH:
-          serviceImpl.sendHealth((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.sendHealth((org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_SEND_LOG:
-          serviceImpl.sendLog((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.sendLog((org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_SEND_EXCEPTION:
-          serviceImpl.sendException((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
-          break;
-        case METHODID_GET_CONFIG_TARGET:
-          serviceImpl.getConfigTarget((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.sendException((org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_LIST_AGENTS:
-          serviceImpl.listAgents((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.listAgents((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply>) responseObserver);
           break;
         case METHODID_LIST_SSL_AUTHORITIES:
-          serviceImpl.listSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.listSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>) responseObserver);
           break;
         case METHODID_ADD_SSL_AUTHORITIES:
-          serviceImpl.addSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.addSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_DROP_SSL_AUTHORITIES:
-          serviceImpl.dropSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.dropSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_KICK_AGENT:
-          serviceImpl.kickAgent((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
-          break;
-        case METHODID_CREATE_RPC_WORKSPACE:
-          serviceImpl.createRpcWorkspace((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
-          break;
-        case METHODID_DROP_RPC_WORKSPACE:
-          serviceImpl.dropRpcWorkspace((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
-          break;
-        case METHODID_LIST_RPC_WORKSPACE:
-          serviceImpl.listRpcWorkspace((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.kickAgent((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         case METHODID_ELABORATE_MESSAGE:
-          serviceImpl.elaborateMessage((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.elaborateMessage((org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply>) responseObserver);
           break;
         case METHODID_LIST_COMMANDS:
-          serviceImpl.listCommands((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.listCommands((org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply>) responseObserver);
           break;
         case METHODID_COMPLETE_COMMAND:
-          serviceImpl.completeCommand((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.completeCommand((org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply>) responseObserver);
           break;
         case METHODID_CREATE_PROXY_SOCKS_ON_AGENT:
-          serviceImpl.createProxySocksOnAgent((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.createProxySocksOnAgent((org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>) responseObserver);
           break;
         case METHODID_EXPOSE_AGENT_PORT:
-          serviceImpl.exposeAgentPort((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.exposeAgentPort((org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>) responseObserver);
           break;
         case METHODID_LIST_TUNNELS:
-          serviceImpl.listTunnels((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.listTunnels((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>) responseObserver);
           break;
         case METHODID_CLOSE_TUNNEL:
-          serviceImpl.closeTunnel((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+          serviceImpl.closeTunnel((org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1847,7 +1825,7 @@ public final class RpcServiceV1Grpc {
       switch (methodId) {
         case METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL:
           return (io.grpc.stub.StreamObserver<Req>) serviceImpl.openBidirectionalSocketTunnel(
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -1900,21 +1878,20 @@ public final class RpcServiceV1Grpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new RpcServiceV1FileDescriptorSupplier())
               .addMethod(getRegisterMethod())
+              .addMethod(getGetConfigTargetMethod())
               .addMethod(getPollingMethod())
               .addMethod(getSubscriptionMethod())
+              .addMethod(getSendChatMessageMethod())
+              .addMethod(getSendCommandReplyMethod())
               .addMethod(getSendHealthMethod())
               .addMethod(getSendLogMethod())
               .addMethod(getSendExceptionMethod())
-              .addMethod(getGetConfigTargetMethod())
               .addMethod(getOpenBidirectionalSocketTunnelMethod())
               .addMethod(getListAgentsMethod())
               .addMethod(getListSslAuthoritiesMethod())
               .addMethod(getAddSslAuthoritiesMethod())
               .addMethod(getDropSslAuthoritiesMethod())
               .addMethod(getKickAgentMethod())
-              .addMethod(getCreateRpcWorkspaceMethod())
-              .addMethod(getDropRpcWorkspaceMethod())
-              .addMethod(getListRpcWorkspaceMethod())
               .addMethod(getElaborateMessageMethod())
               .addMethod(getListCommandsMethod())
               .addMethod(getCompleteCommandMethod())

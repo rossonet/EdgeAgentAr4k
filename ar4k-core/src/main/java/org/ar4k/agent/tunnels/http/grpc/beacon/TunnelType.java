@@ -4,45 +4,29 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf enum {@code beacon.Status}
+ * Protobuf enum {@code beacon.TunnelType}
  */
-public enum Status
+public enum TunnelType
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
-   * <code>UNKNOWN = 0;</code>
+   * <code>EXPOSE_TCP_PORT = 0;</code>
    */
-  UNKNOWN(0),
+  EXPOSE_TCP_PORT(0),
   /**
-   * <code>GOOD = 1;</code>
+   * <code>GRANT_SOCKS_ACCESS = 1;</code>
    */
-  GOOD(1),
-  /**
-   * <code>BAD = 2;</code>
-   */
-  BAD(2),
-  /**
-   * <code>FAULT = 3;</code>
-   */
-  FAULT(3),
+  GRANT_SOCKS_ACCESS(1),
   UNRECOGNIZED(-1),
   ;
 
   /**
-   * <code>UNKNOWN = 0;</code>
+   * <code>EXPOSE_TCP_PORT = 0;</code>
    */
-  public static final int UNKNOWN_VALUE = 0;
+  public static final int EXPOSE_TCP_PORT_VALUE = 0;
   /**
-   * <code>GOOD = 1;</code>
+   * <code>GRANT_SOCKS_ACCESS = 1;</code>
    */
-  public static final int GOOD_VALUE = 1;
-  /**
-   * <code>BAD = 2;</code>
-   */
-  public static final int BAD_VALUE = 2;
-  /**
-   * <code>FAULT = 3;</code>
-   */
-  public static final int FAULT_VALUE = 3;
+  public static final int GRANT_SOCKS_ACCESS_VALUE = 1;
 
 
   public final int getNumber() {
@@ -57,29 +41,27 @@ public enum Status
    * @deprecated Use {@link #forNumber(int)} instead.
    */
   @java.lang.Deprecated
-  public static Status valueOf(int value) {
+  public static TunnelType valueOf(int value) {
     return forNumber(value);
   }
 
-  public static Status forNumber(int value) {
+  public static TunnelType forNumber(int value) {
     switch (value) {
-      case 0: return UNKNOWN;
-      case 1: return GOOD;
-      case 2: return BAD;
-      case 3: return FAULT;
+      case 0: return EXPOSE_TCP_PORT;
+      case 1: return GRANT_SOCKS_ACCESS;
       default: return null;
     }
   }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<Status>
+  public static com.google.protobuf.Internal.EnumLiteMap<TunnelType>
       internalGetValueMap() {
     return internalValueMap;
   }
   private static final com.google.protobuf.Internal.EnumLiteMap<
-      Status> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<Status>() {
-          public Status findValueByNumber(int number) {
-            return Status.forNumber(number);
+      TunnelType> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<TunnelType>() {
+          public TunnelType findValueByNumber(int number) {
+            return TunnelType.forNumber(number);
           }
         };
 
@@ -93,12 +75,12 @@ public enum Status
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.getDescriptor().getEnumTypes().get(0);
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.getDescriptor().getEnumTypes().get(4);
   }
 
-  private static final Status[] VALUES = values();
+  private static final TunnelType[] VALUES = values();
 
-  public static Status valueOf(
+  public static TunnelType valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
       throw new java.lang.IllegalArgumentException(
@@ -112,10 +94,10 @@ public enum Status
 
   private final int value;
 
-  private Status(int value) {
+  private TunnelType(int value) {
     this.value = value;
   }
 
-  // @@protoc_insertion_point(enum_scope:beacon.Status)
+  // @@protoc_insertion_point(enum_scope:beacon.TunnelType)
 }
 

@@ -21,31 +21,145 @@ option objc_class_prefix = "AR4K";
 package beacon;
 
 service RpcServiceV1 {
-  // for agent
+  // for agent registration
   rpc Register (RegisterRequest) returns (RegisterReply) {}
-  rpc Polling (RegisterRequest) returns (RegisterReply) {}
-  rpc Subscription (RegisterRequest) returns (stream RegisterReply) {}
-  rpc SendHealth (RegisterRequest) returns (RegisterReply) {}
-  rpc SendLog (RegisterRequest) returns (RegisterReply) {}
-  rpc SendException (RegisterRequest) returns (RegisterReply) {}
-  rpc GetConfigTarget (RegisterRequest) returns (RegisterReply) {}
-  rpc OpenBidirectionalSocketTunnel (stream RegisterRequest) returns (stream RegisterReply) {}
+  rpc GetConfigTarget (Agent) returns (ConfigReply) {}
+  rpc Polling (Agent) returns (FlowMessage) {}
+  rpc Subscription (Agent) returns (stream FlowMessage) {}
+  rpc SendChatMessage (ChatMessage) returns (StatusReply) {}
+  rpc SendCommandReply (CommandReplyRequest) returns (StatusReply) {}
+  rpc SendHealth (HealthRequest) returns (StatusReply) {}
+  rpc SendLog (LogRequest) returns (StatusReply) {}
+  rpc SendException (ExceptionRequest) returns (StatusReply) {}
+  rpc OpenBidirectionalSocketTunnel (stream StreamData) returns (stream StreamData) {}
   // for console
-  rpc ListAgents (RegisterRequest) returns (RegisterReply) {}
-  rpc ListSslAuthorities (RegisterRequest) returns (RegisterReply) {}
-  rpc AddSslAuthorities (RegisterRequest) returns (RegisterReply) {}
-  rpc DropSslAuthorities (RegisterRequest) returns (RegisterReply) {}
-  rpc KickAgent (RegisterRequest) returns (RegisterReply) {}
-  rpc CreateRpcWorkspace (RegisterRequest) returns (RegisterReply) {}
-  rpc DropRpcWorkspace (RegisterRequest) returns (RegisterReply) {}
-  rpc ListRpcWorkspace (RegisterRequest) returns (RegisterReply) {}
-  rpc ElaborateMessage(RegisterRequest) returns (RegisterReply) {}
-  rpc ListCommands(RegisterRequest) returns (RegisterReply) {}
-  rpc CompleteCommand(RegisterRequest) returns (RegisterReply) {}
-  rpc CreateProxySocksOnAgent(RegisterRequest) returns (RegisterReply) {}
-  rpc ExposeAgentPort(RegisterRequest) returns (RegisterReply) {}
-  rpc ListTunnels (RegisterRequest) returns (RegisterReply) {}
-  rpc CloseTunnel (RegisterRequest) returns (RegisterReply) {}
+  // list agents connected 
+  rpc ListAgents (Empty) returns (ListAgentsReply) {}
+  // TODO gestione ssl con Beacon
+  rpc ListSslAuthorities (Empty) returns (ListSslAuthoritiesReply) {}
+  rpc AddSslAuthorities (SslAuthority) returns (StatusReply) {}
+  rpc DropSslAuthorities (SslAuthority) returns (StatusReply) {}
+   // TODO gestione kick agent con Beacon
+  rpc KickAgent (Agent) returns (StatusReply) {}
+  // RPC on agent
+  rpc ElaborateMessage(ElaborateMessageRequest) returns (ElaborateMessageReply) {}
+  rpc ListCommands(ListCommandsRequest) returns (ListCommandsReply) {}
+  rpc CompleteCommand(CompleteCommandRequest) returns (CompleteCommandReply) {}
+  // TODO network tunnels 
+  rpc CreateProxySocksOnAgent(CreateProxySocksOnAgentRequest) returns (TunnelCreatedReply) {}
+  rpc ExposeAgentPort(ExposeAgentPortRequest) returns (TunnelCreatedReply) {}
+  rpc ListTunnels (Empty) returns (ListTunnelsReply) {}
+  rpc CloseTunnel (CloseTunnelRequest) returns (StatusReply) {}
+}
+
+message RegisterRequest {
+  string name = 1;
+  string secretKey = 2;
+  Timestamp time = 3;
+  string jsonHealth = 4;
+}
+
+message Timestamp {
+  // Represents seconds of UTC time since Unix epoch
+  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+  // 9999-12-31T23:59:59Z inclusive.
+  int64 seconds = 1;
+  // Non-negative fractions of a second at nanosecond resolution. Negative
+  // second values with fractions must still have non-negative nanos values
+  // that count forward in time. Must be from 0 to 999,999,999
+  // inclusive.
+  int32 nanos = 2;
+}
+
+message RegisterReply {
+  Status result = 1;
+  string registerCode = 2;
+  int32 monitoringFrequency = 3;
+  AnimaStates targetState = 4;
+}
+
+message StatusReply {
+  Status status = 1;
+}
+
+enum Status {
+  UNKNOWN = 0;
+  GOOD = 1;
+  BAD = 2;
+  FAULT = 3;
+}
+
+enum AnimaStates {
+    INIT = 0;
+    STARTING = 1;
+    STAMINAL = 2;
+    CONFIGURED = 3;
+    RUNNING = 4;
+    SERVICE = 5;
+    CONSOLE = 6;
+    LAMBDA = 7;
+    BOT = 8;
+    PAUSED = 9;
+    STOPED = 10;
+    KILLED = 11;
+    FAULTED = 12;
+    STASIS = 13;
+ }
+ 
+message Agent {
+  string agentUniqueName = 1;
+  //string hardwareInfoAsJson = 2;
+  string secretKey = 2;
+  int32 pollingFrequency = 3;
+  int64 timestampRegistration = 4;
+}
+ 
+message ConfigReply {
+  string config = 1;
+}
+
+message FlowMessage {
+  repeated RequestToAgent toDoList = 1;
+}
+
+message RequestToAgent {
+  CommandType type = 1;
+  Agent caller = 2;
+  string uniqueIdRequest = 3;
+  string request = 4;
+}
+
+enum CommandType {
+  ELABORATE_MESSAGE_COMMAND = 0;
+  LIST_COMMANDS = 1;
+  COMPLETE_COMMAND = 2;
+  OPEN_PROXY_SOCKS = 3;
+  EXPOSE_PORT = 4;
+}
+
+message ChatMessage {
+  Agent agentSender = 1;
+  Agent agentDestination = 2;
+  string messageTxt = 3;
+}
+
+message CommandReplyRequest {
+  string uniqueIdRequest = 1;
+  Agent agentSender = 2;
+  Agent agentDestination = 3;
+  string reply = 4;
+  string errors = 5;
+}
+
+message HealthRequest {
+  Agent agentSender = 1;
+  string hardwareInfo = 2;
+}
+
+message LogRequest {
+  Agent agentSender = 1;
+  LogSeverity severity = 2;
+  string logLine = 3;
 }
 
 enum LogSeverity {
@@ -69,6 +183,118 @@ enum LogSeverity {
   // (800) One or more systems are unusable.
   EMERGENCY = 800;
 }
+
+message ExceptionRequest {
+  Agent agentSender = 1;
+  string messageException = 2;
+  string stackTraceException = 3;
+}
+
+message StreamData {
+  Agent fromAgent = 1;
+  Agent toAgent = 2;
+  bytes data = 3;
+}
+
+message Empty {
+}
+
+message ListAgentsReply {
+  Status result = 1;
+  repeated Agent agents = 2;
+}
+
+message ListSslAuthoritiesReply {
+  Status result = 1;
+  repeated SslAuthority authorities = 2;
+}
+
+message SslAuthority {
+  string label = 1;
+  string description = 2;
+  string authorityCa = 3;
+}
+
+message ElaborateMessageRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  string commandMessage = 3;
+}
+
+message ElaborateMessageReply {
+  string reply = 1;
+  repeated string errors = 2;
+}
+
+message ListCommandsRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+}
+
+message ListCommandsReply {
+  repeated Command commands = 1;
+}
+
+message Command {
+  Agent agentSender = 1;
+  string command = 2;
+  string group = 3;
+  string help = 4;
+}
+
+message CompleteCommandRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  string commandMessageToComplete = 3;
+}
+
+message CompleteCommandReply {
+  string reply = 1;
+  repeated string errors = 2;
+}
+
+message CreateProxySocksOnAgentRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  map<string, string> parameters = 3;
+}
+
+message TunnelCreatedReply {
+   string uniqueTunnelId = 1;
+   Status status = 2;
+   Tunnel tunnel = 3;
+}
+
+message ExposeAgentPortRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  map<string, string> parameters = 3;
+}
+
+message Tunnel {
+  string uniqueTunnelId = 1;
+  Agent agentFrom = 2;
+  Agent agentTo = 3;
+  TunnelType type = 4;
+  map<string, string> parameters = 5;
+}
+
+enum TunnelType {
+  EXPOSE_TCP_PORT = 0;
+  GRANT_SOCKS_ACCESS = 1;
+}
+
+message ListTunnelsReply {
+  repeated Tunnel tunnels = 1;
+}
+
+message CloseTunnelRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  string uniqueTunnelId = 3;
+}
+
+// NOT USED
 
 message Color {
   float red = 1;
@@ -97,13 +323,6 @@ enum DayOfWeek {
   FRIDAY = 5;
   SATURDAY = 6;
   SUNDAY = 7;
-}
-
-enum Status {
-  UNKNOWN = 0;
-  GOOD = 1;
-  BAD = 2;
-  FAULT = 3;
 }
 
 message LatLng {
@@ -209,18 +428,6 @@ message PostalAddress {
   string organization = 11;
 }
 
-message Timestamp {
-  // Represents seconds of UTC time since Unix epoch
-  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-  // 9999-12-31T23:59:59Z inclusive.
-  int64 seconds = 1;
-  // Non-negative fractions of a second at nanosecond resolution. Negative
-  // second values with fractions must still have non-negative nanos values
-  // that count forward in time. Must be from 0 to 999,999,999
-  // inclusive.
-  int32 nanos = 2;
-}
-
 message TimeOfDay {
   // Hours of day in 24 hour format. Should be from 0 to 23. An API may choose
   // to allow the value "24:00:00" for scenarios like business closing time.
@@ -233,36 +440,3 @@ message TimeOfDay {
   // Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
   int32 nanos = 4;
 }
-
-enum AnimaStates {
-    INIT = 0;
-    STARTING = 1;
-    STAMINAL = 2;
-    CONFIGURED = 3;
-    RUNNING = 4;
-    SERVICE = 5;
-    CONSOLE = 6;
-    LAMBDA = 7;
-    BOT = 8;
-    PAUSED = 9;
-    STOPED = 10;
-    KILLED = 11;
-    FAULTED = 12;
-    STASIS = 13;
- }
-
-message RegisterRequest {
-  string name = 1;
-  string secretKey = 2;
-  Timestamp time = 3;
-  string jsonHealth = 4;
-}
-
-message RegisterReply {
-  Status result = 1;
-  string registerCode = 2;
-  int32 monitoringFrequency = 3;
-  AnimaStates targetState = 4;
-}
-
-
