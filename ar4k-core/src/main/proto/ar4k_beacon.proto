@@ -126,7 +126,10 @@ message RequestToAgent {
   CommandType type = 1;
   Agent caller = 2;
   string uniqueIdRequest = 3;
-  string request = 4;
+  string requestCommand = 4;
+  repeated string words = 5;
+  int32 wordIndex = 6;
+  int32 position = 7;
 }
 
 enum CommandType {

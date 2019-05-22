@@ -21,6 +21,8 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -127,7 +129,9 @@ public class BeaconClient implements Runnable {
     for (RequestToAgent m : messages.getToDoListList()) {
       switch (m.getType()) {
       case COMPLETE_COMMAND:
-        List<CompletionProposal>localExecutor.complete(context)
+        CompletionContext cc = new CompletionContext();
+        
+        List<CompletionProposal> listProposal = localExecutor.complete(context)
         CommandReplyRequest request = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
             .setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).build();
         blockingStub.sendCommandReply(request);
