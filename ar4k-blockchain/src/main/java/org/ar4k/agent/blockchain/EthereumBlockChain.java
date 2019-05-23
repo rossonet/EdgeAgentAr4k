@@ -1,5 +1,7 @@
 package org.ar4k.agent.blockchain;
 
+import java.io.IOException;
+
 import com.google.gson.JsonElement;
 
 public class EthereumBlockChain extends AbstractBlockChainManager {
@@ -18,6 +20,12 @@ public class EthereumBlockChain extends AbstractBlockChainManager {
 
   @Override
   public void setBeanName(String name) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void close() throws IOException {
     // TODO Auto-generated method stub
     
   }

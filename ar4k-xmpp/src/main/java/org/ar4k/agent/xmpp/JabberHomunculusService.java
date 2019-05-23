@@ -14,6 +14,8 @@
     */
 package org.ar4k.agent.xmpp;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.ConfigSeed;
@@ -84,6 +86,12 @@ public class JabberHomunculusService extends AbstractAr4kService {
   public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void close() throws IOException {
+    // TODO Auto-generated method stub
+    
   }
 
 }

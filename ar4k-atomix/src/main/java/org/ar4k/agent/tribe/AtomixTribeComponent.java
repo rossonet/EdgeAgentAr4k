@@ -216,4 +216,10 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public void close() throws IOException {
+    // TODO Auto-generated method stub
+    
+  }
 }

@@ -14,6 +14,7 @@
     */
 package org.ar4k.agent.iot.serial;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -256,5 +257,11 @@ public class SerialService extends AbstractAr4kService {
   public JsonElement getStatusJson() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void close() throws IOException {
+    // TODO Auto-generated method stub
+    
   }
 }
