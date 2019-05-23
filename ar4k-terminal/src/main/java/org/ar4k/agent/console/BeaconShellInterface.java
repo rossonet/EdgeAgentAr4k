@@ -15,14 +15,22 @@
 package org.ar4k.agent.console;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
+import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
+import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -41,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  *         Interfaccia gestione servizi tunnel.
  */
 
-@ShellCommandGroup("Beacon Commands")
+@ShellCommandGroup("Beacon Server Commands")
 @ShellComponent
 @EnableMBeanExport
 @ManagedResource(objectName = "bean:name=beaconInterface", description = "Ar4k Agent Beacon Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "beaconInterface")
@@ -49,27 +57,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/beaconInterface")
 public class BeaconShellInterface extends AbstractShellHelper {
 
-  BeaconServer tmpServer = null;
+  private static final CharSequence COMPLETION_CHAR = "?";
 
-  protected Availability testBeaconNull() {
+  BeaconServer tmpServer = null;
+  BeaconClient tmpClient = null;
+
+  protected Availability testBeaconServerNull() {
     return tmpServer == null ? Availability.available()
         : Availability.unavailable("a Beacom server exists on port " + tmpServer.getPort());
   }
 
-  protected Availability testBeaconRunning() {
+  protected Availability testBeaconServerRunning() {
     return tmpServer != null ? Availability.available() : Availability.unavailable("no Beacon servers are running");
   }
 
-  @ShellMethod(value = "Add Beacon service to the selected configuration", group = "Beacon Commands")
+  protected Availability testBeaconClientNull() {
+    return tmpClient == null ? Availability.available()
+        : Availability.unavailable("a Beacom client exists with id " + tmpClient.getAgentUniqueName());
+  }
+
+  protected Availability testBeaconClientRunning() {
+    return tmpClient != null ? Availability.available() : Availability.unavailable("no Beacon client are running");
+  }
+
+  @ShellMethod(value = "Add Beacon service to the selected configuration", group = "Beacon Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addBeaconService(@ShellOption(optOut = true) @Valid BeaconServiceConfig service) {
     getWorkingConfig().services.add(service);
   }
 
-  @ShellMethod(value = "Start Beacon server on the enviroment in where the agent is running", group = "Beacon Commands")
+  @ShellMethod(value = "Start Beacon server on the enviroment in where the agent is running", group = "Beacon Server Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testBeaconNull")
+  @ShellMethodAvailability("testBeaconServerNull")
   public boolean runBeaconServer(
       @ShellOption(help = "the tcp port for the Beacon server", defaultValue = "6599") int port) throws IOException {
     tmpServer = new BeaconServer(port);
@@ -77,28 +97,68 @@ public class BeaconShellInterface extends AbstractShellHelper {
     return true;
   }
 
-  @ShellMethod(value = "Stop Beacon server on the enviroment in where the agent is running", group = "Beacon Commands")
+  @ShellMethod(value = "Stop Beacon server on the enviroment in where the agent is running", group = "Beacon Server Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testBeaconRunning")
+  @ShellMethodAvailability("testBeaconServerRunning")
   public boolean stopBeaconServer() {
     tmpServer.stop();
     tmpServer = null;
     return true;
   }
 
-  @ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Commands")
+  @ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Server Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testBeaconRunning")
-  public List<BeaconAgent> listBeaconAgents() {
+  @ShellMethodAvailability("testBeaconServerRunning")
+  public List<BeaconAgent> listBeaconAgentsConnected() {
     return tmpServer.getAgentLabelRegisterReplies();
   }
 
-  @ShellMethod(value = "Connect to a Beacon service as a agent", group = "Beacon Commands")
+  @ShellMethod(value = "Connect to a Beacon service as an agent", group = "Beacon Client Commands")
   @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientNull")
   public boolean connectToBeaconService(
       @ShellOption(help = "the target Beacon Serve URL", defaultValue = "http://127.0.0.1:6599") String beaconServer) {
-    anima.connectToBeaconService(beaconServer);
+    tmpClient = anima.connectToBeaconService(beaconServer);
     return true;
+  }
+
+  @ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public List<Agent> listBeaconAgents() {
+    return tmpClient.listAgentsConnectedToBeacon();
+  }
+
+  @ShellMethod(value = "List commands on a remote agent connected by Beacon", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public List<String> listCommandsOnRemoteAgent(
+      @ShellOption(help = "the unique ID of the remote agent") String uniqueId) {
+    ListCommandsReply reply = tmpClient.listCommadsOnAgent(uniqueId);
+    List<String> result = new ArrayList<>();
+    for (Command c : reply.getCommandsList()) {
+      result.add(c.getCommand());
+    }
+    Collections.sort(result);
+    return result;
+  }
+
+  @ShellMethod(value = "Run command on a agent connected by Beacon", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public String runCommandOnRemoteAgent(@ShellOption(help = "the unique ID of the remote agent") String uniqueId,
+      @ShellOption(help = "command to run - you can use ? for completition") String command) {
+    StringBuilder result = new StringBuilder();
+    if (command.contains(COMPLETION_CHAR)) {
+      CompleteCommandReply ccr = tmpClient.runCompletitionOnAgent(uniqueId, command);
+      for (String singleLine : ccr.getRepliesList()) {
+        result.append(singleLine + "\n");
+      }
+    } else {
+      ElaborateMessageReply emr = tmpClient.runCommadsOnAgent(uniqueId, command);
+      result.append(emr.getReply());
+    }
+    return result.toString();
   }
 
 }

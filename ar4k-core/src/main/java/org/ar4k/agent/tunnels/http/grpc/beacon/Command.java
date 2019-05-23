@@ -17,8 +17,6 @@ private static final long serialVersionUID = 0L;
   }
   private Command() {
     command_ = "";
-    group_ = "";
-    help_ = "";
   }
 
   @java.lang.Override
@@ -62,18 +60,6 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             command_ = s;
-            break;
-          }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            group_ = s;
-            break;
-          }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            help_ = s;
             break;
           }
           default: {
@@ -163,74 +149,6 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int GROUP_FIELD_NUMBER = 3;
-  private volatile java.lang.Object group_;
-  /**
-   * <code>string group = 3;</code>
-   */
-  public java.lang.String getGroup() {
-    java.lang.Object ref = group_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      group_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string group = 3;</code>
-   */
-  public com.google.protobuf.ByteString
-      getGroupBytes() {
-    java.lang.Object ref = group_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      group_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int HELP_FIELD_NUMBER = 4;
-  private volatile java.lang.Object help_;
-  /**
-   * <code>string help = 4;</code>
-   */
-  public java.lang.String getHelp() {
-    java.lang.Object ref = help_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      help_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string help = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getHelpBytes() {
-    java.lang.Object ref = help_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      help_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -251,12 +169,6 @@ private static final long serialVersionUID = 0L;
     if (!getCommandBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, command_);
     }
-    if (!getGroupBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, group_);
-    }
-    if (!getHelpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, help_);
-    }
     unknownFields.writeTo(output);
   }
 
@@ -272,12 +184,6 @@ private static final long serialVersionUID = 0L;
     }
     if (!getCommandBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, command_);
-    }
-    if (!getGroupBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, group_);
-    }
-    if (!getHelpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, help_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -301,10 +207,6 @@ private static final long serialVersionUID = 0L;
     }
     if (!getCommand()
         .equals(other.getCommand())) return false;
-    if (!getGroup()
-        .equals(other.getGroup())) return false;
-    if (!getHelp()
-        .equals(other.getHelp())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -322,10 +224,6 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + COMMAND_FIELD_NUMBER;
     hash = (53 * hash) + getCommand().hashCode();
-    hash = (37 * hash) + GROUP_FIELD_NUMBER;
-    hash = (53 * hash) + getGroup().hashCode();
-    hash = (37 * hash) + HELP_FIELD_NUMBER;
-    hash = (53 * hash) + getHelp().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -467,10 +365,6 @@ private static final long serialVersionUID = 0L;
       }
       command_ = "";
 
-      group_ = "";
-
-      help_ = "";
-
       return this;
     }
 
@@ -503,8 +397,6 @@ private static final long serialVersionUID = 0L;
         result.agentSender_ = agentSenderBuilder_.build();
       }
       result.command_ = command_;
-      result.group_ = group_;
-      result.help_ = help_;
       onBuilt();
       return result;
     }
@@ -558,14 +450,6 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getCommand().isEmpty()) {
         command_ = other.command_;
-        onChanged();
-      }
-      if (!other.getGroup().isEmpty()) {
-        group_ = other.group_;
-        onChanged();
-      }
-      if (!other.getHelp().isEmpty()) {
-        help_ = other.help_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -779,144 +663,6 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       command_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object group_ = "";
-    /**
-     * <code>string group = 3;</code>
-     */
-    public java.lang.String getGroup() {
-      java.lang.Object ref = group_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        group_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string group = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getGroupBytes() {
-      java.lang.Object ref = group_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        group_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string group = 3;</code>
-     */
-    public Builder setGroup(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      group_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string group = 3;</code>
-     */
-    public Builder clearGroup() {
-      
-      group_ = getDefaultInstance().getGroup();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string group = 3;</code>
-     */
-    public Builder setGroupBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      group_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object help_ = "";
-    /**
-     * <code>string help = 4;</code>
-     */
-    public java.lang.String getHelp() {
-      java.lang.Object ref = help_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        help_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string help = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHelpBytes() {
-      java.lang.Object ref = help_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        help_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string help = 4;</code>
-     */
-    public Builder setHelp(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      help_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string help = 4;</code>
-     */
-    public Builder clearHelp() {
-      
-      help_ = getDefaultInstance().getHelp();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string help = 4;</code>
-     */
-    public Builder setHelpBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      help_ = value;
       onChanged();
       return this;
     }

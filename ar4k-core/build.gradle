@@ -3,6 +3,7 @@ description = "Core componets of Ar4k Semantic Router"
 apply plugin: 'com.google.protobuf'
 
 dependencies {
+  //compile project(':ar4k-terminal')
   // crittografia
   compile('org.bouncycastle:bcprov-jdk15on:1.59')
   compile('org.bouncycastle:bcpkix-jdk15on:1.59')
@@ -46,6 +47,7 @@ dependencies {
   compile "io.grpc:grpc-auth:1.20.0"
   //script engine groovy-jsr223
   compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.6'
+  compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
   testCompile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
 }
 

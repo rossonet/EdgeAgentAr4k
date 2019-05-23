@@ -8,14 +8,23 @@ public interface CompleteCommandReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string reply = 1;</code>
+   * <code>repeated string replies = 1;</code>
    */
-  java.lang.String getReply();
+  java.util.List<java.lang.String>
+      getRepliesList();
   /**
-   * <code>string reply = 1;</code>
+   * <code>repeated string replies = 1;</code>
+   */
+  int getRepliesCount();
+  /**
+   * <code>repeated string replies = 1;</code>
+   */
+  java.lang.String getReplies(int index);
+  /**
+   * <code>repeated string replies = 1;</code>
    */
   com.google.protobuf.ByteString
-      getReplyBytes();
+      getRepliesBytes(int index);
 
   /**
    * <code>repeated string errors = 2;</code>

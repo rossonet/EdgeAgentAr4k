@@ -34,12 +34,31 @@ public interface CompleteCommandRequestOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentSenderOrBuilder();
 
   /**
-   * <code>string commandMessageToComplete = 3;</code>
+   * <code>repeated string words = 3;</code>
    */
-  java.lang.String getCommandMessageToComplete();
+  java.util.List<java.lang.String>
+      getWordsList();
   /**
-   * <code>string commandMessageToComplete = 3;</code>
+   * <code>repeated string words = 3;</code>
+   */
+  int getWordsCount();
+  /**
+   * <code>repeated string words = 3;</code>
+   */
+  java.lang.String getWords(int index);
+  /**
+   * <code>repeated string words = 3;</code>
    */
   com.google.protobuf.ByteString
-      getCommandMessageToCompleteBytes();
+      getWordsBytes(int index);
+
+  /**
+   * <code>int32 wordIndex = 4;</code>
+   */
+  int getWordIndex();
+
+  /**
+   * <code>int32 position = 5;</code>
+   */
+  int getPosition();
 }

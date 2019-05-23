@@ -240,19 +240,19 @@ message ListCommandsReply {
 
 message Command {
   Agent agentSender = 1;
-  string command = 2;
-  string group = 3;
-  string help = 4;
+  string command = 2 ;
 }
 
 message CompleteCommandRequest {
   Agent agentTarget = 1;
   Agent agentSender = 2;
-  string commandMessageToComplete = 3;
+  repeated string words = 3;
+  int32 wordIndex = 4;
+  int32 position = 5;
 }
 
 message CompleteCommandReply {
-  string reply = 1;
+  repeated string replies = 1;
   repeated string errors = 2;
 }
 

@@ -18,10 +18,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +37,7 @@ public class GrpcBeacon {
 
   BeaconServer server = null;
   BeaconClient client = null;
+  RpcConversation rpcConversation = null;
   int port = 2569;
 
   @Before
@@ -40,7 +45,7 @@ public class GrpcBeacon {
     server = new BeaconServer(port);
     server.start();
     Thread.sleep(3000L);
-    client = new BeaconClient("127.0.0.1", port);
+    client = new BeaconClient(rpcConversation, "127.0.0.1", port);
   }
 
   @After
@@ -76,5 +81,21 @@ public class GrpcBeacon {
     System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
     assertEquals("GOOD", status);
   }
+
+  @Test
+  public void checkRemoteList() throws InterruptedException, IOException, ParseException {
+    Thread.sleep(6000L);
+    String ls = client.getStateConnection().name();
+    System.out.println("LAST STATE: " + ls);
+    assertEquals("READY", ls);
+    // server.blockUntilShutdown();
+    String status = client.registerToBeacon(Anima.generateNewUniqueName());
+    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
+    assertEquals("GOOD", status);
+    List<Agent> list = client.listAgentsConnectedToBeacon();
+    assertEquals(list.isEmpty(), false);
+    System.out.println("I'm " + list.get(0).getAgentUniqueName());
+  }
+
 
 }

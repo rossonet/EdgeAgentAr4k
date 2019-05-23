@@ -7,4 +7,12 @@ public class RemoteBeaconAgentHomunculus implements Homunculus {
 
   private Agent remoteAgent = null;
 
+  public Agent getRemoteAgent() {
+    return remoteAgent;
+  }
+
+  public void setRemoteAgent(Agent remoteAgent) {
+    this.remoteAgent = remoteAgent;
+  }
+
 }

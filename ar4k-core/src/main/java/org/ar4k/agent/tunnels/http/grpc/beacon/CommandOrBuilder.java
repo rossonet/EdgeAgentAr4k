@@ -29,24 +29,4 @@ public interface CommandOrBuilder extends
    */
   com.google.protobuf.ByteString
       getCommandBytes();
-
-  /**
-   * <code>string group = 3;</code>
-   */
-  java.lang.String getGroup();
-  /**
-   * <code>string group = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getGroupBytes();
-
-  /**
-   * <code>string help = 4;</code>
-   */
-  java.lang.String getHelp();
-  /**
-   * <code>string help = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getHelpBytes();
 }

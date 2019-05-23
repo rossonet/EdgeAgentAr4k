@@ -71,6 +71,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.OnStateChanged;
 import org.springframework.statemachine.annotation.WithStateMachine;
@@ -117,6 +118,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   private String agentUniqueName = null;
+
+  @Autowired
+  private Shell shell;
 
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
@@ -325,11 +329,18 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  public void connectToBeaconService(String urlBeacon) {
+  public BeaconClient connectToBeaconService(String urlBeacon) {
     URL urlTarget;
+    if (beaconClient != null) {
+      logger.info("This agent is connected to another Beacon service");
+    }
     try {
       urlTarget = new URL(urlBeacon);
-      beaconClient = new BeaconClient(urlTarget.getHost(), urlTarget.getPort());
+      String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
+      animaHomunculus.registerNewSession(sessionId, sessionId);
+      RpcConversation rpc = animaHomunculus.getRpc(sessionId);
+      rpc.setShell(shell);
+      beaconClient = new BeaconClient(rpc, urlTarget.getHost(), urlTarget.getPort());
       String ret = beaconClient.registerToBeacon(getAgentUniqueName());
       if (ret.equals("GOOD")) {
         logger.info("found Beacon endpoint: " + urlBeacon);
@@ -343,6 +354,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } catch (IOException | InterruptedException | ParseException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
     }
+    return beaconClient;
   }
 
   // trova la configurazione appropriata per il bootstrap in funzione dei
