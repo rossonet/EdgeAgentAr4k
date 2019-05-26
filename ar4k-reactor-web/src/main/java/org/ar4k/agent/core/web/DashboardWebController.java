@@ -264,7 +264,7 @@ public class DashboardWebController {
     JSONObject runtimeConfig = new JSONObject();
     for (ServiceComponent st : anima.getServices()) {
       JSONObject sjt = new JSONObject();
-      sjt.put("status", st.status());
+      sjt.put("status", st.getStatusString());
       sjt.put("status", st.getConfiguration().getName());
       sjt.put("idProcess", st.getConfiguration().getUniqueId());
       sjt.put("description", st.getConfiguration().getDescription());

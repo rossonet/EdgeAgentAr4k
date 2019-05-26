@@ -459,8 +459,8 @@ public class ShellInterface extends AbstractShellHelper {
     String risposta = "";
     for (ServiceComponent servizio : anima.getServices()) {
       risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, servizio.getConfiguration().getUniqueId().toString(),
-          AnsiColor.DEFAULT, " - ", servizio.getConfiguration().getName(), " [", AnsiColor.RED, servizio.status(),
-          AnsiColor.DEFAULT, "]\n");
+          AnsiColor.DEFAULT, " - ", servizio.getConfiguration().getName(), " [", AnsiColor.RED,
+          servizio.getStatusString(), AnsiColor.DEFAULT, "]\n");
     }
     return risposta;
   }

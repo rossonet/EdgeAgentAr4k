@@ -16,6 +16,7 @@ package org.ar4k.agent.console;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -47,7 +48,7 @@ public class SshShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshNetworkPoint(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
 }

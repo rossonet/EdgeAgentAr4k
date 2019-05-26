@@ -98,7 +98,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
   }
 
   @Override
-  public String status() {
+  public String getStatusString() {
     return serviceStatus.name();
   }
 

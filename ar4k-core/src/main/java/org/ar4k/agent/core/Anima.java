@@ -494,12 +494,14 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   private void runServices() {
-    for (ServiceConfig confServizio : runtimeConfig.services) {
-      try {
-        runSeedService(confServizio);
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-          | SecurityException e) {
-        throw new Ar4kException("problem trying to run service " + confServizio.getName(), e.getCause());
+    for (PotConfig confServizio : runtimeConfig.pots) {
+      if (confServizio instanceof ServiceConfig) {
+        try {
+          runSeedService((ServiceConfig) confServizio);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+            | SecurityException e) {
+          throw new Ar4kException("problem trying to run service " + confServizio.getName(), e.getCause());
+        }
       }
     }
   }

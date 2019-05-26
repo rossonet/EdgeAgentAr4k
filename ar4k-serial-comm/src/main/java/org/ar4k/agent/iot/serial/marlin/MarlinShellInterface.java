@@ -2,6 +2,7 @@ package org.ar4k.agent.iot.serial.marlin;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -27,7 +28,7 @@ public class MarlinShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
 }

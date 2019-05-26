@@ -38,4 +38,10 @@ public class SshRemoteTunnel extends AbstractSshTunnel {
     startTunnel();
   }
 
+  @Override
+  public void stop() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

@@ -16,6 +16,7 @@ package org.ar4k.agent.iot.serial.cnc;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -48,7 +49,7 @@ public class CncShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addCncService(@ShellOption(optOut = true) @Valid CncConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
 }

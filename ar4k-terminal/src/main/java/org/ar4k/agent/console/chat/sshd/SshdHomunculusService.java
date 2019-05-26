@@ -90,4 +90,10 @@ public class SshdHomunculusService extends AbstractAr4kService {
 
   }
 
+  @Override
+  public void stop() {
+    // TODO Auto-generated method stub
+
+  }
+
 }

@@ -23,6 +23,7 @@ import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -71,7 +72,7 @@ public class SshdShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
   @ShellMethod(value = "Start SSHD remote management server", group = "Ssh Server Commands")
@@ -91,12 +92,12 @@ public class SshdShellInterface extends AbstractShellHelper {
       e.printStackTrace();
     }
   }
-  
+
   @ShellMethod(value = "List active SSHD remote management connections", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testClientFree")
   public List<AbstractSession> listSshdRemoteManager() {
-      return server.getActiveSessions();
+    return server.getActiveSessions();
   }
 
   @ShellMethod(value = "Stop SSHD remote management connection", group = "Ssh Server Commands")

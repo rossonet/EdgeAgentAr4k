@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -121,7 +122,7 @@ public class TribeShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addTribe(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
-    getWorkingConfig().services.add(tribe);
+    getWorkingConfig().pots.add((PotConfig) tribe);
   }
 
 }

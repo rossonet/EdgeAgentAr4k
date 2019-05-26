@@ -28,6 +28,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
@@ -80,7 +81,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.services.add(s1);
+    c.pots.add((PotConfig) s1);
     c.pots.add(s2);
     ConfigSeed a = ConfigHelper.fromJson(ConfigHelper.toJson(c));
     assertTrue(check.equals(((Ar4kConfig) a).author));
@@ -100,7 +101,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.services.add(s1);
+    c.pots.add((PotConfig) s1);
     c.pots.add(s2);
     String checkText = ConfigHelper.toBase64(c);
     System.out.println("base64 config: " + checkText);
@@ -124,7 +125,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.services.add(s1);
+    c.pots.add((PotConfig) s1);
     c.pots.add(s2);
     ConfigSeed a = ConfigHelper.fromBase64Rsa(ConfigHelper.toBase64Rsa(c, "privateKeyAlias"));
     assertTrue(check.equals(((Ar4kConfig) a).author));

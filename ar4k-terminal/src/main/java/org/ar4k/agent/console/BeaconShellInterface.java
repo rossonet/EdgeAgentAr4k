@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
@@ -84,7 +85,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addBeaconService(@ShellOption(optOut = true) @Valid BeaconServiceConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
   @ShellMethod(value = "Start Beacon server on the enviroment in where the agent is running", group = "Beacon Server Commands")

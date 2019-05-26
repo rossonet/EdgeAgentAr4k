@@ -262,6 +262,12 @@ public class SerialService extends AbstractAr4kService {
   @Override
   public void close() throws IOException {
     // TODO Auto-generated method stub
-    
+
+  }
+
+  @Override
+  public void stop() {
+    // TODO Auto-generated method stub
+
   }
 }
