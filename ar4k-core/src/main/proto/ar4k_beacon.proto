@@ -76,6 +76,7 @@ message RegisterReply {
   string registerCode = 2;
   int32 monitoringFrequency = 3;
   AnimaStates targetState = 4;
+  StatusValue status = 5;
 }
 
 message Status {

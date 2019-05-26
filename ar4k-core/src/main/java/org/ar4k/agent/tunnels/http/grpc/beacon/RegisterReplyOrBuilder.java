@@ -43,4 +43,13 @@ public interface RegisterReplyOrBuilder extends
    * <code>.beacon.AnimaStates targetState = 4;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getTargetState();
+
+  /**
+   * <code>.beacon.StatusValue status = 5;</code>
+   */
+  int getStatusValue();
+  /**
+   * <code>.beacon.StatusValue status = 5;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus();
 }

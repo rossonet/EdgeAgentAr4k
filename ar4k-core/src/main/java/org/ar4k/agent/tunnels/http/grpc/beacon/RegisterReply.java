@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private RegisterReply() {
     registerCode_ = "";
     targetState_ = 0;
+    status_ = 0;
   }
 
   @java.lang.Override
@@ -72,6 +73,12 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             targetState_ = rawValue;
+            break;
+          }
+          case 40: {
+            int rawValue = input.readEnum();
+
+            status_ = rawValue;
             break;
           }
           default: {
@@ -187,6 +194,23 @@ private static final long serialVersionUID = 0L;
     return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.UNRECOGNIZED : result;
   }
 
+  public static final int STATUS_FIELD_NUMBER = 5;
+  private int status_;
+  /**
+   * <code>.beacon.StatusValue status = 5;</code>
+   */
+  public int getStatusValue() {
+    return status_;
+  }
+  /**
+   * <code>.beacon.StatusValue status = 5;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus() {
+    @SuppressWarnings("deprecation")
+    org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue result = org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.valueOf(status_);
+    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNRECOGNIZED : result;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -213,6 +237,9 @@ private static final long serialVersionUID = 0L;
     if (targetState_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
       output.writeEnum(4, targetState_);
     }
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNKNOWN.getNumber()) {
+      output.writeEnum(5, status_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -236,6 +263,10 @@ private static final long serialVersionUID = 0L;
     if (targetState_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, targetState_);
+    }
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNKNOWN.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(5, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -262,6 +293,7 @@ private static final long serialVersionUID = 0L;
     if (getMonitoringFrequency()
         != other.getMonitoringFrequency()) return false;
     if (targetState_ != other.targetState_) return false;
+    if (status_ != other.status_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -283,6 +315,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMonitoringFrequency();
     hash = (37 * hash) + TARGETSTATE_FIELD_NUMBER;
     hash = (53 * hash) + targetState_;
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + status_;
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -428,6 +462,8 @@ private static final long serialVersionUID = 0L;
 
       targetState_ = 0;
 
+      status_ = 0;
+
       return this;
     }
 
@@ -462,6 +498,7 @@ private static final long serialVersionUID = 0L;
       result.registerCode_ = registerCode_;
       result.monitoringFrequency_ = monitoringFrequency_;
       result.targetState_ = targetState_;
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -522,6 +559,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.targetState_ != 0) {
         setTargetStateValue(other.getTargetStateValue());
+      }
+      if (other.status_ != 0) {
+        setStatusValue(other.getStatusValue());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -805,6 +845,51 @@ private static final long serialVersionUID = 0L;
     public Builder clearTargetState() {
       
       targetState_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int status_ = 0;
+    /**
+     * <code>.beacon.StatusValue status = 5;</code>
+     */
+    public int getStatusValue() {
+      return status_;
+    }
+    /**
+     * <code>.beacon.StatusValue status = 5;</code>
+     */
+    public Builder setStatusValue(int value) {
+      status_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.beacon.StatusValue status = 5;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus() {
+      @SuppressWarnings("deprecation")
+      org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue result = org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.valueOf(status_);
+      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.beacon.StatusValue status = 5;</code>
+     */
+    public Builder setStatus(org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      status_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.beacon.StatusValue status = 5;</code>
+     */
+    public Builder clearStatus() {
+      
+      status_ = 0;
       onChanged();
       return this;
     }

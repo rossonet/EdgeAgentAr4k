@@ -28,7 +28,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
-import org.ar4k.agent.tunnels.http.grpc.beacon.StatusReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -94,22 +94,22 @@ public class BeaconServer implements Runnable {
   private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 
     @Override
-    public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<StatusReply> responseObserver) {
-      responseObserver.onNext(StatusReply.newBuilder().setStatus(Status.GOOD).build());
+    public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
+      responseObserver.onNext(Status.newBuilder().setStatusValue(StatusValue.GOOD.getNumber()).build());
       responseObserver.onCompleted();
     }
 
     @Override
-    public void sendCommandReply(CommandReplyRequest request, StreamObserver<StatusReply> responseObserver) {
+    public void sendCommandReply(CommandReplyRequest request, StreamObserver<Status> responseObserver) {
       repliesQueue.put(request.getUniqueIdRequest(), request);
-      responseObserver.onNext(StatusReply.newBuilder().setStatus(Status.GOOD).build());
+      responseObserver.onNext(Status.newBuilder().setStatus(StatusValue.GOOD).build());
       responseObserver.onCompleted();
     }
 
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
-      RegisterReply reply = RegisterReply.newBuilder().setResult(Status.GOOD).setRegisterCode(request.getName())
-          .setMonitoringFrequency(defaultPollTime).build();
+      RegisterReply reply = RegisterReply.newBuilder().setResult(Status.newBuilder().setStatus(StatusValue.GOOD))
+          .setRegisterCode(request.getName()).setMonitoringFrequency(defaultPollTime).build();
       agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
@@ -124,7 +124,8 @@ public class BeaconServer implements Runnable {
             .build();
         values.add(a);
       }
-      ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values).setResult(Status.GOOD).build();
+      ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
+          .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }

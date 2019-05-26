@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
@@ -42,8 +43,6 @@ import org.springframework.shell.MethodTarget;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.apache.commons.lang.StringUtils;
 
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
@@ -129,7 +128,7 @@ public class BeaconClient implements Runnable {
     RegisterReply reply = blockingStub.register(request);
     me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
         .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
-    result = reply.getResult().name();
+    result = reply.getResult().getStatus().name();
     return result;
   }
 
