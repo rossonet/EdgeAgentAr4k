@@ -15,7 +15,7 @@
 package org.ar4k.agent.tunnels.ssh.client;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
+//import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -27,9 +27,6 @@ import com.beust.jcommander.Parameter;
 public abstract class AbstractSshConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -5164761698374285171L;
-
-  @Parameter(names = "--socketFactory", description = "the socket factory for the ssh connection -can includes proxy-")
-  public ISocketFactoryComponent socketFactory = null;
 
   @Parameter(names = "--host", description = "host for the connection")
   public String host = null;
@@ -45,5 +42,16 @@ public abstract class AbstractSshConfig extends AbstractServiceConfig {
 
   @Parameter(names = "--authkey", description = "private auth key for the connection")
   public String authkey = null;
+
+  @Parameter(names = "--soTimeout", description = "enable/disable SO_TIMEOUT with the specified timeout, in milliseconds")
+  public Integer soTimeout = null;
+  @Parameter(names = "--tcpNoDelay", description = "enable/disable TCP_NODELAY (disable/enable Nagle's algorithm)")
+  public Boolean tcpNoDelay = null;
+  @Parameter(names = "--keepAlive", description = "enable/disable SO_KEEPALIVE")
+  public Boolean keepAlive = null;
+  @Parameter(names = "--receiveBufferSize", description = "sets the SO_RCVBUF option to the specified value for this Socket")
+  public Integer receiveBufferSize = null;
+  @Parameter(names = "--reuseAddress", description = "enable/disable the SO_REUSEADDR socket option")
+  public Boolean reuseAddress = null;
 
 }

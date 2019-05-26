@@ -12,8 +12,6 @@ dependencies {
   compile group: 'com.pi4j', name: 'pi4j-core', version: '1.1'
   // ssh
   compile "com.jcraft:jsch:0.1.55"
-  // dns
-  compile 'dnsjava:dnsjava:2.1.8'
   // spring
   compile('org.springframework.boot:spring-boot-starter-mail')
   compile("org.springframework:spring-jms")
@@ -26,7 +24,7 @@ dependencies {
   // jms
   compile group: 'org.springframework.integration', name: 'spring-integration-jms'
   // mail
-  compile group: 'org.springframework.integration', name: 'spring-integration-mail'
+  //compile group: 'org.springframework.integration', name: 'spring-integration-mail'
   // mqtt
   //compile group: 'org.springframework.integration', name: 'spring-integration-mqtt'
   // file
@@ -48,6 +46,8 @@ dependencies {
   //script engine groovy-jsr223
   compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.6'
   compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+  // per let's encrypt
+  compile 'org.shredzone.acme4j:acme4j:2.7'
   testCompile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
 }
 

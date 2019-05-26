@@ -92,7 +92,7 @@ public class SShdRpcTests {
     server.setPort(6666);
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     server.setPublickeyAuthenticator(AcceptAllPublickeyAuthenticator.INSTANCE);
-    server.setShellFactory(new SshdConnectionHandlerHomunculus(null, shell));
+    server.setShellFactory(new SshdConnectionHandlerHomunculus());
     server.start();
     Thread.sleep(1000 * 60 * 5);
   }

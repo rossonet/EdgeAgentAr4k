@@ -2,8 +2,6 @@ description = "Add terminal capabilities to the Ar4k Edge Agent"
 
 dependencies {
   compile project(':ar4k-core')
-  // IRC
-  compile group: 'org.kitteh.irc', name: 'client-lib', version: '7.0.0'
   compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
   compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
   compile group: 'org.apache.sshd', name: 'sshd-core', version: '2.2.0'

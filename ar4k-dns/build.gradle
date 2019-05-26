@@ -1,0 +1,7 @@
+description = "DNS component"
+
+dependencies {
+  compile project(':ar4k-core')
+  // dns
+  compile 'dnsjava:dnsjava:2.1.8'
+}

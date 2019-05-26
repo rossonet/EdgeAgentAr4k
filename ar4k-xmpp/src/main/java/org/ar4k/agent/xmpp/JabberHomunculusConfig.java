@@ -17,6 +17,8 @@ package org.ar4k.agent.xmpp;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Ar4kComponent;
 
+import com.beust.jcommander.Parameter;
+
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  * 
@@ -26,6 +28,17 @@ import org.ar4k.agent.core.Ar4kComponent;
 public class JabberHomunculusConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -4642788033911032726L;
+  
+  @Parameter(names = "--soTimeout", description = "enable/disable SO_TIMEOUT with the specified timeout, in milliseconds")
+  public Integer soTimeout = null;
+  @Parameter(names = "--tcpNoDelay", description = "enable/disable TCP_NODELAY (disable/enable Nagle's algorithm)")
+  public Boolean tcpNoDelay = null;
+  @Parameter(names = "--keepAlive", description = "enable/disable SO_KEEPALIVE")
+  public Boolean keepAlive = null;
+  @Parameter(names = "--receiveBufferSize", description = "sets the SO_RCVBUF option to the specified value for this Socket")
+  public Integer receiveBufferSize = null;
+  @Parameter(names = "--reuseAddress", description = "enable/disable the SO_REUSEADDR socket option")
+  public Boolean reuseAddress = null;
 
   public Ar4kComponent instantiate() {
     // System.out.println("Serial service start");

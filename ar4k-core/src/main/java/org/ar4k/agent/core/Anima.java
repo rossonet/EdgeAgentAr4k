@@ -34,6 +34,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
@@ -45,7 +47,7 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
-import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
+//import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -317,12 +319,12 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       logger.warn(e.getMessage());
     }
     setInitialAuth();
-    checkBeaconClient();
     bootStrapConfig = resolveBootstrapConfig();
     animaStateMachine.sendEvent(AnimaEvents.BORN);
     init = true;
   }
 
+  @PostConstruct
   private void checkBeaconClient() {
     if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) {
       connectToBeaconService(webRegistrationEndpoint);
@@ -605,16 +607,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public static ApplicationContext getApplicationContext() throws BeansException {
     return applicationContext;
-  }
-
-  public Collection<ISocketFactoryComponent> getTunnels() {
-    Set<ISocketFactoryComponent> target = new HashSet<ISocketFactoryComponent>();
-    for (Ar4kComponent bean : components) {
-      if (bean instanceof ISocketFactoryComponent) {
-        target.add((ISocketFactoryComponent) bean);
-      }
-    }
-    return target;
   }
 
   public Collection<ServiceComponent> getServices() {

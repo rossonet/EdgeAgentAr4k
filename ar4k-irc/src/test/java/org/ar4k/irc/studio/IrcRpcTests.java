@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.qa.tests;
+package org.ar4k.irc.studio;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;

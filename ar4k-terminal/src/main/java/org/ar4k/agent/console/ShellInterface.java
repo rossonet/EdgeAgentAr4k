@@ -61,7 +61,6 @@ import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.rpc.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -344,21 +343,6 @@ public class ShellInterface extends AbstractShellHelper {
       risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, configurazione.getValue().uniqueId.toString(),
           AnsiColor.DEFAULT, " - ", configurazione.getValue().name, " [", configurazione.getValue().promptColor,
           configurazione.getValue().prompt, AnsiColor.DEFAULT, "]\n");
-    }
-    return risposta;
-  }
-
-  @ShellMethod(value = "List tunnel in runtime", group = "Tunnel Commands")
-  @ManagedOperation
-  public String listTunnelsRuntime() {
-    String risposta = "";
-    for (ISocketFactoryComponent tunnels : anima.getTunnels()) {
-      try {
-        ConfigSeed c = tunnels.getConfiguration();
-        risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, c.getName(), AnsiColor.DEFAULT, " - ",
-            c.getClass().getName(), " [", AnsiColor.RED, AnsiColor.DEFAULT, "]\n");
-      } catch (Exception aa) {
-      }
     }
     return risposta;
   }
@@ -647,6 +631,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Run shell command on the enviroment in where the agent is running. The default code to terminate the session is CTRL-E exit, you can change it", group = "Remote Management Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
+  // TODO Migliorare l'interazione della command line bash
   public String runCommandLine(
       @ShellOption(help = "the command to start in the shell", defaultValue = "/bin/bash -l") String shellCommand,
       @ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {

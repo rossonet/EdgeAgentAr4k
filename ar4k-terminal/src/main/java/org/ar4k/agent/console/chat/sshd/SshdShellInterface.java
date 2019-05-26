@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
  *         Interfaccia gestione servizi rpc via ssh.
  */
 
-@ShellCommandGroup("SSHD Commands")
+@ShellCommandGroup("Ssh Server Commands")
 @ShellComponent
 @EnableMBeanExport
 @ManagedResource(objectName = "bean:name=sshdInterface", description = "Ar4k Agent SSHD RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshdInterface")
@@ -67,14 +67,14 @@ public class SshdShellInterface extends AbstractShellHelper {
     return server != null ? Availability.available() : Availability.unavailable("the sshd server is not running");
   }
 
-  @ShellMethod(value = "Add a sshd remote management server to the selected configuration", group = "SSHD Commands")
+  @ShellMethod(value = "Add a sshd remote management server to the selected configuration", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
     getWorkingConfig().services.add(service);
   }
 
-  @ShellMethod(value = "Start SSHD remote management server", group = "SSHD Commands")
+  @ShellMethod(value = "Start SSHD remote management server", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testClientUsed")
   public void startSshdRemoteManager(@ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
@@ -92,14 +92,14 @@ public class SshdShellInterface extends AbstractShellHelper {
     }
   }
   
-  @ShellMethod(value = "List active SSHD remote management connections", group = "SSHD Commands")
+  @ShellMethod(value = "List active SSHD remote management connections", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testClientFree")
   public List<AbstractSession> listSshdRemoteManager() {
       return server.getActiveSessions();
   }
 
-  @ShellMethod(value = "Stop SSHD remote management connection", group = "SSHD Commands")
+  @ShellMethod(value = "Stop SSHD remote management connection", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testClientFree")
   public void stopSshdRemoteManager() {
