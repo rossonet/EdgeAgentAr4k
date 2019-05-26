@@ -20,11 +20,15 @@ public interface TunnelCreatedReplyOrBuilder extends
   /**
    * <code>.beacon.Status status = 2;</code>
    */
-  int getStatusValue();
+  boolean hasStatus();
   /**
    * <code>.beacon.Status status = 2;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.Status getStatus();
+  /**
+   * <code>.beacon.Status status = 2;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getStatusOrBuilder();
 
   /**
    * <code>.beacon.Tunnel tunnel = 3;</code>

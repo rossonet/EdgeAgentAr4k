@@ -25,7 +25,6 @@ import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

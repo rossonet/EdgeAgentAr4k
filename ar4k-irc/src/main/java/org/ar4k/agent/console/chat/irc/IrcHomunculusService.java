@@ -90,4 +90,10 @@ public class IrcHomunculusService extends AbstractAr4kService {
 
   }
 
+  @Override
+  public void stop() {
+    // TODO Auto-generated method stub
+
+  }
+
 }

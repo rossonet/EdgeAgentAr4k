@@ -10,11 +10,15 @@ public interface ListSslAuthoritiesReplyOrBuilder extends
   /**
    * <code>.beacon.Status result = 1;</code>
    */
-  int getResultValue();
+  boolean hasResult();
   /**
    * <code>.beacon.Status result = 1;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.Status getResult();
+  /**
+   * <code>.beacon.Status result = 1;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getResultOrBuilder();
 
   /**
    * <code>repeated .beacon.SslAuthority authorities = 2;</code>

@@ -30,10 +30,10 @@ public final class BeaconMirrorService {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_beacon_RegisterReply_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_StatusReply_descriptor;
+    internal_static_beacon_Status_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_StatusReply_fieldAccessorTable;
+      internal_static_beacon_Status_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_beacon_Agent_descriptor;
   static final 
@@ -185,40 +185,70 @@ public final class BeaconMirrorService {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_beacon_CloseTunnelRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_Color_descriptor;
+    internal_static_beacon_MessageEventRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_Color_fieldAccessorTable;
+      internal_static_beacon_MessageEventRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_Date_descriptor;
+    internal_static_beacon_MessageEventRequest_EventDataEntry_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_Date_fieldAccessorTable;
+      internal_static_beacon_MessageEventRequest_EventDataEntry_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_DateTime_descriptor;
+    internal_static_beacon_FlowMessagePot_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_DateTime_fieldAccessorTable;
+      internal_static_beacon_FlowMessagePot_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_LatLng_descriptor;
+    internal_static_beacon_RequestToAgentPot_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_LatLng_fieldAccessorTable;
+      internal_static_beacon_RequestToAgentPot_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_Money_descriptor;
+    internal_static_beacon_RequestToAgentPot_RequestDataEntry_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_Money_fieldAccessorTable;
+      internal_static_beacon_RequestToAgentPot_RequestDataEntry_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_PostalAddress_descriptor;
+    internal_static_beacon_RequestSubscription_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_PostalAddress_fieldAccessorTable;
+      internal_static_beacon_RequestSubscription_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_TimeOfDay_descriptor;
+    internal_static_beacon_RequestPolling_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_TimeOfDay_fieldAccessorTable;
+      internal_static_beacon_RequestPolling_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_FlowMessageData_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_FlowMessageData_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_Data_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_Data_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_FlowMessageDataJson_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_FlowMessageDataJson_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_DataJson_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_DataJson_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_RequestWrite_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_RequestWrite_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_RequestWriteText_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_RequestWriteText_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -233,11 +263,11 @@ public final class BeaconMirrorService {
       "\037\n\004time\030\003 \001(\0132\021.beacon.Timestamp\022\022\n\njson" +
       "Health\030\004 \001(\t\"+\n\tTimestamp\022\017\n\007seconds\030\001 \001" +
       "(\003\022\r\n\005nanos\030\002 \001(\005\"\214\001\n\rRegisterReply\022\036\n\006r" +
-      "esult\030\001 \001(\0162\016.beacon.Status\022\024\n\014registerC" +
+      "esult\030\001 \001(\0132\016.beacon.Status\022\024\n\014registerC" +
       "ode\030\002 \001(\t\022\033\n\023monitoringFrequency\030\003 \001(\005\022(" +
       "\n\013targetState\030\004 \001(\0162\023.beacon.AnimaStates" +
-      "\"-\n\013StatusReply\022\036\n\006status\030\001 \001(\0162\016.beacon" +
-      ".Status\"l\n\005Agent\022\027\n\017agentUniqueName\030\001 \001(" +
+      "\"-\n\006Status\022#\n\006status\030\001 \001(\0162\023.beacon.Stat" +
+      "usValue\"l\n\005Agent\022\027\n\017agentUniqueName\030\001 \001(" +
       "\t\022\021\n\tsecretKey\030\002 \001(\t\022\030\n\020pollingFrequency" +
       "\030\003 \001(\005\022\035\n\025timestampRegistration\030\004 \001(\003\"\035\n" +
       "\013ConfigReply\022\016\n\006config\030\001 \001(\t\"7\n\013FlowMess" +
@@ -264,9 +294,9 @@ public final class BeaconMirrorService {
       "reamData\022 \n\tfromAgent\030\001 \001(\0132\r.beacon.Age" +
       "nt\022\036\n\007toAgent\030\002 \001(\0132\r.beacon.Agent\022\014\n\004da" +
       "ta\030\003 \001(\014\"\007\n\005Empty\"P\n\017ListAgentsReply\022\036\n\006" +
-      "result\030\001 \001(\0162\016.beacon.Status\022\035\n\006agents\030\002" +
+      "result\030\001 \001(\0132\016.beacon.Status\022\035\n\006agents\030\002" +
       " \003(\0132\r.beacon.Agent\"d\n\027ListSslAuthoritie" +
-      "sReply\022\036\n\006result\030\001 \001(\0162\016.beacon.Status\022)" +
+      "sReply\022\036\n\006result\030\001 \001(\0132\016.beacon.Status\022)" +
       "\n\013authorities\030\002 \003(\0132\024.beacon.SslAuthorit" +
       "y\"G\n\014SslAuthority\022\r\n\005label\030\001 \001(\t\022\023\n\013desc" +
       "ription\030\002 \001(\t\022\023\n\013authorityCa\030\003 \001(\t\"y\n\027El" +
@@ -292,7 +322,7 @@ public final class BeaconMirrorService {
       "est.ParametersEntry\0321\n\017ParametersEntry\022\013" +
       "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"l\n\022Tunnel" +
       "CreatedReply\022\026\n\016uniqueTunnelId\030\001 \001(\t\022\036\n\006" +
-      "status\030\002 \001(\0162\016.beacon.Status\022\036\n\006tunnel\030\003" +
+      "status\030\002 \001(\0132\016.beacon.Status\022\036\n\006tunnel\030\003" +
       " \001(\0132\016.beacon.Tunnel\"\327\001\n\026ExposeAgentPort" +
       "Request\022\"\n\013agentTarget\030\001 \001(\0132\r.beacon.Ag" +
       "ent\022\"\n\013agentSender\030\002 \001(\0132\r.beacon.Agent\022" +
@@ -309,79 +339,110 @@ public final class BeaconMirrorService {
       "on.Tunnel\"t\n\022CloseTunnelRequest\022\"\n\013agent" +
       "Target\030\001 \001(\0132\r.beacon.Agent\022\"\n\013agentSend" +
       "er\030\002 \001(\0132\r.beacon.Agent\022\026\n\016uniqueTunnelI" +
-      "d\030\003 \001(\t\"@\n\005Color\022\013\n\003red\030\001 \001(\002\022\r\n\005green\030\002" +
-      " \001(\002\022\014\n\004blue\030\003 \001(\002\022\r\n\005alpha\030\004 \001(\002\"0\n\004Dat" +
-      "e\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 " +
-      "\001(\005\"G\n\010DateTime\022\032\n\004date\030\001 \001(\0132\014.beacon.D" +
-      "ate\022\037\n\004time\030\002 \001(\0132\021.beacon.TimeOfDay\"-\n\006" +
-      "LatLng\022\020\n\010latitude\030\001 \001(\001\022\021\n\tlongitude\030\002 " +
-      "\001(\001\"<\n\005Money\022\025\n\rcurrency_code\030\001 \001(\t\022\r\n\005u" +
-      "nits\030\002 \001(\003\022\r\n\005nanos\030\003 \001(\005\"\375\001\n\rPostalAddr" +
-      "ess\022\020\n\010revision\030\001 \001(\005\022\023\n\013region_code\030\002 \001" +
-      "(\t\022\025\n\rlanguage_code\030\003 \001(\t\022\023\n\013postal_code" +
-      "\030\004 \001(\t\022\024\n\014sorting_code\030\005 \001(\t\022\033\n\023administ" +
-      "rative_area\030\006 \001(\t\022\020\n\010locality\030\007 \001(\t\022\023\n\013s" +
-      "ublocality\030\010 \001(\t\022\025\n\raddress_lines\030\t \003(\t\022" +
-      "\022\n\nrecipients\030\n \003(\t\022\024\n\014organization\030\013 \001(" +
-      "\t\"K\n\tTimeOfDay\022\r\n\005hours\030\001 \001(\005\022\017\n\007minutes" +
-      "\030\002 \001(\005\022\017\n\007seconds\030\003 \001(\005\022\r\n\005nanos\030\004 \001(\005*3" +
-      "\n\006Status\022\013\n\007UNKNOWN\020\000\022\010\n\004GOOD\020\001\022\007\n\003BAD\020\002" +
-      "\022\t\n\005FAULT\020\003*\274\001\n\013AnimaStates\022\010\n\004INIT\020\000\022\014\n" +
-      "\010STARTING\020\001\022\014\n\010STAMINAL\020\002\022\016\n\nCONFIGURED\020" +
-      "\003\022\013\n\007RUNNING\020\004\022\013\n\007SERVICE\020\005\022\013\n\007CONSOLE\020\006" +
-      "\022\n\n\006LAMBDA\020\007\022\007\n\003BOT\020\010\022\n\n\006PAUSED\020\t\022\n\n\006STO" +
-      "PED\020\n\022\n\n\006KILLED\020\013\022\013\n\007FAULTED\020\014\022\n\n\006STASIS" +
-      "\020\r*|\n\013CommandType\022\035\n\031ELABORATE_MESSAGE_C" +
-      "OMMAND\020\000\022\021\n\rLIST_COMMANDS\020\001\022\024\n\020COMPLETE_" +
-      "COMMAND\020\002\022\024\n\020OPEN_PROXY_SOCKS\020\003\022\017\n\013EXPOS" +
-      "E_PORT\020\004*\202\001\n\013LogSeverity\022\013\n\007DEFAULT\020\000\022\t\n" +
-      "\005DEBUG\020d\022\t\n\004INFO\020\310\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARN" +
-      "ING\020\220\003\022\n\n\005ERROR\020\364\003\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALE" +
-      "RT\020\274\005\022\016\n\tEMERGENCY\020\240\006*9\n\nTunnelType\022\023\n\017E" +
-      "XPOSE_TCP_PORT\020\000\022\026\n\022GRANT_SOCKS_ACCESS\020\001" +
-      "*\204\001\n\tDayOfWeek\022\033\n\027DAY_OF_WEEK_UNSPECIFIE" +
-      "D\020\000\022\n\n\006MONDAY\020\001\022\013\n\007TUESDAY\020\002\022\r\n\tWEDNESDA" +
-      "Y\020\003\022\014\n\010THURSDAY\020\004\022\n\n\006FRIDAY\020\005\022\014\n\010SATURDA" +
-      "Y\020\006\022\n\n\006SUNDAY\020\0072\321\013\n\014RpcServiceV1\022<\n\010Regi" +
-      "ster\022\027.beacon.RegisterRequest\032\025.beacon.R" +
-      "egisterReply\"\000\0227\n\017GetConfigTarget\022\r.beac" +
-      "on.Agent\032\023.beacon.ConfigReply\"\000\022/\n\007Polli" +
-      "ng\022\r.beacon.Agent\032\023.beacon.FlowMessage\"\000" +
-      "\0226\n\014Subscription\022\r.beacon.Agent\032\023.beacon" +
-      ".FlowMessage\"\0000\001\022=\n\017SendChatMessage\022\023.be" +
-      "acon.ChatMessage\032\023.beacon.StatusReply\"\000\022" +
-      "F\n\020SendCommandReply\022\033.beacon.CommandRepl" +
-      "yRequest\032\023.beacon.StatusReply\"\000\022:\n\nSendH" +
-      "ealth\022\025.beacon.HealthRequest\032\023.beacon.St" +
-      "atusReply\"\000\0224\n\007SendLog\022\022.beacon.LogReque" +
-      "st\032\023.beacon.StatusReply\"\000\022@\n\rSendExcepti" +
-      "on\022\030.beacon.ExceptionRequest\032\023.beacon.St" +
-      "atusReply\"\000\022M\n\035OpenBidirectionalSocketTu" +
-      "nnel\022\022.beacon.StreamData\032\022.beacon.Stream" +
-      "Data\"\000(\0010\001\0226\n\nListAgents\022\r.beacon.Empty\032" +
-      "\027.beacon.ListAgentsReply\"\000\022F\n\022ListSslAut" +
-      "horities\022\r.beacon.Empty\032\037.beacon.ListSsl" +
-      "AuthoritiesReply\"\000\022@\n\021AddSslAuthorities\022" +
-      "\024.beacon.SslAuthority\032\023.beacon.StatusRep" +
-      "ly\"\000\022A\n\022DropSslAuthorities\022\024.beacon.SslA" +
-      "uthority\032\023.beacon.StatusReply\"\000\0221\n\tKickA" +
-      "gent\022\r.beacon.Agent\032\023.beacon.StatusReply" +
-      "\"\000\022T\n\020ElaborateMessage\022\037.beacon.Elaborat" +
-      "eMessageRequest\032\035.beacon.ElaborateMessag" +
-      "eReply\"\000\022H\n\014ListCommands\022\033.beacon.ListCo" +
-      "mmandsRequest\032\031.beacon.ListCommandsReply" +
-      "\"\000\022Q\n\017CompleteCommand\022\036.beacon.CompleteC" +
-      "ommandRequest\032\034.beacon.CompleteCommandRe" +
-      "ply\"\000\022_\n\027CreateProxySocksOnAgent\022&.beaco" +
-      "n.CreateProxySocksOnAgentRequest\032\032.beaco" +
-      "n.TunnelCreatedReply\"\000\022O\n\017ExposeAgentPor" +
-      "t\022\036.beacon.ExposeAgentPortRequest\032\032.beac" +
-      "on.TunnelCreatedReply\"\000\0228\n\013ListTunnels\022\r" +
-      ".beacon.Empty\032\030.beacon.ListTunnelsReply\"" +
-      "\000\022@\n\013CloseTunnel\022\032.beacon.CloseTunnelReq" +
-      "uest\032\023.beacon.StatusReply\"\000BG\n\'org.ar4k." +
-      "agent.tunnels.http.grpc.beaconB\023BeaconMi" +
-      "rrorServiceP\001\242\002\004AR4Kb\006proto3"
+      "d\030\003 \001(\t\"\320\001\n\023MessageEventRequest\022\"\n\013agent" +
+      "Sender\030\001 \001(\0132\r.beacon.Agent\022$\n\teventType" +
+      "\030\002 \001(\0162\021.beacon.EventType\022=\n\teventData\030\003" +
+      " \003(\0132*.beacon.MessageEventRequest.EventD" +
+      "ataEntry\0320\n\016EventDataEntry\022\013\n\003key\030\001 \001(\t\022" +
+      "\r\n\005value\030\002 \001(\t:\0028\001\"=\n\016FlowMessagePot\022+\n\010" +
+      "toDoList\030\001 \003(\0132\031.beacon.RequestToAgentPo" +
+      "t\"\337\001\n\021RequestToAgentPot\022$\n\004type\030\001 \001(\0162\026." +
+      "beacon.CommandTypePot\022\027\n\017uniqueIdRequest" +
+      "\030\002 \001(\t\022\026\n\016requestCommand\030\003 \001(\t\022?\n\013reques" +
+      "tData\030\004 \003(\0132*.beacon.RequestToAgentPot.R" +
+      "equestDataEntry\0322\n\020RequestDataEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"O\n\023RequestSu" +
+      "bscription\022\016\n\006nodeId\030\001 \001(\t\022\024\n\014samplingRa" +
+      "te\030\002 \001(\005\022\022\n\ndataFilter\030\003 \001(\t\"4\n\016RequestP" +
+      "olling\022\016\n\006nodeId\030\001 \001(\t\022\022\n\ndataFilter\030\002 \001" +
+      "(\t\"-\n\017FlowMessageData\022\032\n\004data\030\001 \003(\0132\014.be" +
+      "acon.Data\"\206\001\n\004Data\022\016\n\006nodeId\030\001 \001(\t\022\037\n\004ti" +
+      "me\030\002 \001(\0132\021.beacon.Timestamp\022\037\n\007quality\030\003" +
+      " \001(\0132\016.beacon.Status\022\036\n\004type\030\004 \001(\0162\020.bea" +
+      "con.DataType\022\014\n\004data\030\005 \001(\014\"5\n\023FlowMessag" +
+      "eDataJson\022\036\n\004data\030\001 \003(\0132\020.beacon.DataJso" +
+      "n\"j\n\010DataJson\022\016\n\006nodeId\030\001 \001(\t\022\037\n\004time\030\002 " +
+      "\001(\0132\021.beacon.Timestamp\022\037\n\007quality\030\003 \001(\0132" +
+      "\016.beacon.Status\022\014\n\004data\030\004 \001(\t\"\216\001\n\014Reques" +
+      "tWrite\022\016\n\006nodeId\030\001 \001(\t\022\037\n\004time\030\002 \001(\0132\021.b" +
+      "eacon.Timestamp\022\037\n\007quality\030\003 \001(\0132\016.beaco" +
+      "n.Status\022\036\n\004type\030\004 \001(\0162\020.beacon.DataType" +
+      "\022\014\n\004data\030\005 \001(\014\"r\n\020RequestWriteText\022\016\n\006no" +
+      "deId\030\001 \001(\t\022\037\n\004time\030\002 \001(\0132\021.beacon.Timest" +
+      "amp\022\037\n\007quality\030\003 \001(\0132\016.beacon.Status\022\014\n\004" +
+      "data\030\004 \001(\t*8\n\013StatusValue\022\013\n\007UNKNOWN\020\000\022\010" +
+      "\n\004GOOD\020\001\022\007\n\003BAD\020\002\022\t\n\005FAULT\020\003*\274\001\n\013AnimaSt" +
+      "ates\022\010\n\004INIT\020\000\022\014\n\010STARTING\020\001\022\014\n\010STAMINAL" +
+      "\020\002\022\016\n\nCONFIGURED\020\003\022\013\n\007RUNNING\020\004\022\013\n\007SERVI" +
+      "CE\020\005\022\013\n\007CONSOLE\020\006\022\n\n\006LAMBDA\020\007\022\007\n\003BOT\020\010\022\n" +
+      "\n\006PAUSED\020\t\022\n\n\006STOPED\020\n\022\n\n\006KILLED\020\013\022\013\n\007FA" +
+      "ULTED\020\014\022\n\n\006STASIS\020\r*|\n\013CommandType\022\035\n\031EL" +
+      "ABORATE_MESSAGE_COMMAND\020\000\022\021\n\rLIST_COMMAN" +
+      "DS\020\001\022\024\n\020COMPLETE_COMMAND\020\002\022\024\n\020OPEN_PROXY" +
+      "_SOCKS\020\003\022\017\n\013EXPOSE_PORT\020\004*\202\001\n\013LogSeverit" +
+      "y\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n\004INFO\020\310\001\022\013\n\006" +
+      "NOTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005ERROR\020\364\003\022\r\n\010C" +
+      "RITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEMERGENCY\020\240\006*9" +
+      "\n\nTunnelType\022\023\n\017EXPOSE_TCP_PORT\020\000\022\026\n\022GRA" +
+      "NT_SOCKS_ACCESS\020\001*,\n\tEventType\022\017\n\013FAULT_" +
+      "EVENT\020\000\022\016\n\nINFO_EVENT\020\001*i\n\016CommandTypePo" +
+      "t\022\r\n\tSTART_POT\020\000\022\014\n\010STOP_POT\020\001\022\r\n\tPAUSE_" +
+      "POT\020\002\022\026\n\022REQUEST_STATUS_POT\020\003\022\023\n\017INSTANT" +
+      "IATE_POT\020\004*]\n\010DataType\022\n\n\006STRING\020\000\022\t\n\005IN" +
+      "T32\020\001\022\t\n\005INT64\020\002\022\t\n\005FLOAT\020\003\022\n\n\006DOUBLE\020\004\022" +
+      "\r\n\tTIMESTAMP\020\005\022\t\n\005BYTES\020\0062\244\013\n\014RpcService" +
+      "V1\022<\n\010Register\022\027.beacon.RegisterRequest\032" +
+      "\025.beacon.RegisterReply\"\000\0227\n\017GetConfigTar" +
+      "get\022\r.beacon.Agent\032\023.beacon.ConfigReply\"" +
+      "\000\022/\n\007Polling\022\r.beacon.Agent\032\023.beacon.Flo" +
+      "wMessage\"\000\0226\n\014Subscription\022\r.beacon.Agen" +
+      "t\032\023.beacon.FlowMessage\"\0000\001\0228\n\017SendChatMe" +
+      "ssage\022\023.beacon.ChatMessage\032\016.beacon.Stat" +
+      "us\"\000\022A\n\020SendCommandReply\022\033.beacon.Comman" +
+      "dReplyRequest\032\016.beacon.Status\"\000\0225\n\nSendH" +
+      "ealth\022\025.beacon.HealthRequest\032\016.beacon.St" +
+      "atus\"\000\022/\n\007SendLog\022\022.beacon.LogRequest\032\016." +
+      "beacon.Status\"\000\022;\n\rSendException\022\030.beaco" +
+      "n.ExceptionRequest\032\016.beacon.Status\"\000\022M\n\035" +
+      "OpenBidirectionalSocketTunnel\022\022.beacon.S" +
+      "treamData\032\022.beacon.StreamData\"\000(\0010\001\0226\n\nL" +
+      "istAgents\022\r.beacon.Empty\032\027.beacon.ListAg" +
+      "entsReply\"\000\022F\n\022ListSslAuthorities\022\r.beac" +
+      "on.Empty\032\037.beacon.ListSslAuthoritiesRepl" +
+      "y\"\000\022;\n\021AddSslAuthorities\022\024.beacon.SslAut" +
+      "hority\032\016.beacon.Status\"\000\022<\n\022DropSslAutho" +
+      "rities\022\024.beacon.SslAuthority\032\016.beacon.St" +
+      "atus\"\000\022,\n\tKickAgent\022\r.beacon.Agent\032\016.bea" +
+      "con.Status\"\000\022T\n\020ElaborateMessage\022\037.beaco" +
+      "n.ElaborateMessageRequest\032\035.beacon.Elabo" +
+      "rateMessageReply\"\000\022H\n\014ListCommands\022\033.bea" +
+      "con.ListCommandsRequest\032\031.beacon.ListCom" +
+      "mandsReply\"\000\022Q\n\017CompleteCommand\022\036.beacon" +
+      ".CompleteCommandRequest\032\034.beacon.Complet" +
+      "eCommandReply\"\000\022_\n\027CreateProxySocksOnAge" +
+      "nt\022&.beacon.CreateProxySocksOnAgentReque" +
+      "st\032\032.beacon.TunnelCreatedReply\"\000\022O\n\017Expo" +
+      "seAgentPort\022\036.beacon.ExposeAgentPortRequ" +
+      "est\032\032.beacon.TunnelCreatedReply\"\000\0228\n\013Lis" +
+      "tTunnels\022\r.beacon.Empty\032\030.beacon.ListTun" +
+      "nelsReply\"\000\022;\n\013CloseTunnel\022\032.beacon.Clos" +
+      "eTunnelRequest\032\016.beacon.Status\"\0002\271\001\n\014Pot" +
+      "ServiceV1\022:\n\tsendEvent\022\033.beacon.MessageE" +
+      "ventRequest\032\016.beacon.Status\"\000\0222\n\007Polling" +
+      "\022\r.beacon.Agent\032\026.beacon.FlowMessagePot\"" +
+      "\000\0229\n\014Subscription\022\r.beacon.Agent\032\026.beaco" +
+      "n.FlowMessagePot\"\0000\0012\336\002\n\rDataServiceV1\022<" +
+      "\n\007Polling\022\026.beacon.RequestPolling\032\027.beac" +
+      "on.FlowMessageData\"\000\022H\n\014Subscription\022\033.b" +
+      "eacon.RequestSubscription\032\027.beacon.FlowM" +
+      "essageData\"\0000\001\022C\n\nPollingTxt\022\026.beacon.Re" +
+      "questPolling\032\033.beacon.FlowMessageDataJso" +
+      "n\"\000\022O\n\017SubscriptionTxt\022\033.beacon.RequestS" +
+      "ubscription\032\033.beacon.FlowMessageDataJson" +
+      "\"\0000\001\022/\n\005write\022\024.beacon.RequestWrite\032\016.be" +
+      "acon.Status\"\000BG\n\'org.ar4k.agent.tunnels." +
+      "http.grpc.beaconB\023BeaconMirrorServiceP\001\242" +
+      "\002\004AR4Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -413,11 +474,11 @@ public final class BeaconMirrorService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_RegisterReply_descriptor,
         new java.lang.String[] { "Result", "RegisterCode", "MonitoringFrequency", "TargetState", });
-    internal_static_beacon_StatusReply_descriptor =
+    internal_static_beacon_Status_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_beacon_StatusReply_fieldAccessorTable = new
+    internal_static_beacon_Status_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_StatusReply_descriptor,
+        internal_static_beacon_Status_descriptor,
         new java.lang.String[] { "Status", });
     internal_static_beacon_Agent_descriptor =
       getDescriptor().getMessageTypes().get(4);
@@ -599,48 +660,84 @@ public final class BeaconMirrorService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CloseTunnelRequest_descriptor,
         new java.lang.String[] { "AgentTarget", "AgentSender", "UniqueTunnelId", });
-    internal_static_beacon_Color_descriptor =
+    internal_static_beacon_MessageEventRequest_descriptor =
       getDescriptor().getMessageTypes().get(31);
-    internal_static_beacon_Color_fieldAccessorTable = new
+    internal_static_beacon_MessageEventRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_Color_descriptor,
-        new java.lang.String[] { "Red", "Green", "Blue", "Alpha", });
-    internal_static_beacon_Date_descriptor =
+        internal_static_beacon_MessageEventRequest_descriptor,
+        new java.lang.String[] { "AgentSender", "EventType", "EventData", });
+    internal_static_beacon_MessageEventRequest_EventDataEntry_descriptor =
+      internal_static_beacon_MessageEventRequest_descriptor.getNestedTypes().get(0);
+    internal_static_beacon_MessageEventRequest_EventDataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_MessageEventRequest_EventDataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_beacon_FlowMessagePot_descriptor =
       getDescriptor().getMessageTypes().get(32);
-    internal_static_beacon_Date_fieldAccessorTable = new
+    internal_static_beacon_FlowMessagePot_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_Date_descriptor,
-        new java.lang.String[] { "Year", "Month", "Day", });
-    internal_static_beacon_DateTime_descriptor =
+        internal_static_beacon_FlowMessagePot_descriptor,
+        new java.lang.String[] { "ToDoList", });
+    internal_static_beacon_RequestToAgentPot_descriptor =
       getDescriptor().getMessageTypes().get(33);
-    internal_static_beacon_DateTime_fieldAccessorTable = new
+    internal_static_beacon_RequestToAgentPot_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_DateTime_descriptor,
-        new java.lang.String[] { "Date", "Time", });
-    internal_static_beacon_LatLng_descriptor =
+        internal_static_beacon_RequestToAgentPot_descriptor,
+        new java.lang.String[] { "Type", "UniqueIdRequest", "RequestCommand", "RequestData", });
+    internal_static_beacon_RequestToAgentPot_RequestDataEntry_descriptor =
+      internal_static_beacon_RequestToAgentPot_descriptor.getNestedTypes().get(0);
+    internal_static_beacon_RequestToAgentPot_RequestDataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_RequestToAgentPot_RequestDataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_beacon_RequestSubscription_descriptor =
       getDescriptor().getMessageTypes().get(34);
-    internal_static_beacon_LatLng_fieldAccessorTable = new
+    internal_static_beacon_RequestSubscription_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_LatLng_descriptor,
-        new java.lang.String[] { "Latitude", "Longitude", });
-    internal_static_beacon_Money_descriptor =
+        internal_static_beacon_RequestSubscription_descriptor,
+        new java.lang.String[] { "NodeId", "SamplingRate", "DataFilter", });
+    internal_static_beacon_RequestPolling_descriptor =
       getDescriptor().getMessageTypes().get(35);
-    internal_static_beacon_Money_fieldAccessorTable = new
+    internal_static_beacon_RequestPolling_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_Money_descriptor,
-        new java.lang.String[] { "CurrencyCode", "Units", "Nanos", });
-    internal_static_beacon_PostalAddress_descriptor =
+        internal_static_beacon_RequestPolling_descriptor,
+        new java.lang.String[] { "NodeId", "DataFilter", });
+    internal_static_beacon_FlowMessageData_descriptor =
       getDescriptor().getMessageTypes().get(36);
-    internal_static_beacon_PostalAddress_fieldAccessorTable = new
+    internal_static_beacon_FlowMessageData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_PostalAddress_descriptor,
-        new java.lang.String[] { "Revision", "RegionCode", "LanguageCode", "PostalCode", "SortingCode", "AdministrativeArea", "Locality", "Sublocality", "AddressLines", "Recipients", "Organization", });
-    internal_static_beacon_TimeOfDay_descriptor =
+        internal_static_beacon_FlowMessageData_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_beacon_Data_descriptor =
       getDescriptor().getMessageTypes().get(37);
-    internal_static_beacon_TimeOfDay_fieldAccessorTable = new
+    internal_static_beacon_Data_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_TimeOfDay_descriptor,
-        new java.lang.String[] { "Hours", "Minutes", "Seconds", "Nanos", });
+        internal_static_beacon_Data_descriptor,
+        new java.lang.String[] { "NodeId", "Time", "Quality", "Type", "Data", });
+    internal_static_beacon_FlowMessageDataJson_descriptor =
+      getDescriptor().getMessageTypes().get(38);
+    internal_static_beacon_FlowMessageDataJson_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_FlowMessageDataJson_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_beacon_DataJson_descriptor =
+      getDescriptor().getMessageTypes().get(39);
+    internal_static_beacon_DataJson_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_DataJson_descriptor,
+        new java.lang.String[] { "NodeId", "Time", "Quality", "Data", });
+    internal_static_beacon_RequestWrite_descriptor =
+      getDescriptor().getMessageTypes().get(40);
+    internal_static_beacon_RequestWrite_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_RequestWrite_descriptor,
+        new java.lang.String[] { "NodeId", "Time", "Quality", "Type", "Data", });
+    internal_static_beacon_RequestWriteText_descriptor =
+      getDescriptor().getMessageTypes().get(41);
+    internal_static_beacon_RequestWriteText_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_RequestWriteText_descriptor,
+        new java.lang.String[] { "NodeId", "Time", "Quality", "Data", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

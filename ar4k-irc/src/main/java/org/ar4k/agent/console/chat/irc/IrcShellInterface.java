@@ -19,6 +19,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.Client.Builder;
@@ -69,7 +70,7 @@ public class IrcShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addIrcManagerToSelectedConfig(@ShellOption(optOut = true) @Valid IrcHomunculusConfig service) {
-    getWorkingConfig().services.add(service);
+    getWorkingConfig().pots.add((PotConfig) service);
   }
 
   @ShellMethod(value = "Start IRC remote management connection", group = "IRC Commands")

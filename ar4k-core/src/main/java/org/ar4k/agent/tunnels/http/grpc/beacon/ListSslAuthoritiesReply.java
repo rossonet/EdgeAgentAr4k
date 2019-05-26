@@ -16,7 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private ListSslAuthoritiesReply() {
-    result_ = 0;
     authorities_ = java.util.Collections.emptyList();
   }
 
@@ -44,10 +43,17 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
-            int rawValue = input.readEnum();
+          case 10: {
+            org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder subBuilder = null;
+            if (result_ != null) {
+              subBuilder = result_.toBuilder();
+            }
+            result_ = input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.Status.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(result_);
+              result_ = subBuilder.buildPartial();
+            }
 
-            result_ = rawValue;
             break;
           }
           case 18: {
@@ -96,20 +102,24 @@ private static final long serialVersionUID = 0L;
 
   private int bitField0_;
   public static final int RESULT_FIELD_NUMBER = 1;
-  private int result_;
+  private org.ar4k.agent.tunnels.http.grpc.beacon.Status result_;
   /**
    * <code>.beacon.Status result = 1;</code>
    */
-  public int getResultValue() {
-    return result_;
+  public boolean hasResult() {
+    return result_ != null;
   }
   /**
    * <code>.beacon.Status result = 1;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.Status getResult() {
-    @SuppressWarnings("deprecation")
-    org.ar4k.agent.tunnels.http.grpc.beacon.Status result = org.ar4k.agent.tunnels.http.grpc.beacon.Status.valueOf(result_);
-    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Status.UNRECOGNIZED : result;
+    return result_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance() : result_;
+  }
+  /**
+   * <code>.beacon.Status result = 1;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getResultOrBuilder() {
+    return getResult();
   }
 
   public static final int AUTHORITIES_FIELD_NUMBER = 2;
@@ -161,8 +171,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (result_ != org.ar4k.agent.tunnels.http.grpc.beacon.Status.UNKNOWN.getNumber()) {
-      output.writeEnum(1, result_);
+    if (result_ != null) {
+      output.writeMessage(1, getResult());
     }
     for (int i = 0; i < authorities_.size(); i++) {
       output.writeMessage(2, authorities_.get(i));
@@ -176,9 +186,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (result_ != org.ar4k.agent.tunnels.http.grpc.beacon.Status.UNKNOWN.getNumber()) {
+    if (result_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, result_);
+        .computeMessageSize(1, getResult());
     }
     for (int i = 0; i < authorities_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
@@ -199,7 +209,11 @@ private static final long serialVersionUID = 0L;
     }
     org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply other = (org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply) obj;
 
-    if (result_ != other.result_) return false;
+    if (hasResult() != other.hasResult()) return false;
+    if (hasResult()) {
+      if (!getResult()
+          .equals(other.getResult())) return false;
+    }
     if (!getAuthoritiesList()
         .equals(other.getAuthoritiesList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
@@ -213,8 +227,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + RESULT_FIELD_NUMBER;
-    hash = (53 * hash) + result_;
+    if (hasResult()) {
+      hash = (37 * hash) + RESULT_FIELD_NUMBER;
+      hash = (53 * hash) + getResult().hashCode();
+    }
     if (getAuthoritiesCount() > 0) {
       hash = (37 * hash) + AUTHORITIES_FIELD_NUMBER;
       hash = (53 * hash) + getAuthoritiesList().hashCode();
@@ -353,8 +369,12 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      result_ = 0;
-
+      if (resultBuilder_ == null) {
+        result_ = null;
+      } else {
+        result_ = null;
+        resultBuilder_ = null;
+      }
       if (authoritiesBuilder_ == null) {
         authorities_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -389,7 +409,11 @@ private static final long serialVersionUID = 0L;
       org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply result = new org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
-      result.result_ = result_;
+      if (resultBuilder_ == null) {
+        result.result_ = result_;
+      } else {
+        result.result_ = resultBuilder_.build();
+      }
       if (authoritiesBuilder_ == null) {
         if (((bitField0_ & 0x00000002) != 0)) {
           authorities_ = java.util.Collections.unmodifiableList(authorities_);
@@ -448,8 +472,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply other) {
       if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.getDefaultInstance()) return this;
-      if (other.result_ != 0) {
-        setResultValue(other.getResultValue());
+      if (other.hasResult()) {
+        mergeResult(other.getResult());
       }
       if (authoritiesBuilder_ == null) {
         if (!other.authorities_.isEmpty()) {
@@ -507,49 +531,121 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private int result_ = 0;
+    private org.ar4k.agent.tunnels.http.grpc.beacon.Status result_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.Status, org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder> resultBuilder_;
     /**
      * <code>.beacon.Status result = 1;</code>
      */
-    public int getResultValue() {
-      return result_;
-    }
-    /**
-     * <code>.beacon.Status result = 1;</code>
-     */
-    public Builder setResultValue(int value) {
-      result_ = value;
-      onChanged();
-      return this;
+    public boolean hasResult() {
+      return resultBuilder_ != null || result_ != null;
     }
     /**
      * <code>.beacon.Status result = 1;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Status getResult() {
-      @SuppressWarnings("deprecation")
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status result = org.ar4k.agent.tunnels.http.grpc.beacon.Status.valueOf(result_);
-      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Status.UNRECOGNIZED : result;
+      if (resultBuilder_ == null) {
+        return result_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance() : result_;
+      } else {
+        return resultBuilder_.getMessage();
+      }
     }
     /**
      * <code>.beacon.Status result = 1;</code>
      */
     public Builder setResult(org.ar4k.agent.tunnels.http.grpc.beacon.Status value) {
-      if (value == null) {
-        throw new NullPointerException();
+      if (resultBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result_ = value;
+        onChanged();
+      } else {
+        resultBuilder_.setMessage(value);
       }
-      
-      result_ = value.getNumber();
-      onChanged();
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Status result = 1;</code>
+     */
+    public Builder setResult(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder builderForValue) {
+      if (resultBuilder_ == null) {
+        result_ = builderForValue.build();
+        onChanged();
+      } else {
+        resultBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Status result = 1;</code>
+     */
+    public Builder mergeResult(org.ar4k.agent.tunnels.http.grpc.beacon.Status value) {
+      if (resultBuilder_ == null) {
+        if (result_ != null) {
+          result_ =
+            org.ar4k.agent.tunnels.http.grpc.beacon.Status.newBuilder(result_).mergeFrom(value).buildPartial();
+        } else {
+          result_ = value;
+        }
+        onChanged();
+      } else {
+        resultBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
      * <code>.beacon.Status result = 1;</code>
      */
     public Builder clearResult() {
-      
-      result_ = 0;
-      onChanged();
+      if (resultBuilder_ == null) {
+        result_ = null;
+        onChanged();
+      } else {
+        result_ = null;
+        resultBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.beacon.Status result = 1;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder getResultBuilder() {
+      
+      onChanged();
+      return getResultFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.beacon.Status result = 1;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getResultOrBuilder() {
+      if (resultBuilder_ != null) {
+        return resultBuilder_.getMessageOrBuilder();
+      } else {
+        return result_ == null ?
+            org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance() : result_;
+      }
+    }
+    /**
+     * <code>.beacon.Status result = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.Status, org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder> 
+        getResultFieldBuilder() {
+      if (resultBuilder_ == null) {
+        resultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.Status, org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder>(
+                getResult(),
+                getParentForChildren(),
+                isClean());
+        result_ = null;
+      }
+      return resultBuilder_;
     }
 
     private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> authorities_ =
