@@ -14,7 +14,11 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
+import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.json.SshRemoteConfigJsonAdapter;
+
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -43,8 +47,9 @@ public class SshRemoteConfig extends AbstractSshConfig {
   }
 
   @Override
-  public int getPriority() {
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     // TODO Auto-generated method stub
-    return 0;
+    return new SshRemoteConfigJsonAdapter();
   }
+
 }

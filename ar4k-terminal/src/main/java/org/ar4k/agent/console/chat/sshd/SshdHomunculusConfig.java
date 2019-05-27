@@ -15,7 +15,11 @@
 package org.ar4k.agent.console.chat.sshd;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.json.SshdHomunculusConfigJsonAdapter;
 import org.ar4k.agent.core.Ar4kComponent;
+
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -35,5 +39,10 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 15;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    return new SshdHomunculusConfigJsonAdapter();
   }
 }

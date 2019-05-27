@@ -23,6 +23,8 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.PotServiceV1Grpc;
+import org.ar4k.agent.tunnels.http.grpc.beacon.DataServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
@@ -56,7 +58,8 @@ public class BeaconServer implements Runnable {
 
   public BeaconServer(ServerBuilder<?> serverBuilder, int port) {
     this.port = port;
-    server = serverBuilder.addService(new RpcService()).build();
+    server = serverBuilder.addService(new RpcService()).addService(new PotService()).addService(new DataService())
+        .build();
   }
 
   public void start() throws IOException {
@@ -89,6 +92,14 @@ public class BeaconServer implements Runnable {
     if (server != null) {
       server.awaitTermination();
     }
+  }
+
+  private class PotService extends PotServiceV1Grpc.PotServiceV1ImplBase {
+
+  }
+
+  private class DataService extends DataServiceV1Grpc.DataServiceV1ImplBase {
+
   }
 
   private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {

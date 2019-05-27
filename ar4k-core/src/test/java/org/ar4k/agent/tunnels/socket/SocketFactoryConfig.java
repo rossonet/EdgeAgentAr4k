@@ -14,7 +14,10 @@
     */
 package org.ar4k.agent.tunnels.socket;
 
+import org.ar4k.agent.config.ConfigSeed;
+
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -51,5 +54,11 @@ public class SocketFactoryConfig extends AbstractSocketFactoryConfig {
     sb.append("receiveBufferSize: " + receiveBufferSize + "\n");
     sb.append("reuseAddress: " + reuseAddress + "\n");
     return sb.toString();
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

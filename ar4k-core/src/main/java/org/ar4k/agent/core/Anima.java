@@ -104,7 +104,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public Anima() {
     agentUniqueName = generateNewUniqueName();
-    // System.err.println("\t*** [AGENT UNIQUE NAME] " + agentUniqueName + " ***");
   }
 
   public static String generateNewUniqueName() {

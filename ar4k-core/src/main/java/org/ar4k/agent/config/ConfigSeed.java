@@ -7,10 +7,12 @@ import java.util.UUID;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 
+import com.google.gson.TypeAdapter;
+
 public interface ConfigSeed extends Serializable, Cloneable {
 
   public String getName();
-  
+
   public String getDescription();
 
   public Collection<String> getTags();
@@ -22,7 +24,9 @@ public interface ConfigSeed extends Serializable, Cloneable {
   public Instant getLastUpdateDate();
 
   public UUID getUniqueId();
-  
+
   public int getPriority();
+
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter();
 
 }

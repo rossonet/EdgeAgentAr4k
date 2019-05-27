@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.ar4k.agent.tribe.TribeGovernanceValidator;
@@ -12,6 +13,7 @@ import org.ar4k.agent.tribe.AtomixTribeComponent.Governance;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 public class TribeConfig extends AbstractServiceConfig {
 
@@ -76,5 +78,10 @@ public class TribeConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 7;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    return new TribeConfigJsonAdapter();
   }
 }

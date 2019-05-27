@@ -14,10 +14,12 @@
     */
 package org.ar4k.agent.tunnels.socket.proxy;
 
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.validator.ProxyValidator;
 import org.ar4k.agent.tunnels.socket.AbstractSocketFactoryConfig;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -58,5 +60,11 @@ public class SocketFactoryProxyConfig extends AbstractSocketFactoryConfig {
     SocketFactoryProxy ss = new SocketFactoryProxy();
     ss.setConfiguration(this);
     return ss;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -14,11 +14,13 @@
     */
 package org.ar4k.agent.tunnels.socket.ssl;
 
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.validator.KeystoreValidator;
 import org.ar4k.agent.config.validator.ProxyValidator;
 import org.ar4k.agent.tunnels.socket.AbstractSocketFactoryConfig;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -76,6 +78,12 @@ public class SocketFactorySslConfig extends AbstractSocketFactoryConfig {
     SocketFactorySsl ss = new SocketFactorySsl();
     ss.setConfiguration(this);
     return ss;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

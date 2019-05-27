@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.Size;
 
+import org.ar4k.agent.config.json.Ar4kConfigJsonAdapter;
 import org.ar4k.agent.config.validator.AnsiColorValidator;
 import org.ar4k.agent.config.validator.Ar4kStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
@@ -32,6 +33,7 @@ import org.joda.time.Instant;
 import org.springframework.boot.ansi.AnsiColor;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -159,5 +161,10 @@ public class Ar4kConfig implements ConfigSeed {
   @Override
   public int getPriority() {
     return 0;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    return new Ar4kConfigJsonAdapter();
   }
 }

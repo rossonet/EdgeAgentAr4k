@@ -15,9 +15,11 @@
 package org.ar4k.agent.xmpp;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -49,5 +51,10 @@ public class JabberHomunculusConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 6;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    return new JabberHomunculusConfigJsonAdapter();
   }
 }

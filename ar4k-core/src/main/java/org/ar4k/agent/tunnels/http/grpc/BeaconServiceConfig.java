@@ -15,8 +15,11 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.json.BeaconServiceConfigJsonAdapter;
 
 import com.beust.jcommander.Parameter;
+import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -34,6 +37,11 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
     BeaconService ss = new BeaconService();
     ss.setConfiguration(this);
     return ss;
+  }
+
+  @Override
+  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
+    return new BeaconServiceConfigJsonAdapter();
   }
 
 }

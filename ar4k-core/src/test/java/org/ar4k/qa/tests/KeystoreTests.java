@@ -19,28 +19,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.gw.anima.TestApplicationRunner;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.junit.runner.RunWith;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.shell.SpringShellAutoConfiguration;
+import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
+import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.legacy.LegacyAdapterAutoConfiguration;
+import org.springframework.shell.standard.FileValueProvider;
+import org.springframework.shell.standard.StandardAPIAutoConfiguration;
+import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@RunWith(SpringRunner.class)
-@ComponentScan("org.ar4k.agent")
-@Import(TestApplicationRunner.class)
+@Configuration
+@Import({
+    // Core runtime
+    SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class,
+    // Various Resolvers
+    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+    StandardAPIAutoConfiguration.class,
+    // Built-In Commands
+    StandardCommandsAutoConfiguration.class,
+    // Sample Commands
+    Commands.class, FileValueProvider.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class KeystoreTests {

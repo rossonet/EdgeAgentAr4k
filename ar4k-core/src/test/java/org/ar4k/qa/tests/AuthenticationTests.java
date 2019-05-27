@@ -23,29 +23,42 @@ import java.util.List;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.gw.anima.TestApplicationRunner;
+import org.jline.builtins.Commands;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.shell.SpringShellAutoConfiguration;
+import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
+import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.legacy.LegacyAdapterAutoConfiguration;
+import org.springframework.shell.standard.FileValueProvider;
+import org.springframework.shell.standard.StandardAPIAutoConfiguration;
+import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@ComponentScan("org.ar4k.agent")
-@Import(TestApplicationRunner.class)
+@Configuration
+@Import({
+    // Core runtime
+    SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class,
+    // Various Resolvers
+    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+    StandardAPIAutoConfiguration.class,
+    // Built-In Commands
+    StandardCommandsAutoConfiguration.class,
+    // Sample Commands
+    Commands.class, FileValueProvider.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthenticationTests {
