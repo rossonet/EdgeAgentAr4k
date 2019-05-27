@@ -70,7 +70,7 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
 
   private Map<String, String> produceMembershipMetadata() throws IOException, InterruptedException, ParseException {
     Map<String, String> metadata = new HashMap<String, String>();
-    Map<String, Object> hal = HardwareHelper.getSystemInfo();
+    Map<String, Object> hal = HardwareHelper.getSystemInfo().getHealthIndicator();
     for (String chiave : hal.keySet()) {
       metadata.put(chiave, hal.get(chiave).toString());
     }
@@ -220,6 +220,6 @@ public class AtomixTribeComponent implements Ar4kComponent, Runnable {
   @Override
   public void close() throws IOException {
     // TODO Auto-generated method stub
-    
+
   }
 }

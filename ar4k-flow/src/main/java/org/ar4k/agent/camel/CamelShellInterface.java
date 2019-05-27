@@ -98,6 +98,7 @@ public class CamelShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addCamelEndpointToConfiguration(@ShellOption(help = "label of the endpoint") String label) {
+  /* TODO da implementare con AddressSpace
     try {
       if (((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
         // ok
@@ -116,6 +117,7 @@ public class CamelShellInterface extends AbstractShellHelper {
     }
     ((Map<String, String>) ((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints")).put(label,
         camelComponents.get(label));
+        */
   }
 
   @ShellMethod(value = "Add (or replace) camel route to the selected config", group = "Camel Commands")

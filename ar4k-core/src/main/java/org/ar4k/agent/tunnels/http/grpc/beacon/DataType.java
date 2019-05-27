@@ -13,29 +13,45 @@ public enum DataType
    */
   STRING(0),
   /**
-   * <code>INT32 = 1;</code>
+   * <code>CHAR = 1;</code>
    */
-  INT32(1),
+  CHAR(1),
   /**
-   * <code>INT64 = 2;</code>
+   * <code>BYTES = 2;</code>
    */
-  INT64(2),
+  BYTES(2),
   /**
-   * <code>FLOAT = 3;</code>
+   * <code>INT32 = 3;</code>
    */
-  FLOAT(3),
+  INT32(3),
   /**
-   * <code>DOUBLE = 4;</code>
+   * <code>INT64 = 4;</code>
    */
-  DOUBLE(4),
+  INT64(4),
   /**
-   * <code>TIMESTAMP = 5;</code>
+   * <code>FLOAT = 5;</code>
    */
-  TIMESTAMP(5),
+  FLOAT(5),
   /**
-   * <code>BYTES = 6;</code>
+   * <code>DOUBLE = 6;</code>
    */
-  BYTES(6),
+  DOUBLE(6),
+  /**
+   * <code>BOOLEAN = 7;</code>
+   */
+  BOOLEAN(7),
+  /**
+   * <code>TIMESTAMP = 8;</code>
+   */
+  TIMESTAMP(8),
+  /**
+   * <code>OBJECT = 9;</code>
+   */
+  OBJECT(9),
+  /**
+   * <code>UNKNOWN = 10;</code>
+   */
+  UNKNOWN(10),
   UNRECOGNIZED(-1),
   ;
 
@@ -44,29 +60,45 @@ public enum DataType
    */
   public static final int STRING_VALUE = 0;
   /**
-   * <code>INT32 = 1;</code>
+   * <code>CHAR = 1;</code>
    */
-  public static final int INT32_VALUE = 1;
+  public static final int CHAR_VALUE = 1;
   /**
-   * <code>INT64 = 2;</code>
+   * <code>BYTES = 2;</code>
    */
-  public static final int INT64_VALUE = 2;
+  public static final int BYTES_VALUE = 2;
   /**
-   * <code>FLOAT = 3;</code>
+   * <code>INT32 = 3;</code>
    */
-  public static final int FLOAT_VALUE = 3;
+  public static final int INT32_VALUE = 3;
   /**
-   * <code>DOUBLE = 4;</code>
+   * <code>INT64 = 4;</code>
    */
-  public static final int DOUBLE_VALUE = 4;
+  public static final int INT64_VALUE = 4;
   /**
-   * <code>TIMESTAMP = 5;</code>
+   * <code>FLOAT = 5;</code>
    */
-  public static final int TIMESTAMP_VALUE = 5;
+  public static final int FLOAT_VALUE = 5;
   /**
-   * <code>BYTES = 6;</code>
+   * <code>DOUBLE = 6;</code>
    */
-  public static final int BYTES_VALUE = 6;
+  public static final int DOUBLE_VALUE = 6;
+  /**
+   * <code>BOOLEAN = 7;</code>
+   */
+  public static final int BOOLEAN_VALUE = 7;
+  /**
+   * <code>TIMESTAMP = 8;</code>
+   */
+  public static final int TIMESTAMP_VALUE = 8;
+  /**
+   * <code>OBJECT = 9;</code>
+   */
+  public static final int OBJECT_VALUE = 9;
+  /**
+   * <code>UNKNOWN = 10;</code>
+   */
+  public static final int UNKNOWN_VALUE = 10;
 
 
   public final int getNumber() {
@@ -88,12 +120,16 @@ public enum DataType
   public static DataType forNumber(int value) {
     switch (value) {
       case 0: return STRING;
-      case 1: return INT32;
-      case 2: return INT64;
-      case 3: return FLOAT;
-      case 4: return DOUBLE;
-      case 5: return TIMESTAMP;
-      case 6: return BYTES;
+      case 1: return CHAR;
+      case 2: return BYTES;
+      case 3: return INT32;
+      case 4: return INT64;
+      case 5: return FLOAT;
+      case 6: return DOUBLE;
+      case 7: return BOOLEAN;
+      case 8: return TIMESTAMP;
+      case 9: return OBJECT;
+      case 10: return UNKNOWN;
       default: return null;
     }
   }

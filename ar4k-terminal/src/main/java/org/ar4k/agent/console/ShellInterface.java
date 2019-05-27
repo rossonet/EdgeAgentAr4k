@@ -121,6 +121,8 @@ public class ShellInterface extends AbstractShellHelper {
     return result;
   }
 
+  // TODO implementare la gestione dell'Address Space
+
   @ShellMethod(value = "List sessions attached to the user", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -275,10 +277,6 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Rsa(base64Config));
   }
 
-  // TODO: aggiungere il salvataggio dell configurazione su DNS con key (provare
-  // su sottodominio ar4k.net) e il salvataggio della configurazione su web con
-  // http push autenticato.
-
   @ShellMethod("Load selected configuration from a base64 text file crypted in RSA")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -307,7 +305,6 @@ public class ShellInterface extends AbstractShellHelper {
     return "saved";
   }
 
-  // TODO: risolvere gli oggetti annidati
   @ShellMethod("Import the selected configuration from json text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")

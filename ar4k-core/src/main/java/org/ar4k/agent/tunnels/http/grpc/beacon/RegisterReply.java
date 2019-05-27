@@ -237,7 +237,7 @@ private static final long serialVersionUID = 0L;
     if (targetState_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
       output.writeEnum(4, targetState_);
     }
-    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNKNOWN.getNumber()) {
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.GOOD.getNumber()) {
       output.writeEnum(5, status_);
     }
     unknownFields.writeTo(output);
@@ -264,7 +264,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, targetState_);
     }
-    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNKNOWN.getNumber()) {
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.GOOD.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(5, status_);
     }

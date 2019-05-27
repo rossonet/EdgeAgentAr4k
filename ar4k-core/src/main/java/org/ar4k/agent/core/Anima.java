@@ -40,6 +40,7 @@ import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
@@ -201,6 +202,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private AnimaStates stateTarget = null;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
 
+  // TODO implementare l'esecuzione dei pre e post script
+  
   // array keystore disponibili
   private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
 
@@ -225,6 +228,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private BeaconClient beaconClient = null;
 
+  private DataAddress dataAddress = new DataAddress();
+
   // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
   // Lambda,Google Function o, in generale, in modalità function as a service
   // STASIS per la funzione di mantenimento a basso consumo,
@@ -234,7 +239,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     STASIS
   }
 
-  // tipi di router interno supportato
+  // tipi di router interno supportato per gestire lo scambio dei messagi tra gli
+  // agenti
   public static enum AnimaRouterType {
     NONE, PRODUCTION, DEVELOP, ROAD
   }
@@ -694,18 +700,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
   // TODO:implementare IAnimaGateway
 
-  // coda principale logger
-  @Bean
-  public MessageChannel mainLogChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  // coda principale exceptions
-  @Bean
-  public MessageChannel mainExceptionChannel() {
-    return new PublishSubscribeChannel();
-  }
-
   @Override
   public void setBeanName(String name) {
     beanName = name;
@@ -774,5 +768,13 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public void setAgentUniqueName(String agentUniqueName) {
     if (agentUniqueName != null && !agentUniqueName.isEmpty())
       this.agentUniqueName = agentUniqueName;
+  }
+
+  public DataAddress getDataAddress() {
+    return dataAddress;
+  }
+
+  public void setDataAddress(DataAddress dataAddress) {
+    this.dataAddress = dataAddress;
   }
 }

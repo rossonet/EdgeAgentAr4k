@@ -20,9 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.pi4j.platform.PlatformManager;
 import com.pi4j.system.NetworkInfo;
@@ -41,299 +39,299 @@ public class HardwareHelper {
 
   public static final boolean debugFreezeHal = false;
 
-  public static Map<String, Object> getSystemInfo() throws IOException, InterruptedException, ParseException {
-    Map<String, Object> dato = new HashMap<String, Object>();
+  public static HardwareInfo getSystemInfo() throws IOException, InterruptedException, ParseException {
+    final HardwareInfo dato = new HardwareInfo();
     oshi.SystemInfo si = new oshi.SystemInfo();
     Runtime runtime = Runtime.getRuntime();
     OperatingSystemMXBean mbean = ManagementFactory.getOperatingSystemMXBean();
-    dato.put("system-load-average", mbean.getSystemLoadAverage());
-    dato.put("hardware-runtime-total-memory", runtime.totalMemory());
-    dato.put("hardware-runtime-free-memory", runtime.freeMemory());
-    List<Map<String, Object>> fileSystem = new ArrayList<Map<String, Object>>();
+    dato.setSystemLoadAverage(mbean.getSystemLoadAverage());
+    dato.setHardwareRuntimetotalmemory(runtime.totalMemory());
+    dato.setHardwareRuntimefreememory(runtime.freeMemory());
+    List<RootFileSystem> fileSystem = new ArrayList<RootFileSystem>();
     for (File root : File.listRoots()) {
-      Map<String, Object> rootFs = new HashMap<String, Object>();
-      rootFs.put("absolutePath", root.getAbsoluteFile());
-      rootFs.put("freeSpace", root.getFreeSpace());
-      rootFs.put("totalSpace", root.getTotalSpace());
-      List<Map<String, Object>> childs = new ArrayList<Map<String, Object>>();
+      RootFileSystem rootFs = new RootFileSystem();
+      rootFs.setAbsolutePath(root.getAbsoluteFile());
+      rootFs.setFreeSpace(root.getFreeSpace());
+      rootFs.setTotalSpace(root.getTotalSpace());
+      List<RootFileSystem> childs = new ArrayList<RootFileSystem>();
       if (root != null && root.listFiles() != null)
         for (File figlio : root.listFiles()) {
-          Map<String, Object> figlioFs = new HashMap<String, Object>();
-          figlioFs.put("absolutePath", figlio.getAbsoluteFile());
-          figlioFs.put("freeSpace", figlio.getFreeSpace());
-          figlioFs.put("totalSpace", figlio.getTotalSpace());
+          RootFileSystem figlioFs = new RootFileSystem();
+          figlioFs.setAbsolutePath(figlio.getAbsoluteFile());
+          figlioFs.setFreeSpace(figlio.getFreeSpace());
+          figlioFs.setTotalSpace(figlio.getTotalSpace());
           childs.add(figlioFs);
         }
-      rootFs.put("childs", childs);
+      rootFs.setChilds(childs);
       fileSystem.add(rootFs);
     }
     // System.out.println("check1");
-    dato.put("hardware-file-list-roots", fileSystem);
+    dato.setHardwareFilelistroots(fileSystem);
     HardwareAbstractionLayer hal = si.getHardware();
     if (debugFreezeHal) {
       // System.out.println("check1.1");
       try {
-        dato.put("hardware-computer-system", hal.getComputerSystem());
+        dato.setHardwareComputersystem(hal.getComputerSystem());
       } catch (Exception re) {
       }
       // System.out.println("check1.2");
       try {
-        dato.put("hardware-disk", hal.getDiskStores());
+        dato.setHardwareDisk(hal.getDiskStores());
       } catch (Exception re) {
       }
       ;
       // System.out.println("check1.3");
       try {
-        dato.put("hardware-dislay", hal.getDisplays());
+        dato.setHardwareDislay(hal.getDisplays());
       } catch (Exception re) {
       }
       ;
       // System.out.println("check1.4");
       try {
-        dato.put("hardware-memory-total", hal.getMemory().getTotal());
+        dato.setHardwareMemorytotal(hal.getMemory().getTotal());
       } catch (Exception re) {
       }
       // System.out.println("check1.5");
       try {
-        dato.put("hardware-memory-available", hal.getMemory().getAvailable());
+        dato.setHardwareMemoryavailable(hal.getMemory().getAvailable());
       } catch (Exception re) {
       }
       try {
-        dato.put("hardware-swap-total", hal.getMemory().getSwapTotal());
+        dato.setHardwareSwaptotal(hal.getMemory().getSwapTotal());
       } catch (Exception re) {
       }
       // System.out.println("check1.6");
       try {
-        dato.put("hardware-swap-used", hal.getMemory().getSwapUsed());
+        dato.setHardwareSwapused(hal.getMemory().getSwapUsed());
       } catch (Exception re) {
       }
       // System.out.println("check1.7");
       try {
-        dato.put("hardware-network", hal.getNetworkIFs());
+        dato.setHardwareNetwork(hal.getNetworkIFs());
       } catch (Exception re) {
       }
       // System.out.println("check1.8");
       try {
-        dato.put("hardware-power", hal.getPowerSources());
+        dato.setHardwarePower(hal.getPowerSources());
       } catch (Exception re) {
       }
       // System.out.println("check1.9");
       try {
-        dato.put("hardware-processor", hal.getProcessor());
+        dato.setHardwareProcessor(hal.getProcessor());
       } catch (Exception re) {
       }
       try {
-        dato.put("hardware-sensor", hal.getSensors());
+        dato.setHardwareSensor(hal.getSensors());
       } catch (Exception re) {
       }
       try {
-        dato.put("hardware-usb", hal.getUsbDevices(true));
+        dato.setHardwareUsb(hal.getUsbDevices(true));
       } catch (Exception re) {
       }
     }
     try {
       OperatingSystem os = si.getOperatingSystem();
-      dato.put("operating-system", os);
+      dato.setOperatingSystem(os);
     } catch (Exception ex) {
     }
     // System.out.println("check2");
     // X RaspBerry
     try {
-      dato.put("pi-Platform-Name", PlatformManager.getPlatform().getLabel());
+      dato.setPiPlatformName(PlatformManager.getPlatform().getLabel());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Platform-ID", PlatformManager.getPlatform().getId());
+      dato.setPiPlatformID(PlatformManager.getPlatform().getId());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Serial-Number", SystemInfo.getSerial());
+      dato.setPiSerialNumber(SystemInfo.getSerial());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Revision", SystemInfo.getCpuRevision());
+      dato.setPiCPURevision(SystemInfo.getCpuRevision());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Architecture", SystemInfo.getCpuArchitecture());
+      dato.setPiCPUArchitecture(SystemInfo.getCpuArchitecture());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Part", SystemInfo.getCpuPart());
+      dato.setPiCPUPart(SystemInfo.getCpuPart());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Temperature", SystemInfo.getCpuTemperature());
+      dato.setPiCPUTemperature(SystemInfo.getCpuTemperature());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Core-Voltage", SystemInfo.getCpuVoltage());
+      dato.setPiCPUCoreVoltage(SystemInfo.getCpuVoltage());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CPU-Model-Name", SystemInfo.getModelName());
+      dato.setPiCPUModelName(SystemInfo.getModelName());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Processor", SystemInfo.getProcessor());
+      dato.setPiProcessor(SystemInfo.getProcessor());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Hardware", SystemInfo.getHardware());
+      dato.setPiHardware(SystemInfo.getHardware());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Hardware-Revision", SystemInfo.getRevision());
+      dato.setPiHardwareRevision(SystemInfo.getRevision());
     } catch (Exception ex) {
     }
     // in windows da errore
     /*
-     * try { dato.put("pi-Is-Hard-Float-ABI", SystemInfo.isHardFloatAbi()); } catch
+     * try { dato.put("piIsHardFloatABI", SystemInfo.isHardFloatAbi()); } catch
      * (Exception ex) { }
      */
     try {
-      dato.put("pi-Board-Type", SystemInfo.getBoardType().name());
+      dato.setPiBoardType(SystemInfo.getBoardType().name());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Total-Memory", SystemInfo.getMemoryTotal());
+      dato.setPiTotalMemory(SystemInfo.getMemoryTotal());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Used-Memory", SystemInfo.getMemoryUsed());
+      dato.setPiUsedMemory(SystemInfo.getMemoryUsed());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Free-Memory", SystemInfo.getMemoryFree());
+      dato.setPiFreeMemory(SystemInfo.getMemoryFree());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Shared-Memory", SystemInfo.getMemoryShared());
+      dato.setPiSharedMemory(SystemInfo.getMemoryShared());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Memory-Buffers", SystemInfo.getMemoryBuffers());
+      dato.setPiMemoryBuffers(SystemInfo.getMemoryBuffers());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Cached-Memory", SystemInfo.getMemoryCached());
+      dato.setPiCachedMemory(SystemInfo.getMemoryCached());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-SDRAM_C-Voltage", SystemInfo.getMemoryVoltageSDRam_C());
+      dato.setPiSDRAM_CVoltage(SystemInfo.getMemoryVoltageSDRam_C());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-SDRAM_I-Voltage", SystemInfo.getMemoryVoltageSDRam_I());
+      dato.setPiSDRAM_IVoltage(SystemInfo.getMemoryVoltageSDRam_I());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-SDRAM_P-Voltage", SystemInfo.getMemoryVoltageSDRam_P());
+      dato.setPiSDRAM_PVoltage(SystemInfo.getMemoryVoltageSDRam_P());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-OS-Name", SystemInfo.getOsName());
+      dato.setPiOSName(SystemInfo.getOsName());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-OS-Version", SystemInfo.getOsVersion());
+      dato.setPiOSVersion(SystemInfo.getOsVersion());
     } catch (Exception ex) {
     }
     try {
-      dato.put("OS-Architecture", SystemInfo.getOsArch());
+      dato.setoSArchitecture(SystemInfo.getOsArch());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-OS-Firmware-Build", SystemInfo.getOsFirmwareBuild());
+      dato.setPiOSFirmwareBuild(SystemInfo.getOsFirmwareBuild());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-OS-Firmware-Date", SystemInfo.getOsFirmwareDate());
+      dato.setPiOSFirmwareDate(SystemInfo.getOsFirmwareDate());
     } catch (Exception ex) {
     }
     // System.out.println("check3");
     try {
-      dato.put("pi-Java-Vendor", SystemInfo.getJavaVendor());
-      dato.put("pi-Java-Vendor-URL", SystemInfo.getJavaVendorUrl());
-      dato.put("pi-Java-Version", SystemInfo.getJavaVersion());
-      dato.put("pi-Java-VM", SystemInfo.getJavaVirtualMachine());
-      dato.put("pi-Java-Runtime", SystemInfo.getJavaRuntime());
-      dato.put("pi-Hostname-", NetworkInfo.getHostname());
+      dato.setPiJavaVendor(SystemInfo.getJavaVendor());
+      dato.setPiJavaVendorURL(SystemInfo.getJavaVendorUrl());
+      dato.setPiJavaVersion(SystemInfo.getJavaVersion());
+      dato.setPiJavaVM(SystemInfo.getJavaVirtualMachine());
+      dato.setPiJavaRuntime(SystemInfo.getJavaRuntime());
+      dato.setPiHostname(NetworkInfo.getHostname());
       int a = 0;
       int b = 0;
       int c = 0;
       for (String ipAddress : NetworkInfo.getIPAddresses()) {
-        dato.put("pi-IP-Addresses-" + String.valueOf(a), ipAddress);
+        dato.setPiIPAddresses(a, ipAddress);
         a++;
       }
       for (String fqdn : NetworkInfo.getFQDNs()) {
-        dato.put("pi-FQDN-" + String.valueOf(b), fqdn);
+        dato.setPiFQDN(b, fqdn);
         b++;
       }
       for (String nameserver : NetworkInfo.getNameservers()) {
-        dato.put("pi-Nameserver" + String.valueOf(c), nameserver);
+        dato.setPiNameserver(c, nameserver);
         c++;
       }
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-H264-Codec-Enabled", SystemInfo.getCodecH264Enabled());
+      dato.setPiH264CodecEnabled(SystemInfo.getCodecH264Enabled());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-MPG2-Codec-Enabled", SystemInfo.getCodecMPG2Enabled());
+      dato.setPiMPG2CodecEnabled(SystemInfo.getCodecMPG2Enabled());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-WVC1-Codec-Enabled", SystemInfo.getCodecWVC1Enabled());
+      dato.setPiWVC1CodecEnabled(SystemInfo.getCodecWVC1Enabled());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-ARM-Frequency", SystemInfo.getClockFrequencyArm());
+      dato.setPiARMFrequency(SystemInfo.getClockFrequencyArm());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-CORE-Frequency", SystemInfo.getClockFrequencyCore());
+      dato.setPiCOREFrequency(SystemInfo.getClockFrequencyCore());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-H264-Frequency", SystemInfo.getClockFrequencyH264());
+      dato.setPiH264Frequency(SystemInfo.getClockFrequencyH264());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-ISP-Frequency", SystemInfo.getClockFrequencyISP());
+      dato.setPiISPFrequency(SystemInfo.getClockFrequencyISP());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-V3D-Frequency", SystemInfo.getClockFrequencyV3D());
+      dato.setPiV3DFrequency(SystemInfo.getClockFrequencyV3D());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-UART-Frequency", SystemInfo.getClockFrequencyUART());
+      dato.setPiUARTFrequency(SystemInfo.getClockFrequencyUART());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-PWM-Frequency", SystemInfo.getClockFrequencyPWM());
+      dato.setPiPWMFrequency(SystemInfo.getClockFrequencyPWM());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-EMMC-Frequency", SystemInfo.getClockFrequencyEMMC());
+      dato.setPiEMMCFrequency(SystemInfo.getClockFrequencyEMMC());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-Pixel-Frequency", SystemInfo.getClockFrequencyPixel());
+      dato.setPiPixelFrequency(SystemInfo.getClockFrequencyPixel());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-VEC-Frequency", SystemInfo.getClockFrequencyVEC());
+      dato.setPiVECFrequency(SystemInfo.getClockFrequencyVEC());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-HDMI-Frequency", SystemInfo.getClockFrequencyHDMI());
+      dato.setPiHDMIFrequency(SystemInfo.getClockFrequencyHDMI());
     } catch (Exception ex) {
     }
     try {
-      dato.put("pi-DPI-Frequency", SystemInfo.getClockFrequencyDPI());
+      dato.setPiDPIFrequency(SystemInfo.getClockFrequencyDPI());
     } catch (Exception ex) {
     }
     return dato;

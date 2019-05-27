@@ -9,40 +9,32 @@ package org.ar4k.agent.tunnels.http.grpc.beacon;
 public enum StatusValue
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
-   * <code>UNKNOWN = 0;</code>
+   * <code>GOOD = 0;</code>
    */
-  UNKNOWN(0),
+  GOOD(0),
   /**
-   * <code>GOOD = 1;</code>
+   * <code>BAD = 1;</code>
    */
-  GOOD(1),
+  BAD(1),
   /**
-   * <code>BAD = 2;</code>
+   * <code>FAULT = 2;</code>
    */
-  BAD(2),
-  /**
-   * <code>FAULT = 3;</code>
-   */
-  FAULT(3),
+  FAULT(2),
   UNRECOGNIZED(-1),
   ;
 
   /**
-   * <code>UNKNOWN = 0;</code>
+   * <code>GOOD = 0;</code>
    */
-  public static final int UNKNOWN_VALUE = 0;
+  public static final int GOOD_VALUE = 0;
   /**
-   * <code>GOOD = 1;</code>
+   * <code>BAD = 1;</code>
    */
-  public static final int GOOD_VALUE = 1;
+  public static final int BAD_VALUE = 1;
   /**
-   * <code>BAD = 2;</code>
+   * <code>FAULT = 2;</code>
    */
-  public static final int BAD_VALUE = 2;
-  /**
-   * <code>FAULT = 3;</code>
-   */
-  public static final int FAULT_VALUE = 3;
+  public static final int FAULT_VALUE = 2;
 
 
   public final int getNumber() {
@@ -63,10 +55,9 @@ public enum StatusValue
 
   public static StatusValue forNumber(int value) {
     switch (value) {
-      case 0: return UNKNOWN;
-      case 1: return GOOD;
-      case 2: return BAD;
-      case 3: return FAULT;
+      case 0: return GOOD;
+      case 1: return BAD;
+      case 2: return FAULT;
       default: return null;
     }
   }

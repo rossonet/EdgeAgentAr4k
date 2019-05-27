@@ -38,7 +38,7 @@ public class Ar4kHealthIndicator extends AbstractHealthIndicator {
   @Override
   protected void doHealthCheck(Health.Builder builder) throws Exception {
     try {
-      Map<String, Object> rit = HardwareHelper.getSystemInfo();
+      Map<String, Object> rit = HardwareHelper.getSystemInfo().getHealthIndicator();
       for (String chiave : rit.keySet()) {
         builder.withDetail(chiave, rit.get(chiave));
       }

@@ -15,9 +15,7 @@
 package org.ar4k.agent.config;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.constraints.Size;
@@ -59,6 +57,12 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--description", description = "description")
   public String description = "Template configurazione Agente Ar4k";
 
+  @Parameter(names = "--beaconServer", description = "Beacon server for remote management")
+  public String beaconServer = null;
+
+  @Parameter(names = "--autoRegisterBeaconServer", description = "if the Beacon server is not present or is non reacheable, use the Beacon discovery protocol to find a end point")
+  public boolean autoRegisterBeaconServer = true;
+
   @Parameter(names = "--dataCenter", description = "datacenter in where the agent run")
   public String dataCenter = "ALONE";
 
@@ -89,11 +93,14 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--groups", description = "groups", variableArity = true)
   public Collection<String> groups = new HashSet<String>();
 
-  // @Parameter(names = "--data", description = "data")
-  public Map<String, Object> data = new HashMap<String, Object>();
-
   @Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
   public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
+
+  @Parameter(names = "--preScript", description = "pre script in format <LANGUAGE>:<SCRIPT>")
+  public String preScript = null;
+
+  @Parameter(names = "--postScript", description = "post script in format <LANGUAGE>:<SCRIPT>")
+  public String postScript = null;
 
   @Parameter(names = "--clockAfterFinishCallLambda", description = "time before exit after all operations in lambda mode")
   public long clockAfterFinishCallLambda = 1000 * 60 * 5;
