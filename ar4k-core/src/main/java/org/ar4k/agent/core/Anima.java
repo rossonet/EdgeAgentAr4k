@@ -34,8 +34,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
@@ -54,6 +52,7 @@ import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -96,7 +95,8 @@ import jdbm.RecordManagerFactory;
 @Scope("singleton")
 @EnableJms
 @WithStateMachine
-public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, Closeable {
+public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware,
+    InitializingBean, Closeable {
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
@@ -199,11 +199,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // gestione stati TODO: aggiungere pre script e post script
   // TODO: controllare se stateTarget viene veramente usato
   // config per arrivare allo stato desiderato
-  private AnimaStates stateTarget = null;
+  private AnimaStates stateTarget = AnimaStates.RUNNING;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
 
   // TODO implementare l'esecuzione dei pre e post script
-  
+
   // array keystore disponibili
   private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
 
@@ -276,6 +276,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @OnStateChanged()
   public synchronized void stateChanged() {
+    // System.out.println("** status changed to " + getState());
     statesBefore.put(new Instant(), getState());
   }
 
@@ -309,7 +310,21 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  @OnStateChanged(target = "STARTING")
+//TODO Ripristinare la gestione per stati
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+    setInitialAuth();
+    checkBeaconClient();
+    startingAgent();
+    animaStateMachine.sendEvent(AnimaEvents.BORN);
+    staminalAgent();
+    animaStateMachine.sendEvent(AnimaEvents.SETCONF);
+    configureAgent();
+    animaStateMachine.sendEvent(AnimaEvents.START);
+  }
+
+  // @OnStateChanged(target = "STARTING")
   public synchronized void startingAgent() {
     new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
     fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
@@ -323,16 +338,19 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-    setInitialAuth();
+    // System.out.println("started");
     bootStrapConfig = resolveBootstrapConfig();
-    animaStateMachine.sendEvent(AnimaEvents.BORN);
     init = true;
+    // animaStateMachine.sendEvent(AnimaEvents.BORN);
   }
 
-  @PostConstruct
   private void checkBeaconClient() {
     if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) {
-      connectToBeaconService(webRegistrationEndpoint);
+      try {
+        connectToBeaconService(webRegistrationEndpoint);
+      } catch (Exception e) {
+        System.out.print("Beacon connection not ok: " + e.getMessage());
+      }
     }
   }
 
@@ -367,6 +385,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // trova la configurazione appropriata per il bootstrap in funzione dei
   // parametri di configurazione
   private Ar4kConfig resolveBootstrapConfig() {
+    // System.out.println("searching file " + fileConfig != null ? fileConfig :
+    // "NaN");
     Ar4kConfig targetConfig = null;
     // se impostato il flag solo console esclude qualsiasi ragionamento
     if (consoleOnly == true) {
@@ -399,6 +419,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.equals("")) {
           try {
             String config = "";
+            // System.out.println("config path " + fileConfig.replaceFirst("^~",
+            // System.getProperty("user.home")));
             FileReader fileReader = new FileReader(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
@@ -417,20 +439,24 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return targetConfig;
   }
 
-  @OnStateChanged(target = "STAMINAL")
+  // @OnStateChanged(target = "STAMINAL")
   public synchronized void staminalAgent() {
+    // bootStrapConfig = resolveBootstrapConfig();
     // se non è presente una configurazione runtime e un target ed è presente quella
     // di boot, utilizzarla per l'avvio
+    // System.out.println("Config found T:" + targetConfig + " R:" + runtimeConfig +
+    // " B:" + bootStrapConfig);
     if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
       targetConfig = bootStrapConfig;
     }
     if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
-      runtimeConfig = targetConfig;
-      animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+      if (targetConfig != null)
+        runtimeConfig = targetConfig;
+      // animaStateMachine.sendEvent(AnimaEvents.SETCONF);
     }
   }
 
-  @OnStateChanged(target = "CONFIGURED")
+  // @OnStateChanged(target = "CONFIGURED")
   public synchronized void configureAgent() {
     if (runtimeConfig == null) {
       logger.warn("Required running state without conf");
@@ -440,6 +466,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       stateTarget = runtimeConfig.targetRunLevel;
     }
     runPots();
+    // runAgent();
+    // animaStateMachine.sendEvent(AnimaEvents.START);
   }
 
   @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
@@ -526,7 +554,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     Method method = potConfig.getClass().getMethod("instantiate");
     Ar4kComponent targetService;
-    targetService = (Ar4kComponent) method.invoke(null);
+    targetService = (Ar4kComponent) method.invoke(potConfig);
     targetService.setConfiguration((PotConfig) potConfig);
     components.add(targetService);
     targetService.init();
@@ -536,7 +564,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     Method method = confServizio.getClass().getMethod("instantiate");
     ServiceComponent targetService;
-    targetService = (ServiceComponent) method.invoke(null);
+    targetService = (ServiceComponent) method.invoke(confServizio);
     targetService.setConfiguration((ServiceConfig) confServizio);
     targetService.setAnima(this);
     components.add(targetService);
@@ -758,7 +786,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public String toString() {
     return "Anima [runtimeConfig=" + runtimeConfig + ", stateTarget=" + stateTarget + ", init=" + init + ", getState()="
         + getState() + ", isRunning()=" + isRunning() + ", getEnvironmentVariablesAsString()="
-        + getEnvironmentVariablesAsString() + ", getBeanName()=" + getBeanName() + ", hashCode()=" + hashCode() + "]";
+        + getEnvironmentVariablesAsString() + ", getBeanName()=" + getBeanName() + ", runtimeConfig="
+        + getRuntimeConfig().toString() + "]";
   }
 
   public String getAgentUniqueName() {

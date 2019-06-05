@@ -46,6 +46,7 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
     runningStates.add(AnimaStates.CONSOLE);
     runningStates.add(AnimaStates.LAMBDA);
     runningStates.add(AnimaStates.BOT);
+    runningStates.add(AnimaStates.RUNNING);
     baseStates = new HashSet<AnimaStates>();
     baseStates.add(AnimaStates.INIT);
     baseStates.add(AnimaStates.RUNNING);

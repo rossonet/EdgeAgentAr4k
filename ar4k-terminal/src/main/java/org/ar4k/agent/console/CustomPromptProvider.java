@@ -53,11 +53,12 @@ public class CustomPromptProvider implements PromptProvider {
     }
     AnsiColor colore = AnsiColor.BLUE;
     String testo = "AGENT:> ";
-    if (anima.getState() != null)
+    if (anima.getState() != null) {
       testo = anima.getState().toString() + ":> ";
-    if (wc != null) {
-      colore = wc.promptColor;
-      testo = wc.prompt + ":# ";
+      if (wc != null) {
+        colore = wc.promptColor;
+        testo = "-" + anima.getState().toString() + "- " + wc.prompt + ":# ";
+      }
     }
     AttributedString prompt = null;
     if (a != null) {

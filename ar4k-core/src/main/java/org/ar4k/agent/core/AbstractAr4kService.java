@@ -88,8 +88,8 @@ public abstract class AbstractAr4kService implements ServiceComponent {
       processo = new Thread(this);
       processo.setName(configuration.name);
       processo.start();
+      serviceStatus = configuration.targetRunLevel;
     }
-    serviceStatus = configuration.targetRunLevel;
   }
 
   @Override

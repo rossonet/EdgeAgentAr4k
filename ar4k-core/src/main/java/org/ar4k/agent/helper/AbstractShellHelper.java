@@ -137,7 +137,7 @@ public abstract class AbstractShellHelper {
 
   protected void setWorkingConfig(Ar4kConfig config) {
     Map<String, Ar4kConfig> actualConfig = ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
-    if (config != null && !actualConfig.containsValue(config))
+    if (config != null && actualConfig != null && !actualConfig.containsValue(config))
       addConfig(config);
     if (config != null)
       ((RpcConversation) anima.getRpc(getSessionId())).setWorkingConfig(config.getName());

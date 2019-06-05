@@ -174,4 +174,18 @@ public class Ar4kConfig implements ConfigSeed {
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new Ar4kConfigJsonAdapter();
   }
+
+  @Override
+  public String toString() {
+    return "Ar4kConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
+        + ", name=" + name + ", prompt=" + prompt + ", promptColor=" + promptColor + ", description=" + description
+        + ", beaconServer=" + beaconServer + ", autoRegisterBeaconServer=" + autoRegisterBeaconServer + ", dataCenter="
+        + dataCenter + ", version=" + version + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion
+        + ", author=" + author + ", project=" + project + ", license=" + license + ", tags=" + tags + ", contexts="
+        + contexts + ", groups=" + groups + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript
+        + ", postScript=" + postScript + ", clockAfterFinishCallLambda=" + clockAfterFinishCallLambda
+        + ", keyStorePassword=" + keyStorePassword + ", keyStorePath=" + keyStorePath + ", initializeKeystore="
+        + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath + ", routerType=" + routerType
+        + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
+  }
 }

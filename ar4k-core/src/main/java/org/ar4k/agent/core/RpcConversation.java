@@ -84,7 +84,7 @@ public class RpcConversation implements RpcExecutor {
   }
 
   public Map<String, Ar4kConfig> getConfigurations() {
-    return configurations.isEmpty() ? null : configurations;
+    return configurations;
   }
 
   public void setConfigurations(Map<String, Ar4kConfig> configurations) {

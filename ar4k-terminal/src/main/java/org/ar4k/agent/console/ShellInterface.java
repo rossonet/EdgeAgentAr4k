@@ -415,6 +415,12 @@ public class ShellInterface extends AbstractShellHelper {
     return anima.getState().name();
   }
 
+  @ShellMethod(value = "View the Anima Bean", group = "Agent Life Cycle Commands")
+  @ManagedOperation
+  public Anima getAnima() {
+    return anima;
+  }
+
   @ShellMethod(value = "Set a event to the agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
@@ -634,10 +640,6 @@ public class ShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {
     return UserSpaceByteSystemCommandHelper.runShellCommandLineByteToByte(shellCommand, endCharacter, logger, System.in,
         System.out);
-  }
-
-  public Anima getAnima() {
-    return anima;
   }
 
   public void setAnima(Anima anima) {
