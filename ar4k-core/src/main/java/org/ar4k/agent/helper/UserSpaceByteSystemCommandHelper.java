@@ -1,5 +1,7 @@
 package org.ar4k.agent.helper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,8 +10,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.slf4j.Logger;
+import org.springframework.boot.system.ApplicationHome;
 
 public class UserSpaceByteSystemCommandHelper {
 
@@ -170,6 +175,28 @@ public class UserSpaceByteSystemCommandHelper {
       return false;
     }
     return true;
+  }
+
+  public static void extractFromJar(String jarEntry, File outputFile) throws IOException {
+    ApplicationHome a = new ApplicationHome();
+    extractFromJar(jarEntry, a.getSource(), outputFile);
+  }
+
+  public static void extractFromJar(String jarEntry, File jar, File outputFile) throws IOException {
+    JarFile jarFile = new JarFile(jar);
+    JarEntry entry = jarFile.getJarEntry(jarEntry);
+    if (entry != null) {
+      InputStream jarEntryStream = jarFile.getInputStream(entry);
+      FileOutputStream outStream = new FileOutputStream(outputFile);
+      byte[] buffer = new byte[1024];
+      int bytes;
+      while ((bytes = jarEntryStream.read(buffer)) != -1) {
+        outStream.write(buffer, 0, bytes);
+      }
+      outStream.close();
+      jarEntryStream.close();
+      jarFile.close();
+    }
   }
 
 }

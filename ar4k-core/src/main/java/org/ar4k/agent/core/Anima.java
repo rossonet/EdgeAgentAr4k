@@ -313,15 +313,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 //TODO Ripristinare la gestione per stati
   @Override
   public void afterPropertiesSet() throws Exception {
-    animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
-    setInitialAuth();
+    //animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+    //setInitialAuth();
     checkBeaconClient();
-    startingAgent();
-    animaStateMachine.sendEvent(AnimaEvents.BORN);
-    staminalAgent();
-    animaStateMachine.sendEvent(AnimaEvents.SETCONF);
-    configureAgent();
-    animaStateMachine.sendEvent(AnimaEvents.START);
+    //startingAgent();
+    //animaStateMachine.sendEvent(AnimaEvents.BORN);
+    //staminalAgent();
+    //animaStateMachine.sendEvent(AnimaEvents.SETCONF);
+    //configureAgent();
+    //animaStateMachine.sendEvent(AnimaEvents.START);
   }
 
   // @OnStateChanged(target = "STARTING")
