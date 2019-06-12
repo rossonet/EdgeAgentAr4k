@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
@@ -48,7 +50,6 @@ import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -71,12 +72,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.annotation.OnStateChanged;
-import org.springframework.statemachine.annotation.OnStateMachineStart;
-import org.springframework.statemachine.annotation.OnTransition;
-import org.springframework.statemachine.annotation.WithStateMachine;
-//import org.springframework.stereotype.Component;
-import org.springframework.statemachine.config.EnableWithStateMachine;
 import org.springframework.stereotype.Component;
 
 import io.grpc.ConnectivityState;
@@ -95,10 +90,10 @@ import jdbm.RecordManagerFactory;
 @EnableMBeanExport
 @Scope("singleton")
 @EnableJms
-@EnableWithStateMachine
-@WithStateMachine
-public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware,
-    InitializingBean, Closeable {
+// Non funzionano le annotazioni sotto. Nel primo stati non chiamano il metodo. Bisogna mtterci un Thread.sleep
+//@EnableWithStateMachine
+//@WithStateMachine
+public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, Closeable {
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
@@ -256,12 +251,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     animaStateMachine = null;
   }
 
-  @OnStateChanged()
+  // workaround Spring State Machine
+  // @OnStateChanged()
   public synchronized void stateChanged() {
+    logger.info("State change in ANIMA to " + getState());
     statesBefore.put(new Instant(), getState());
   }
 
-  @OnTransition(target = "KILLED")
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "KILLED")
   public synchronized void finalizeAgent() {
     for (Ar4kComponent targetService : components) {
       targetService.kill();
@@ -293,27 +291,23 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  // @SuppressWarnings("unchecked")
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    // avvio automatico dopo il caricamento dei beans
-    // animaStateMachine = (StateMachine<AnimaStates, AnimaEvents>)
-    // getApplicationContext().getBean("stateMachine");
-    // animaStateMachine.start();
-    // initAgent();
+  @PostConstruct
+  public void afterSpringInit() throws Exception {
+    animaStateMachine.start();
   }
 
-  @OnStateMachineStart
+  // workaround Spring State Machine
+  // @OnStateMachineStart
   public synchronized void initAgent() {
-    logger.error("First state " + consoleOnly);
+    // System.out.println("First state " + consoleOnly);
     if (!consoleOnly) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
     }
   }
 
-  @OnTransition(target = "STAMINAL")
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "STAMINAL")
   public synchronized void startingAgent() {
-    logger.error("Fire state STAMINAL");
     new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
     fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
     try {
@@ -337,6 +331,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         runtimeConfig = targetConfig;
     }
     if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
+      System.out.println("Starting with config: " + runtimeConfig.toString());
       animaStateMachine.sendEvent(AnimaEvents.SETCONF);
     }
   }
@@ -436,7 +431,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return targetConfig;
   }
 
-  @OnTransition(target = "CONFIGURED")
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "CONFIGURED")
   public synchronized void configureAgent() {
     if (runtimeConfig == null) {
       logger.warn("Required running state without conf");
@@ -449,8 +445,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       animaStateMachine.sendEvent(AnimaEvents.START);
   }
 
-  @OnTransition(target = "RUNNING")
-  public void runServices() {
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "RUNNING")
+  public synchronized void runServices() {
     for (PotConfig confServizio : runtimeConfig.pots) {
       if (confServizio instanceof ServiceConfig) {
         try {
@@ -463,8 +460,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  @OnTransition(target = "RUNNING")
-  public void runPots() {
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "RUNNING")
+  public synchronized void runPots() {
     for (PotConfig confVaso : runtimeConfig.pots) {
       try {
         runSeedPot(confVaso);

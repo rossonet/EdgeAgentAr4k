@@ -84,7 +84,8 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
+    } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"

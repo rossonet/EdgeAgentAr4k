@@ -8,12 +8,12 @@ import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
-import org.springframework.statemachine.config.EnableWithStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -35,9 +35,12 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
   private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
+  @Autowired
+  Anima anima;
+
   @Override
   public void configure(StateMachineConfigurationConfigurer<AnimaStates, AnimaEvents> config) throws Exception {
-    config.withConfiguration().autoStartup(true).listener(listener());
+    config.withConfiguration().autoStartup(false).listener(listener());
   }
 
   @Override
@@ -51,18 +54,18 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
     transitions.withExternal().source(AnimaStates.INIT).target(AnimaStates.STAMINAL).event(AnimaEvents.BOOTSTRAP).and()
         .withExternal().source(AnimaStates.INIT).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and().withExternal()
         .source(AnimaStates.INIT).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal()
-        .source(AnimaStates.STAMINAL).target(AnimaStates.CONFIGURED).event(AnimaEvents.SETCONF).and().withExternal()
-        .source(AnimaStates.STAMINAL).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and().withExternal()
-        .source(AnimaStates.STAMINAL).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal()
-        .source(AnimaStates.CONFIGURED).target(AnimaStates.RUNNING).event(AnimaEvents.START).and().withExternal()
-        .source(AnimaStates.CONFIGURED).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and().withExternal()
-        .source(AnimaStates.CONFIGURED).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal()
-        .source(AnimaStates.RUNNING).target(AnimaStates.STASIS).event(AnimaEvents.PAUSE).and().withExternal()
-        .source(AnimaStates.RUNNING).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and().withExternal()
-        .source(AnimaStates.RUNNING).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal()
-        .source(AnimaStates.STASIS).target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and().withExternal()
-        .source(AnimaStates.STASIS).target(AnimaStates.RUNNING).event(AnimaEvents.START).and().withExternal()
-        .source(AnimaStates.STASIS).target(AnimaStates.FAULTED).event(AnimaEvents.STOP);
+        .source(AnimaStates.STAMINAL).target(AnimaStates.CONFIGURED).event(AnimaEvents.SETCONF).guard(guardConfig())
+        .and().withExternal().source(AnimaStates.STAMINAL).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
+        .withExternal().source(AnimaStates.STAMINAL).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
+        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
+        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.STASIS).event(AnimaEvents.PAUSE).and()
+        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
+        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and()
+        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
+        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.FAULTED).event(AnimaEvents.STOP);
   }
 
   @Bean
@@ -70,28 +73,55 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
     return new StateMachineListenerAdapter<AnimaStates, AnimaEvents>() {
       @Override
       public void stateChanged(State<AnimaStates, AnimaEvents> from, State<AnimaStates, AnimaEvents> to) {
-        logger.info("State change to " + to.getId());
+        // workaround Spring State Machine
+        if (anima.getState().equals(AnimaStates.INIT)) {
+          anima.initAgent();
+        }
+        if (anima.getState().equals(AnimaStates.STAMINAL)) {
+          anima.startingAgent();
+        }
+        if (anima.getState().equals(AnimaStates.KILLED)) {
+          anima.finalizeAgent();
+        }
+        if (anima.getState().equals(AnimaStates.CONFIGURED)) {
+          anima.configureAgent();
+        }
+        if (anima.getState().equals(AnimaStates.RUNNING)) {
+          anima.runPots();
+          anima.runServices();
+        }
+        // logger.info("State change to " + to.getId());
+        anima.stateChanged();
+        // System.out.println("State change to " + to.getId());
+      }
+    };
+  }
+
+  @Bean
+  public Guard<AnimaStates, AnimaEvents> guardConfig() {
+    return new Guard<AnimaStates, AnimaEvents>() {
+
+      @Override
+      public boolean evaluate(StateContext<AnimaStates, AnimaEvents> context) {
+        if (context.getEvent().equals(AnimaEvents.SETCONF)) {
+          if (anima.getRuntimeConfig() != null) {
+            return true;
+          } else {
+            logger
+                .error("To change the state to CONFIGURED is needed a configuration. anima.getRuntimeConfig() is null");
+            return false;
+          }
+        } else {
+          return true;
+        }
       }
     };
   }
 
   @Bean
   public Action<AnimaStates, AnimaEvents> errorAction() {
+    logger.warn("Error in change action");
     return ctx -> System.out.println("Error in change action " + ctx.getSource().getId() + ctx.getException());
-  }
-
-  @Bean
-  public Guard<AnimaStates, AnimaEvents> guardStartType() {
-    return new Guard<AnimaStates, AnimaEvents>() {
-      @Override
-      public boolean evaluate(StateContext<AnimaStates, AnimaEvents> context) {
-        boolean ritorno = false;
-        logger.info("Evaluate change state: " + context.getEvent() + " on " + context.getSource().getId());
-        ritorno = true;
-        return ritorno;
-      }
-    };
-
   }
 
   public Set<AnimaStates> getBaseStates() {
