@@ -16,6 +16,8 @@ package org.ar4k.agent.tunnels.ssh.client;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +32,9 @@ import com.jcraft.jsch.Session;
  *
  */
 public abstract class AbstractSshTunnel extends AbstractAr4kService {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(AbstractSshTunnel.class.toString());
 
   private AbstractSshConfig configuration = null;
 
@@ -48,7 +53,7 @@ public abstract class AbstractSshTunnel extends AbstractAr4kService {
       session.setUserInfo(ui);
       session.connect();
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return session;
   }

@@ -6,9 +6,14 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 import org.ar4k.agent.helper.NetworkHelper;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.process.AgentProcess;
 
 public class XpraSessionProcess implements AgentProcess {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(XpraSessionProcess.class.toString());
 
   private Process xpraProcess = null;
   private int tcpPort = 0;
@@ -24,7 +29,7 @@ public class XpraSessionProcess implements AgentProcess {
     try {
       xpraProcess = builder.start();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -76,7 +81,7 @@ public class XpraSessionProcess implements AgentProcess {
       if (reader.ready())
         reply = reader.lines().collect(Collectors.joining());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return reply;
   }
@@ -89,7 +94,7 @@ public class XpraSessionProcess implements AgentProcess {
       if (reader.ready())
         reply = reader.lines().collect(Collectors.joining());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return reply;
   }

@@ -40,6 +40,7 @@ import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
+import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
@@ -47,7 +48,6 @@ import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 //import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
-import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +94,8 @@ import jdbm.RecordManagerFactory;
 //@EnableWithStateMachine
 //@WithStateMachine
 public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, Closeable {
-  private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
@@ -109,7 +110,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     try {
       result = InetAddress.getLocalHost().getHostName();
     } catch (UnknownHostException e) {
-      System.out.println("no hostname found...");
+      logger.info("no hostname found...");
       result = "";
     }
     result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
@@ -319,6 +320,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
     } catch (IOException e) {
       logger.warn(e.getMessage());
+      logger.logException(e);
     }
     bootStrapConfig = resolveBootstrapConfig();
     setInitialAuth();
@@ -331,7 +333,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         runtimeConfig = targetConfig;
     }
     if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
-      System.out.println("Starting with config: " + runtimeConfig.toString());
+      logger.info("Starting with config: " + runtimeConfig.toString());
       animaStateMachine.sendEvent(AnimaEvents.SETCONF);
     }
   }
@@ -341,7 +343,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       try {
         connectToBeaconService(webRegistrationEndpoint, beaconDiscoveryPort, beaconDiscoveryFilterString);
       } catch (Exception e) {
-        System.out.print("Beacon connection not ok: " + e.getMessage());
+        logger.warn("Beacon connection not ok: " + e.getMessage());
+        logger.logException(e);
       }
     }
   }
@@ -370,6 +373,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
     } catch (IOException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
+      logger.logException(e);
     }
     return beaconClient;
   }
@@ -406,6 +410,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
           } catch (ClassNotFoundException | IOException e) {
             if (logger != null)
               logger.warn(e.getMessage());
+            logger.logException(e);
           }
         }
         if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.equals("")) {
@@ -423,7 +428,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
             targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
           } catch (IOException | ClassNotFoundException e) {
             if (logger != null)
-              logger.warn(e.getMessage());
+              logger.logException(e);
+            logger.warn(e.getMessage());
           }
         }
       }

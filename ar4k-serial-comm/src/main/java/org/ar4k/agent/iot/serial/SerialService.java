@@ -27,6 +27,8 @@ import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.gson.JsonElement;
@@ -37,6 +39,9 @@ import com.google.gson.JsonElement;
  *         Servizio di connessione seriale.
  */
 public class SerialService extends AbstractAr4kService {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(SerialService.class.toString());
 
   // porta serial target
   private SerialPort comPort = null;
@@ -87,7 +92,7 @@ public class SerialService extends AbstractAr4kService {
         // macchina.
         // comPort = SerialPort.getCommPorts()[0];
       } catch (Exception ee) {
-        System.out.println(ee.getMessage());
+        logger.logException(ee);
       }
       // configura baudrate e bit controllo
       comPort.setBaudRate(Integer.valueOf(configuration.baudRate.name().replace("bs", "")));
@@ -119,7 +124,7 @@ public class SerialService extends AbstractAr4kService {
           // anima.camelContext.addRoutes(costruttore);
           // rottaWrite = costruttore.getIdRotta();
         } catch (Exception e) {
-          e.printStackTrace();
+          logger.logException(e);
         }
         // anima.registeredCallback.put(rottaWrite, this);
       }
@@ -160,7 +165,7 @@ public class SerialService extends AbstractAr4kService {
          */
         rottaWrite = null;
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.logException(e);
       }
     }
     comPort.closePort();
@@ -179,7 +184,7 @@ public class SerialService extends AbstractAr4kService {
       comPort.closePort();
       comPort = null;
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 

@@ -52,6 +52,8 @@ import java.util.regex.Pattern;
 import javax.security.auth.x500.X500Principal;
 
 import org.ar4k.agent.helper.NetworkHelper;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -78,6 +80,9 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
  */
 
 public class KeystoreLoader {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(KeystoreLoader.class.toString());
 
   public static final String demoKeystore = "test.keystore";
   private static final String demoPassword = "secA4.rk!8";
@@ -171,7 +176,7 @@ public class KeystoreLoader {
       serverKeyStore = null;
     } catch (Exception df) {
       ritorno = false;
-      df.printStackTrace();
+      logger.logException(df);
     }
     return ritorno;
   }

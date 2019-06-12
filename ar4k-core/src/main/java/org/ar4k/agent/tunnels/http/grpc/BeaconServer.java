@@ -13,14 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandType;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.DataServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Empty;
@@ -30,7 +32,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.PotServiceV1Grpc;
-import org.ar4k.agent.tunnels.http.grpc.beacon.DataServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
@@ -43,7 +44,9 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 public class BeaconServer implements Runnable {
-  private static final Logger logger = Logger.getLogger(BeaconServer.class.getName());
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(BeaconServer.class.toString());
   private static final long defaultTimeOut = 10000L;
   private static final long waitReplyLoopWaitTime = 300L;
 
@@ -196,7 +199,7 @@ public class BeaconServer implements Runnable {
         }
         responseObserver.onCompleted();
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.logException(e);
       }
     }
 
@@ -226,7 +229,7 @@ public class BeaconServer implements Runnable {
         }
         responseObserver.onCompleted();
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.logException(e);
       }
     }
 
@@ -255,7 +258,7 @@ public class BeaconServer implements Runnable {
         }
         responseObserver.onCompleted();
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.logException(e);
       }
     }
   }
@@ -276,7 +279,7 @@ public class BeaconServer implements Runnable {
         Thread.sleep(waitReplyLoopWaitTime);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return ret;
   }
@@ -314,6 +317,7 @@ public class BeaconServer implements Runnable {
         Thread.sleep((long) defaultPollTime);
       } catch (InterruptedException e) {
         logger.info("in Beacon server loop error " + e.getMessage());
+        logger.logException(e);
       }
     }
   }
@@ -330,9 +334,10 @@ public class BeaconServer implements Runnable {
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
             InetAddress.getByName(broadcastAddress), discoveryPort);
         socketFlashBeacon.send(sendPacket);
-        logger.fine(getClass().getName() + ">>> Request packet sent to: " + broadcastAddress);
+        logger.debug(getClass().getName() + ">>> Request packet sent to: " + broadcastAddress);
       } catch (Exception e) {
-        logger.warning("Error sending flash beacon " + e.getMessage());
+        logger.logException(e);
+        logger.warn("Error sending flash beacon " + e.getMessage());
       }
       Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
       while (interfaces.hasMoreElements()) {
@@ -349,14 +354,16 @@ public class BeaconServer implements Runnable {
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, discoveryPort);
             socketFlashBeacon.send(sendPacket);
           } catch (Exception e) {
-            logger.warning("Error sending flash beacon on " + broadcast.getHostName() + " -> " + e.getMessage());
+            logger.logException(e);
+            logger.warn("Error sending flash beacon on " + broadcast.getHostName() + " -> " + e.getMessage());
           }
-          logger.fine(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress()
+          logger.debug(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress()
               + "; Interface: " + networkInterface.getDisplayName());
         }
       }
     } catch (IOException ex) {
-      logger.warning("Exception in Beacon flash " + ex.getMessage());
+      logger.logException(ex);
+      logger.warn("Exception in Beacon flash " + ex.getMessage());
     }
   }
 

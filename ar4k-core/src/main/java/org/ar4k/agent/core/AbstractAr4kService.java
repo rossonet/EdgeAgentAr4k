@@ -17,8 +17,8 @@ package org.ar4k.agent.core;
 import javax.annotation.PostConstruct;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.slf4j.Logger;
 
 /**
  * Classe astratta da implementare per i servizi gestiti dalla piattaforma Ar4k.
@@ -29,8 +29,8 @@ import org.slf4j.Logger;
  */
 public abstract class AbstractAr4kService implements ServiceComponent {
 
-  private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Anima.class.toString());
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(AbstractAr4kService.class.toString());
 
   // stati servizi
   public static enum ServiceStates {
@@ -79,6 +79,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
       Thread.sleep((long) configuration.clockRunnableClass);
     } catch (InterruptedException e) {
       logger.warn(e.getMessage());
+      logger.logException(e);
     }
   }
 

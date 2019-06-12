@@ -130,8 +130,7 @@ public class DockerInterface extends AbstractShellHelper {
     try {
       dockerClient.close();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
     dockerClient = null;
   }
@@ -157,8 +156,7 @@ public class DockerInterface extends AbstractShellHelper {
     try {
       dockerClient.logContainerCmd(containerId).withStdOut(true).withStdErr(true).exec(callback).awaitCompletion();
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -213,8 +211,7 @@ public class DockerInterface extends AbstractShellHelper {
     try {
       dockerClient.pullImageCmd(containerImage).exec(callback).awaitCompletion();
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -347,7 +344,7 @@ public class DockerInterface extends AbstractShellHelper {
           .exec(new ExecStartResultCallback(outputStream, System.err)).awaitCompletion();
       output = outputStream.toString();// IOUtils.toString(outputStream, Charset.defaultCharset());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return output;
   }

@@ -96,8 +96,7 @@ public class KubernetesInterface extends AbstractShellHelper {
       pc = new ProtoClient(client);
       coreApi = new CoreV1Api(client);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -134,8 +133,7 @@ public class KubernetesInterface extends AbstractShellHelper {
       pc = new ProtoClient(client);
       coreApi = new CoreV1Api(client);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -149,8 +147,7 @@ public class KubernetesInterface extends AbstractShellHelper {
       pc = new ProtoClient(client);
       coreApi = new CoreV1Api(client);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -170,8 +167,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listNode(true, "true", null, null, null, null, null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -183,8 +179,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listComponentStatus(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -196,8 +191,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listConfigMapForAllNamespaces(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -209,8 +203,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listConfigMapForAllNamespaces(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -222,8 +215,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listPodForAllNamespaces(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -235,8 +227,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listServiceForAllNamespaces(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -248,8 +239,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listLimitRangeForAllNamespaces(null, null, true, null, null, "true", null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
@@ -261,13 +251,12 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       return coreApi.listPersistentVolume(true, "true", null, null, null, null, null, null, null);
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return null;
     }
   }
-  
-  //TODO register e list services
+
+  // TODO register e list services
 
   @ShellMethod(value = "create a new pod in the K8s cluster connected", group = "Kubernetes Commands")
   @ManagedOperation
@@ -308,8 +297,7 @@ public class KubernetesInterface extends AbstractShellHelper {
       V1Pod pod = coreApi.createNamespacedPod(namespace, podBody, true, "true", "true");
       return pod.toString();
     } catch (ApiException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
       return e.getMessage();
     }
   }

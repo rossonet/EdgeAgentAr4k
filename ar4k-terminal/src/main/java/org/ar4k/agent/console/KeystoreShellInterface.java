@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.valueProvider.KeystoreValuesProvider;
+import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -51,7 +52,7 @@ import com.google.gson.GsonBuilder;
 @ManagedResource(objectName = "bean:name=keytoolsInterface", description = "Ar4k Agent keytools interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "keytoolsInterface")
 @RestController
 @RequestMapping("/keytoolsInterface")
-public class KeystoreShellInterface {
+public class KeystoreShellInterface extends AbstractShellHelper {
 
   @Autowired
   ApplicationContext applicationContext;
@@ -116,7 +117,7 @@ public class KeystoreShellInterface {
         }
       }
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return ok;
   }

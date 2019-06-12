@@ -89,7 +89,7 @@ public class SshdShellInterface extends AbstractShellHelper {
     try {
       server.start();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -107,7 +107,7 @@ public class SshdShellInterface extends AbstractShellHelper {
     try {
       server.stop();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     server = null;
   }

@@ -15,11 +15,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
@@ -54,7 +55,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 public class BeaconClient implements Runnable {
-  private static final Logger logger = Logger.getLogger(BeaconClient.class.getName());
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(BeaconClient.class.toString());
   public static final CharSequence COMPLETION_CHAR = "?";
   public static final int discoveryPacketMaxSize = 1024;
   private long defaultPollingFreq = 500L;
@@ -103,8 +106,7 @@ public class BeaconClient implements Runnable {
     try {
       registerStatus = registerToBeacon(reservedUniqueName);
     } catch (IOException | InterruptedException | ParseException | NullPointerException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -163,7 +165,8 @@ public class BeaconClient implements Runnable {
           .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
       result = reply.getResult().getStatus().name();
     } catch (io.grpc.StatusRuntimeException e) {
-      logger.warning("Beacon server is " + e.getMessage());
+      logger.warn("Beacon server is " + e.getMessage());
+      logger.logException(e);
     }
     return result;
   }
@@ -189,7 +192,7 @@ public class BeaconClient implements Runnable {
         }
       } catch (Exception e) {
         logger.info("in Beacon client loop " + e.getMessage());
-        e.printStackTrace();
+        logger.logException(e);
       }
     }
   }
@@ -225,7 +228,8 @@ public class BeaconClient implements Runnable {
     try {
       elaborateRequestFromBus(blockingStub.polling(me));
     } catch (io.grpc.StatusRuntimeException e) {
-      logger.finest("GRPC POLL FAILED " + e.getMessage());
+      logger.debug("GRPC POLL FAILED " + e.getMessage());
+      logger.logException(e);
     }
   }
 
@@ -305,7 +309,8 @@ public class BeaconClient implements Runnable {
           .setHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
       blockingStub.sendHealth(hr);
     } catch (IOException | InterruptedException | ParseException | io.grpc.StatusRuntimeException e) {
-      logger.warning("sendHardwareInfo -> " + e.getMessage());
+      logger.warn("sendHardwareInfo -> " + e.getMessage());
+      logger.logException(e);
     }
   }
 

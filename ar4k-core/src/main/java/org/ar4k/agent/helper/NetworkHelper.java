@@ -26,9 +26,14 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.LoggerFactory;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 public class NetworkHelper {
+  
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(NetworkHelper.class.toString());
 
   private NetworkHelper() {
     System.out.println("Just for static usage");
@@ -41,6 +46,7 @@ public class NetworkHelper {
     try {
       return InetAddress.getLocalHost().getHostName();
     } catch (UnknownHostException e) {
+      logger.logException(e);
       return "localhost";
     }
   }
@@ -72,8 +78,7 @@ public class NetworkHelper {
             });
           }
         } catch (SocketException e) {
-          LoggerFactory.getLogger(NetworkHelper.class).warn("Failed to NetworkInterfaces for bind address: {}", address,
-              e);
+          logger.logException(e);
         }
       } else {
         hostnames.add(inetAddress.getHostName());
@@ -81,7 +86,7 @@ public class NetworkHelper {
         hostnames.add(inetAddress.getCanonicalHostName());
       }
     } catch (UnknownHostException e) {
-      LoggerFactory.getLogger(NetworkHelper.class).warn("Failed to get InetAddress for bind address: {}", address, e);
+      logger.logException(e);
     }
     return hostnames;
   }
@@ -94,6 +99,7 @@ public class NetworkHelper {
       socket.close();
       return port;
     } catch (IOException ex) {
+      logger.logException(ex);
       return defaultPort;
     }
   }
@@ -104,12 +110,14 @@ public class NetworkHelper {
     try {
       socket = new ServerSocket(port);
     } catch (IOException e) {
+      logger.logException(e);
       portTaken = true;
     } finally {
       if (socket != null)
         try {
           socket.close();
         } catch (IOException e) {
+          logger.logException(e);
         }
     }
     return !portTaken;

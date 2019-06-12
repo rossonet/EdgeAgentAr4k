@@ -20,6 +20,8 @@ import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +34,9 @@ import com.google.gson.JsonElement;
  *
  */
 public class BeaconService extends AbstractAr4kService {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(Anima.class.toString());
 
   // iniettata vedi set/get
   private BeaconServiceConfig configuration = null;
@@ -83,7 +88,7 @@ public class BeaconService extends AbstractAr4kService {
           configuration.stringDiscovery);
       beaconServer.start();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
 
   }

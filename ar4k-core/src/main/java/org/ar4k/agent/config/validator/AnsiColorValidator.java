@@ -43,14 +43,3 @@ public class AnsiColorValidator implements IParameterValidator {
     }
   }
 }
-/*
- * class AnsiColorProvider extends ValueProviderSupport {
- * 
- * private final static String[] VALUES =
- * Stream.of(AnsiColor.values()).map(AnsiColor::name).toArray(String[]::new);
- * 
- * @Override public List<CompletionProposal> complete(MethodParameter parameter,
- * CompletionContext completionContext, String[] hints) { return
- * Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList(
- * )); } }
- */

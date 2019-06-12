@@ -12,7 +12,13 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+
 public class ScriptEngineManagerProcess implements AgentProcess {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(ScriptEngineManagerProcess.class.toString());
 
   private String label = null;
   private ScriptEngine engine = null;
@@ -49,6 +55,7 @@ public class ScriptEngineManagerProcess implements AgentProcess {
       completed = true;
     } catch (ScriptException e) {
       error = e;
+      logger.logException(e);
     }
   }
 

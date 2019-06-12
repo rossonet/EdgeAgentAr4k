@@ -63,7 +63,7 @@ public class CustomPromptProvider implements PromptProvider {
     AttributedString prompt = null;
     if (a != null) {
       prompt = new AttributedString(
-          AnsiOutput.toString(colore, "[", AnsiColor.BLACK, a.getName(), colore, "] " + testo, AnsiColor.DEFAULT));
+          AnsiOutput.toString(colore, "[", AnsiColor.YELLOW, a.getName(), colore, "] " + testo, AnsiColor.DEFAULT));
     } else {
       prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
     }

@@ -61,8 +61,6 @@ import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.rpc.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
@@ -106,8 +104,6 @@ public class ShellInterface extends AbstractShellHelper {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-
-  private static final Logger logger = LoggerFactory.getLogger(ShellInterface.class);
 
   @ShellMethod(value = "Login in the agent", group = "Authentication Commands")
   @ManagedOperation
@@ -356,6 +352,7 @@ public class ShellInterface extends AbstractShellHelper {
               a.getClass().getName(), "\n");
         }
       } catch (Exception ee) {
+        logger.logException(ee);
       }
     }
     return risposta;
@@ -452,7 +449,7 @@ public class ShellInterface extends AbstractShellHelper {
     try {
       Thread.sleep(3000L);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     setAr4kAgentStatus(AnimaEvents.START);
   }
@@ -524,7 +521,7 @@ public class ShellInterface extends AbstractShellHelper {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       return gson.toJson(HardwareHelper.getSystemInfo());
     } catch (Exception ae) {
-      ae.printStackTrace();
+      logger.logException(ae);
       return null;
     }
   }
@@ -613,7 +610,7 @@ public class ShellInterface extends AbstractShellHelper {
         }
       }
     } catch (SocketException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return result;
   }
@@ -626,7 +623,7 @@ public class ShellInterface extends AbstractShellHelper {
       try {
         listProcesses().get(label).close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.logException(e);
       }
       listProcesses().remove(label);
     }

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.slf4j.Logger;
+import org.ar4k.agent.logger.Ar4kLogger;
 import org.springframework.boot.system.ApplicationHome;
 
 public class UserSpaceByteSystemCommandHelper {
@@ -21,7 +21,7 @@ public class UserSpaceByteSystemCommandHelper {
   private UserSpaceByteSystemCommandHelper() {
   }
 
-  public static String runShellCommandLineByteToByte(String shellCommand, String endCharacter, Logger logger,
+  public static String runShellCommandLineByteToByte(String shellCommand, String endCharacter, Ar4kLogger logger,
       InputStream input, OutputStream output) {
     Integer errori = 0;
     boolean running = true;
@@ -30,7 +30,7 @@ public class UserSpaceByteSystemCommandHelper {
     try {
       pr = rt.exec(shellCommand);
     } catch (IOException e1) {
-      e1.printStackTrace();
+      logger.logException(e1);
     }
     InputStream is = pr.getInputStream();
     OutputStream os = pr.getOutputStream();
@@ -93,6 +93,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     if (rerr != null) {
@@ -103,6 +104,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     if (rout != null) {
@@ -113,6 +115,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     if (es != null) {
@@ -123,6 +126,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     if (is != null) {
@@ -133,6 +137,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     if (os != null) {
@@ -143,6 +148,7 @@ public class UserSpaceByteSystemCommandHelper {
       } catch (IOException e) {
         errori++;
         logger.warn(e.getMessage());
+        logger.logException(e);
       }
     }
     try {
@@ -151,15 +157,9 @@ public class UserSpaceByteSystemCommandHelper {
     } catch (IOException e1) {
       errori++;
       logger.warn(e1.getMessage());
+      logger.logException(e1);
     }
-    // System.out.println("shell closed");
-    /*
-     * // throw new Ar4kException("running shell terminated"); if (si != null) { try
-     * { si.close(); si = null; System.out.println("reader input closed"); } catch
-     * (IOException e) { errori++; logger.warn(e.getMessage()); } } if (so != null)
-     * { try { so.close(); so = null; System.out.println("writer output closed"); }
-     * catch (IOException e) { errori++; logger.warn(e.getMessage()); } }
-     */
+
     return "session terminated with " + String.valueOf(errori) + " errors";
   }
 

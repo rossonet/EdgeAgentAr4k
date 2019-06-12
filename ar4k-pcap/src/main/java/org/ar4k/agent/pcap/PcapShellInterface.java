@@ -104,7 +104,7 @@ public class PcapShellInterface extends AbstractShellHelper {
         rit.add(a.getName());
       }
     } catch (PcapNativeException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
     return rit;
   }
@@ -130,6 +130,7 @@ public class PcapShellInterface extends AbstractShellHelper {
         try {
           packet = handle.getNextPacketEx();
         } catch (Exception a) {
+          logger.logException(a);
           continua = false;
         }
         pa.elaboratePacket(packet);
@@ -137,7 +138,7 @@ public class PcapShellInterface extends AbstractShellHelper {
       handle.close();
     } catch (PcapNativeException | IOException | ClassNotFoundException | NoSuchMethodException | SecurityException
         | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -155,7 +156,7 @@ public class PcapShellInterface extends AbstractShellHelper {
           try {
             pa.elaboratePacket(packet);
           } catch (IOException e) {
-            e.printStackTrace();
+            logger.logException(e);
           }
         }
       };
@@ -172,7 +173,7 @@ public class PcapShellInterface extends AbstractShellHelper {
         | InvocationTargetException e) {
       if (handle != null)
         handle.close();
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 
@@ -192,6 +193,7 @@ public class PcapShellInterface extends AbstractShellHelper {
         try {
           packet = handleFile.getNextPacketEx();
         } catch (Exception a) {
+          logger.logException(a);
           continua = false;
         }
         if (packet.contains(IpPacket.class)) {
@@ -222,7 +224,7 @@ public class PcapShellInterface extends AbstractShellHelper {
       }
       handleFile.close();
     } catch (PcapNativeException | NotOpenException | InterruptedException e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 

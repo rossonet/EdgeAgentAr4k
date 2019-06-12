@@ -17,6 +17,8 @@ package org.ar4k.agent.config.validator;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
@@ -29,6 +31,9 @@ import com.beust.jcommander.ParameterException;
  *         selezionata.
  */
 public class PotValidator implements IParameterValidator {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(PotValidator.class.toString());
 
   @Override
   public void validate(String name, String value) throws ParameterException {
@@ -43,6 +48,7 @@ public class PotValidator implements IParameterValidator {
         }
         r.append(b.getName() + " ");
       } catch (Exception ee) {
+        logger.logException(ee);
       }
     }
     if (ok == false) {

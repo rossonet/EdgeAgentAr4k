@@ -31,6 +31,8 @@ import javax.management.ReflectionException;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -48,6 +50,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Availability;
 
 public abstract class AbstractShellHelper {
+
+  protected static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(AbstractShellHelper.class.toString());
 
   private static final Long load = 1500L;
 

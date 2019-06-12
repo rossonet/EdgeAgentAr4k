@@ -14,6 +14,9 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  * 
@@ -22,6 +25,9 @@ package org.ar4k.agent.tunnels.ssh.client;
  */
 public class SshLocalTunnel extends AbstractSshTunnel {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(SshLocalTunnel.class.toString());
+
   private SshLocalConfig configuration = null;
 
   private void startTunnel() {
@@ -29,7 +35,7 @@ public class SshLocalTunnel extends AbstractSshTunnel {
       connect().setPortForwardingL(configuration.bindHost, configuration.bindPort, configuration.redirectServer,
           configuration.redirectPort);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.logException(e);
     }
   }
 

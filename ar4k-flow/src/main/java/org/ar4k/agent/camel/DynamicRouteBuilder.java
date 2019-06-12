@@ -18,12 +18,17 @@ import java.util.UUID;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
 public class DynamicRouteBuilder extends RouteBuilder {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(DynamicRouteBuilder.class.toString());
 
   private String from;
   private String to;
@@ -41,7 +46,7 @@ public class DynamicRouteBuilder extends RouteBuilder {
     try {
       from(from).routeId(idRotta).to(to);
     } catch (Exception ee) {
-      ee.printStackTrace();
+      logger.logException(ee);
     }
   }
 
