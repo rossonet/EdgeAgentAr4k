@@ -90,18 +90,19 @@ public class GrpcRpcTests {
   public void setUp() throws Exception {
     context = new AnnotationConfigApplicationContext(this.getClass());
     shell = context.getBean(Shell.class);
-    server = new BeaconServer(port);
+    server = new BeaconServer(port, 0, "255.255.255.255", "TESTING");
     server.start();
     rpcConversation = new RpcConversation();
     rpcConversation.setShell(shell);
     Thread.sleep(3000L);
-    client = new BeaconClient(rpcConversation, "127.0.0.1", port);
+    client = new BeaconClient(rpcConversation, "127.0.0.1", port, 0, "TESTING", Anima.generateNewUniqueName());
   }
 
   @After
   public void tearDown() throws Exception {
     client.shutdown();
-    server.stop();
+    if (server != null)
+      server.stop();
   }
 
   @Rule
@@ -118,9 +119,10 @@ public class GrpcRpcTests {
     System.out.println("LAST STATE: " + ls);
     assertEquals("READY", ls);
     // server.blockUntilShutdown();
-    String status = client.registerToBeacon(Anima.generateNewUniqueName());
-    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
-    assertEquals("GOOD", status);
+    // String status = client.registerToBeacon(Anima.generateNewUniqueName());
+    System.out.println(
+        "REGISTER STATUS: " + client.getRegistrationStatus() + " [register code] " + client.getAgentUniqueName());
+    assertEquals("GOOD", client.getRegistrationStatus());
     List<Agent> list = client.listAgentsConnectedToBeacon();
     assertEquals(list.isEmpty(), false);
     System.out.println("I'm " + list.get(0).getAgentUniqueName());
@@ -135,9 +137,10 @@ public class GrpcRpcTests {
     System.out.println("LAST STATE: " + ls);
     assertEquals("READY", ls);
     // server.blockUntilShutdown();
-    String status = client.registerToBeacon(Anima.generateNewUniqueName());
-    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
-    assertEquals("GOOD", status);
+    // String status = client.registerToBeacon(Anima.generateNewUniqueName());
+    System.out.println(
+        "REGISTER STATUS: " + client.getRegistrationStatus() + " [register code] " + client.getAgentUniqueName());
+    assertEquals("GOOD", client.getRegistrationStatus());
     List<Agent> list = client.listAgentsConnectedToBeacon();
     assertEquals(list.isEmpty(), false);
     System.out.println("I'm " + list.get(0).getAgentUniqueName());
@@ -152,9 +155,10 @@ public class GrpcRpcTests {
     System.out.println("LAST STATE: " + ls);
     assertEquals("READY", ls);
     // server.blockUntilShutdown();
-    String status = client.registerToBeacon(Anima.generateNewUniqueName());
-    System.out.println("REGISTER STATUS: " + status + " [register code] " + client.getAgentUniqueName());
-    assertEquals("GOOD", status);
+    // String status = client.registerToBeacon(Anima.generateNewUniqueName());
+    System.out.println(
+        "REGISTER STATUS: " + client.getRegistrationStatus() + " [register code] " + client.getAgentUniqueName());
+    assertEquals("GOOD", client.getRegistrationStatus());
     List<Agent> list = client.listAgentsConnectedToBeacon();
     assertEquals(list.isEmpty(), false);
     System.out.println("I'm " + list.get(0).getAgentUniqueName());

@@ -14,6 +14,8 @@
     */
 package org.ar4k.agent.tunnels.http.grpc;
 
+import java.util.UUID;
+
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.json.BeaconServiceConfigJsonAdapter;
@@ -32,6 +34,12 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
 
   @Parameter(names = "--port", description = "the port for run the Beacon endpoint", required = true)
   public int port = 6599;
+  @Parameter(names = "--discoveryPort", description = "the port for the UDP flash -discovery-. if 0 then then flash will be stopped", required = true)
+  public int discoveryPort = 33666;
+  @Parameter(names = "--broadcastAddress", description = "the broadcast address for the flash", required = true)
+  public String broadcastAddress = "255.255.255.255";
+  @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash", required = true)
+  public String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString();
 
   public BeaconService instantiate() {
     BeaconService ss = new BeaconService();

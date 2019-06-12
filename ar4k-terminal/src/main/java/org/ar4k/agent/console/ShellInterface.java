@@ -433,7 +433,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public void goodbye() {
-    setAr4kAgentStatus(AnimaEvents.FINALIZE);
+    setAr4kAgentStatus(AnimaEvents.STOP);
     System.exit(0);
   }
 
@@ -450,9 +450,11 @@ public class ShellInterface extends AbstractShellHelper {
   public void restart() {
     setAr4kAgentStatus(AnimaEvents.STOP);
     try {
-      Thread.sleep(1500L);
+      Thread.sleep(3000L);
     } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+    setAr4kAgentStatus(AnimaEvents.START);
   }
 
   @ShellMethod(value = "List runtime services", group = "Agent Life Cycle Commands")

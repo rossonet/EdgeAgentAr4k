@@ -79,7 +79,8 @@ public class BeaconService extends AbstractAr4kService {
   @Override
   public void init() {
     try {
-      beaconServer = new BeaconServer(configuration.port);
+      beaconServer = new BeaconServer(configuration.port, configuration.discoveryPort, configuration.broadcastAddress,
+          configuration.stringDiscovery);
       beaconServer.start();
     } catch (IOException e) {
       e.printStackTrace();
@@ -112,7 +113,7 @@ public class BeaconService extends AbstractAr4kService {
   @Override
   public void stop() {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

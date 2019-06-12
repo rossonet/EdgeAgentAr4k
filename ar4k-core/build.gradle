@@ -20,7 +20,7 @@ dependencies {
   compile('org.springframework.boot:spring-boot-starter-security')
   compile('org.springframework.boot:spring-boot-starter-integration')
   // state machine
-  compile "org.springframework.statemachine:spring-statemachine-core:2.1.0.RELEASE"
+  compile "org.springframework.statemachine:spring-statemachine-core:2.1.3.RELEASE"
   // jms
   compile group: 'org.springframework.integration', name: 'spring-integration-jms'
   // mail

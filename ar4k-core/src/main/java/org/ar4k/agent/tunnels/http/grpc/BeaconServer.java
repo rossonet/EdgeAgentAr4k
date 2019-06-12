@@ -1,8 +1,14 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,22 +47,30 @@ public class BeaconServer implements Runnable {
   private static final long defaultTimeOut = 10000L;
   private static final long waitReplyLoopWaitTime = 300L;
 
-  private final int port;
-  private final Server server;
+  private int port = 0;
+  private Server server = null;
   private int defaultPollTime = 6000;
+  private int defaultBeaconFlashMoltiplicator = 1;
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>();
 
   private boolean running = false;
 
   private Thread process = null;
+  private DatagramSocket socketFlashBeacon = null;
 
   private final Map<String, CommandReplyRequest> repliesQueue = new ConcurrentHashMap<>();
+  private int discoveryPort = 0;
+  private String broadcastAddress = "255.255.255.255";
+  private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
 
-  public BeaconServer(int port) throws IOException {
+  public BeaconServer(int port, int discoveryPort, String broadcastAddress, String stringDiscovery) throws IOException {
     this(ServerBuilder.forPort(port), port);
+    this.discoveryPort = discoveryPort;
+    this.broadcastAddress = broadcastAddress;
+    this.stringDiscovery = stringDiscovery;
   }
 
-  public BeaconServer(ServerBuilder<?> serverBuilder, int port) {
+  private BeaconServer(ServerBuilder<?> serverBuilder, int port) {
     this.port = port;
     server = serverBuilder.addService(new RpcService()).addService(new PotService()).addService(new DataService())
         .build();
@@ -86,6 +100,8 @@ public class BeaconServer implements Runnable {
       server.shutdown();
     }
     running = false;
+    if (socketFlashBeacon != null)
+      socketFlashBeacon.close();
   }
 
   public void blockUntilShutdown() throws InterruptedException {
@@ -287,12 +303,100 @@ public class BeaconServer implements Runnable {
 
   @Override
   public void run() {
+    int counter = 1;
     while (running) {
+      if (counter++ > defaultBeaconFlashMoltiplicator) {
+        counter = 1;
+        if (discoveryPort != 0)
+          sendFlashUdp();
+      }
       try {
         Thread.sleep((long) defaultPollTime);
       } catch (InterruptedException e) {
         logger.info("in Beacon server loop error " + e.getMessage());
       }
     }
+  }
+
+  public void sendFlashUdp() {
+    try {
+      // Open a random port to send the package
+      if (socketFlashBeacon == null) {
+        socketFlashBeacon = new DatagramSocket();
+        socketFlashBeacon.setBroadcast(true);
+      }
+      byte[] sendData = (stringDiscovery + ":" + String.valueOf(port)).getBytes();
+      try {
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+            InetAddress.getByName(broadcastAddress), discoveryPort);
+        socketFlashBeacon.send(sendPacket);
+        logger.fine(getClass().getName() + ">>> Request packet sent to: " + broadcastAddress);
+      } catch (Exception e) {
+        logger.warning("Error sending flash beacon " + e.getMessage());
+      }
+      Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+      while (interfaces.hasMoreElements()) {
+        NetworkInterface networkInterface = interfaces.nextElement();
+        if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+          continue; // Don't want to broadcast to the loopback interface
+        }
+        for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+          InetAddress broadcast = interfaceAddress.getBroadcast();
+          if (broadcast == null) {
+            continue;
+          }
+          try {
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, discoveryPort);
+            socketFlashBeacon.send(sendPacket);
+          } catch (Exception e) {
+            logger.warning("Error sending flash beacon on " + broadcast.getHostName() + " -> " + e.getMessage());
+          }
+          logger.fine(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress()
+              + "; Interface: " + networkInterface.getDisplayName());
+        }
+      }
+    } catch (IOException ex) {
+      logger.warning("Exception in Beacon flash " + ex.getMessage());
+    }
+  }
+
+  public int getDefaultBeaconFlashMoltiplicator() {
+    return defaultBeaconFlashMoltiplicator;
+  }
+
+  public void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator) {
+    this.defaultBeaconFlashMoltiplicator = defaultBeaconFlashMoltiplicator;
+  }
+
+  public int getDiscoveryPort() {
+    return discoveryPort;
+  }
+
+  public void setDiscoveryPort(int discoveryPort) {
+    this.discoveryPort = discoveryPort;
+  }
+
+  public String getBroadcastAddress() {
+    return broadcastAddress;
+  }
+
+  public void setBroadcastAddress(String broadcastAddress) {
+    this.broadcastAddress = broadcastAddress;
+  }
+
+  public String getStringDiscovery() {
+    return stringDiscovery;
+  }
+
+  public void setStringDiscovery(String stringDiscovery) {
+    this.stringDiscovery = stringDiscovery;
+  }
+
+  public static long getDefaulttimeout() {
+    return defaultTimeOut;
+  }
+
+  public static long getWaitreplyloopwaittime() {
+    return waitReplyLoopWaitTime;
   }
 }

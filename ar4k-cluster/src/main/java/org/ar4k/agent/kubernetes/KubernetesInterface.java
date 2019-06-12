@@ -266,6 +266,8 @@ public class KubernetesInterface extends AbstractShellHelper {
       return null;
     }
   }
+  
+  //TODO register e list services
 
   @ShellMethod(value = "create a new pod in the K8s cluster connected", group = "Kubernetes Commands")
   @ManagedOperation

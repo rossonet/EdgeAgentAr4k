@@ -92,8 +92,12 @@ public class BeaconShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testBeaconServerNull")
   public boolean runBeaconServer(
-      @ShellOption(help = "the tcp port for the Beacon server", defaultValue = "6599") int port) throws IOException {
-    tmpServer = new BeaconServer(port);
+      @ShellOption(help = "the tcp port for the Beacon server", defaultValue = "6599") int port,
+      @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
+      @ShellOption(help = "the broadcast target for the discovery message", defaultValue = "255.255.255.255") String discoveryAddress,
+      @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
+      throws IOException {
+    tmpServer = new BeaconServer(port, discoveryPort, discoveryAddress, discoveryMessage);
     tmpServer.start();
     return true;
   }
@@ -118,8 +122,10 @@ public class BeaconShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testBeaconClientNull")
   public boolean connectToBeaconService(
-      @ShellOption(help = "the target Beacon Serve URL", defaultValue = "http://127.0.0.1:6599") String beaconServer) {
-    tmpClient = anima.connectToBeaconService(beaconServer);
+      @ShellOption(help = "the target Beacon Serve URL. If the port is 0 work just the discovery", defaultValue = "http://127.0.0.1:6599") String beaconServer,
+      @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
+      @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage) {
+    tmpClient = anima.connectToBeaconService(beaconServer, discoveryPort, discoveryMessage);
     return true;
   }
 

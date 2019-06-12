@@ -24,17 +24,13 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
-import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
@@ -76,9 +72,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.OnStateChanged;
+import org.springframework.statemachine.annotation.OnStateMachineStart;
+import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
+//import org.springframework.stereotype.Component;
+import org.springframework.statemachine.config.EnableWithStateMachine;
 import org.springframework.stereotype.Component;
 
+import io.grpc.ConnectivityState;
 import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
 
@@ -94,6 +95,7 @@ import jdbm.RecordManagerFactory;
 @EnableMBeanExport
 @Scope("singleton")
 @EnableJms
+@EnableWithStateMachine
 @WithStateMachine
 public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware,
     InitializingBean, Closeable {
@@ -127,8 +129,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
 
-  @Autowired
-  private AnimaStateMachineConfig animaStateMachineConfig;
+  // @Autowired
+  // private AnimaStateMachineConfig animaStateMachineConfig;
 
   @Autowired
   private AnimaHomunculus animaHomunculus;
@@ -168,6 +170,10 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private String webRegistrationEndpoint;
   @Value("${ar4k.dnsRegistrationEndpoint}")
   private String dnsRegistrationEndpoint;
+  @Value("${ar4k.beaconDiscoveryFilterString}")
+  private String beaconDiscoveryFilterString;
+  @Value("${ar4k.beaconDiscoveryPort}")
+  private Integer beaconDiscoveryPort;
   @Value("${ar4k.fileConfigOrder}")
   private Integer fileConfigOrder;
   @Value("${ar4k.webConfigOrder}")
@@ -190,15 +196,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private Ar4kConfig targetConfig = null;
   // configurazione iniziale di bootStrap derivata dalle variabili Spring
   private Ar4kConfig bootStrapConfig = null;
-
-  // array di configurazioni disponibili
-  // private Set<Ar4kConfig> configs = new HashSet<Ar4kConfig>();
-  // configurazione di lavoro per editare
-  // private Ar4kConfig workingConfig = null;
-
-  // gestione stati TODO: aggiungere pre script e post script
-  // TODO: controllare se stateTarget viene veramente usato
-  // config per arrivare allo stato desiderato
   private AnimaStates stateTarget = AnimaStates.RUNNING;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
 
@@ -206,9 +203,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   // array keystore disponibili
   private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
-
-  private Instant timeCounterLambda = null;
-  private Timer timerLambda = null;
 
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
@@ -219,10 +213,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private Collection<Ar4kUserDetails> localUsers = new HashSet<>();
 
-  // per HashMap su disco (map reduction)
   private transient RecordManager recMan = null;
-
-  private boolean init = false;
 
   private String beanName = null;
 
@@ -230,13 +221,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private DataAddress dataAddress = new DataAddress();
 
-  // LAMBDA quando chiamato da cron sul sistema con regolarità o tramite AWS
-  // Lambda,Google Function o, in generale, in modalità function as a service
-  // STASIS per la funzione di mantenimento a basso consumo,
-  // Bot sistema autonomo (switch tra le configurazioni selezionato da Cortex)
   public static enum AnimaStates {
-    INIT, STARTING, STAMINAL, CONFIGURED, RUNNING, SERVICE, CONSOLE, LAMBDA, BOT, PAUSED, STOPED, KILLED, FAULTED,
-    STASIS
+    INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
   }
 
   // tipi di router interno supportato per gestire lo scambio dei messagi tra gli
@@ -246,7 +232,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   public static enum AnimaEvents {
-    BOOTSTRAP, BORN, SETCONF, START, PAUSE, STOP, HIBERNATION, FINALIZE, EXCEPTION
+    BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION
   }
 
   @ManagedOperation
@@ -260,27 +246,22 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   public boolean isRunning() {
-    boolean risposta = false;
-    if (animaStateMachineConfig != null && animaStateMachineConfig.getRunningStates() != null
-        && animaStateMachineConfig.getRunningStates().contains(getState())) {
-      risposta = true;
-    }
-    return risposta;
+    return AnimaStates.RUNNING.equals(getState());
   }
 
   @Override
   public void close() {
-    animaStateMachine.sendEvent(AnimaEvents.FINALIZE);
+    animaStateMachine.sendEvent(AnimaEvents.STOP);
+    animaStateMachine.stop();
     animaStateMachine = null;
   }
 
   @OnStateChanged()
   public synchronized void stateChanged() {
-    // System.out.println("** status changed to " + getState());
     statesBefore.put(new Instant(), getState());
   }
 
-  @OnStateChanged(target = "KILLED")
+  @OnTransition(target = "KILLED")
   public synchronized void finalizeAgent() {
     for (Ar4kComponent targetService : components) {
       targetService.kill();
@@ -305,27 +286,34 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
           break;
         }
       }
-      if (free == true)
+      if (free == true) {
         localUsers.add(admin);
+        logger.warn("create user " + admin.getUsername());
+      }
     }
   }
 
-//TODO Ripristinare la gestione per stati
+  // @SuppressWarnings("unchecked")
   @Override
   public void afterPropertiesSet() throws Exception {
-    //animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
-    //setInitialAuth();
-    checkBeaconClient();
-    //startingAgent();
-    //animaStateMachine.sendEvent(AnimaEvents.BORN);
-    //staminalAgent();
-    //animaStateMachine.sendEvent(AnimaEvents.SETCONF);
-    //configureAgent();
-    //animaStateMachine.sendEvent(AnimaEvents.START);
+    // avvio automatico dopo il caricamento dei beans
+    // animaStateMachine = (StateMachine<AnimaStates, AnimaEvents>)
+    // getApplicationContext().getBean("stateMachine");
+    // animaStateMachine.start();
+    // initAgent();
   }
 
-  // @OnStateChanged(target = "STARTING")
+  @OnStateMachineStart
+  public synchronized void initAgent() {
+    logger.error("First state " + consoleOnly);
+    if (!consoleOnly) {
+      animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+    }
+  }
+
+  @OnTransition(target = "STAMINAL")
   public synchronized void startingAgent() {
+    logger.error("Fire state STAMINAL");
     new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
     fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
     try {
@@ -338,23 +326,32 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-    // System.out.println("started");
     bootStrapConfig = resolveBootstrapConfig();
-    init = true;
-    // animaStateMachine.sendEvent(AnimaEvents.BORN);
+    setInitialAuth();
+    checkBeaconClient();
+    if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
+      targetConfig = bootStrapConfig;
+    }
+    if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
+      if (targetConfig != null)
+        runtimeConfig = targetConfig;
+    }
+    if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
+      animaStateMachine.sendEvent(AnimaEvents.SETCONF);
+    }
   }
 
   private void checkBeaconClient() {
     if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) {
       try {
-        connectToBeaconService(webRegistrationEndpoint);
+        connectToBeaconService(webRegistrationEndpoint, beaconDiscoveryPort, beaconDiscoveryFilterString);
       } catch (Exception e) {
         System.out.print("Beacon connection not ok: " + e.getMessage());
       }
     }
   }
 
-  public BeaconClient connectToBeaconService(String urlBeacon) {
+  public BeaconClient connectToBeaconService(String urlBeacon, int discoveryPort, String discoveryFilter) {
     URL urlTarget;
     if (beaconClient != null) {
       logger.info("This agent is connected to another Beacon service");
@@ -365,18 +362,18 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       animaHomunculus.registerNewSession(sessionId, sessionId);
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
-      beaconClient = new BeaconClient(rpc, urlTarget.getHost(), urlTarget.getPort());
-      String ret = beaconClient.registerToBeacon(getAgentUniqueName());
-      if (ret.equals("GOOD")) {
+      beaconClient = new BeaconClient(rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort, discoveryFilter,
+          getAgentUniqueName());
+      if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
           setAgentUniqueName(beaconClient.getAgentUniqueName());
           logger.info("the unique name is changed in " + getAgentUniqueName());
         }
       } else {
-        logger.info("the Beacon endpoint " + urlBeacon + " return " + ret);
+        logger.info("the Beacon endpoint " + urlBeacon + " return " + beaconClient.getStateConnection());
       }
-    } catch (IOException | InterruptedException | ParseException e) {
+    } catch (IOException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
     }
     return beaconClient;
@@ -439,24 +436,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return targetConfig;
   }
 
-  // @OnStateChanged(target = "STAMINAL")
-  public synchronized void staminalAgent() {
-    // bootStrapConfig = resolveBootstrapConfig();
-    // se non è presente una configurazione runtime e un target ed è presente quella
-    // di boot, utilizzarla per l'avvio
-    // System.out.println("Config found T:" + targetConfig + " R:" + runtimeConfig +
-    // " B:" + bootStrapConfig);
-    if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
-      targetConfig = bootStrapConfig;
-    }
-    if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
-      if (targetConfig != null)
-        runtimeConfig = targetConfig;
-      // animaStateMachine.sendEvent(AnimaEvents.SETCONF);
-    }
-  }
-
-  // @OnStateChanged(target = "CONFIGURED")
+  @OnTransition(target = "CONFIGURED")
   public synchronized void configureAgent() {
     if (runtimeConfig == null) {
       logger.warn("Required running state without conf");
@@ -465,68 +445,12 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (stateTarget == null && runtimeConfig != null) {
       stateTarget = runtimeConfig.targetRunLevel;
     }
-    runPots();
-    // runAgent();
-    // animaStateMachine.sendEvent(AnimaEvents.START);
+    if (stateTarget.equals(AnimaStates.RUNNING))
+      animaStateMachine.sendEvent(AnimaEvents.START);
   }
 
-  @OnStateChanged(source = "CONFIGURED", target = "SERVICE")
-  public synchronized void runService() {
-    // joinTribes();
-    runAgent();
-  }
-
-  @OnStateChanged(source = "CONFIGURED", target = "CONSOLE")
-  public synchronized void runConsole() {
-    // joinTribes();
-    runAgent();
-  }
-
-  @OnStateChanged(source = "CONFIGURED", target = "BOT")
-  public synchronized void runBot() {
-    // joinTribes();
-    runAgent();
-  }
-
-  @OnStateChanged(source = "CONFIGURED", target = "LAMBDA")
-  public synchronized void runLambda() {
-    // joinTribes();
-    timeCounterLambda = new Instant();
-    timerLambda = new Timer("Timer");
-    long delay = 1000L;
-    timerLambda.schedule(task, delay);
-    runAgent();
-  }
-
-  @OnStateChanged(source = "LAMBDA")
-  public synchronized void exitLambda() {
-    if (timerLambda != null) {
-      timerLambda.purge();
-      timerLambda = null;
-    }
-  }
-
-  private boolean checkLambdaFinished() {
-    boolean ritorno = false;
-    if (new Instant().getMillis() - timeCounterLambda.getMillis() > runtimeConfig.clockAfterFinishCallLambda) {
-      ritorno = true;
-    }
-    return ritorno;
-  }
-
-  private TimerTask task = new TimerTask() {
-    public void run() {
-      if (checkLambdaFinished()) {
-        animaStateMachine.sendEvent(AnimaEvents.STOP);
-      }
-    }
-  };
-
-  private synchronized void runAgent() {
-    runServices();
-  }
-
-  private void runServices() {
+  @OnTransition(target = "RUNNING")
+  public void runServices() {
     for (PotConfig confServizio : runtimeConfig.pots) {
       if (confServizio instanceof ServiceConfig) {
         try {
@@ -539,7 +463,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
-  private void runPots() {
+  @OnTransition(target = "RUNNING")
+  public void runPots() {
     for (PotConfig confVaso : runtimeConfig.pots) {
       try {
         runSeedPot(confVaso);
@@ -586,6 +511,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     ritorno.put("ar4k.otpRegistrationSeed", otpRegistrationSeed);
     ritorno.put("ar4k.webRegistrationEndpoint", webRegistrationEndpoint);
     ritorno.put("ar4k.dnsRegistrationEndpoint", dnsRegistrationEndpoint);
+    ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(beaconDiscoveryPort));
+    ritorno.put("ar4k.beaconDiscoveryFilterString", beaconDiscoveryFilterString);
     ritorno.put("ar4k.fileConfigOrder", String.valueOf(fileConfigOrder));
     ritorno.put("ar4k.webConfigOrder", String.valueOf(webConfigOrder));
     ritorno.put("ar4k.dnsConfigOrder", String.valueOf(dnsConfigOrder));
@@ -613,6 +540,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.otpRegistrationSeed: xxx\n";
     configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
     configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
+    configTxt += "ar4k.beaconDiscoveryPort: " + beaconDiscoveryPort + "\n";
+    configTxt += "ar4k.beaconDiscoveryFilterString: " + beaconDiscoveryFilterString + "\n";
     configTxt += "ar4k.fileConfigOrder: " + fileConfigOrder + "\n";
     configTxt += "ar4k.webConfigOrder: " + webConfigOrder + "\n";
     configTxt += "ar4k.dnsConfigOrder: " + dnsConfigOrder + "\n";
@@ -622,17 +551,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.consoleOnly: " + consoleOnly
         + "\n---------------------------------------------------------------\n";
     return configTxt;
-  }
-
-  public void waitFirstState() {
-    while (init == false) {
-      try {
-        System.out.println("wait first status " + getState());
-        Thread.sleep(1000L);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
   }
 
   @Override
@@ -782,14 +700,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return beanName;
   }
 
-  @Override
-  public String toString() {
-    return "Anima [runtimeConfig=" + runtimeConfig + ", stateTarget=" + stateTarget + ", init=" + init + ", getState()="
-        + getState() + ", isRunning()=" + isRunning() + ", getEnvironmentVariablesAsString()="
-        + getEnvironmentVariablesAsString() + ", getBeanName()=" + getBeanName() + ", runtimeConfig="
-        + getRuntimeConfig().toString() + "]";
-  }
-
   public String getAgentUniqueName() {
     return agentUniqueName;
   }
@@ -805,5 +715,21 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public void setDataAddress(DataAddress dataAddress) {
     this.dataAddress = dataAddress;
+  }
+
+  @Override
+  public String toString() {
+    return "Anima [dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName=" + dbDataStoreName + ", agentUniqueName="
+        + agentUniqueName + ", fileKeystore=" + fileKeystore + ", webKeystore=" + webKeystore + ", dnsKeystore="
+        + dnsKeystore + ", keystorePassword=" + keystorePassword + ", keystoreCaAlias=" + keystoreCaAlias
+        + ", confPath=" + confPath + ", fileConfig=" + fileConfig + ", webConfig=" + webConfig + ", dnsConfig="
+        + dnsConfig + ", baseConfig=" + baseConfig + ", otpRegistrationSeed=" + otpRegistrationSeed
+        + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
+        + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString=" + beaconDiscoveryFilterString
+        + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder + ", webConfigOrder="
+        + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder + ", base64ConfigOrder=" + base64ConfigOrder
+        + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly + ", logoUrl=" + logoUrl + ", runtimeConfig="
+        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootStrapConfig=" + bootStrapConfig + ", stateTarget="
+        + stateTarget + ", statesBefore=" + statesBefore + ", beanName=" + beanName + "]";
   }
 }

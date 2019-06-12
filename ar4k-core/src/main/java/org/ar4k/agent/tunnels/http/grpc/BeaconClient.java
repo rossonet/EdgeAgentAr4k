@@ -1,6 +1,11 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,12 +55,13 @@ import io.grpc.ManagedChannelBuilder;
 
 public class BeaconClient implements Runnable {
   private static final Logger logger = Logger.getLogger(BeaconClient.class.getName());
-  private static final CharSequence COMPLETION_CHAR = "?";
+  public static final CharSequence COMPLETION_CHAR = "?";
+  public static final int discoveryPacketMaxSize = 1024;
   private long defaultPollingFreq = 500L;
 
-  private final ManagedChannel channel;
-  private final RpcServiceV1BlockingStub blockingStub;
-  private final RpcServiceV1Stub asyncStub;
+  private ManagedChannel channel = null;
+  private RpcServiceV1BlockingStub blockingStub = null;
+  private RpcServiceV1Stub asyncStub = null;
   private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
   private final String secretKey = UUID.randomUUID().toString();
   // private String registerCode = null;
@@ -69,22 +75,48 @@ public class BeaconClient implements Runnable {
   private RpcConversation localExecutor = new RpcConversation();
 
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
+  private int discoveryPort = 0;
+  private String discoveryFilter = "AR4K";
+  private DatagramSocket socketDiscovery = null;
+  private String reservedUniqueName = null;
+  private String registerStatus = "BAD";
 
-  public BeaconClient(RpcConversation rpcConversation, String host, int port) {
-    this(rpcConversation, ManagedChannelBuilder.forAddress(host, port).usePlaintext());
+  public BeaconClient(RpcConversation rpcConversation, String host, int port, int discoveryPort, String discoveryFilter,
+      String uniqueName) {
+    this.localExecutor = rpcConversation;
+    this.discoveryPort = discoveryPort;
+    this.discoveryFilter = discoveryFilter;
+    if (uniqueName != null)
+      this.reservedUniqueName = uniqueName;
+    else
+      this.reservedUniqueName = UUID.randomUUID().toString();
+    if (port != 0) {
+      runConnection(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
+    }
+    runInstance();
   }
 
-  public BeaconClient(RpcConversation rpcConversation, ManagedChannelBuilder<?> channelBuilder) {
-    this.localExecutor = rpcConversation;
+  public void runConnection(ManagedChannelBuilder<?> channelBuilder) {
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     asyncStub = RpcServiceV1Grpc.newStub(channel);
-    logger.info("Client Beacon started, connected state " + channel.getState(true));
+    try {
+      registerStatus = registerToBeacon(reservedUniqueName);
+    } catch (IOException | InterruptedException | ParseException | NullPointerException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  public void runInstance() {
+    logger.info("Client Beacon started, connected state "
+        + ((channel != null && channel.getState(true) != null) ? channel.getState(true).toString()
+            : " WAITING BEACON FLASH"));
+    running = true;
     if (process == null) {
       process = new Thread(this);
       process.start();
     }
-    running = true;
   }
 
   public RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent) {
@@ -116,19 +148,23 @@ public class BeaconClient implements Runnable {
   }
 
   public ConnectivityState getStateConnection() {
-    return channel.getState(true);
+    return channel != null ? channel.getState(true) : ConnectivityState.TRANSIENT_FAILURE;
   }
 
-  public String registerToBeacon(String uniqueName) throws IOException, InterruptedException, ParseException {
+  private String registerToBeacon(String uniqueName) throws IOException, InterruptedException, ParseException {
     RegisterRequest request;
     String result = "BAD";
-    long timeRequest = new Date().getTime();
-    request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
-        .setSecretKey(secretKey).setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest)).build();
-    RegisterReply reply = blockingStub.register(request);
-    me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
-        .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
-    result = reply.getResult().getStatus().name();
+    try {
+      long timeRequest = new Date().getTime();
+      request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
+          .setSecretKey(secretKey).setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest)).build();
+      RegisterReply reply = blockingStub.register(request);
+      me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
+          .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
+      result = reply.getResult().getStatus().name();
+    } catch (io.grpc.StatusRuntimeException e) {
+      logger.warning("Beacon server is " + e.getMessage());
+    }
     return result;
   }
 
@@ -140,12 +176,16 @@ public class BeaconClient implements Runnable {
   public void run() {
     while (running) {
       try {
-        if (me != null) {
+        if (me != null && getStateConnection().equals(ConnectivityState.READY)) {
           checkPollChannel();
           sendHardwareInfo();
           Thread.sleep((long) getPollingFreq());
         } else {
           Thread.sleep(defaultPollingFreq);
+        }
+        if (channel == null && discoveryFilter != null && discoveryPort != 0
+            && !getStateConnection().equals(ConnectivityState.READY)) {
+          lookOut();
         }
       } catch (Exception e) {
         logger.info("in Beacon client loop " + e.getMessage());
@@ -154,8 +194,39 @@ public class BeaconClient implements Runnable {
     }
   }
 
+  public void lookOut()
+      throws SocketException, UnknownHostException, IOException, InterruptedException, ParseException {
+    if (socketDiscovery == null) {
+      socketDiscovery = new DatagramSocket(discoveryPort, InetAddress.getByName("0.0.0.0"));
+      socketDiscovery.setBroadcast(true);
+    } else {
+      byte[] recvBuf = new byte[discoveryPacketMaxSize];
+      DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+      socketDiscovery.receive(packet);
+      if (packet.getData().length > 0) {
+        String message = new String(packet.getData()).trim();
+        logger.info("DISCOVERY FLASH: " + message);
+        if (message.contains(discoveryFilter)) {
+          String hostBeacon = packet.getAddress().getHostAddress();
+          int portBeacon = Integer.valueOf(message.split(":")[1]);
+          logger
+              .info("-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
+          runConnection(ManagedChannelBuilder.forAddress(hostBeacon, portBeacon).usePlaintext());
+          if (!registerToBeacon(reservedUniqueName).equals("BAD")) {
+            socketDiscovery.close();
+            socketDiscovery = null;
+          }
+        }
+      }
+    }
+  }
+
   private void checkPollChannel() {
-    elaborateRequestFromBus(blockingStub.polling(me));
+    try {
+      elaborateRequestFromBus(blockingStub.polling(me));
+    } catch (io.grpc.StatusRuntimeException e) {
+      logger.finest("GRPC POLL FAILED " + e.getMessage());
+    }
   }
 
   private void elaborateRequestFromBus(FlowMessage messages) {
@@ -233,8 +304,8 @@ public class BeaconClient implements Runnable {
       HealthRequest hr = HealthRequest.newBuilder().setAgentSender(me)
           .setHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
       blockingStub.sendHealth(hr);
-    } catch (IOException | InterruptedException | ParseException e) {
-      e.printStackTrace();
+    } catch (IOException | InterruptedException | ParseException | io.grpc.StatusRuntimeException e) {
+      logger.warning("sendHardwareInfo -> " + e.getMessage());
     }
   }
 
@@ -343,6 +414,54 @@ public class BeaconClient implements Runnable {
     // System.out.println("generated from shell interface w: " + clean + "\nindex:"
     // + word + "\npos:" + pos);
     return runCompletitionOnAgent(agentUniqueName, clean, word, pos);
+  }
+
+  public long getDefaultPollingFreq() {
+    return defaultPollingFreq;
+  }
+
+  public void setDefaultPollingFreq(long defaultPollingFreq) {
+    this.defaultPollingFreq = defaultPollingFreq;
+  }
+
+  public List<RemoteBeaconRpcExecutor> getRemoteExecutors() {
+    return remoteExecutors;
+  }
+
+  public void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors) {
+    this.remoteExecutors = remoteExecutors;
+  }
+
+  public int getDiscoveryPort() {
+    return discoveryPort;
+  }
+
+  public void setDiscoveryPort(int discoveryPort) {
+    this.discoveryPort = discoveryPort;
+  }
+
+  public String getDiscoveryFilter() {
+    return discoveryFilter;
+  }
+
+  public void setDiscoveryFilter(String discoveryFilter) {
+    this.discoveryFilter = discoveryFilter;
+  }
+
+  public String getSecretKey() {
+    return secretKey;
+  }
+
+  public String getReservedUniqueName() {
+    return reservedUniqueName;
+  }
+
+  public void setReservedUniqueName(String reservedUniqueName) {
+    this.reservedUniqueName = reservedUniqueName;
+  }
+
+  public String getRegistrationStatus() {
+    return registerStatus;
   }
 
 }

@@ -45,6 +45,8 @@ public class Ar4kStarterProperties {
   private String adminPassword = "a4c8ff551a";
   private String webRegistrationEndpoint = "https://xxxx.com";
   private String dnsRegistrationEndpoint = "subdomain.domain.com";
+  private String beaconDiscoveryFilterString = "AR4K";
+  private int beaconDiscoveryPort = 33666;
   private int fileConfigOrder = 1;
   private int webConfigOrder = 2;
   private int dnsConfigOrder = 0;
@@ -228,6 +230,22 @@ public class Ar4kStarterProperties {
 
   public void setLogoUrl(String logoUrl) {
     this.logoUrl = logoUrl;
+  }
+
+  public String getBeaconDiscoveryFilterString() {
+    return beaconDiscoveryFilterString;
+  }
+
+  public void setBeaconDiscoveryFilterString(String beaconDiscoveryFilterString) {
+    this.beaconDiscoveryFilterString = beaconDiscoveryFilterString;
+  }
+
+  public int getBeaconDiscoveryPort() {
+    return beaconDiscoveryPort;
+  }
+
+  public void setBeaconDiscoveryPort(int beaconDiscoveryPort) {
+    this.beaconDiscoveryPort = beaconDiscoveryPort;
   }
 
 }

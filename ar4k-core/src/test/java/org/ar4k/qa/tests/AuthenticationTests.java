@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.jline.builtins.Commands;
@@ -114,7 +115,13 @@ public class AuthenticationTests {
 
   @Test
   public void authenticationTest() {
-    anima.waitFirstState();
+    while (anima.getState() != null && anima.getState().equals(AnimaStates.INIT)) {
+      try {
+        Thread.sleep(200L);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
     printBeans();
     checkAuthentication();
     anima.loginAgent("admin", "a4c8ff551a", null);
@@ -134,7 +141,13 @@ public class AuthenticationTests {
 
   @Test
   public void destroySessionTest() {
-    anima.waitFirstState();
+    while (anima.getState() != null && anima.getState().equals(AnimaStates.INIT)) {
+      try {
+        Thread.sleep(200L);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
     printBeans();
     checkAuthentication();
     String sessionId = anima.loginAgent("admin", "a4c8ff551a", null);

@@ -80,8 +80,9 @@ public abstract class AbstractShellHelper {
   }
 
   protected Availability sessionOkOrStatusInit() {
-    return (getSessionId() != null || anima.getState().equals(AnimaStates.INIT)) ? Availability.available()
-        : Availability.unavailable("you must login in the system or to be in INIT status");
+    return (getSessionId() != null || anima.getState().equals(AnimaStates.INIT)
+        || anima.getState().equals(AnimaStates.STAMINAL)) ? Availability.available()
+            : Availability.unavailable("you must login in the system or to be in INIT status");
   }
 
   protected Availability sessionFalse() {
