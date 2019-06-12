@@ -52,6 +52,7 @@ public class Ar4kLogger implements Logger {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
     o.put("exception", e);
+    logger.error("Exception in trace: " + e.getCause().getStackTrace().toString());
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
