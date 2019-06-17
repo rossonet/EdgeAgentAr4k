@@ -19,6 +19,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.ConfigSeed;
 
+import com.google.common.base.Splitter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,6 +43,18 @@ public class ConfigHelper {
     oos.writeObject(configObject);
     oos.close();
     return Base64.getEncoder().encodeToString(baos.toByteArray());
+  }
+
+  public static String toBase64ForDns(String name, ConfigSeed configObject) throws IOException {
+    Iterable<String> chunks = Splitter.fixedLength(254).split(toBase64(configObject));
+    StringBuilder result = new StringBuilder();
+    int counter = 0;
+    for (String s : chunks) {
+      result.append(name + "-" + String.valueOf(counter) + "\tIN\tTXT\t" + '"' + s + '"' + "\n");
+      counter++;
+    }
+    result.append(name + "-max" + "\tIN\tTXT\t" + '"' + String.valueOf(counter) + '"' + "\n");
+    return result.toString();
   }
 
   public static String toBase64Rsa(ConfigSeed configObject, String aliasPrivateKey)

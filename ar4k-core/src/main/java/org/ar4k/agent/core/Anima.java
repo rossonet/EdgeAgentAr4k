@@ -14,9 +14,11 @@
     */
 package org.ar4k.agent.core;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -59,6 +61,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -73,6 +76,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.TextParseException;
+import org.xbill.DNS.Type;
 
 import io.grpc.ConnectivityState;
 import jdbm.RecordManager;
@@ -217,6 +225,10 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private DataAddress dataAddress = new DataAddress();
 
+  private boolean onApplicationEventFlag = false;
+
+  private boolean afterSpringInitFlag = false;
+
   public static enum AnimaStates {
     INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
   }
@@ -271,6 +283,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   @SuppressWarnings("unchecked")
   private void setInitialAuth() {
     if (adminPassword != null && !adminPassword.isEmpty()) {
+      // logger.warn("create admin user with config password");
       Ar4kUserDetails admin = new Ar4kUserDetails();
       admin.setUsername("admin");
       admin.setPassword(passwordEncoder.encode((CharSequence) adminPassword));
@@ -294,7 +307,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @PostConstruct
   public void afterSpringInit() throws Exception {
-    animaStateMachine.start();
+    afterSpringInitFlag = true;
+    // animaStateMachine.start();
+    checkDualStart();
   }
 
   // workaround Spring State Machine
@@ -303,6 +318,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     // System.out.println("First state " + consoleOnly);
     if (!consoleOnly) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+    } else {
+      logger.warn("console only true, run just the command line");
     }
   }
 
@@ -319,7 +336,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         logger.info("datastore on Anima started");
       }
     } catch (IOException e) {
-      logger.warn(e.getMessage());
+      // logger.warn(e.getMessage());
       logger.logException(e);
     }
     bootStrapConfig = resolveBootstrapConfig();
@@ -343,7 +360,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       try {
         connectToBeaconService(webRegistrationEndpoint, beaconDiscoveryPort, beaconDiscoveryFilterString);
       } catch (Exception e) {
-        logger.warn("Beacon connection not ok: " + e.getMessage());
+        // logger.warn("Beacon connection not ok: " + e.getMessage());
         logger.logException(e);
       }
     }
@@ -381,60 +398,133 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // trova la configurazione appropriata per il bootstrap in funzione dei
   // parametri di configurazione
   private Ar4kConfig resolveBootstrapConfig() {
-    // System.out.println("searching file " + fileConfig != null ? fileConfig :
-    // "NaN");
     Ar4kConfig targetConfig = null;
-    // se impostato il flag solo console esclude qualsiasi ragionamento
-    if (consoleOnly == true) {
-      if (logger != null)
-        logger.warn("console only true, run just the command line");
-    } else {
-      // System.out.println("\nResolving bootstrap config...\n");
-      int maxConfig = fileConfigOrder;
-      if (maxConfig < webConfigOrder)
-        maxConfig = webConfigOrder;
-      if (maxConfig < dnsConfigOrder)
-        maxConfig = dnsConfigOrder;
-      if (maxConfig < base64ConfigOrder)
-        maxConfig = base64ConfigOrder;
-      for (int liv = 0; liv <= maxConfig; liv++) {
-        if (liv == webConfigOrder && targetConfig == null) {
-          // TODO: implementare caricamento da web
+    int maxConfig = 0;
+    maxConfig = Integer.max(maxConfig, webConfigOrder);
+    maxConfig = Integer.max(maxConfig, dnsConfigOrder);
+    maxConfig = Integer.max(maxConfig, base64ConfigOrder);
+    maxConfig = Integer.max(maxConfig, fileConfigOrder);
+    for (int liv = 0; liv <= maxConfig; liv++) {
+      if (liv == webConfigOrder && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
+        try {
+          logger.warn("try webConfigDownload");
+          targetConfig = webConfigDownload();
+        } catch (Exception e) {
+          logger.logException(e);
         }
-        if (liv == dnsConfigOrder && targetConfig == null) {
-          // TODO: implementare caricamento configurazione da DNS
+        break;
+      }
+      if (liv == dnsConfigOrder && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
+        try {
+          logger.warn("try dnsConfigOrder");
+          targetConfig = dnsConfigDownload();
+        } catch (Exception e) {
+          logger.logException(e);
         }
-        if (liv == base64ConfigOrder && targetConfig == null && baseConfig != null && !baseConfig.equals("")) {
-          try {
-            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
-          } catch (ClassNotFoundException | IOException e) {
-            if (logger != null)
-              logger.warn(e.getMessage());
-            logger.logException(e);
-          }
+        break;
+      }
+      if (liv == base64ConfigOrder && targetConfig == null && baseConfig != null && !baseConfig.isEmpty()) {
+        try {
+          logger.warn("try fromBase64");
+          targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
+        } catch (Exception e) {
+          logger.logException(e);
         }
-        if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.equals("")) {
-          try {
-            String config = "";
-            // System.out.println("config path " + fileConfig.replaceFirst("^~",
-            // System.getProperty("user.home")));
-            FileReader fileReader = new FileReader(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
-              config = config + line;
-            }
-            bufferedReader.close();
-            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
-          } catch (IOException | ClassNotFoundException e) {
-            if (logger != null)
-              logger.logException(e);
-            logger.warn(e.getMessage());
-          }
+        break;
+      }
+      if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.isEmpty()) {
+        try {
+          logger.warn("try fileConfig");
+          targetConfig = loadConfigFromFile(fileConfig);
+        } catch (Exception e) {
+          logger.logException(e);
         }
       }
     }
     return targetConfig;
+  }
+
+  private Ar4kConfig dnsConfigDownload() {
+    StringBuilder resultString = new StringBuilder();
+    String hostPart = dnsConfig.split("\\.")[0];
+    String domainPart = dnsConfig.replaceAll("^" + hostPart, "");
+    System.out.println("Using H:" + hostPart + " D:" + domainPart);
+    Set<String> errors = new HashSet<>();
+    try {
+      Lookup l = new Lookup(hostPart + "-max" + domainPart, Type.TXT, DClass.IN);
+      l.setResolver(new SimpleResolver());
+      l.run();
+      if (l.getResult() == Lookup.SUCCESSFUL) {
+        int chunkSize = Integer.valueOf(l.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+        if (chunkSize > 0) {
+          for (int c = 0; c < chunkSize; c++) {
+            Lookup cl = new Lookup(hostPart + "-" + String.valueOf(c) + domainPart, Type.TXT, DClass.IN);
+            cl.setResolver(new SimpleResolver());
+            cl.run();
+            if (cl.getResult() == Lookup.SUCCESSFUL) {
+              resultString.append(cl.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+            } else {
+              errors.add(
+                  "error in chunk " + hostPart + "-" + String.valueOf(c) + domainPart + " -> " + cl.getErrorString());
+            }
+          }
+        } else {
+          errors.add("error, size of data is " + l.getAnswers()[0].rdataToString());
+        }
+      } else {
+        errors.add("no " + hostPart + "-max" + domainPart + " record found -> " + l.getErrorString());
+      }
+      if (!errors.isEmpty()) {
+        logger.error(errors.toString());
+      }
+    } catch (UnknownHostException | TextParseException e) {
+      logger.logException(e);
+    }
+    try {
+      return (Ar4kConfig) ((errors.isEmpty() && resultString.length() > 0)
+          ? ConfigHelper.fromBase64(resultString.toString())
+          : null);
+    } catch (ClassNotFoundException | IOException e) {
+      logger.logException(e);
+      return null;
+    }
+  }
+
+  public Ar4kConfig loadConfigFromFile(String pathConfig) {
+    Ar4kConfig resultConfig = null;
+    try {
+      String config = "";
+      FileReader fileReader = new FileReader(pathConfig.replaceFirst("^~", System.getProperty("user.home")));
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+      String line = null;
+      while ((line = bufferedReader.readLine()) != null) {
+        config = config + line;
+      }
+      bufferedReader.close();
+      resultConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
+    } catch (IOException | ClassNotFoundException e) {
+      if (logger != null)
+        logger.logException(e);
+      logger.warn(e.getMessage());
+    }
+    return resultConfig;
+  }
+
+  public Ar4kConfig webConfigDownload() {
+    String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf";
+    try (BufferedInputStream in = new BufferedInputStream(new URL(webConfig).openStream());
+        FileOutputStream fileOutputStream = new FileOutputStream(temporaryFile)) {
+      byte dataBuffer[] = new byte[1024];
+      int bytesRead;
+      while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+        fileOutputStream.write(dataBuffer, 0, bytesRead);
+      }
+    } catch (IOException e) {
+      if (logger != null)
+        logger.warn(e.getMessage());
+      logger.logException(e);
+    }
+    return loadConfigFromFile(temporaryFile);
   }
 
   // workaround Spring State Machine
@@ -582,8 +672,18 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
-    if (logger != null) {
-      logger.info(" event: " + event.toString());
+    logger.info(" event: " + event.toString());
+    if (event instanceof ContextRefreshedEvent) {
+      // avvio a contesto spring caricato
+      onApplicationEventFlag = true;
+      checkDualStart();
+    }
+  }
+
+  private synchronized void checkDualStart() {
+    logger.info("STARTING AGENT...");
+    if (onApplicationEventFlag && afterSpringInitFlag) {
+      animaStateMachine.start();
     }
   }
 
@@ -643,12 +743,24 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     return (dataStore != null);
   }
 
-  // coda principale Anima (sottoscritto da Anima con IAnimaGateway
   @Bean
-  public MessageChannel mainAnimaChannel() {
+  public MessageChannel loggerChannel() {
     return new PublishSubscribeChannel();
   }
-  // TODO:implementare IAnimaGateway
+
+  @Bean
+  public MessageChannel statsChannel() {
+    return new PublishSubscribeChannel();
+  }
+
+  /*
+   * @Bean public MessageChannel rpcAnimaChannel() { return new
+   * ExecutorChannel(null); // TODO: implementare l'esecutore }
+   */
+  @Bean
+  public MessageChannel eventsChannel() {
+    return new PublishSubscribeChannel();
+  }
 
   @Override
   public void setBeanName(String name) {

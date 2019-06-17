@@ -212,6 +212,14 @@ public class ShellInterface extends AbstractShellHelper {
     return ConfigHelper.toBase64(getWorkingConfig());
   }
 
+  @ShellMethod("View dns version base64 text prepared for dns")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public String getSelectedConfigForDns(@ShellOption(help = "the hostname for this configuration") String name)
+      throws IOException {
+    return ConfigHelper.toBase64ForDns(name, getWorkingConfig());
+  }
+
   @ShellMethod("Save selected configuration in base64 text file")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")

@@ -14,14 +14,14 @@
     */
 package org.ar4k.agent.logger;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.messages.LoggerMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-//import org.springframework.integration.core.MessagingTemplate;
 
 /**
  * Logger
@@ -33,7 +33,7 @@ import org.slf4j.Marker;
 public class Ar4kLogger implements Logger {
 
   private Logger logger;
-
+  
   public Ar4kLogger(Class<?> clazz) {
     logger = LoggerFactory.getLogger(clazz);
   }
@@ -48,18 +48,32 @@ public class Ar4kLogger implements Logger {
 
   public static LogLevel level = LogLevel.INFO;
 
+  private static String stackTraceToString(Throwable e) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    e.printStackTrace(pw);
+    String response = null;
+    if (e.getCause() != null && e.getCause().getMessage() != null) {
+      response = " [M] " + e.getCause().getMessage() + " -> " + sw.toString();
+    } else {
+      response = " [M] " + sw.toString();
+    }
+    return response;
+  }
+
   public void logException(Exception e) {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
-    o.put("exception", e);
-    logger.error("Exception in trace: " + e.getCause().getStackTrace().toString());
+    o.put("exception", stackTraceToString(e));
+    logger.warn("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
   public void logException(int errore, Exception e) {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
-    o.put("exception", e);
+    o.put("exception", stackTraceToString(e));
+    logger.warn("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
@@ -70,19 +84,7 @@ public class Ar4kLogger implements Logger {
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    // MessagingTemplate messageTemplate = new MessagingTemplate();
-    LoggerMessage loggerMessage = new LoggerMessage();
-    if (logMessage.containsKey("exception") && logMessage.get("exception") instanceof Exception) {
-      loggerMessage.setException((Exception) logMessage.get("exception"));
-    }
-    if (logMessage.containsKey("msg") && logMessage.get("msg") instanceof String) {
-      loggerMessage.setMessage(logMessage.get("msg").toString());
-    }
-    loggerMessage.setLogLevel(level);
-    // TODO:riattivare invio eventi da Logger
-    // messageTemplate.send(((Anima)
-    // Anima.getApplicationContext().getBean("anima")).mainLogChannel(),
-    // loggerMessage);
+    //TODO implementare in messaggi
   }
 
   @Override
