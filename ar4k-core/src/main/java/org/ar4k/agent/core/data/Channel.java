@@ -13,6 +13,7 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
 import org.joda.time.Instant;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.integration.channel.AbstractMessageChannel;
 
@@ -200,7 +201,8 @@ public abstract class Channel implements Ar4kChannel, Closeable {
   }
 
   protected void stopFunction() {
-    ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().destroyBean(getChannel());
+    ((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory())
+        .destroySingleton(getNodeId());
   }
 
   @Override
