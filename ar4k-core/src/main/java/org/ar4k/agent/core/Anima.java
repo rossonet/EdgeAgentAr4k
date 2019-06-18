@@ -106,6 +106,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
+  public static final String NETTY_CTX_CLIENT = "net-ctx-c";
+  public static final String NETTY_CTX_SERVER = "net-ctx-s";
+  public static final String KOPS_BINARY_PATH = "./kops.bin";
+  public static final String BASE_BASH_CMD = "/bin/bash -l";
+  public static final String LATEST_KOPS_URL = "https://api.github.com/repos/kubernetes/kops/releases/latest";
+  public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
+  public static final String MINIKUBE_BINARY_PATH = "./minikube.bin";
+  public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
+
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
   private final String dbDataStoreName = "datastore";
 

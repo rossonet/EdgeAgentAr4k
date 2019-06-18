@@ -1,4 +1,4 @@
-package org.ar4k.agent.messages;
+package org.ar4k.agent.core.data.messages;
 
 import org.springframework.messaging.Message;
 

@@ -271,9 +271,15 @@ public abstract class AbstractShellHelper {
   }
 
   protected static String runShellTest(String testString) {
-    char[] animationChars = new char[] { '|', '/', '-', '\\' };
     int totali = 1000;
     Instant inizio = new Instant();
+    waitingConsole(testString, totali, inizio);
+    System.out.println("\n\n");
+    return "Processing: Done!";
+  }
+
+  protected static void waitingConsole(String text, int totali, Instant inizio) {
+    char[] animationChars = new char[] { '|', '/', '-', '\\' };
     for (int conto = 0; conto <= totali; conto++) {
       Duration trascorso = new Duration(inizio, new Instant());
       String circle = "";
@@ -288,10 +294,9 @@ public abstract class AbstractShellHelper {
       } else {
         circle = "  starting..." + spazii;
       }
-      System.out.print("Running:  " + testString + " " + String.valueOf(conto % testString.length()) + circle + "\r");
+      System.out.print("Running:  " + text + " " + circle + "\r");
       fib(load);
     }
-    System.out.println("\n\n");
-    return "Processing: Done!";
   }
+
 }

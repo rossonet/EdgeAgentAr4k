@@ -14,12 +14,20 @@
     */
 package org.ar4k.agent.kubernetes;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.helper.HardwareHelper;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -33,6 +41,8 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.io.CharStreams;
 
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.ApiException;
@@ -299,6 +309,136 @@ public class KubernetesInterface extends AbstractShellHelper {
     } catch (ApiException e) {
       logger.logException(e);
       return e.getMessage();
+    }
+  }
+
+  @ShellMethod(value = "Run Kops (K8s admin tool) (https://github.com/kubernetes/kops)", group = "Kubernetes Commands")
+  @ManagedOperation
+  public String runKopsCommandLine(
+      @ShellOption(help = "command to execute in Kops", defaultValue = "help") String command) {
+    StringBuilder result = new StringBuilder();
+    try {
+      getKopsBinary();
+    } catch (JSONException | IOException e) {
+      logger.logException(e);
+    }
+    String[] splitCmd = command.split(" |\t");
+    String[] commandArgs = new String[splitCmd.length + 1];
+    int counter = 0;
+    commandArgs[counter] = Anima.KOPS_BINARY_PATH;
+    for (counter = 1; counter < splitCmd.length + 1; counter++) {
+      commandArgs[counter] = splitCmd[counter - 1];
+    }
+    try {
+      Runtime rt = Runtime.getRuntime();
+      Process p = rt.exec(commandArgs);
+      p.waitFor();
+      InputStream is = p.getInputStream();
+      InputStream es = p.getErrorStream();
+      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
+      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
+      // result.append(" -- OUTPUT -- \n");
+      result.append(CharStreams.toString(rin));
+      if (p.exitValue() != 0) {
+        result.append("\n -- ERROR -- \n");
+        result.append(CharStreams.toString(rerr));
+      }
+    } catch (IOException | InterruptedException e) {
+      logger.logException(e);
+    }
+    return result.toString();
+  }
+
+  @ShellMethod(value = "Create a K8s cluster with minikube command line and login to it (https://github.com/kubernetes/minikube)", group = "Kubernetes Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testApiClientNull")
+  public String createK8sWithMiniKube(
+      @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName) {
+    StringBuilder result = new StringBuilder();
+    result.append("Deleting previos cluster");
+    System.out.println("Deleting previos cluster");
+    result.append(runMiniKubeCommandLine(vmName, "delete"));
+    result.append("Starting K8s Cluster");
+    System.out.println("Starting K8s Cluster");
+    result.append(runMiniKubeCommandLine(vmName, "start"));
+    System.out.println("Starting K8s Cluster");
+    result.append(runMiniKubeCommandLine(vmName, "status"));
+    connectToK8sApi();
+    return result.toString();
+  }
+
+  @ShellMethod(value = "Create a K8s cluster with minikube command line and login to it (https://github.com/kubernetes/minikube)", group = "Kubernetes Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testApiClientNull")
+  public String removeK8sWithMiniKube(
+      @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName) {
+    StringBuilder result = new StringBuilder();
+    result.append("Deleting cluster " + vmName);
+    result.append(runMiniKubeCommandLine(vmName, "delete"));
+    return result.toString();
+  }
+
+  @ShellMethod(value = "Run MiniKube (K8s admin tool) (https://github.com/kubernetes/minikube)", group = "Kubernetes Commands")
+  @ManagedOperation
+  public String runMiniKubeCommandLine(
+      @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName,
+      @ShellOption(help = "command to execute in MiniKube", defaultValue = "help") String command) {
+    StringBuilder result = new StringBuilder();
+    try {
+      getMiniKubeBinary();
+    } catch (JSONException | IOException e) {
+      logger.logException(e);
+    }
+    String[] splitCmd = (command + " -p " + vmName).split(" |\t");
+    String[] commandArgs = new String[splitCmd.length + 1];
+    int counter = 0;
+    commandArgs[counter] = Anima.MINIKUBE_BINARY_PATH;
+    for (counter = 1; counter < splitCmd.length + 1; counter++) {
+      commandArgs[counter] = splitCmd[counter - 1];
+    }
+    try {
+      Runtime rt = Runtime.getRuntime();
+      Process p = rt.exec(commandArgs);
+      p.waitFor();
+      InputStream is = p.getInputStream();
+      InputStream es = p.getErrorStream();
+      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
+      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
+      // result.append(" -- OUTPUT -- \n");
+      result.append(CharStreams.toString(rin));
+      if (p.exitValue() != 0) {
+        result.append("\n -- ERROR -- \n");
+        result.append(CharStreams.toString(rerr));
+      }
+    } catch (IOException | InterruptedException e) {
+      logger.logException(e);
+    }
+    return result.toString();
+  }
+
+  private void getMiniKubeBinary() throws JSONException, IOException {
+    File miniBinary = new File(Anima.MINIKUBE_BINARY_PATH);
+    if (!miniBinary.exists()) {
+      logger.warn("Downloading " + Anima.MINIKUBE_URL + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(Anima.MINIKUBE_BINARY_PATH, Anima.MINIKUBE_URL);
+      logger.warn("Download of " + Anima.MINIKUBE_URL + " completed");
+    }
+    if (!miniBinary.canExecute()) {
+      miniBinary.setExecutable(true);
+    }
+  }
+
+  private void getKopsBinary() throws JSONException, IOException {
+    File kopsBinary = new File(Anima.KOPS_BINARY_PATH);
+    if (!kopsBinary.exists()) {
+      String latestKopsVersion = HardwareHelper.readJsonFromUrl(Anima.LATEST_KOPS_URL).optString("tag_name");
+      String kopsUrl = Anima.KOPS_URL.replace("$version", latestKopsVersion);
+      logger.warn("Downloading " + kopsUrl + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(Anima.KOPS_BINARY_PATH, kopsUrl);
+      logger.warn("Download of " + kopsUrl + " completed");
+    }
+    if (!kopsBinary.canExecute()) {
+      kopsBinary.setExecutable(true);
     }
   }
 
