@@ -114,6 +114,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
   public static final String MINIKUBE_BINARY_PATH = "./minikube.bin";
   public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
+  public static final String HELM_TGZ_PATH = "./helm.tgz";
+  public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
+  public static final String HELM_DIRECTORY_PATH = "./linux-amd64";
 
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
   private final String dbDataStoreName = "datastore";

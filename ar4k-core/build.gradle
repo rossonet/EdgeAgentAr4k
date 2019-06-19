@@ -49,6 +49,8 @@ dependencies {
   // per let's encrypt
   compile 'org.shredzone.acme4j:acme4j:2.7'
   testCompile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
+  // commons-compress
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
 }
 
 protobuf {

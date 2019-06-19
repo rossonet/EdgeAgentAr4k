@@ -14,6 +14,7 @@
     */
 package org.ar4k.agent.helper;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +34,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.ar4k.agent.exception.Ar4kException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +57,7 @@ import oshi.software.os.OperatingSystem;
 public class HardwareHelper {
 
   public static final boolean debugFreezeHal = false;
+  private static final int BUFFER_SIZE = 512;
 
   public static HardwareInfo getSystemInfo() throws IOException, InterruptedException, ParseException {
     final HardwareInfo dato = new HardwareInfo();
@@ -390,5 +396,32 @@ public class HardwareHelper {
         fileOutputStream.close();
     }
     return result;
+  }
+
+  public static void extractTarGz(InputStream in) throws IOException {
+    GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
+    try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+      TarArchiveEntry entry = null;
+      while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+        /** If the entry is a directory, create the directory. **/
+        if (entry.isDirectory()) {
+          File f = new File(entry.getName());
+          boolean created = f.mkdir();
+          if (!created) {
+            throw new Ar4kException(
+                "Unable to create directory " + f.getAbsolutePath() + ", during extraction of archive contents.");
+          }
+        } else {
+          int count;
+          byte data[] = new byte[BUFFER_SIZE];
+          FileOutputStream fos = new FileOutputStream(entry.getName(), false);
+          try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
+            while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+              dest.write(data, 0, count);
+            }
+          }
+        }
+      }
+    }
   }
 }

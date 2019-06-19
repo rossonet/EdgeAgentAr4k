@@ -83,7 +83,8 @@ public class PcapShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "List packets analyzer", group = "Pcap Commands")
   @ManagedOperation
-  public Set<String> listPacketAnalyzer(@ShellOption(help = "package for searching") String packageName) {
+  public Set<String> listPacketAnalyzer(
+      @ShellOption(help = "package for searching", defaultValue = "org.ar4k.agent.pcap") String packageName) {
     Set<String> rit = new HashSet<>();
     ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
     provider.addIncludeFilter(new AnnotationTypeFilter(Ar4kPcapAnalyzer.class));
