@@ -33,7 +33,7 @@ import org.slf4j.Marker;
 public class Ar4kLogger implements Logger {
 
   private Logger logger;
-  
+
   public Ar4kLogger(Class<?> clazz) {
     logger = LoggerFactory.getLogger(clazz);
   }
@@ -65,7 +65,7 @@ public class Ar4kLogger implements Logger {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
-    logger.warn("Exception -> " + stackTraceToString(e));
+    logger.info("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
@@ -73,7 +73,7 @@ public class Ar4kLogger implements Logger {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
-    logger.warn("Exception -> " + stackTraceToString(e));
+    logger.info("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
@@ -84,7 +84,7 @@ public class Ar4kLogger implements Logger {
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    //TODO implementare in messaggi
+    // TODO implementare in messaggi
   }
 
   @Override

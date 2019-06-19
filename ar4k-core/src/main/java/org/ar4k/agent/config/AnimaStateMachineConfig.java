@@ -6,8 +6,8 @@ import java.util.Set;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
+import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import org.springframework.statemachine.state.State;
  *
  */
 public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<AnimaStates, AnimaEvents> {
-  private static final Logger logger = Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
   @Autowired
@@ -120,8 +120,7 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
 
   @Bean
   public Action<AnimaStates, AnimaEvents> errorAction() {
-    logger.warn("Error in change action");
-    return ctx -> System.out.println("Error in change action " + ctx.getSource().getId() + ctx.getException());
+    return ctx -> logger.logException(ctx.getException());
   }
 
   public Set<AnimaStates> getBaseStates() {

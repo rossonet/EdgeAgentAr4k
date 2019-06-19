@@ -41,6 +41,8 @@ import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -117,6 +119,17 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public static final String HELM_TGZ_PATH = "./helm.tgz";
   public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
   public static final String HELM_DIRECTORY_PATH = "./linux-amd64";
+
+  // default value
+  private static final String commonName = "dev-rossonet-" + UUID.randomUUID().toString();
+  private static final String organization = "Rossonet";
+  private static final String unit = "Ar4k";
+  private static final String locality = "Imola";
+  private static final String state = "Bologna";
+  private static final String country = "IT";
+  private static final String uri = "https://www.rossonet.com";
+  private static final String dns = NetworkHelper.getHostname();
+  private static final String ip = "127.0.0.1";
 
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
   private final String dbDataStoreName = "datastore";
@@ -217,7 +230,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   // TODO implementare l'esecuzione dei pre e post script
 
-  // array keystore disponibili
   private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
 
   // assegnato da Spring tramite setter al boot
@@ -236,6 +248,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private BeaconClient beaconClient = null;
 
   private DataAddress dataAddress = new DataAddress();
+
+  private KeystoreConfig myIdentityKeystore = null;
+  private String myAliasCertInKeystore = "agent";
 
   private boolean onApplicationEventFlag = false;
 
@@ -317,6 +332,55 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
   }
 
+  private void setMasterKeystore() {
+    KeystoreConfig ks = new KeystoreConfig();
+    boolean foundFile = false;
+    boolean foundWeb = false;
+    if (fileKeystore != null && !fileKeystore.isEmpty()) {
+      if (new File(fileKeystore).exists()) {
+        ks.filePathPre = fileKeystore;
+        foundFile = true;
+        logger.info("use keystore " + ks.toString());
+      } else {
+        logger.info("keystore file not found" + ks.toString());
+      }
+    } else {
+      logger.info("value of fileKeystore is null, use: " + ks.toString());
+    }
+    if (!foundFile) {
+      if (webKeystore != null && !webKeystore.isEmpty()) {
+        try {
+          HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystore);
+        } catch (IOException e) {
+          foundWeb = false;
+          logger.logException(e);
+        }
+        if (new File(ks.filePathPre).exists()) {
+          logger.info("try keystore from web, url: " + webKeystore);
+          foundWeb = true;
+        }
+      }
+      if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
+        // TODO: implementare scaricamento keystore da DNS
+        // logger.warn("use keystore from DNS, domain: " + webKeystore);
+      }
+    }
+    if (keystorePassword != null && !keystorePassword.isEmpty()) {
+      ks.keystorePassword = keystorePassword;
+    }
+    if (keystoreCaAlias != null && !keystoreCaAlias.isEmpty()) {
+      ks.caAlias = keystoreCaAlias;
+    }
+    if (!new File(fileKeystore).exists()) {
+      logger.warn("new keystore: " + ks.toString());
+      ks.create(Anima.commonName, Anima.organization, Anima.unit, Anima.locality, Anima.state, Anima.country, Anima.uri,
+          Anima.dns, Anima.ip);
+      logger.debug("keystore created");
+    }
+    addKeyStores(ks);
+    setMyIdentityKeystore(ks);
+  }
+
   @PostConstruct
   public void afterSpringInit() throws Exception {
     afterSpringInitFlag = true;
@@ -353,6 +417,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
     bootStrapConfig = resolveBootstrapConfig();
     setInitialAuth();
+    setMasterKeystore();
     checkBeaconClient();
     if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
       targetConfig = bootStrapConfig;
@@ -419,7 +484,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     for (int liv = 0; liv <= maxConfig; liv++) {
       if (liv == webConfigOrder && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
         try {
-          logger.warn("try webConfigDownload");
+          logger.info("try webConfigDownload");
           targetConfig = webConfigDownload();
         } catch (Exception e) {
           logger.logException(e);
@@ -428,7 +493,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
       if (liv == dnsConfigOrder && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
         try {
-          logger.warn("try dnsConfigOrder");
+          logger.info("try dnsConfigOrder");
           targetConfig = dnsConfigDownload();
         } catch (Exception e) {
           logger.logException(e);
@@ -437,7 +502,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
       if (liv == base64ConfigOrder && targetConfig == null && baseConfig != null && !baseConfig.isEmpty()) {
         try {
-          logger.warn("try fromBase64");
+          logger.info("try fromBase64");
           targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
         } catch (Exception e) {
           logger.logException(e);
@@ -446,7 +511,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
       if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.isEmpty()) {
         try {
-          logger.warn("try fileConfig");
+          logger.info("try fileConfig");
           targetConfig = loadConfigFromFile(fileConfig);
         } catch (Exception e) {
           logger.logException(e);
@@ -859,5 +924,21 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
         + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly + ", logoUrl=" + logoUrl + ", runtimeConfig="
         + runtimeConfig + ", targetConfig=" + targetConfig + ", bootStrapConfig=" + bootStrapConfig + ", stateTarget="
         + stateTarget + ", statesBefore=" + statesBefore + ", beanName=" + beanName + "]";
+  }
+
+  public KeystoreConfig getMyIdentityKeystore() {
+    return myIdentityKeystore;
+  }
+
+  public void setMyIdentityKeystore(KeystoreConfig myIdentityKeystore) {
+    this.myIdentityKeystore = myIdentityKeystore;
+  }
+
+  public String getMyAliasCertInKeystore() {
+    return myAliasCertInKeystore;
+  }
+
+  public void setMyAliasCertInKeystore(String myAliasCertInKeystore) {
+    this.myAliasCertInKeystore = myAliasCertInKeystore;
   }
 }

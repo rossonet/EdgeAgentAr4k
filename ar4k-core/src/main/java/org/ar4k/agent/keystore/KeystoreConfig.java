@@ -26,11 +26,11 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.json.KeystoreConfigJsonAdapter;
 import org.ar4k.agent.core.Ar4kComponent;
@@ -49,7 +49,7 @@ import com.google.gson.TypeAdapter;
  *         Classe configurazione per keystore.
  *
  */
-public class KeystoreConfig extends AbstractServiceConfig {
+public class KeystoreConfig implements ConfigSeed {
 
   private static final long serialVersionUID = 6291742061764165257L;
 
@@ -295,6 +295,25 @@ public class KeystoreConfig extends AbstractServiceConfig {
   @Override
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new KeystoreConfigJsonAdapter();
+  }
+
+  @Override
+  public String toString() {
+    return "KeystoreConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
+        + ", filePathPre=" + filePathPre + ", keystorePassword=*********" + ", label=" + label + ", caAlias=" + caAlias
+        + "]";
+  }
+
+  @Override
+  public String getDescription() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<String> getTags() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
