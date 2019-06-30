@@ -51,7 +51,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @SpringBootTest(properties = { ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false",
     InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false" })
 @ComponentScan("org.ar4k.agent.console,org.ar4k.agent.core.web,org.ar4k.agent.spring.autoconfig,org.ar4k.agent.spring.autoconfig.web")
-@Import(TestApplicationRunner.class)
+//@Import(TestApplicationRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class ConsoleWebTest {
 

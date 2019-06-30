@@ -22,6 +22,7 @@ import org.springframework.shell.Shell;
 
 import com.beust.jcommander.ParameterException;
 
+// una singola converrsazione via RPC
 public class RpcConversation implements RpcExecutor {
 
   private Map<String, Ar4kConfig> configurations = new HashMap<>();

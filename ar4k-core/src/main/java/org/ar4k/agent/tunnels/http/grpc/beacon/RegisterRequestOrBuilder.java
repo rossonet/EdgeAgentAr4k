@@ -18,34 +18,44 @@ public interface RegisterRequestOrBuilder extends
       getNameBytes();
 
   /**
-   * <code>string secretKey = 2;</code>
+   * <code>string requestCsr = 2;</code>
    */
-  java.lang.String getSecretKey();
+  java.lang.String getRequestCsr();
   /**
-   * <code>string secretKey = 2;</code>
+   * <code>string requestCsr = 2;</code>
    */
   com.google.protobuf.ByteString
-      getSecretKeyBytes();
+      getRequestCsrBytes();
 
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>string displayKey = 3;</code>
+   */
+  java.lang.String getDisplayKey();
+  /**
+   * <code>string displayKey = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getDisplayKeyBytes();
+
+  /**
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   boolean hasTime();
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getTime();
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getTimeOrBuilder();
 
   /**
-   * <code>string jsonHealth = 4;</code>
+   * <code>string jsonHealth = 5;</code>
    */
   java.lang.String getJsonHealth();
   /**
-   * <code>string jsonHealth = 4;</code>
+   * <code>string jsonHealth = 5;</code>
    */
   com.google.protobuf.ByteString
       getJsonHealthBytes();

@@ -50,214 +50,214 @@ import org.springframework.test.context.junit4.SpringRunner;
 //TODO: test concole da implementare
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = { ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false",
-		InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false" })
+    InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false" })
 @ComponentScan("org.ar4k.agent")
-@Import(TestApplicationRunner.class)
+//@Import(TestApplicationRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class TunnelTest {
 
-	@Autowired
-	private Shell shell;
+  @Autowired
+  private Shell shell;
 
-	@Autowired
-	Anima anima;
+  @Autowired
+  Anima anima;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+  }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+  }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+  @Before
+  public void setUp() throws Exception {
+  }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+  @After
+  public void tearDown() throws Exception {
+  }
 
-	@Rule
-	public TestWatcher watcher = new TestWatcher() {
-		protected void starting(Description description) {
-			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-		}
-	};
+  @Rule
+  public TestWatcher watcher = new TestWatcher() {
+    protected void starting(Description description) {
+      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+    }
+  };
 
-	@Test
-	public void helpTest() {
-		boolean ok = false;
-		try {
-			Map<String, MethodTarget> commands = shell.listCommands();
-			System.out.println("\nCOMMANDS\n---------------------------\n" + String.join(", ", commands.keySet()));
-			List<String> comandi = new ArrayList<String>();
-			comandi.add("help");
-			for (String hi : commands.keySet()) {
-				comandi.add("help " + hi);
-			}
-			testCommands(comandi);
-			ok = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(ok);
-	}
+  @Test
+  public void helpTest() {
+    boolean ok = false;
+    try {
+      Map<String, MethodTarget> commands = shell.listCommands();
+      System.out.println("\nCOMMANDS\n---------------------------\n" + String.join(", ", commands.keySet()));
+      List<String> comandi = new ArrayList<String>();
+      comandi.add("help");
+      for (String hi : commands.keySet()) {
+        comandi.add("help " + hi);
+      }
+      testCommands(comandi);
+      ok = true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertTrue(ok);
+  }
 
-	@Test
-	@Ignore
-	public void testActivationAr4kNet() throws InterruptedException {
-		boolean ok = false;
-		try {
-			List<String> comandi = new ArrayList<String>();
-			List<String> post = new ArrayList<String>();
-			String labelTest = UUID.randomUUID().toString();
-			String ksFile = labelTest + ".keystore";
-			comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
-			comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
-			comandi.add("create-selected-config --name test_stunnel");
-			comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
-			comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
-			comandi.add(
-					"add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
-							+ labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
-			comandi.add(
-					"add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
-			comandi.add("set-selected-config-as-runtime");
-			post.add("get-ar4k-agent-status");
-			post.add("list-tunnels-selected-config");
-			post.add("list-tunnels-runtime");
-			testCommands(comandi);
-			Thread.sleep(3000L);
-			testCommands(post);
-			Thread.sleep(30000L);
-			testCommands(post);
-			ok = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(ok);
-	}
+  @Test
+  @Ignore
+  public void testActivationAr4kNet() throws InterruptedException {
+    boolean ok = false;
+    try {
+      List<String> comandi = new ArrayList<String>();
+      List<String> post = new ArrayList<String>();
+      String labelTest = UUID.randomUUID().toString();
+      String ksFile = labelTest + ".keystore";
+      comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
+      comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
+      comandi.add("create-selected-config --name test_stunnel");
+      comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
+      comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
+      comandi.add(
+          "add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
+              + labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
+      comandi.add(
+          "add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
+      comandi.add("set-selected-config-as-runtime");
+      post.add("get-ar4k-agent-status");
+      post.add("list-tunnels-selected-config");
+      post.add("list-tunnels-runtime");
+      testCommands(comandi);
+      Thread.sleep(3000L);
+      testCommands(post);
+      Thread.sleep(30000L);
+      testCommands(post);
+      ok = true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertTrue(ok);
+  }
 
-	@Test
-	@Ignore
-	public void testActivationProxy() throws InterruptedException {
-		boolean ok = false;
-		try {
-			List<String> comandi = new ArrayList<String>();
-			List<String> post = new ArrayList<String>();
-			String labelTest = UUID.randomUUID().toString();
-			String ksFile = labelTest + ".keystore";
-			comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
-			comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
-			comandi.add("create-selected-config --name test_stunnel");
-			comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
-			comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
-			comandi.add(
-					"add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
-							+ labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
-			comandi.add(
-					"add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
-			comandi.add("set-selected-config-as-runtime");
-			post.add("get-ar4k-agent-status");
-			post.add("list-tunnels-selected-config");
-			post.add("list-tunnels-runtime");
-			testCommands(comandi);
-			Thread.sleep(3000L);
-			testCommands(post);
-			Thread.sleep(30000L);
-			testCommands(post);
-			ok = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(ok);
-	}
+  @Test
+  @Ignore
+  public void testActivationProxy() throws InterruptedException {
+    boolean ok = false;
+    try {
+      List<String> comandi = new ArrayList<String>();
+      List<String> post = new ArrayList<String>();
+      String labelTest = UUID.randomUUID().toString();
+      String ksFile = labelTest + ".keystore";
+      comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
+      comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
+      comandi.add("create-selected-config --name test_stunnel");
+      comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
+      comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
+      comandi.add(
+          "add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
+              + labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
+      comandi.add(
+          "add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
+      comandi.add("set-selected-config-as-runtime");
+      post.add("get-ar4k-agent-status");
+      post.add("list-tunnels-selected-config");
+      post.add("list-tunnels-runtime");
+      testCommands(comandi);
+      Thread.sleep(3000L);
+      testCommands(post);
+      Thread.sleep(30000L);
+      testCommands(post);
+      ok = true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertTrue(ok);
+  }
 
-	@Test
-	@Ignore
-	public void testActivationSsh() throws InterruptedException {
-		boolean ok = false;
-		try {
-			List<String> comandi = new ArrayList<String>();
-			List<String> post = new ArrayList<String>();
-			String labelTest = UUID.randomUUID().toString();
-			String ksFile = labelTest + ".keystore";
-			comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
-			comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
-			comandi.add("create-selected-config --name test_stunnel");
-			comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
-			comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
-			comandi.add(
-					"add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
-							+ labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
-			comandi.add(
-					"add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
-			comandi.add("set-selected-config-as-runtime");
-			post.add("get-ar4k-agent-status");
-			post.add("list-tunnels-selected-config");
-			post.add("list-tunnels-runtime");
-			testCommands(comandi);
-			Thread.sleep(3000L);
-			testCommands(post);
-			Thread.sleep(30000L);
-			testCommands(post);
-			ok = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(ok);
-	}
+  @Test
+  @Ignore
+  public void testActivationSsh() throws InterruptedException {
+    boolean ok = false;
+    try {
+      List<String> comandi = new ArrayList<String>();
+      List<String> post = new ArrayList<String>();
+      String labelTest = UUID.randomUUID().toString();
+      String ksFile = labelTest + ".keystore";
+      comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
+      comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
+      comandi.add("create-selected-config --name test_stunnel");
+      comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
+      comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
+      comandi.add(
+          "add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
+              + labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
+      comandi.add(
+          "add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
+      comandi.add("set-selected-config-as-runtime");
+      post.add("get-ar4k-agent-status");
+      post.add("list-tunnels-selected-config");
+      post.add("list-tunnels-runtime");
+      testCommands(comandi);
+      Thread.sleep(3000L);
+      testCommands(post);
+      Thread.sleep(30000L);
+      testCommands(post);
+      ok = true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertTrue(ok);
+  }
 
-	@Test
-	@Ignore
-	public void testActivationStunnel() throws InterruptedException {
-		boolean ok = false;
-		try {
-			List<String> comandi = new ArrayList<String>();
-			List<String> post = new ArrayList<String>();
-			String labelTest = UUID.randomUUID().toString();
-			String ksFile = labelTest + ".keystore";
-			comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
-			comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
-			comandi.add("create-selected-config --name test_stunnel");
-			comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
-			comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
-			comandi.add(
-					"add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
-							+ labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
-			comandi.add(
-					"add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
-			comandi.add("set-selected-config-as-runtime");
-			post.add("get-ar4k-agent-status");
-			post.add("list-tunnels-selected-config");
-			post.add("list-tunnels-runtime");
-			testCommands(comandi);
-			Thread.sleep(3000L);
-			testCommands(post);
-			Thread.sleep(30000L);
-			testCommands(post);
-			ok = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(ok);
-	}
+  @Test
+  @Ignore
+  public void testActivationStunnel() throws InterruptedException {
+    boolean ok = false;
+    try {
+      List<String> comandi = new ArrayList<String>();
+      List<String> post = new ArrayList<String>();
+      String labelTest = UUID.randomUUID().toString();
+      String ksFile = labelTest + ".keystore";
+      comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
+      comandi.add("initialize-keystore-ca --keystore-label " + labelTest);
+      comandi.add("create-selected-config --name test_stunnel");
+      comandi.add("add-inet-network-point --ipHost ipa.ar4k.net --port 443 --name ipa_endpoint");
+      comandi.add("add-inet-network-point --ipHost errante.lab.ar4k.net --port 22 --name errante");
+      comandi.add(
+          "add-stunnel-service --connectionSock ipa_endpoint --redirectServer 127.0.0.1 --redirectPort 2200 --keystoreAuth "
+              + labelTest + " --keystoreTrust " + labelTest + " --name test_stunnel_service");
+      comandi.add(
+          "add-ssh-network-point --name ssh_test --connectionSock errante --bindHost localhost --bindPort 5676 --username ombra --password ciaone");
+      comandi.add("set-selected-config-as-runtime");
+      post.add("get-ar4k-agent-status");
+      post.add("list-tunnels-selected-config");
+      post.add("list-tunnels-runtime");
+      testCommands(comandi);
+      Thread.sleep(3000L);
+      testCommands(post);
+      Thread.sleep(30000L);
+      testCommands(post);
+      ok = true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertTrue(ok);
+  }
 
-	private void testCommands(List<String> cmd) throws IOException {
-		// Thread.sleep(5000L);
-		shell.run(new InputProvider() {
-			private int invoked = 0;
+  private void testCommands(List<String> cmd) throws IOException {
+    // Thread.sleep(5000L);
+    shell.run(new InputProvider() {
+      private int invoked = 0;
 
-			@Override
-			public Input readInput() {
-				invoked++;
-				if (cmd.size() >= invoked) {
-					return () -> cmd.get(invoked - 1);
-				} else {
-					return () -> "exit";
-				}
-			}
-		});
-	}
+      @Override
+      public Input readInput() {
+        invoked++;
+        if (cmd.size() >= invoked) {
+          return () -> cmd.get(invoked - 1);
+        } else {
+          return () -> "exit";
+        }
+      }
+    });
+  }
 }

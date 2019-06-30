@@ -7,6 +7,7 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.google.gson.JsonElement;
 
+// compoenente come bean
 public interface Ar4kComponent extends BeanNameAware, Closeable {
 
   public void init();

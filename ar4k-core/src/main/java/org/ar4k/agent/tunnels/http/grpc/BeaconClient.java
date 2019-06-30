@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -42,6 +43,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -66,8 +68,6 @@ public class BeaconClient implements Runnable {
   private RpcServiceV1BlockingStub blockingStub = null;
   private RpcServiceV1Stub asyncStub = null;
   private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-  private final String secretKey = UUID.randomUUID().toString();
-  // private String registerCode = null;
 
   private boolean running = false;
 
@@ -76,19 +76,20 @@ public class BeaconClient implements Runnable {
   private Agent me = null;
 
   private RpcConversation localExecutor = new RpcConversation();
-
+  private transient Anima a = null;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
   private int discoveryPort = 0;
   private String discoveryFilter = "AR4K";
   private DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
-  private String registerStatus = "BAD";
+  private StatusValue registerStatus = StatusValue.BAD;
 
-  public BeaconClient(RpcConversation rpcConversation, String host, int port, int discoveryPort, String discoveryFilter,
-      String uniqueName) {
+  public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
+      String discoveryFilter, String uniqueName) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
+    this.a = anima;
     if (uniqueName != null)
       this.reservedUniqueName = uniqueName;
     else
@@ -104,10 +105,22 @@ public class BeaconClient implements Runnable {
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     asyncStub = RpcServiceV1Grpc.newStub(channel);
     try {
-      registerStatus = registerToBeacon(reservedUniqueName);
+      registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), getCsrRequestBase64());
     } catch (IOException | InterruptedException | ParseException | NullPointerException e) {
       logger.logException(e);
     }
+  }
+
+  private String getCsrRequestBase64() {
+    return a.getCsrForBeaconRegistration();
+  }
+
+  private String getDisplayRequestTxt() {
+    return Anima.getRegistrationPin();
+  }
+
+  private void registerCertificateFromBeacon(String cert, String ca) {
+    a.registerCertificateFromBeacon(cert, ca);
   }
 
   public void runInstance() {
@@ -153,17 +166,24 @@ public class BeaconClient implements Runnable {
     return channel != null ? channel.getState(true) : ConnectivityState.TRANSIENT_FAILURE;
   }
 
-  private String registerToBeacon(String uniqueName) throws IOException, InterruptedException, ParseException {
+  private StatusValue registerToBeacon(String uniqueName, String displayKey, String csr)
+      throws IOException, InterruptedException, ParseException {
     RegisterRequest request;
-    String result = "BAD";
+    StatusValue result = StatusValue.BAD;
     try {
       long timeRequest = new Date().getTime();
       request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
-          .setSecretKey(secretKey).setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest)).build();
+          .setDisplayKey(displayKey).setRequestCsr(csr).setName(uniqueName)
+          .setTime(Timestamp.newBuilder().setSeconds(timeRequest)).build();
       RegisterReply reply = blockingStub.register(request);
-      me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
-          .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
-      result = reply.getResult().getStatus().name();
+      if (reply.getStatusRegistration().getStatus().equals(StatusValue.GOOD)) {
+        if (reply.getCa() != null && reply.getCert() != null) {
+          registerCertificateFromBeacon(reply.getCert(), reply.getCa());
+        }
+        me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
+            .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
+      }
+      result = reply.getStatusRegistration().getStatus();
     } catch (io.grpc.StatusRuntimeException e) {
       logger.warn("Beacon server is " + e.getMessage());
       logger.logException(e);
@@ -179,7 +199,15 @@ public class BeaconClient implements Runnable {
   public void run() {
     while (running) {
       try {
-        if (me != null && getStateConnection().equals(ConnectivityState.READY)) {
+        if (getStateConnection().equals(ConnectivityState.READY) && registerStatus.equals(StatusValue.WAIT_HUMAN)) {
+          try {
+            registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), getCsrRequestBase64());
+          } catch (IOException | InterruptedException | ParseException | NullPointerException e) {
+            logger.logException(e);
+          }
+        }
+        if (me != null && getStateConnection().equals(ConnectivityState.READY)
+            && registerStatus.equals(StatusValue.GOOD)) {
           checkPollChannel();
           sendHardwareInfo();
           Thread.sleep((long) getPollingFreq());
@@ -215,7 +243,7 @@ public class BeaconClient implements Runnable {
           logger
               .info("-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
           runConnection(ManagedChannelBuilder.forAddress(hostBeacon, portBeacon).usePlaintext());
-          if (!registerToBeacon(reservedUniqueName).equals("BAD")) {
+          if (!registerStatus.equals(StatusValue.BAD)) {
             socketDiscovery.close();
             socketDiscovery = null;
           }
@@ -453,10 +481,6 @@ public class BeaconClient implements Runnable {
     this.discoveryFilter = discoveryFilter;
   }
 
-  public String getSecretKey() {
-    return secretKey;
-  }
-
   public String getReservedUniqueName() {
     return reservedUniqueName;
   }
@@ -465,7 +489,7 @@ public class BeaconClient implements Runnable {
     this.reservedUniqueName = reservedUniqueName;
   }
 
-  public String getRegistrationStatus() {
+  public StatusValue getRegistrationStatus() {
     return registerStatus;
   }
 

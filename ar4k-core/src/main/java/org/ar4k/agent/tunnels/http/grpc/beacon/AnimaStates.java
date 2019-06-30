@@ -13,57 +13,29 @@ public enum AnimaStates
    */
   INIT(0),
   /**
-   * <code>STARTING = 1;</code>
+   * <code>STAMINAL = 1;</code>
    */
-  STARTING(1),
+  STAMINAL(1),
   /**
-   * <code>STAMINAL = 2;</code>
+   * <code>CONFIGURED = 2;</code>
    */
-  STAMINAL(2),
+  CONFIGURED(2),
   /**
-   * <code>CONFIGURED = 3;</code>
+   * <code>RUNNING = 3;</code>
    */
-  CONFIGURED(3),
+  RUNNING(3),
   /**
-   * <code>RUNNING = 4;</code>
+   * <code>KILLED = 4;</code>
    */
-  RUNNING(4),
+  KILLED(4),
   /**
-   * <code>SERVICE = 5;</code>
+   * <code>FAULTED = 5;</code>
    */
-  SERVICE(5),
+  FAULTED(5),
   /**
-   * <code>CONSOLE = 6;</code>
+   * <code>STASIS = 6;</code>
    */
-  CONSOLE(6),
-  /**
-   * <code>LAMBDA = 7;</code>
-   */
-  LAMBDA(7),
-  /**
-   * <code>BOT = 8;</code>
-   */
-  BOT(8),
-  /**
-   * <code>PAUSED = 9;</code>
-   */
-  PAUSED(9),
-  /**
-   * <code>STOPED = 10;</code>
-   */
-  STOPED(10),
-  /**
-   * <code>KILLED = 11;</code>
-   */
-  KILLED(11),
-  /**
-   * <code>FAULTED = 12;</code>
-   */
-  FAULTED(12),
-  /**
-   * <code>STASIS = 13;</code>
-   */
-  STASIS(13),
+  STASIS(6),
   UNRECOGNIZED(-1),
   ;
 
@@ -72,57 +44,29 @@ public enum AnimaStates
    */
   public static final int INIT_VALUE = 0;
   /**
-   * <code>STARTING = 1;</code>
+   * <code>STAMINAL = 1;</code>
    */
-  public static final int STARTING_VALUE = 1;
+  public static final int STAMINAL_VALUE = 1;
   /**
-   * <code>STAMINAL = 2;</code>
+   * <code>CONFIGURED = 2;</code>
    */
-  public static final int STAMINAL_VALUE = 2;
+  public static final int CONFIGURED_VALUE = 2;
   /**
-   * <code>CONFIGURED = 3;</code>
+   * <code>RUNNING = 3;</code>
    */
-  public static final int CONFIGURED_VALUE = 3;
+  public static final int RUNNING_VALUE = 3;
   /**
-   * <code>RUNNING = 4;</code>
+   * <code>KILLED = 4;</code>
    */
-  public static final int RUNNING_VALUE = 4;
+  public static final int KILLED_VALUE = 4;
   /**
-   * <code>SERVICE = 5;</code>
+   * <code>FAULTED = 5;</code>
    */
-  public static final int SERVICE_VALUE = 5;
+  public static final int FAULTED_VALUE = 5;
   /**
-   * <code>CONSOLE = 6;</code>
+   * <code>STASIS = 6;</code>
    */
-  public static final int CONSOLE_VALUE = 6;
-  /**
-   * <code>LAMBDA = 7;</code>
-   */
-  public static final int LAMBDA_VALUE = 7;
-  /**
-   * <code>BOT = 8;</code>
-   */
-  public static final int BOT_VALUE = 8;
-  /**
-   * <code>PAUSED = 9;</code>
-   */
-  public static final int PAUSED_VALUE = 9;
-  /**
-   * <code>STOPED = 10;</code>
-   */
-  public static final int STOPED_VALUE = 10;
-  /**
-   * <code>KILLED = 11;</code>
-   */
-  public static final int KILLED_VALUE = 11;
-  /**
-   * <code>FAULTED = 12;</code>
-   */
-  public static final int FAULTED_VALUE = 12;
-  /**
-   * <code>STASIS = 13;</code>
-   */
-  public static final int STASIS_VALUE = 13;
+  public static final int STASIS_VALUE = 6;
 
 
   public final int getNumber() {
@@ -144,19 +88,12 @@ public enum AnimaStates
   public static AnimaStates forNumber(int value) {
     switch (value) {
       case 0: return INIT;
-      case 1: return STARTING;
-      case 2: return STAMINAL;
-      case 3: return CONFIGURED;
-      case 4: return RUNNING;
-      case 5: return SERVICE;
-      case 6: return CONSOLE;
-      case 7: return LAMBDA;
-      case 8: return BOT;
-      case 9: return PAUSED;
-      case 10: return STOPED;
-      case 11: return KILLED;
-      case 12: return FAULTED;
-      case 13: return STASIS;
+      case 1: return STAMINAL;
+      case 2: return CONFIGURED;
+      case 3: return RUNNING;
+      case 4: return KILLED;
+      case 5: return FAULTED;
+      case 6: return STASIS;
       default: return null;
     }
   }

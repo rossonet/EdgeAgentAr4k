@@ -76,6 +76,9 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   @Parameter(names = "--comment", description = "service comment text", required = false)
   public String comment;
 
+  @Parameter(names = "--remote", description = "true if the service is managed outside the JVM", required = false)
+  public boolean remote = false;
+
   // @Parameter(names = "--data", description = "additional data for this service
   // (multi selection)", variableArity = true)
   public Map<String, Object> data = new HashMap<String, Object>();

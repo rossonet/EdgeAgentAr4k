@@ -38,6 +38,8 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   public int discoveryPort = 33666;
   @Parameter(names = "--broadcastAddress", description = "the broadcast address for the flash", required = true)
   public String broadcastAddress = "255.255.255.255";
+  @Parameter(names = "--acceptAllCerts", description = "in registration phase accept all cetificates or use the auth flow", required = true)
+  public boolean acceptAllCerts = true;
   @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash", required = true)
   public String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString();
 

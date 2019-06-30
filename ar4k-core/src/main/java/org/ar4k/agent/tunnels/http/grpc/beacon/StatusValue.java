@@ -20,6 +20,10 @@ public enum StatusValue
    * <code>FAULT = 2;</code>
    */
   FAULT(2),
+  /**
+   * <code>WAIT_HUMAN = 3;</code>
+   */
+  WAIT_HUMAN(3),
   UNRECOGNIZED(-1),
   ;
 
@@ -35,6 +39,10 @@ public enum StatusValue
    * <code>FAULT = 2;</code>
    */
   public static final int FAULT_VALUE = 2;
+  /**
+   * <code>WAIT_HUMAN = 3;</code>
+   */
+  public static final int WAIT_HUMAN_VALUE = 3;
 
 
   public final int getNumber() {
@@ -58,6 +66,7 @@ public enum StatusValue
       case 0: return GOOD;
       case 1: return BAD;
       case 2: return FAULT;
+      case 3: return WAIT_HUMAN;
       default: return null;
     }
   }

@@ -26,7 +26,6 @@ import org.ar4k.agent.config.validator.Ar4kStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaRouterType;
-import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 import org.springframework.boot.ansi.AnsiColor;
 
@@ -102,9 +101,6 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--postScript", description = "post script in format <LANGUAGE>:<SCRIPT>")
   public String postScript = null;
 
-  @Parameter(names = "--clockAfterFinishCallLambda", description = "time before exit after all operations in lambda mode")
-  public long clockAfterFinishCallLambda = 1000 * 60 * 5;
-
   @Parameter(names = "--keyStorePassword", description = "keyStore password", password = true)
   @Size(min = 8)
   public String keyStorePassword = "secA4.rk!8";
@@ -132,14 +128,14 @@ public class Ar4kConfig implements ConfigSeed {
   public String getName() {
     return name;
   }
-
+/*
   @Override
   public Ar4kComponent instantiate() {
     Anima a = (Anima) Anima.getApplicationContext().getBean("anima");
     a.setTargetConfig(this);
     return (Ar4kComponent) a;
   }
-
+*/
   @Override
   public Instant getCreationDate() {
     return creationDate;
@@ -183,9 +179,8 @@ public class Ar4kConfig implements ConfigSeed {
         + dataCenter + ", version=" + version + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion
         + ", author=" + author + ", project=" + project + ", license=" + license + ", tags=" + tags + ", contexts="
         + contexts + ", groups=" + groups + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript
-        + ", postScript=" + postScript + ", clockAfterFinishCallLambda=" + clockAfterFinishCallLambda
-        + ", keyStorePassword=" + keyStorePassword + ", keyStorePath=" + keyStorePath + ", initializeKeystore="
-        + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath + ", routerType=" + routerType
-        + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
+        + ", postScript=" + postScript + ", keyStorePassword=" + keyStorePassword + ", keyStorePath=" + keyStorePath
+        + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath
+        + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
   }
 }

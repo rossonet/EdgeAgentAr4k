@@ -17,7 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private RegisterRequest() {
     name_ = "";
-    secretKey_ = "";
+    requestCsr_ = "";
+    displayKey_ = "";
     jsonHealth_ = "";
   }
 
@@ -54,10 +55,16 @@ private static final long serialVersionUID = 0L;
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            secretKey_ = s;
+            requestCsr_ = s;
             break;
           }
           case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            displayKey_ = s;
+            break;
+          }
+          case 34: {
             org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder subBuilder = null;
             if (time_ != null) {
               subBuilder = time_.toBuilder();
@@ -70,7 +77,7 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 34: {
+          case 42: {
             java.lang.String s = input.readStringRequireUtf8();
 
             jsonHealth_ = s;
@@ -142,65 +149,99 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int SECRETKEY_FIELD_NUMBER = 2;
-  private volatile java.lang.Object secretKey_;
+  public static final int REQUESTCSR_FIELD_NUMBER = 2;
+  private volatile java.lang.Object requestCsr_;
   /**
-   * <code>string secretKey = 2;</code>
+   * <code>string requestCsr = 2;</code>
    */
-  public java.lang.String getSecretKey() {
-    java.lang.Object ref = secretKey_;
+  public java.lang.String getRequestCsr() {
+    java.lang.Object ref = requestCsr_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      secretKey_ = s;
+      requestCsr_ = s;
       return s;
     }
   }
   /**
-   * <code>string secretKey = 2;</code>
+   * <code>string requestCsr = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getSecretKeyBytes() {
-    java.lang.Object ref = secretKey_;
+      getRequestCsrBytes() {
+    java.lang.Object ref = requestCsr_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      secretKey_ = b;
+      requestCsr_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int TIME_FIELD_NUMBER = 3;
+  public static final int DISPLAYKEY_FIELD_NUMBER = 3;
+  private volatile java.lang.Object displayKey_;
+  /**
+   * <code>string displayKey = 3;</code>
+   */
+  public java.lang.String getDisplayKey() {
+    java.lang.Object ref = displayKey_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      displayKey_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string displayKey = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getDisplayKeyBytes() {
+    java.lang.Object ref = displayKey_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      displayKey_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TIME_FIELD_NUMBER = 4;
   private org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp time_;
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   public boolean hasTime() {
     return time_ != null;
   }
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getTime() {
     return time_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.getDefaultInstance() : time_;
   }
   /**
-   * <code>.beacon.Timestamp time = 3;</code>
+   * <code>.beacon.Timestamp time = 4;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getTimeOrBuilder() {
     return getTime();
   }
 
-  public static final int JSONHEALTH_FIELD_NUMBER = 4;
+  public static final int JSONHEALTH_FIELD_NUMBER = 5;
   private volatile java.lang.Object jsonHealth_;
   /**
-   * <code>string jsonHealth = 4;</code>
+   * <code>string jsonHealth = 5;</code>
    */
   public java.lang.String getJsonHealth() {
     java.lang.Object ref = jsonHealth_;
@@ -215,7 +256,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string jsonHealth = 4;</code>
+   * <code>string jsonHealth = 5;</code>
    */
   public com.google.protobuf.ByteString
       getJsonHealthBytes() {
@@ -248,14 +289,17 @@ private static final long serialVersionUID = 0L;
     if (!getNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
     }
-    if (!getSecretKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, secretKey_);
+    if (!getRequestCsrBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, requestCsr_);
+    }
+    if (!getDisplayKeyBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, displayKey_);
     }
     if (time_ != null) {
-      output.writeMessage(3, getTime());
+      output.writeMessage(4, getTime());
     }
     if (!getJsonHealthBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, jsonHealth_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, jsonHealth_);
     }
     unknownFields.writeTo(output);
   }
@@ -269,15 +313,18 @@ private static final long serialVersionUID = 0L;
     if (!getNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
     }
-    if (!getSecretKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, secretKey_);
+    if (!getRequestCsrBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, requestCsr_);
+    }
+    if (!getDisplayKeyBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, displayKey_);
     }
     if (time_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getTime());
+        .computeMessageSize(4, getTime());
     }
     if (!getJsonHealthBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, jsonHealth_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, jsonHealth_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -296,8 +343,10 @@ private static final long serialVersionUID = 0L;
 
     if (!getName()
         .equals(other.getName())) return false;
-    if (!getSecretKey()
-        .equals(other.getSecretKey())) return false;
+    if (!getRequestCsr()
+        .equals(other.getRequestCsr())) return false;
+    if (!getDisplayKey()
+        .equals(other.getDisplayKey())) return false;
     if (hasTime() != other.hasTime()) return false;
     if (hasTime()) {
       if (!getTime()
@@ -318,8 +367,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + NAME_FIELD_NUMBER;
     hash = (53 * hash) + getName().hashCode();
-    hash = (37 * hash) + SECRETKEY_FIELD_NUMBER;
-    hash = (53 * hash) + getSecretKey().hashCode();
+    hash = (37 * hash) + REQUESTCSR_FIELD_NUMBER;
+    hash = (53 * hash) + getRequestCsr().hashCode();
+    hash = (37 * hash) + DISPLAYKEY_FIELD_NUMBER;
+    hash = (53 * hash) + getDisplayKey().hashCode();
     if (hasTime()) {
       hash = (37 * hash) + TIME_FIELD_NUMBER;
       hash = (53 * hash) + getTime().hashCode();
@@ -461,7 +512,9 @@ private static final long serialVersionUID = 0L;
       super.clear();
       name_ = "";
 
-      secretKey_ = "";
+      requestCsr_ = "";
+
+      displayKey_ = "";
 
       if (timeBuilder_ == null) {
         time_ = null;
@@ -498,7 +551,8 @@ private static final long serialVersionUID = 0L;
     public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest result = new org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest(this);
       result.name_ = name_;
-      result.secretKey_ = secretKey_;
+      result.requestCsr_ = requestCsr_;
+      result.displayKey_ = displayKey_;
       if (timeBuilder_ == null) {
         result.time_ = time_;
       } else {
@@ -557,8 +611,12 @@ private static final long serialVersionUID = 0L;
         name_ = other.name_;
         onChanged();
       }
-      if (!other.getSecretKey().isEmpty()) {
-        secretKey_ = other.secretKey_;
+      if (!other.getRequestCsr().isEmpty()) {
+        requestCsr_ = other.requestCsr_;
+        onChanged();
+      }
+      if (!other.getDisplayKey().isEmpty()) {
+        displayKey_ = other.displayKey_;
         onChanged();
       }
       if (other.hasTime()) {
@@ -666,71 +724,140 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object secretKey_ = "";
+    private java.lang.Object requestCsr_ = "";
     /**
-     * <code>string secretKey = 2;</code>
+     * <code>string requestCsr = 2;</code>
      */
-    public java.lang.String getSecretKey() {
-      java.lang.Object ref = secretKey_;
+    public java.lang.String getRequestCsr() {
+      java.lang.Object ref = requestCsr_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        secretKey_ = s;
+        requestCsr_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string secretKey = 2;</code>
+     * <code>string requestCsr = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getSecretKeyBytes() {
-      java.lang.Object ref = secretKey_;
+        getRequestCsrBytes() {
+      java.lang.Object ref = requestCsr_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        secretKey_ = b;
+        requestCsr_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string secretKey = 2;</code>
+     * <code>string requestCsr = 2;</code>
      */
-    public Builder setSecretKey(
+    public Builder setRequestCsr(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      secretKey_ = value;
+      requestCsr_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string secretKey = 2;</code>
+     * <code>string requestCsr = 2;</code>
      */
-    public Builder clearSecretKey() {
+    public Builder clearRequestCsr() {
       
-      secretKey_ = getDefaultInstance().getSecretKey();
+      requestCsr_ = getDefaultInstance().getRequestCsr();
       onChanged();
       return this;
     }
     /**
-     * <code>string secretKey = 2;</code>
+     * <code>string requestCsr = 2;</code>
      */
-    public Builder setSecretKeyBytes(
+    public Builder setRequestCsrBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      secretKey_ = value;
+      requestCsr_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object displayKey_ = "";
+    /**
+     * <code>string displayKey = 3;</code>
+     */
+    public java.lang.String getDisplayKey() {
+      java.lang.Object ref = displayKey_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        displayKey_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string displayKey = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayKeyBytes() {
+      java.lang.Object ref = displayKey_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        displayKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string displayKey = 3;</code>
+     */
+    public Builder setDisplayKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      displayKey_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string displayKey = 3;</code>
+     */
+    public Builder clearDisplayKey() {
+      
+      displayKey_ = getDefaultInstance().getDisplayKey();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string displayKey = 3;</code>
+     */
+    public Builder setDisplayKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      displayKey_ = value;
       onChanged();
       return this;
     }
@@ -739,13 +866,13 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp, org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder> timeBuilder_;
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public boolean hasTime() {
       return timeBuilder_ != null || time_ != null;
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getTime() {
       if (timeBuilder_ == null) {
@@ -755,7 +882,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public Builder setTime(org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp value) {
       if (timeBuilder_ == null) {
@@ -771,7 +898,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public Builder setTime(
         org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder builderForValue) {
@@ -785,7 +912,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public Builder mergeTime(org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp value) {
       if (timeBuilder_ == null) {
@@ -803,7 +930,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public Builder clearTime() {
       if (timeBuilder_ == null) {
@@ -817,7 +944,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder getTimeBuilder() {
       
@@ -825,7 +952,7 @@ private static final long serialVersionUID = 0L;
       return getTimeFieldBuilder().getBuilder();
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getTimeOrBuilder() {
       if (timeBuilder_ != null) {
@@ -836,7 +963,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.beacon.Timestamp time = 3;</code>
+     * <code>.beacon.Timestamp time = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp, org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder> 
@@ -854,7 +981,7 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object jsonHealth_ = "";
     /**
-     * <code>string jsonHealth = 4;</code>
+     * <code>string jsonHealth = 5;</code>
      */
     public java.lang.String getJsonHealth() {
       java.lang.Object ref = jsonHealth_;
@@ -869,7 +996,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string jsonHealth = 4;</code>
+     * <code>string jsonHealth = 5;</code>
      */
     public com.google.protobuf.ByteString
         getJsonHealthBytes() {
@@ -885,7 +1012,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string jsonHealth = 4;</code>
+     * <code>string jsonHealth = 5;</code>
      */
     public Builder setJsonHealth(
         java.lang.String value) {
@@ -898,7 +1025,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string jsonHealth = 4;</code>
+     * <code>string jsonHealth = 5;</code>
      */
     public Builder clearJsonHealth() {
       
@@ -907,7 +1034,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string jsonHealth = 4;</code>
+     * <code>string jsonHealth = 5;</code>
      */
     public Builder setJsonHealthBytes(
         com.google.protobuf.ByteString value) {

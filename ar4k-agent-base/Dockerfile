@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk as ar4k-builder
 RUN apt-get update -yq \
-    && apt-get install curl gnupg bash sed grep coreutils wget npm -yq
+    && apt-get install curl gnupg bash sed grep coreutils wget -yq
 COPY gradle/ /ar4kAgent/gradle/
 COPY gradlew /ar4kAgent/gradlew
 COPY LICENSE /ar4kAgent/LICENSE

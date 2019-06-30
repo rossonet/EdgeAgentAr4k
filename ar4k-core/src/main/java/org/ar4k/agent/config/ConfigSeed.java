@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
-import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 
 import com.google.gson.TypeAdapter;
@@ -17,7 +16,7 @@ public interface ConfigSeed extends Serializable, Cloneable {
 
   public Collection<String> getTags();
 
-  public Ar4kComponent instantiate();
+  //public Ar4kComponent instantiate();
 
   public Instant getCreationDate();
 

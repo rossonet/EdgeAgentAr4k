@@ -358,12 +358,16 @@ public class HardwareHelper {
   }
 
   public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+    JSONObject json = new JSONObject(readTxtFromUrl(url));
+    return json;
+  }
+
+  public static String readTxtFromUrl(String url) throws IOException, JSONException {
     InputStream is = new URL(url).openStream();
     try {
       BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-      String jsonText = readAll(rd);
-      JSONObject json = new JSONObject(jsonText);
-      return json;
+      String text = readAll(rd);
+      return text;
     } finally {
       is.close();
     }
@@ -398,15 +402,15 @@ public class HardwareHelper {
     return result;
   }
 
-  public static void extractTarGz(InputStream in) throws IOException {
+  public static void extractTarGz(String path, InputStream in) throws IOException {
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
     try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry = null;
       while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
         /** If the entry is a directory, create the directory. **/
         if (entry.isDirectory()) {
-          File f = new File(entry.getName());
-          boolean created = f.mkdir();
+          File f = new File(path + "/" + entry.getName());
+          boolean created = f.mkdirs();
           if (!created) {
             throw new Ar4kException(
                 "Unable to create directory " + f.getAbsolutePath() + ", during extraction of archive contents.");
@@ -414,7 +418,7 @@ public class HardwareHelper {
         } else {
           int count;
           byte data[] = new byte[BUFFER_SIZE];
-          FileOutputStream fos = new FileOutputStream(entry.getName(), false);
+          FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
           try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
             while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
               dest.write(data, 0, count);

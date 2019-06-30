@@ -54,9 +54,10 @@ service RpcServiceV1 {
 
 message RegisterRequest {
   string name = 1;
-  string secretKey = 2;
-  Timestamp time = 3;
-  string jsonHealth = 4;
+  string requestCsr = 2;
+  string displayKey = 3;
+  Timestamp time = 4;
+  string jsonHealth = 5;
 }
 
 message Timestamp {
@@ -72,11 +73,11 @@ message Timestamp {
 }
 
 message RegisterReply {
-  Status result = 1;
-  string registerCode = 2;
-  int32 monitoringFrequency = 3;
-  AnimaStates targetState = 4;
-  StatusValue status = 5;
+  string registerCode = 1;
+  int32 monitoringFrequency = 2;
+  string cert = 3;
+  string ca = 4;
+  Status statusRegistration = 5;
 }
 
 message Status {
@@ -87,23 +88,17 @@ enum StatusValue {
   GOOD = 0;
   BAD = 1;
   FAULT = 2;
+  WAIT_HUMAN = 3;
 }
 
 enum AnimaStates {
     INIT = 0;
-    STARTING = 1;
-    STAMINAL = 2;
-    CONFIGURED = 3;
-    RUNNING = 4;
-    SERVICE = 5;
-    CONSOLE = 6;
-    LAMBDA = 7;
-    BOT = 8;
-    PAUSED = 9;
-    STOPED = 10;
-    KILLED = 11;
-    FAULTED = 12;
-    STASIS = 13;
+    STAMINAL = 1;
+    CONFIGURED = 2;
+    RUNNING = 3;
+    KILLED = 4;
+    FAULTED = 5;
+    STASIS = 6;
  }
  
 message Agent {

@@ -22,6 +22,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
@@ -32,6 +33,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -57,6 +59,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/beaconInterface")
 public class BeaconShellInterface extends AbstractShellHelper {
+
+  @Autowired
+  private Anima anima;
 
   private static final CharSequence COMPLETION_CHAR = "?";
 
@@ -95,9 +100,10 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the tcp port for the Beacon server", defaultValue = "6599") int port,
       @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
       @ShellOption(help = "the broadcast target for the discovery message", defaultValue = "255.255.255.255") String discoveryAddress,
+      @ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
       throws IOException {
-    tmpServer = new BeaconServer(port, discoveryPort, discoveryAddress, discoveryMessage);
+    tmpServer = new BeaconServer(anima, port, discoveryPort, discoveryAddress, acceptAllCerts, discoveryMessage);
     tmpServer.start();
     return true;
   }

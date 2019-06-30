@@ -39,10 +39,6 @@ public class BeaconAgent {
     return new JSONObject(registerRequest.getJsonHealth());
   }
 
-  public String getSecretKey() {
-    return registerRequest.getSecretKey();
-  }
-
   public List<RequestToAgent> getCommandsToBeExecute() {
     List<RequestToAgent> r = new ArrayList<>();
     while (!cmdCalls.isEmpty()) {
@@ -66,8 +62,8 @@ public class BeaconAgent {
   @Override
   public String toString() {
     return "BeaconAgent [getAgentUniqueName()=" + getAgentUniqueName() + ", getHardwareInfoAsJson()="
-        + getHardwareInfoAsJson().toString(2) + ", getSecretKey()=" + getSecretKey() + ", getPollingFrequency()="
-        + getPollingFrequency() + ", getTimestampRegistration()=" + getTimestampRegistration() + "]";
+        + getHardwareInfoAsJson().toString(2) + ", getPollingFrequency()=" + getPollingFrequency()
+        + ", getTimestampRegistration()=" + getTimestampRegistration() + "]";
   }
 
 }

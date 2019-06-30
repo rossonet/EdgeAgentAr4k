@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -110,35 +111,66 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public static final String NETTY_CTX_CLIENT = "net-ctx-c";
   public static final String NETTY_CTX_SERVER = "net-ctx-s";
-  public static final String KOPS_BINARY_PATH = "./kops.bin";
+  public static final String KOPS_BINARY_PATH = "./bin/kops";
   public static final String BASE_BASH_CMD = "/bin/bash -l";
   public static final String LATEST_KOPS_URL = "https://api.github.com/repos/kubernetes/kops/releases/latest";
   public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
-  public static final String MINIKUBE_BINARY_PATH = "./minikube.bin";
+  public static final String MINIKUBE_BINARY_PATH = "./bin/minikube";
   public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
-  public static final String HELM_TGZ_PATH = "./helm.tgz";
+  public static final String HELM_TGZ_PATH = "./bin/helm.tgz";
   public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
-  public static final String HELM_DIRECTORY_PATH = "./linux-amd64";
+  public static final String HELM_DIRECTORY_PATH = "./bin";
+  public static final String LATEST_KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
+  public static final String KUBECTL_BINARY_PATH = "./bin/kubectl";
+  public static final String KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/$version/bin/linux/amd64/kubectl";
+  public static final String KUBEFLOW_TGZ_PATH = "./bin/kubeflow.tgz";
+  public static final String KUBEFLOW_COMPRESSED_URL = "https://github.com/kubeflow/kubeflow/archive/v0.4.1.tar.gz";
+  public static final String KUBEFLOW_DIRECTORY_PATH = "./bin";
+  public static final String KSONNET_TGZ_PATH = "./bin/ksonnet.tgz";
+  public static final String KSONNET_COMPRESSED_URL = "https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz";
+  public static final String KSONNET_DIRECTORY_PATH = "./bin";
 
   // default value
-  private static final String commonName = "dev-rossonet-" + UUID.randomUUID().toString();
-  private static final String organization = "Rossonet";
-  private static final String unit = "Ar4k";
-  private static final String locality = "Imola";
-  private static final String state = "Bologna";
-  private static final String country = "IT";
-  private static final String uri = "https://www.rossonet.com";
-  private static final String dns = NetworkHelper.getHostname();
-  private static final String ip = "127.0.0.1";
+  public static final String organization = "Rossonet";
+  public static final String unit = "Ar4k";
+  public static final String locality = "Imola";
+  public static final String state = "Bologna";
+  public static final String country = "IT";
+  public static final String uri = "https://www.rossonet.com";
+  public static final String dns = NetworkHelper.getHostname();
+  public static final String ip = "127.0.0.1";
 
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
   private final String dbDataStoreName = "datastore";
 
-  public Anima() {
-    agentUniqueName = generateNewUniqueName();
+  private static transient String registrationPin = createRandomRegistryId();
+  private String agentUniqueName = generateNewUniqueName();
+
+  private static String createRandomRegistryId() {
+    StringBuilder val = new StringBuilder();
+    val.append("AR");
+    // char (1), random A-Z
+    int ranChar = 65 + (new Random()).nextInt(90 - 65);
+    char ch = (char) ranChar;
+    val.append(ch);
+    // numbers (6), random 0-9
+    Random r = new Random();
+    int numbers = 100000 + (int) (r.nextFloat() * 899900);
+    val.append(String.valueOf(numbers));
+    val.append("-");
+    // char or numbers (5), random 0-9 A-Z
+    for (int i = 0; i < 6;) {
+      int ranAny = 48 + (new Random()).nextInt(90 - 65);
+      if (!(57 < ranAny && ranAny <= 65)) {
+        char c = (char) ranAny;
+        val.append(c);
+        i++;
+      }
+    }
+    return val.toString();
   }
 
-  public static String generateNewUniqueName() {
+  private static String generateNewUniqueName() {
     String result = null;
     try {
       result = InetAddress.getLocalHost().getHostName();
@@ -149,8 +181,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
     return result;
   }
-
-  private String agentUniqueName = null;
 
   @Autowired
   private Shell shell;
@@ -235,6 +265,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
 
+  public static int defaulBeaconSignvalidity = 100;
+
   private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
 
   private Map<String, Object> dataStore = null;
@@ -252,16 +284,16 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private KeystoreConfig myIdentityKeystore = null;
   private String myAliasCertInKeystore = "agent";
 
-  private boolean onApplicationEventFlag = false;
+  private transient boolean onApplicationEventFlag = false;
 
-  private boolean afterSpringInitFlag = false;
+  private transient boolean afterSpringInitFlag = false;
 
   public static enum AnimaStates {
     INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
   }
 
   // tipi di router interno supportato per gestire lo scambio dei messagi tra gli
-  // agenti
+  // agenti, per la definizione della secutrity sul routing
   public static enum AnimaRouterType {
     NONE, PRODUCTION, DEVELOP, ROAD
   }
@@ -373,7 +405,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
     if (!new File(fileKeystore).exists()) {
       logger.warn("new keystore: " + ks.toString());
-      ks.create(Anima.commonName, Anima.organization, Anima.unit, Anima.locality, Anima.state, Anima.country, Anima.uri,
+      ks.create(agentUniqueName, Anima.organization, Anima.unit, Anima.locality, Anima.state, Anima.country, Anima.uri,
           Anima.dns, Anima.ip);
       logger.debug("keystore created");
     }
@@ -397,6 +429,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } else {
       logger.warn("console only true, run just the command line");
     }
+    System.out.println("__________________________________________________");
+    System.out.println("       REGISTRATION CODE: " + registrationPin);
+    System.out.println("__________________________________________________\n");
   }
 
   // workaround Spring State Machine
@@ -454,8 +489,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       animaHomunculus.registerNewSession(sessionId, sessionId);
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
-      beaconClient = new BeaconClient(rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort, discoveryFilter,
-          getAgentUniqueName());
+      beaconClient = new BeaconClient(this, rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort,
+          discoveryFilter, getAgentUniqueName());
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
@@ -582,7 +617,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     } catch (IOException | ClassNotFoundException e) {
       if (logger != null)
         logger.logException(e);
-      logger.warn(e.getMessage());
     }
     return resultConfig;
   }
@@ -598,8 +632,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
     } catch (IOException e) {
       if (logger != null)
-        logger.warn(e.getMessage());
-      logger.logException(e);
+        logger.logException(e);
     }
     return loadConfigFromFile(temporaryFile);
   }
@@ -940,5 +973,23 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public void setMyAliasCertInKeystore(String myAliasCertInKeystore) {
     this.myAliasCertInKeystore = myAliasCertInKeystore;
+  }
+
+  public String signBeaconCsr(String id, String requestCsr, String jsonHealth, String consoleKey) {
+    // TODO Auto-generated method stub
+    return "CERT";
+  }
+
+  public String getCsrForBeaconRegistration() {
+    // TODO Auto-generated method stub
+    return "CSR";
+  }
+
+  public static String getRegistrationPin() {
+    return registrationPin;
+  }
+
+  public void registerCertificateFromBeacon(String cert, String ca) {
+    // TODO Auto-generated method stub
   }
 }

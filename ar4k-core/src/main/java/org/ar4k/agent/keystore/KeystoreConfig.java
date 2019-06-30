@@ -33,7 +33,6 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.json.KeystoreConfigJsonAdapter;
-import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.exception.Ar4kException;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -208,7 +207,7 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
-  public X509Certificate signCertificate(String csr, String targetAlias, int validity, String alias) {
+  public X509Certificate signCertificate(String csr, String targetAlias, int validity) {// , String alias) {
     X509Certificate ritorno = null;
     try {
       ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
@@ -220,7 +219,7 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
-  public String signCertificateBase64(String csr, String targetAlias, int validity, String alias) {
+  public String signCertificateBase64(String csr, String targetAlias, int validity) {// , String alias) {
     String ritorno = null;
     try {
       ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), targetAlias,
@@ -265,11 +264,6 @@ public class KeystoreConfig implements ConfigSeed {
   @Override
   public String getName() {
     return label;
-  }
-
-  @Override
-  public Ar4kComponent instantiate() {
-    return null;
   }
 
   @Override

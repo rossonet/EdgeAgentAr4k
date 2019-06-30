@@ -8,48 +8,50 @@ public interface RegisterReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.beacon.Status result = 1;</code>
-   */
-  boolean hasResult();
-  /**
-   * <code>.beacon.Status result = 1;</code>
-   */
-  org.ar4k.agent.tunnels.http.grpc.beacon.Status getResult();
-  /**
-   * <code>.beacon.Status result = 1;</code>
-   */
-  org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getResultOrBuilder();
-
-  /**
-   * <code>string registerCode = 2;</code>
+   * <code>string registerCode = 1;</code>
    */
   java.lang.String getRegisterCode();
   /**
-   * <code>string registerCode = 2;</code>
+   * <code>string registerCode = 1;</code>
    */
   com.google.protobuf.ByteString
       getRegisterCodeBytes();
 
   /**
-   * <code>int32 monitoringFrequency = 3;</code>
+   * <code>int32 monitoringFrequency = 2;</code>
    */
   int getMonitoringFrequency();
 
   /**
-   * <code>.beacon.AnimaStates targetState = 4;</code>
+   * <code>string cert = 3;</code>
    */
-  int getTargetStateValue();
+  java.lang.String getCert();
   /**
-   * <code>.beacon.AnimaStates targetState = 4;</code>
+   * <code>string cert = 3;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getTargetState();
+  com.google.protobuf.ByteString
+      getCertBytes();
 
   /**
-   * <code>.beacon.StatusValue status = 5;</code>
+   * <code>string ca = 4;</code>
    */
-  int getStatusValue();
+  java.lang.String getCa();
   /**
-   * <code>.beacon.StatusValue status = 5;</code>
+   * <code>string ca = 4;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus();
+  com.google.protobuf.ByteString
+      getCaBytes();
+
+  /**
+   * <code>.beacon.Status statusRegistration = 5;</code>
+   */
+  boolean hasStatusRegistration();
+  /**
+   * <code>.beacon.Status statusRegistration = 5;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.Status getStatusRegistration();
+  /**
+   * <code>.beacon.Status statusRegistration = 5;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getStatusRegistrationOrBuilder();
 }

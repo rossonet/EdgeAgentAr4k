@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
@@ -55,8 +56,9 @@ public class BeaconServer implements Runnable {
   private int defaultPollTime = 6000;
   private int defaultBeaconFlashMoltiplicator = 1;
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>();
-
+  private boolean acceptAllCerts = true;
   private boolean running = false;
+  private transient Anima a = null;
 
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
@@ -66,8 +68,11 @@ public class BeaconServer implements Runnable {
   private String broadcastAddress = "255.255.255.255";
   private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
 
-  public BeaconServer(int port, int discoveryPort, String broadcastAddress, String stringDiscovery) throws IOException {
+  public BeaconServer(Anima anima, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
+      String stringDiscovery) throws IOException {
     this(ServerBuilder.forPort(port), port);
+    this.a = anima;
+    this.acceptAllCerts = acceptCerts;
     this.discoveryPort = discoveryPort;
     this.broadcastAddress = broadcastAddress;
     this.stringDiscovery = stringDiscovery;
@@ -138,11 +143,29 @@ public class BeaconServer implements Runnable {
 
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
-      RegisterReply reply = RegisterReply.newBuilder().setResult(Status.newBuilder().setStatus(StatusValue.GOOD))
+      String certFromCsr = getCertForRegistration(request.getName(), request.getRequestCsr(), request.getJsonHealth(),
+          request.getDisplayKey());
+      RegisterReply reply = RegisterReply.newBuilder().setCa(getBeaconCa()).setCert(certFromCsr)
+          .setStatusRegistration(
+              Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
           .setRegisterCode(request.getName()).setMonitoringFrequency(defaultPollTime).build();
       agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
+    }
+
+    private String getBeaconCa() {
+      return a.getMyIdentityKeystore().getClientCertificateBase64("ca");
+    }
+
+    private String getCertForRegistration(String id, String requestCsr, String jsonHealth, String consoleKey) {
+      String result = null;
+      if (acceptAllCerts) {
+        result = a.getMyIdentityKeystore().signCertificateBase64(requestCsr, id, Anima.defaulBeaconSignvalidity);
+      } else {
+        result = a.signBeaconCsr(id, requestCsr, jsonHealth, consoleKey);
+      }
+      return result;
     }
 
     @Override
