@@ -111,24 +111,25 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public static final String NETTY_CTX_CLIENT = "net-ctx-c";
   public static final String NETTY_CTX_SERVER = "net-ctx-s";
-  public static final String KOPS_BINARY_PATH = "./bin/kops";
+  public static final String KOPS_BINARY_PATH = "~/bin/kops";
   public static final String BASE_BASH_CMD = "/bin/bash -l";
   public static final String LATEST_KOPS_URL = "https://api.github.com/repos/kubernetes/kops/releases/latest";
   public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
-  public static final String MINIKUBE_BINARY_PATH = "./bin/minikube";
+  public static final String MINIKUBE_BINARY_PATH = "~/bin/minikube";
   public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
-  public static final String HELM_TGZ_PATH = "./bin/helm.tgz";
+  public static final String HELM_TGZ_PATH = "~/bin/helm.tgz";
   public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
-  public static final String HELM_DIRECTORY_PATH = "./bin";
+  public static final String HELM_DIRECTORY_PATH = "~/bin";
   public static final String LATEST_KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
-  public static final String KUBECTL_BINARY_PATH = "./bin/kubectl";
+  public static final String KUBECTL_BINARY_PATH = "~/bin/kubectl";
   public static final String KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/$version/bin/linux/amd64/kubectl";
-  public static final String KUBEFLOW_TGZ_PATH = "./bin/kubeflow.tgz";
+  public static final String KUBEFLOW_TGZ_PATH = "~/bin/kubeflow.tgz";
   public static final String KUBEFLOW_COMPRESSED_URL = "https://github.com/kubeflow/kubeflow/archive/v0.4.1.tar.gz";
-  public static final String KUBEFLOW_DIRECTORY_PATH = "./bin";
-  public static final String KSONNET_TGZ_PATH = "./bin/ksonnet.tgz";
+  public static final String KUBEFLOW_DIRECTORY_PATH = "~/bin";
+  public static final String KSONNET_TGZ_PATH = "~/bin/ksonnet.tgz";
   public static final String KSONNET_COMPRESSED_URL = "https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz";
-  public static final String KSONNET_DIRECTORY_PATH = "./bin";
+  public static final String KSONNET_DIRECTORY_PATH = "~/bin";
+  public static final String KUBECONFIG = "~/.kube/config";
 
   // default value
   public static final String organization = "Rossonet";

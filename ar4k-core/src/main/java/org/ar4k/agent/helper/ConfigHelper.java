@@ -17,7 +17,9 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.yaml.snakeyaml.Yaml;
 
 import com.google.common.base.Splitter;
 import com.google.gson.Gson;
@@ -94,6 +96,16 @@ public class ConfigHelper {
     ConfigSeed rit = (ConfigSeed) ois.readObject();
     ois.close();
     return rit;
+  }
+
+  public static Ar4kConfig fromYaml(String yamlConfig) {
+    Yaml yaml = new Yaml();
+    return yaml.load(yamlConfig);
+  }
+
+  public static String toYaml(Ar4kConfig workingConfig) {
+    Yaml yaml = new Yaml();
+    return yaml.dump(workingConfig);
   }
 
 }

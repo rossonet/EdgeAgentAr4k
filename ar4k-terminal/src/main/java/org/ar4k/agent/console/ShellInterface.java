@@ -298,6 +298,13 @@ public class ShellInterface extends AbstractShellHelper {
     return ConfigHelper.toJson(getWorkingConfig());
   }
 
+  @ShellMethod("View the selected configuration in Yaml text")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public String getSelectedConfigYaml() {
+    return ConfigHelper.toYaml(getWorkingConfig());
+  }
+
   @ShellMethod("Save selected configuration in json text file")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
@@ -309,12 +316,32 @@ public class ShellInterface extends AbstractShellHelper {
     return "saved";
   }
 
+  @ShellMethod("Save selected configuration in Yaml text file")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public String saveSelectedConfigYaml(
+      @ShellOption(help = "file for saving the configuration. The system will add .conf.yaml.ar4k to the string") String filename)
+      throws IOException {
+    Files.write(Paths.get(filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.yaml.ar4k"),
+        getSelectedConfigYaml().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    return "saved";
+  }
+
   @ShellMethod("Import the selected configuration from json text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigJson(
       @ShellOption(help = "configuration exported by export-selected-config-json") String jsonConfig) {
     setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
+  }
+
+  //TODO verificare il caricamento
+  @ShellMethod("Import the selected configuration from yaml text")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public void importSelectedConfigYaml(
+      @ShellOption(help = "configuration exported by export-selected-config-yaml") String yamlConfig) {
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromYaml(yamlConfig));
   }
 
   // TODO: risolvere gli oggetti annidati
@@ -326,6 +353,16 @@ public class ShellInterface extends AbstractShellHelper {
       throws IOException, ClassNotFoundException {
     String config = readFromFile(filename, ".conf.json.ar4k");
     importSelectedConfigJson(config);
+  }
+
+  @ShellMethod("Load selected configuration from a yaml text file")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public void loadSelectedConfigYaml(
+      @ShellOption(help = "file in where the configuration is saved. The system will add .conf.yaml.ar4k to the string") String filename)
+      throws IOException, ClassNotFoundException {
+    String config = readFromFile(filename, ".conf.yaml.ar4k");
+    importSelectedConfigYaml(config);
   }
 
   @ShellMethod("Create new configuration as selected configuration")

@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -45,8 +46,6 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.io.CharStreams;
 
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.ApiException;
@@ -353,27 +352,11 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.KOPS_BINARY_PATH;
+    commandArgs[counter] = Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
-    try {
-      Runtime rt = Runtime.getRuntime();
-      Process p = rt.exec(commandArgs);
-      p.waitFor();
-      InputStream is = p.getInputStream();
-      InputStream es = p.getErrorStream();
-      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-      // result.append(" -- OUTPUT -- \n");
-      result.append(CharStreams.toString(rin));
-      if (p.exitValue() != 0) {
-        result.append("\n -- ERROR -- \n");
-        result.append(CharStreams.toString(rerr));
-      }
-    } catch (IOException | InterruptedException e) {
-      logger.logException(e);
-    }
+    runCommandAndPrint(result, commandArgs, null);
     return result.toString();
   }
 
@@ -387,13 +370,13 @@ public class KubernetesInterface extends AbstractShellHelper {
       @ShellOption(help = "the disk space for the Minikube for MiniKube", defaultValue = "20g") String diskSize) {
     StringBuilder result = new StringBuilder();
     result.append("Deleting previos cluster");
-    System.out.println("Deleting previos cluster");
+    // System.out.println("Deleting previos cluster");
     result.append(runMiniKubeCommandLine(vmName, "delete"));
     result.append("Starting K8s Cluster");
-    System.out.println("Starting K8s Cluster");
+    // System.out.println("Starting K8s Cluster");
     result.append(
         runMiniKubeCommandLine(vmName, "start --cpus " + cpus + " --memory " + memory + " --disk-size=" + diskSize));
-    System.out.println("Starting K8s Cluster");
+    // System.out.println("Starting K8s Cluster");
     result.append(runMiniKubeCommandLine(vmName, "status"));
     connectToK8sApi();
     return result.toString();
@@ -428,25 +411,9 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       getKubectlBin();
       getMiniKubeBinary();
-      Runtime rt = Runtime.getRuntime();
-      String[] command = { Anima.MINIKUBE_BINARY_PATH, "dashboard", "-p", vmName, "--url" };
-      miniKubeDashboard = rt.exec(command);
-      InputStream is = miniKubeDashboard.getInputStream();
-      InputStream es = miniKubeDashboard.getErrorStream();
-      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-      long waitTime = (new Date()).getTime() + 5000;
-      while (miniKubeDashboard.isAlive() && (new Date()).getTime() < waitTime) {
-        if (rin.ready()) {
-          char ic = (char) rin.read();
-          System.out.print(ic);
-        }
-        if (rerr.ready()) {
-          char ec = (char) rerr.read();
-          System.err.print(ec);
-          result.append(ec);
-        }
-      }
+      String[] command = { Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")), "dashboard",
+          "-p", vmName, "--url" };
+      runCommandAndPrint(result, command, null, 30000, null);
     } catch (IOException | InterruptedException e) {
       logger.logException(e);
     }
@@ -461,103 +428,50 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       getKubectlBin();
       getKubeFlowBinary();
-      try {
-        Runtime rt = Runtime.getRuntime();
-        String[] commandArgsEnv = { "env" };
-        String[] commandArgs1 = { Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1/scripts/kfctl.sh", "init", dirPath,
-            "--platform", "minikube" };
-        String[] commandArgs2 = {
-            Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
-            "generate", "all" };
-        String[] commandArgs3 = {
-            Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
-            "apply", "all" };
-        {
-          logger.info("RUN: " + String.join(" ", commandArgsEnv));
-          Process p = rt.exec(commandArgsEnv, new String[] {
-              "KUBEFLOW_REPO=" + Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1").toAbsolutePath() });
-          InputStream is = p.getInputStream();
-          InputStream es = p.getErrorStream();
-          Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-          Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-          while (p.isAlive()) {
-            if (rin.ready()) {
-              char ic = (char) rin.read();
-              System.out.print(ic);
-            }
-            if (rerr.ready()) {
-              char ec = (char) rerr.read();
-              System.err.print(ec);
-              result.append(ec);
-            }
-          }
-        }
-        {
-          logger.info("RUN: " + String.join(" ", commandArgs1));
-          Process p = rt.exec(commandArgs1, new String[] {
-              "KUBEFLOW_REPO=" + Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1").toAbsolutePath() });
-          InputStream is = p.getInputStream();
-          InputStream es = p.getErrorStream();
-          Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-          Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-          while (p.isAlive()) {
-            if (rin.ready()) {
-              char ic = (char) rin.read();
-              System.out.print(ic);
-            }
-            if (rerr.ready()) {
-              char ec = (char) rerr.read();
-              System.err.print(ec);
-              result.append(ec);
-            }
-          }
-        }
-        {
-          logger.info("RUN: " + String.join(" ", commandArgs2));
-          Process p = rt.exec(commandArgs2,
-              new String[] {
-                  "KUBEFLOW_REPO=" + Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1").toAbsolutePath() },
-              new File(dirPath));
-          InputStream is = p.getInputStream();
-          InputStream es = p.getErrorStream();
-          Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-          Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-          while (p.isAlive()) {
-            if (rin.ready()) {
-              char ic = (char) rin.read();
-              System.out.print(ic);
-            }
-            if (rerr.ready()) {
-              char ec = (char) rerr.read();
-              System.err.print(ec);
-              result.append(ec);
-            }
-          }
-        }
-        {
-          logger.info("RUN: " + String.join(" ", commandArgs3));
-          Process p = rt.exec(commandArgs3,
-              new String[] {
-                  "KUBEFLOW_REPO=" + Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1").toAbsolutePath() },
-              new File(dirPath));
-          InputStream is = p.getInputStream();
-          InputStream es = p.getErrorStream();
-          Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-          Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-          while (p.isAlive()) {
-            if (rin.ready()) {
-              char ic = (char) rin.read();
-              System.out.print(ic);
-            }
-            if (rerr.ready()) {
-              char ec = (char) rerr.read();
-              System.err.print(ec);
-              result.append(ec);
-            }
-          }
-        }
-      } catch (IOException e) {
-        logger.logException(e);
+      String[] commandArgs1 = { Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + "/kubeflow-0.4.1/scripts/kfctl.sh", "init", dirPath, "--platform", "minikube" };
+      String[] commandArgs2 = {
+          Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+              + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
+          "generate", "all" };
+      String[] commandArgs3 = {
+          Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+              + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
+          "apply", "all" };
+      {
+        logger.warn("RUN: " + String.join(" ", commandArgs1));
+        runCommandAndPrint(result, commandArgs1, new String[] {
+            "KUBEFLOW_REPO=" + Paths.get(
+                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
+                .toAbsolutePath(),
+            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+            "KUBECONFIG="
+                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() });
+        Thread.sleep(1000L);
+      }
+      {
+        logger.warn("RUN: " + String.join(" ", commandArgs2));
+        runCommandAndPrint(result, commandArgs2, new String[] {
+            "KUBEFLOW_REPO=" + Paths.get(
+                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
+                .toAbsolutePath(),
+            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+            "KUBECONFIG="
+                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() },
+            0, dirPath);
+        Thread.sleep(1000L);
+      }
+      {
+        logger.warn("RUN: " + String.join(" ", commandArgs3));
+        runCommandAndPrint(result, commandArgs3, new String[] {
+            "KUBEFLOW_REPO=" + Paths.get(
+                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
+                .toAbsolutePath(),
+            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+            "KUBECONFIG="
+                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() },
+            0, dirPath);
+        Thread.sleep(1000L);
       }
     } catch (IOException | InterruptedException e) {
       logger.logException(e);
@@ -587,32 +501,67 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = (command + " -p " + vmName).split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.MINIKUBE_BINARY_PATH;
+    commandArgs[counter] = Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
+    runCommandAndPrint(result, commandArgs, null);
+    return result.toString();
+  }
+
+  private void runCommandAndPrint(StringBuilder result, String[] command, String[] env) {
+    runCommandAndPrint(result, command, env, 0, null);
+  }
+
+  private void runCommandAndPrint(StringBuilder result, String[] commandArgs, String[] env, long timeout,
+      String basePath) {
     try {
       Runtime rt = Runtime.getRuntime();
-      Process p = rt.exec(commandArgs);
+      Process p = null;
+      if (env != null) {
+        if (basePath != null)
+          p = rt.exec(commandArgs, env, new File(basePath));
+        else
+          p = rt.exec(commandArgs, env);
+      } else {
+        if (basePath != null)
+          p = rt.exec(commandArgs, null, new File(basePath));
+        else
+          p = rt.exec(commandArgs);
+      }
       InputStream is = p.getInputStream();
       InputStream es = p.getErrorStream();
       Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
       Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-      while (p.isAlive()) {
+      long startDate = new Date().getTime();
+      while ((p.isAlive() || rin.ready() || rerr.ready())
+          && (timeout == 0 || startDate + timeout > new Date().getTime())) {
         if (rin.ready()) {
           char ic = (char) rin.read();
-          System.out.print(ic);
+          if (ic == '\n') {
+            System.out.print("\r");
+            System.out.print(StringUtils.repeat(' ', 50));
+            System.out.print("\r");
+          } else {
+            System.out.print(ic);
+          }
+          result.append(ic);
         }
         if (rerr.ready()) {
           char ec = (char) rerr.read();
-          System.err.print(ec);
+          if (ec == '\n') {
+            System.err.print("\r");
+            System.out.print(StringUtils.repeat(' ', 50));
+            System.err.print("\r");
+          } else {
+            System.err.print(ec);
+          }
           result.append(ec);
         }
       }
     } catch (IOException e) {
       logger.logException(e);
     }
-    return result.toString();
   }
 
   @ShellMethod(value = "Run KubeCtl from original binary (K8s admin tool) (https://kubernetes.io/docs/reference/kubectl/kubectl/)", group = "Kubernetes Admin Commands")
@@ -628,31 +577,11 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.KUBECTL_BINARY_PATH;
+    commandArgs[counter] = Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
-    try {
-      Runtime rt = Runtime.getRuntime();
-      Process p = rt.exec(commandArgs);
-      InputStream is = p.getInputStream();
-      InputStream es = p.getErrorStream();
-      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-      while (p.isAlive()) {
-        if (rin.ready()) {
-          char ic = (char) rin.read();
-          System.out.print(ic);
-        }
-        if (rerr.ready()) {
-          char ec = (char) rerr.read();
-          System.err.print(ec);
-          result.append(ec);
-        }
-      }
-    } catch (IOException e) {
-      logger.logException(e);
-    }
+    runCommandAndPrint(result, commandArgs, null);
     return result.toString();
   }
 
@@ -700,40 +629,22 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.HELM_DIRECTORY_PATH + "/linux-amd64/helm";
+    commandArgs[counter] = Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+        + "/linux-amd64/helm";
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
-    try {
-      Runtime rt = Runtime.getRuntime();
-      Process p = rt.exec(commandArgs);
-      InputStream is = p.getInputStream();
-      InputStream es = p.getErrorStream();
-      Reader rin = new InputStreamReader(is, StandardCharsets.UTF_8);
-      Reader rerr = new InputStreamReader(es, StandardCharsets.UTF_8);
-      while (p.isAlive()) {
-        if (rin.ready()) {
-          char ic = (char) rin.read();
-          System.out.print(ic);
-        }
-        if (rerr.ready()) {
-          char ec = (char) rerr.read();
-          System.err.print(ec);
-          result.append(ec);
-        }
-      }
-    } catch (IOException e) {
-      logger.logException(e);
-    }
+    runCommandAndPrint(result, commandArgs, null);
     return result.toString();
   }
 
   private void getMiniKubeBinary() throws IOException, InterruptedException {
     createBinIfNotExists();
-    File miniBinary = new File(Anima.MINIKUBE_BINARY_PATH);
+    File miniBinary = new File(Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!miniBinary.exists()) {
       logger.warn("Downloading " + Anima.MINIKUBE_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.MINIKUBE_BINARY_PATH, Anima.MINIKUBE_URL);
+      HardwareHelper.downloadFileFromUrl(Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          Anima.MINIKUBE_URL);
       logger.warn("Download of " + Anima.MINIKUBE_URL + " completed");
     }
     if (!miniBinary.canExecute()) {
@@ -748,12 +659,13 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKubectlBin() throws IOException, InterruptedException {
     createBinIfNotExists();
-    File kubectlBinary = new File(Anima.KUBECTL_BINARY_PATH);
+    File kubectlBinary = new File(Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kubectlBinary.exists()) {
       String latestKubectlVersion = HardwareHelper.readTxtFromUrl(Anima.LATEST_KUBECTL_URL);
       String kubectlUrl = Anima.KUBECTL_URL.replace("$version", latestKubectlVersion.replace("\n", ""));
       logger.warn("Downloading " + kubectlUrl + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KUBECTL_BINARY_PATH, kubectlUrl);
+      HardwareHelper.downloadFileFromUrl(Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          kubectlUrl);
       logger.warn("Download of " + kubectlUrl + " completed");
     }
     if (!kubectlBinary.canExecute()) {
@@ -764,24 +676,32 @@ public class KubernetesInterface extends AbstractShellHelper {
   private void getHelmBinary() throws IOException, InterruptedException {
     createBinIfNotExists();
     boolean newHelm = false;
-    File helmBinaryTgz = new File(Anima.HELM_TGZ_PATH);
+    File helmBinaryTgz = new File(Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!helmBinaryTgz.exists()) {
       logger.warn("Downloading " + Anima.HELM_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.HELM_TGZ_PATH, Anima.HELM_COMPRESSED_URL);
+      HardwareHelper.downloadFileFromUrl(Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          Anima.HELM_COMPRESSED_URL);
       logger.warn("Download of " + Anima.HELM_COMPRESSED_URL + " completed");
     }
-    File helmDirectory = new File(Anima.HELM_DIRECTORY_PATH + "/linux-amd64");
-    File helmBinary = new File(Anima.HELM_DIRECTORY_PATH + "/linux-amd64/helm");
-    File tillerBinary = new File(Anima.HELM_DIRECTORY_PATH + "/linux-amd64/tiller");
+    File helmDirectory = new File(
+        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64");
+    File helmBinary = new File(
+        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/helm");
+    File tillerBinary = new File(
+        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/tiller");
     if (!helmDirectory.exists()) {
-      logger
-          .warn("Decompress " + Anima.HELM_TGZ_PATH + " to " + Anima.HELM_DIRECTORY_PATH + "/linux-amd64 PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.HELM_DIRECTORY_PATH, new FileInputStream(helmBinaryTgz));
-      logger
-          .warn("Decompress of " + Anima.HELM_TGZ_PATH + " to " + Anima.HELM_DIRECTORY_PATH + "/linux-amd64 completed");
+      logger.warn("Decompress " + Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+          + Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64 PLEASE WAIT");
+      HardwareHelper.extractTarGz(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          new FileInputStream(helmBinaryTgz));
+      logger.warn("Decompress of " + Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+          + Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64 completed");
       newHelm = true;
-      Files.createSymbolicLink(Paths.get(Anima.HELM_DIRECTORY_PATH + "/helm"), helmBinary.toPath().toAbsolutePath());
-      Files.createSymbolicLink(Paths.get(Anima.HELM_DIRECTORY_PATH + "/tiller"),
+      Files.createSymbolicLink(
+          Paths.get(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/helm"),
+          helmBinary.toPath().toAbsolutePath());
+      Files.createSymbolicLink(
+          Paths.get(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/tiller"),
           tillerBinary.toPath().toAbsolutePath());
     }
     if (!helmBinary.canExecute()) {
@@ -798,19 +718,25 @@ public class KubernetesInterface extends AbstractShellHelper {
   private void getKubeFlowBinary() throws IOException {
     createBinIfNotExists();
     getKsonnetBinary();
-    File kubeflowBinaryTgz = new File(Anima.KUBEFLOW_TGZ_PATH);
+    File kubeflowBinaryTgz = new File(Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kubeflowBinaryTgz.exists()) {
       logger.warn("Downloading " + Anima.KUBEFLOW_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KUBEFLOW_TGZ_PATH, Anima.KUBEFLOW_COMPRESSED_URL);
+      HardwareHelper.downloadFileFromUrl(Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          Anima.KUBEFLOW_COMPRESSED_URL);
       logger.warn("Download of " + Anima.KUBEFLOW_COMPRESSED_URL + " completed");
     }
-    File kubeflowDirectory = new File(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1");
+    File kubeflowDirectory = new File(
+        Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1");
     if (!kubeflowDirectory.exists()) {
-      logger.warn("Decompress " + Anima.KUBEFLOW_TGZ_PATH + " to " + Anima.KUBEFLOW_DIRECTORY_PATH + " PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.KUBEFLOW_DIRECTORY_PATH, new FileInputStream(kubeflowBinaryTgz));
-      logger.warn("Decompress of " + Anima.KUBEFLOW_TGZ_PATH + " to " + Anima.KUBEFLOW_DIRECTORY_PATH + " completed");
+      logger.warn("Decompress " + Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+          + Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " PLEASE WAIT");
+      HardwareHelper.extractTarGz(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          new FileInputStream(kubeflowBinaryTgz));
+      logger.warn("Decompress of " + Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " completed");
     }
-    File kubeflowBinary = new File(Anima.KUBEFLOW_DIRECTORY_PATH + "/kubeflow-0.4.1/scripts/kfctl.sh");
+    File kubeflowBinary = new File(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+        + "/kubeflow-0.4.1/scripts/kfctl.sh");
     if (!kubeflowBinary.canExecute()) {
       kubeflowBinary.setExecutable(true);
     }
@@ -818,20 +744,27 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKsonnetBinary() throws IOException {
     createBinIfNotExists();
-    File ksonnetBinaryTgz = new File(Anima.KSONNET_TGZ_PATH);
+    File ksonnetBinaryTgz = new File(Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!ksonnetBinaryTgz.exists()) {
       logger.warn("Downloading " + Anima.KSONNET_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KSONNET_TGZ_PATH, Anima.KSONNET_COMPRESSED_URL);
+      HardwareHelper.downloadFileFromUrl(Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          Anima.KSONNET_COMPRESSED_URL);
       logger.warn("Download of " + Anima.KSONNET_COMPRESSED_URL + " completed");
     }
-    File ksonnetDirectory = new File(Anima.KSONNET_DIRECTORY_PATH + "/ks_0.13.1_linux_amd64");
-    File ksonnetBinary = new File(Anima.KSONNET_DIRECTORY_PATH + "/ks_0.13.1_linux_amd64/ks");
+    File ksonnetDirectory = new File(
+        Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks_0.13.1_linux_amd64");
+    File ksonnetBinary = new File(
+        Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks_0.13.1_linux_amd64/ks");
     if (!ksonnetDirectory.exists()) {
       ksonnetDirectory.mkdirs();
-      logger.warn("Decompress " + Anima.KSONNET_TGZ_PATH + " to " + Anima.KSONNET_DIRECTORY_PATH + " PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.KSONNET_DIRECTORY_PATH, new FileInputStream(ksonnetBinaryTgz));
-      logger.warn("Decompress of " + Anima.KSONNET_TGZ_PATH + " to " + Anima.KSONNET_DIRECTORY_PATH + " completed");
-      Files.createSymbolicLink(Paths.get(Anima.KSONNET_DIRECTORY_PATH + "/ks"),
+      logger.warn("Decompress " + Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+          + Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " PLEASE WAIT");
+      HardwareHelper.extractTarGz(Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          new FileInputStream(ksonnetBinaryTgz));
+      logger.warn("Decompress of " + Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+          + Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " completed");
+      Files.createSymbolicLink(
+          Paths.get(Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks"),
           ksonnetBinary.toPath().toAbsolutePath());
     }
     if (!ksonnetBinary.canExecute()) {
@@ -841,12 +774,13 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKopsBinary() throws JSONException, IOException, InterruptedException {
     createBinIfNotExists();
-    File kopsBinary = new File(Anima.KOPS_BINARY_PATH);
+    File kopsBinary = new File(Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kopsBinary.exists()) {
       String latestKopsVersion = HardwareHelper.readJsonFromUrl(Anima.LATEST_KOPS_URL).optString("tag_name");
       String kopsUrl = Anima.KOPS_URL.replace("$version", latestKopsVersion);
       logger.warn("Downloading " + kopsUrl + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KOPS_BINARY_PATH, kopsUrl);
+      HardwareHelper.downloadFileFromUrl(Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          kopsUrl);
       logger.warn("Download of " + kopsUrl + " completed");
     }
     if (!kopsBinary.canExecute()) {
