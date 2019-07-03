@@ -130,6 +130,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public static final String KSONNET_COMPRESSED_URL = "https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz";
   public static final String KSONNET_DIRECTORY_PATH = "~/bin";
   public static final String KUBECONFIG = "~/.kube/config";
+  public static final String SHELL_INTERACTIVE_START = "~/.ssty_noecho";
 
   // default value
   public static final String organization = "Rossonet";
