@@ -25,6 +25,7 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.console.chat.sshd.firstCommand.Ar4kProcessShellFactory;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -87,6 +88,25 @@ public class SshdShellInterface extends AbstractShellHelper {
     server.setPort(port);
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     ProcessShellFactory shellFactory = new Ar4kProcessShellFactory(new String[] { "/bin/bash", "-i", "-l" });
+    server.setShellFactory(shellFactory);
+    try {
+      server.start();
+    } catch (IOException e) {
+      logger.logException(e);
+    }
+  }
+
+  @ShellMethod(value = "Start SSHD remote management server that use Homunculus shell", group = "Ssh Server Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testClientUsed")
+  public void startSshdRemoteHomunculus(
+      @ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
+      @ShellOption(help = "the sshd server port", defaultValue = "6666") int port) {
+    server = SshServer.setUpDefaultServer();
+    server.setHost(host);
+    server.setPort(port);
+    server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+    Ar4kAnimaShellFactory shellFactory = new Ar4kAnimaShellFactory(Anima.getApplicationContext().getBean(Anima.class));
     server.setShellFactory(shellFactory);
     try {
       server.start();
