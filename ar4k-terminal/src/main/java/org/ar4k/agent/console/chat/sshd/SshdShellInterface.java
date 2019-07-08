@@ -106,7 +106,8 @@ public class SshdShellInterface extends AbstractShellHelper {
     server.setHost(host);
     server.setPort(port);
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-    Ar4kAnimaShellFactory shellFactory = new Ar4kAnimaShellFactory(Anima.getApplicationContext().getBean(Anima.class));
+    Ar4kAnimaShellFactory shellFactory = new Ar4kAnimaShellFactory(Anima.getApplicationContext().getBean(Anima.class),
+        this.shell);
     server.setShellFactory(shellFactory);
     try {
       server.start();
