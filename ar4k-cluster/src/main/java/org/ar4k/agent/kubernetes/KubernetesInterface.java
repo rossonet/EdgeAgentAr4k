@@ -540,7 +540,7 @@ public class KubernetesInterface extends AbstractShellHelper {
           char ic = (char) rin.read();
           if (ic == '\n') {
             System.out.print("\r");
-            System.out.print(StringUtils.repeat(' ', 50));
+            System.out.print(StringUtils.repeat(' ', 80));
             System.out.print("\r");
           } else {
             System.out.print(ic);
@@ -711,8 +711,9 @@ public class KubernetesInterface extends AbstractShellHelper {
     if (!tillerBinary.canExecute()) {
       tillerBinary.setExecutable(true);
     }
-    if (newHelm)
+    if (newHelm) {
       runHelmCommandLine("init");
+    }
   }
 
   private void getKubeFlowBinary() throws IOException {

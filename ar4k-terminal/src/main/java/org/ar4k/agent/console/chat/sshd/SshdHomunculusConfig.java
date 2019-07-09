@@ -19,6 +19,7 @@ import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.json.SshdHomunculusConfigJsonAdapter;
 import org.ar4k.agent.core.Ar4kComponent;
 
+import com.beust.jcommander.Parameter;
 import com.google.gson.TypeAdapter;
 
 /*
@@ -28,6 +29,11 @@ import com.google.gson.TypeAdapter;
  *
  */
 public class SshdHomunculusConfig extends AbstractServiceConfig {
+
+  @Parameter(names = "--port", description = "the port for the SSHD service", required = true)
+  public int port = 6661;
+  @Parameter(names = "--bindHost", description = "bind which interface. All = 0.0.0.0", required = true)
+  public String broadcastAddress = "0.0.0.0";
 
   private static final long serialVersionUID = 6301077946480730173L;
 
