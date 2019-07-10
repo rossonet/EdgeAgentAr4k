@@ -346,6 +346,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     StringBuilder result = new StringBuilder();
     try {
       getKopsBinary();
+      getKubectlBin();
     } catch (JSONException | IOException | InterruptedException e) {
       logger.logException(e);
     }
@@ -365,6 +366,7 @@ public class KubernetesInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testApiClientNull")
   public String createK8sWithMiniKube(
       @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName,
+      @ShellOption(help = "the driver for the virtual enviroment. Should be: virtualbox, vmwarefusion, kvm2, hyperkit, hyperv, vmware, none", defaultValue = "virtualbox") String driver,
       @ShellOption(help = "the number of cpus for the K8s", defaultValue = "2") String cpus,
       @ShellOption(help = "the ammount of memory for MiniKube", defaultValue = "2048") String memory,
       @ShellOption(help = "the disk space for the Minikube for MiniKube", defaultValue = "20g") String diskSize) {
@@ -374,8 +376,8 @@ public class KubernetesInterface extends AbstractShellHelper {
     result.append(runMiniKubeCommandLine(vmName, "delete"));
     result.append("Starting K8s Cluster");
     // System.out.println("Starting K8s Cluster");
-    result.append(
-        runMiniKubeCommandLine(vmName, "start --cpus " + cpus + " --memory " + memory + " --disk-size=" + diskSize));
+    result.append(runMiniKubeCommandLine(vmName,
+        "start --cpus " + cpus + " --memory " + memory + " --disk-size=" + diskSize + " --vm-driver=" + driver));
     // System.out.println("Starting K8s Cluster");
     result.append(runMiniKubeCommandLine(vmName, "status"));
     connectToK8sApi();
@@ -423,7 +425,8 @@ public class KubernetesInterface extends AbstractShellHelper {
   @ShellMethod(value = "Start a KubeFlow system", group = "Kubernetes Admin Commands")
   @ManagedOperation
   public String installKubeFlow(
-      @ShellOption(help = "directory for the configuration", defaultValue = "kubeflow") String dirPath) {
+      @ShellOption(help = "directory for the configuration", defaultValue = "kubeflow") String dirPath,
+      @ShellOption(help = "platform. Should be: ", defaultValue = "minikube") String platform) {
     StringBuilder result = new StringBuilder();
     try {
       getKubectlBin();
@@ -783,6 +786,10 @@ public class KubernetesInterface extends AbstractShellHelper {
       HardwareHelper.downloadFileFromUrl(Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
           kopsUrl);
       logger.warn("Download of " + kopsUrl + " completed");
+      logger.warn("install aws client with pip");
+      StringBuilder awsCli = new StringBuilder();
+      String[] command = { "pip", "install", "awscli" };
+      runCommandAndPrint(awsCli, command, null);
     }
     if (!kopsBinary.canExecute()) {
       kopsBinary.setExecutable(true);
