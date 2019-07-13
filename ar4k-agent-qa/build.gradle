@@ -10,7 +10,7 @@ dependencies {
 	//compile project(':ar4k-flow-full')
 	//compile project(':pcap')
 	//compile project(':drools')
-	//compile project(':atomix')
+	compile project(':ar4k-atomix')
 	//compile project(':xmpp')
 	//compile project(':openoffice-uno')
 	//compile project(':blockchain')

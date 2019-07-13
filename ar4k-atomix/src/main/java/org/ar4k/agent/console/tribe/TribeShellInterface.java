@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -54,7 +53,6 @@ import io.atomix.utils.net.Address;
 @ManagedResource(objectName = "bean:name=tribeInterface", description = "Ar4k Agent Tribe Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "tribeInterface")
 @RestController
 @RequestMapping("/tribeInterface")
-@ConditionalOnProperty(name = "ar4k.tribe", havingValue = "true")
 public class TribeShellInterface extends AbstractShellHelper {
 
   List<Atomix> selectedAtomix = new ArrayList<Atomix>();
