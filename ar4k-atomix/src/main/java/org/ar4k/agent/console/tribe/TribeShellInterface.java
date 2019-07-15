@@ -14,7 +14,6 @@
     */
 package org.ar4k.agent.console.tribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,9 +21,11 @@ import javax.validation.Valid;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -33,11 +34,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.atomix.cluster.Member;
-import io.atomix.core.Atomix;
-import io.atomix.core.profile.Profile;
-import io.atomix.primitive.partition.PartitionGroup;
-import io.atomix.utils.net.Address;
+import io.atomix.core.set.DistributedSet;
 
 /**
  * 
@@ -55,65 +52,45 @@ import io.atomix.utils.net.Address;
 @RequestMapping("/tribeInterface")
 public class TribeShellInterface extends AbstractShellHelper {
 
-  List<Atomix> selectedAtomix = new ArrayList<Atomix>();
+  AtomixTribeComponent selectedAtomix = null;
 
-  @ShellMethod(value = "Create a Atomix cluster with 3 local nodes on different ports", group = "Tribe Commands")
-  @ManagedOperation
-  public void tribeFoundation(
-      @ShellOption(help = "The TCP port for bind the Atomix istance 1", defaultValue = "5000") Integer port0,
-      @ShellOption(help = "The TCP port for bind the Atomix istance 1", defaultValue = "5001") Integer port1,
-      @ShellOption(help = "The TCP port for bind the Atomix istance 1", defaultValue = "5002") Integer port2,
-      @ShellOption(help = "The name for the this node in the cluster", defaultValue = "ar4kMaster") String hostAlias,
-      @ShellOption(help = "Multicast address for dicovery", defaultValue = "224.0.0.66") String multicastAddress,
-      @ShellOption(help = "Multicast port", defaultValue = "5066") Integer multicastPort) {
-    int contatore = 0;
-    Integer[] ports = { port0, port1, port2 };
-    for (Integer port : ports) {
-      Atomix.Builder builder = Atomix.builder();
-      builder.withLocalMember(Member.builder().withId(hostAlias + "-" + String.valueOf(contatore))
-          .withAddress("localhost:" + String.valueOf(port)).build());
-      builder.withProfiles(Profile.CONSENSUS, Profile.DATA_GRID);
-      builder.withMulticastEnabled();
-      builder.withMulticastAddress(Address.from(multicastAddress + ":" + String.valueOf(multicastPort)));
-      Atomix atomix = builder.build();
-      atomix.start();
-      selectedAtomix.add(atomix);
-      contatore++;
-    }
+  protected Availability testAtomixNodeNull() {
+    return selectedAtomix == null ? Availability.available()
+        : Availability.unavailable("a Atomix node exists with status " + selectedAtomix.getStatusString());
   }
 
-  @ShellMethod(value = "list the tribe joined", group = "Tribe Commands")
-  @ManagedOperation
-  // @ShellMethodAvailability("testSelectedConfigOk")
-  public void listTribe() {
-    for (Atomix target : selectedAtomix) {
-      System.out.println("istance: " + target.getMembershipService().getLocalMember().toString() + "; members: "
-          + target.getMembershipService().getMembers().size());
-      System.out.println("partitions:");
-      for (PartitionGroup pt : target.getPartitionService().getPartitionGroups()) {
-        System.out.print(pt.name() + " " + pt.type().name() + " (" + String.valueOf(pt.getPartitions().size()) + "); ");
-      }
-      System.out.println("\n---------------------------------------------");
-    }
+  protected Availability testAtomixNodeRunning() {
+    return selectedAtomix != null ? Availability.available() : Availability.unavailable("no Beacon client are running");
   }
 
-  @ShellMethod(value = "Join to a existing Atomix cluster", group = "Tribe Commands")
+  @ShellMethod(value = "Create Atomix node", group = "Tribe Commands")
   @ManagedOperation
-  // @ShellMethodAvailability("testSelectedConfigOk")
-  public void tribeJoin(
-      @ShellOption(help = "The TCP port for bind the Atomix istance", defaultValue = "5009") Integer port,
-      @ShellOption(help = "The name for the this node in the cluster", defaultValue = "ar4kSlave") String hostAlias,
-      @ShellOption(help = "Multicast address for dicovery", defaultValue = "224.0.0.66") String multicastAddress,
-      @ShellOption(help = "Multicast port", defaultValue = "5066") Integer multicastPort) {
-    Atomix.Builder builder = Atomix.builder();
-    builder
-        .withLocalMember(Member.builder().withId(hostAlias).withAddress("localhost:" + String.valueOf(port)).build());
-    builder.withProfiles(Profile.CONSENSUS, Profile.DATA_GRID);
-    builder.withMulticastEnabled();
-    builder.withMulticastAddress(Address.from(multicastAddress + ":" + String.valueOf(multicastPort)));
-    Atomix atomix = builder.build();
-    atomix.start();
-    selectedAtomix.add(atomix);
+  @ShellMethodAvailability("testAtomixNodeNull")
+  public void tribeJoin(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
+    selectedAtomix = new AtomixTribeComponent(tribe);
+    selectedAtomix.init();
+  }
+
+  @ShellMethod(value = "Get status for Atomix node", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public String tribeStatus() {
+    return selectedAtomix.getStatusString();
+  }
+
+  @ShellMethod(value = "List nodes joined to the cluster", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public List<String> tribeList() {
+    return selectedAtomix.listAtomixNodes();
+  }
+
+  @ShellMethod(value = "Stop Atomix node", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public void tribeStop() {
+    selectedAtomix.kill();
+    selectedAtomix = null;
   }
 
   @ShellMethod(value = "Add tribe config to the selected configuration", group = "Tribe Commands")
@@ -121,6 +98,28 @@ public class TribeShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addTribe(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
     getWorkingConfig().pots.add((PotConfig) tribe);
+  }
+
+  @ShellMethod(value = "List data in Atomix", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public DistributedSet<String> atomixKeySet() {
+    return selectedAtomix.getAtomixMap().keySet();
+  }
+
+  @ShellMethod(value = "Put data in Atomix map", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public void atomixPut(@ShellOption(help = "key for the data. If the key exists will be override") String key,
+      @ShellOption(help = "value for the key") String value) {
+    selectedAtomix.getAtomixMap().put(key, value);
+  }
+
+  @ShellMethod(value = "Get data in Atomix map", group = "Tribe Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testAtomixNodeRunning")
+  public Object atomixGet(@ShellOption(help = "key for the data") String key) {
+    return selectedAtomix.getAtomixMap().get(key);
   }
 
 }

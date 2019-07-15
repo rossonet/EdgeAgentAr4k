@@ -23,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * Logger
  * 
@@ -31,6 +34,8 @@ import org.slf4j.Marker;
  */
 
 public class Ar4kLogger implements Logger {
+
+  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private Logger logger;
 
@@ -84,7 +89,7 @@ public class Ar4kLogger implements Logger {
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    // TODO implementare in messaggi
+    logger.info(gson.toJson(logMessage));
   }
 
   @Override
