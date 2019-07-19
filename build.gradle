@@ -17,8 +17,9 @@ buildscript {
   }
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
-    //classpath('se.transmode.gradle:gradle-docker:1.2')
     classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+    classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
+    classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
   }
 }
 
@@ -28,6 +29,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'maven'
 apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: "io.quarkus"
+apply plugin: 'com.google.cloud.tools.jib'
 
 repositories {
   mavenCentral()
@@ -66,6 +69,8 @@ subprojects {
       classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
       classpath 'de.undercouch:gradle-download-task:3.1.1'
       classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+      classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
+      classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
     }
   }
 
@@ -75,6 +80,8 @@ subprojects {
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'maven'
   apply plugin: "com.gorylenko.gradle-git-properties"
+  apply plugin: "io.quarkus"
+  apply plugin: 'com.google.cloud.tools.jib'
 
   repositories {
     mavenCentral()
@@ -84,8 +91,7 @@ subprojects {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
-  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]"
-    } }
+  task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
 
   configurations.all {
     //exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
@@ -113,6 +119,10 @@ subprojects {
     //compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     runtime("org.springframework.boot:spring-boot-devtools")
+    // QUARKUS 
+    compile group: 'org.jboss.logmanager', name: 'jboss-logmanager', version: '2.1.13.Final'
+    compile group: 'io.quarkus', name: 'quarkus-core-runtime', version: '0.12.0'
+
     compile("org.springframework.boot:spring-boot-configuration-processor")
     testCompile('org.springframework.boot:spring-boot-starter-test')
   }

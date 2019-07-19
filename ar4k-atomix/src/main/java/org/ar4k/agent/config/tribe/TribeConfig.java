@@ -48,7 +48,7 @@ public class TribeConfig extends AbstractServiceConfig {
   @Parameter(names = "--mapName", description = "the name for the map in where store the data")
   public String mapName = "base-map";
 
-  @Parameter(names = "--storage", description = "the pathn for the raft storage")
+  @Parameter(names = "--storage", description = "the path for the raft storage")
   public String storagePath = "/tmp/" + UUID.randomUUID().toString();
 
   @Override

@@ -13,25 +13,24 @@ import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 import io.atomix.cluster.Member;
 import io.atomix.cluster.MemberId;
 import io.atomix.core.Atomix;
 import io.atomix.core.AtomixBuilder;
-import io.atomix.core.election.LeaderElection;
 import io.atomix.core.election.Leadership;
 import io.atomix.core.map.AtomicMap;
 import io.atomix.primitive.partition.MemberGroupStrategy;
 import io.atomix.protocols.backup.partition.PrimaryBackupPartitionGroup;
-import io.atomix.protocols.raft.MultiRaftProtocol;
-import io.atomix.protocols.raft.ReadConsistency;
 import io.atomix.protocols.raft.partition.RaftPartitionGroup;
 import io.atomix.utils.net.Address;
 
 public class AtomixTribeComponent implements Ar4kComponent {
 
-  // private static final Yaml yaml = new Yaml();
+  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
@@ -81,18 +80,9 @@ public class AtomixTribeComponent implements Ar4kComponent {
       }
     }
 
-    private void observerElection() {
-      LeaderElection<MemberId> election = atomix.getLeaderElection("boss");
-      leadership = election.getLeadership();
-      election.addListener(event -> {
-        System.out.println("The boss is " + event.newLeadership().leader());
-      });
-    }
-
     @Override
     public void run() {
       connect();
-      observerElection();
       getAtomixMap();
     }
   }
@@ -143,8 +133,7 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   @Override
   public JsonElement getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
+    return gson.toJsonTree(configuration);
   }
 
   @Override
@@ -160,6 +149,10 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   public Atomix getAtomix() {
     return atomix;
+  }
+
+  public void sendChatMessage(String message) {
+    atomix.getCommunicationService().broadcast("chat", message);
   }
 
   public AtomicMap<String, Object> getAtomixMap() {

@@ -82,6 +82,24 @@ public class AtomixClusterTest {
     Versioned<Object> vOn3 = n3.getAtomixMap().get("exampleData");
     System.out.println("value on node 3 -> " + vOn3.value().toString());
     assertTrue(vOn3.value().toString().equals(exampleValue));
+    Thread.sleep(1000 * 30);
+  }
+
+  @Test
+  public void testChat() throws InterruptedException {
+    createNodes();
+    Thread.sleep(1000 * 20);
+    System.out.println(n1.listAtomixNodes());
+    System.out.println(n2.listAtomixNodes());
+    System.out.println(n3.listAtomixNodes());
+    System.out.println(n1.getStatusString());
+    System.out.println(n2.getStatusString());
+    System.out.println(n3.getStatusString());
+    Atomix a = n1.getAtomix();
+    System.out.println(a.getPrimitives());
+    Thread.sleep(1000 * 10);
+    n1.sendChatMessage("This is a chat message");
+    Thread.sleep(1000 * 30);
   }
 
   private void createNodes() {
