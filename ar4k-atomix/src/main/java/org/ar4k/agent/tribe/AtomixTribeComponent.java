@@ -83,15 +83,17 @@ public class AtomixTribeComponent implements Ar4kComponent {
     @Override
     public void run() {
       connect();
-      getAtomixMap();
+      //getAtomixMap();
     }
   }
 
   public List<String> listAtomixNodes() {
-    Set<Member> ms = atomix.getMembershipService().getMembers();
     List<String> ritorno = new ArrayList<String>();
-    for (Member a : ms) {
-      ritorno.add(a.address().host() + ":" + a.address().port());
+    if (atomix != null && atomix.getMembershipService() != null) {
+      Set<Member> ms = atomix.getMembershipService().getMembers();
+      for (Member a : ms) {
+        ritorno.add(a.address().host() + ":" + a.address().port());
+      }
     }
     return ritorno;
   }
@@ -157,11 +159,6 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   public AtomicMap<String, Object> getAtomixMap() {
     if (map == null) {
-      /*
-       * MultiRaftProtocol protocol =
-       * MultiRaftProtocol.builder().withReadConsistency(ReadConsistency.LINEARIZABLE)
-       * .build();
-       */
       map = atomix.<String, Object>atomicMapBuilder(configuration.mapName).withCacheEnabled().withCacheSize(1000)
           .withKeyType(String.class).build();
     }

@@ -1,16 +1,4 @@
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import org.ar4k.agent.config.tribe.TribeConfig;
-import org.ar4k.agent.tribe.AtomixTribeComponent;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import io.atomix.core.Atomix;
-import io.atomix.utils.time.Versioned;
+package org.ar4k.agent.tribe;
 
 import static org.junit.Assert.assertTrue;
 
@@ -18,6 +6,18 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+import org.ar4k.agent.config.tribe.TribeConfig;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import io.atomix.core.Atomix;
+import io.atomix.utils.time.Versioned;
 
 public class AtomixClusterTest {
 
@@ -32,12 +32,11 @@ public class AtomixClusterTest {
 
   @Before
   public void setUp() throws Exception {
-    host = getLocalAddress().getHostAddress();
+    host = "192.168.0.159";// getLocalAddress().getHostAddress();
     Set<String> setClients = new HashSet<String>();
     setClients.add("test1");
     setClients.add("test2");
     setClients.add("test3");
-    // setClients.add("test3");
     tc1.name = "test1";
     tc2.name = "test2";
     tc3.name = "test3";
@@ -70,10 +69,10 @@ public class AtomixClusterTest {
     System.out.println(n2.getStatusString());
     System.out.println(n3.getStatusString());
     Atomix a = n1.getAtomix();
+    Thread.sleep(1000 * 20);
     System.out.println(a.getPrimitives());
-    Thread.sleep(1000 * 10);
     String exampleValue = UUID.randomUUID().toString();
-    n1.getAtomixMap().put("exampleData", exampleValue);
+    n2.getAtomixMap().put("exampleData", exampleValue);
     System.out.println("list on node 2 ->");
     for (String line : n2.getAtomixMap().keySet()) {
       System.out.println(line);
@@ -114,6 +113,7 @@ public class AtomixClusterTest {
     n3.init();
   }
 
+  @SuppressWarnings("unused")
   private static InetAddress getLocalAddress() throws SocketException {
     Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
     while (ifaces.hasMoreElements()) {
