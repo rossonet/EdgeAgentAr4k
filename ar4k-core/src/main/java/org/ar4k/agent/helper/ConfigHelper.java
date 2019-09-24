@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -12,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.util.Base64;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
@@ -19,6 +23,8 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.yaml.snakeyaml.Yaml;
 
 import com.google.common.base.Splitter;
@@ -27,8 +33,80 @@ import com.google.gson.GsonBuilder;
 
 public class ConfigHelper {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(ConfigHelper.class.toString());
+
+  public static final String NETTY_CTX_CLIENT = "net-ctx-c";
+  public static final String NETTY_CTX_SERVER = "net-ctx-s";
+  public static final String KOPS_BINARY_PATH = "~/bin/kops";
+  public static final String BASE_BASH_CMD = "/bin/bash -l";
+  public static final String LATEST_KOPS_URL = "https://api.github.com/repos/kubernetes/kops/releases/latest";
+  public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
+  public static final String MINIKUBE_BINARY_PATH = "~/bin/minikube";
+  public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
+  public static final String HELM_TGZ_PATH = "~/bin/helm.tgz";
+  public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
+  public static final String HELM_DIRECTORY_PATH = "~/bin";
+  public static final String LATEST_KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
+  public static final String KUBECTL_BINARY_PATH = "~/bin/kubectl";
+  public static final String KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/$version/bin/linux/amd64/kubectl";
+  public static final String KUBEFLOW_TGZ_PATH = "~/bin/kubeflow.tgz";
+  public static final String KUBEFLOW_COMPRESSED_URL = "https://github.com/kubeflow/kubeflow/archive/v0.4.1.tar.gz";
+  public static final String KUBEFLOW_DIRECTORY_PATH = "~/bin";
+  public static final String KSONNET_TGZ_PATH = "~/bin/ksonnet.tgz";
+  public static final String KSONNET_COMPRESSED_URL = "https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz";
+  public static final String KSONNET_DIRECTORY_PATH = "~/bin";
+  public static final String KUBECONFIG = "~/.kube/config";
+  public static final String SHELL_INTERACTIVE_START = "~/.ssty_noecho";
+
+  // default value
+  public static final String organization = "Rossonet";
+  public static final String unit = "Ar4k";
+  public static final String locality = "Imola";
+  public static final String state = "Bologna";
+  public static final String country = "IT";
+  public static final String uri = "https://www.rossonet.net";
+  public static final String dns = NetworkHelper.getHostname();
+  public static final String ip = "127.0.0.1";
+
   private ConfigHelper() {
     System.out.println("Just for static usage");
+  }
+
+  public static String createRandomRegistryId() {
+    StringBuilder val = new StringBuilder();
+    val.append("AR");
+    // char (1), random A-Z
+    int ranChar = 65 + (new Random()).nextInt(90 - 65);
+    char ch = (char) ranChar;
+    val.append(ch);
+    // numbers (6), random 0-9
+    Random r = new Random();
+    int numbers = 100000 + (int) (r.nextFloat() * 899900);
+    val.append(String.valueOf(numbers));
+    val.append("-");
+    // char or numbers (5), random 0-9 A-Z
+    for (int i = 0; i < 6;) {
+      int ranAny = 48 + (new Random()).nextInt(90 - 65);
+      if (!(57 < ranAny && ranAny <= 65)) {
+        char c = (char) ranAny;
+        val.append(c);
+        i++;
+      }
+    }
+    return val.toString();
+  }
+
+  public static String generateNewUniqueName() {
+    String result = null;
+    try {
+      result = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      logger.info("no hostname found...");
+      result = "";
+    }
+    result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
+    return result;
   }
 
   public static String toJson(ConfigSeed configObject) {

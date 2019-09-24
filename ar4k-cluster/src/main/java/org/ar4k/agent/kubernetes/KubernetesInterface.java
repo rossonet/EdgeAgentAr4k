@@ -29,8 +29,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -353,7 +353,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
+    commandArgs[counter] = ConfigHelper.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
@@ -413,8 +413,8 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       getKubectlBin();
       getMiniKubeBinary();
-      String[] command = { Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")), "dashboard",
-          "-p", vmName, "--url" };
+      String[] command = { ConfigHelper.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          "dashboard", "-p", vmName, "--url" };
       runCommandAndPrint(result, command, null, 30000, null);
     } catch (IOException | InterruptedException e) {
       logger.logException(e);
@@ -431,48 +431,51 @@ public class KubernetesInterface extends AbstractShellHelper {
     try {
       getKubectlBin();
       getKubeFlowBinary();
-      String[] commandArgs1 = { Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+      String[] commandArgs1 = { ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
           + "/kubeflow-0.4.1/scripts/kfctl.sh", "init", dirPath, "--platform", "minikube" };
       String[] commandArgs2 = {
-          Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          Paths.get(ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
               + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
           "generate", "all" };
       String[] commandArgs3 = {
-          Paths.get(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          Paths.get(ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
               + "/kubeflow-0.4.1/scripts/kfctl.sh").toAbsolutePath().toString(),
           "apply", "all" };
       {
         logger.warn("RUN: " + String.join(" ", commandArgs1));
-        runCommandAndPrint(result, commandArgs1, new String[] {
-            "KUBEFLOW_REPO=" + Paths.get(
-                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
-                .toAbsolutePath(),
-            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
-            "KUBECONFIG="
-                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() });
+        runCommandAndPrint(result, commandArgs1,
+            new String[] {
+                "KUBEFLOW_REPO="
+                    + Paths.get(ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+                        + "/kubeflow-0.4.1").toAbsolutePath(),
+                "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+                "KUBECONFIG=" + Paths.get(ConfigHelper.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home")))
+                    .toAbsolutePath() });
         Thread.sleep(1000L);
       }
       {
         logger.warn("RUN: " + String.join(" ", commandArgs2));
-        runCommandAndPrint(result, commandArgs2, new String[] {
-            "KUBEFLOW_REPO=" + Paths.get(
-                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
-                .toAbsolutePath(),
-            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
-            "KUBECONFIG="
-                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() },
+        runCommandAndPrint(result, commandArgs2,
+            new String[] {
+                "KUBEFLOW_REPO="
+                    + Paths.get(ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+                        + "/kubeflow-0.4.1").toAbsolutePath(),
+                "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+                "KUBECONFIG=" + Paths.get(ConfigHelper.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home")))
+                    .toAbsolutePath() },
             0, dirPath);
         Thread.sleep(1000L);
       }
       {
         logger.warn("RUN: " + String.join(" ", commandArgs3));
-        runCommandAndPrint(result, commandArgs3, new String[] {
-            "KUBEFLOW_REPO=" + Paths.get(
-                Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1")
-                .toAbsolutePath(),
-            "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
-            "KUBECONFIG="
-                + Paths.get(Anima.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home"))).toAbsolutePath() },
+        runCommandAndPrint(result, commandArgs3,
+            new String[] {
+                "KUBEFLOW_REPO="
+                    + Paths.get(ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+                        + "/kubeflow-0.4.1").toAbsolutePath(),
+                "PATH=" + "/usr/share/Modules/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:~/bin",
+                "KUBECONFIG=" + Paths.get(ConfigHelper.KUBECONFIG.replaceFirst("^~", System.getProperty("user.home")))
+                    .toAbsolutePath() },
             0, dirPath);
         Thread.sleep(1000L);
       }
@@ -504,7 +507,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = (command + " -p " + vmName).split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
+    commandArgs[counter] = ConfigHelper.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
@@ -580,7 +583,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
+    commandArgs[counter] = ConfigHelper.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home"));
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
     }
@@ -632,7 +635,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     String[] splitCmd = command.split(" |\t");
     String[] commandArgs = new String[splitCmd.length + 1];
     int counter = 0;
-    commandArgs[counter] = Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+    commandArgs[counter] = ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
         + "/linux-amd64/helm";
     for (counter = 1; counter < splitCmd.length + 1; counter++) {
       commandArgs[counter] = splitCmd[counter - 1];
@@ -643,12 +646,13 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getMiniKubeBinary() throws IOException, InterruptedException {
     createBinIfNotExists();
-    File miniBinary = new File(Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File miniBinary = new File(ConfigHelper.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!miniBinary.exists()) {
-      logger.warn("Downloading " + Anima.MINIKUBE_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          Anima.MINIKUBE_URL);
-      logger.warn("Download of " + Anima.MINIKUBE_URL + " completed");
+      logger.warn("Downloading " + ConfigHelper.MINIKUBE_URL + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(
+          ConfigHelper.MINIKUBE_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          ConfigHelper.MINIKUBE_URL);
+      logger.warn("Download of " + ConfigHelper.MINIKUBE_URL + " completed");
     }
     if (!miniBinary.canExecute()) {
       miniBinary.setExecutable(true);
@@ -662,13 +666,13 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKubectlBin() throws IOException, InterruptedException {
     createBinIfNotExists();
-    File kubectlBinary = new File(Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File kubectlBinary = new File(ConfigHelper.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kubectlBinary.exists()) {
-      String latestKubectlVersion = HardwareHelper.readTxtFromUrl(Anima.LATEST_KUBECTL_URL);
-      String kubectlUrl = Anima.KUBECTL_URL.replace("$version", latestKubectlVersion.replace("\n", ""));
+      String latestKubectlVersion = HardwareHelper.readTxtFromUrl(ConfigHelper.LATEST_KUBECTL_URL);
+      String kubectlUrl = ConfigHelper.KUBECTL_URL.replace("$version", latestKubectlVersion.replace("\n", ""));
       logger.warn("Downloading " + kubectlUrl + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          kubectlUrl);
+      HardwareHelper.downloadFileFromUrl(
+          ConfigHelper.KUBECTL_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")), kubectlUrl);
       logger.warn("Download of " + kubectlUrl + " completed");
     }
     if (!kubectlBinary.canExecute()) {
@@ -679,32 +683,34 @@ public class KubernetesInterface extends AbstractShellHelper {
   private void getHelmBinary() throws IOException, InterruptedException {
     createBinIfNotExists();
     boolean newHelm = false;
-    File helmBinaryTgz = new File(Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File helmBinaryTgz = new File(ConfigHelper.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!helmBinaryTgz.exists()) {
-      logger.warn("Downloading " + Anima.HELM_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          Anima.HELM_COMPRESSED_URL);
-      logger.warn("Download of " + Anima.HELM_COMPRESSED_URL + " completed");
+      logger.warn("Downloading " + ConfigHelper.HELM_COMPRESSED_URL + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(ConfigHelper.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          ConfigHelper.HELM_COMPRESSED_URL);
+      logger.warn("Download of " + ConfigHelper.HELM_COMPRESSED_URL + " completed");
     }
     File helmDirectory = new File(
-        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64");
+        ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64");
     File helmBinary = new File(
-        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/helm");
+        ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/helm");
     File tillerBinary = new File(
-        Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/tiller");
+        ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64/tiller");
     if (!helmDirectory.exists()) {
-      logger.warn("Decompress " + Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
-          + Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64 PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+      logger.warn("Decompress " + ConfigHelper.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + "/linux-amd64 PLEASE WAIT");
+      HardwareHelper.extractTarGz(ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
           new FileInputStream(helmBinaryTgz));
-      logger.warn("Decompress of " + Anima.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
-          + Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/linux-amd64 completed");
+      logger.warn("Decompress of " + ConfigHelper.HELM_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + "/linux-amd64 completed");
       newHelm = true;
       Files.createSymbolicLink(
-          Paths.get(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/helm"),
+          Paths.get(ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/helm"),
           helmBinary.toPath().toAbsolutePath());
       Files.createSymbolicLink(
-          Paths.get(Anima.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/tiller"),
+          Paths.get(ConfigHelper.HELM_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/tiller"),
           tillerBinary.toPath().toAbsolutePath());
     }
     if (!helmBinary.canExecute()) {
@@ -722,25 +728,31 @@ public class KubernetesInterface extends AbstractShellHelper {
   private void getKubeFlowBinary() throws IOException {
     createBinIfNotExists();
     getKsonnetBinary();
-    File kubeflowBinaryTgz = new File(Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File kubeflowBinaryTgz = new File(
+        ConfigHelper.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kubeflowBinaryTgz.exists()) {
-      logger.warn("Downloading " + Anima.KUBEFLOW_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          Anima.KUBEFLOW_COMPRESSED_URL);
-      logger.warn("Download of " + Anima.KUBEFLOW_COMPRESSED_URL + " completed");
+      logger.warn("Downloading " + ConfigHelper.KUBEFLOW_COMPRESSED_URL + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(
+          ConfigHelper.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          ConfigHelper.KUBEFLOW_COMPRESSED_URL);
+      logger.warn("Download of " + ConfigHelper.KUBEFLOW_COMPRESSED_URL + " completed");
     }
     File kubeflowDirectory = new File(
-        Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1");
+        ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/kubeflow-0.4.1");
     if (!kubeflowDirectory.exists()) {
-      logger.warn("Decompress " + Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
-          + Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+      logger.warn("Decompress " + ConfigHelper.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " PLEASE WAIT");
+      HardwareHelper.extractTarGz(
+          ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
           new FileInputStream(kubeflowBinaryTgz));
-      logger.warn("Decompress of " + Anima.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
-          + " to " + Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " completed");
+      logger.warn("Decompress of " + ConfigHelper.KUBEFLOW_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " completed");
     }
-    File kubeflowBinary = new File(Anima.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
-        + "/kubeflow-0.4.1/scripts/kfctl.sh");
+    File kubeflowBinary = new File(
+        ConfigHelper.KUBEFLOW_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+            + "/kubeflow-0.4.1/scripts/kfctl.sh");
     if (!kubeflowBinary.canExecute()) {
       kubeflowBinary.setExecutable(true);
     }
@@ -748,27 +760,33 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKsonnetBinary() throws IOException {
     createBinIfNotExists();
-    File ksonnetBinaryTgz = new File(Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File ksonnetBinaryTgz = new File(ConfigHelper.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!ksonnetBinaryTgz.exists()) {
-      logger.warn("Downloading " + Anima.KSONNET_COMPRESSED_URL + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          Anima.KSONNET_COMPRESSED_URL);
-      logger.warn("Download of " + Anima.KSONNET_COMPRESSED_URL + " completed");
+      logger.warn("Downloading " + ConfigHelper.KSONNET_COMPRESSED_URL + " PLEASE WAIT");
+      HardwareHelper.downloadFileFromUrl(
+          ConfigHelper.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")),
+          ConfigHelper.KSONNET_COMPRESSED_URL);
+      logger.warn("Download of " + ConfigHelper.KSONNET_COMPRESSED_URL + " completed");
     }
     File ksonnetDirectory = new File(
-        Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks_0.13.1_linux_amd64");
+        ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+            + "/ks_0.13.1_linux_amd64");
     File ksonnetBinary = new File(
-        Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks_0.13.1_linux_amd64/ks");
+        ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+            + "/ks_0.13.1_linux_amd64/ks");
     if (!ksonnetDirectory.exists()) {
       ksonnetDirectory.mkdirs();
-      logger.warn("Decompress " + Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
-          + Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " PLEASE WAIT");
-      HardwareHelper.extractTarGz(Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
+      logger.warn("Decompress " + ConfigHelper.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " to " + ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home"))
+          + " PLEASE WAIT");
+      HardwareHelper.extractTarGz(
+          ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")),
           new FileInputStream(ksonnetBinaryTgz));
-      logger.warn("Decompress of " + Anima.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
-          + Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " completed");
+      logger.warn(
+          "Decompress of " + ConfigHelper.KSONNET_TGZ_PATH.replaceFirst("^~", System.getProperty("user.home")) + " to "
+              + ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + " completed");
       Files.createSymbolicLink(
-          Paths.get(Anima.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks"),
+          Paths.get(ConfigHelper.KSONNET_DIRECTORY_PATH.replaceFirst("^~", System.getProperty("user.home")) + "/ks"),
           ksonnetBinary.toPath().toAbsolutePath());
     }
     if (!ksonnetBinary.canExecute()) {
@@ -778,13 +796,13 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   private void getKopsBinary() throws JSONException, IOException, InterruptedException {
     createBinIfNotExists();
-    File kopsBinary = new File(Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
+    File kopsBinary = new File(ConfigHelper.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")));
     if (!kopsBinary.exists()) {
-      String latestKopsVersion = HardwareHelper.readJsonFromUrl(Anima.LATEST_KOPS_URL).optString("tag_name");
-      String kopsUrl = Anima.KOPS_URL.replace("$version", latestKopsVersion);
+      String latestKopsVersion = HardwareHelper.readJsonFromUrl(ConfigHelper.LATEST_KOPS_URL).optString("tag_name");
+      String kopsUrl = ConfigHelper.KOPS_URL.replace("$version", latestKopsVersion);
       logger.warn("Downloading " + kopsUrl + " PLEASE WAIT");
-      HardwareHelper.downloadFileFromUrl(Anima.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")),
-          kopsUrl);
+      HardwareHelper.downloadFileFromUrl(
+          ConfigHelper.KOPS_BINARY_PATH.replaceFirst("^~", System.getProperty("user.home")), kopsUrl);
       logger.warn("Download of " + kopsUrl + " completed");
       logger.warn("install aws client with pip");
       StringBuilder awsCli = new StringBuilder();

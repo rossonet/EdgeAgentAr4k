@@ -692,7 +692,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("sessionOk")
   // TODO Migliorare l'interazione della command line bash
   public String runCommandLine(
-      @ShellOption(help = "the command to start in the shell", defaultValue = Anima.BASE_BASH_CMD) String shellCommand,
+      @ShellOption(help = "the command to start in the shell", defaultValue = ConfigHelper.BASE_BASH_CMD) String shellCommand,
       @ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {
     return UserSpaceByteSystemCommandHelper.runShellCommandLineByteToByte(shellCommand, endCharacter, logger, System.in,
         System.out);

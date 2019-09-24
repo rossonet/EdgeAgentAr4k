@@ -57,4 +57,9 @@ public class JabberHomunculusConfig extends AbstractServiceConfig {
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new JabberHomunculusConfigJsonAdapter();
   }
+
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
 }

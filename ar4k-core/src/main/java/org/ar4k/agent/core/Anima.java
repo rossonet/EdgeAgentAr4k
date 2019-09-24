@@ -23,14 +23,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,7 +47,6 @@ import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
-import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -116,80 +113,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  public static final String NETTY_CTX_CLIENT = "net-ctx-c";
-  public static final String NETTY_CTX_SERVER = "net-ctx-s";
-  public static final String KOPS_BINARY_PATH = "~/bin/kops";
-  public static final String BASE_BASH_CMD = "/bin/bash -l";
-  public static final String LATEST_KOPS_URL = "https://api.github.com/repos/kubernetes/kops/releases/latest";
-  public static final String KOPS_URL = "https://github.com/kubernetes/kops/releases/download/$version/kops-linux-amd64";
-  public static final String MINIKUBE_BINARY_PATH = "~/bin/minikube";
-  public static final String MINIKUBE_URL = "https://storage.googleapis.com/minikube/releases/v1.1.1/minikube-linux-amd64";
-  public static final String HELM_TGZ_PATH = "~/bin/helm.tgz";
-  public static final String HELM_COMPRESSED_URL = "https://get.helm.sh/helm-v2.14.1-linux-amd64.tar.gz";
-  public static final String HELM_DIRECTORY_PATH = "~/bin";
-  public static final String LATEST_KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
-  public static final String KUBECTL_BINARY_PATH = "~/bin/kubectl";
-  public static final String KUBECTL_URL = "https://storage.googleapis.com/kubernetes-release/release/$version/bin/linux/amd64/kubectl";
-  public static final String KUBEFLOW_TGZ_PATH = "~/bin/kubeflow.tgz";
-  public static final String KUBEFLOW_COMPRESSED_URL = "https://github.com/kubeflow/kubeflow/archive/v0.4.1.tar.gz";
-  public static final String KUBEFLOW_DIRECTORY_PATH = "~/bin";
-  public static final String KSONNET_TGZ_PATH = "~/bin/ksonnet.tgz";
-  public static final String KSONNET_COMPRESSED_URL = "https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz";
-  public static final String KSONNET_DIRECTORY_PATH = "~/bin";
-  public static final String KUBECONFIG = "~/.kube/config";
-  public static final String SHELL_INTERACTIVE_START = "~/.ssty_noecho";
-
-  // default value
-  public static final String organization = "Rossonet";
-  public static final String unit = "Ar4k";
-  public static final String locality = "Imola";
-  public static final String state = "Bologna";
-  public static final String country = "IT";
-  public static final String uri = "https://www.rossonet.net";
-  public static final String dns = NetworkHelper.getHostname();
-  public static final String ip = "127.0.0.1";
-
   private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
   private final String dbDataStoreName = "datastore";
 
-  private static transient String registrationPin = createRandomRegistryId();
-  private String agentUniqueName = generateNewUniqueName();
-
-  private static String createRandomRegistryId() {
-    StringBuilder val = new StringBuilder();
-    val.append("AR");
-    // char (1), random A-Z
-    int ranChar = 65 + (new Random()).nextInt(90 - 65);
-    char ch = (char) ranChar;
-    val.append(ch);
-    // numbers (6), random 0-9
-    Random r = new Random();
-    int numbers = 100000 + (int) (r.nextFloat() * 899900);
-    val.append(String.valueOf(numbers));
-    val.append("-");
-    // char or numbers (5), random 0-9 A-Z
-    for (int i = 0; i < 6;) {
-      int ranAny = 48 + (new Random()).nextInt(90 - 65);
-      if (!(57 < ranAny && ranAny <= 65)) {
-        char c = (char) ranAny;
-        val.append(c);
-        i++;
-      }
-    }
-    return val.toString();
-  }
-
-  private static String generateNewUniqueName() {
-    String result = null;
-    try {
-      result = InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      logger.info("no hostname found...");
-      result = "";
-    }
-    result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
-    return result;
-  }
+  private static transient String registrationPin = ConfigHelper.createRandomRegistryId();
+  private String agentUniqueName = ConfigHelper.generateNewUniqueName();
 
   @Autowired
   private Shell shell;
@@ -327,6 +255,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   private Timer timer = new Timer("TimerHealth");
 
+  // task per health
   private TimerTask repeatedTask = new TimerTask() {
 
     private Anima anima = null;
@@ -352,6 +281,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       anima.getDataAddress().getChannel("health").send(messageObject);
     }
   };
+  // task per health
 
   @Override
   public void close() {
@@ -442,8 +372,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     }
     if (!new File(fileKeystore).exists()) {
       logger.warn("new keystore: " + ks.toString());
-      ks.create(agentUniqueName, Anima.organization, Anima.unit, Anima.locality, Anima.state, Anima.country, Anima.uri,
-          Anima.dns, Anima.ip);
+      ks.create(agentUniqueName, ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
+          ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip);
       logger.debug("keystore created");
     }
     addKeyStores(ks);

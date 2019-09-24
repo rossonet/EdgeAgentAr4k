@@ -42,4 +42,9 @@ public class IrcHomunculusConfig extends AbstractServiceConfig {
     return null;
   }
 
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
+
 }
