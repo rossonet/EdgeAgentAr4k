@@ -79,7 +79,6 @@ public class SerialConfig extends AbstractServiceConfig {
 
   @Override
   public boolean isSpringBean() {
-    // TODO Implementare come bean
     return true;
   }
 }
