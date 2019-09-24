@@ -8,5 +8,5 @@ dependencies {
   compile group: 'io.atomix', name: 'atomix-primary-backup', version: '3.1.5'
   compile group: 'joda-time', name: 'joda-time', version: '2.10.3'
   // Attenzione alla correlazione tra le versioni!!!
-  compile group: 'com.google.guava', name: 'guava', version: '22.0'
+  compile group: 'com.google.guava', name: 'guava', version: '23.0'
 }

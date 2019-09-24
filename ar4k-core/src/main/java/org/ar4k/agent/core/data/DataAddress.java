@@ -15,6 +15,14 @@ public class DataAddress {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(DataAddress.class.toString());
 
+  public DataAddress() {
+    dataChannels.clear();
+    // add log channel
+    // add command channel
+    // add health channel
+    // add info service channel
+  }
+
   private Collection<Channel> dataChannels = new HashSet<>();
 
   public Collection<Channel> getDataChannels() {

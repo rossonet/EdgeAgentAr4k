@@ -70,6 +70,11 @@ public abstract class AbstractSshTunnel extends AbstractAr4kService {
 
   @Override
   public void close() {
+    stop();
+  }
+
+  @Override
+  public void stop() {
     if (session != null)
       session.disconnect();
     session = null;

@@ -1,19 +1,18 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.Channel;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.dispatcher.RoundRobinLoadBalancingStrategy;
+import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.support.management.SubscribableChannelManagement;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.SubscribableChannel;
 
-public class IDirectChannel extends Channel implements SubscribableChannel, SubscribableChannelManagement {
+public class IPublishSubscribeChannel extends Channel implements SubscribableChannel, SubscribableChannelManagement {
 
-  public IDirectChannel() {
-    DirectChannel c = new DirectChannel(new RoundRobinLoadBalancingStrategy());
+  public IPublishSubscribeChannel() {
+    PublishSubscribeChannel c = new PublishSubscribeChannel();
     super.setChannel(c);
-    super.setChannelType(Type.DirectChannel);
+    super.setChannelType(Type.PublishSubscribeChannel);
   }
 
   @Override
@@ -23,25 +22,21 @@ public class IDirectChannel extends Channel implements SubscribableChannel, Subs
 
   @Override
   public int getSubscriberCount() {
-    return ((DirectChannel) getChannel()).getSubscriberCount();
+    return ((PublishSubscribeChannel) getChannel()).getSubscriberCount();
   }
 
   @Override
   public boolean subscribe(MessageHandler handler) {
-    return ((DirectChannel) getChannel()).subscribe(handler);
+    return ((PublishSubscribeChannel) getChannel()).subscribe(handler);
   }
 
   @Override
   public boolean unsubscribe(MessageHandler handler) {
-    return ((DirectChannel) getChannel()).unsubscribe(handler);
-  }
-
-  public void setFailover(boolean failover) {
-    ((DirectChannel) getChannel()).setFailover(failover);
+    return ((PublishSubscribeChannel) getChannel()).unsubscribe(handler);
   }
 
   public void setMaxSubscribers(int maxSubscribers) {
-    ((DirectChannel) getChannel()).setMaxSubscribers(maxSubscribers);
+    ((PublishSubscribeChannel) getChannel()).setMaxSubscribers(maxSubscribers);
   }
 
   @Override

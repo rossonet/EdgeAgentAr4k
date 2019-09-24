@@ -56,12 +56,28 @@ public interface Ar4kChannel {
 
   public AbstractMessageChannel getChannel();
 
-  void setTags(List<String> tags);
+  public void setTags(List<String> tags);
 
-  List<String> getTags();
+  public List<String> getTags();
 
-  String getDomainId();
+  public String getDomainId();
 
-  void setDomainId(String domainId);
+  public void setDomainId(String domainId);
+
+  public String getNameSpace();
+
+  public void setNameSpace(String nameSpace);
+
+  public void setFatherOfScope(String scope, Ar4kChannel father);
+
+  public void addChildOfScope(String scope, Ar4kChannel child);
+
+  public List<Ar4kChannel> getChildsOfScope(String scope);
+
+  public int getChildsCountOfScope(String scope);
+
+  public void removeParentsOfScope(String scope);
+
+  public Ar4kChannel getFatherOfScope(String scope);
 
 }

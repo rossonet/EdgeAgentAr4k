@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ar4k.agent.core.Anima;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -38,6 +39,8 @@ public class Ar4kLogger implements Logger {
   private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private Logger logger;
+
+  private transient Anima anima = null;
 
   public Ar4kLogger(Class<?> clazz) {
     logger = LoggerFactory.getLogger(clazz);
@@ -70,6 +73,7 @@ public class Ar4kLogger implements Logger {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
+    o.put("level", LogLevel.EXCEPTION.name());
     logger.info("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
@@ -78,6 +82,7 @@ public class Ar4kLogger implements Logger {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
+    o.put("level", LogLevel.EXCEPTION.name());
     logger.info("Exception -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
@@ -85,11 +90,26 @@ public class Ar4kLogger implements Logger {
   private void sendEvent(LogLevel level, String logMessage) {
     Map<String, Object> o = new HashMap<String, Object>();
     o.put("msg", logMessage);
+    o.put("level", level.toString());
     sendEvent(level, o);
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    logger.info(gson.toJson(logMessage));
+    // logger.info(gson.toJson(logMessage));
+    try {
+      if (anima == null && Anima.getApplicationContext() != null
+          && Anima.getApplicationContext().getBean(Anima.class) != null
+          && ((Anima) Anima.getApplicationContext().getBean(Anima.class)).getDataAddress() != null) {
+        anima = (Anima) Anima.getApplicationContext().getBean(Anima.class);
+      }
+      if (anima != null) {
+        LoggerMessage<String> messageObject = new LoggerMessage<>();
+        messageObject.setPayload(gson.toJson(logMessage));
+        anima.getDataAddress().getChannel("logger").send(messageObject);
+      }
+    } catch (Exception aa) {
+      // gestisce il bootstrap
+    }
   }
 
   @Override

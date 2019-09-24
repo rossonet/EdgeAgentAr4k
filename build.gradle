@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.6.20'
+version = '0.6.38'
 
 ext{
   sourceCompatibility = 1.8
@@ -18,8 +18,8 @@ buildscript {
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
     classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
-    classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
-    classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
+    //classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
+    //classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
   }
 }
 
@@ -29,8 +29,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'maven'
 apply plugin: "com.gorylenko.gradle-git-properties"
-apply plugin: "io.quarkus"
-apply plugin: 'com.google.cloud.tools.jib'
+//apply plugin: "io.quarkus"
+//apply plugin: 'com.google.cloud.tools.jib'
 
 repositories {
   mavenCentral()
@@ -69,8 +69,8 @@ subprojects {
       classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
       classpath 'de.undercouch:gradle-download-task:3.1.1'
       classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
-      classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
-      classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
+      //classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
+      //classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
     }
   }
 
@@ -80,8 +80,8 @@ subprojects {
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'maven'
   apply plugin: "com.gorylenko.gradle-git-properties"
-  apply plugin: "io.quarkus"
-  apply plugin: 'com.google.cloud.tools.jib'
+  //apply plugin: "io.quarkus"
+  //apply plugin: 'com.google.cloud.tools.jib'
 
   repositories {
     mavenCentral()
@@ -119,7 +119,7 @@ subprojects {
     //compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     runtime("org.springframework.boot:spring-boot-devtools")
-    // QUARKUS 
+    // QUARKUS
     //compile group: 'org.jboss.logmanager', name: 'jboss-logmanager', version: '2.1.13.Final'
     //compile group: 'io.quarkus', name: 'quarkus-core-runtime', version: '0.12.0'
 
@@ -243,10 +243,23 @@ task ar4kBootJarSmall{
   ar4kBootJarSmall.dependsOn(":ar4k-agent-small:endBootJar")
 }
 
+task ar4kBootJarBase{
+  group "Ar4k Semantic Router Build"
+  description 'Build Ar4k Semantic Router as a single fat jar. This is the base version.'
+  ar4kBootJarBase.dependsOn(":ar4k-agent-base:bootJar")
+  ar4kBootJarBase.dependsOn(":ar4k-agent-base:endBootJar")
+}
+
 task ar4kDockerContainerSmall{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is for the small version.'
   ar4kDockerContainerSmall.dependsOn(":ar4k-agent-small:buildDocker")
+}
+
+task ar4kDockerContainerBase{
+  group "Ar4k Semantic Router Build"
+  description 'Build Ar4k Semantic Router as a docker container. This is for the base version.'
+  ar4kDockerContainerBase.dependsOn(":ar4k-agent-base:buildDocker")
 }
 
 task ar4kBootJarFull{

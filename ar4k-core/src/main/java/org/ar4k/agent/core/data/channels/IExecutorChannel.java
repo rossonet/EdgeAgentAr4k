@@ -1,19 +1,21 @@
 package org.ar4k.agent.core.data.channels;
 
+import java.util.concurrent.Executors;
+
 import org.ar4k.agent.core.data.Channel;
-import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.channel.ExecutorChannel;
 import org.springframework.integration.dispatcher.RoundRobinLoadBalancingStrategy;
 import org.springframework.integration.support.management.SubscribableChannelManagement;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.SubscribableChannel;
 
-public class IDirectChannel extends Channel implements SubscribableChannel, SubscribableChannelManagement {
+public class IExecutorChannel extends Channel implements SubscribableChannel, SubscribableChannelManagement {
 
-  public IDirectChannel() {
-    DirectChannel c = new DirectChannel(new RoundRobinLoadBalancingStrategy());
+  public IExecutorChannel() {
+    ExecutorChannel c = new ExecutorChannel(Executors.newFixedThreadPool(10), new RoundRobinLoadBalancingStrategy());
     super.setChannel(c);
-    super.setChannelType(Type.DirectChannel);
+    super.setChannelType(Type.ExecutorChannel);
   }
 
   @Override
@@ -23,25 +25,25 @@ public class IDirectChannel extends Channel implements SubscribableChannel, Subs
 
   @Override
   public int getSubscriberCount() {
-    return ((DirectChannel) getChannel()).getSubscriberCount();
+    return ((ExecutorChannel) getChannel()).getSubscriberCount();
   }
 
   @Override
   public boolean subscribe(MessageHandler handler) {
-    return ((DirectChannel) getChannel()).subscribe(handler);
+    return ((ExecutorChannel) getChannel()).subscribe(handler);
   }
 
   @Override
   public boolean unsubscribe(MessageHandler handler) {
-    return ((DirectChannel) getChannel()).unsubscribe(handler);
+    return ((ExecutorChannel) getChannel()).unsubscribe(handler);
   }
 
   public void setFailover(boolean failover) {
-    ((DirectChannel) getChannel()).setFailover(failover);
+    ((ExecutorChannel) getChannel()).setFailover(failover);
   }
 
   public void setMaxSubscribers(int maxSubscribers) {
-    ((DirectChannel) getChannel()).setMaxSubscribers(maxSubscribers);
+    ((ExecutorChannel) getChannel()).setMaxSubscribers(maxSubscribers);
   }
 
   @Override

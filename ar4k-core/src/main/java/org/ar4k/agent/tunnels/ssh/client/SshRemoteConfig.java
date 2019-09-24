@@ -48,8 +48,12 @@ public class SshRemoteConfig extends AbstractSshConfig {
 
   @Override
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    // TODO Auto-generated method stub
     return new SshRemoteConfigJsonAdapter();
+  }
+
+  @Override
+  public boolean isSpringBean() {
+    return false;
   }
 
 }

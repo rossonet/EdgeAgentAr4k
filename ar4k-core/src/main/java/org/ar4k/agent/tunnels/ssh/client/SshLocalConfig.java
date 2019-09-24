@@ -52,4 +52,9 @@ public class SshLocalConfig extends AbstractSshConfig {
     return new SshLocalConfigJsonAdapter();
   }
 
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
+
 }

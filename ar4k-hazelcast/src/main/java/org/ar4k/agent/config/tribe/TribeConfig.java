@@ -85,4 +85,10 @@ public class TribeConfig extends AbstractServiceConfig {
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new TribeConfigJsonAdapter();
   }
+
+  @Override
+  public boolean isSpringBean() {
+    // TODO implementare come spring bean
+    return true;
+  }
 }

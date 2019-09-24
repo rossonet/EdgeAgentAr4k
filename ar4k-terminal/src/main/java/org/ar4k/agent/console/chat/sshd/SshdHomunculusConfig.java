@@ -51,4 +51,9 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new SshdHomunculusConfigJsonAdapter();
   }
+
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
 }

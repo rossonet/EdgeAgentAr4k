@@ -335,7 +335,7 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
   }
 
-  //TODO verificare il caricamento
+  // TODO verificare il caricamento
   @ShellMethod("Import the selected configuration from yaml text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -543,6 +543,18 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   public String getLogLevel() {
     return Ar4kLogger.level.name();
+  }
+
+  @ShellMethod(value = "Send message to log as a INFO", group = "Monitoring Commands")
+  @ManagedOperation
+  public void sendLogMessageInfo(@ShellOption(help = "message to write in the logger") String message) {
+    logger.info(message);
+  }
+
+  @ShellMethod(value = "Send message to log as a ERROR", group = "Monitoring Commands")
+  @ManagedOperation
+  public void sendLogMessageError(@ShellOption(help = "message to write in the logger") String message) {
+    logger.error(message);
   }
 
   private void changeLogLevel(String gwlog) {

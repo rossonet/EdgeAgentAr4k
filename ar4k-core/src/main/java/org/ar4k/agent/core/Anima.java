@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +41,11 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.data.Channel;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.INoDataChannel;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -49,6 +55,7 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.spring.HealthMessage;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 //import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
@@ -61,15 +68,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -84,6 +88,9 @@ import org.xbill.DNS.Lookup;
 import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.grpc.ConnectivityState;
 import jdbm.RecordManager;
@@ -138,7 +145,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public static final String locality = "Imola";
   public static final String state = "Bologna";
   public static final String country = "IT";
-  public static final String uri = "https://www.rossonet.com";
+  public static final String uri = "https://www.rossonet.net";
   public static final String dns = NetworkHelper.getHostname();
   public static final String ip = "127.0.0.1";
 
@@ -189,9 +196,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
-
-  // @Autowired
-  // private AnimaStateMachineConfig animaStateMachineConfig;
 
   @Autowired
   private AnimaHomunculus animaHomunculus;
@@ -317,6 +321,37 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public boolean isRunning() {
     return AnimaStates.RUNNING.equals(getState());
   }
+
+  private long delay = 35000L;
+  private long period = 15000L;
+
+  private Timer timer = new Timer("TimerHealth");
+
+  private TimerTask repeatedTask = new TimerTask() {
+
+    private Anima anima = null;
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    public void run() {
+      try {
+        sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
+      } catch (Exception e) {
+        logger.logException(e);
+      }
+    }
+
+    private void sendEvent(Map<String, Object> healthMessage) {
+      if (anima == null && Anima.getApplicationContext() != null
+          && Anima.getApplicationContext().getBean(Anima.class) != null
+          && ((Anima) Anima.getApplicationContext().getBean(Anima.class)).getDataAddress() != null) {
+        anima = (Anima) Anima.getApplicationContext().getBean(Anima.class);
+      }
+      HealthMessage<String> messageObject = new HealthMessage<>();
+      messageObject.setPayload(gson.toJson(healthMessage));
+      anima.getDataAddress().getChannel("health").send(messageObject);
+    }
+  };
 
   @Override
   public void close() {
@@ -453,6 +488,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       logger.logException(e);
     }
     bootStrapConfig = resolveBootstrapConfig();
+    popolateAddressSpace();
     setInitialAuth();
     setMasterKeystore();
     checkBeaconClient();
@@ -467,6 +503,29 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       logger.info("Starting with config: " + runtimeConfig.toString());
       animaStateMachine.sendEvent(AnimaEvents.SETCONF);
     }
+  }
+
+  private void popolateAddressSpace() {
+    String scope = "ar4k-system";
+    Channel systemChannel = new INoDataChannel();
+    systemChannel.setNodeId("system");
+    systemChannel.setDescription("local JVM system");
+    Channel loggerChannel = new IPublishSubscribeChannel();
+    loggerChannel.setNodeId("logger");
+    loggerChannel.setDescription("logger queue");
+    loggerChannel.setFatherOfScope(scope, systemChannel);
+    dataAddress.addDataChannel(loggerChannel);
+    Channel healthChannel = new IPublishSubscribeChannel();
+    healthChannel.setNodeId("health");
+    healthChannel.setDescription("local machine hardware and software stats");
+    healthChannel.setFatherOfScope(scope, systemChannel);
+    dataAddress.addDataChannel(healthChannel);
+    Channel cmdChannel = new IQueueChannel();
+    cmdChannel.setNodeId("command");
+    cmdChannel.setDescription("RPC interface");
+    cmdChannel.setFatherOfScope(scope, systemChannel);
+    dataAddress.addDataChannel(cmdChannel);
+    timer.scheduleAtFixedRate(repeatedTask, delay, period);
   }
 
   private void checkBeaconClient() {
@@ -853,25 +912,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public boolean dataStoreExists() {
     return (dataStore != null);
-  }
-
-  @Bean
-  public MessageChannel loggerChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  @Bean
-  public MessageChannel statsChannel() {
-    return new PublishSubscribeChannel();
-  }
-
-  /*
-   * @Bean public MessageChannel rpcAnimaChannel() { return new
-   * ExecutorChannel(null); // TODO: implementare l'esecutore }
-   */
-  @Bean
-  public MessageChannel eventsChannel() {
-    return new PublishSubscribeChannel();
   }
 
   @Override

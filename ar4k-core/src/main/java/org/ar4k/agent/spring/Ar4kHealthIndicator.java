@@ -32,9 +32,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Ar4kHealthIndicator extends AbstractHealthIndicator {
 
-  public Ar4kHealthIndicator() {
-  }
-
   @Override
   protected void doHealthCheck(Health.Builder builder) throws Exception {
     try {
@@ -43,8 +40,10 @@ public class Ar4kHealthIndicator extends AbstractHealthIndicator {
         builder.withDetail(chiave, rit.get(chiave));
       }
       builder.up();
+      // sendEvent(rit);
     } catch (Exception ex) {
       builder.down(ex);
     }
   }
+
 }

@@ -16,10 +16,12 @@ import org.joda.time.Instant;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.integration.channel.AbstractMessageChannel;
+import org.springframework.messaging.PollableChannel;
+import org.springframework.messaging.SubscribableChannel;
 
 import com.beust.jcommander.Parameter;
 
-public abstract class Channel implements Ar4kChannel, Closeable {
+public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel, SubscribableChannel {
 
   protected static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Channel.class.toString());
@@ -52,6 +54,9 @@ public abstract class Channel implements Ar4kChannel, Closeable {
   private List<String> tags = new ArrayList<String>();
 
   private Queue<String> lastLogs = new ConcurrentLinkedQueue<String>();
+
+  @Parameter(names = "--namespace", description = "namespace for the data")
+  private String nameSpace = "default";
 
   @Override
   public String getNodeId() {
@@ -177,6 +182,16 @@ public abstract class Channel implements Ar4kChannel, Closeable {
     this.domainId = domainId;
   }
 
+  @Override
+  public String getNameSpace() {
+    return nameSpace;
+  }
+
+  @Override
+  public void setNameSpace(String nameSpace) {
+    this.nameSpace = nameSpace;
+  }
+
   protected void setStatus(Status status) {
     this.status = status;
   }
@@ -196,6 +211,8 @@ public abstract class Channel implements Ar4kChannel, Closeable {
   }
 
   protected void startFunction() {
+    getChannel().setBeanName(getNodeId());
+    getChannel().setComponentName(getNodeId());
     ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(getNodeId(),
         getChannel());
   }
@@ -209,7 +226,8 @@ public abstract class Channel implements Ar4kChannel, Closeable {
   public String toString() {
     return "Channel [logQueueSize=" + logQueueSize + ", nodeId=" + nodeId + ", domainId=" + domainId + ", channel="
         + channel + ", channelTypeRequest=" + channelTypeRequest + ", status=" + status + ", description=" + description
-        + ", createData=" + createData + ", dataType=" + dataType + ", isRemote=" + isRemote + ", tags=" + tags + "]";
+        + ", createData=" + createData + ", dataType=" + dataType + ", isRemote=" + isRemote + ", tags=" + tags
+        + ", lastLogs=" + lastLogs + ", nameSpace=" + nameSpace + "]";
   }
 
   @Override
@@ -221,6 +239,39 @@ public abstract class Channel implements Ar4kChannel, Closeable {
       logger.logException(e);
       setChannel(null);
     }
+  }
+
+  @Override
+  public void setFatherOfScope(String scope, Ar4kChannel father) {
+    // TODO Auto-generated method stub
+  }
+
+  @Override
+  public void addChildOfScope(String scope, Ar4kChannel child) {
+    // TODO Auto-generated method stub
+  }
+
+  @Override
+  public List<Ar4kChannel> getChildsOfScope(String scope) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int getChildsCountOfScope(String scope) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public void removeParentsOfScope(String scope) {
+    // TODO Auto-generated method stub
+  }
+
+  @Override
+  public Ar4kChannel getFatherOfScope(String scope) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

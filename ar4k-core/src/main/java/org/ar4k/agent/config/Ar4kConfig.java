@@ -120,22 +120,13 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--logoUrl", description = "default log url")
   public String logoUrl = "/static/img/ar4k.png";
 
-  // public Collection<ServiceConfig> services = new HashSet<ServiceConfig>();
-
   public Collection<PotConfig> pots = new HashSet<PotConfig>();
 
   @Override
   public String getName() {
     return name;
   }
-/*
-  @Override
-  public Ar4kComponent instantiate() {
-    Anima a = (Anima) Anima.getApplicationContext().getBean("anima");
-    a.setTargetConfig(this);
-    return (Ar4kComponent) a;
-  }
-*/
+
   @Override
   public Instant getCreationDate() {
     return creationDate;

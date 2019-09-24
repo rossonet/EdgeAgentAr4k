@@ -16,8 +16,6 @@ public interface ConfigSeed extends Serializable, Cloneable {
 
   public Collection<String> getTags();
 
-  //public Ar4kComponent instantiate();
-
   public Instant getCreationDate();
 
   public Instant getLastUpdateDate();

@@ -9,7 +9,7 @@ dependencies {
   compile project(':ar4k-flow-full')
   compile project(':ar4k-pcap')
   compile project(':ar4k-drools')
-  compile project(':ar4k-atomix')
+  compile project(':ar4k-hazelcast')
   compile project(':ar4k-xmpp')
   compile project(':ar4k-openoffice-uno')
   compile project(':ar4k-blockchain')

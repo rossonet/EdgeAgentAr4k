@@ -54,4 +54,9 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
     return new BeaconServiceConfigJsonAdapter();
   }
 
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
+
 }

@@ -2,8 +2,13 @@ package org.ar4k.agent.tribe;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ar4k.agent.config.ConfigSeed;
@@ -19,12 +24,13 @@ import com.google.gson.JsonElement;
 
 import io.atomix.cluster.Member;
 import io.atomix.cluster.MemberId;
+import io.atomix.cluster.Node;
+import io.atomix.cluster.discovery.BootstrapDiscoveryProvider;
+import io.atomix.cluster.discovery.NodeDiscoveryProvider;
 import io.atomix.core.Atomix;
 import io.atomix.core.AtomixBuilder;
 import io.atomix.core.election.Leadership;
 import io.atomix.core.map.AtomicMap;
-import io.atomix.primitive.partition.MemberGroupStrategy;
-import io.atomix.protocols.backup.partition.PrimaryBackupPartitionGroup;
 import io.atomix.protocols.raft.partition.RaftPartitionGroup;
 import io.atomix.utils.net.Address;
 
@@ -45,6 +51,10 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   Leadership<MemberId> leadership = null;
 
+  private boolean discoveryOn = true;
+
+  private Map<String, String> hostAddressNodes = new HashMap<String, String>();
+
   // (Anima) Anima.getApplicationContext().getBean("anima");
 
   public AtomixTribeComponent(Anima anima, TribeConfig tribeConfig) {
@@ -61,16 +71,38 @@ public class AtomixTribeComponent implements Ar4kComponent {
       try {
         AtomixBuilder builder = Atomix.builder();
         builder.withMemberId(configuration.name).withAddress(new Address(configuration.hostBind, configuration.port));
-        builder.withMulticastEnabled();
-        builder.withMulticastAddress(Address.from(configuration.multicastIp + ":" + configuration.multicastPort));
+        if (discoveryOn) {
+          builder.withMulticastEnabled();
+          builder.withMulticastAddress(Address.from(configuration.multicastIp + ":" + configuration.multicastPort));
+        } else {
+          Node[] nodesToAdd = new Node[hostAddressNodes.size()];
+          int counter = 0;
+          for (Entry<String, String> singleData : hostAddressNodes.entrySet()) {
+            nodesToAdd[counter] = Node.builder().withId(singleData.getKey())
+                .withAddress(Address.from(singleData.getValue())).build();
+            counter++;
+          }
+          NodeDiscoveryProvider bootstrapProvider = BootstrapDiscoveryProvider.builder().withNodes(nodesToAdd).build();
+          builder.withMembershipProvider(bootstrapProvider);
+        }
         builder.withRackId(configuration.rack);
         builder.withHost(configuration.hostBind);
         builder.withZoneId(configuration.zone);
+        builder.withReachabilityTimeout(Duration.of(120, ChronoUnit.SECONDS));
+        // builder.addProfile(Profile.dataGrid());
         builder.withManagementGroup(RaftPartitionGroup.builder("system").withMembers(configuration.joinLinks)
-            .withDataDirectory(new File(configuration.storagePath.replaceFirst("^~", System.getProperty("user.home"))))
+            .withDataDirectory(new File(
+                configuration.storagePath.replaceFirst("^~", System.getProperty("user.home")) + "/system-raft"))
             .withNumPartitions(1).build());
-        builder.withPartitionGroups(PrimaryBackupPartitionGroup.builder("data")
-            .withMemberGroupStrategy(MemberGroupStrategy.NODE_AWARE).withNumPartitions(32).build());
+        /*
+         * builder.withPartitionGroups(PrimaryBackupPartitionGroup.builder("data")
+         * .withMemberGroupStrategy(MemberGroupStrategy.NODE_AWARE).withNumPartitions(32
+         * ).build());
+         */
+        builder.withPartitionGroups(RaftPartitionGroup.builder("raft")
+            .withDataDirectory(
+                new File(configuration.storagePath.replaceFirst("^~", System.getProperty("user.home")) + "/data-raft"))
+            .withNumPartitions(3).withMembers(configuration.joinLinks).build()).build();
         atomix = builder.build();
         atomix.start().join();
         startStatus = true;
@@ -83,7 +115,7 @@ public class AtomixTribeComponent implements Ar4kComponent {
     @Override
     public void run() {
       connect();
-      //getAtomixMap();
+      // getAtomixMap();
     }
   }
 
@@ -163,6 +195,22 @@ public class AtomixTribeComponent implements Ar4kComponent {
           .withKeyType(String.class).build();
     }
     return map;
+  }
+
+  public boolean isDiscoveryOn() {
+    return discoveryOn;
+  }
+
+  public void setDiscoveryOn(boolean discoveryOn) {
+    this.discoveryOn = discoveryOn;
+  }
+
+  public Map<String, String> getHostAddressNodes() {
+    return hostAddressNodes;
+  }
+
+  public void setHostAddressNodes(Map<String, String> hostAddressNodes) {
+    this.hostAddressNodes = hostAddressNodes;
   }
 
 }

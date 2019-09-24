@@ -6,4 +6,6 @@ public interface ServiceConfig extends PotConfig {
 
   public Ar4kComponent instantiate();
 
+  public boolean isSpringBean();
+
 }

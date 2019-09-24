@@ -76,4 +76,10 @@ public class SerialConfig extends AbstractServiceConfig {
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
     return new SerialConfigJsonAdapter();
   }
+
+  @Override
+  public boolean isSpringBean() {
+    // TODO Implementare come bean
+    return true;
+  }
 }

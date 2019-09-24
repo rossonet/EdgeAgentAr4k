@@ -34,7 +34,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
 
   // stati servizi
   public static enum ServiceStates {
-    INIT, STARTING, STAMINAL, RUNNING, KILLED, FAULT
+    INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
   }
 
   // stato servizio
