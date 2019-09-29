@@ -8,52 +8,39 @@ public interface RequestWriteOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string nodeId = 1;</code>
+   * <code>.beacon.Agent agent = 1;</code>
    */
-  java.lang.String getNodeId();
+  boolean hasAgent();
   /**
-   * <code>string nodeId = 1;</code>
+   * <code>.beacon.Agent agent = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getNodeIdBytes();
+  org.ar4k.agent.tunnels.http.grpc.beacon.Agent getAgent();
+  /**
+   * <code>.beacon.Agent agent = 1;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentOrBuilder();
 
   /**
-   * <code>.beacon.Timestamp time = 2;</code>
+   * <code>repeated .beacon.DataNode valuesToWrite = 2;</code>
    */
-  boolean hasTime();
+  java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> 
+      getValuesToWriteList();
   /**
-   * <code>.beacon.Timestamp time = 2;</code>
+   * <code>repeated .beacon.DataNode valuesToWrite = 2;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getTime();
+  org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getValuesToWrite(int index);
   /**
-   * <code>.beacon.Timestamp time = 2;</code>
+   * <code>repeated .beacon.DataNode valuesToWrite = 2;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getTimeOrBuilder();
-
+  int getValuesToWriteCount();
   /**
-   * <code>.beacon.Status quality = 3;</code>
+   * <code>repeated .beacon.DataNode valuesToWrite = 2;</code>
    */
-  boolean hasQuality();
+  java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
+      getValuesToWriteOrBuilderList();
   /**
-   * <code>.beacon.Status quality = 3;</code>
+   * <code>repeated .beacon.DataNode valuesToWrite = 2;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.Status getQuality();
-  /**
-   * <code>.beacon.Status quality = 3;</code>
-   */
-  org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getQualityOrBuilder();
-
-  /**
-   * <code>.beacon.DataType type = 4;</code>
-   */
-  int getTypeValue();
-  /**
-   * <code>.beacon.DataType type = 4;</code>
-   */
-  org.ar4k.agent.tunnels.http.grpc.beacon.DataType getType();
-
-  /**
-   * <code>bytes data = 5;</code>
-   */
-  com.google.protobuf.ByteString getData();
+  org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getValuesToWriteOrBuilder(
+      int index);
 }

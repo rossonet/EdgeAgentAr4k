@@ -8,10 +8,18 @@ public interface RegisterReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * unique code for the registration on the beacon server
+   * </pre>
+   *
    * <code>string registerCode = 1;</code>
    */
   java.lang.String getRegisterCode();
   /**
+   * <pre>
+   * unique code for the registration on the beacon server
+   * </pre>
+   *
    * <code>string registerCode = 1;</code>
    */
   com.google.protobuf.ByteString
@@ -23,10 +31,18 @@ public interface RegisterReplyOrBuilder extends
   int getMonitoringFrequency();
 
   /**
+   * <pre>
+   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * </pre>
+   *
    * <code>string cert = 3;</code>
    */
   java.lang.String getCert();
   /**
+   * <pre>
+   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * </pre>
+   *
    * <code>string cert = 3;</code>
    */
   com.google.protobuf.ByteString
@@ -54,4 +70,9 @@ public interface RegisterReplyOrBuilder extends
    * <code>.beacon.Status statusRegistration = 5;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.StatusOrBuilder getStatusRegistrationOrBuilder();
+
+  /**
+   * <code>int64 timestampRegistration = 6;</code>
+   */
+  long getTimestampRegistration();
 }

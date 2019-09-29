@@ -60,99 +60,67 @@ public final class RpcServiceV1Grpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingCmdQueueMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "GetConfigTarget",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigTargetMethod;
-    if ((getGetConfigTargetMethod = RpcServiceV1Grpc.getGetConfigTargetMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getGetConfigTargetMethod = RpcServiceV1Grpc.getGetConfigTargetMethod) == null) {
-          RpcServiceV1Grpc.getGetConfigTargetMethod = getGetConfigTargetMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "GetConfigTarget"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetConfigTarget"))
-                  .build();
-          }
-        }
-     }
-     return getGetConfigTargetMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Polling",
+      fullMethodName = SERVICE_NAME + '/' + "PollingCmdQueue",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingMethod;
-    if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingCmdQueueMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getPollingCmdQueueMethod;
+    if ((getPollingCmdQueueMethod = RpcServiceV1Grpc.getPollingCmdQueueMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getPollingMethod = RpcServiceV1Grpc.getPollingMethod) == null) {
-          RpcServiceV1Grpc.getPollingMethod = getPollingMethod = 
+        if ((getPollingCmdQueueMethod = RpcServiceV1Grpc.getPollingCmdQueueMethod) == null) {
+          RpcServiceV1Grpc.getPollingCmdQueueMethod = getPollingCmdQueueMethod = 
               io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "Polling"))
+                  "beacon.RpcServiceV1", "PollingCmdQueue"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Polling"))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("PollingCmdQueue"))
                   .build();
           }
         }
      }
-     return getPollingMethod;
+     return getPollingCmdQueueMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionCmdQueueMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Subscription",
+      fullMethodName = SERVICE_NAME + '/' + "SubscriptionCmdQueue",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionMethod;
-    if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionCmdQueueMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> getSubscriptionCmdQueueMethod;
+    if ((getSubscriptionCmdQueueMethod = RpcServiceV1Grpc.getSubscriptionCmdQueueMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getSubscriptionMethod = RpcServiceV1Grpc.getSubscriptionMethod) == null) {
-          RpcServiceV1Grpc.getSubscriptionMethod = getSubscriptionMethod = 
+        if ((getSubscriptionCmdQueueMethod = RpcServiceV1Grpc.getSubscriptionCmdQueueMethod) == null) {
+          RpcServiceV1Grpc.getSubscriptionCmdQueueMethod = getSubscriptionCmdQueueMethod = 
               io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "Subscription"))
+                  "beacon.RpcServiceV1", "SubscriptionCmdQueue"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("Subscription"))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SubscriptionCmdQueue"))
                   .build();
           }
         }
      }
-     return getSubscriptionMethod;
+     return getSubscriptionCmdQueueMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ChatMessage,
@@ -315,36 +283,36 @@ public final class RpcServiceV1Grpc {
      return getSendExceptionMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
-      org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getSendConfigRuntimeMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "OpenBidirectionalSocketTunnel",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
-      org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData, org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> getOpenBidirectionalSocketTunnelMethod;
-    if ((getOpenBidirectionalSocketTunnelMethod = RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod) == null) {
+      fullMethodName = SERVICE_NAME + '/' + "SendConfigRuntime",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getSendConfigRuntimeMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getSendConfigRuntimeMethod;
+    if ((getSendConfigRuntimeMethod = RpcServiceV1Grpc.getSendConfigRuntimeMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getOpenBidirectionalSocketTunnelMethod = RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod) == null) {
-          RpcServiceV1Grpc.getOpenBidirectionalSocketTunnelMethod = getOpenBidirectionalSocketTunnelMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData, org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+        if ((getSendConfigRuntimeMethod = RpcServiceV1Grpc.getSendConfigRuntimeMethod) == null) {
+          RpcServiceV1Grpc.getSendConfigRuntimeMethod = getSendConfigRuntimeMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "OpenBidirectionalSocketTunnel"))
+                  "beacon.RpcServiceV1", "SendConfigRuntime"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.StreamData.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("OpenBidirectionalSocketTunnel"))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("SendConfigRuntime"))
                   .build();
           }
         }
      }
-     return getOpenBidirectionalSocketTunnelMethod;
+     return getSendConfigRuntimeMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
@@ -603,134 +571,6 @@ public final class RpcServiceV1Grpc {
      return getCompleteCommandMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "CreateProxySocksOnAgent",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getCreateProxySocksOnAgentMethod;
-    if ((getCreateProxySocksOnAgentMethod = RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getCreateProxySocksOnAgentMethod = RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod) == null) {
-          RpcServiceV1Grpc.getCreateProxySocksOnAgentMethod = getCreateProxySocksOnAgentMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "CreateProxySocksOnAgent"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CreateProxySocksOnAgent"))
-                  .build();
-          }
-        }
-     }
-     return getCreateProxySocksOnAgentMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ExposeAgentPort",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> getExposeAgentPortMethod;
-    if ((getExposeAgentPortMethod = RpcServiceV1Grpc.getExposeAgentPortMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getExposeAgentPortMethod = RpcServiceV1Grpc.getExposeAgentPortMethod) == null) {
-          RpcServiceV1Grpc.getExposeAgentPortMethod = getExposeAgentPortMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest, org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "ExposeAgentPort"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ExposeAgentPort"))
-                  .build();
-          }
-        }
-     }
-     return getExposeAgentPortMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ListTunnels",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> getListTunnelsMethod;
-    if ((getListTunnelsMethod = RpcServiceV1Grpc.getListTunnelsMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getListTunnelsMethod = RpcServiceV1Grpc.getListTunnelsMethod) == null) {
-          RpcServiceV1Grpc.getListTunnelsMethod = getListTunnelsMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "ListTunnels"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListTunnels"))
-                  .build();
-          }
-        }
-     }
-     return getListTunnelsMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getCloseTunnelMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "CloseTunnel",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.Status.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getCloseTunnelMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest, org.ar4k.agent.tunnels.http.grpc.beacon.Status> getCloseTunnelMethod;
-    if ((getCloseTunnelMethod = RpcServiceV1Grpc.getCloseTunnelMethod) == null) {
-      synchronized (RpcServiceV1Grpc.class) {
-        if ((getCloseTunnelMethod = RpcServiceV1Grpc.getCloseTunnelMethod) == null) {
-          RpcServiceV1Grpc.getCloseTunnelMethod = getCloseTunnelMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest, org.ar4k.agent.tunnels.http.grpc.beacon.Status>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "CloseTunnel"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("CloseTunnel"))
-                  .build();
-          }
-        }
-     }
-     return getCloseTunnelMethod;
-  }
-
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -769,24 +609,20 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
+     * <pre>
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     * </pre>
      */
-    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetConfigTargetMethod(), responseObserver);
+    public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getPollingCmdQueueMethod(), responseObserver);
     }
 
     /**
      */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+    public void subscriptionCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
-      asyncUnimplementedUnaryCall(getPollingMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
-      asyncUnimplementedUnaryCall(getSubscriptionMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getSubscriptionCmdQueueMethod(), responseObserver);
     }
 
     /**
@@ -826,9 +662,9 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> openBidirectionalSocketTunnel(
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> responseObserver) {
-      return asyncUnimplementedStreamingCall(getOpenBidirectionalSocketTunnelMethod(), responseObserver);
+    public void sendConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendConfigRuntimeMethod(), responseObserver);
     }
 
     /**
@@ -900,37 +736,6 @@ public final class RpcServiceV1Grpc {
       asyncUnimplementedUnaryCall(getCompleteCommandMethod(), responseObserver);
     }
 
-    /**
-     * <pre>
-     * TODO network tunnels 
-     * </pre>
-     */
-    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getCreateProxySocksOnAgentMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getExposeAgentPortMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getListTunnelsMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
-      asyncUnimplementedUnaryCall(getCloseTunnelMethod(), responseObserver);
-    }
-
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -941,26 +746,19 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>(
                   this, METHODID_REGISTER)))
           .addMethod(
-            getGetConfigTargetMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
-                org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
-                  this, METHODID_GET_CONFIG_TARGET)))
-          .addMethod(
-            getPollingMethod(),
+            getPollingCmdQueueMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
                 org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>(
-                  this, METHODID_POLLING)))
+                  this, METHODID_POLLING_CMD_QUEUE)))
           .addMethod(
-            getSubscriptionMethod(),
+            getSubscriptionCmdQueueMethod(),
             asyncServerStreamingCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
                 org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>(
-                  this, METHODID_SUBSCRIPTION)))
+                  this, METHODID_SUBSCRIPTION_CMD_QUEUE)))
           .addMethod(
             getSendChatMessageMethod(),
             asyncUnaryCall(
@@ -997,12 +795,12 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.Status>(
                   this, METHODID_SEND_EXCEPTION)))
           .addMethod(
-            getOpenBidirectionalSocketTunnelMethod(),
-            asyncBidiStreamingCall(
+            getSendConfigRuntimeMethod(),
+            asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.StreamData,
-                org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>(
-                  this, METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL)))
+                org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
+                  this, METHODID_SEND_CONFIG_RUNTIME)))
           .addMethod(
             getListAgentsMethod(),
             asyncUnaryCall(
@@ -1059,34 +857,6 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest,
                 org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply>(
                   this, METHODID_COMPLETE_COMMAND)))
-          .addMethod(
-            getCreateProxySocksOnAgentMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>(
-                  this, METHODID_CREATE_PROXY_SOCKS_ON_AGENT)))
-          .addMethod(
-            getExposeAgentPortMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>(
-                  this, METHODID_EXPOSE_AGENT_PORT)))
-          .addMethod(
-            getListTunnelsMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-                org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>(
-                  this, METHODID_LIST_TUNNELS)))
-          .addMethod(
-            getCloseTunnelMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest,
-                org.ar4k.agent.tunnels.http.grpc.beacon.Status>(
-                  this, METHODID_CLOSE_TUNNEL)))
           .build();
     }
   }
@@ -1121,27 +891,22 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
+     * <pre>
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     * </pre>
      */
-    public void getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getGetConfigTargetMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+    public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getPollingMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getPollingCmdQueueMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+    public void subscriptionCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
       asyncServerStreamingCall(
-          getChannel().newCall(getSubscriptionMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getSubscriptionCmdQueueMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -1186,10 +951,10 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> openBidirectionalSocketTunnel(
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData> responseObserver) {
-      return asyncBidiStreamingCall(
-          getChannel().newCall(getOpenBidirectionalSocketTunnelMethod(), getCallOptions()), responseObserver);
+    public void sendConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendConfigRuntimeMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -1268,41 +1033,6 @@ public final class RpcServiceV1Grpc {
       asyncUnaryCall(
           getChannel().newCall(getCompleteCommandMethod(), getCallOptions()), request, responseObserver);
     }
-
-    /**
-     * <pre>
-     * TODO network tunnels 
-     * </pre>
-     */
-    public void createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getCreateProxySocksOnAgentMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getExposeAgentPortMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getListTunnelsMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getCloseTunnelMethod(), getCallOptions()), request, responseObserver);
-    }
   }
 
   /**
@@ -1334,25 +1064,21 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
+     * <pre>
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply getConfigTarget(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingUnaryCall(
-          getChannel(), getGetConfigTargetMethod(), getCallOptions(), request);
+          getChannel(), getPollingCmdQueueMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage polling(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
-      return blockingUnaryCall(
-          getChannel(), getPollingMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> subscription(
+    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> subscriptionCmdQueue(
         org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingServerStreamingCall(
-          getChannel(), getSubscriptionMethod(), getCallOptions(), request);
+          getChannel(), getSubscriptionCmdQueueMethod(), getCallOptions(), request);
     }
 
     /**
@@ -1388,6 +1114,13 @@ public final class RpcServiceV1Grpc {
     public org.ar4k.agent.tunnels.http.grpc.beacon.Status sendException(org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request) {
       return blockingUnaryCall(
           getChannel(), getSendExceptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply sendConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport request) {
+      return blockingUnaryCall(
+          getChannel(), getSendConfigRuntimeMethod(), getCallOptions(), request);
     }
 
     /**
@@ -1458,37 +1191,6 @@ public final class RpcServiceV1Grpc {
       return blockingUnaryCall(
           getChannel(), getCompleteCommandMethod(), getCallOptions(), request);
     }
-
-    /**
-     * <pre>
-     * TODO network tunnels 
-     * </pre>
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply createProxySocksOnAgent(org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getCreateProxySocksOnAgentMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply exposeAgentPort(org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getExposeAgentPortMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply listTunnels(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
-      return blockingUnaryCall(
-          getChannel(), getListTunnelsMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Status closeTunnel(org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getCloseTunnelMethod(), getCallOptions(), request);
-    }
   }
 
   /**
@@ -1521,19 +1223,14 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
+     * <pre>
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getConfigTarget(
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> pollingCmdQueue(
         org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return futureUnaryCall(
-          getChannel().newCall(getGetConfigTargetMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> polling(
-        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
-      return futureUnaryCall(
-          getChannel().newCall(getPollingMethod(), getCallOptions()), request);
+          getChannel().newCall(getPollingCmdQueueMethod(), getCallOptions()), request);
     }
 
     /**
@@ -1574,6 +1271,14 @@ public final class RpcServiceV1Grpc {
         org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getSendExceptionMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> sendConfigRuntime(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSendConfigRuntimeMethod(), getCallOptions()), request);
     }
 
     /**
@@ -1652,52 +1357,17 @@ public final class RpcServiceV1Grpc {
       return futureUnaryCall(
           getChannel().newCall(getCompleteCommandMethod(), getCallOptions()), request);
     }
-
-    /**
-     * <pre>
-     * TODO network tunnels 
-     * </pre>
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> createProxySocksOnAgent(
-        org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getCreateProxySocksOnAgentMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply> exposeAgentPort(
-        org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getExposeAgentPortMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply> listTunnels(
-        org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
-      return futureUnaryCall(
-          getChannel().newCall(getListTunnelsMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> closeTunnel(
-        org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getCloseTunnelMethod(), getCallOptions()), request);
-    }
   }
 
   private static final int METHODID_REGISTER = 0;
-  private static final int METHODID_GET_CONFIG_TARGET = 1;
-  private static final int METHODID_POLLING = 2;
-  private static final int METHODID_SUBSCRIPTION = 3;
-  private static final int METHODID_SEND_CHAT_MESSAGE = 4;
-  private static final int METHODID_SEND_COMMAND_REPLY = 5;
-  private static final int METHODID_SEND_HEALTH = 6;
-  private static final int METHODID_SEND_LOG = 7;
-  private static final int METHODID_SEND_EXCEPTION = 8;
+  private static final int METHODID_POLLING_CMD_QUEUE = 1;
+  private static final int METHODID_SUBSCRIPTION_CMD_QUEUE = 2;
+  private static final int METHODID_SEND_CHAT_MESSAGE = 3;
+  private static final int METHODID_SEND_COMMAND_REPLY = 4;
+  private static final int METHODID_SEND_HEALTH = 5;
+  private static final int METHODID_SEND_LOG = 6;
+  private static final int METHODID_SEND_EXCEPTION = 7;
+  private static final int METHODID_SEND_CONFIG_RUNTIME = 8;
   private static final int METHODID_LIST_AGENTS = 9;
   private static final int METHODID_LIST_SSL_AUTHORITIES = 10;
   private static final int METHODID_ADD_SSL_AUTHORITIES = 11;
@@ -1706,11 +1376,6 @@ public final class RpcServiceV1Grpc {
   private static final int METHODID_ELABORATE_MESSAGE = 14;
   private static final int METHODID_LIST_COMMANDS = 15;
   private static final int METHODID_COMPLETE_COMMAND = 16;
-  private static final int METHODID_CREATE_PROXY_SOCKS_ON_AGENT = 17;
-  private static final int METHODID_EXPOSE_AGENT_PORT = 18;
-  private static final int METHODID_LIST_TUNNELS = 19;
-  private static final int METHODID_CLOSE_TUNNEL = 20;
-  private static final int METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL = 21;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1733,16 +1398,12 @@ public final class RpcServiceV1Grpc {
           serviceImpl.register((org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply>) responseObserver);
           break;
-        case METHODID_GET_CONFIG_TARGET:
-          serviceImpl.getConfigTarget((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
-          break;
-        case METHODID_POLLING:
-          serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+        case METHODID_POLLING_CMD_QUEUE:
+          serviceImpl.pollingCmdQueue((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>) responseObserver);
           break;
-        case METHODID_SUBSCRIPTION:
-          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+        case METHODID_SUBSCRIPTION_CMD_QUEUE:
+          serviceImpl.subscriptionCmdQueue((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage>) responseObserver);
           break;
         case METHODID_SEND_CHAT_MESSAGE:
@@ -1764,6 +1425,10 @@ public final class RpcServiceV1Grpc {
         case METHODID_SEND_EXCEPTION:
           serviceImpl.sendException((org.ar4k.agent.tunnels.http.grpc.beacon.ExceptionRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status>) responseObserver);
+          break;
+        case METHODID_SEND_CONFIG_RUNTIME:
+          serviceImpl.sendConfigRuntime((org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
           break;
         case METHODID_LIST_AGENTS:
           serviceImpl.listAgents((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
@@ -1797,22 +1462,6 @@ public final class RpcServiceV1Grpc {
           serviceImpl.completeCommand((org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply>) responseObserver);
           break;
-        case METHODID_CREATE_PROXY_SOCKS_ON_AGENT:
-          serviceImpl.createProxySocksOnAgent((org.ar4k.agent.tunnels.http.grpc.beacon.CreateProxySocksOnAgentRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>) responseObserver);
-          break;
-        case METHODID_EXPOSE_AGENT_PORT:
-          serviceImpl.exposeAgentPort((org.ar4k.agent.tunnels.http.grpc.beacon.ExposeAgentPortRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.TunnelCreatedReply>) responseObserver);
-          break;
-        case METHODID_LIST_TUNNELS:
-          serviceImpl.listTunnels((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListTunnelsReply>) responseObserver);
-          break;
-        case METHODID_CLOSE_TUNNEL:
-          serviceImpl.closeTunnel((org.ar4k.agent.tunnels.http.grpc.beacon.CloseTunnelRequest) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status>) responseObserver);
-          break;
         default:
           throw new AssertionError();
       }
@@ -1823,9 +1472,6 @@ public final class RpcServiceV1Grpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_OPEN_BIDIRECTIONAL_SOCKET_TUNNEL:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.openBidirectionalSocketTunnel(
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.StreamData>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -1878,15 +1524,14 @@ public final class RpcServiceV1Grpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new RpcServiceV1FileDescriptorSupplier())
               .addMethod(getRegisterMethod())
-              .addMethod(getGetConfigTargetMethod())
-              .addMethod(getPollingMethod())
-              .addMethod(getSubscriptionMethod())
+              .addMethod(getPollingCmdQueueMethod())
+              .addMethod(getSubscriptionCmdQueueMethod())
               .addMethod(getSendChatMessageMethod())
               .addMethod(getSendCommandReplyMethod())
               .addMethod(getSendHealthMethod())
               .addMethod(getSendLogMethod())
               .addMethod(getSendExceptionMethod())
-              .addMethod(getOpenBidirectionalSocketTunnelMethod())
+              .addMethod(getSendConfigRuntimeMethod())
               .addMethod(getListAgentsMethod())
               .addMethod(getListSslAuthoritiesMethod())
               .addMethod(getAddSslAuthoritiesMethod())
@@ -1895,10 +1540,6 @@ public final class RpcServiceV1Grpc {
               .addMethod(getElaborateMessageMethod())
               .addMethod(getListCommandsMethod())
               .addMethod(getCompleteCommandMethod())
-              .addMethod(getCreateProxySocksOnAgentMethod())
-              .addMethod(getExposeAgentPortMethod())
-              .addMethod(getListTunnelsMethod())
-              .addMethod(getCloseTunnelMethod())
               .build();
         }
       }

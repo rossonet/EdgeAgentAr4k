@@ -21,12 +21,12 @@ public interface HealthRequestOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentSenderOrBuilder();
 
   /**
-   * <code>string hardwareInfo = 2;</code>
+   * <code>string jsonHardwareInfo = 2;</code>
    */
-  java.lang.String getHardwareInfo();
+  java.lang.String getJsonHardwareInfo();
   /**
-   * <code>string hardwareInfo = 2;</code>
+   * <code>string jsonHardwareInfo = 2;</code>
    */
   com.google.protobuf.ByteString
-      getHardwareInfoBytes();
+      getJsonHardwareInfoBytes();
 }

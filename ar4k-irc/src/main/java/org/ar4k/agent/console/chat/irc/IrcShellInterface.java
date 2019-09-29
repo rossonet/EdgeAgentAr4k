@@ -14,6 +14,8 @@
     */
 package org.ar4k.agent.console.chat.irc;
 
+//TODO mappa un servizio irc al bus come client
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

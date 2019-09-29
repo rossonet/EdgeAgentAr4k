@@ -47,6 +47,9 @@ import com.google.gson.GsonBuilder;
 @ManagedResource(objectName = "bean:name=camelInterface", description = "Ar4k Agent camel interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "camelInterface")
 @RestController
 @RequestMapping("/camelInterface")
+
+// TODO integrare le rotte camel sul bus e permettere il salvataggio in conf di servizi
+
 public class CamelShellInterface extends AbstractShellHelper {
 
   @Autowired
@@ -98,26 +101,21 @@ public class CamelShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addCamelEndpointToConfiguration(@ShellOption(help = "label of the endpoint") String label) {
-  /* TODO da implementare con AddressSpace
-    try {
-      if (((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
-        // ok
-      }
-    } catch (Exception ee) {
-      if (getWorkingConfig() != null && getWorkingConfig().data != null
-          && getWorkingConfig().data.containsKey("camel")) {
-        getWorkingConfig().data.remove("camel");
-      }
-    }
-    if (!getWorkingConfig().data.containsKey("camel")) {
-      Map<String, Object> mapCamel = new HashMap<String, Object>();
-      Map<String, String> eps = new HashMap<String, String>();
-      mapCamel.put("endpoints", eps);
-      getWorkingConfig().data.put("camel", mapCamel);
-    }
-    ((Map<String, String>) ((HashMap<String, Object>) getWorkingConfig().data.get("camel")).get("endpoints")).put(label,
-        camelComponents.get(label));
-        */
+    /*
+     * TODO da implementare con AddressSpace try { if (((HashMap<String, Object>)
+     * getWorkingConfig().data.get("camel")).get("endpoints") instanceof HashMap) {
+     * // ok } } catch (Exception ee) { if (getWorkingConfig() != null &&
+     * getWorkingConfig().data != null &&
+     * getWorkingConfig().data.containsKey("camel")) {
+     * getWorkingConfig().data.remove("camel"); } } if
+     * (!getWorkingConfig().data.containsKey("camel")) { Map<String, Object>
+     * mapCamel = new HashMap<String, Object>(); Map<String, String> eps = new
+     * HashMap<String, String>(); mapCamel.put("endpoints", eps);
+     * getWorkingConfig().data.put("camel", mapCamel); } ((Map<String, String>)
+     * ((HashMap<String, Object>)
+     * getWorkingConfig().data.get("camel")).get("endpoints")).put(label,
+     * camelComponents.get(label));
+     */
   }
 
   @ShellMethod(value = "Add (or replace) camel route to the selected config", group = "Camel Commands")

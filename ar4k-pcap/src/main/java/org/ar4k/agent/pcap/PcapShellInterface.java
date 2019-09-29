@@ -55,6 +55,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
+// TODO fornisce bean per sniffare a comando e riportare i dati sulle code ( eventualmenti lavorati con un plugin come mib)
+
 @ShellCommandGroup("Pcap Commands")
 @ShellComponent
 @EnableMBeanExport

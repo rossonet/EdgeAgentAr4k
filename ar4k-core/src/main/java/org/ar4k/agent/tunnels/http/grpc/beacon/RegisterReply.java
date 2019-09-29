@@ -81,6 +81,11 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 48: {
+
+            timestampRegistration_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -116,6 +121,10 @@ private static final long serialVersionUID = 0L;
   public static final int REGISTERCODE_FIELD_NUMBER = 1;
   private volatile java.lang.Object registerCode_;
   /**
+   * <pre>
+   * unique code for the registration on the beacon server
+   * </pre>
+   *
    * <code>string registerCode = 1;</code>
    */
   public java.lang.String getRegisterCode() {
@@ -131,6 +140,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * unique code for the registration on the beacon server
+   * </pre>
+   *
    * <code>string registerCode = 1;</code>
    */
   public com.google.protobuf.ByteString
@@ -159,6 +172,10 @@ private static final long serialVersionUID = 0L;
   public static final int CERT_FIELD_NUMBER = 3;
   private volatile java.lang.Object cert_;
   /**
+   * <pre>
+   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * </pre>
+   *
    * <code>string cert = 3;</code>
    */
   public java.lang.String getCert() {
@@ -174,6 +191,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * </pre>
+   *
    * <code>string cert = 3;</code>
    */
   public com.google.protobuf.ByteString
@@ -245,6 +266,15 @@ private static final long serialVersionUID = 0L;
     return getStatusRegistration();
   }
 
+  public static final int TIMESTAMPREGISTRATION_FIELD_NUMBER = 6;
+  private long timestampRegistration_;
+  /**
+   * <code>int64 timestampRegistration = 6;</code>
+   */
+  public long getTimestampRegistration() {
+    return timestampRegistration_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -274,6 +304,9 @@ private static final long serialVersionUID = 0L;
     if (statusRegistration_ != null) {
       output.writeMessage(5, getStatusRegistration());
     }
+    if (timestampRegistration_ != 0L) {
+      output.writeInt64(6, timestampRegistration_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -299,6 +332,10 @@ private static final long serialVersionUID = 0L;
     if (statusRegistration_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, getStatusRegistration());
+    }
+    if (timestampRegistration_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(6, timestampRegistration_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -328,6 +365,8 @@ private static final long serialVersionUID = 0L;
       if (!getStatusRegistration()
           .equals(other.getStatusRegistration())) return false;
     }
+    if (getTimestampRegistration()
+        != other.getTimestampRegistration()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -351,6 +390,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + STATUSREGISTRATION_FIELD_NUMBER;
       hash = (53 * hash) + getStatusRegistration().hashCode();
     }
+    hash = (37 * hash) + TIMESTAMPREGISTRATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getTimestampRegistration());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -498,6 +540,8 @@ private static final long serialVersionUID = 0L;
         statusRegistration_ = null;
         statusRegistrationBuilder_ = null;
       }
+      timestampRegistration_ = 0L;
+
       return this;
     }
 
@@ -533,6 +577,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.statusRegistration_ = statusRegistrationBuilder_.build();
       }
+      result.timestampRegistration_ = timestampRegistration_;
       onBuilt();
       return result;
     }
@@ -599,6 +644,9 @@ private static final long serialVersionUID = 0L;
       if (other.hasStatusRegistration()) {
         mergeStatusRegistration(other.getStatusRegistration());
       }
+      if (other.getTimestampRegistration() != 0L) {
+        setTimestampRegistration(other.getTimestampRegistration());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -630,6 +678,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object registerCode_ = "";
     /**
+     * <pre>
+     * unique code for the registration on the beacon server
+     * </pre>
+     *
      * <code>string registerCode = 1;</code>
      */
     public java.lang.String getRegisterCode() {
@@ -645,6 +697,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * unique code for the registration on the beacon server
+     * </pre>
+     *
      * <code>string registerCode = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -661,6 +717,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * unique code for the registration on the beacon server
+     * </pre>
+     *
      * <code>string registerCode = 1;</code>
      */
     public Builder setRegisterCode(
@@ -674,6 +734,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * unique code for the registration on the beacon server
+     * </pre>
+     *
      * <code>string registerCode = 1;</code>
      */
     public Builder clearRegisterCode() {
@@ -683,6 +747,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * unique code for the registration on the beacon server
+     * </pre>
+     *
      * <code>string registerCode = 1;</code>
      */
     public Builder setRegisterCodeBytes(
@@ -725,6 +793,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object cert_ = "";
     /**
+     * <pre>
+     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * </pre>
+     *
      * <code>string cert = 3;</code>
      */
     public java.lang.String getCert() {
@@ -740,6 +812,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * </pre>
+     *
      * <code>string cert = 3;</code>
      */
     public com.google.protobuf.ByteString
@@ -756,6 +832,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * </pre>
+     *
      * <code>string cert = 3;</code>
      */
     public Builder setCert(
@@ -769,6 +849,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * </pre>
+     *
      * <code>string cert = 3;</code>
      */
     public Builder clearCert() {
@@ -778,6 +862,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * </pre>
+     *
      * <code>string cert = 3;</code>
      */
     public Builder setCertBytes(
@@ -976,6 +1064,32 @@ private static final long serialVersionUID = 0L;
         statusRegistration_ = null;
       }
       return statusRegistrationBuilder_;
+    }
+
+    private long timestampRegistration_ ;
+    /**
+     * <code>int64 timestampRegistration = 6;</code>
+     */
+    public long getTimestampRegistration() {
+      return timestampRegistration_;
+    }
+    /**
+     * <code>int64 timestampRegistration = 6;</code>
+     */
+    public Builder setTimestampRegistration(long value) {
+      
+      timestampRegistration_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 timestampRegistration = 6;</code>
+     */
+    public Builder clearTimestampRegistration() {
+      
+      timestampRegistration_ = 0L;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

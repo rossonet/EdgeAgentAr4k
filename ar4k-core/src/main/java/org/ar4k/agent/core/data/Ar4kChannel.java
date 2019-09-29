@@ -38,8 +38,6 @@ public interface Ar4kChannel {
 
   public boolean isRemote();
 
-  public void setRemote(boolean isRemote);
-
   public int addLogLine(String text);
 
   public int getLogLineSize();

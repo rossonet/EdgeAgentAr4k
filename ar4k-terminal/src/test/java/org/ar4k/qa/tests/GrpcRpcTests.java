@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
 import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
@@ -95,8 +96,8 @@ public class GrpcRpcTests {
   public void setUp() throws Exception {
     anima.setAgentUniqueName(UUID.randomUUID().toString().replaceAll("-", ""));
     KeystoreConfig ks = new KeystoreConfig();
-    ks.create(anima.getAgentUniqueName(), Anima.organization, Anima.unit, Anima.locality, Anima.state, Anima.country, Anima.uri,
-        Anima.dns, Anima.ip);
+    ks.create(anima.getAgentUniqueName(), ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
+        ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip);
     anima.setMyIdentityKeystore(ks);
     context = new AnnotationConfigApplicationContext(this.getClass());
     shell = context.getBean(Shell.class);

@@ -17,7 +17,6 @@ private static final long serialVersionUID = 0L;
   }
   private Agent() {
     agentUniqueName_ = "";
-    secretKey_ = "";
   }
 
   @java.lang.Override
@@ -48,22 +47,6 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             agentUniqueName_ = s;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            secretKey_ = s;
-            break;
-          }
-          case 24: {
-
-            pollingFrequency_ = input.readInt32();
-            break;
-          }
-          case 32: {
-
-            timestampRegistration_ = input.readInt64();
             break;
           }
           default: {
@@ -101,6 +84,13 @@ private static final long serialVersionUID = 0L;
   public static final int AGENTUNIQUENAME_FIELD_NUMBER = 1;
   private volatile java.lang.Object agentUniqueName_;
   /**
+   * <pre>
+   *string hardwareInfoAsJson = 2;
+   * string registerCode = 2; // ritornato in registrazione
+   *int32 pollingFrequency = 3;
+   *int64 timestampRegistration = 3;
+   * </pre>
+   *
    * <code>string agentUniqueName = 1;</code>
    */
   public java.lang.String getAgentUniqueName() {
@@ -116,6 +106,13 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   *string hardwareInfoAsJson = 2;
+   * string registerCode = 2; // ritornato in registrazione
+   *int32 pollingFrequency = 3;
+   *int64 timestampRegistration = 3;
+   * </pre>
+   *
    * <code>string agentUniqueName = 1;</code>
    */
   public com.google.protobuf.ByteString
@@ -130,66 +127,6 @@ private static final long serialVersionUID = 0L;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
-  }
-
-  public static final int SECRETKEY_FIELD_NUMBER = 2;
-  private volatile java.lang.Object secretKey_;
-  /**
-   * <pre>
-   *string hardwareInfoAsJson = 2;
-   * </pre>
-   *
-   * <code>string secretKey = 2;</code>
-   */
-  public java.lang.String getSecretKey() {
-    java.lang.Object ref = secretKey_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      secretKey_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   *string hardwareInfoAsJson = 2;
-   * </pre>
-   *
-   * <code>string secretKey = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getSecretKeyBytes() {
-    java.lang.Object ref = secretKey_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      secretKey_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int POLLINGFREQUENCY_FIELD_NUMBER = 3;
-  private int pollingFrequency_;
-  /**
-   * <code>int32 pollingFrequency = 3;</code>
-   */
-  public int getPollingFrequency() {
-    return pollingFrequency_;
-  }
-
-  public static final int TIMESTAMPREGISTRATION_FIELD_NUMBER = 4;
-  private long timestampRegistration_;
-  /**
-   * <code>int64 timestampRegistration = 4;</code>
-   */
-  public long getTimestampRegistration() {
-    return timestampRegistration_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -209,15 +146,6 @@ private static final long serialVersionUID = 0L;
     if (!getAgentUniqueNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, agentUniqueName_);
     }
-    if (!getSecretKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, secretKey_);
-    }
-    if (pollingFrequency_ != 0) {
-      output.writeInt32(3, pollingFrequency_);
-    }
-    if (timestampRegistration_ != 0L) {
-      output.writeInt64(4, timestampRegistration_);
-    }
     unknownFields.writeTo(output);
   }
 
@@ -229,17 +157,6 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getAgentUniqueNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, agentUniqueName_);
-    }
-    if (!getSecretKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, secretKey_);
-    }
-    if (pollingFrequency_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, pollingFrequency_);
-    }
-    if (timestampRegistration_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, timestampRegistration_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -258,12 +175,6 @@ private static final long serialVersionUID = 0L;
 
     if (!getAgentUniqueName()
         .equals(other.getAgentUniqueName())) return false;
-    if (!getSecretKey()
-        .equals(other.getSecretKey())) return false;
-    if (getPollingFrequency()
-        != other.getPollingFrequency()) return false;
-    if (getTimestampRegistration()
-        != other.getTimestampRegistration()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -277,13 +188,6 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + AGENTUNIQUENAME_FIELD_NUMBER;
     hash = (53 * hash) + getAgentUniqueName().hashCode();
-    hash = (37 * hash) + SECRETKEY_FIELD_NUMBER;
-    hash = (53 * hash) + getSecretKey().hashCode();
-    hash = (37 * hash) + POLLINGFREQUENCY_FIELD_NUMBER;
-    hash = (53 * hash) + getPollingFrequency();
-    hash = (37 * hash) + TIMESTAMPREGISTRATION_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTimestampRegistration());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -419,12 +323,6 @@ private static final long serialVersionUID = 0L;
       super.clear();
       agentUniqueName_ = "";
 
-      secretKey_ = "";
-
-      pollingFrequency_ = 0;
-
-      timestampRegistration_ = 0L;
-
       return this;
     }
 
@@ -452,9 +350,6 @@ private static final long serialVersionUID = 0L;
     public org.ar4k.agent.tunnels.http.grpc.beacon.Agent buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.Agent result = new org.ar4k.agent.tunnels.http.grpc.beacon.Agent(this);
       result.agentUniqueName_ = agentUniqueName_;
-      result.secretKey_ = secretKey_;
-      result.pollingFrequency_ = pollingFrequency_;
-      result.timestampRegistration_ = timestampRegistration_;
       onBuilt();
       return result;
     }
@@ -507,16 +402,6 @@ private static final long serialVersionUID = 0L;
         agentUniqueName_ = other.agentUniqueName_;
         onChanged();
       }
-      if (!other.getSecretKey().isEmpty()) {
-        secretKey_ = other.secretKey_;
-        onChanged();
-      }
-      if (other.getPollingFrequency() != 0) {
-        setPollingFrequency(other.getPollingFrequency());
-      }
-      if (other.getTimestampRegistration() != 0L) {
-        setTimestampRegistration(other.getTimestampRegistration());
-      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -548,6 +433,13 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object agentUniqueName_ = "";
     /**
+     * <pre>
+     *string hardwareInfoAsJson = 2;
+     * string registerCode = 2; // ritornato in registrazione
+     *int32 pollingFrequency = 3;
+     *int64 timestampRegistration = 3;
+     * </pre>
+     *
      * <code>string agentUniqueName = 1;</code>
      */
     public java.lang.String getAgentUniqueName() {
@@ -563,6 +455,13 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     *string hardwareInfoAsJson = 2;
+     * string registerCode = 2; // ritornato in registrazione
+     *int32 pollingFrequency = 3;
+     *int64 timestampRegistration = 3;
+     * </pre>
+     *
      * <code>string agentUniqueName = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -579,6 +478,13 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     *string hardwareInfoAsJson = 2;
+     * string registerCode = 2; // ritornato in registrazione
+     *int32 pollingFrequency = 3;
+     *int64 timestampRegistration = 3;
+     * </pre>
+     *
      * <code>string agentUniqueName = 1;</code>
      */
     public Builder setAgentUniqueName(
@@ -592,6 +498,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     *string hardwareInfoAsJson = 2;
+     * string registerCode = 2; // ritornato in registrazione
+     *int32 pollingFrequency = 3;
+     *int64 timestampRegistration = 3;
+     * </pre>
+     *
      * <code>string agentUniqueName = 1;</code>
      */
     public Builder clearAgentUniqueName() {
@@ -601,6 +514,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     *string hardwareInfoAsJson = 2;
+     * string registerCode = 2; // ritornato in registrazione
+     *int32 pollingFrequency = 3;
+     *int64 timestampRegistration = 3;
+     * </pre>
+     *
      * <code>string agentUniqueName = 1;</code>
      */
     public Builder setAgentUniqueNameBytes(
@@ -611,147 +531,6 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       agentUniqueName_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object secretKey_ = "";
-    /**
-     * <pre>
-     *string hardwareInfoAsJson = 2;
-     * </pre>
-     *
-     * <code>string secretKey = 2;</code>
-     */
-    public java.lang.String getSecretKey() {
-      java.lang.Object ref = secretKey_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        secretKey_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     *string hardwareInfoAsJson = 2;
-     * </pre>
-     *
-     * <code>string secretKey = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSecretKeyBytes() {
-      java.lang.Object ref = secretKey_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        secretKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     *string hardwareInfoAsJson = 2;
-     * </pre>
-     *
-     * <code>string secretKey = 2;</code>
-     */
-    public Builder setSecretKey(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      secretKey_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *string hardwareInfoAsJson = 2;
-     * </pre>
-     *
-     * <code>string secretKey = 2;</code>
-     */
-    public Builder clearSecretKey() {
-      
-      secretKey_ = getDefaultInstance().getSecretKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     *string hardwareInfoAsJson = 2;
-     * </pre>
-     *
-     * <code>string secretKey = 2;</code>
-     */
-    public Builder setSecretKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      secretKey_ = value;
-      onChanged();
-      return this;
-    }
-
-    private int pollingFrequency_ ;
-    /**
-     * <code>int32 pollingFrequency = 3;</code>
-     */
-    public int getPollingFrequency() {
-      return pollingFrequency_;
-    }
-    /**
-     * <code>int32 pollingFrequency = 3;</code>
-     */
-    public Builder setPollingFrequency(int value) {
-      
-      pollingFrequency_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 pollingFrequency = 3;</code>
-     */
-    public Builder clearPollingFrequency() {
-      
-      pollingFrequency_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private long timestampRegistration_ ;
-    /**
-     * <code>int64 timestampRegistration = 4;</code>
-     */
-    public long getTimestampRegistration() {
-      return timestampRegistration_;
-    }
-    /**
-     * <code>int64 timestampRegistration = 4;</code>
-     */
-    public Builder setTimestampRegistration(long value) {
-      
-      timestampRegistration_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 timestampRegistration = 4;</code>
-     */
-    public Builder clearTimestampRegistration() {
-      
-      timestampRegistration_ = 0L;
       onChanged();
       return this;
     }

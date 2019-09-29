@@ -1,5 +1,7 @@
 description = "IoT components Paho"
 
+// carica variabili e riporta i valori su mqtt 
+
 dependencies {
   compile project(':ar4k-core')
   // in realtà già incluso da Spring in core

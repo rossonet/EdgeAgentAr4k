@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private HealthRequest() {
-    hardwareInfo_ = "";
+    jsonHardwareInfo_ = "";
   }
 
   @java.lang.Override
@@ -59,7 +59,7 @@ private static final long serialVersionUID = 0L;
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            hardwareInfo_ = s;
+            jsonHardwareInfo_ = s;
             break;
           }
           default: {
@@ -115,34 +115,34 @@ private static final long serialVersionUID = 0L;
     return getAgentSender();
   }
 
-  public static final int HARDWAREINFO_FIELD_NUMBER = 2;
-  private volatile java.lang.Object hardwareInfo_;
+  public static final int JSONHARDWAREINFO_FIELD_NUMBER = 2;
+  private volatile java.lang.Object jsonHardwareInfo_;
   /**
-   * <code>string hardwareInfo = 2;</code>
+   * <code>string jsonHardwareInfo = 2;</code>
    */
-  public java.lang.String getHardwareInfo() {
-    java.lang.Object ref = hardwareInfo_;
+  public java.lang.String getJsonHardwareInfo() {
+    java.lang.Object ref = jsonHardwareInfo_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      hardwareInfo_ = s;
+      jsonHardwareInfo_ = s;
       return s;
     }
   }
   /**
-   * <code>string hardwareInfo = 2;</code>
+   * <code>string jsonHardwareInfo = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getHardwareInfoBytes() {
-    java.lang.Object ref = hardwareInfo_;
+      getJsonHardwareInfoBytes() {
+    java.lang.Object ref = jsonHardwareInfo_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      hardwareInfo_ = b;
+      jsonHardwareInfo_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -166,8 +166,8 @@ private static final long serialVersionUID = 0L;
     if (agentSender_ != null) {
       output.writeMessage(1, getAgentSender());
     }
-    if (!getHardwareInfoBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hardwareInfo_);
+    if (!getJsonHardwareInfoBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, jsonHardwareInfo_);
     }
     unknownFields.writeTo(output);
   }
@@ -182,8 +182,8 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getAgentSender());
     }
-    if (!getHardwareInfoBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hardwareInfo_);
+    if (!getJsonHardwareInfoBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, jsonHardwareInfo_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -205,8 +205,8 @@ private static final long serialVersionUID = 0L;
       if (!getAgentSender()
           .equals(other.getAgentSender())) return false;
     }
-    if (!getHardwareInfo()
-        .equals(other.getHardwareInfo())) return false;
+    if (!getJsonHardwareInfo()
+        .equals(other.getJsonHardwareInfo())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -222,8 +222,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + AGENTSENDER_FIELD_NUMBER;
       hash = (53 * hash) + getAgentSender().hashCode();
     }
-    hash = (37 * hash) + HARDWAREINFO_FIELD_NUMBER;
-    hash = (53 * hash) + getHardwareInfo().hashCode();
+    hash = (37 * hash) + JSONHARDWAREINFO_FIELD_NUMBER;
+    hash = (53 * hash) + getJsonHardwareInfo().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -363,7 +363,7 @@ private static final long serialVersionUID = 0L;
         agentSender_ = null;
         agentSenderBuilder_ = null;
       }
-      hardwareInfo_ = "";
+      jsonHardwareInfo_ = "";
 
       return this;
     }
@@ -396,7 +396,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.agentSender_ = agentSenderBuilder_.build();
       }
-      result.hardwareInfo_ = hardwareInfo_;
+      result.jsonHardwareInfo_ = jsonHardwareInfo_;
       onBuilt();
       return result;
     }
@@ -448,8 +448,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasAgentSender()) {
         mergeAgentSender(other.getAgentSender());
       }
-      if (!other.getHardwareInfo().isEmpty()) {
-        hardwareInfo_ = other.hardwareInfo_;
+      if (!other.getJsonHardwareInfo().isEmpty()) {
+        jsonHardwareInfo_ = other.jsonHardwareInfo_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -598,71 +598,71 @@ private static final long serialVersionUID = 0L;
       return agentSenderBuilder_;
     }
 
-    private java.lang.Object hardwareInfo_ = "";
+    private java.lang.Object jsonHardwareInfo_ = "";
     /**
-     * <code>string hardwareInfo = 2;</code>
+     * <code>string jsonHardwareInfo = 2;</code>
      */
-    public java.lang.String getHardwareInfo() {
-      java.lang.Object ref = hardwareInfo_;
+    public java.lang.String getJsonHardwareInfo() {
+      java.lang.Object ref = jsonHardwareInfo_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        hardwareInfo_ = s;
+        jsonHardwareInfo_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string hardwareInfo = 2;</code>
+     * <code>string jsonHardwareInfo = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getHardwareInfoBytes() {
-      java.lang.Object ref = hardwareInfo_;
+        getJsonHardwareInfoBytes() {
+      java.lang.Object ref = jsonHardwareInfo_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        hardwareInfo_ = b;
+        jsonHardwareInfo_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string hardwareInfo = 2;</code>
+     * <code>string jsonHardwareInfo = 2;</code>
      */
-    public Builder setHardwareInfo(
+    public Builder setJsonHardwareInfo(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      hardwareInfo_ = value;
+      jsonHardwareInfo_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string hardwareInfo = 2;</code>
+     * <code>string jsonHardwareInfo = 2;</code>
      */
-    public Builder clearHardwareInfo() {
+    public Builder clearJsonHardwareInfo() {
       
-      hardwareInfo_ = getDefaultInstance().getHardwareInfo();
+      jsonHardwareInfo_ = getDefaultInstance().getJsonHardwareInfo();
       onChanged();
       return this;
     }
     /**
-     * <code>string hardwareInfo = 2;</code>
+     * <code>string jsonHardwareInfo = 2;</code>
      */
-    public Builder setHardwareInfoBytes(
+    public Builder setJsonHardwareInfoBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      hardwareInfo_ = value;
+      jsonHardwareInfo_ = value;
       onChanged();
       return this;
     }

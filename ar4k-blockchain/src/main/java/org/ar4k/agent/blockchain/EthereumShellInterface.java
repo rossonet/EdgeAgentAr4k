@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ethereumInterface")
 @ConditionalOnProperty(name = "ar4k.ethereum", havingValue = "true")
+// TODO integrare Ethereum nel bus (analisi e studio da effettuare)
 public class EthereumShellInterface {
 
   @Autowired

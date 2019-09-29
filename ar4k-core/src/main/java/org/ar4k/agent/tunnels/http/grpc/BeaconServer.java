@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
@@ -32,7 +33,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
-import org.ar4k.agent.tunnels.http.grpc.beacon.PotServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
@@ -58,7 +58,7 @@ public class BeaconServer implements Runnable {
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>();
   private boolean acceptAllCerts = true;
   private boolean running = false;
-  private transient Anima a = null;
+  private transient Anima anima = null;
 
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
@@ -68,20 +68,33 @@ public class BeaconServer implements Runnable {
   private String broadcastAddress = "255.255.255.255";
   private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
 
+  private final static String aliasBeaconServerInKeystore = "beacon-server";
+
   public BeaconServer(Anima anima, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
       String stringDiscovery) throws IOException {
     this(ServerBuilder.forPort(port), port);
-    this.a = anima;
+    this.anima = anima;
     this.acceptAllCerts = acceptCerts;
     this.discoveryPort = discoveryPort;
     this.broadcastAddress = broadcastAddress;
     this.stringDiscovery = stringDiscovery;
+    if (anima.getMyIdentityKeystore().listCertificate().contains(aliasBeaconServerInKeystore)) {
+      logger.info("Certificate for Beacon server is present in keystore");
+    } else {
+      logger.info("Create certificate for beacon server");
+      anima.getMyIdentityKeystore().createSelfSignedCert(
+          aliasBeaconServerInKeystore + "-" + UUID.randomUUID().toString(), ConfigHelper.organization,
+          ConfigHelper.unit, ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
+          ConfigHelper.dns, ConfigHelper.ip, aliasBeaconServerInKeystore);
+      logger.info("Certificate for beacon server: " + anima.getMyIdentityKeystore()
+          .getClientCertificate(aliasBeaconServerInKeystore).getSubjectX500Principal().toString() + " - alias "
+          + aliasBeaconServerInKeystore);
+    }
   }
 
   private BeaconServer(ServerBuilder<?> serverBuilder, int port) {
     this.port = port;
-    server = serverBuilder.addService(new RpcService()).addService(new PotService()).addService(new DataService())
-        .build();
+    server = serverBuilder.addService(new RpcService()).addService(new DataService()).build();
   }
 
   public void start() throws IOException {
@@ -118,10 +131,6 @@ public class BeaconServer implements Runnable {
     }
   }
 
-  private class PotService extends PotServiceV1Grpc.PotServiceV1ImplBase {
-
-  }
-
   private class DataService extends DataServiceV1Grpc.DataServiceV1ImplBase {
 
   }
@@ -143,27 +152,38 @@ public class BeaconServer implements Runnable {
 
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
-      String certFromCsr = getCertForRegistration(request.getName(), request.getRequestCsr(), request.getJsonHealth(),
-          request.getDisplayKey());
+      String uniqueClientNameForBeacon = UUID.randomUUID().toString();
+      String certFromCsr = getCertForRegistration(aliasBeaconServerInKeystore, request.getRequestCsr(),
+          request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
+      logger.info("Certificate for beacon client (signed): "
+          + anima.getMyIdentityKeystore().getClientCertificate(uniqueClientNameForBeacon) + " - alias "
+          + uniqueClientNameForBeacon);
+      logger.info("Certificate for beacon client (CA): " + anima.getMyIdentityKeystore()
+          .getClientCertificate(aliasBeaconServerInKeystore).getSubjectX500Principal().toString() + " - alias "
+          + aliasBeaconServerInKeystore);
       RegisterReply reply = RegisterReply.newBuilder().setCa(getBeaconCa()).setCert(certFromCsr)
           .setStatusRegistration(
               Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
-          .setRegisterCode(request.getName()).setMonitoringFrequency(defaultPollTime).build();
+          .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
       agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }
 
     private String getBeaconCa() {
-      return a.getMyIdentityKeystore().getClientCertificateBase64("ca");
+      return anima.getMyIdentityKeystore().getClientCertificateBase64(aliasBeaconServerInKeystore);
     }
 
-    private String getCertForRegistration(String id, String requestCsr, String jsonHealth, String consoleKey) {
+    private String getCertForRegistration(String idAuth, String requestCsr, String jsonHealth, String consoleKey,
+        String targetAlias) {
       String result = null;
       if (acceptAllCerts) {
-        result = a.getMyIdentityKeystore().signCertificateBase64(requestCsr, id, Anima.defaulBeaconSignvalidity);
+        result = anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
+            ConfigHelper.defaulBeaconSignvalidity, idAuth);
       } else {
-        result = a.signBeaconCsr(id, requestCsr, jsonHealth, consoleKey);
+        // TODO filtrare per CA con console manuale e coda
+        result = anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
+            ConfigHelper.defaulBeaconSignvalidity, idAuth);
       }
       return result;
     }
@@ -172,9 +192,7 @@ public class BeaconServer implements Runnable {
     public void listAgents(Empty request, StreamObserver<ListAgentsReply> responseObserver) {
       List<Agent> values = new ArrayList<>();
       for (BeaconAgent r : agentLabelRegisterReplies) {
-        Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName())
-            .setPollingFrequency(r.getPollingFrequency()).setTimestampRegistration(r.getTimestampRegistration())
-            .build();
+        Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName()).build();
         values.add(a);
       }
       ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
@@ -184,7 +202,7 @@ public class BeaconServer implements Runnable {
     }
 
     @Override
-    public void polling(Agent request, StreamObserver<FlowMessage> responseObserver) {
+    public void pollingCmdQueue(Agent request, StreamObserver<FlowMessage> responseObserver) {
       List<RequestToAgent> values = new ArrayList<>();
       for (BeaconAgent at : agentLabelRegisterReplies) {
         if (at.getAgentUniqueName().equals(request.getAgentUniqueName())) {

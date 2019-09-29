@@ -1,5 +1,7 @@
 description = "IoT components GRPC"
 
+//TODO dato un file .proto, mappa le variabili sulle code del bus in entrata e uscita (modalità server e client)
+
 dependencies {
   compile project(':ar4k-core')
   compile 'io.grpc:grpc-netty-shaded:1.20.0'

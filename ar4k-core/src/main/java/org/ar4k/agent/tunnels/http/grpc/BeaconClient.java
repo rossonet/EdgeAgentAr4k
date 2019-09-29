@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +65,10 @@ public class BeaconClient implements Runnable {
   public static final int discoveryPacketMaxSize = 1024;
   private long defaultPollingFreq = 500L;
 
+  private String connectionUuid = UUID.randomUUID().toString();
+  private String beaconClientAlias = "beacon-" + connectionUuid + "-client";
+  private String beaconServerCaAlias = "beacon-" + connectionUuid + "-ca";
+
   private ManagedChannel channel = null;
   private RpcServiceV1BlockingStub blockingStub = null;
   private RpcServiceV1Stub asyncStub = null;
@@ -76,20 +81,21 @@ public class BeaconClient implements Runnable {
   private Agent me = null;
 
   private RpcConversation localExecutor = new RpcConversation();
-  private transient Anima a = null;
+  private transient Anima anima = null;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
   private int discoveryPort = 0;
   private String discoveryFilter = "AR4K";
   private DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
   private StatusValue registerStatus = StatusValue.BAD;
+  private int pollingFrequency = 1000;
 
   public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
       String discoveryFilter, String uniqueName) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
-    this.a = anima;
+    this.anima = anima;
     if (uniqueName != null)
       this.reservedUniqueName = uniqueName;
     else
@@ -112,7 +118,10 @@ public class BeaconClient implements Runnable {
   }
 
   private String getCsrRequestBase64() {
-    return a.getCsrForBeaconRegistration();
+    logger.info("Certificate for registration to the beacon server (SOURCE OF CSR): " + anima.getMyIdentityKeystore()
+        .getClientCertificate(anima.getMyAliasCertInKeystore()).getSubjectX500Principal().toString() + " - alias "
+        + anima.getMyAliasCertInKeystore());
+    return anima.getMyIdentityKeystore().getPKCS10CertificationRequestBase64(anima.getMyAliasCertInKeystore());
   }
 
   private String getDisplayRequestTxt() {
@@ -120,7 +129,18 @@ public class BeaconClient implements Runnable {
   }
 
   private void registerCertificateFromBeacon(String cert, String ca) {
-    a.registerCertificateFromBeacon(cert, ca);
+    try {
+      anima.getMyIdentityKeystore().setClientKeyPair(
+          anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), cert, beaconClientAlias);
+      logger.info("Certificate for future access to Beacon server: "
+          + anima.getMyIdentityKeystore().getClientCertificate(beaconClientAlias).getSubjectX500Principal().toString()
+          + " - alias " + beaconClientAlias);
+      anima.getMyIdentityKeystore().setCa(ca, beaconServerCaAlias);
+      logger.info("Certificate for CA " + anima.getMyIdentityKeystore().getClientCertificate(beaconServerCaAlias)
+          + " - alias " + beaconServerCaAlias);
+    } catch (NoSuchAlgorithmException e) {
+      logger.logException(e);
+    }
   }
 
   public void runInstance() {
@@ -180,8 +200,7 @@ public class BeaconClient implements Runnable {
         if (reply.getCa() != null && reply.getCert() != null) {
           registerCertificateFromBeacon(reply.getCert(), reply.getCa());
         }
-        me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode())
-            .setPollingFrequency(reply.getMonitoringFrequency()).setTimestampRegistration(timeRequest).build();
+        me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
       }
       result = reply.getStatusRegistration().getStatus();
     } catch (io.grpc.StatusRuntimeException e) {
@@ -192,7 +211,7 @@ public class BeaconClient implements Runnable {
   }
 
   public int getPollingFreq() {
-    return me.getPollingFrequency();
+    return pollingFrequency;
   }
 
   @Override
@@ -254,7 +273,7 @@ public class BeaconClient implements Runnable {
 
   private void checkPollChannel() {
     try {
-      elaborateRequestFromBus(blockingStub.polling(me));
+      elaborateRequestFromBus(blockingStub.pollingCmdQueue(me));
     } catch (io.grpc.StatusRuntimeException e) {
       logger.debug("GRPC POLL FAILED " + e.getMessage());
       logger.logException(e);
@@ -334,7 +353,7 @@ public class BeaconClient implements Runnable {
   private void sendHardwareInfo() {
     try {
       HealthRequest hr = HealthRequest.newBuilder().setAgentSender(me)
-          .setHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
+          .setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
       blockingStub.sendHealth(hr);
     } catch (IOException | InterruptedException | ParseException | io.grpc.StatusRuntimeException e) {
       logger.warn("sendHardwareInfo -> " + e.getMessage());

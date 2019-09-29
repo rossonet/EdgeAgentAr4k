@@ -50,6 +50,9 @@ import io.atomix.core.set.DistributedSet;
 @ManagedResource(objectName = "bean:name=tribeInterface", description = "Ar4k Agent Tribe Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "tribeInterface")
 @RestController
 @RequestMapping("/tribeInterface")
+
+// TODO mappa le variabili definite in conf al bus e mette a disposizione un bean per accedere a tipi dati in cluster (tipo ecss) 
+
 public class TribeShellInterface extends AbstractShellHelper {
 
   AtomixTribeComponent selectedAtomix = null;

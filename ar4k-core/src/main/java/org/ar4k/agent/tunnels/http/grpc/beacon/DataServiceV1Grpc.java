@@ -27,28 +27,28 @@ public final class DataServiceV1Grpc {
   public static final String SERVICE_NAME = "beacon.DataServiceV1";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest,
       org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getPollingMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Polling",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest,
       org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getPollingMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getPollingMethod;
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getPollingMethod;
     if ((getPollingMethod = DataServiceV1Grpc.getPollingMethod) == null) {
       synchronized (DataServiceV1Grpc.class) {
         if ((getPollingMethod = DataServiceV1Grpc.getPollingMethod) == null) {
           DataServiceV1Grpc.getPollingMethod = getPollingMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.DataServiceV1", "Polling"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.getDefaultInstance()))
                   .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("Polling"))
@@ -59,28 +59,28 @@ public final class DataServiceV1Grpc {
      return getPollingMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest,
       org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getSubscriptionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Subscription",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription.class,
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest,
       org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getSubscriptionMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getSubscriptionMethod;
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getSubscriptionMethod;
     if ((getSubscriptionMethod = DataServiceV1Grpc.getSubscriptionMethod) == null) {
       synchronized (DataServiceV1Grpc.class) {
         if ((getSubscriptionMethod = DataServiceV1Grpc.getSubscriptionMethod) == null) {
           DataServiceV1Grpc.getSubscriptionMethod = getSubscriptionMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(
                   "beacon.DataServiceV1", "Subscription"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.getDefaultInstance()))
                   .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("Subscription"))
@@ -91,100 +91,100 @@ public final class DataServiceV1Grpc {
      return getSubscriptionMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getPollingTxtMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "PollingTxt",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getPollingTxtMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getPollingTxtMethod;
-    if ((getPollingTxtMethod = DataServiceV1Grpc.getPollingTxtMethod) == null) {
-      synchronized (DataServiceV1Grpc.class) {
-        if ((getPollingTxtMethod = DataServiceV1Grpc.getPollingTxtMethod) == null) {
-          DataServiceV1Grpc.getPollingTxtMethod = getPollingTxtMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.DataServiceV1", "PollingTxt"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson.getDefaultInstance()))
-                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("PollingTxt"))
-                  .build();
-          }
-        }
-     }
-     return getPollingTxtMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getSubscriptionTxtMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SubscriptionTxt",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
-      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getSubscriptionTxtMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> getSubscriptionTxtMethod;
-    if ((getSubscriptionTxtMethod = DataServiceV1Grpc.getSubscriptionTxtMethod) == null) {
-      synchronized (DataServiceV1Grpc.class) {
-        if ((getSubscriptionTxtMethod = DataServiceV1Grpc.getSubscriptionTxtMethod) == null) {
-          DataServiceV1Grpc.getSubscriptionTxtMethod = getSubscriptionTxtMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "beacon.DataServiceV1", "SubscriptionTxt"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson.getDefaultInstance()))
-                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("SubscriptionTxt"))
-                  .build();
-          }
-        }
-     }
-     return getSubscriptionTxtMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getWriteMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "write",
+      fullMethodName = SERVICE_NAME + '/' + "Write",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.Status.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getWriteMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.Status> getWriteMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteMethod;
     if ((getWriteMethod = DataServiceV1Grpc.getWriteMethod) == null) {
       synchronized (DataServiceV1Grpc.class) {
         if ((getWriteMethod = DataServiceV1Grpc.getWriteMethod) == null) {
           DataServiceV1Grpc.getWriteMethod = getWriteMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.Status>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.DataServiceV1", "write"))
+                  "beacon.DataServiceV1", "Write"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance()))
-                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("write"))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.getDefaultInstance()))
+                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("Write"))
                   .build();
           }
         }
      }
      return getWriteMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace,
+      org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSendAddressSpaceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SendAddressSpace",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace,
+      org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSendAddressSpaceMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSendAddressSpaceMethod;
+    if ((getSendAddressSpaceMethod = DataServiceV1Grpc.getSendAddressSpaceMethod) == null) {
+      synchronized (DataServiceV1Grpc.class) {
+        if ((getSendAddressSpaceMethod = DataServiceV1Grpc.getSendAddressSpaceMethod) == null) {
+          DataServiceV1Grpc.getSendAddressSpaceMethod = getSendAddressSpaceMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.DataServiceV1", "SendAddressSpace"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.getDefaultInstance()))
+                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("SendAddressSpace"))
+                  .build();
+          }
+        }
+     }
+     return getSendAddressSpaceMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getGetRemoteAddressSpaceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetRemoteAddressSpace",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getGetRemoteAddressSpaceMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getGetRemoteAddressSpaceMethod;
+    if ((getGetRemoteAddressSpaceMethod = DataServiceV1Grpc.getGetRemoteAddressSpaceMethod) == null) {
+      synchronized (DataServiceV1Grpc.class) {
+        if ((getGetRemoteAddressSpaceMethod = DataServiceV1Grpc.getGetRemoteAddressSpaceMethod) == null) {
+          DataServiceV1Grpc.getGetRemoteAddressSpaceMethod = getGetRemoteAddressSpaceMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.DataServiceV1", "GetRemoteAddressSpace"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.getDefaultInstance()))
+                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("GetRemoteAddressSpace"))
+                  .build();
+          }
+        }
+     }
+     return getGetRemoteAddressSpaceMethod;
   }
 
   /**
@@ -216,37 +216,37 @@ public final class DataServiceV1Grpc {
 
     /**
      */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request,
+    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnimplementedUnaryCall(getPollingMethod(), responseObserver);
     }
 
     /**
      */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request,
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnimplementedUnaryCall(getSubscriptionMethod(), responseObserver);
     }
 
     /**
      */
-    public void pollingTxt(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> responseObserver) {
-      asyncUnimplementedUnaryCall(getPollingTxtMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void subscriptionTxt(org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> responseObserver) {
-      asyncUnimplementedUnaryCall(getSubscriptionTxtMethod(), responseObserver);
-    }
-
-    /**
-     */
     public void write(org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnimplementedUnaryCall(getWriteMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void sendAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendAddressSpaceMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void getRemoteAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetRemoteAddressSpaceMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -255,37 +255,37 @@ public final class DataServiceV1Grpc {
             getPollingMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
+                org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest,
                 org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>(
                   this, METHODID_POLLING)))
           .addMethod(
             getSubscriptionMethod(),
             asyncServerStreamingCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
+                org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest,
                 org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>(
                   this, METHODID_SUBSCRIPTION)))
-          .addMethod(
-            getPollingTxtMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling,
-                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>(
-                  this, METHODID_POLLING_TXT)))
-          .addMethod(
-            getSubscriptionTxtMethod(),
-            asyncServerStreamingCall(
-              new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription,
-                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>(
-                  this, METHODID_SUBSCRIPTION_TXT)))
           .addMethod(
             getWriteMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
-                org.ar4k.agent.tunnels.http.grpc.beacon.Status>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>(
                   this, METHODID_WRITE)))
+          .addMethod(
+            getSendAddressSpaceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace,
+                org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>(
+                  this, METHODID_SEND_ADDRESS_SPACE)))
+          .addMethod(
+            getGetRemoteAddressSpaceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>(
+                  this, METHODID_GET_REMOTE_ADDRESS_SPACE)))
           .build();
     }
   }
@@ -310,7 +310,7 @@ public final class DataServiceV1Grpc {
 
     /**
      */
-    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request,
+    public void polling(org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getPollingMethod(), getCallOptions()), request, responseObserver);
@@ -318,7 +318,7 @@ public final class DataServiceV1Grpc {
 
     /**
      */
-    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request,
+    public void subscription(org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(getSubscriptionMethod(), getCallOptions()), request, responseObserver);
@@ -326,26 +326,26 @@ public final class DataServiceV1Grpc {
 
     /**
      */
-    public void pollingTxt(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getPollingTxtMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void subscriptionTxt(org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> responseObserver) {
-      asyncServerStreamingCall(
-          getChannel().newCall(getSubscriptionTxtMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
     public void write(org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getWriteMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sendAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSendAddressSpaceMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void getRemoteAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetRemoteAddressSpaceMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -369,7 +369,7 @@ public final class DataServiceV1Grpc {
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData polling(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData polling(org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest request) {
       return blockingUnaryCall(
           getChannel(), getPollingMethod(), getCallOptions(), request);
     }
@@ -377,31 +377,30 @@ public final class DataServiceV1Grpc {
     /**
      */
     public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> subscription(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request) {
+        org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest request) {
       return blockingServerStreamingCall(
           getChannel(), getSubscriptionMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson pollingTxt(org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request) {
-      return blockingUnaryCall(
-          getChannel(), getPollingTxtMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public java.util.Iterator<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> subscriptionTxt(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription request) {
-      return blockingServerStreamingCall(
-          getChannel(), getSubscriptionTxtMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Status write(org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData write(org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request) {
       return blockingUnaryCall(
           getChannel(), getWriteMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace sendAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace request) {
+      return blockingUnaryCall(
+          getChannel(), getSendAddressSpaceMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace getRemoteAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return blockingUnaryCall(
+          getChannel(), getGetRemoteAddressSpaceMethod(), getCallOptions(), request);
     }
   }
 
@@ -426,33 +425,41 @@ public final class DataServiceV1Grpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> polling(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request) {
+        org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getPollingMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson> pollingTxt(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> write(
+        org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request) {
       return futureUnaryCall(
-          getChannel().newCall(getPollingTxtMethod(), getCallOptions()), request);
+          getChannel().newCall(getWriteMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> write(
-        org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> sendAddressSpace(
+        org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace request) {
       return futureUnaryCall(
-          getChannel().newCall(getWriteMethod(), getCallOptions()), request);
+          getChannel().newCall(getSendAddressSpaceMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getRemoteAddressSpace(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetRemoteAddressSpaceMethod(), getCallOptions()), request);
     }
   }
 
   private static final int METHODID_POLLING = 0;
   private static final int METHODID_SUBSCRIPTION = 1;
-  private static final int METHODID_POLLING_TXT = 2;
-  private static final int METHODID_SUBSCRIPTION_TXT = 3;
-  private static final int METHODID_WRITE = 4;
+  private static final int METHODID_WRITE = 2;
+  private static final int METHODID_SEND_ADDRESS_SPACE = 3;
+  private static final int METHODID_GET_REMOTE_ADDRESS_SPACE = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -472,24 +479,24 @@ public final class DataServiceV1Grpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_POLLING:
-          serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling) request,
+          serviceImpl.polling((org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>) responseObserver);
           break;
         case METHODID_SUBSCRIPTION:
-          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription) request,
+          serviceImpl.subscription((org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>) responseObserver);
-          break;
-        case METHODID_POLLING_TXT:
-          serviceImpl.pollingTxt((org.ar4k.agent.tunnels.http.grpc.beacon.RequestPolling) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>) responseObserver);
-          break;
-        case METHODID_SUBSCRIPTION_TXT:
-          serviceImpl.subscriptionTxt((org.ar4k.agent.tunnels.http.grpc.beacon.RequestSubscription) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageDataJson>) responseObserver);
           break;
         case METHODID_WRITE:
           serviceImpl.write((org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status>) responseObserver);
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>) responseObserver);
+          break;
+        case METHODID_SEND_ADDRESS_SPACE:
+          serviceImpl.sendAddressSpace((org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>) responseObserver);
+          break;
+        case METHODID_GET_REMOTE_ADDRESS_SPACE:
+          serviceImpl.getRemoteAddressSpace((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -554,9 +561,9 @@ public final class DataServiceV1Grpc {
               .setSchemaDescriptor(new DataServiceV1FileDescriptorSupplier())
               .addMethod(getPollingMethod())
               .addMethod(getSubscriptionMethod())
-              .addMethod(getPollingTxtMethod())
-              .addMethod(getSubscriptionTxtMethod())
               .addMethod(getWriteMethod())
+              .addMethod(getSendAddressSpaceMethod())
+              .addMethod(getGetRemoteAddressSpaceMethod())
               .build();
         }
       }

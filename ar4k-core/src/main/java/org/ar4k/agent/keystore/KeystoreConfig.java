@@ -34,6 +34,8 @@ import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.json.KeystoreConfigJsonAdapter;
 import org.ar4k.agent.exception.Ar4kException;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
@@ -50,6 +52,9 @@ import com.google.gson.TypeAdapter;
  */
 public class KeystoreConfig implements ConfigSeed {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(KeystoreConfig.class.toString());
+
   private static final long serialVersionUID = 6291742061764165257L;
 
   public Instant creationDate = new Instant();
@@ -57,7 +62,7 @@ public class KeystoreConfig implements ConfigSeed {
   public UUID uniqueId = UUID.randomUUID();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
-  public String filePathPre = "./default.keystore";
+  public String filePathPre = "~/.ar4k/default.keystore";
 
   @Parameter(names = "--keystorePassword", description = "keystore password")
   public String keystorePassword = "secA4.rk!8";
@@ -66,7 +71,7 @@ public class KeystoreConfig implements ConfigSeed {
   public String label = "master-keytool";
 
   @Parameter(names = "--caAlias", description = "main cert for the keystore")
-  public String caAlias = "ca";
+  public String keyStoreAlias = "ca";
 
   public String filePath() {
     return filePathPre.replaceFirst("^~", System.getProperty("user.home"));
@@ -75,7 +80,7 @@ public class KeystoreConfig implements ConfigSeed {
   public boolean check() {
     boolean verifica = false;
     try {
-      if (KeystoreLoader.getClientKeyPair(filePath(), caAlias, keystorePassword) != null) {
+      if (KeystoreLoader.getClientKeyPair(filePath(), keyStoreAlias, keystorePassword) != null) {
         verifica = true;
       } else {
         System.out.println("Check for keystore " + filePath() + " failed");
@@ -92,7 +97,7 @@ public class KeystoreConfig implements ConfigSeed {
     boolean verifica = false;
     try {
       verifica = KeystoreLoader.create(commonName, organization, unit, locality, state, country, uri, dns, ip,
-          filePath(), caAlias, keystorePassword);
+          filePath(), keyStoreAlias, keystorePassword);
     } catch (Exception e) {
       throw new Ar4kException("problem with keystore", e.getCause());
     }
@@ -171,6 +176,12 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
+  public boolean setCa(String crt, String alias) {
+    boolean ritorno = false;
+    ritorno = KeystoreLoader.setCA(crt, filePath(), alias, keystorePassword);
+    return ritorno;
+  }
+
   public boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
       String state, String country, String uri, String dns, String ip, String alias) {
     boolean ritorno = false;
@@ -219,14 +230,24 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
-  public String signCertificateBase64(String csr, String targetAlias, int validity) {// , String alias) {
+  public String signCertificateBase64(String csr, String targetAlias, int validity, String alias) {
     String ritorno = null;
     try {
-      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), targetAlias,
-          keystorePassword);
+      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), alias, keystorePassword);
     } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
         | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | ClassNotFoundException
         | CMSException e) {
+      logger.debug("KeystoreLoader.signCertificateBase64(" + csr + ", " + targetAlias + ", " + validity + ", "
+          + filePath() + ", " + targetAlias + ", " + keystorePassword + ")");
+      try {
+        byte[] data = Base64.getDecoder().decode(csr);
+        PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
+        if (csrDecoded != null)
+          logger.debug("CSR " + csrDecoded.getSubject().toString());
+      } catch (Exception e1) {
+        logger.logException(e1);
+      }
+      e.printStackTrace();
       throw new Ar4kException("problem with keystore", e.getCause());
     }
     return ritorno;
@@ -294,8 +315,8 @@ public class KeystoreConfig implements ConfigSeed {
   @Override
   public String toString() {
     return "KeystoreConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
-        + ", filePathPre=" + filePathPre + ", keystorePassword=*********" + ", label=" + label + ", caAlias=" + caAlias
-        + "]";
+        + ", filePathPre=" + filePathPre + ", keystorePassword=*********" + ", label=" + label + ", caAlias="
+        + keyStoreAlias + "]";
   }
 
   @Override

@@ -199,8 +199,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
 
-  public static int defaulBeaconSignvalidity = 100;
-
   private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
 
   private Map<String, Object> dataStore = null;
@@ -336,12 +334,12 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     boolean foundFile = false;
     boolean foundWeb = false;
     if (fileKeystore != null && !fileKeystore.isEmpty()) {
-      if (new File(fileKeystore).exists()) {
-        ks.filePathPre = fileKeystore;
+      ks.filePathPre = fileKeystore;
+      if (new File(ks.filePathPre).exists()) {
         foundFile = true;
         logger.info("use keystore " + ks.toString());
       } else {
-        logger.info("keystore file not found" + ks.toString());
+        logger.info("keystore file not found, using parameters " + ks.toString());
       }
     } else {
       logger.info("value of fileKeystore is null, use: " + ks.toString());
@@ -349,17 +347,18 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (!foundFile) {
       if (webKeystore != null && !webKeystore.isEmpty()) {
         try {
+          logger.info("try keystore from url: " + webKeystore);
           HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystore);
-        } catch (IOException e) {
+        } catch (Exception e) {
           foundWeb = false;
-          logger.logException(e);
+          // logger.logException(e);
         }
         if (new File(ks.filePathPre).exists()) {
-          logger.info("try keystore from web, url: " + webKeystore);
           foundWeb = true;
         }
       }
       if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
+        logger.info("try keystore from dns: " + dnsKeystore);
         // TODO: implementare scaricamento keystore da DNS
         // logger.warn("use keystore from DNS, domain: " + webKeystore);
       }
@@ -368,16 +367,23 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       ks.keystorePassword = keystorePassword;
     }
     if (keystoreCaAlias != null && !keystoreCaAlias.isEmpty()) {
-      ks.caAlias = keystoreCaAlias;
+      ks.keyStoreAlias = keystoreCaAlias;
     }
     if (!new File(fileKeystore).exists()) {
       logger.warn("new keystore: " + ks.toString());
+      ks.filePathPre = fileKeystore;
+      ks.keyStoreAlias = keystoreCaAlias;
+      ks.keystorePassword = keystorePassword;
       ks.create(agentUniqueName, ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
           ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip);
       logger.debug("keystore created");
     }
     addKeyStores(ks);
     setMyIdentityKeystore(ks);
+    setMyAliasCertInKeystore(ks.keyStoreAlias);
+    logger.info("Certificate for anima created: "
+        + getMyIdentityKeystore().getClientCertificate(getMyAliasCertInKeystore()).getSubjectX500Principal().toString()
+        + " - alias " + getMyAliasCertInKeystore());
   }
 
   @PostConstruct
@@ -939,29 +945,16 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     this.myIdentityKeystore = myIdentityKeystore;
   }
 
-  public String getMyAliasCertInKeystore() {
-    return myAliasCertInKeystore;
-  }
-
   public void setMyAliasCertInKeystore(String myAliasCertInKeystore) {
     this.myAliasCertInKeystore = myAliasCertInKeystore;
   }
 
-  public String signBeaconCsr(String id, String requestCsr, String jsonHealth, String consoleKey) {
-    // TODO Auto-generated method stub
-    return "CERT";
-  }
-
-  public String getCsrForBeaconRegistration() {
-    // TODO Auto-generated method stub
-    return "CSR";
+  public String getMyAliasCertInKeystore() {
+    return myAliasCertInKeystore;
   }
 
   public static String getRegistrationPin() {
     return registrationPin;
   }
 
-  public void registerCertificateFromBeacon(String cert, String ca) {
-    // TODO Auto-generated method stub
-  }
 }

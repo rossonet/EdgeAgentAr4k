@@ -25,6 +25,8 @@ import org.pentaho.di.repository.RepositoryElementMetaInterface;
 import org.pentaho.di.repository.RepositoryMeta;
 import org.pentaho.di.repository.filerep.KettleFileRepositoryMeta;
 
+// TODO servizio che esegue job da repository pre configurati (da zip file o connessione db) e permetta tramite coda di messaggi la manipolazione e il running
+
 public class Kettle {
 
   // ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine()

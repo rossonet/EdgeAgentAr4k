@@ -1,5 +1,7 @@
 description = "OpenOffice UNO module"
 
+//TODO Bean che espone code per generare documenti (esporare la modalità template configurati, documenti generati da messaggio)
+
 dependencies {
   compile project(':ar4k-core')
   // UNO

@@ -1,5 +1,7 @@
 description = "Rules Engine component"
 
+// TODO eseguire come servizio contesti drools che interagiscono con il bus dati
+
 dependencies {
 	compile project(':ar4k-core')
 	  // rules engine

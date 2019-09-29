@@ -8,12 +8,17 @@ public interface ConfigReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string config = 1;</code>
+   * <code>string base64Config = 1;</code>
    */
-  java.lang.String getConfig();
+  java.lang.String getBase64Config();
   /**
-   * <code>string config = 1;</code>
+   * <code>string base64Config = 1;</code>
    */
   com.google.protobuf.ByteString
-      getConfigBytes();
+      getBase64ConfigBytes();
+
+  /**
+   * <code>int64 restartAt = 2;</code>
+   */
+  long getRestartAt();
 }

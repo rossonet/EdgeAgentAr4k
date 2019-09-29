@@ -1,16 +1,5 @@
-// Copyright 2015 The gRPC Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Andrea Ambrosini - Rossonet s.c.a r.l.
+
 syntax = "proto3";
 
 option java_multiple_files = true;
@@ -23,15 +12,15 @@ package beacon;
 service RpcServiceV1 {
   // for agent registration
   rpc Register (RegisterRequest) returns (RegisterReply) {}
-  rpc GetConfigTarget (Agent) returns (ConfigReply) {}
-  rpc Polling (Agent) returns (FlowMessage) {}
-  rpc Subscription (Agent) returns (stream FlowMessage) {}
+  //rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+  rpc PollingCmdQueue (Agent) returns (FlowMessage) {}
+  rpc SubscriptionCmdQueue (Agent) returns (stream FlowMessage) {}
   rpc SendChatMessage (ChatMessage) returns (Status) {}
   rpc SendCommandReply (CommandReplyRequest) returns (Status) {}
   rpc SendHealth (HealthRequest) returns (Status) {}
   rpc SendLog (LogRequest) returns (Status) {}
   rpc SendException (ExceptionRequest) returns (Status) {}
-  rpc OpenBidirectionalSocketTunnel (stream StreamData) returns (stream StreamData) {}
+  rpc SendConfigRuntime (ConfigReport) returns (ConfigReply) {}
   // for console
   // list agents connected 
   rpc ListAgents (Empty) returns (ListAgentsReply) {}
@@ -45,17 +34,12 @@ service RpcServiceV1 {
   rpc ElaborateMessage(ElaborateMessageRequest) returns (ElaborateMessageReply) {}
   rpc ListCommands(ListCommandsRequest) returns (ListCommandsReply) {}
   rpc CompleteCommand(CompleteCommandRequest) returns (CompleteCommandReply) {}
-  // TODO network tunnels 
-  rpc CreateProxySocksOnAgent(CreateProxySocksOnAgentRequest) returns (TunnelCreatedReply) {}
-  rpc ExposeAgentPort(ExposeAgentPortRequest) returns (TunnelCreatedReply) {}
-  rpc ListTunnels (Empty) returns (ListTunnelsReply) {}
-  rpc CloseTunnel (CloseTunnelRequest) returns (Status) {}
 }
 
 message RegisterRequest {
-  string name = 1;
+  string name = 1; // unique name of the agent
   string requestCsr = 2;
-  string displayKey = 3;
+  string displayKey = 3;  // password key show in the output of Jar agent
   Timestamp time = 4;
   string jsonHealth = 5;
 }
@@ -73,11 +57,12 @@ message Timestamp {
 }
 
 message RegisterReply {
-  string registerCode = 1;
+  string registerCode = 1;  // unique code for the registration on the beacon server
   int32 monitoringFrequency = 2;
-  string cert = 3;
+  string cert = 3; // TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
   string ca = 4;
   Status statusRegistration = 5;
+  int64 timestampRegistration = 6;
 }
 
 message Status {
@@ -104,13 +89,20 @@ enum AnimaStates {
 message Agent {
   string agentUniqueName = 1;
   //string hardwareInfoAsJson = 2;
-  string secretKey = 2;
-  int32 pollingFrequency = 3;
-  int64 timestampRegistration = 4;
+  // string registerCode = 2; // ritornato in registrazione
+  //int32 pollingFrequency = 3;
+  //int64 timestampRegistration = 3;
 }
  
 message ConfigReply {
-  string config = 1;
+  string base64Config = 1;
+  int64 restartAt = 2;
+}
+
+message ConfigReport {
+  Agent agent = 1;
+  string base64Config = 2;
+  string jsonConfig = 3;
 }
 
 message FlowMessage {
@@ -151,7 +143,7 @@ message CommandReplyRequest {
 
 message HealthRequest {
   Agent agentSender = 1;
-  string hardwareInfo = 2;
+  string jsonHardwareInfo = 2;
 }
 
 message LogRequest {
@@ -187,13 +179,6 @@ message ExceptionRequest {
   string messageException = 2;
   string stackTraceException = 3;
 }
-
-message StreamData {
-  Agent fromAgent = 1;
-  Agent toAgent = 2;
-  bytes data = 3;
-}
-
 message Empty {
 }
 
@@ -251,138 +236,65 @@ message CompleteCommandReply {
   repeated string errors = 2;
 }
 
-message CreateProxySocksOnAgentRequest {
-  Agent agentTarget = 1;
-  Agent agentSender = 2;
-  map<string, string> parameters = 3;
-}
-
-message TunnelCreatedReply {
-   string uniqueTunnelId = 1;
-   Status status = 2;
-   Tunnel tunnel = 3;
-}
-
-message ExposeAgentPortRequest {
-  Agent agentTarget = 1;
-  Agent agentSender = 2;
-  map<string, string> parameters = 3;
-}
-
-message Tunnel {
-  string uniqueTunnelId = 1;
-  Agent agentFrom = 2;
-  Agent agentTo = 3;
-  TunnelType type = 4;
-  map<string, string> parameters = 5;
-}
-
-enum TunnelType {
-  EXPOSE_TCP_PORT = 0;
-  GRANT_SOCKS_ACCESS = 1;
-}
-
-message ListTunnelsReply {
-  repeated Tunnel tunnels = 1;
-}
-
-message CloseTunnelRequest {
-  Agent agentTarget = 1;
-  Agent agentSender = 2;
-  string uniqueTunnelId = 3;
-}
-
-service PotServiceV1 {
-  rpc sendEvent (MessageEventRequest) returns (Status) {}
-  rpc Polling (Agent) returns (FlowMessagePot) {}
-  rpc Subscription (Agent) returns (stream FlowMessagePot) {}
-}
-
-message MessageEventRequest {
-  Agent agentSender = 1;
-  EventType eventType = 2;
-  map<string,string> eventData = 3;
-}
-
-enum EventType {
-  FAULT_EVENT = 0;
-  INFO_EVENT = 1;
-}
-
-message FlowMessagePot {
-  repeated RequestToAgentPot toDoList = 1;
-}
-
-message RequestToAgentPot {
-  CommandTypePot type = 1;
-  string uniqueIdRequest = 2;
-  string requestCommand = 3;
-  map<string,string> requestData = 4;
-}
-
-enum CommandTypePot {
-  START_POT = 0;
-  STOP_POT = 1;
-  PAUSE_POT = 2;
-  REQUEST_STATUS_POT = 3;
-  INSTANTIATE_POT = 4;
-}
-
 service DataServiceV1 {
-  rpc Polling (RequestPolling) returns (FlowMessageData) {}
-  rpc Subscription (RequestSubscription) returns (stream FlowMessageData) {}
-  rpc PollingTxt (RequestPolling) returns (FlowMessageDataJson) {}
-  rpc SubscriptionTxt (RequestSubscription) returns (stream FlowMessageDataJson) {}
-  rpc write (RequestWrite) returns (Status) {}
+  rpc Polling (PollingRequest) returns (FlowMessageData) {}
+  rpc Subscription (SubscribeRequest) returns (stream FlowMessageData) {}
+  rpc Write (RequestWrite) returns (FlowMessageData) {}
+  rpc SendAddressSpace (AddressSpace) returns (AddressSpace) {}
+  rpc GetRemoteAddressSpace (Agent) returns (AddressSpace) {}
 }
 
-message RequestSubscription {
-  string nodeId = 1;
-  int32 samplingRate = 2;
-  string dataFilter = 3;
+message PollingRequest {
+  Agent agent = 1;
+  repeated DataNode dataNodes = 2; // elenco nodi ricercati
 }
 
-message RequestPolling {
-  string nodeId = 1;
-  string dataFilter = 2;
+message SubscribeRequest {
+  Agent agent = 1;
+  repeated DataNode dataNodes = 2; // elenco nodi ricercati
+  int32 samplingRate = 3;
 }
 
 message FlowMessageData {
-  repeated Data data = 1;
-}
-
-message Data {
-  string nodeId = 1;
-  Timestamp time = 2;
-  Status quality = 3;
-  DataType type = 4;
-  bytes data = 5;
-}
-
-message FlowMessageDataJson {
-  repeated DataJson data = 1;
-}
-
-message DataJson {
-  string nodeId = 1;
-  Timestamp time = 2;
-  Status quality = 3;
-  string data = 4;
+  repeated DataNode values = 1;
+  int32 hiSpeedRoutingTag = 2; // sperimentale per indirizzare rapidamente il routing nei grossi volumi
 }
 
 message RequestWrite {
-  string nodeId = 1;
-  Timestamp time = 2;
-  Status quality = 3;
-  DataType type = 4;
-  bytes data = 5;
+ Agent agent = 1;
+ repeated DataNode valuesToWrite = 2;
 }
 
-message RequestWriteText {
-  string nodeId = 1;
-  Timestamp time = 2;
-  Status quality = 3;
-  string data = 4;
+message DataNode {
+  Agent agentOwner = 1; // chiedo al beacon di un nodo relativo ad un agent
+  string nodeId = 2;
+  string jsonValue = 3;
+  string stringValue = 4;
+  bytes byteValue = 5;
+  Status quality = 6;
+  Timestamp timestamp = 7;
+  DataType type = 8;
+  repeated string errors = 9;
+  Timestamp timeToExpire = 10;
+}
+
+message NodeMetadata {
+  DataNode dataNode = 1;
+  string namespace = 2;
+  string domainId = 3;
+  repeated string tags = 4;
+  repeated ParentScope fatherForScopes = 5;
+  repeated string logs = 6;
+}
+
+message AddressSpace {
+  int64 lastUpdate = 1;
+  repeated NodeMetadata nodes = 2;
+}
+
+message ParentScope {
+  string scope = 1;
+  NodeMetadata parent = 2;
 }
 
 enum DataType {

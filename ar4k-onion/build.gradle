@@ -1,5 +1,7 @@
 description = "Tor client library - Orchid"
 
+// TODO servizio per mettere a disposizione un bean con proxy onion 
+
 dependencies {
 	compile project(':ar4k-core')
 	compile group: 'org.bitcoinj', name: 'orchid', version: '1.2.1'

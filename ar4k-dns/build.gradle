@@ -1,5 +1,7 @@
 description = "DNS component"
 
+//TODO - plugind di beacon server per la gestione delle configurazioni via dns per gli agenti
+
 dependencies {
   compile project(':ar4k-core')
   // dns

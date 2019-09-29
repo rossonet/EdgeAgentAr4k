@@ -49,8 +49,6 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   @Parameter(names = "--dataType", description = "data type for the channel", validateWith = DataTypeValidator.class)
   private DataType dataType = DataType.STRING;
 
-  private boolean isRemote = false;
-
   private List<String> tags = new ArrayList<String>();
 
   private Queue<String> lastLogs = new ConcurrentLinkedQueue<String>();
@@ -58,6 +56,8 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   @Parameter(names = "--namespace", description = "namespace for the data")
   private String nameSpace = "default";
 
+  private boolean isRemote = false;
+  
   @Override
   public String getNodeId() {
     return nodeId;
@@ -135,11 +135,6 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   @Override
   public boolean isRemote() {
     return isRemote;
-  }
-
-  @Override
-  public void setRemote(boolean isRemote) {
-    this.isRemote = isRemote;
   }
 
   @Override
@@ -226,8 +221,8 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   public String toString() {
     return "Channel [logQueueSize=" + logQueueSize + ", nodeId=" + nodeId + ", domainId=" + domainId + ", channel="
         + channel + ", channelTypeRequest=" + channelTypeRequest + ", status=" + status + ", description=" + description
-        + ", createData=" + createData + ", dataType=" + dataType + ", isRemote=" + isRemote + ", tags=" + tags
-        + ", lastLogs=" + lastLogs + ", nameSpace=" + nameSpace + "]";
+        + ", createData=" + createData + ", dataType=" + dataType + ", tags=" + tags + ", lastLogs=" + lastLogs
+        + ", nameSpace=" + nameSpace + "]";
   }
 
   @Override

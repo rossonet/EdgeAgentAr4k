@@ -69,6 +69,8 @@ public class ConfigHelper {
   public static final String dns = NetworkHelper.getHostname();
   public static final String ip = "127.0.0.1";
 
+  public static final int defaulBeaconSignvalidity = 100;
+
   private ConfigHelper() {
     System.out.println("Just for static usage");
   }

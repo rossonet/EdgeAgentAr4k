@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -48,8 +47,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -143,6 +140,31 @@ public class KeystoreLoader {
     }
     serverKeyStore = null;
     return true;
+  }
+
+  public static boolean setCA(String crt, String keyStorePath, String alias, String password) {
+    char[] passwordChar = password.toCharArray();
+    boolean ritorno = false;
+    try {
+      KeyStore keyStore = KeyStore.getInstance("PKCS12");
+      File serverKeyStore = new File(keyStorePath);
+      serverKeyStore.deleteOnExit();
+      keyStore.load(null, passwordChar);
+      String crtContent = crt;
+      byte[] decodedCrt = Base64.getDecoder().decode(crtContent);
+      X509Certificate caCertificate = (X509Certificate) CertificateFactory.getInstance("X.509")
+          .generateCertificate(new ByteArrayInputStream(decodedCrt));
+      logger.info("CertCA to store: " + crt);
+      logger.info("CertCA: " + caCertificate.toString());
+      keyStore.setCertificateEntry(alias, caCertificate);
+      keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
+      ritorno = true;
+      serverKeyStore = null;
+    } catch (Exception df) {
+      ritorno = false;
+      logger.logException(df);
+    }
+    return ritorno;
   }
 
   public static boolean setClientKeyPair(String key, String crt, String alias) {
@@ -391,8 +413,9 @@ public class KeystoreLoader {
   public static String getPKCS10CertificationRequestBase64(String keyStorePath, String alias, String password)
       throws UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException, FileNotFoundException,
       KeyStoreException, OperatorCreationException, IOException {
-    return Base64.getEncoder()
-        .encodeToString(getPKCS10CertificationRequest(keyStorePath, alias, password).getEncoded());
+    PKCS10CertificationRequest csrPreEncode = getPKCS10CertificationRequest(keyStorePath, alias, password);
+    logger.debug("original CSR before Basse64 " + csrPreEncode.getSubject().toString());
+    return Base64.getEncoder().encodeToString(csrPreEncode.getEncoded());
   }
 
   public static String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity,
@@ -416,8 +439,7 @@ public class KeystoreLoader {
       throws IOException, UnrecoverableKeyException, OperatorCreationException, KeyStoreException,
       NoSuchAlgorithmException, CertificateException, NoSuchProviderException, CMSException, ClassNotFoundException {
     byte[] data = Base64.getDecoder().decode(csr);
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    PKCS10CertificationRequest csrDecoded = (PKCS10CertificationRequest) ois.readObject();
+    PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
     return signCertificate(csrDecoded, targetAlias, validity, keyStorePath, alias, password);
   }
 
@@ -428,11 +450,20 @@ public class KeystoreLoader {
     AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
     AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
     PrivateKey cakey = getPrivateKey(keyStorePath, alias, password);
+    logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + alias + ", " + password + " ->");
+    if (getClientKeyPair(keyStorePath, alias, password) == null
+        || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
+      logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE");
+    } else {
+      logger.info(getClientKeyPair(keyStorePath, alias, password).getPublic().getAlgorithm());
+    }
     X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
         // These are the details of the CA
         // new X500Name("C=US, L=Vienna, O=Your CA Inc")
-        new X500Name(getClientCertificate(keyStorePath, alias, password).getIssuerX500Principal()
-            .getName(X500Principal.RFC2253)),
+        // new X500Name(getClientCertificate(keyStorePath, alias,
+        // password).getIssuerX500Principal()
+        // .getName(X500Principal.RFC2253)),
+        csr.getSubject(),
         // This should be a serial number that the CA keeps track of
         new BigInteger(64, new SecureRandom()),
         // Certificate validity start
@@ -505,8 +536,8 @@ public class KeystoreLoader {
   public static String getClientCertificateBase64(String keyStorePath, String alias, String password)
       throws CertificateEncodingException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException,
       FileNotFoundException, KeyStoreException, IOException {
-    return Base64.getEncoder()
-        .encodeToString(KeystoreLoader.getClientCertificate(keyStorePath, alias, password).getEncoded());
+    return KeystoreLoader.getClientCertificate(keyStorePath, alias, password) != null ? Base64.getEncoder()
+        .encodeToString(KeystoreLoader.getClientCertificate(keyStorePath, alias, password).getEncoded()) : null;
   }
 
   public static String getPrivateKeyBase64(String alias) throws UnrecoverableKeyException, KeyStoreException,

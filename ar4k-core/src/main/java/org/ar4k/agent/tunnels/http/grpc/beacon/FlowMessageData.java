@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private FlowMessageData() {
-    data_ = java.util.Collections.emptyList();
+    values_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -45,11 +45,16 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              data_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.Data>();
+              values_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode>();
               mutable_bitField0_ |= 0x00000001;
             }
-            data_.add(
-                input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.Data.parser(), extensionRegistry));
+            values_.add(
+                input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.parser(), extensionRegistry));
+            break;
+          }
+          case 16: {
+
+            hiSpeedRoutingTag_ = input.readInt32();
             break;
           }
           default: {
@@ -68,7 +73,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        data_ = java.util.Collections.unmodifiableList(data_);
+        values_ = java.util.Collections.unmodifiableList(values_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -87,39 +92,53 @@ private static final long serialVersionUID = 0L;
             org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.class, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.Builder.class);
   }
 
-  public static final int DATA_FIELD_NUMBER = 1;
-  private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.Data> data_;
+  private int bitField0_;
+  public static final int VALUES_FIELD_NUMBER = 1;
+  private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> values_;
   /**
-   * <code>repeated .beacon.Data data = 1;</code>
+   * <code>repeated .beacon.DataNode values = 1;</code>
    */
-  public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.Data> getDataList() {
-    return data_;
+  public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> getValuesList() {
+    return values_;
   }
   /**
-   * <code>repeated .beacon.Data data = 1;</code>
+   * <code>repeated .beacon.DataNode values = 1;</code>
    */
-  public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder> 
-      getDataOrBuilderList() {
-    return data_;
+  public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
+      getValuesOrBuilderList() {
+    return values_;
   }
   /**
-   * <code>repeated .beacon.Data data = 1;</code>
+   * <code>repeated .beacon.DataNode values = 1;</code>
    */
-  public int getDataCount() {
-    return data_.size();
+  public int getValuesCount() {
+    return values_.size();
   }
   /**
-   * <code>repeated .beacon.Data data = 1;</code>
+   * <code>repeated .beacon.DataNode values = 1;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.Data getData(int index) {
-    return data_.get(index);
+  public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getValues(int index) {
+    return values_.get(index);
   }
   /**
-   * <code>repeated .beacon.Data data = 1;</code>
+   * <code>repeated .beacon.DataNode values = 1;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder getDataOrBuilder(
+  public org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getValuesOrBuilder(
       int index) {
-    return data_.get(index);
+    return values_.get(index);
+  }
+
+  public static final int HISPEEDROUTINGTAG_FIELD_NUMBER = 2;
+  private int hiSpeedRoutingTag_;
+  /**
+   * <pre>
+   * sperimentale per indirizzare rapidamente il routing nei grossi volumi
+   * </pre>
+   *
+   * <code>int32 hiSpeedRoutingTag = 2;</code>
+   */
+  public int getHiSpeedRoutingTag() {
+    return hiSpeedRoutingTag_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -136,8 +155,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    for (int i = 0; i < data_.size(); i++) {
-      output.writeMessage(1, data_.get(i));
+    for (int i = 0; i < values_.size(); i++) {
+      output.writeMessage(1, values_.get(i));
+    }
+    if (hiSpeedRoutingTag_ != 0) {
+      output.writeInt32(2, hiSpeedRoutingTag_);
     }
     unknownFields.writeTo(output);
   }
@@ -148,9 +170,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    for (int i = 0; i < data_.size(); i++) {
+    for (int i = 0; i < values_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, data_.get(i));
+        .computeMessageSize(1, values_.get(i));
+    }
+    if (hiSpeedRoutingTag_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, hiSpeedRoutingTag_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -167,8 +193,10 @@ private static final long serialVersionUID = 0L;
     }
     org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData other = (org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData) obj;
 
-    if (!getDataList()
-        .equals(other.getDataList())) return false;
+    if (!getValuesList()
+        .equals(other.getValuesList())) return false;
+    if (getHiSpeedRoutingTag()
+        != other.getHiSpeedRoutingTag()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -180,10 +208,12 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (getDataCount() > 0) {
-      hash = (37 * hash) + DATA_FIELD_NUMBER;
-      hash = (53 * hash) + getDataList().hashCode();
+    if (getValuesCount() > 0) {
+      hash = (37 * hash) + VALUES_FIELD_NUMBER;
+      hash = (53 * hash) + getValuesList().hashCode();
     }
+    hash = (37 * hash) + HISPEEDROUTINGTAG_FIELD_NUMBER;
+    hash = (53 * hash) + getHiSpeedRoutingTag();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -312,18 +342,20 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getDataFieldBuilder();
+        getValuesFieldBuilder();
       }
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (dataBuilder_ == null) {
-        data_ = java.util.Collections.emptyList();
+      if (valuesBuilder_ == null) {
+        values_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
       } else {
-        dataBuilder_.clear();
+        valuesBuilder_.clear();
       }
+      hiSpeedRoutingTag_ = 0;
+
       return this;
     }
 
@@ -351,15 +383,18 @@ private static final long serialVersionUID = 0L;
     public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData result = new org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData(this);
       int from_bitField0_ = bitField0_;
-      if (dataBuilder_ == null) {
+      int to_bitField0_ = 0;
+      if (valuesBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
-          data_ = java.util.Collections.unmodifiableList(data_);
+          values_ = java.util.Collections.unmodifiableList(values_);
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.data_ = data_;
+        result.values_ = values_;
       } else {
-        result.data_ = dataBuilder_.build();
+        result.values_ = valuesBuilder_.build();
       }
+      result.hiSpeedRoutingTag_ = hiSpeedRoutingTag_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -408,31 +443,34 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData other) {
       if (other == org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.getDefaultInstance()) return this;
-      if (dataBuilder_ == null) {
-        if (!other.data_.isEmpty()) {
-          if (data_.isEmpty()) {
-            data_ = other.data_;
+      if (valuesBuilder_ == null) {
+        if (!other.values_.isEmpty()) {
+          if (values_.isEmpty()) {
+            values_ = other.values_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureDataIsMutable();
-            data_.addAll(other.data_);
+            ensureValuesIsMutable();
+            values_.addAll(other.values_);
           }
           onChanged();
         }
       } else {
-        if (!other.data_.isEmpty()) {
-          if (dataBuilder_.isEmpty()) {
-            dataBuilder_.dispose();
-            dataBuilder_ = null;
-            data_ = other.data_;
+        if (!other.values_.isEmpty()) {
+          if (valuesBuilder_.isEmpty()) {
+            valuesBuilder_.dispose();
+            valuesBuilder_ = null;
+            values_ = other.values_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            dataBuilder_ = 
+            valuesBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getDataFieldBuilder() : null;
+                 getValuesFieldBuilder() : null;
           } else {
-            dataBuilder_.addAllMessages(other.data_);
+            valuesBuilder_.addAllMessages(other.values_);
           }
         }
+      }
+      if (other.getHiSpeedRoutingTag() != 0) {
+        setHiSpeedRoutingTag(other.getHiSpeedRoutingTag());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -464,244 +502,282 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.Data> data_ =
+    private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> values_ =
       java.util.Collections.emptyList();
-    private void ensureDataIsMutable() {
+    private void ensureValuesIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        data_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.Data>(data_);
+        values_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode>(values_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.Data, org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder> dataBuilder_;
+        org.ar4k.agent.tunnels.http.grpc.beacon.DataNode, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> valuesBuilder_;
 
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.Data> getDataList() {
-      if (dataBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(data_);
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> getValuesList() {
+      if (valuesBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(values_);
       } else {
-        return dataBuilder_.getMessageList();
+        return valuesBuilder_.getMessageList();
       }
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public int getDataCount() {
-      if (dataBuilder_ == null) {
-        return data_.size();
+    public int getValuesCount() {
+      if (valuesBuilder_ == null) {
+        return values_.size();
       } else {
-        return dataBuilder_.getCount();
+        return valuesBuilder_.getCount();
       }
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Data getData(int index) {
-      if (dataBuilder_ == null) {
-        return data_.get(index);
+    public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getValues(int index) {
+      if (valuesBuilder_ == null) {
+        return values_.get(index);
       } else {
-        return dataBuilder_.getMessage(index);
+        return valuesBuilder_.getMessage(index);
       }
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder setData(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.Data value) {
-      if (dataBuilder_ == null) {
+    public Builder setValues(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode value) {
+      if (valuesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureDataIsMutable();
-        data_.set(index, value);
+        ensureValuesIsMutable();
+        values_.set(index, value);
         onChanged();
       } else {
-        dataBuilder_.setMessage(index, value);
+        valuesBuilder_.setMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder setData(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder builderForValue) {
-      if (dataBuilder_ == null) {
-        ensureDataIsMutable();
-        data_.set(index, builderForValue.build());
+    public Builder setValues(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder builderForValue) {
+      if (valuesBuilder_ == null) {
+        ensureValuesIsMutable();
+        values_.set(index, builderForValue.build());
         onChanged();
       } else {
-        dataBuilder_.setMessage(index, builderForValue.build());
+        valuesBuilder_.setMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder addData(org.ar4k.agent.tunnels.http.grpc.beacon.Data value) {
-      if (dataBuilder_ == null) {
+    public Builder addValues(org.ar4k.agent.tunnels.http.grpc.beacon.DataNode value) {
+      if (valuesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureDataIsMutable();
-        data_.add(value);
+        ensureValuesIsMutable();
+        values_.add(value);
         onChanged();
       } else {
-        dataBuilder_.addMessage(value);
+        valuesBuilder_.addMessage(value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder addData(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.Data value) {
-      if (dataBuilder_ == null) {
+    public Builder addValues(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode value) {
+      if (valuesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureDataIsMutable();
-        data_.add(index, value);
+        ensureValuesIsMutable();
+        values_.add(index, value);
         onChanged();
       } else {
-        dataBuilder_.addMessage(index, value);
+        valuesBuilder_.addMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder addData(
-        org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder builderForValue) {
-      if (dataBuilder_ == null) {
-        ensureDataIsMutable();
-        data_.add(builderForValue.build());
+    public Builder addValues(
+        org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder builderForValue) {
+      if (valuesBuilder_ == null) {
+        ensureValuesIsMutable();
+        values_.add(builderForValue.build());
         onChanged();
       } else {
-        dataBuilder_.addMessage(builderForValue.build());
+        valuesBuilder_.addMessage(builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder addData(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder builderForValue) {
-      if (dataBuilder_ == null) {
-        ensureDataIsMutable();
-        data_.add(index, builderForValue.build());
+    public Builder addValues(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder builderForValue) {
+      if (valuesBuilder_ == null) {
+        ensureValuesIsMutable();
+        values_.add(index, builderForValue.build());
         onChanged();
       } else {
-        dataBuilder_.addMessage(index, builderForValue.build());
+        valuesBuilder_.addMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder addAllData(
-        java.lang.Iterable<? extends org.ar4k.agent.tunnels.http.grpc.beacon.Data> values) {
-      if (dataBuilder_ == null) {
-        ensureDataIsMutable();
+    public Builder addAllValues(
+        java.lang.Iterable<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> values) {
+      if (valuesBuilder_ == null) {
+        ensureValuesIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, data_);
+            values, values_);
         onChanged();
       } else {
-        dataBuilder_.addAllMessages(values);
+        valuesBuilder_.addAllMessages(values);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder clearData() {
-      if (dataBuilder_ == null) {
-        data_ = java.util.Collections.emptyList();
+    public Builder clearValues() {
+      if (valuesBuilder_ == null) {
+        values_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
       } else {
-        dataBuilder_.clear();
+        valuesBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public Builder removeData(int index) {
-      if (dataBuilder_ == null) {
-        ensureDataIsMutable();
-        data_.remove(index);
+    public Builder removeValues(int index) {
+      if (valuesBuilder_ == null) {
+        ensureValuesIsMutable();
+        values_.remove(index);
         onChanged();
       } else {
-        dataBuilder_.remove(index);
+        valuesBuilder_.remove(index);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder getDataBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder getValuesBuilder(
         int index) {
-      return getDataFieldBuilder().getBuilder(index);
+      return getValuesFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder getDataOrBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getValuesOrBuilder(
         int index) {
-      if (dataBuilder_ == null) {
-        return data_.get(index);  } else {
-        return dataBuilder_.getMessageOrBuilder(index);
+      if (valuesBuilder_ == null) {
+        return values_.get(index);  } else {
+        return valuesBuilder_.getMessageOrBuilder(index);
       }
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder> 
-         getDataOrBuilderList() {
-      if (dataBuilder_ != null) {
-        return dataBuilder_.getMessageOrBuilderList();
+    public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
+         getValuesOrBuilderList() {
+      if (valuesBuilder_ != null) {
+        return valuesBuilder_.getMessageOrBuilderList();
       } else {
-        return java.util.Collections.unmodifiableList(data_);
+        return java.util.Collections.unmodifiableList(values_);
       }
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder addDataBuilder() {
-      return getDataFieldBuilder().addBuilder(
-          org.ar4k.agent.tunnels.http.grpc.beacon.Data.getDefaultInstance());
+    public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder addValuesBuilder() {
+      return getValuesFieldBuilder().addBuilder(
+          org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.getDefaultInstance());
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder addDataBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder addValuesBuilder(
         int index) {
-      return getDataFieldBuilder().addBuilder(
-          index, org.ar4k.agent.tunnels.http.grpc.beacon.Data.getDefaultInstance());
+      return getValuesFieldBuilder().addBuilder(
+          index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.getDefaultInstance());
     }
     /**
-     * <code>repeated .beacon.Data data = 1;</code>
+     * <code>repeated .beacon.DataNode values = 1;</code>
      */
-    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder> 
-         getDataBuilderList() {
-      return getDataFieldBuilder().getBuilderList();
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder> 
+         getValuesBuilderList() {
+      return getValuesFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.Data, org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder> 
-        getDataFieldBuilder() {
-      if (dataBuilder_ == null) {
-        dataBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            org.ar4k.agent.tunnels.http.grpc.beacon.Data, org.ar4k.agent.tunnels.http.grpc.beacon.Data.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataOrBuilder>(
-                data_,
+        org.ar4k.agent.tunnels.http.grpc.beacon.DataNode, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
+        getValuesFieldBuilder() {
+      if (valuesBuilder_ == null) {
+        valuesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.DataNode, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder>(
+                values_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
                 isClean());
-        data_ = null;
+        values_ = null;
       }
-      return dataBuilder_;
+      return valuesBuilder_;
+    }
+
+    private int hiSpeedRoutingTag_ ;
+    /**
+     * <pre>
+     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
+     * </pre>
+     *
+     * <code>int32 hiSpeedRoutingTag = 2;</code>
+     */
+    public int getHiSpeedRoutingTag() {
+      return hiSpeedRoutingTag_;
+    }
+    /**
+     * <pre>
+     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
+     * </pre>
+     *
+     * <code>int32 hiSpeedRoutingTag = 2;</code>
+     */
+    public Builder setHiSpeedRoutingTag(int value) {
+      
+      hiSpeedRoutingTag_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
+     * </pre>
+     *
+     * <code>int32 hiSpeedRoutingTag = 2;</code>
+     */
+    public Builder clearHiSpeedRoutingTag() {
+      
+      hiSpeedRoutingTag_ = 0;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

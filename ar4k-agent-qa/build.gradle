@@ -17,7 +17,7 @@ dependencies {
   //compile project(':kettle')
   //compile project(':onion')
   //compile project(':paho')
-  //compile project(':serial-comm')
+  compile project(':ar4k-serial-comm')
   //compile project(':opcua')
   //compile project(':zeromq')
   //compile project(':kafka')
