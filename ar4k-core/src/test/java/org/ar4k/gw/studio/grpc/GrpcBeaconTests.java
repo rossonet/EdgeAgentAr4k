@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
@@ -83,8 +84,15 @@ public class GrpcBeaconTests {
 
   @Before
   public void setUp() throws Exception {
+    System.out.println("Waiting anima");
+    while (!anima.getState().equals(AnimaStates.STAMINAL)) {
+      System.out.println("waiting anima, actual state: " + anima.getState());
+      Thread.sleep(1500L);
+    }
+    Thread.sleep(1500L);
+    System.out.println("Beacon server starting");
     server = new BeaconServer(anima, port, 33666, "255.255.255.255", true,
-        "AR4K-BEACON-" + UUID.randomUUID().toString());
+        "AR4K-BEACON-" + UUID.randomUUID().toString(), null, null, null, null);
     server.start();
     System.out.println("Beacon server started");
     Thread.sleep(3000L);
@@ -126,7 +134,7 @@ public class GrpcBeaconTests {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
     assertEquals("READY", ls);
@@ -142,7 +150,7 @@ public class GrpcBeaconTests {
   public void testRegistration() {
     try {
       Thread.sleep(2000L);
-      client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null);
+      client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
       String ls = client.getStateConnection().name();
       System.out.println("LAST STATE: " + ls);
       assertEquals("READY", ls);
@@ -156,7 +164,7 @@ public class GrpcBeaconTests {
 
   @Test
   public void checkRemoteList() throws InterruptedException, IOException, ParseException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -172,7 +180,8 @@ public class GrpcBeaconTests {
 
   @Test
   public void checkDiscoveryRegistration() throws InterruptedException, IOException, ParseException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", 0, 33666, "AR4K", UUID.randomUUID().toString());
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", 0, 33666, "AR4K", UUID.randomUUID().toString(), null,
+        null, null);
     Thread.sleep(12000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);

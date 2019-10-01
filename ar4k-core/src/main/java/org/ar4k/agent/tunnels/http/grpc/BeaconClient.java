@@ -1,5 +1,7 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -17,9 +19,12 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLException;
+
 import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -44,6 +49,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.springframework.shell.CompletionContext;
@@ -56,6 +62,8 @@ import com.google.gson.GsonBuilder;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 
 public class BeaconClient implements Runnable {
 
@@ -89,21 +97,68 @@ public class BeaconClient implements Runnable {
   private String reservedUniqueName = null;
   private StatusValue registerStatus = StatusValue.BAD;
   private int pollingFrequency = 1000;
+  private String certChainFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + "-ca.pem";
+  private String aliasBeaconClientInKeystore = "beacon-client";
+  private String aliasBeaconClientRequestCertInKeystore = "beacon-client-crt-request";
 
   public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
-      String discoveryFilter, String uniqueName) {
+      String discoveryFilter, String uniqueName, String certChainFile, String aliasBeaconClientInKeystore,
+      String aliasBeaconClientRequestCertInKeystore) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
     this.anima = anima;
+    if (aliasBeaconClientInKeystore != null) {
+      this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
+    }
+    if (aliasBeaconClientRequestCertInKeystore != null) {
+      this.aliasBeaconClientRequestCertInKeystore = aliasBeaconClientRequestCertInKeystore;
+    }
+    if (certChainFile != null)
+      this.certChainFile = certChainFile;
     if (uniqueName != null)
       this.reservedUniqueName = uniqueName;
     else
       this.reservedUniqueName = UUID.randomUUID().toString();
     if (port != 0) {
-      runConnection(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
+      try {
+        if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+          logger.info("Certificate for Beacon server is present in keystore");
+        } else {
+          generateCertificate();
+        }
+        generateCaFile();
+        runConnection(NettyChannelBuilder.forAddress(host, port)
+            .sslContext(GrpcSslContexts.forClient().trustManager(new File(this.certChainFile)).build()));
+      } catch (SSLException e) {
+        logger.logException(e);
+      }
     }
     runInstance();
+  }
+
+  private void generateCertificate() {
+    logger.info("Create certificate for beacon client");
+    anima.getMyIdentityKeystore().create(aliasBeaconClientInKeystore, ConfigHelper.organization, ConfigHelper.unit,
+        ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
+        ConfigHelper.ip, aliasBeaconClientRequestCertInKeystore);
+    PKCS10CertificationRequest csr = anima.getMyIdentityKeystore()
+        .getPKCS10CertificationRequest(aliasBeaconClientRequestCertInKeystore);
+    anima.getMyIdentityKeystore().signCertificateBase64(csr, aliasBeaconClientInKeystore, 400,
+        anima.getMyAliasCertInKeystore());
+  }
+
+  private void generateCaFile() {
+    try {
+      FileWriter writer = new FileWriter(new File(certChainFile));
+      String pemTxt = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
+      writer.write("-----BEGIN CERTIFICATE-----\n");
+      writer.write(pemTxt);
+      writer.write("\n-----END CERTIFICATE-----\n");
+      writer.close();
+    } catch (IOException e) {
+      logger.logException(e);
+    }
   }
 
   public void runConnection(ManagedChannelBuilder<?> channelBuilder) {
@@ -261,7 +316,10 @@ public class BeaconClient implements Runnable {
           int portBeacon = Integer.valueOf(message.split(":")[1]);
           logger
               .info("-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
-          runConnection(ManagedChannelBuilder.forAddress(hostBeacon, portBeacon).usePlaintext());
+          // runConnection(ManagedChannelBuilder.forAddress(hostBeacon,
+          // portBeacon).usePlaintext());
+          runConnection(NettyChannelBuilder.forAddress(hostBeacon, portBeacon)
+              .sslContext(GrpcSslContexts.forClient().trustManager(new File(certChainFile)).build()));
           if (!registerStatus.equals(StatusValue.BAD)) {
             socketDiscovery.close();
             socketDiscovery = null;

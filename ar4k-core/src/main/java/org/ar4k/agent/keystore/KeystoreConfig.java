@@ -87,19 +87,19 @@ public class KeystoreConfig implements ConfigSeed {
       }
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException e) {
-      throw new Ar4kException("problem with keystore file or password", e.getCause());
+      throw new Ar4kException("problem with keystore file or password", e);
     }
     return verifica;
   }
 
   public boolean create(String commonName, String organization, String unit, String locality, String state,
-      String country, String uri, String dns, String ip) {
+      String country, String uri, String dns, String ip, String alias) {
     boolean verifica = false;
     try {
       verifica = KeystoreLoader.create(commonName, organization, unit, locality, state, country, uri, dns, ip,
-          filePath(), keyStoreAlias, keystorePassword);
+          filePath(), alias, keystorePassword);
     } catch (Exception e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return verifica;
   }
@@ -110,7 +110,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getPrivateKey(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -121,7 +121,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getPrivateKeyBase64(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -132,7 +132,19 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getClientCertificate(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      logger.logException(e);
+      throw new Ar4kException("problem with keystore", e);
+    }
+    return ritorno;
+  }
+
+  public String getCaPem(String alias) {
+    String ritorno = null;
+    try {
+      ritorno = KeystoreLoader.getCertCaAsPem(filePath(), alias, keystorePassword);
+    } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
+        | IOException e) {
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -143,7 +155,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getClientCertificateBase64(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -154,7 +166,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getPKCS10CertificationRequest(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException | OperatorCreationException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -165,7 +177,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.getPKCS10CertificationRequestBase64(filePath(), alias, keystorePassword);
     } catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
         | IOException | OperatorCreationException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -189,7 +201,7 @@ public class KeystoreConfig implements ConfigSeed {
       ritorno = KeystoreLoader.createSelfSignedCert(commonName, organization, unit, locality, state, country, uri, dns,
           ip, filePath(), alias, keystorePassword);
     } catch (Exception e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -197,23 +209,18 @@ public class KeystoreConfig implements ConfigSeed {
   public X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
       String alias) {
     X509Certificate ritorno = null;
-    try {
-      ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
-    } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
-        | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | CMSException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
-    }
+    ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
     return ritorno;
   }
-
+  
   public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity, String alias) {
     String ritorno = null;
     try {
-      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), targetAlias,
-          keystorePassword);
+      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), alias, keystorePassword);
     } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
         | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | CMSException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      logger.logException(e);
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -225,7 +232,7 @@ public class KeystoreConfig implements ConfigSeed {
     } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
         | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | ClassNotFoundException
         | CMSException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -248,7 +255,7 @@ public class KeystoreConfig implements ConfigSeed {
         logger.logException(e1);
       }
       e.printStackTrace();
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -258,7 +265,8 @@ public class KeystoreConfig implements ConfigSeed {
     try {
       ritorno = KeystoreLoader.listCertificate(filePath(), keystorePassword);
     } catch (NoSuchAlgorithmException | CertificateException | KeyStoreException | IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      logger.logException(e);
+      throw new Ar4kException("problem with keystore", e);
     }
     return ritorno;
   }
@@ -268,7 +276,7 @@ public class KeystoreConfig implements ConfigSeed {
     try {
       risposta = Base64.getEncoder().encodeToString(Files.readAllBytes(Paths.get(filePath())));
     } catch (IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
     return risposta;
   }
@@ -278,7 +286,7 @@ public class KeystoreConfig implements ConfigSeed {
     try {
       FileUtils.writeByteArrayToFile(new File(filePath()), data);
     } catch (IOException e) {
-      throw new Ar4kException("problem with keystore", e.getCause());
+      throw new Ar4kException("problem with keystore", e);
     }
   }
 

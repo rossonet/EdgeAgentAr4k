@@ -333,13 +333,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     KeystoreConfig ks = new KeystoreConfig();
     boolean foundFile = false;
     boolean foundWeb = false;
+    ks.keyStoreAlias = keystoreCaAlias;
+    ks.keystorePassword = keystorePassword;
+    ks.filePathPre = fileKeystore.replaceFirst("^~", System.getProperty("user.home"));
     if (fileKeystore != null && !fileKeystore.isEmpty()) {
-      ks.filePathPre = fileKeystore;
       if (new File(ks.filePathPre).exists()) {
         foundFile = true;
         logger.info("use keystore " + ks.toString());
       } else {
-        logger.info("keystore file not found, using parameters " + ks.toString());
+        logger.info("keystore file name not found, using parameters " + ks.toString());
       }
     } else {
       logger.info("value of fileKeystore is null, use: " + ks.toString());
@@ -369,21 +371,19 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (keystoreCaAlias != null && !keystoreCaAlias.isEmpty()) {
       ks.keyStoreAlias = keystoreCaAlias;
     }
-    if (!new File(fileKeystore).exists()) {
+    if (!new File(fileKeystore.replaceFirst("^~", System.getProperty("user.home"))).exists()) {
       logger.warn("new keystore: " + ks.toString());
-      ks.filePathPre = fileKeystore;
-      ks.keyStoreAlias = keystoreCaAlias;
-      ks.keystorePassword = keystorePassword;
-      ks.create(agentUniqueName, ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
-          ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip);
+      ks.createSelfSignedCert(agentUniqueName, ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
+          ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,
+          ks.keyStoreAlias);
       logger.debug("keystore created");
     }
     addKeyStores(ks);
     setMyIdentityKeystore(ks);
     setMyAliasCertInKeystore(ks.keyStoreAlias);
     logger.info("Certificate for anima created: "
-        + getMyIdentityKeystore().getClientCertificate(getMyAliasCertInKeystore()).getSubjectX500Principal().toString()
-        + " - alias " + getMyAliasCertInKeystore());
+        + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal().toString() + " - alias "
+        + ks.keyStoreAlias);
   }
 
   @PostConstruct
@@ -487,7 +487,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
       beaconClient = new BeaconClient(this, rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort,
-          discoveryFilter, getAgentUniqueName());
+          discoveryFilter, getAgentUniqueName(), null, null, null);
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
@@ -544,7 +544,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.isEmpty()) {
         try {
           logger.info("try fileConfig");
-          targetConfig = loadConfigFromFile(fileConfig);
+          targetConfig = loadConfigFromFile(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
         } catch (Exception e) {
           logger.logException(e);
         }

@@ -206,12 +206,12 @@ public class KeystoreShellInterface extends AbstractShellHelper {
   public String signCertificateBase64(@ShellOption(help = "the csr in base64 format") String base64Csr,
       @ShellOption(help = "the alias of the target key") String targetAlias,
       @ShellOption(help = "the validity of the certificate in day", defaultValue = "365") String validity,
-      @ShellOption(help = "label assigned to the keystore with th CA key", valueProvider = KeystoreValuesProvider.class) String keystoreLabel) {
-    // ,@ShellOption(help = "the alias of the CA key") String caAlias) {
+      @ShellOption(help = "label assigned to the keystore with th CA key", valueProvider = KeystoreValuesProvider.class) String keystoreLabel,
+      @ShellOption(help = "the alias of the CA key") String caAlias) {
     String out = null;
     for (KeystoreConfig t : anima.getKeyStores()) {
       if (t.label.equals(keystoreLabel)) {
-        out = t.signCertificateBase64(base64Csr, targetAlias, Integer.valueOf(validity));// , caAlias);
+        out = t.signCertificateBase64(base64Csr, targetAlias, Integer.valueOf(validity), caAlias);
       }
     }
     return out;

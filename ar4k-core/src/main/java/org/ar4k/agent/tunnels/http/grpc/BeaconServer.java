@@ -1,5 +1,7 @@
 package org.ar4k.agent.tunnels.http.grpc;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -39,6 +41,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -67,34 +70,98 @@ public class BeaconServer implements Runnable {
   private int discoveryPort = 0;
   private String broadcastAddress = "255.255.255.255";
   private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
+  private String certChainFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
+  private String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
+  private String aliasBeaconServerInKeystore = "beacon-server";
+  private String aliasBeaconServerRequestCertInKeystore = "beacon-server-crt-request";
 
-  private final static String aliasBeaconServerInKeystore = "beacon-server";
-
-  public BeaconServer(Anima anima, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
-      String stringDiscovery) throws IOException {
-    this(ServerBuilder.forPort(port), port);
-    this.anima = anima;
-    this.acceptAllCerts = acceptCerts;
-    this.discoveryPort = discoveryPort;
-    this.broadcastAddress = broadcastAddress;
-    this.stringDiscovery = stringDiscovery;
-    if (anima.getMyIdentityKeystore().listCertificate().contains(aliasBeaconServerInKeystore)) {
-      logger.info("Certificate for Beacon server is present in keystore");
-    } else {
-      logger.info("Create certificate for beacon server");
-      anima.getMyIdentityKeystore().createSelfSignedCert(
-          aliasBeaconServerInKeystore + "-" + UUID.randomUUID().toString(), ConfigHelper.organization,
-          ConfigHelper.unit, ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
-          ConfigHelper.dns, ConfigHelper.ip, aliasBeaconServerInKeystore);
-      logger.info("Certificate for beacon server: " + anima.getMyIdentityKeystore()
-          .getClientCertificate(aliasBeaconServerInKeystore).getSubjectX500Principal().toString() + " - alias "
-          + aliasBeaconServerInKeystore);
-    }
+  public boolean isAcceptAllCerts() {
+    return acceptAllCerts;
   }
 
-  private BeaconServer(ServerBuilder<?> serverBuilder, int port) {
+  public String getCertChainFile() {
+    return certChainFile;
+  }
+
+  public String getPrivateKeyFile() {
+    return privateKeyFile;
+  }
+
+  public BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
+      String stringDiscovery, String certChain, String privateKey, String aliasBeaconServer,
+      String aliasBeaconServerRequestCertInKeystore) {
+    this.anima = animaTarget;
+    if (aliasBeaconServer != null)
+      this.aliasBeaconServerInKeystore = aliasBeaconServer;
+    if (aliasBeaconServerRequestCertInKeystore != null)
+      this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
     this.port = port;
+    if (certChain != null)
+      this.certChainFile = certChain;
+    if (privateKey != null)
+      this.privateKeyFile = privateKey;
+    this.acceptAllCerts = acceptCerts;
+    this.discoveryPort = discoveryPort;
+    if (broadcastAddress != null)
+      this.broadcastAddress = broadcastAddress;
+    if (stringDiscovery != null)
+      this.stringDiscovery = stringDiscovery;
+    if (animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
+      logger.info("Certificate for Beacon server is present in keystore");
+    } else {
+      generateCertificate();
+    }
+    writePemCa(this.aliasBeaconServerInKeystore, animaTarget, this.certChainFile);
+    // writePrivateKey(this.aliasBeaconServerRequestCertInKeystore, animaTarget,
+    // this.privateKeyFile);
+    writePrivateKey(anima.getMyAliasCertInKeystore(), animaTarget, this.privateKeyFile);
+    logger.info("Starting beacon server");
+    ServerBuilder<?> serverBuilder = ServerBuilder.forPort(port).useTransportSecurity(new File(this.certChainFile),
+        new File(this.privateKeyFile));
     server = serverBuilder.addService(new RpcService()).addService(new DataService()).build();
+  }
+
+  private void generateCertificate() {
+    logger.info("Create certificate for beacon server with alias " + aliasBeaconServerRequestCertInKeystore);
+    anima.getMyIdentityKeystore().create(aliasBeaconServerInKeystore, ConfigHelper.organization, ConfigHelper.unit,
+        ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
+        ConfigHelper.ip, aliasBeaconServerRequestCertInKeystore);
+    PKCS10CertificationRequest csr = anima.getMyIdentityKeystore()
+        .getPKCS10CertificationRequest(aliasBeaconServerRequestCertInKeystore);
+    anima.getMyIdentityKeystore().signCertificateBase64(csr, aliasBeaconServerInKeystore, 400,
+        anima.getMyAliasCertInKeystore());
+  }
+
+  private static void writePrivateKey(String aliasBeaconServer, Anima animaTarget, String privateKey) {
+    String pk = animaTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
+    FileWriter writer;
+    try {
+      writer = new FileWriter(new File(privateKey));
+      writer.write("-----BEGIN PRIVATE KEY-----\n");
+      writer.write(pk);
+      writer.write("\n-----END PRIVATE KEY-----\n");
+      writer.close();
+    } catch (IOException e) {
+      logger.logException(e);
+    }
+
+  }
+
+  private static void writePemCa(String aliasBeaconServer, Anima animaTarget, String certChain) {
+    try {
+      FileWriter writer = new FileWriter(new File(certChain));
+      String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
+      String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
+      writer.write("-----BEGIN CERTIFICATE-----\n");
+      writer.write(pemTxtBase);
+      writer.write("\n-----END CERTIFICATE-----\n");
+      writer.write("-----BEGIN CERTIFICATE-----\n");
+      writer.write(pemTxtCa);
+      writer.write("\n-----END CERTIFICATE-----\n");
+      writer.close();
+    } catch (IOException e) {
+      logger.logException(e);
+    }
   }
 
   public void start() throws IOException {

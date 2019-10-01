@@ -32,6 +32,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -48,6 +49,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -103,43 +105,30 @@ public class KeystoreLoader {
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
     File serverKeyStore = new File(keyStorePath);
     if (!serverKeyStore.exists()) {
+      logger.debug("create keystore " + keyStorePath);
       keyStore.load(null, passwordChar);
-      KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
-      SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
-          .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
-          .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
-      // Get as many hostnames and IP addresses as we can listed in the certificate.
-      for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
-        if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
-          builder.addIpAddress(hostname);
-        } else {
-          builder.addDnsName(hostname);
-        }
-      }
-      X509Certificate certificate = builder.build();
-      keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
-      keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
     } else {
+      logger.debug("load keystore " + keyStorePath);
       keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
     }
-    Key serverPrivateKey = keyStore.getKey(alias, passwordChar);
-    if (serverPrivateKey instanceof PrivateKey) {
-      // X509Certificate clientCertificate = (X509Certificate)
-      // keyStore.getCertificate(alias);
-      // PublicKey serverPublicKey = clientCertificate.getPublicKey();
-      /*
-       * logger.debug("\n\n-----BEGIN CERTIFICATE-----\n" +
-       * Base64.getEncoder().encodeToString(clientCertificate.getEncoded()) +
-       * "\n-----END CERTIFICATE-----\n\n");
-       * logger.debug("\n\n-----BEGIN RSA PRIVATE KEY-----\n" +
-       * Base64.getEncoder().encodeToString(serverPrivateKey.getEncoded()) +
-       * "\n-----END RSA PRIVATE KEY-----\n\n");
-       */
-      // clientKeyPair = new KeyPair(serverPublicKey, (PrivateKey) serverPrivateKey);
-      // privateKey = (PrivateKey) serverPrivateKey;
+    KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
+    SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
+        .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
+        .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
+    // Get as many hostnames and IP addresses as we can listed in the certificate.
+    for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
+      if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
+        builder.addIpAddress(hostname);
+      } else {
+        builder.addDnsName(hostname);
+      }
     }
+    X509Certificate certificate = builder.build();
+    keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
+    keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
     serverKeyStore = null;
     return true;
+
   }
 
   public static boolean setCA(String crt, String keyStorePath, String alias, String password) {
@@ -205,12 +194,16 @@ public class KeystoreLoader {
 
   public static boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
       String state, String country, String uri, String dns, String ip, String keyStorePath, String alias,
-      String password) throws Exception {
-    char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    if (serverKeyStore.exists()) {
-      keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+      String password) {
+    try {
+      char[] passwordChar = password.toCharArray();
+      KeyStore keyStore = KeyStore.getInstance("PKCS12");
+      File serverKeyStore = new File(keyStorePath);
+      if (serverKeyStore.exists()) {
+        keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+      } else {
+        keyStore.load(null, passwordChar);
+      }
       KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
       SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
           .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
@@ -226,11 +219,12 @@ public class KeystoreLoader {
       X509Certificate certificate = builder.build();
       keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
-    } else {
-      System.out.println("Keystore " + keyStorePath + " not found");
+      serverKeyStore = null;
+      return true;
+    } catch (Exception a) {
+      logger.logException(a);
+      return false;
     }
-    serverKeyStore = null;
-    return true;
   }
 
   public static boolean createSelfSignedCert() throws Exception {
@@ -375,12 +369,27 @@ public class KeystoreLoader {
     return clientCertificate;
   }
 
+  public static String getCertCaAsPem(String keyStorePath, String alias, String password)
+      throws NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, KeyStoreException,
+      UnrecoverableKeyException {
+    char[] passwordChar = password.toCharArray();
+    KeyStore keyStore = KeyStore.getInstance("PKCS12");
+    File serverKeyStore = new File(keyStorePath);
+    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    Certificate caCert = keyStore.getCertificate(alias);
+    String clientCertificate = null;
+    if (caCert instanceof Certificate) {
+      clientCertificate = Base64.getEncoder().encodeToString(caCert.getEncoded());
+    }
+    serverKeyStore = null;
+    return clientCertificate;
+  }
+
   public static X509Certificate getClientCertificate(String alias) throws NoSuchAlgorithmException,
       CertificateException, FileNotFoundException, IOException, KeyStoreException, UnrecoverableKeyException {
     return KeystoreLoader.getClientCertificate(demoKeystore, alias, demoPassword);
   }
 
-  @SuppressWarnings("deprecation")
   public static PKCS10CertificationRequest getPKCS10CertificationRequest(String keyStorePath, String alias,
       String password) throws UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException,
       FileNotFoundException, KeyStoreException, IOException, OperatorCreationException {
@@ -392,15 +401,11 @@ public class KeystoreLoader {
     keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
     X500Name x500 = (X500Name) new JcaX509CertificateHolder(c).getSubject();
     byte[] encoded = k.getPublic().getEncoded();
-    SubjectPublicKeyInfo subjectPublicKeyInfo = new SubjectPublicKeyInfo(ASN1Sequence.getInstance(encoded));
+    SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(ASN1Sequence.getInstance(encoded));
     PKCS10CertificationRequestBuilder p10Builder = new PKCS10CertificationRequestBuilder(x500, subjectPublicKeyInfo);
     JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
     ContentSigner signer = csBuilder.build(k.getPrivate());
     PKCS10CertificationRequest csr = p10Builder.build(signer);
-    // keyStore.setKeyEntry(alias, getClientKeyPair(keyStorePath, alias,
-    // password).getPrivate(), passwordChar,
-    // new X509Certificate[] { (X509Certificate) keyStore.getCertificate(alias) });
-    // keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
     return csr;
   }
 
@@ -414,7 +419,6 @@ public class KeystoreLoader {
       throws UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException, FileNotFoundException,
       KeyStoreException, OperatorCreationException, IOException {
     PKCS10CertificationRequest csrPreEncode = getPKCS10CertificationRequest(keyStorePath, alias, password);
-    logger.debug("original CSR before Basse64 " + csrPreEncode.getSubject().toString());
     return Base64.getEncoder().encodeToString(csrPreEncode.getEncoded());
   }
 
@@ -444,57 +448,74 @@ public class KeystoreLoader {
   }
 
   public static X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
-      String keyStorePath, String alias, String password)
-      throws IOException, OperatorCreationException, UnrecoverableKeyException, KeyStoreException,
-      NoSuchAlgorithmException, CertificateException, CMSException, NoSuchProviderException {
-    AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
-    AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-    PrivateKey cakey = getPrivateKey(keyStorePath, alias, password);
-    logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + alias + ", " + password + " ->");
-    if (getClientKeyPair(keyStorePath, alias, password) == null
-        || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
-      logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE");
-    } else {
-      logger.info(getClientKeyPair(keyStorePath, alias, password).getPublic().getAlgorithm());
+      String keyStorePath, String alias, String password) {
+    try {
+      AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
+      AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
+      PrivateKey cakey = getPrivateKey(keyStorePath, alias, password);
+      logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + alias + " ->");
+      if (getClientKeyPair(keyStorePath, alias, password) == null
+          || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
+        logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE");
+      } else {
+        logger.info(((X509Certificate) getClientCertificate(keyStorePath, alias, password)).toString());
+      }
+      X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
+          // These are the details of the CA
+          // new X500Name("C=US, L=Vienna, O=Your CA Inc")
+          // new X500Name(getClientCertificate(keyStorePath, alias,
+          // password).getIssuerX500Principal()
+          // .getName(X500Principal.RFC2253)),
+          csr.getSubject(),
+          // This should be a serial number that the CA keeps track of
+          new BigInteger(64, new SecureRandom()),
+          // Certificate validity start
+          Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
+          // Certificate validity end
+          Date.from(LocalDateTime.now().plusDays(validity).toInstant(ZoneOffset.UTC)),
+          // Blanket grant the subject as requested in the CSR
+          // A real CA would want to vet this.
+          csr.getSubject(),
+          // Public key of the certificate authority
+          SubjectPublicKeyInfo.getInstance(
+              ASN1Sequence.getInstance(getClientKeyPair(keyStorePath, alias, password).getPublic().getEncoded())));
+      ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId)
+          .build(PrivateKeyFactory.createKey(cakey.getEncoded()));
+      X509CertificateHolder holder = certificateGenerator.build(sigGen);
+      CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+      X509Certificate certificate = (X509Certificate) certificateFactory
+          .generateCertificate(new ByteArrayInputStream(holder.toASN1Structure().getEncoded()));
+      char[] passwordChar = password.toCharArray();
+      KeyStore keyStore = KeyStore.getInstance("PKCS12");
+      File serverKeyStore = new File(keyStorePath);
+      keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+      StringBuilder kstorePresents = new StringBuilder();
+      Enumeration<String> listAliases = keyStore.aliases();
+      boolean primo = true;
+      while (listAliases.hasMoreElements()) {
+        if (primo == true) {
+          kstorePresents.append(listAliases.nextElement());
+          primo = false;
+        } else {
+          kstorePresents.append(", " + listAliases.nextElement());
+        }
+      }
+      logger
+          .info("saving in keystore alias " + targetAlias + " present in keystore are : " + kstorePresents.toString());
+      keyStore.setCertificateEntry(targetAlias, certificate);
+      keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
+      /*
+       * System.out.println("-----BEGIN PKCS #7 SIGNED DATA-----\n");
+       * System.out.println(Base64.getEncoder().encodeToString(signeddata.getEncoded()
+       * )); System.out.println("\n-----END PKCS #7 SIGNED DATA-----\n");
+       */
+      X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(targetAlias);
+      return clientCertificate;
+    } catch (Ar4kException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
+        | OperatorCreationException | UnrecoverableKeyException a) {
+      logger.logException(a);
+      return null;
     }
-    X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
-        // These are the details of the CA
-        // new X500Name("C=US, L=Vienna, O=Your CA Inc")
-        // new X500Name(getClientCertificate(keyStorePath, alias,
-        // password).getIssuerX500Principal()
-        // .getName(X500Principal.RFC2253)),
-        csr.getSubject(),
-        // This should be a serial number that the CA keeps track of
-        new BigInteger(64, new SecureRandom()),
-        // Certificate validity start
-        Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
-        // Certificate validity end
-        Date.from(LocalDateTime.now().plusDays(validity).toInstant(ZoneOffset.UTC)),
-        // Blanket grant the subject as requested in the CSR
-        // A real CA would want to vet this.
-        csr.getSubject(),
-        // Public key of the certificate authority
-        SubjectPublicKeyInfo.getInstance(
-            ASN1Sequence.getInstance(getClientKeyPair(keyStorePath, alias, password).getPublic().getEncoded())));
-    ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId)
-        .build(PrivateKeyFactory.createKey(cakey.getEncoded()));
-    X509CertificateHolder holder = certificateGenerator.build(sigGen);
-    CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-    X509Certificate certificate = (X509Certificate) certificateFactory
-        .generateCertificate(new ByteArrayInputStream(holder.toASN1Structure().getEncoded()));
-    char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
-    keyStore.setCertificateEntry(targetAlias, certificate);
-    keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
-    /*
-     * System.out.println("-----BEGIN PKCS #7 SIGNED DATA-----\n");
-     * System.out.println(Base64.getEncoder().encodeToString(signeddata.getEncoded()
-     * )); System.out.println("\n-----END PKCS #7 SIGNED DATA-----\n");
-     */
-    X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(targetAlias);
-    return clientCertificate;
   }
 
   public static X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,

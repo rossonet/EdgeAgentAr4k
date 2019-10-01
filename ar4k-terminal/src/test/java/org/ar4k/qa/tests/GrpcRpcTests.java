@@ -97,16 +97,18 @@ public class GrpcRpcTests {
     anima.setAgentUniqueName(UUID.randomUUID().toString().replaceAll("-", ""));
     KeystoreConfig ks = new KeystoreConfig();
     ks.create(anima.getAgentUniqueName(), ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
-        ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip);
+        ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,
+        anima.getMyAliasCertInKeystore());
     anima.setMyIdentityKeystore(ks);
     context = new AnnotationConfigApplicationContext(this.getClass());
     shell = context.getBean(Shell.class);
-    server = new BeaconServer(anima, port, 0, "255.255.255.255", false, "TESTING");
+    server = new BeaconServer(anima, port, 0, "255.255.255.255", false, "TESTING", null, null, null, null);
     server.start();
     rpcConversation = new RpcConversation();
     rpcConversation.setShell(shell);
     Thread.sleep(3000L);
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, "TESTING", generateNewUniqueName());
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, "TESTING", generateNewUniqueName(), null,
+        null, null);
   }
 
   private static String generateNewUniqueName() {
