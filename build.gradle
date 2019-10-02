@@ -18,6 +18,7 @@ buildscript {
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
     classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+    classpath "com.diffplug.gradle:goomph:3.18.1"
     //classpath "io.quarkus:quarkus-gradle-plugin:0.19.1"
     //classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
   }
@@ -29,6 +30,18 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'maven'
 apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: 'com.diffplug.gradle.oomph.ide'
+
+oomphIde {
+  repoEclipseLatest()
+  jdt {}
+  eclipseIni { vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
+  }
+  style {
+    classicTheme()  // oldschool cool
+    niceText()      // with nice fonts and visible whitespace
+  }
+}
 //apply plugin: "io.quarkus"
 //apply plugin: 'com.google.cloud.tools.jib'
 
