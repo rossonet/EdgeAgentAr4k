@@ -49,14 +49,9 @@ public interface RegisterReplyOrBuilder extends
       getCertBytes();
 
   /**
-   * <code>string ca = 4;</code>
+   * <code>bytes ca = 4;</code>
    */
-  java.lang.String getCa();
-  /**
-   * <code>string ca = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getCaBytes();
+  com.google.protobuf.ByteString getCa();
 
   /**
    * <code>.beacon.Status statusRegistration = 5;</code>

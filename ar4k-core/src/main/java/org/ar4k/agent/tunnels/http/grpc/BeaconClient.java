@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ import org.springframework.shell.MethodTarget;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.protobuf.ByteString;
 
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
@@ -100,6 +102,7 @@ public class BeaconClient implements Runnable {
   private String certChainFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + "-ca.pem";
   private String aliasBeaconClientInKeystore = "beacon-client";
   private String aliasBeaconClientRequestCertInKeystore = "beacon-client-crt-request";
+  private ByteString caAfterRegistration = null;
 
   public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
       String discoveryFilter, String uniqueName, String certChainFile, String aliasBeaconClientInKeystore,
@@ -123,12 +126,13 @@ public class BeaconClient implements Runnable {
     if (port != 0) {
       try {
         if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-          logger.info("Certificate for Beacon server is present in keystore");
+          logger.info("Certificate for Beacon client is present in keystore");
         } else {
           generateCertificate();
         }
         generateCaFile();
-        runConnection(NettyChannelBuilder.forAddress(host, port)
+        logger.info("Starting with overrideAuthority " + this.aliasBeaconClientInKeystore);
+        runConnection(NettyChannelBuilder.forAddress(host, port)// .overrideAuthority(this.aliasBeaconClientInKeystore)
             .sslContext(GrpcSslContexts.forClient().trustManager(new File(this.certChainFile)).build()));
       } catch (SSLException e) {
         logger.logException(e);
@@ -151,9 +155,13 @@ public class BeaconClient implements Runnable {
   private void generateCaFile() {
     try {
       FileWriter writer = new FileWriter(new File(certChainFile));
-      String pemTxt = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
+      String pemTxt = anima.getMyIdentityKeystore().getCaPem("beacon-server");
+      String pemTxtCa = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxt);
+      writer.write("\n-----END CERTIFICATE-----\n");
+      writer.write("-----BEGIN CERTIFICATE-----\n");
+      writer.write(pemTxtCa);
       writer.write("\n-----END CERTIFICATE-----\n");
       writer.close();
     } catch (IOException e) {
@@ -183,16 +191,16 @@ public class BeaconClient implements Runnable {
     return Anima.getRegistrationPin();
   }
 
-  private void registerCertificateFromBeacon(String cert, String ca) {
+  private void registerCertificateFromBeacon(String cert, ByteString ca) {
     try {
       anima.getMyIdentityKeystore().setClientKeyPair(
           anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), cert, beaconClientAlias);
       logger.info("Certificate for future access to Beacon server: "
           + anima.getMyIdentityKeystore().getClientCertificate(beaconClientAlias).getSubjectX500Principal().toString()
           + " - alias " + beaconClientAlias);
-      anima.getMyIdentityKeystore().setCa(ca, beaconServerCaAlias);
-      logger.info("Certificate for CA " + anima.getMyIdentityKeystore().getClientCertificate(beaconServerCaAlias)
-          + " - alias " + beaconServerCaAlias);
+      // anima.getMyIdentityKeystore().setCa(byteString, beaconServerCaAlias);
+      logger.info("Certificate for CA " + ca.toString(Charset.defaultCharset()));
+      caAfterRegistration = ca;
     } catch (NoSuchAlgorithmException e) {
       logger.logException(e);
     }
@@ -250,6 +258,7 @@ public class BeaconClient implements Runnable {
       request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
           .setDisplayKey(displayKey).setRequestCsr(csr).setName(uniqueName)
           .setTime(Timestamp.newBuilder().setSeconds(timeRequest)).build();
+      logger.info("try registration, channel status " + channel.getState(true));
       RegisterReply reply = blockingStub.register(request);
       if (reply.getStatusRegistration().getStatus().equals(StatusValue.GOOD)) {
         if (reply.getCa() != null && reply.getCert() != null) {

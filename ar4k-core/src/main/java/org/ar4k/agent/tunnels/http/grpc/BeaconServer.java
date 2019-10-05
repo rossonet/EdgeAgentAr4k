@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -42,6 +43,8 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+
+import com.google.protobuf.ByteString;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -220,15 +223,17 @@ public class BeaconServer implements Runnable {
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
       String uniqueClientNameForBeacon = UUID.randomUUID().toString();
-      String certFromCsr = getCertForRegistration(aliasBeaconServerInKeystore, request.getRequestCsr(),
+      logger.info("Try to sign request: " + request.toString());
+      String certFromCsr = getCertForRegistration(anima.getMyAliasCertInKeystore(), request.getRequestCsr(),
           request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
       logger.info("Certificate for beacon client (signed): "
           + anima.getMyIdentityKeystore().getClientCertificate(uniqueClientNameForBeacon) + " - alias "
           + uniqueClientNameForBeacon);
-      logger.info("Certificate for beacon client (CA): " + anima.getMyIdentityKeystore()
-          .getClientCertificate(aliasBeaconServerInKeystore).getSubjectX500Principal().toString() + " - alias "
-          + aliasBeaconServerInKeystore);
-      RegisterReply reply = RegisterReply.newBuilder().setCa(getBeaconCa()).setCert(certFromCsr)
+      logger.info("Certificate for beacon client (CA): " + getPemCaStr(aliasBeaconServerInKeystore, anima));
+      RegisterReply reply = RegisterReply.newBuilder()
+          .setCa(
+              ByteString.copyFrom(getPemCaStr(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))))
+          .setCert(certFromCsr)
           .setStatusRegistration(
               Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
           .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
@@ -237,8 +242,17 @@ public class BeaconServer implements Runnable {
       responseObserver.onCompleted();
     }
 
-    private String getBeaconCa() {
-      return anima.getMyIdentityKeystore().getClientCertificateBase64(aliasBeaconServerInKeystore);
+    private String getPemCaStr(String aliasBeaconServer, Anima animaTarget) {
+      StringBuilder writer = new StringBuilder();
+      String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
+      String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
+      writer.append("-----BEGIN CERTIFICATE-----\n");
+      writer.append(pemTxtBase);
+      writer.append("\n-----END CERTIFICATE-----\n");
+      writer.append("-----BEGIN CERTIFICATE-----\n");
+      writer.append(pemTxtCa);
+      writer.append("\n-----END CERTIFICATE-----\n");
+      return writer.toString();
     }
 
     private String getCertForRegistration(String idAuth, String requestCsr, String jsonHealth, String consoleKey,

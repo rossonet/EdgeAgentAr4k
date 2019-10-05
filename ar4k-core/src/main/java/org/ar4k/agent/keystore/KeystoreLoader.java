@@ -50,12 +50,24 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.ar4k.agent.exception.Ar4kException;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.ExtensionsGenerator;
+import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.GeneralNamesBuilder;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -403,6 +415,10 @@ public class KeystoreLoader {
     byte[] encoded = k.getPublic().getEncoded();
     SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(ASN1Sequence.getInstance(encoded));
     PKCS10CertificationRequestBuilder p10Builder = new PKCS10CertificationRequestBuilder(x500, subjectPublicKeyInfo);
+    for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
+      p10Builder.addAttribute(Extension.subjectAlternativeName, new GeneralNames(new GeneralName(
+          new X500Name("CN=" + hostname + ",O=" + ConfigHelper.organization + ",OU=" + ConfigHelper.unit))));
+    }
     JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
     ContentSigner signer = csBuilder.build(k.getPrivate());
     PKCS10CertificationRequest csr = p10Builder.build(signer);
@@ -450,15 +466,20 @@ public class KeystoreLoader {
   public static X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
       String keyStorePath, String alias, String password) {
     try {
+      StringBuilder attributes = new StringBuilder();
+      for (Attribute attribute : csr.getAttributes()) {
+        attributes.append(attribute.getAttrValues().toString());
+      }
+      logger.info("signing CSR:\n" + csr.getSubject().toString() + "\n" + attributes.toString() + "\n");
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
       PrivateKey cakey = getPrivateKey(keyStorePath, alias, password);
       logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + alias + " ->");
       if (getClientKeyPair(keyStorePath, alias, password) == null
           || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
-        logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE");
+        logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE" + "\n");
       } else {
-        logger.info(((X509Certificate) getClientCertificate(keyStorePath, alias, password)).toString());
+        logger.info(((X509Certificate) getClientCertificate(keyStorePath, alias, password)).getSubjectDN() + "\n");
       }
       X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
           // These are the details of the CA
@@ -479,6 +500,19 @@ public class KeystoreLoader {
           // Public key of the certificate authority
           SubjectPublicKeyInfo.getInstance(
               ASN1Sequence.getInstance(getClientKeyPair(keyStorePath, alias, password).getPublic().getEncoded())));
+
+      ASN1Encodable[] asn1Encodable = new ASN1Encodable[NetworkHelper.getHostnames("0.0.0.0").size()];
+      int counter = 0;
+      for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
+        if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
+          asn1Encodable[counter] = new GeneralName(GeneralName.iPAddress, hostname);
+        } else {
+          asn1Encodable[counter] = new GeneralName(GeneralName.dNSName, hostname);
+        }
+        counter++;
+      }
+      DERSequence subjectAlternativeNames = new DERSequence(asn1Encodable);
+      certificateGenerator.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
       ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId)
           .build(PrivateKeyFactory.createKey(cakey.getEncoded()));
       X509CertificateHolder holder = certificateGenerator.build(sigGen);
@@ -502,6 +536,9 @@ public class KeystoreLoader {
       }
       logger
           .info("saving in keystore alias " + targetAlias + " present in keystore are : " + kstorePresents.toString());
+      logger.info("CERT\n" + certificate.toString());
+      logger.info("IssuerDN\n" + certificate.getIssuerDN().getName());
+      logger.info("SubjectDN\n" + certificate.getSubjectDN().getName());
       keyStore.setCertificateEntry(targetAlias, certificate);
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       /*

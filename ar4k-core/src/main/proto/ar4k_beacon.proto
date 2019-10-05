@@ -60,7 +60,7 @@ message RegisterReply {
   string registerCode = 1;  // unique code for the registration on the beacon server
   int32 monitoringFrequency = 2;
   string cert = 3; // TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-  string ca = 4;
+  bytes ca = 4;
   Status statusRegistration = 5;
   int64 timestampRegistration = 6;
 }

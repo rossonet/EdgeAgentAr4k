@@ -97,6 +97,7 @@ public class GrpcBeaconTests {
     System.out.println("Beacon server started");
     Thread.sleep(3000L);
     // client = new BeaconClient(rpcConversation, "127.0.0.1", port);
+    // Gestione dei certificati
   }
 
   @After
@@ -134,7 +135,7 @@ public class GrpcBeaconTests {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+    client = new BeaconClient(anima, rpcConversation, "localhost", port, 0, null, null, null, null, null);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
     assertEquals("READY", ls);

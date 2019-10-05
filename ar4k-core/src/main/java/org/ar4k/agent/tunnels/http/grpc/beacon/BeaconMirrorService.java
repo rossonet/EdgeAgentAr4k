@@ -195,7 +195,7 @@ public final class BeaconMirrorService {
       "estamp\022\017\n\007seconds\030\001 \001(\003\022\r\n\005nanos\030\002 \001(\005\"\247" +
       "\001\n\rRegisterReply\022\024\n\014registerCode\030\001 \001(\t\022\033" +
       "\n\023monitoringFrequency\030\002 \001(\005\022\014\n\004cert\030\003 \001(" +
-      "\t\022\n\n\002ca\030\004 \001(\t\022*\n\022statusRegistration\030\005 \001(" +
+      "\t\022\n\n\002ca\030\004 \001(\014\022*\n\022statusRegistration\030\005 \001(" +
       "\0132\016.beacon.Status\022\035\n\025timestampRegistrati" +
       "on\030\006 \001(\003\"-\n\006Status\022#\n\006status\030\001 \001(\0162\023.bea" +
       "con.StatusValue\" \n\005Agent\022\027\n\017agentUniqueN" +

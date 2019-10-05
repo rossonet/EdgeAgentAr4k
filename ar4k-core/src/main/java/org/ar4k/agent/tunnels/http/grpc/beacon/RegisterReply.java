@@ -18,7 +18,7 @@ private static final long serialVersionUID = 0L;
   private RegisterReply() {
     registerCode_ = "";
     cert_ = "";
-    ca_ = "";
+    ca_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -63,9 +63,8 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            ca_ = s;
+            ca_ = input.readBytes();
             break;
           }
           case 42: {
@@ -212,37 +211,12 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int CA_FIELD_NUMBER = 4;
-  private volatile java.lang.Object ca_;
+  private com.google.protobuf.ByteString ca_;
   /**
-   * <code>string ca = 4;</code>
+   * <code>bytes ca = 4;</code>
    */
-  public java.lang.String getCa() {
-    java.lang.Object ref = ca_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      ca_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string ca = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getCaBytes() {
-    java.lang.Object ref = ca_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      ca_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getCa() {
+    return ca_;
   }
 
   public static final int STATUSREGISTRATION_FIELD_NUMBER = 5;
@@ -298,8 +272,8 @@ private static final long serialVersionUID = 0L;
     if (!getCertBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, cert_);
     }
-    if (!getCaBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, ca_);
+    if (!ca_.isEmpty()) {
+      output.writeBytes(4, ca_);
     }
     if (statusRegistration_ != null) {
       output.writeMessage(5, getStatusRegistration());
@@ -326,8 +300,9 @@ private static final long serialVersionUID = 0L;
     if (!getCertBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, cert_);
     }
-    if (!getCaBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, ca_);
+    if (!ca_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(4, ca_);
     }
     if (statusRegistration_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -532,7 +507,7 @@ private static final long serialVersionUID = 0L;
 
       cert_ = "";
 
-      ca_ = "";
+      ca_ = com.google.protobuf.ByteString.EMPTY;
 
       if (statusRegistrationBuilder_ == null) {
         statusRegistration_ = null;
@@ -637,9 +612,8 @@ private static final long serialVersionUID = 0L;
         cert_ = other.cert_;
         onChanged();
       }
-      if (!other.getCa().isEmpty()) {
-        ca_ = other.ca_;
-        onChanged();
+      if (other.getCa() != com.google.protobuf.ByteString.EMPTY) {
+        setCa(other.getCa());
       }
       if (other.hasStatusRegistration()) {
         mergeStatusRegistration(other.getStatusRegistration());
@@ -880,43 +854,17 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object ca_ = "";
+    private com.google.protobuf.ByteString ca_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string ca = 4;</code>
+     * <code>bytes ca = 4;</code>
      */
-    public java.lang.String getCa() {
-      java.lang.Object ref = ca_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ca_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getCa() {
+      return ca_;
     }
     /**
-     * <code>string ca = 4;</code>
+     * <code>bytes ca = 4;</code>
      */
-    public com.google.protobuf.ByteString
-        getCaBytes() {
-      java.lang.Object ref = ca_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ca_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string ca = 4;</code>
-     */
-    public Builder setCa(
-        java.lang.String value) {
+    public Builder setCa(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -926,25 +874,11 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string ca = 4;</code>
+     * <code>bytes ca = 4;</code>
      */
     public Builder clearCa() {
       
       ca_ = getDefaultInstance().getCa();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string ca = 4;</code>
-     */
-    public Builder setCaBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      ca_ = value;
       onChanged();
       return this;
     }
