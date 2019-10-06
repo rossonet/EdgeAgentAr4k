@@ -74,6 +74,8 @@ public class SelfSignedCertificateBuilder {
   private final KeyPair keyPair;
   private final SelfSignedCertificateGenerator generator;
 
+  private boolean isCa = false;
+
   public SelfSignedCertificateBuilder(KeyPair keyPair) {
     this(keyPair, new SelfSignedCertificateGenerator());
   }
@@ -100,6 +102,11 @@ public class SelfSignedCertificateBuilder {
 
   public SelfSignedCertificateBuilder setValidityPeriod(Period validityPeriod) {
     this.validityPeriod = validityPeriod;
+    return this;
+  }
+
+  public SelfSignedCertificateBuilder isCa(boolean isCaThisCert) {
+    this.isCa = isCaThisCert;
     return this;
   }
 
@@ -162,7 +169,7 @@ public class SelfSignedCertificateBuilder {
     Date notAfter = Date.from(expiration.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     return generator.generateSelfSigned(keyPair, notBefore, notAfter, commonName, organization, organizationalUnit,
-        localityName, stateName, countryCode, applicationUri, dnsNames, ipAddresses, signatureAlgorithm);
+        localityName, stateName, countryCode, applicationUri, dnsNames, ipAddresses, signatureAlgorithm, isCa);
   }
 
 }

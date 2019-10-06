@@ -49,6 +49,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.NetworkHelper;
@@ -102,12 +104,12 @@ public class KeystoreLoader {
   public static void create() throws Exception {
     KeystoreLoader.create("rossonet-" + UUID.randomUUID().toString(), "Rossonet s.c.a r.l.", "Ar4k", "Imola", "BO",
         "IT", "urn:org.ar4k.agent:ca_rossonet-key-agent", "ca.test.ar4k.net", "127.0.0.1", demoKeystore, "master",
-        demoPassword);
+        demoPassword, false);
   }
 
   public static boolean create(String commonName, String organization, String unit, String locality, String state,
-      String country, String uri, String dns, String ip, String keyStorePath, String alias, String password)
-      throws Exception {
+      String country, String uri, String dns, String ip, String keyStorePath, String alias, String password,
+      boolean isCa) throws Exception {
     char[] passwordChar = password.toCharArray();
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
     File serverKeyStore = new File(keyStorePath);
@@ -119,9 +121,10 @@ public class KeystoreLoader {
       keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
     }
     KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
+    // TODO verificare se va bene la class per non self-signed
     SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
         .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
-        .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
+        .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip).isCa(isCa);
     // Get as many hostnames and IP addresses as we can listed in the certificate.
     for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
       if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
@@ -201,7 +204,7 @@ public class KeystoreLoader {
 
   public static boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
       String state, String country, String uri, String dns, String ip, String keyStorePath, String alias,
-      String password) {
+      String password, boolean isCaCert) {
     try {
       char[] passwordChar = password.toCharArray();
       KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -214,7 +217,7 @@ public class KeystoreLoader {
       KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
       SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
           .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
-          .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip);
+          .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip).isCa(isCaCert);
       // Get as many hostnames and IP addresses as we can listed in the certificate.
       for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
         if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
@@ -224,6 +227,7 @@ public class KeystoreLoader {
         }
       }
       X509Certificate certificate = builder.build();
+      logger.info("created master CA " + certificate.toString());
       keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       serverKeyStore = null;
@@ -237,7 +241,7 @@ public class KeystoreLoader {
   public static boolean createSelfSignedCert() throws Exception {
     return createSelfSignedCert("agent-" + UUID.randomUUID().toString(), "Rossonet scarl", "Ar4kAgent", "Imola", "BO",
         "IT", "urn:org.ar4k.agent:client-test1", "agent.test.ar4k.net", "127.0.0.1", demoKeystore, "client1",
-        demoPassword);
+        demoPassword, false);
   }
 
   public static PrivateKey getPrivateKey(String keyStorePath, String alias, String password) throws KeyStoreException,
@@ -479,10 +483,8 @@ public class KeystoreLoader {
       X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
           // These are the details of the CA
           // new X500Name("C=US, L=Vienna, O=Your CA Inc")
-          // new X500Name(getClientCertificate(keyStorePath, alias,
-          // password).getIssuerX500Principal()
-          // .getName(X500Principal.RFC2253)),
-          csr.getSubject(),
+          new X500Name(getClientCertificate(keyStorePath, alias, password).getSubjectX500Principal()
+              .getName(X500Principal.RFC2253)),
           // This should be a serial number that the CA keeps track of
           new BigInteger(64, new SecureRandom()),
           // Certificate validity start

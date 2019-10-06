@@ -143,8 +143,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private String dnsKeystore;
   @Value("${ar4k.keystorePassword}")
   private String keystorePassword;
-  @Value("${ar4k.keystoreCaAlias}")
-  private String keystoreCaAlias;
+  @Value("${ar4k.keystoreMainAlias}")
+  private String keystoreMainAlias;
   @Value("${ar4k.confPath}")
   private String confPath;
   @Value("${ar4k.fileConfig}")
@@ -155,8 +155,8 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   private String dnsConfig;
   @Value("${ar4k.baseConfig}")
   private String baseConfig;
-  @Value("${ar4k.otpRegistrationSeed}")
-  private String otpRegistrationSeed;
+  @Value("${ar4k.beaconCaChainPem}")
+  private String beaconCaChainPem;
   @Value("${ar4k.adminPassword}")
   private String adminPassword;
   @Value("${ar4k.webRegistrationEndpoint}")
@@ -333,7 +333,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     KeystoreConfig ks = new KeystoreConfig();
     boolean foundFile = false;
     boolean foundWeb = false;
-    ks.keyStoreAlias = keystoreCaAlias;
+    ks.keyStoreAlias = keystoreMainAlias;
     ks.keystorePassword = keystorePassword;
     ks.filePathPre = fileKeystore.replaceFirst("^~", System.getProperty("user.home"));
     if (fileKeystore != null && !fileKeystore.isEmpty()) {
@@ -368,14 +368,15 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (keystorePassword != null && !keystorePassword.isEmpty()) {
       ks.keystorePassword = keystorePassword;
     }
-    if (keystoreCaAlias != null && !keystoreCaAlias.isEmpty()) {
-      ks.keyStoreAlias = keystoreCaAlias;
+    if (keystoreMainAlias != null && !keystoreMainAlias.isEmpty()) {
+      ks.keyStoreAlias = keystoreMainAlias;
     }
+    // se alla fine non è stato trovato un keystore, lo creo
     if (!new File(fileKeystore.replaceFirst("^~", System.getProperty("user.home"))).exists()) {
       logger.warn("new keystore: " + ks.toString());
-      ks.createSelfSignedCert(agentUniqueName, ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
-          ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,
-          ks.keyStoreAlias);
+      ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
+          ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
+          ConfigHelper.ip, ks.keyStoreAlias, true);
       logger.debug("keystore created");
     }
     addKeyStores(ks);
@@ -465,29 +466,33 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   private void checkBeaconClient() {
-    if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) {
+    if ((webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) || beaconDiscoveryPort != 0) {
       try {
-        connectToBeaconService(webRegistrationEndpoint, beaconDiscoveryPort, beaconDiscoveryFilterString);
+        logger.info("TRY CONECTION TO BEACON AT " + webRegistrationEndpoint);
+        connectToBeaconService(webRegistrationEndpoint, beaconCaChainPem, beaconDiscoveryPort,
+            beaconDiscoveryFilterString);
       } catch (Exception e) {
-        // logger.warn("Beacon connection not ok: " + e.getMessage());
-        logger.logException(e);
+        logger.warn("Beacon connection not ok: " + e.getMessage());
+        // logger.logException(e);
       }
     }
   }
 
-  public BeaconClient connectToBeaconService(String urlBeacon, int discoveryPort, String discoveryFilter) {
-    URL urlTarget;
+  public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
+      String discoveryFilter) {
+    URL urlTarget = null;
     if (beaconClient != null) {
       logger.info("This agent is connected to another Beacon service");
     }
     try {
-      urlTarget = new URL(urlBeacon);
+      if (urlBeacon != null)
+        urlTarget = new URL(urlBeacon);
       String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
       animaHomunculus.registerNewSession(sessionId, sessionId);
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
       beaconClient = new BeaconClient(this, rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort,
-          discoveryFilter, getAgentUniqueName(), null, null, null, null, null);
+          discoveryFilter, getAgentUniqueName(), null, null, null, null, null, beaconCaChainPem);
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
@@ -499,7 +504,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
     } catch (IOException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
-      logger.logException(e);
+      // logger.logException(e);
     }
     return beaconClient;
   }
@@ -703,13 +708,13 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     ritorno.put("ar4k.webKeystore", webKeystore);
     ritorno.put("ar4k.dnsKeystore", dnsKeystore);
     ritorno.put("ar4k.keystorePassword", keystorePassword);
-    ritorno.put("ar4k.keystoreCaAlias", keystoreCaAlias);
+    ritorno.put("ar4k.keystoreMainAlias", keystoreMainAlias);
     ritorno.put("ar4k.confPath", confPath);
     ritorno.put("ar4k.fileConfig", fileConfig);
     ritorno.put("ar4k.webConfig", webConfig);
     ritorno.put("ar4k.dnsConfig", dnsConfig);
     ritorno.put("ar4k.baseConfig", baseConfig);
-    ritorno.put("ar4k.otpRegistrationSeed", otpRegistrationSeed);
+    ritorno.put("ar4k.beaconCaChainPem", beaconCaChainPem);
     ritorno.put("ar4k.webRegistrationEndpoint", webRegistrationEndpoint);
     ritorno.put("ar4k.dnsRegistrationEndpoint", dnsRegistrationEndpoint);
     ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(beaconDiscoveryPort));
@@ -731,14 +736,14 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     configTxt += "ar4k.dnsKeystore: " + dnsKeystore + "\n";
     // configTxt += "ar4k.keystorePassword: " + keystorePassword + "\n";
     configTxt += "ar4k.keystorePassword: xxx\n";
-    configTxt += "ar4k.keystoreCaAlias: " + keystoreCaAlias + "\n";
+    configTxt += "ar4k.keystoreMainAlias: " + keystoreMainAlias + "\n";
     configTxt += "ar4k.confPath: " + confPath + "\n";
     configTxt += "ar4k.fileConfig: " + fileConfig + "\n";
     configTxt += "ar4k.webConfig: " + webConfig + "\n";
     configTxt += "ar4k.dnsConfig: " + dnsConfig + "\n";
     configTxt += "ar4k.baseConfig: " + baseConfig + "\n";
-    // configTxt += "ar4k.otpRegistrationSeed: " + otpRegistrationSeed + "\n";
-    configTxt += "ar4k.otpRegistrationSeed: xxx\n";
+    // configTxt += "ar4k.beaconCaChainPem: " + beaconCaChainPem + "\n";
+    configTxt += "ar4k.beaconCaChainPem: xxx\n";
     configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
     configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
     configTxt += "ar4k.beaconDiscoveryPort: " + beaconDiscoveryPort + "\n";
@@ -925,9 +930,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   public String toString() {
     return "Anima [dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName=" + dbDataStoreName + ", agentUniqueName="
         + agentUniqueName + ", fileKeystore=" + fileKeystore + ", webKeystore=" + webKeystore + ", dnsKeystore="
-        + dnsKeystore + ", keystorePassword=" + keystorePassword + ", keystoreCaAlias=" + keystoreCaAlias
+        + dnsKeystore + ", keystorePassword=" + keystorePassword + ", keystoreMainAlias=" + keystoreMainAlias
         + ", confPath=" + confPath + ", fileConfig=" + fileConfig + ", webConfig=" + webConfig + ", dnsConfig="
-        + dnsConfig + ", baseConfig=" + baseConfig + ", otpRegistrationSeed=" + otpRegistrationSeed
+        + dnsConfig + ", baseConfig=" + baseConfig + ", beaconCaChainPem=" + beaconCaChainPem
         + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
         + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString=" + beaconDiscoveryFilterString
         + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder + ", webConfigOrder="

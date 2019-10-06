@@ -26,6 +26,9 @@ import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandType;
@@ -38,6 +41,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Empty;
 import org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage;
 import org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
@@ -46,20 +50,19 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import com.google.protobuf.ByteString;
 
 import io.grpc.Grpc;
 import io.grpc.Metadata;
-import io.grpc.Metadata.Key;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerCall;
 import io.grpc.ServerCall.Listener;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
-import io.grpc.StatusRuntimeException;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
@@ -75,8 +78,8 @@ public class BeaconServer implements Runnable {
   private int port = 0;
   private Server server = null;
   private int defaultPollTime = 6000;
-  private int defaultBeaconFlashMoltiplicator = 1;
-  private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>();
+  private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
+  private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;
   private transient Anima anima = null;
@@ -84,41 +87,37 @@ public class BeaconServer implements Runnable {
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
 
+  private List<RegistrationRequest> listAgentRequest = new ArrayList<>();
+
   // coda risposta clients
   private final Map<String, CommandReplyRequest> repliesQueue = new ConcurrentHashMap<>();
   private int discoveryPort = 0;
   private String broadcastAddress = "255.255.255.255";
   private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
-  private String certFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
+  private String certChainFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
+  private String certFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".pem";
   private String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
   private String aliasBeaconServerInKeystore = "beacon-server";
   private String aliasBeaconServerRequestCertInKeystore = "beacon-server-crt-request";
-
-  public boolean isAcceptAllCerts() {
-    return acceptAllCerts;
-  }
-
-  public String getCertChainFile() {
-    return certFile;
-  }
-
-  public String getPrivateKeyFile() {
-    return privateKeyFile;
-  }
+  private String caChainPem = null;
 
   public BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
-      String stringDiscovery, String cert, String privateKey, String aliasBeaconServer,
-      String aliasBeaconServerRequestCertInKeystore) {
+      String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
+      String aliasBeaconServerInKeystore, String aliasBeaconServerRequestCertInKeystore, String caChainPem) {
     this.anima = animaTarget;
-    if (aliasBeaconServer != null)
-      this.aliasBeaconServerInKeystore = aliasBeaconServer;
+    if (aliasBeaconServerInKeystore != null)
+      this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
     if (aliasBeaconServerRequestCertInKeystore != null)
       this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
     this.port = port;
-    if (cert != null)
-      this.certFile = cert;
-    if (privateKey != null)
-      this.privateKeyFile = privateKey;
+    if (certChainFile != null)
+      this.certChainFile = certChainFile;
+    if (certFile != null)
+      this.certFile = certFile;
+    if (privateKeyFile != null)
+      this.privateKeyFile = privateKeyFile;
+    if (caChainPem != null)
+      this.caChainPem = caChainPem;
     this.acceptAllCerts = acceptCerts;
     this.discoveryPort = discoveryPort;
     if (broadcastAddress != null)
@@ -130,24 +129,22 @@ public class BeaconServer implements Runnable {
     } else {
       generateCertificate();
     }
-    writePemCa(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
+    writePemCa(anima.getMyAliasCertInKeystore(), animaTarget, this.certChainFile);
+    writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
+    // TODO VERIFICARE PERCHE' RICHIEDE LA CHIAVE MASTER
     // writePrivateKey(this.aliasBeaconServerRequestCertInKeystore, animaTarget,
     // this.privateKeyFile);
     writePrivateKey(anima.getMyAliasCertInKeystore(), animaTarget, this.privateKeyFile);
     logger.info("Starting beacon server");
-    ServerBuilder<?> serverBuilder = null;
     try {
-      serverBuilder = NettyServerBuilder.forPort(port)
+      ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
           .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
-           //   .trustManager(new File(this.certFile))
-              .clientAuth(ClientAuth.REQUIRE).build());
+              .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.OPTIONAL).build());
+      server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
+          .addService(new DataService()).build();
     } catch (SSLException e) {
       logger.logException(e);
     }
-    // ServerBuilder.forPort(port).useTransportSecurity(new File(this.certFile),
-    // new File(this.privateKeyFile));
-    server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
-        .addService(new DataService()).build();
   }
 
   private class AuthorizationInterceptor implements ServerInterceptor {
@@ -156,8 +153,8 @@ public class BeaconServer implements Runnable {
         final ServerCallHandler<ReqT, RespT> serverCallHandler) {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
       try {
-        logger.info("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
-        logger.info("SSL DATA LOCAL: " + sslSession.getPeerPrincipal().getName());
+        logger.debug("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
+        logger.info("SSL DATA PEER: " + sslSession.getPeerPrincipal().getName());
       } catch (SSLPeerUnverifiedException e) {
         logger.info("SSL CERT NOT VERIFIED");
       }
@@ -167,9 +164,9 @@ public class BeaconServer implements Runnable {
 
   private void generateCertificate() {
     logger.info("Create certificate for beacon server with alias " + aliasBeaconServerRequestCertInKeystore);
-    anima.getMyIdentityKeystore().create(aliasBeaconServerInKeystore, ConfigHelper.organization, ConfigHelper.unit,
-        ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
-        ConfigHelper.ip, aliasBeaconServerRequestCertInKeystore);
+    anima.getMyIdentityKeystore().create(anima.getAgentUniqueName() + "-bs", ConfigHelper.organization,
+        ConfigHelper.unit, ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
+        ConfigHelper.dns, ConfigHelper.ip, aliasBeaconServerRequestCertInKeystore, true);
     PKCS10CertificationRequest csr = anima.getMyIdentityKeystore()
         .getPKCS10CertificationRequest(aliasBeaconServerRequestCertInKeystore);
     anima.getMyIdentityKeystore().signCertificateBase64(csr, aliasBeaconServerInKeystore, 400,
@@ -191,17 +188,52 @@ public class BeaconServer implements Runnable {
 
   }
 
-  private static void writePemCa(String aliasBeaconServer, Anima animaTarget, String certChain) {
+  private void writePemCa(String alias, Anima animaTarget, String certChain) {
+    try {
+      FileWriter writer = new FileWriter(new File(certChain));
+      if (caChainPem == null || caChainPem.isEmpty()) {
+        String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(alias);
+        writer.write("-----BEGIN CERTIFICATE-----\n");
+        writer.write(pemTxtBase);
+        writer.write("\n-----END CERTIFICATE-----\n");
+      } else {
+        writer.write(caChainPem);
+      }
+      writer.close();
+    } catch (IOException e) {
+      logger.logException(e);
+    }
+  }
+
+  private String getPemCaStrForRegistrationReply(String aliasBeaconServer, Anima animaTarget) {
+    StringBuilder writer = new StringBuilder();
+    String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
+    String pemTxtClient = animaTarget.getMyIdentityKeystore().getCaPem("beacon-client");
+    String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
+    writer.append("-----BEGIN CERTIFICATE-----\n");
+    writer.append(pemTxtClient);
+    writer.append("\n-----END CERTIFICATE-----\n");
+    writer.append("-----BEGIN CERTIFICATE-----\n");
+    writer.append(pemTxtBase);
+    writer.append("\n-----END CERTIFICATE-----\n");
+    writer.append("-----BEGIN CERTIFICATE-----\n");
+    writer.append(pemTxtCa);
+    writer.append("\n-----END CERTIFICATE-----\n");
+    return writer.toString();
+  }
+
+  private static void writePemCert(String aliasBeaconServer, Anima animaTarget, String certChain) {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
       String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-      String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
+      // String pemTxtCa =
+      // animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxtBase);
       writer.write("\n-----END CERTIFICATE-----\n");
-      writer.write("-----BEGIN CERTIFICATE-----\n");
-      writer.write(pemTxtCa);
-      writer.write("\n-----END CERTIFICATE-----\n");
+      // writer.write("-----BEGIN CERTIFICATE-----\n");
+      // writer.write(pemTxtCa);
+      // writer.write("\n-----END CERTIFICATE-----\n");
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -266,15 +298,16 @@ public class BeaconServer implements Runnable {
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
       String uniqueClientNameForBeacon = UUID.randomUUID().toString();
       logger.debug("Try to sign request: " + request.toString());
-      String certFromCsr = getCertForRegistration(anima.getMyAliasCertInKeystore(), request.getRequestCsr(),
-          request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
+      String certFromCsr = getCertForRegistration(anima.getMyAliasCertInKeystore(), request.getName(),
+          request.getRequestCsr(), request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
       logger.debug("Certificate for beacon client (signed): "
           + anima.getMyIdentityKeystore().getClientCertificate(uniqueClientNameForBeacon) + " - alias "
           + uniqueClientNameForBeacon);
-      logger.debug("Certificate for beacon client (CA): " + getPemCaStr(aliasBeaconServerInKeystore, anima));
+      logger.debug(
+          "Certificate for beacon client (CA): " + getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima));
       RegisterReply reply = RegisterReply.newBuilder()
-          .setCa(
-              ByteString.copyFrom(getPemCaStr(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))))
+          .setCa(ByteString.copyFrom(
+              getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))))
           .setCert(certFromCsr)
           .setStatusRegistration(
               Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
@@ -284,31 +317,50 @@ public class BeaconServer implements Runnable {
       responseObserver.onCompleted();
     }
 
-    private String getPemCaStr(String aliasBeaconServer, Anima animaTarget) {
-      StringBuilder writer = new StringBuilder();
-      String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-      String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
-      writer.append("-----BEGIN CERTIFICATE-----\n");
-      writer.append(pemTxtBase);
-      writer.append("\n-----END CERTIFICATE-----\n");
-      writer.append("-----BEGIN CERTIFICATE-----\n");
-      writer.append(pemTxtCa);
-      writer.append("\n-----END CERTIFICATE-----\n");
-      return writer.toString();
-    }
-
-    private String getCertForRegistration(String idAuth, String requestCsr, String jsonHealth, String consoleKey,
-        String targetAlias) {
+    private String getCertForRegistration(String idAuth, String name, String requestCsr, String jsonHealth,
+        String consoleKey, String targetAlias) {
       String result = null;
       if (acceptAllCerts) {
         result = anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
             ConfigHelper.defaulBeaconSignvalidity, idAuth);
       } else {
-        // TODO filtrare per CA con console manuale e coda
-        result = anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
-            ConfigHelper.defaulBeaconSignvalidity, idAuth);
+        result = checkRegistrationServer(idAuth, name, requestCsr, consoleKey, targetAlias, jsonHealth);
       }
       return result;
+    }
+
+    private String checkRegistrationServer(String idAuth, String name, String requestCsr, String consoleKey,
+        String targetAlias, String jsonHealth) {
+      boolean isNewRequest = true;
+      boolean isAccepted = false;
+      RegistrationRequest request = new RegistrationRequest();
+      request.idAuth = idAuth;
+      request.name = name;
+      request.requestCsr = requestCsr;
+      request.consoleKey = consoleKey;
+      request.targetAlias = targetAlias;
+      request.jsonHealth = jsonHealth;
+      request.lastCall = new Date();
+      request.time = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+      for (RegistrationRequest singleRequestArchived : listAgentRequest) {
+        if (singleRequestArchived.equals(request)) {
+          isNewRequest = false;
+          if (singleRequestArchived.approved && singleRequestArchived.approvedDate != null) {
+            isAccepted = true;
+            singleRequestArchived.completed = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+          }
+          break;
+        }
+      }
+      if (isNewRequest) {
+        listAgentRequest.add(request);
+      }
+      if (isAccepted) {
+        return anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
+            ConfigHelper.defaulBeaconSignvalidity, idAuth);
+      } else {
+        return null;
+      }
     }
 
     @Override
@@ -321,6 +373,39 @@ public class BeaconServer implements Runnable {
       ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
           .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
       responseObserver.onNext(reply);
+      responseObserver.onCompleted();
+    }
+
+    @Override
+    public void listAgentsRequestComplete(Empty request, StreamObserver<ListAgentsRequestReply> responseObserver) {
+      List<AgentRequest> values = new ArrayList<>();
+      for (RegistrationRequest r : listAgentRequest) {
+        Builder a = AgentRequest.newBuilder().setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
+        if (r.approved && r.approvedDate != null)
+          a.setApproved(r.approvedDate);
+        if (r.completed != null)
+          a.setRegistrationCompleted(r.completed);
+        values.add(a.build());
+      }
+      ListAgentsRequestReply reply = ListAgentsRequestReply.newBuilder().addAllRequests(values)
+          .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
+      responseObserver.onNext(reply);
+      responseObserver.onCompleted();
+    }
+
+    @Override
+    public void approveAgentRequest(ApproveAgentRequestRequest request, StreamObserver<Status> responseObserver) {
+      org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder status = Status.newBuilder().setStatus(StatusValue.BAD);
+      for (RegistrationRequest r : listAgentRequest) {
+        if (r.idRequest.equals(request.getIdRequest())) {
+          r.approved = true;
+          r.approvedDate = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+          r.pemApproved = request.getCert();
+          r.note = request.getNote();
+          status = Status.newBuilder().setStatus(StatusValue.GOOD);
+        }
+      }
+      responseObserver.onNext(status.build());
       responseObserver.onCompleted();
     }
 
@@ -569,5 +654,17 @@ public class BeaconServer implements Runnable {
 
   public static long getWaitreplyloopwaittime() {
     return waitReplyLoopWaitTime;
+  }
+
+  public boolean isAcceptAllCerts() {
+    return acceptAllCerts;
+  }
+
+  public String getCertChainFile() {
+    return certFile;
+  }
+
+  public String getPrivateKeyFile() {
+    return privateKeyFile;
   }
 }

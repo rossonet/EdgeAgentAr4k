@@ -31,11 +31,13 @@ import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
 import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.Extensions;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -86,7 +88,7 @@ public class SelfSignedCertificateGenerator {
 
   public X509Certificate generateSelfSigned(KeyPair keyPair, Date notBefore, Date notAfter, String commonName,
       String organization, String organizationalUnit, String localityName, String stateName, String countryCode,
-      String applicationUri, List<String> dnsNames, List<String> ipAddresses, String signatureAlgorithm)
+      String applicationUri, List<String> dnsNames, List<String> ipAddresses, String signatureAlgorithm, boolean isCa)
       throws Exception {
 
     X500NameBuilder nameBuilder = new X500NameBuilder();
@@ -107,13 +109,15 @@ public class SelfSignedCertificateGenerator {
     X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(name, certSerialNumber, notBefore,
         notAfter, name, subjectPublicKeyInfo);
 
+    certificateBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(isCa));
+
     BasicConstraints basicConstraints = new BasicConstraints(true);
 
     // Authority Key Identifier
     addAuthorityKeyIdentifier(certificateBuilder, keyPair);
 
     // Basic Constraints
-    addBasicConstraints(certificateBuilder, basicConstraints);
+    // addBasicConstraints(certificateBuilder, basicConstraints);
 
     // Key Usage
     addKeyUsage(certificateBuilder);

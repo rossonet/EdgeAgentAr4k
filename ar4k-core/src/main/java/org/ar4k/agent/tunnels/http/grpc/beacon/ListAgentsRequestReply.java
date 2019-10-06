@@ -4,18 +4,18 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf type {@code beacon.ListAgentsRequest}
+ * Protobuf type {@code beacon.ListAgentsRequestReply}
  */
-public  final class ListAgentsRequest extends
+public  final class ListAgentsRequestReply extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:beacon.ListAgentsRequest)
-    ListAgentsRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:beacon.ListAgentsRequestReply)
+    ListAgentsRequestReplyOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use ListAgentsRequest.newBuilder() to construct.
-  private ListAgentsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ListAgentsRequestReply.newBuilder() to construct.
+  private ListAgentsRequestReply(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private ListAgentsRequest() {
+  private ListAgentsRequestReply() {
     requests_ = java.util.Collections.emptyList();
   }
 
@@ -24,7 +24,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private ListAgentsRequest(
+  private ListAgentsRequestReply(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -89,15 +89,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequestReply_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequestReply_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.Builder.class);
+            org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.Builder.class);
   }
 
   private int bitField0_;
@@ -204,10 +204,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest)) {
+    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply)) {
       return super.equals(obj);
     }
-    org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest other = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) obj;
+    org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply other = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply) obj;
 
     if (hasResult() != other.hasResult()) return false;
     if (hasResult()) {
@@ -240,69 +240,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(byte[] data)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseDelimitedFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseDelimitedFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -315,7 +315,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest prototype) {
+  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -331,26 +331,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code beacon.ListAgentsRequest}
+   * Protobuf type {@code beacon.ListAgentsRequestReply}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:beacon.ListAgentsRequest)
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:beacon.ListAgentsRequestReply)
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReplyOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequestReply_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequestReply_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.Builder.class);
+              org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -387,17 +387,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequestReply_descriptor;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstanceForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply getDefaultInstanceForType() {
+      return org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest build() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest result = buildPartial();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply build() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -405,8 +405,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest buildPartial() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest result = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest(this);
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply buildPartial() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply result = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       if (resultBuilder_ == null) {
@@ -462,16 +462,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) {
-        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest)other);
+      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply) {
+        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest other) {
-      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply other) {
+      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.getDefaultInstance()) return this;
       if (other.hasResult()) {
         mergeResult(other.getResult());
       }
@@ -516,11 +516,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parsedMessage = null;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) e.getUnfinishedMessage();
+        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -900,41 +900,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:beacon.ListAgentsRequest)
+    // @@protoc_insertion_point(builder_scope:beacon.ListAgentsRequestReply)
   }
 
-  // @@protoc_insertion_point(class_scope:beacon.ListAgentsRequest)
-  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:beacon.ListAgentsRequestReply)
+  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest();
+    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply();
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstance() {
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<ListAgentsRequest>
-      PARSER = new com.google.protobuf.AbstractParser<ListAgentsRequest>() {
+  private static final com.google.protobuf.Parser<ListAgentsRequestReply>
+      PARSER = new com.google.protobuf.AbstractParser<ListAgentsRequestReply>() {
     @java.lang.Override
-    public ListAgentsRequest parsePartialFrom(
+    public ListAgentsRequestReply parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new ListAgentsRequest(input, extensionRegistry);
+      return new ListAgentsRequestReply(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<ListAgentsRequest> parser() {
+  public static com.google.protobuf.Parser<ListAgentsRequestReply> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<ListAgentsRequest> getParserForType() {
+  public com.google.protobuf.Parser<ListAgentsRequestReply> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstanceForType() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

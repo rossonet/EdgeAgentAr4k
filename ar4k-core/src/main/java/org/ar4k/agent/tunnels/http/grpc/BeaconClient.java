@@ -94,7 +94,7 @@ public class BeaconClient implements Runnable {
   private RpcConversation localExecutor = new RpcConversation();
   private transient Anima anima = null;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
-  private int discoveryPort = 0;
+  private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
   private String discoveryFilter = "AR4K";
   private DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
@@ -106,13 +106,13 @@ public class BeaconClient implements Runnable {
   private ByteString caAfterRegistration = null;
   private String caServer = null;
   private String hostTarget = null;
-  private int port = 0;
+  private int port = 0; // se zero esclude la connessione diretta ed eventualmente passa al discovery
   private String privateFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".key";;
   private String certFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".pem";;
 
   public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
       String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-      String aliasBeaconClientInKeystore, String aliasBeaconClientRequestCertInKeystore) {
+      String aliasBeaconClientInKeystore, String aliasBeaconClientRequestCertInKeystore, String beaconCaChainPem) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
@@ -125,6 +125,8 @@ public class BeaconClient implements Runnable {
     if (aliasBeaconClientRequestCertInKeystore != null) {
       this.aliasBeaconClientRequestCertInKeystore = aliasBeaconClientRequestCertInKeystore;
     }
+    if (beaconCaChainPem != null)
+      this.caServer = beaconCaChainPem;
     if (certChainFile != null)
       this.certChainFile = certChainFile;
     if (certFile != null)
@@ -135,13 +137,17 @@ public class BeaconClient implements Runnable {
       this.reservedUniqueName = uniqueName;
     else
       this.reservedUniqueName = UUID.randomUUID().toString();
+    if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+      logger.info("Certificate for Beacon client is present in keystore");
+    } else {
+      generateCertificate();
+    }
     if (this.port != 0) {
       try {
-        if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-          logger.info("Certificate for Beacon client is present in keystore");
-        } else {
-          generateCertificate();
-        }
+        // TODO Verificare perché il certificato usa la firma del master (in sign o
+        // generando il csr?)
+        // writePrivateKey(this.aliasBeaconClientRequestCertInKeystore, anima,
+        // this.privateFile);
         writePrivateKey(anima.getMyAliasCertInKeystore(), anima, this.privateFile);
         startConnection(this.hostTarget, this.port);
         actionRegister();
@@ -161,9 +167,9 @@ public class BeaconClient implements Runnable {
 
   private void generateCertificate() {
     logger.debug("Create certificate for beacon client");
-    anima.getMyIdentityKeystore().create(aliasBeaconClientInKeystore, ConfigHelper.organization, ConfigHelper.unit,
-        ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
-        ConfigHelper.ip, aliasBeaconClientRequestCertInKeystore);
+    anima.getMyIdentityKeystore().create(anima.getAgentUniqueName() + "-bc", ConfigHelper.organization,
+        ConfigHelper.unit, ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
+        ConfigHelper.dns, ConfigHelper.ip, aliasBeaconClientRequestCertInKeystore, false);
     PKCS10CertificationRequest csr = anima.getMyIdentityKeystore()
         .getPKCS10CertificationRequest(aliasBeaconClientRequestCertInKeystore);
     anima.getMyIdentityKeystore().signCertificateBase64(csr, aliasBeaconClientInKeystore, 400,
@@ -190,10 +196,14 @@ public class BeaconClient implements Runnable {
     try {
       FileWriter writer = new FileWriter(new File(certChainFile));
       if (getCaServer() == null || getCaServer().isEmpty()) {
-        String pemTxt = anima.getMyIdentityKeystore().getCaPem("beacon-server");
+        String pemTxtClient = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClientInKeystore);
+        String pemTxtServer = anima.getMyIdentityKeystore().getCaPem("beacon-server");
         String pemTxtCa = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
         writer.write("-----BEGIN CERTIFICATE-----\n");
-        writer.write(pemTxt);
+        writer.write(pemTxtClient);
+        writer.write("\n-----END CERTIFICATE-----\n");
+        writer.write("-----BEGIN CERTIFICATE-----\n");
+        writer.write(pemTxtServer);
         writer.write("\n-----END CERTIFICATE-----\n");
         writer.write("-----BEGIN CERTIFICATE-----\n");
         writer.write(pemTxtCa);
@@ -210,18 +220,16 @@ public class BeaconClient implements Runnable {
   private void generateCertFile() {
     try {
       FileWriter writer = new FileWriter(new File(certFile));
-      if (getCaServer() == null || getCaServer().isEmpty()) {
-        String pemTxt = anima.getMyIdentityKeystore().getCaPem("beacon-client");
-        String pemTxtCa = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
-        writer.write("-----BEGIN CERTIFICATE-----\n");
-        writer.write(pemTxt);
-        writer.write("\n-----END CERTIFICATE-----\n");
-        writer.write("-----BEGIN CERTIFICATE-----\n");
-        writer.write(pemTxtCa);
-        writer.write("\n-----END CERTIFICATE-----\n");
-      } else {
-        writer.write(getCaServer());
-      }
+      String pemTxt = anima.getMyIdentityKeystore()
+          .getCaPem(me != null ? beaconClientAlias : aliasBeaconClientInKeystore);
+      // String pemTxtCa =
+      // anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
+      writer.write("-----BEGIN CERTIFICATE-----\n");
+      writer.write(pemTxt);
+      writer.write("\n-----END CERTIFICATE-----\n");
+      // writer.write("-----BEGIN CERTIFICATE-----\n");
+      // writer.write(pemTxtCa);
+      // writer.write("\n-----END CERTIFICATE-----\n");
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -237,16 +245,16 @@ public class BeaconClient implements Runnable {
   private void actionRegister() {
     try {
       registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), getCsrRequestBase64());
-    } catch (IOException | InterruptedException | ParseException | NullPointerException e) {
+    } catch (Exception e) {
       logger.logException(e);
     }
   }
 
   private String getCsrRequestBase64() {
     logger.info("Certificate for registration to the beacon server (SOURCE OF CSR): " + anima.getMyIdentityKeystore()
-        .getClientCertificate(anima.getMyAliasCertInKeystore()).getSubjectX500Principal().toString() + " - alias "
-        + anima.getMyAliasCertInKeystore());
-    return anima.getMyIdentityKeystore().getPKCS10CertificationRequestBase64(anima.getMyAliasCertInKeystore());
+        .getClientCertificate(aliasBeaconClientRequestCertInKeystore).getSubjectX500Principal().toString() + " - alias "
+        + aliasBeaconClientRequestCertInKeystore);
+    return anima.getMyIdentityKeystore().getPKCS10CertificationRequestBase64(aliasBeaconClientRequestCertInKeystore);
   }
 
   private String getDisplayRequestTxt() {
@@ -326,15 +334,20 @@ public class BeaconClient implements Runnable {
         if (reply.getCa() != null && reply.getCert() != null) {
           registerCertificateFromBeacon(reply.getCert(), reply.getCa());
         }
-        me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
+        if (caAfterRegistration != null) {
+          me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
+        }
       }
       result = reply.getStatusRegistration().getStatus();
     } catch (io.grpc.StatusRuntimeException e) {
       logger.warn("Beacon server is " + e.getMessage());
       logger.logException(e);
     }
-    channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-    startConnection(hostTarget, port);
+    if (result.equals(StatusValue.GOOD)) {
+      // passa a connessione con nuovo
+      channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+      startConnection(hostTarget, port);
+    }
     return result;
   }
 
@@ -346,9 +359,11 @@ public class BeaconClient implements Runnable {
   public void run() {
     while (running) {
       try {
+        // se la registrazione è in attesa di approvazione
         if (getStateConnection().equals(ConnectivityState.READY) && registerStatus.equals(StatusValue.WAIT_HUMAN)) {
           actionRegister();
         }
+        // se sono registrato
         if (me != null && getStateConnection().equals(ConnectivityState.READY)
             && registerStatus.equals(StatusValue.GOOD)) {
           checkPollChannel();
@@ -357,9 +372,14 @@ public class BeaconClient implements Runnable {
         } else {
           Thread.sleep(defaultPollingFreq);
         }
-        if (channel == null && discoveryFilter != null && discoveryPort != 0
-            && !getStateConnection().equals(ConnectivityState.READY)) {
+        // se non c'è connessione e discoveryPort è attivo
+        if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
           lookOut();
+        }
+        // se non c'è connessione e port (server) è attivo
+        if (channel == null && port != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
+          startConnection(this.hostTarget, this.port);
+          actionRegister();
         }
       } catch (Exception e) {
         logger.info("in Beacon client loop " + e.getMessage());
@@ -380,7 +400,7 @@ public class BeaconClient implements Runnable {
       if (packet.getData().length > 0) {
         String message = new String(packet.getData()).trim();
         logger.info("DISCOVERY FLASH: " + message);
-        if (message.contains(discoveryFilter)) {
+        if (discoveryFilter == null || message.contains(discoveryFilter)) {
           String hostBeacon = packet.getAddress().getHostAddress();
           int portBeacon = Integer.valueOf(message.split(":")[1]);
           logger
@@ -390,6 +410,7 @@ public class BeaconClient implements Runnable {
           startConnection(this.hostTarget, this.port);
           actionRegister();
           if (!registerStatus.equals(StatusValue.BAD)) {
+            // se la registrazione va a buon fine chiude il socket
             socketDiscovery.close();
             socketDiscovery = null;
           }

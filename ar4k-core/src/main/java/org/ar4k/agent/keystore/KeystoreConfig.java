@@ -93,11 +93,11 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   public boolean create(String commonName, String organization, String unit, String locality, String state,
-      String country, String uri, String dns, String ip, String alias) {
+      String country, String uri, String dns, String ip, String alias, boolean isCa) {
     boolean verifica = false;
     try {
       verifica = KeystoreLoader.create(commonName, organization, unit, locality, state, country, uri, dns, ip,
-          filePath(), alias, keystorePassword);
+          filePath(), alias, keystorePassword, isCa);
     } catch (Exception e) {
       throw new Ar4kException("problem with keystore", e);
     }
@@ -195,11 +195,11 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   public boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
-      String state, String country, String uri, String dns, String ip, String alias) {
+      String state, String country, String uri, String dns, String ip, String alias, boolean isCa) {
     boolean ritorno = false;
     try {
       ritorno = KeystoreLoader.createSelfSignedCert(commonName, organization, unit, locality, state, country, uri, dns,
-          ip, filePath(), alias, keystorePassword);
+          ip, filePath(), alias, keystorePassword, isCa);
     } catch (Exception e) {
       throw new Ar4kException("problem with keystore", e);
     }
@@ -212,7 +212,7 @@ public class KeystoreConfig implements ConfigSeed {
     ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
     return ritorno;
   }
-  
+
   public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity, String alias) {
     String ritorno = null;
     try {

@@ -3,8 +3,8 @@
 
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
-public interface ListAgentsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:beacon.ListAgentsRequest)
+public interface ListAgentsRequestReplyOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:beacon.ListAgentsRequestReply)
     com.google.protobuf.MessageOrBuilder {
 
   /**

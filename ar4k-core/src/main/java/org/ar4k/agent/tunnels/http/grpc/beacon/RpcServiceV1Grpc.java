@@ -348,21 +348,21 @@ public final class RpcServiceV1Grpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestCompleteMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListAgentsRequestComplete",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestCompleteMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestCompleteMethod;
     if ((getListAgentsRequestCompleteMethod = RpcServiceV1Grpc.getListAgentsRequestCompleteMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListAgentsRequestCompleteMethod = RpcServiceV1Grpc.getListAgentsRequestCompleteMethod) == null) {
           RpcServiceV1Grpc.getListAgentsRequestCompleteMethod = getListAgentsRequestCompleteMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListAgentsRequestComplete"))
@@ -370,7 +370,7 @@ public final class RpcServiceV1Grpc {
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListAgentsRequestComplete"))
                   .build();
           }
@@ -380,21 +380,21 @@ public final class RpcServiceV1Grpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestToDoMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "ListAgentsRequestToDo",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestToDoMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> getListAgentsRequestToDoMethod;
     if ((getListAgentsRequestToDoMethod = RpcServiceV1Grpc.getListAgentsRequestToDoMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
         if ((getListAgentsRequestToDoMethod = RpcServiceV1Grpc.getListAgentsRequestToDoMethod) == null) {
           RpcServiceV1Grpc.getListAgentsRequestToDoMethod = getListAgentsRequestToDoMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>newBuilder()
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "beacon.RpcServiceV1", "ListAgentsRequestToDo"))
@@ -402,7 +402,7 @@ public final class RpcServiceV1Grpc {
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply.getDefaultInstance()))
                   .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListAgentsRequestToDo"))
                   .build();
           }
@@ -681,14 +681,14 @@ public final class RpcServiceV1Grpc {
     /**
      */
     public void listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListAgentsRequestCompleteMethod(), responseObserver);
     }
 
     /**
      */
     public void listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListAgentsRequestToDoMethod(), responseObserver);
     }
 
@@ -810,14 +810,14 @@ public final class RpcServiceV1Grpc {
             asyncUnaryCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>(
                   this, METHODID_LIST_AGENTS_REQUEST_COMPLETE)))
           .addMethod(
             getListAgentsRequestToDoMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>(
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>(
                   this, METHODID_LIST_AGENTS_REQUEST_TO_DO)))
           .addMethod(
             getApproveAgentRequestMethod(),
@@ -969,7 +969,7 @@ public final class RpcServiceV1Grpc {
     /**
      */
     public void listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListAgentsRequestCompleteMethod(), getCallOptions()), request, responseObserver);
     }
@@ -977,7 +977,7 @@ public final class RpcServiceV1Grpc {
     /**
      */
     public void listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListAgentsRequestToDoMethod(), getCallOptions()), request, responseObserver);
     }
@@ -1130,14 +1130,14 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListAgentsRequestCompleteMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListAgentsRequestToDoMethod(), getCallOptions(), request);
     }
@@ -1286,7 +1286,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> listAgentsRequestComplete(
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> listAgentsRequestComplete(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(getListAgentsRequestCompleteMethod(), getCallOptions()), request);
@@ -1294,7 +1294,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> listAgentsRequestToDo(
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply> listAgentsRequestToDo(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
           getChannel().newCall(getListAgentsRequestToDoMethod(), getCallOptions()), request);
@@ -1424,11 +1424,11 @@ public final class RpcServiceV1Grpc {
           break;
         case METHODID_LIST_AGENTS_REQUEST_COMPLETE:
           serviceImpl.listAgentsRequestComplete((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>) responseObserver);
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>) responseObserver);
           break;
         case METHODID_LIST_AGENTS_REQUEST_TO_DO:
           serviceImpl.listAgentsRequestToDo((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>) responseObserver);
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply>) responseObserver);
           break;
         case METHODID_APPROVE_AGENT_REQUEST:
           serviceImpl.approveAgentRequest((org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest) request,

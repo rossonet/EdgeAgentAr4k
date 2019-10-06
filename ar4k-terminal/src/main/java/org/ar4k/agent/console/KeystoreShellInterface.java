@@ -136,11 +136,12 @@ public class KeystoreShellInterface extends AbstractShellHelper {
       @ShellOption(help = "country for the CA certificate", defaultValue = "IT") String country,
       @ShellOption(help = "URI for the CA certificate", defaultValue = "urn:org.ar4k.agent:ca-agents") String uri,
       @ShellOption(help = "host name for the CA certificate", defaultValue = "localhost") String dns,
-      @ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip) {
+      @ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip,
+      @ShellOption(help = "is the certificate a CA true/false", defaultValue = "false") boolean isCa) {
     boolean ok = false;
     for (KeystoreConfig t : anima.getKeyStores()) {
       if (t.label.equals(keystoreLabel) && t.createSelfSignedCert(commonName, organization, unit, locality, state,
-          country, uri, dns, ip, entryAlias)) {
+          country, uri, dns, ip, entryAlias, isCa)) {
         ok = true;
       }
     }
@@ -231,11 +232,13 @@ public class KeystoreShellInterface extends AbstractShellHelper {
       @ShellOption(help = "country for the CA certificate", defaultValue = "IT") String country,
       @ShellOption(help = "URI for the CA certificate", defaultValue = "urn:org.ar4k.agent:ca-agents") String uri,
       @ShellOption(help = "host name for the CA certificate", defaultValue = "localhost") String dns,
-      @ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip) {
+      @ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip,
+      @ShellOption(help = "alias for new cert in the keystore", defaultValue = "new_cert") String alias,
+      @ShellOption(help = "is the certificate a CA true/false", defaultValue = "false") boolean isCa) {
     boolean ok = false;
     for (KeystoreConfig t : anima.getKeyStores()) {
       if (t.label.equals(keystoreLabel)) {
-        ok = t.create(commonName, organization, unit, locality, state, country, uri, dns, ip);
+        ok = t.create(commonName, organization, unit, locality, state, country, uri, dns, ip, alias, isCa);
       }
     }
     return ok;

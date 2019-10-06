@@ -85,13 +85,14 @@ public class BeaconService extends AbstractAr4kService {
   public void init() {
     try {
       beaconServer = new BeaconServer(anima, configuration.port, configuration.discoveryPort,
-          configuration.broadcastAddress, configuration.acceptAllCerts, configuration.stringDiscovery, null, null, null,
-          null);
+          configuration.broadcastAddress, configuration.acceptAllCerts, configuration.stringDiscovery,
+          configuration.certChainFile, configuration.certFile, configuration.privateKeyFile,
+          configuration.aliasBeaconServerInKeystore, configuration.aliasBeaconServerRequestCertInKeystore,
+          configuration.caChainPem);
       beaconServer.start();
     } catch (IOException e) {
       logger.logException(e);
     }
-
   }
 
   @Override

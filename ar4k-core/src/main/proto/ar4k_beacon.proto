@@ -24,8 +24,8 @@ service RpcServiceV1 {
   // for console
   // list agents connected 
   rpc ListAgents (Empty) returns (ListAgentsReply) {}
-  rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequest) {}
-  rpc ListAgentsRequestToDo (Empty) returns (ListAgentsRequest) {}
+  rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequestReply) {}
+  rpc ListAgentsRequestToDo (Empty) returns (ListAgentsRequestReply) {}
   rpc ApproveAgentRequest (ApproveAgentRequestRequest) returns (Status) {}
    // TODO gestione kick agent con Beacon
   rpc KickAgent (Agent) returns (Status) {}
@@ -64,7 +64,7 @@ message RegisterReply {
   int64 timestampRegistration = 6;
 }
 
-message ListAgentsRequest {
+message ListAgentsRequestReply {
   Status result = 1;
   repeated AgentRequest requests = 2;
 }

@@ -39,9 +39,9 @@ public class Ar4kStarterProperties {
   private String fileKeystore = "~/.ar4k/default.keystore";
   private String webKeystore = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k";
   private String dnsKeystore = "subdomain.domain.com";
-  private String keystoreCaAlias = "ca";
+  private String keystoreMainAlias = "ca";
   private String keystorePassword = "secA4.rk!8";
-  private String otpRegistrationSeed = "a4c8ff551a";
+  private String beaconCaChainPem = "a4c8ff551a";
   private String adminPassword = "a4c8ff551a";
   private String webRegistrationEndpoint = "https://xxxx.com";
   private String dnsRegistrationEndpoint = "subdomain.domain.com";
@@ -121,11 +121,11 @@ public class Ar4kStarterProperties {
   }
 
   public String getKeystoreCaAlias() {
-    return keystoreCaAlias;
+    return keystoreMainAlias;
   }
 
-  public void setKeystoreCaAlias(String keystoreCaAlias) {
-    this.keystoreCaAlias = keystoreCaAlias;
+  public void setKeystoreCaAlias(String keystoreMainAlias) {
+    this.keystoreMainAlias = keystoreMainAlias;
   }
 
   public String getKeystorePassword() {
@@ -137,11 +137,11 @@ public class Ar4kStarterProperties {
   }
 
   public String getOtpRegistrationSeed() {
-    return otpRegistrationSeed;
+    return beaconCaChainPem;
   }
 
-  public void setOtpRegistrationSeed(String otpRegistrationSeed) {
-    this.otpRegistrationSeed = otpRegistrationSeed;
+  public void setOtpRegistrationSeed(String beaconCaChainPem) {
+    this.beaconCaChainPem = beaconCaChainPem;
   }
 
   public String getAdminPassword() {
