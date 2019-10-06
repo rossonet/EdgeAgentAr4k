@@ -4,19 +4,19 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf type {@code beacon.ListSslAuthoritiesReply}
+ * Protobuf type {@code beacon.ListAgentsRequest}
  */
-public  final class ListSslAuthoritiesReply extends
+public  final class ListAgentsRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:beacon.ListSslAuthoritiesReply)
-    ListSslAuthoritiesReplyOrBuilder {
+    // @@protoc_insertion_point(message_implements:beacon.ListAgentsRequest)
+    ListAgentsRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use ListSslAuthoritiesReply.newBuilder() to construct.
-  private ListSslAuthoritiesReply(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ListAgentsRequest.newBuilder() to construct.
+  private ListAgentsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private ListSslAuthoritiesReply() {
-    authorities_ = java.util.Collections.emptyList();
+  private ListAgentsRequest() {
+    requests_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -24,7 +24,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private ListSslAuthoritiesReply(
+  private ListAgentsRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -58,11 +58,11 @@ private static final long serialVersionUID = 0L;
           }
           case 18: {
             if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-              authorities_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority>();
+              requests_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest>();
               mutable_bitField0_ |= 0x00000002;
             }
-            authorities_.add(
-                input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.parser(), extensionRegistry));
+            requests_.add(
+                input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -81,7 +81,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000002) != 0)) {
-        authorities_ = java.util.Collections.unmodifiableList(authorities_);
+        requests_ = java.util.Collections.unmodifiableList(requests_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -89,15 +89,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListSslAuthoritiesReply_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListSslAuthoritiesReply_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.Builder.class);
+            org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.Builder.class);
   }
 
   private int bitField0_;
@@ -122,39 +122,39 @@ private static final long serialVersionUID = 0L;
     return getResult();
   }
 
-  public static final int AUTHORITIES_FIELD_NUMBER = 2;
-  private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> authorities_;
+  public static final int REQUESTS_FIELD_NUMBER = 2;
+  private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest> requests_;
   /**
-   * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+   * <code>repeated .beacon.AgentRequest requests = 2;</code>
    */
-  public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> getAuthoritiesList() {
-    return authorities_;
+  public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest> getRequestsList() {
+    return requests_;
   }
   /**
-   * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+   * <code>repeated .beacon.AgentRequest requests = 2;</code>
    */
-  public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder> 
-      getAuthoritiesOrBuilderList() {
-    return authorities_;
+  public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder> 
+      getRequestsOrBuilderList() {
+    return requests_;
   }
   /**
-   * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+   * <code>repeated .beacon.AgentRequest requests = 2;</code>
    */
-  public int getAuthoritiesCount() {
-    return authorities_.size();
+  public int getRequestsCount() {
+    return requests_.size();
   }
   /**
-   * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+   * <code>repeated .beacon.AgentRequest requests = 2;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority getAuthorities(int index) {
-    return authorities_.get(index);
+  public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest getRequests(int index) {
+    return requests_.get(index);
   }
   /**
-   * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+   * <code>repeated .beacon.AgentRequest requests = 2;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder getAuthoritiesOrBuilder(
+  public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder getRequestsOrBuilder(
       int index) {
-    return authorities_.get(index);
+    return requests_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
@@ -174,8 +174,8 @@ private static final long serialVersionUID = 0L;
     if (result_ != null) {
       output.writeMessage(1, getResult());
     }
-    for (int i = 0; i < authorities_.size(); i++) {
-      output.writeMessage(2, authorities_.get(i));
+    for (int i = 0; i < requests_.size(); i++) {
+      output.writeMessage(2, requests_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -190,9 +190,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getResult());
     }
-    for (int i = 0; i < authorities_.size(); i++) {
+    for (int i = 0; i < requests_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, authorities_.get(i));
+        .computeMessageSize(2, requests_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -204,18 +204,18 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply)) {
+    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest)) {
       return super.equals(obj);
     }
-    org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply other = (org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply) obj;
+    org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest other = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) obj;
 
     if (hasResult() != other.hasResult()) return false;
     if (hasResult()) {
       if (!getResult()
           .equals(other.getResult())) return false;
     }
-    if (!getAuthoritiesList()
-        .equals(other.getAuthoritiesList())) return false;
+    if (!getRequestsList()
+        .equals(other.getRequestsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -231,78 +231,78 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + RESULT_FIELD_NUMBER;
       hash = (53 * hash) + getResult().hashCode();
     }
-    if (getAuthoritiesCount() > 0) {
-      hash = (37 * hash) + AUTHORITIES_FIELD_NUMBER;
-      hash = (53 * hash) + getAuthoritiesList().hashCode();
+    if (getRequestsCount() > 0) {
+      hash = (37 * hash) + REQUESTS_FIELD_NUMBER;
+      hash = (53 * hash) + getRequestsList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(byte[] data)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseDelimitedFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseDelimitedFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -315,7 +315,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply prototype) {
+  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -331,26 +331,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code beacon.ListSslAuthoritiesReply}
+   * Protobuf type {@code beacon.ListAgentsRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:beacon.ListSslAuthoritiesReply)
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReplyOrBuilder {
+      // @@protoc_insertion_point(builder_implements:beacon.ListAgentsRequest)
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListSslAuthoritiesReply_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListSslAuthoritiesReply_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.Builder.class);
+              org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -363,7 +363,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getAuthoritiesFieldBuilder();
+        getRequestsFieldBuilder();
       }
     }
     @java.lang.Override
@@ -375,11 +375,11 @@ private static final long serialVersionUID = 0L;
         result_ = null;
         resultBuilder_ = null;
       }
-      if (authoritiesBuilder_ == null) {
-        authorities_ = java.util.Collections.emptyList();
+      if (requestsBuilder_ == null) {
+        requests_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
       } else {
-        authoritiesBuilder_.clear();
+        requestsBuilder_.clear();
       }
       return this;
     }
@@ -387,17 +387,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListSslAuthoritiesReply_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ListAgentsRequest_descriptor;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply getDefaultInstanceForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.getDefaultInstance();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstanceForType() {
+      return org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply build() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply result = buildPartial();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest build() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -405,8 +405,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply buildPartial() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply result = new org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply(this);
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest buildPartial() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest result = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       if (resultBuilder_ == null) {
@@ -414,14 +414,14 @@ private static final long serialVersionUID = 0L;
       } else {
         result.result_ = resultBuilder_.build();
       }
-      if (authoritiesBuilder_ == null) {
+      if (requestsBuilder_ == null) {
         if (((bitField0_ & 0x00000002) != 0)) {
-          authorities_ = java.util.Collections.unmodifiableList(authorities_);
+          requests_ = java.util.Collections.unmodifiableList(requests_);
           bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.authorities_ = authorities_;
+        result.requests_ = requests_;
       } else {
-        result.authorities_ = authoritiesBuilder_.build();
+        result.requests_ = requestsBuilder_.build();
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -462,42 +462,42 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply) {
-        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply)other);
+      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) {
+        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply other) {
-      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.getDefaultInstance()) return this;
+    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest other) {
+      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()) return this;
       if (other.hasResult()) {
         mergeResult(other.getResult());
       }
-      if (authoritiesBuilder_ == null) {
-        if (!other.authorities_.isEmpty()) {
-          if (authorities_.isEmpty()) {
-            authorities_ = other.authorities_;
+      if (requestsBuilder_ == null) {
+        if (!other.requests_.isEmpty()) {
+          if (requests_.isEmpty()) {
+            requests_ = other.requests_;
             bitField0_ = (bitField0_ & ~0x00000002);
           } else {
-            ensureAuthoritiesIsMutable();
-            authorities_.addAll(other.authorities_);
+            ensureRequestsIsMutable();
+            requests_.addAll(other.requests_);
           }
           onChanged();
         }
       } else {
-        if (!other.authorities_.isEmpty()) {
-          if (authoritiesBuilder_.isEmpty()) {
-            authoritiesBuilder_.dispose();
-            authoritiesBuilder_ = null;
-            authorities_ = other.authorities_;
+        if (!other.requests_.isEmpty()) {
+          if (requestsBuilder_.isEmpty()) {
+            requestsBuilder_.dispose();
+            requestsBuilder_ = null;
+            requests_ = other.requests_;
             bitField0_ = (bitField0_ & ~0x00000002);
-            authoritiesBuilder_ = 
+            requestsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getAuthoritiesFieldBuilder() : null;
+                 getRequestsFieldBuilder() : null;
           } else {
-            authoritiesBuilder_.addAllMessages(other.authorities_);
+            requestsBuilder_.addAllMessages(other.requests_);
           }
         }
       }
@@ -516,11 +516,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply parsedMessage = null;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply) e.getUnfinishedMessage();
+        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -648,244 +648,244 @@ private static final long serialVersionUID = 0L;
       return resultBuilder_;
     }
 
-    private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> authorities_ =
+    private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest> requests_ =
       java.util.Collections.emptyList();
-    private void ensureAuthoritiesIsMutable() {
+    private void ensureRequestsIsMutable() {
       if (!((bitField0_ & 0x00000002) != 0)) {
-        authorities_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority>(authorities_);
+        requests_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest>(requests_);
         bitField0_ |= 0x00000002;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder> authoritiesBuilder_;
+        org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder> requestsBuilder_;
 
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> getAuthoritiesList() {
-      if (authoritiesBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(authorities_);
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest> getRequestsList() {
+      if (requestsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(requests_);
       } else {
-        return authoritiesBuilder_.getMessageList();
+        return requestsBuilder_.getMessageList();
       }
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public int getAuthoritiesCount() {
-      if (authoritiesBuilder_ == null) {
-        return authorities_.size();
+    public int getRequestsCount() {
+      if (requestsBuilder_ == null) {
+        return requests_.size();
       } else {
-        return authoritiesBuilder_.getCount();
+        return requestsBuilder_.getCount();
       }
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority getAuthorities(int index) {
-      if (authoritiesBuilder_ == null) {
-        return authorities_.get(index);
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest getRequests(int index) {
+      if (requestsBuilder_ == null) {
+        return requests_.get(index);
       } else {
-        return authoritiesBuilder_.getMessage(index);
+        return requestsBuilder_.getMessage(index);
       }
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder setAuthorities(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority value) {
-      if (authoritiesBuilder_ == null) {
+    public Builder setRequests(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest value) {
+      if (requestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureAuthoritiesIsMutable();
-        authorities_.set(index, value);
+        ensureRequestsIsMutable();
+        requests_.set(index, value);
         onChanged();
       } else {
-        authoritiesBuilder_.setMessage(index, value);
+        requestsBuilder_.setMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder setAuthorities(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder builderForValue) {
-      if (authoritiesBuilder_ == null) {
-        ensureAuthoritiesIsMutable();
-        authorities_.set(index, builderForValue.build());
+    public Builder setRequests(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder builderForValue) {
+      if (requestsBuilder_ == null) {
+        ensureRequestsIsMutable();
+        requests_.set(index, builderForValue.build());
         onChanged();
       } else {
-        authoritiesBuilder_.setMessage(index, builderForValue.build());
+        requestsBuilder_.setMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder addAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority value) {
-      if (authoritiesBuilder_ == null) {
+    public Builder addRequests(org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest value) {
+      if (requestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureAuthoritiesIsMutable();
-        authorities_.add(value);
+        ensureRequestsIsMutable();
+        requests_.add(value);
         onChanged();
       } else {
-        authoritiesBuilder_.addMessage(value);
+        requestsBuilder_.addMessage(value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder addAuthorities(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority value) {
-      if (authoritiesBuilder_ == null) {
+    public Builder addRequests(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest value) {
+      if (requestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureAuthoritiesIsMutable();
-        authorities_.add(index, value);
+        ensureRequestsIsMutable();
+        requests_.add(index, value);
         onChanged();
       } else {
-        authoritiesBuilder_.addMessage(index, value);
+        requestsBuilder_.addMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder addAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder builderForValue) {
-      if (authoritiesBuilder_ == null) {
-        ensureAuthoritiesIsMutable();
-        authorities_.add(builderForValue.build());
+    public Builder addRequests(
+        org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder builderForValue) {
+      if (requestsBuilder_ == null) {
+        ensureRequestsIsMutable();
+        requests_.add(builderForValue.build());
         onChanged();
       } else {
-        authoritiesBuilder_.addMessage(builderForValue.build());
+        requestsBuilder_.addMessage(builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder addAuthorities(
-        int index, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder builderForValue) {
-      if (authoritiesBuilder_ == null) {
-        ensureAuthoritiesIsMutable();
-        authorities_.add(index, builderForValue.build());
+    public Builder addRequests(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder builderForValue) {
+      if (requestsBuilder_ == null) {
+        ensureRequestsIsMutable();
+        requests_.add(index, builderForValue.build());
         onChanged();
       } else {
-        authoritiesBuilder_.addMessage(index, builderForValue.build());
+        requestsBuilder_.addMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder addAllAuthorities(
-        java.lang.Iterable<? extends org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority> values) {
-      if (authoritiesBuilder_ == null) {
-        ensureAuthoritiesIsMutable();
+    public Builder addAllRequests(
+        java.lang.Iterable<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest> values) {
+      if (requestsBuilder_ == null) {
+        ensureRequestsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, authorities_);
+            values, requests_);
         onChanged();
       } else {
-        authoritiesBuilder_.addAllMessages(values);
+        requestsBuilder_.addAllMessages(values);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder clearAuthorities() {
-      if (authoritiesBuilder_ == null) {
-        authorities_ = java.util.Collections.emptyList();
+    public Builder clearRequests() {
+      if (requestsBuilder_ == null) {
+        requests_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
       } else {
-        authoritiesBuilder_.clear();
+        requestsBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public Builder removeAuthorities(int index) {
-      if (authoritiesBuilder_ == null) {
-        ensureAuthoritiesIsMutable();
-        authorities_.remove(index);
+    public Builder removeRequests(int index) {
+      if (requestsBuilder_ == null) {
+        ensureRequestsIsMutable();
+        requests_.remove(index);
         onChanged();
       } else {
-        authoritiesBuilder_.remove(index);
+        requestsBuilder_.remove(index);
       }
       return this;
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder getAuthoritiesBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder getRequestsBuilder(
         int index) {
-      return getAuthoritiesFieldBuilder().getBuilder(index);
+      return getRequestsFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder getAuthoritiesOrBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder getRequestsOrBuilder(
         int index) {
-      if (authoritiesBuilder_ == null) {
-        return authorities_.get(index);  } else {
-        return authoritiesBuilder_.getMessageOrBuilder(index);
+      if (requestsBuilder_ == null) {
+        return requests_.get(index);  } else {
+        return requestsBuilder_.getMessageOrBuilder(index);
       }
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder> 
-         getAuthoritiesOrBuilderList() {
-      if (authoritiesBuilder_ != null) {
-        return authoritiesBuilder_.getMessageOrBuilderList();
+    public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder> 
+         getRequestsOrBuilderList() {
+      if (requestsBuilder_ != null) {
+        return requestsBuilder_.getMessageOrBuilderList();
       } else {
-        return java.util.Collections.unmodifiableList(authorities_);
+        return java.util.Collections.unmodifiableList(requests_);
       }
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder addAuthoritiesBuilder() {
-      return getAuthoritiesFieldBuilder().addBuilder(
-          org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance());
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder addRequestsBuilder() {
+      return getRequestsFieldBuilder().addBuilder(
+          org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.getDefaultInstance());
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder addAuthoritiesBuilder(
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder addRequestsBuilder(
         int index) {
-      return getAuthoritiesFieldBuilder().addBuilder(
-          index, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance());
+      return getRequestsFieldBuilder().addBuilder(
+          index, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.getDefaultInstance());
     }
     /**
-     * <code>repeated .beacon.SslAuthority authorities = 2;</code>
+     * <code>repeated .beacon.AgentRequest requests = 2;</code>
      */
-    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder> 
-         getAuthoritiesBuilderList() {
-      return getAuthoritiesFieldBuilder().getBuilderList();
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder> 
+         getRequestsBuilderList() {
+      return getRequestsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder> 
-        getAuthoritiesFieldBuilder() {
-      if (authoritiesBuilder_ == null) {
-        authoritiesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder>(
-                authorities_,
+        org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder> 
+        getRequestsFieldBuilder() {
+      if (requestsBuilder_ == null) {
+        requestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequestOrBuilder>(
+                requests_,
                 ((bitField0_ & 0x00000002) != 0),
                 getParentForChildren(),
                 isClean());
-        authorities_ = null;
+        requests_ = null;
       }
-      return authoritiesBuilder_;
+      return requestsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(
@@ -900,41 +900,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:beacon.ListSslAuthoritiesReply)
+    // @@protoc_insertion_point(builder_scope:beacon.ListAgentsRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:beacon.ListSslAuthoritiesReply)
-  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:beacon.ListAgentsRequest)
+  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply();
+    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest();
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply getDefaultInstance() {
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<ListSslAuthoritiesReply>
-      PARSER = new com.google.protobuf.AbstractParser<ListSslAuthoritiesReply>() {
+  private static final com.google.protobuf.Parser<ListAgentsRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ListAgentsRequest>() {
     @java.lang.Override
-    public ListSslAuthoritiesReply parsePartialFrom(
+    public ListAgentsRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new ListSslAuthoritiesReply(input, extensionRegistry);
+      return new ListAgentsRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<ListSslAuthoritiesReply> parser() {
+  public static com.google.protobuf.Parser<ListAgentsRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<ListSslAuthoritiesReply> getParserForType() {
+  public com.google.protobuf.Parser<ListAgentsRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply getDefaultInstanceForType() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

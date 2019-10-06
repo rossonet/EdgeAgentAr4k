@@ -487,7 +487,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
       beaconClient = new BeaconClient(this, rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort,
-          discoveryFilter, getAgentUniqueName(), null, null, null);
+          discoveryFilter, getAgentUniqueName(), null, null, null, null, null);
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {

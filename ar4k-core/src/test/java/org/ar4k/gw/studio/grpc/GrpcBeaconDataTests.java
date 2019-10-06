@@ -73,7 +73,7 @@ public class GrpcBeaconDataTests {
 
   @Test
   public void implementTestClass() throws InterruptedException, IOException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null, null, null);
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -83,7 +83,7 @@ public class GrpcBeaconDataTests {
 
   @Test
   public void testRegistration() throws InterruptedException, IOException, ParseException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null, null, null);
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -97,7 +97,7 @@ public class GrpcBeaconDataTests {
 
   @Test
   public void checkRemoteList() throws InterruptedException, IOException, ParseException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null, null, null);
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -114,7 +114,7 @@ public class GrpcBeaconDataTests {
   @Test
   public void checkDiscoveryRegistration() throws InterruptedException, IOException, ParseException {
     client = new BeaconClient(anima, rpcConversation, "127.0.0.1", 0, 33666, "AR4K", UUID.randomUUID().toString(), null,
-        null, null);
+        null, null, null, null);
     Thread.sleep(12000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);

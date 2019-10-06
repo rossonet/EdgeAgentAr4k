@@ -348,99 +348,99 @@ public final class RpcServiceV1Grpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ListSslAuthorities",
+      fullMethodName = SERVICE_NAME + '/' + "ListAgentsRequestComplete",
       requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-      org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> getListSslAuthoritiesMethod;
-    if ((getListSslAuthoritiesMethod = RpcServiceV1Grpc.getListSslAuthoritiesMethod) == null) {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestCompleteMethod;
+    if ((getListAgentsRequestCompleteMethod = RpcServiceV1Grpc.getListAgentsRequestCompleteMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getListSslAuthoritiesMethod = RpcServiceV1Grpc.getListSslAuthoritiesMethod) == null) {
-          RpcServiceV1Grpc.getListSslAuthoritiesMethod = getListSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>newBuilder()
+        if ((getListAgentsRequestCompleteMethod = RpcServiceV1Grpc.getListAgentsRequestCompleteMethod) == null) {
+          RpcServiceV1Grpc.getListAgentsRequestCompleteMethod = getListAgentsRequestCompleteMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "ListSslAuthorities"))
+                  "beacon.RpcServiceV1", "ListAgentsRequestComplete"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListSslAuthorities"))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListAgentsRequestComplete"))
                   .build();
           }
         }
      }
-     return getListSslAuthoritiesMethod;
+     return getListAgentsRequestCompleteMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getAddSslAuthoritiesMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "AddSslAuthorities",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class,
-      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.Status.class,
+      fullMethodName = SERVICE_NAME + '/' + "ListAgentsRequestToDo",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Empty.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getAddSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.Status> getAddSslAuthoritiesMethod;
-    if ((getAddSslAuthoritiesMethod = RpcServiceV1Grpc.getAddSslAuthoritiesMethod) == null) {
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> getListAgentsRequestToDoMethod;
+    if ((getListAgentsRequestToDoMethod = RpcServiceV1Grpc.getListAgentsRequestToDoMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getAddSslAuthoritiesMethod = RpcServiceV1Grpc.getAddSslAuthoritiesMethod) == null) {
-          RpcServiceV1Grpc.getAddSslAuthoritiesMethod = getAddSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.Status>newBuilder()
+        if ((getListAgentsRequestToDoMethod = RpcServiceV1Grpc.getListAgentsRequestToDoMethod) == null) {
+          RpcServiceV1Grpc.getListAgentsRequestToDoMethod = getListAgentsRequestToDoMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Empty, org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "AddSslAuthorities"))
+                  "beacon.RpcServiceV1", "ListAgentsRequestToDo"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Empty.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("AddSslAuthorities"))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ListAgentsRequestToDo"))
                   .build();
           }
         }
      }
-     return getAddSslAuthoritiesMethod;
+     return getListAgentsRequestToDoMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getDropSslAuthoritiesMethod;
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getApproveAgentRequestMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "DropSslAuthorities",
-      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class,
+      fullMethodName = SERVICE_NAME + '/' + "ApproveAgentRequest",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.class,
       responseType = org.ar4k.agent.tunnels.http.grpc.beacon.Status.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getDropSslAuthoritiesMethod() {
-    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.Status> getDropSslAuthoritiesMethod;
-    if ((getDropSslAuthoritiesMethod = RpcServiceV1Grpc.getDropSslAuthoritiesMethod) == null) {
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest,
+      org.ar4k.agent.tunnels.http.grpc.beacon.Status> getApproveAgentRequestMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest, org.ar4k.agent.tunnels.http.grpc.beacon.Status> getApproveAgentRequestMethod;
+    if ((getApproveAgentRequestMethod = RpcServiceV1Grpc.getApproveAgentRequestMethod) == null) {
       synchronized (RpcServiceV1Grpc.class) {
-        if ((getDropSslAuthoritiesMethod = RpcServiceV1Grpc.getDropSslAuthoritiesMethod) == null) {
-          RpcServiceV1Grpc.getDropSslAuthoritiesMethod = getDropSslAuthoritiesMethod = 
-              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority, org.ar4k.agent.tunnels.http.grpc.beacon.Status>newBuilder()
+        if ((getApproveAgentRequestMethod = RpcServiceV1Grpc.getApproveAgentRequestMethod) == null) {
+          RpcServiceV1Grpc.getApproveAgentRequestMethod = getApproveAgentRequestMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest, org.ar4k.agent.tunnels.http.grpc.beacon.Status>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "beacon.RpcServiceV1", "DropSslAuthorities"))
+                  "beacon.RpcServiceV1", "ApproveAgentRequest"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance()))
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.ar4k.agent.tunnels.http.grpc.beacon.Status.getDefaultInstance()))
-                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("DropSslAuthorities"))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("ApproveAgentRequest"))
                   .build();
           }
         }
      }
-     return getDropSslAuthoritiesMethod;
+     return getApproveAgentRequestMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
@@ -679,27 +679,24 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * TODO gestione ssl con Beacon
-     * </pre>
      */
-    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getListSslAuthoritiesMethod(), responseObserver);
+    public void listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+      asyncUnimplementedUnaryCall(getListAgentsRequestCompleteMethod(), responseObserver);
     }
 
     /**
      */
-    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
-      asyncUnimplementedUnaryCall(getAddSslAuthoritiesMethod(), responseObserver);
+    public void listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
+      asyncUnimplementedUnaryCall(getListAgentsRequestToDoMethod(), responseObserver);
     }
 
     /**
      */
-    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+    public void approveAgentRequest(org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
-      asyncUnimplementedUnaryCall(getDropSslAuthoritiesMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getApproveAgentRequestMethod(), responseObserver);
     }
 
     /**
@@ -809,26 +806,26 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply>(
                   this, METHODID_LIST_AGENTS)))
           .addMethod(
-            getListSslAuthoritiesMethod(),
+            getListAgentsRequestCompleteMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
-                org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>(
-                  this, METHODID_LIST_SSL_AUTHORITIES)))
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>(
+                  this, METHODID_LIST_AGENTS_REQUEST_COMPLETE)))
           .addMethod(
-            getAddSslAuthoritiesMethod(),
+            getListAgentsRequestToDoMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
-                org.ar4k.agent.tunnels.http.grpc.beacon.Status>(
-                  this, METHODID_ADD_SSL_AUTHORITIES)))
+                org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>(
+                  this, METHODID_LIST_AGENTS_REQUEST_TO_DO)))
           .addMethod(
-            getDropSslAuthoritiesMethod(),
+            getApproveAgentRequestMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest,
                 org.ar4k.agent.tunnels.http.grpc.beacon.Status>(
-                  this, METHODID_DROP_SSL_AUTHORITIES)))
+                  this, METHODID_APPROVE_AGENT_REQUEST)))
           .addMethod(
             getKickAgentMethod(),
             asyncUnaryCall(
@@ -970,30 +967,27 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * TODO gestione ssl con Beacon
-     * </pre>
      */
-    public void listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> responseObserver) {
+    public void listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getListSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getListAgentsRequestCompleteMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
-        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
+    public void listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getAddSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getListAgentsRequestToDoMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request,
+    public void approveAgentRequest(org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getDropSslAuthoritiesMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getApproveAgentRequestMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -1135,27 +1129,24 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * TODO gestione ssl con Beacon
-     * </pre>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply listSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest listAgentsRequestComplete(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
-          getChannel(), getListSslAuthoritiesMethod(), getCallOptions(), request);
+          getChannel(), getListAgentsRequestCompleteMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Status addSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest listAgentsRequestToDo(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
-          getChannel(), getAddSslAuthoritiesMethod(), getCallOptions(), request);
+          getChannel(), getListAgentsRequestToDoMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Status dropSslAuthorities(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.Status approveAgentRequest(org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest request) {
       return blockingUnaryCall(
-          getChannel(), getDropSslAuthoritiesMethod(), getCallOptions(), request);
+          getChannel(), getApproveAgentRequestMethod(), getCallOptions(), request);
     }
 
     /**
@@ -1294,30 +1285,27 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * TODO gestione ssl con Beacon
-     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply> listSslAuthorities(
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> listAgentsRequestComplete(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
-          getChannel().newCall(getListSslAuthoritiesMethod(), getCallOptions()), request);
+          getChannel().newCall(getListAgentsRequestCompleteMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> addSslAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest> listAgentsRequestToDo(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
-          getChannel().newCall(getAddSslAuthoritiesMethod(), getCallOptions()), request);
+          getChannel().newCall(getListAgentsRequestToDoMethod(), getCallOptions()), request);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> dropSslAuthorities(
-        org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority request) {
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> approveAgentRequest(
+        org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(getDropSslAuthoritiesMethod(), getCallOptions()), request);
+          getChannel().newCall(getApproveAgentRequestMethod(), getCallOptions()), request);
     }
 
     /**
@@ -1369,9 +1357,9 @@ public final class RpcServiceV1Grpc {
   private static final int METHODID_SEND_EXCEPTION = 7;
   private static final int METHODID_SEND_CONFIG_RUNTIME = 8;
   private static final int METHODID_LIST_AGENTS = 9;
-  private static final int METHODID_LIST_SSL_AUTHORITIES = 10;
-  private static final int METHODID_ADD_SSL_AUTHORITIES = 11;
-  private static final int METHODID_DROP_SSL_AUTHORITIES = 12;
+  private static final int METHODID_LIST_AGENTS_REQUEST_COMPLETE = 10;
+  private static final int METHODID_LIST_AGENTS_REQUEST_TO_DO = 11;
+  private static final int METHODID_APPROVE_AGENT_REQUEST = 12;
   private static final int METHODID_KICK_AGENT = 13;
   private static final int METHODID_ELABORATE_MESSAGE = 14;
   private static final int METHODID_LIST_COMMANDS = 15;
@@ -1434,16 +1422,16 @@ public final class RpcServiceV1Grpc {
           serviceImpl.listAgents((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply>) responseObserver);
           break;
-        case METHODID_LIST_SSL_AUTHORITIES:
-          serviceImpl.listSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListSslAuthoritiesReply>) responseObserver);
+        case METHODID_LIST_AGENTS_REQUEST_COMPLETE:
+          serviceImpl.listAgentsRequestComplete((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>) responseObserver);
           break;
-        case METHODID_ADD_SSL_AUTHORITIES:
-          serviceImpl.addSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) request,
-              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status>) responseObserver);
+        case METHODID_LIST_AGENTS_REQUEST_TO_DO:
+          serviceImpl.listAgentsRequestToDo((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequest>) responseObserver);
           break;
-        case METHODID_DROP_SSL_AUTHORITIES:
-          serviceImpl.dropSslAuthorities((org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) request,
+        case METHODID_APPROVE_AGENT_REQUEST:
+          serviceImpl.approveAgentRequest((org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status>) responseObserver);
           break;
         case METHODID_KICK_AGENT:
@@ -1533,9 +1521,9 @@ public final class RpcServiceV1Grpc {
               .addMethod(getSendExceptionMethod())
               .addMethod(getSendConfigRuntimeMethod())
               .addMethod(getListAgentsMethod())
-              .addMethod(getListSslAuthoritiesMethod())
-              .addMethod(getAddSslAuthoritiesMethod())
-              .addMethod(getDropSslAuthoritiesMethod())
+              .addMethod(getListAgentsRequestCompleteMethod())
+              .addMethod(getListAgentsRequestToDoMethod())
+              .addMethod(getApproveAgentRequestMethod())
               .addMethod(getKickAgentMethod())
               .addMethod(getElaborateMessageMethod())
               .addMethod(getListCommandsMethod())

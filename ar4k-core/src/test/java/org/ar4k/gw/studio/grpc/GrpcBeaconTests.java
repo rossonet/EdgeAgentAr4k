@@ -120,28 +120,23 @@ public class GrpcBeaconTests {
   public void implementTest() {
     try {
       Thread.sleep(6000L);
+      System.out.println("looking for alias " + anima.getMyAliasCertInKeystore());
+      System.out.println("in keystore certificates " + anima.getMyIdentityKeystore().listCertificate());
+      System.out.println("Test completed");
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    System.out.println("looking for alias " + anima.getMyAliasCertInKeystore());
-    System.out.println("in keystore certificates " + anima.getMyIdentityKeystore().listCertificate());
-    System.out.println("Test completed");
   }
 
   @Test
   public void implementTestClass() {
     try {
       Thread.sleep(2000L);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    client = new BeaconClient(anima, rpcConversation, "localhost", port, 0, null, null, null, null, null);
-    String ls = client.getStateConnection().name();
-    System.out.println("LAST STATE: " + ls);
-    assertEquals("READY", ls);
-    // server.blockUntilShutdown();
-    try {
-      Thread.sleep(5000L);
+      client = new BeaconClient(anima, rpcConversation, "localhost", port, 0, null, null, null, null, null, null, null);
+      Thread.sleep(2000L);
+      String ls = client.getStateConnection().name();
+      System.out.println("LAST STATE: " + ls);
+      assertEquals("READY", ls);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -151,13 +146,11 @@ public class GrpcBeaconTests {
   public void testRegistration() {
     try {
       Thread.sleep(2000L);
-      client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+      client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null, null, null);
+      Thread.sleep(2000L);
       String ls = client.getStateConnection().name();
       System.out.println("LAST STATE: " + ls);
       assertEquals("READY", ls);
-      // server.blockUntilShutdown();
-      // String status = client.registerToBeacon(Anima.generateNewUniqueName());
-      Thread.sleep(2000L);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -165,7 +158,7 @@ public class GrpcBeaconTests {
 
   @Test
   public void checkRemoteList() throws InterruptedException, IOException, ParseException {
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null);
+    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, null, null, null, null, null, null, null);
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -182,7 +175,7 @@ public class GrpcBeaconTests {
   @Test
   public void checkDiscoveryRegistration() throws InterruptedException, IOException, ParseException {
     client = new BeaconClient(anima, rpcConversation, "127.0.0.1", 0, 33666, "AR4K", UUID.randomUUID().toString(), null,
-        null, null);
+        null, null, null, null);
     Thread.sleep(12000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);

@@ -30,6 +30,21 @@ public final class BeaconMirrorService {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_beacon_RegisterReply_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_ListAgentsRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_ListAgentsRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_AgentRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_AgentRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_ApproveAgentRequestRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_ApproveAgentRequestRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_beacon_Status_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -94,16 +109,6 @@ public final class BeaconMirrorService {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_beacon_ListAgentsReply_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_ListSslAuthoritiesReply_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_ListSslAuthoritiesReply_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_beacon_SslAuthority_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_beacon_SslAuthority_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_beacon_ElaborateMessageRequest_descriptor;
   static final 
@@ -197,39 +202,43 @@ public final class BeaconMirrorService {
       "\n\023monitoringFrequency\030\002 \001(\005\022\014\n\004cert\030\003 \001(" +
       "\t\022\n\n\002ca\030\004 \001(\014\022*\n\022statusRegistration\030\005 \001(" +
       "\0132\016.beacon.Status\022\035\n\025timestampRegistrati" +
-      "on\030\006 \001(\003\"-\n\006Status\022#\n\006status\030\001 \001(\0162\023.bea" +
-      "con.StatusValue\" \n\005Agent\022\027\n\017agentUniqueN" +
-      "ame\030\001 \001(\t\"6\n\013ConfigReply\022\024\n\014base64Config" +
-      "\030\001 \001(\t\022\021\n\trestartAt\030\002 \001(\003\"V\n\014ConfigRepor" +
-      "t\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\024\n\014base6" +
-      "4Config\030\002 \001(\t\022\022\n\njsonConfig\030\003 \001(\t\"7\n\013Flo" +
-      "wMessage\022(\n\010toDoList\030\001 \003(\0132\026.beacon.Requ" +
-      "estToAgent\"\267\001\n\016RequestToAgent\022!\n\004type\030\001 " +
-      "\001(\0162\023.beacon.CommandType\022\035\n\006caller\030\002 \001(\013" +
-      "2\r.beacon.Agent\022\027\n\017uniqueIdRequest\030\003 \001(\t" +
-      "\022\026\n\016requestCommand\030\004 \001(\t\022\r\n\005words\030\005 \003(\t\022" +
-      "\021\n\twordIndex\030\006 \001(\005\022\020\n\010position\030\007 \001(\005\"n\n\013" +
-      "ChatMessage\022\"\n\013agentSender\030\001 \001(\0132\r.beaco" +
-      "n.Agent\022\'\n\020agentDestination\030\002 \001(\0132\r.beac" +
-      "on.Agent\022\022\n\nmessageTxt\030\003 \001(\t\"\234\001\n\023Command" +
-      "ReplyRequest\022\027\n\017uniqueIdRequest\030\001 \001(\t\022\"\n" +
-      "\013agentSender\030\002 \001(\0132\r.beacon.Agent\022\'\n\020age" +
-      "ntDestination\030\003 \001(\0132\r.beacon.Agent\022\017\n\007re" +
-      "plies\030\004 \003(\t\022\016\n\006errors\030\005 \003(\t\"M\n\rHealthReq" +
-      "uest\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent" +
-      "\022\030\n\020jsonHardwareInfo\030\002 \001(\t\"h\n\nLogRequest" +
-      "\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022%\n\010" +
-      "severity\030\002 \001(\0162\023.beacon.LogSeverity\022\017\n\007l" +
-      "ogLine\030\003 \001(\t\"m\n\020ExceptionRequest\022\"\n\013agen" +
-      "tSender\030\001 \001(\0132\r.beacon.Agent\022\030\n\020messageE" +
-      "xception\030\002 \001(\t\022\033\n\023stackTraceException\030\003 " +
-      "\001(\t\"\007\n\005Empty\"P\n\017ListAgentsReply\022\036\n\006resul" +
-      "t\030\001 \001(\0132\016.beacon.Status\022\035\n\006agents\030\002 \003(\0132" +
-      "\r.beacon.Agent\"d\n\027ListSslAuthoritiesRepl" +
-      "y\022\036\n\006result\030\001 \001(\0132\016.beacon.Status\022)\n\013aut" +
-      "horities\030\002 \003(\0132\024.beacon.SslAuthority\"G\n\014" +
-      "SslAuthority\022\r\n\005label\030\001 \001(\t\022\023\n\013descripti" +
-      "on\030\002 \001(\t\022\023\n\013authorityCa\030\003 \001(\t\"y\n\027Elabora" +
+      "on\030\006 \001(\003\"[\n\021ListAgentsRequest\022\036\n\006result\030" +
+      "\001 \001(\0132\016.beacon.Status\022&\n\010requests\030\002 \003(\0132" +
+      "\024.beacon.AgentRequest\"\242\001\n\014AgentRequest\022(" +
+      "\n\007request\030\001 \001(\0132\027.beacon.RegisterRequest" +
+      "\022\021\n\tidRequest\030\002 \001(\t\022#\n\010approved\030\003 \001(\0132\021." +
+      "beacon.Timestamp\0220\n\025registrationComplete" +
+      "d\030\004 \001(\0132\021.beacon.Timestamp\"K\n\032ApproveAge" +
+      "ntRequestRequest\022\021\n\tidRequest\030\001 \001(\t\022\014\n\004c" +
+      "ert\030\002 \001(\t\022\014\n\004note\030\003 \001(\t\"-\n\006Status\022#\n\006sta" +
+      "tus\030\001 \001(\0162\023.beacon.StatusValue\" \n\005Agent\022" +
+      "\027\n\017agentUniqueName\030\001 \001(\t\"6\n\013ConfigReply\022" +
+      "\024\n\014base64Config\030\001 \001(\t\022\021\n\trestartAt\030\002 \001(\003" +
+      "\"V\n\014ConfigReport\022\034\n\005agent\030\001 \001(\0132\r.beacon" +
+      ".Agent\022\024\n\014base64Config\030\002 \001(\t\022\022\n\njsonConf" +
+      "ig\030\003 \001(\t\"7\n\013FlowMessage\022(\n\010toDoList\030\001 \003(" +
+      "\0132\026.beacon.RequestToAgent\"\267\001\n\016RequestToA" +
+      "gent\022!\n\004type\030\001 \001(\0162\023.beacon.CommandType\022" +
+      "\035\n\006caller\030\002 \001(\0132\r.beacon.Agent\022\027\n\017unique" +
+      "IdRequest\030\003 \001(\t\022\026\n\016requestCommand\030\004 \001(\t\022" +
+      "\r\n\005words\030\005 \003(\t\022\021\n\twordIndex\030\006 \001(\005\022\020\n\010pos" +
+      "ition\030\007 \001(\005\"n\n\013ChatMessage\022\"\n\013agentSende" +
+      "r\030\001 \001(\0132\r.beacon.Agent\022\'\n\020agentDestinati" +
+      "on\030\002 \001(\0132\r.beacon.Agent\022\022\n\nmessageTxt\030\003 " +
+      "\001(\t\"\234\001\n\023CommandReplyRequest\022\027\n\017uniqueIdR" +
+      "equest\030\001 \001(\t\022\"\n\013agentSender\030\002 \001(\0132\r.beac" +
+      "on.Agent\022\'\n\020agentDestination\030\003 \001(\0132\r.bea" +
+      "con.Agent\022\017\n\007replies\030\004 \003(\t\022\016\n\006errors\030\005 \003" +
+      "(\t\"M\n\rHealthRequest\022\"\n\013agentSender\030\001 \001(\013" +
+      "2\r.beacon.Agent\022\030\n\020jsonHardwareInfo\030\002 \001(" +
+      "\t\"h\n\nLogRequest\022\"\n\013agentSender\030\001 \001(\0132\r.b" +
+      "eacon.Agent\022%\n\010severity\030\002 \001(\0162\023.beacon.L" +
+      "ogSeverity\022\017\n\007logLine\030\003 \001(\t\"m\n\020Exception" +
+      "Request\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Ag" +
+      "ent\022\030\n\020messageException\030\002 \001(\t\022\033\n\023stackTr" +
+      "aceException\030\003 \001(\t\"\007\n\005Empty\"P\n\017ListAgent" +
+      "sReply\022\036\n\006result\030\001 \001(\0132\016.beacon.Status\022\035" +
+      "\n\006agents\030\002 \003(\0132\r.beacon.Agent\"y\n\027Elabora" +
       "teMessageRequest\022\"\n\013agentTarget\030\001 \001(\0132\r." +
       "beacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.beac" +
       "on.Agent\022\026\n\016commandMessage\030\003 \001(\t\"6\n\025Elab" +
@@ -282,7 +291,7 @@ public final class BeaconMirrorService {
       "CY\020\240\006*\215\001\n\010DataType\022\n\n\006STRING\020\000\022\010\n\004CHAR\020\001" +
       "\022\t\n\005BYTES\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005FLO" +
       "AT\020\005\022\n\n\006DOUBLE\020\006\022\013\n\007BOOLEAN\020\007\022\r\n\tTIMESTA" +
-      "MP\020\010\022\n\n\006OBJECT\020\t\022\013\n\007UNKNOWN\020\n2\305\010\n\014RpcSer" +
+      "MP\020\010\022\n\n\006OBJECT\020\t\022\013\n\007UNKNOWN\020\n2\335\010\n\014RpcSer" +
       "viceV1\022<\n\010Register\022\027.beacon.RegisterRequ" +
       "est\032\025.beacon.RegisterReply\"\000\0227\n\017PollingC" +
       "mdQueue\022\r.beacon.Agent\032\023.beacon.FlowMess" +
@@ -298,29 +307,30 @@ public final class BeaconMirrorService {
       "@\n\021SendConfigRuntime\022\024.beacon.ConfigRepo" +
       "rt\032\023.beacon.ConfigReply\"\000\0226\n\nListAgents\022" +
       "\r.beacon.Empty\032\027.beacon.ListAgentsReply\"" +
-      "\000\022F\n\022ListSslAuthorities\022\r.beacon.Empty\032\037" +
-      ".beacon.ListSslAuthoritiesReply\"\000\022;\n\021Add" +
-      "SslAuthorities\022\024.beacon.SslAuthority\032\016.b" +
-      "eacon.Status\"\000\022<\n\022DropSslAuthorities\022\024.b" +
-      "eacon.SslAuthority\032\016.beacon.Status\"\000\022,\n\t" +
-      "KickAgent\022\r.beacon.Agent\032\016.beacon.Status" +
-      "\"\000\022T\n\020ElaborateMessage\022\037.beacon.Elaborat" +
-      "eMessageRequest\032\035.beacon.ElaborateMessag" +
-      "eReply\"\000\022H\n\014ListCommands\022\033.beacon.ListCo" +
-      "mmandsRequest\032\031.beacon.ListCommandsReply" +
-      "\"\000\022Q\n\017CompleteCommand\022\036.beacon.CompleteC" +
-      "ommandRequest\032\034.beacon.CompleteCommandRe" +
-      "ply\"\0002\320\002\n\rDataServiceV1\022<\n\007Polling\022\026.bea" +
-      "con.PollingRequest\032\027.beacon.FlowMessageD" +
-      "ata\"\000\022E\n\014Subscription\022\030.beacon.Subscribe" +
-      "Request\032\027.beacon.FlowMessageData\"\0000\001\0228\n\005" +
-      "Write\022\024.beacon.RequestWrite\032\027.beacon.Flo" +
-      "wMessageData\"\000\022@\n\020SendAddressSpace\022\024.bea" +
-      "con.AddressSpace\032\024.beacon.AddressSpace\"\000" +
-      "\022>\n\025GetRemoteAddressSpace\022\r.beacon.Agent" +
-      "\032\024.beacon.AddressSpace\"\000BG\n\'org.ar4k.age" +
-      "nt.tunnels.http.grpc.beaconB\023BeaconMirro" +
-      "rServiceP\001\242\002\004AR4Kb\006proto3"
+      "\000\022G\n\031ListAgentsRequestComplete\022\r.beacon." +
+      "Empty\032\031.beacon.ListAgentsRequest\"\000\022C\n\025Li" +
+      "stAgentsRequestToDo\022\r.beacon.Empty\032\031.bea" +
+      "con.ListAgentsRequest\"\000\022K\n\023ApproveAgentR" +
+      "equest\022\".beacon.ApproveAgentRequestReque" +
+      "st\032\016.beacon.Status\"\000\022,\n\tKickAgent\022\r.beac" +
+      "on.Agent\032\016.beacon.Status\"\000\022T\n\020ElaborateM" +
+      "essage\022\037.beacon.ElaborateMessageRequest\032" +
+      "\035.beacon.ElaborateMessageReply\"\000\022H\n\014List" +
+      "Commands\022\033.beacon.ListCommandsRequest\032\031." +
+      "beacon.ListCommandsReply\"\000\022Q\n\017CompleteCo" +
+      "mmand\022\036.beacon.CompleteCommandRequest\032\034." +
+      "beacon.CompleteCommandReply\"\0002\320\002\n\rDataSe" +
+      "rviceV1\022<\n\007Polling\022\026.beacon.PollingReque" +
+      "st\032\027.beacon.FlowMessageData\"\000\022E\n\014Subscri" +
+      "ption\022\030.beacon.SubscribeRequest\032\027.beacon" +
+      ".FlowMessageData\"\0000\001\0228\n\005Write\022\024.beacon.R" +
+      "equestWrite\032\027.beacon.FlowMessageData\"\000\022@" +
+      "\n\020SendAddressSpace\022\024.beacon.AddressSpace" +
+      "\032\024.beacon.AddressSpace\"\000\022>\n\025GetRemoteAdd" +
+      "ressSpace\022\r.beacon.Agent\032\024.beacon.Addres" +
+      "sSpace\"\000BG\n\'org.ar4k.agent.tunnels.http." +
+      "grpc.beaconB\023BeaconMirrorServiceP\001\242\002\004AR4" +
+      "Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -352,182 +362,188 @@ public final class BeaconMirrorService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_RegisterReply_descriptor,
         new java.lang.String[] { "RegisterCode", "MonitoringFrequency", "Cert", "Ca", "StatusRegistration", "TimestampRegistration", });
-    internal_static_beacon_Status_descriptor =
+    internal_static_beacon_ListAgentsRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_beacon_ListAgentsRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_ListAgentsRequest_descriptor,
+        new java.lang.String[] { "Result", "Requests", });
+    internal_static_beacon_AgentRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_beacon_AgentRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_AgentRequest_descriptor,
+        new java.lang.String[] { "Request", "IdRequest", "Approved", "RegistrationCompleted", });
+    internal_static_beacon_ApproveAgentRequestRequest_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_beacon_ApproveAgentRequestRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_ApproveAgentRequestRequest_descriptor,
+        new java.lang.String[] { "IdRequest", "Cert", "Note", });
+    internal_static_beacon_Status_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_beacon_Status_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_Status_descriptor,
         new java.lang.String[] { "Status", });
     internal_static_beacon_Agent_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_beacon_Agent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_Agent_descriptor,
         new java.lang.String[] { "AgentUniqueName", });
     internal_static_beacon_ConfigReply_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_beacon_ConfigReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ConfigReply_descriptor,
         new java.lang.String[] { "Base64Config", "RestartAt", });
     internal_static_beacon_ConfigReport_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_beacon_ConfigReport_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ConfigReport_descriptor,
         new java.lang.String[] { "Agent", "Base64Config", "JsonConfig", });
     internal_static_beacon_FlowMessage_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_beacon_FlowMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_FlowMessage_descriptor,
         new java.lang.String[] { "ToDoList", });
     internal_static_beacon_RequestToAgent_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_beacon_RequestToAgent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_RequestToAgent_descriptor,
         new java.lang.String[] { "Type", "Caller", "UniqueIdRequest", "RequestCommand", "Words", "WordIndex", "Position", });
     internal_static_beacon_ChatMessage_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_beacon_ChatMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ChatMessage_descriptor,
         new java.lang.String[] { "AgentSender", "AgentDestination", "MessageTxt", });
     internal_static_beacon_CommandReplyRequest_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_beacon_CommandReplyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CommandReplyRequest_descriptor,
         new java.lang.String[] { "UniqueIdRequest", "AgentSender", "AgentDestination", "Replies", "Errors", });
     internal_static_beacon_HealthRequest_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_beacon_HealthRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_HealthRequest_descriptor,
         new java.lang.String[] { "AgentSender", "JsonHardwareInfo", });
     internal_static_beacon_LogRequest_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_beacon_LogRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_LogRequest_descriptor,
         new java.lang.String[] { "AgentSender", "Severity", "LogLine", });
     internal_static_beacon_ExceptionRequest_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_beacon_ExceptionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ExceptionRequest_descriptor,
         new java.lang.String[] { "AgentSender", "MessageException", "StackTraceException", });
     internal_static_beacon_Empty_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_beacon_Empty_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_Empty_descriptor,
         new java.lang.String[] { });
     internal_static_beacon_ListAgentsReply_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_beacon_ListAgentsReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ListAgentsReply_descriptor,
         new java.lang.String[] { "Result", "Agents", });
-    internal_static_beacon_ListSslAuthoritiesReply_descriptor =
-      getDescriptor().getMessageTypes().get(16);
-    internal_static_beacon_ListSslAuthoritiesReply_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_ListSslAuthoritiesReply_descriptor,
-        new java.lang.String[] { "Result", "Authorities", });
-    internal_static_beacon_SslAuthority_descriptor =
-      getDescriptor().getMessageTypes().get(17);
-    internal_static_beacon_SslAuthority_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_beacon_SslAuthority_descriptor,
-        new java.lang.String[] { "Label", "Description", "AuthorityCa", });
     internal_static_beacon_ElaborateMessageRequest_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_beacon_ElaborateMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ElaborateMessageRequest_descriptor,
         new java.lang.String[] { "AgentTarget", "AgentSender", "CommandMessage", });
     internal_static_beacon_ElaborateMessageReply_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_beacon_ElaborateMessageReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ElaborateMessageReply_descriptor,
         new java.lang.String[] { "Reply", "Errors", });
     internal_static_beacon_ListCommandsRequest_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_beacon_ListCommandsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ListCommandsRequest_descriptor,
         new java.lang.String[] { "AgentTarget", "AgentSender", });
     internal_static_beacon_ListCommandsReply_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_beacon_ListCommandsReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ListCommandsReply_descriptor,
         new java.lang.String[] { "Commands", });
     internal_static_beacon_Command_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_beacon_Command_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_Command_descriptor,
         new java.lang.String[] { "AgentSender", "Command", });
     internal_static_beacon_CompleteCommandRequest_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_beacon_CompleteCommandRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CompleteCommandRequest_descriptor,
         new java.lang.String[] { "AgentTarget", "AgentSender", "Words", "WordIndex", "Position", });
     internal_static_beacon_CompleteCommandReply_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_beacon_CompleteCommandReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CompleteCommandReply_descriptor,
         new java.lang.String[] { "Replies", "Errors", });
     internal_static_beacon_PollingRequest_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_beacon_PollingRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_PollingRequest_descriptor,
         new java.lang.String[] { "Agent", "DataNodes", });
     internal_static_beacon_SubscribeRequest_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_beacon_SubscribeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_SubscribeRequest_descriptor,
         new java.lang.String[] { "Agent", "DataNodes", "SamplingRate", });
     internal_static_beacon_FlowMessageData_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_beacon_FlowMessageData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_FlowMessageData_descriptor,
         new java.lang.String[] { "Values", "HiSpeedRoutingTag", });
     internal_static_beacon_RequestWrite_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_beacon_RequestWrite_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_RequestWrite_descriptor,
         new java.lang.String[] { "Agent", "ValuesToWrite", });
     internal_static_beacon_DataNode_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_beacon_DataNode_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_DataNode_descriptor,
         new java.lang.String[] { "AgentOwner", "NodeId", "JsonValue", "StringValue", "ByteValue", "Quality", "Timestamp", "Type", "Errors", "TimeToExpire", });
     internal_static_beacon_NodeMetadata_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_beacon_NodeMetadata_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_NodeMetadata_descriptor,
         new java.lang.String[] { "DataNode", "Namespace", "DomainId", "Tags", "FatherForScopes", "Logs", });
     internal_static_beacon_AddressSpace_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_beacon_AddressSpace_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_AddressSpace_descriptor,
         new java.lang.String[] { "LastUpdate", "Nodes", });
     internal_static_beacon_ParentScope_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_beacon_ParentScope_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ParentScope_descriptor,

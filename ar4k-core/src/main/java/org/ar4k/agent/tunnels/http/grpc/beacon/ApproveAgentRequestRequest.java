@@ -4,21 +4,21 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf type {@code beacon.SslAuthority}
+ * Protobuf type {@code beacon.ApproveAgentRequestRequest}
  */
-public  final class SslAuthority extends
+public  final class ApproveAgentRequestRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:beacon.SslAuthority)
-    SslAuthorityOrBuilder {
+    // @@protoc_insertion_point(message_implements:beacon.ApproveAgentRequestRequest)
+    ApproveAgentRequestRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use SslAuthority.newBuilder() to construct.
-  private SslAuthority(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ApproveAgentRequestRequest.newBuilder() to construct.
+  private ApproveAgentRequestRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private SslAuthority() {
-    label_ = "";
-    description_ = "";
-    authorityCa_ = "";
+  private ApproveAgentRequestRequest() {
+    idRequest_ = "";
+    cert_ = "";
+    note_ = "";
   }
 
   @java.lang.Override
@@ -26,7 +26,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private SslAuthority(
+  private ApproveAgentRequestRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -48,19 +48,19 @@ private static final long serialVersionUID = 0L;
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            label_ = s;
+            idRequest_ = s;
             break;
           }
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            description_ = s;
+            cert_ = s;
             break;
           }
           case 26: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            authorityCa_ = s;
+            note_ = s;
             break;
           }
           default: {
@@ -84,113 +84,121 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_SslAuthority_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ApproveAgentRequestRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_SslAuthority_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ApproveAgentRequestRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder.class);
+            org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.Builder.class);
   }
 
-  public static final int LABEL_FIELD_NUMBER = 1;
-  private volatile java.lang.Object label_;
+  public static final int IDREQUEST_FIELD_NUMBER = 1;
+  private volatile java.lang.Object idRequest_;
   /**
-   * <code>string label = 1;</code>
+   * <code>string idRequest = 1;</code>
    */
-  public java.lang.String getLabel() {
-    java.lang.Object ref = label_;
+  public java.lang.String getIdRequest() {
+    java.lang.Object ref = idRequest_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      label_ = s;
+      idRequest_ = s;
       return s;
     }
   }
   /**
-   * <code>string label = 1;</code>
+   * <code>string idRequest = 1;</code>
    */
   public com.google.protobuf.ByteString
-      getLabelBytes() {
-    java.lang.Object ref = label_;
+      getIdRequestBytes() {
+    java.lang.Object ref = idRequest_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      label_ = b;
+      idRequest_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int DESCRIPTION_FIELD_NUMBER = 2;
-  private volatile java.lang.Object description_;
+  public static final int CERT_FIELD_NUMBER = 2;
+  private volatile java.lang.Object cert_;
   /**
-   * <code>string description = 2;</code>
+   * <pre>
+   * da utilizzare se il certificato viene firmato esternamente
+   * </pre>
+   *
+   * <code>string cert = 2;</code>
    */
-  public java.lang.String getDescription() {
-    java.lang.Object ref = description_;
+  public java.lang.String getCert() {
+    java.lang.Object ref = cert_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      description_ = s;
+      cert_ = s;
       return s;
     }
   }
   /**
-   * <code>string description = 2;</code>
+   * <pre>
+   * da utilizzare se il certificato viene firmato esternamente
+   * </pre>
+   *
+   * <code>string cert = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getDescriptionBytes() {
-    java.lang.Object ref = description_;
+      getCertBytes() {
+    java.lang.Object ref = cert_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      description_ = b;
+      cert_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int AUTHORITYCA_FIELD_NUMBER = 3;
-  private volatile java.lang.Object authorityCa_;
+  public static final int NOTE_FIELD_NUMBER = 3;
+  private volatile java.lang.Object note_;
   /**
-   * <code>string authorityCa = 3;</code>
+   * <code>string note = 3;</code>
    */
-  public java.lang.String getAuthorityCa() {
-    java.lang.Object ref = authorityCa_;
+  public java.lang.String getNote() {
+    java.lang.Object ref = note_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      authorityCa_ = s;
+      note_ = s;
       return s;
     }
   }
   /**
-   * <code>string authorityCa = 3;</code>
+   * <code>string note = 3;</code>
    */
   public com.google.protobuf.ByteString
-      getAuthorityCaBytes() {
-    java.lang.Object ref = authorityCa_;
+      getNoteBytes() {
+    java.lang.Object ref = note_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      authorityCa_ = b;
+      note_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -211,14 +219,14 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getLabelBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, label_);
+    if (!getIdRequestBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, idRequest_);
     }
-    if (!getDescriptionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, description_);
+    if (!getCertBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, cert_);
     }
-    if (!getAuthorityCaBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, authorityCa_);
+    if (!getNoteBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, note_);
     }
     unknownFields.writeTo(output);
   }
@@ -229,14 +237,14 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getLabelBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, label_);
+    if (!getIdRequestBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, idRequest_);
     }
-    if (!getDescriptionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, description_);
+    if (!getCertBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, cert_);
     }
-    if (!getAuthorityCaBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, authorityCa_);
+    if (!getNoteBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, note_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -248,17 +256,17 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority)) {
+    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest)) {
       return super.equals(obj);
     }
-    org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority other = (org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) obj;
+    org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest other = (org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest) obj;
 
-    if (!getLabel()
-        .equals(other.getLabel())) return false;
-    if (!getDescription()
-        .equals(other.getDescription())) return false;
-    if (!getAuthorityCa()
-        .equals(other.getAuthorityCa())) return false;
+    if (!getIdRequest()
+        .equals(other.getIdRequest())) return false;
+    if (!getCert()
+        .equals(other.getCert())) return false;
+    if (!getNote()
+        .equals(other.getNote())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -270,80 +278,80 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + LABEL_FIELD_NUMBER;
-    hash = (53 * hash) + getLabel().hashCode();
-    hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-    hash = (53 * hash) + getDescription().hashCode();
-    hash = (37 * hash) + AUTHORITYCA_FIELD_NUMBER;
-    hash = (53 * hash) + getAuthorityCa().hashCode();
+    hash = (37 * hash) + IDREQUEST_FIELD_NUMBER;
+    hash = (53 * hash) + getIdRequest().hashCode();
+    hash = (37 * hash) + CERT_FIELD_NUMBER;
+    hash = (53 * hash) + getCert().hashCode();
+    hash = (37 * hash) + NOTE_FIELD_NUMBER;
+    hash = (53 * hash) + getNote().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(byte[] data)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseDelimitedFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseDelimitedFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -356,7 +364,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority prototype) {
+  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -372,26 +380,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code beacon.SslAuthority}
+   * Protobuf type {@code beacon.ApproveAgentRequestRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:beacon.SslAuthority)
-      org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthorityOrBuilder {
+      // @@protoc_insertion_point(builder_implements:beacon.ApproveAgentRequestRequest)
+      org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_SslAuthority_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ApproveAgentRequestRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_SslAuthority_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ApproveAgentRequestRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.class, org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.Builder.class);
+              org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -409,11 +417,11 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      label_ = "";
+      idRequest_ = "";
 
-      description_ = "";
+      cert_ = "";
 
-      authorityCa_ = "";
+      note_ = "";
 
       return this;
     }
@@ -421,17 +429,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_SslAuthority_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ApproveAgentRequestRequest_descriptor;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority getDefaultInstanceForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest getDefaultInstanceForType() {
+      return org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority build() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority result = buildPartial();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest build() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -439,11 +447,11 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority buildPartial() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority result = new org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority(this);
-      result.label_ = label_;
-      result.description_ = description_;
-      result.authorityCa_ = authorityCa_;
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest buildPartial() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest result = new org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest(this);
+      result.idRequest_ = idRequest_;
+      result.cert_ = cert_;
+      result.note_ = note_;
       onBuilt();
       return result;
     }
@@ -482,26 +490,26 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) {
-        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority)other);
+      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest) {
+        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority other) {
-      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority.getDefaultInstance()) return this;
-      if (!other.getLabel().isEmpty()) {
-        label_ = other.label_;
+    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest other) {
+      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest.getDefaultInstance()) return this;
+      if (!other.getIdRequest().isEmpty()) {
+        idRequest_ = other.idRequest_;
         onChanged();
       }
-      if (!other.getDescription().isEmpty()) {
-        description_ = other.description_;
+      if (!other.getCert().isEmpty()) {
+        cert_ = other.cert_;
         onChanged();
       }
-      if (!other.getAuthorityCa().isEmpty()) {
-        authorityCa_ = other.authorityCa_;
+      if (!other.getNote().isEmpty()) {
+        note_ = other.note_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -519,11 +527,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority parsedMessage = null;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority) e.getUnfinishedMessage();
+        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -533,209 +541,229 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object label_ = "";
+    private java.lang.Object idRequest_ = "";
     /**
-     * <code>string label = 1;</code>
+     * <code>string idRequest = 1;</code>
      */
-    public java.lang.String getLabel() {
-      java.lang.Object ref = label_;
+    public java.lang.String getIdRequest() {
+      java.lang.Object ref = idRequest_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        label_ = s;
+        idRequest_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string label = 1;</code>
+     * <code>string idRequest = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getLabelBytes() {
-      java.lang.Object ref = label_;
+        getIdRequestBytes() {
+      java.lang.Object ref = idRequest_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        label_ = b;
+        idRequest_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string label = 1;</code>
+     * <code>string idRequest = 1;</code>
      */
-    public Builder setLabel(
+    public Builder setIdRequest(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      label_ = value;
+      idRequest_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string label = 1;</code>
+     * <code>string idRequest = 1;</code>
      */
-    public Builder clearLabel() {
+    public Builder clearIdRequest() {
       
-      label_ = getDefaultInstance().getLabel();
+      idRequest_ = getDefaultInstance().getIdRequest();
       onChanged();
       return this;
     }
     /**
-     * <code>string label = 1;</code>
+     * <code>string idRequest = 1;</code>
      */
-    public Builder setLabelBytes(
+    public Builder setIdRequestBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      label_ = value;
+      idRequest_ = value;
       onChanged();
       return this;
     }
 
-    private java.lang.Object description_ = "";
+    private java.lang.Object cert_ = "";
     /**
-     * <code>string description = 2;</code>
+     * <pre>
+     * da utilizzare se il certificato viene firmato esternamente
+     * </pre>
+     *
+     * <code>string cert = 2;</code>
      */
-    public java.lang.String getDescription() {
-      java.lang.Object ref = description_;
+    public java.lang.String getCert() {
+      java.lang.Object ref = cert_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        description_ = s;
+        cert_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string description = 2;</code>
+     * <pre>
+     * da utilizzare se il certificato viene firmato esternamente
+     * </pre>
+     *
+     * <code>string cert = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getDescriptionBytes() {
-      java.lang.Object ref = description_;
+        getCertBytes() {
+      java.lang.Object ref = cert_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        description_ = b;
+        cert_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string description = 2;</code>
+     * <pre>
+     * da utilizzare se il certificato viene firmato esternamente
+     * </pre>
+     *
+     * <code>string cert = 2;</code>
      */
-    public Builder setDescription(
+    public Builder setCert(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      description_ = value;
+      cert_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string description = 2;</code>
+     * <pre>
+     * da utilizzare se il certificato viene firmato esternamente
+     * </pre>
+     *
+     * <code>string cert = 2;</code>
      */
-    public Builder clearDescription() {
+    public Builder clearCert() {
       
-      description_ = getDefaultInstance().getDescription();
+      cert_ = getDefaultInstance().getCert();
       onChanged();
       return this;
     }
     /**
-     * <code>string description = 2;</code>
+     * <pre>
+     * da utilizzare se il certificato viene firmato esternamente
+     * </pre>
+     *
+     * <code>string cert = 2;</code>
      */
-    public Builder setDescriptionBytes(
+    public Builder setCertBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      description_ = value;
+      cert_ = value;
       onChanged();
       return this;
     }
 
-    private java.lang.Object authorityCa_ = "";
+    private java.lang.Object note_ = "";
     /**
-     * <code>string authorityCa = 3;</code>
+     * <code>string note = 3;</code>
      */
-    public java.lang.String getAuthorityCa() {
-      java.lang.Object ref = authorityCa_;
+    public java.lang.String getNote() {
+      java.lang.Object ref = note_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        authorityCa_ = s;
+        note_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string authorityCa = 3;</code>
+     * <code>string note = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getAuthorityCaBytes() {
-      java.lang.Object ref = authorityCa_;
+        getNoteBytes() {
+      java.lang.Object ref = note_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        authorityCa_ = b;
+        note_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string authorityCa = 3;</code>
+     * <code>string note = 3;</code>
      */
-    public Builder setAuthorityCa(
+    public Builder setNote(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      authorityCa_ = value;
+      note_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string authorityCa = 3;</code>
+     * <code>string note = 3;</code>
      */
-    public Builder clearAuthorityCa() {
+    public Builder clearNote() {
       
-      authorityCa_ = getDefaultInstance().getAuthorityCa();
+      note_ = getDefaultInstance().getNote();
       onChanged();
       return this;
     }
     /**
-     * <code>string authorityCa = 3;</code>
+     * <code>string note = 3;</code>
      */
-    public Builder setAuthorityCaBytes(
+    public Builder setNoteBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      authorityCa_ = value;
+      note_ = value;
       onChanged();
       return this;
     }
@@ -752,41 +780,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:beacon.SslAuthority)
+    // @@protoc_insertion_point(builder_scope:beacon.ApproveAgentRequestRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:beacon.SslAuthority)
-  private static final org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:beacon.ApproveAgentRequestRequest)
+  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority();
+    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest();
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority getDefaultInstance() {
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<SslAuthority>
-      PARSER = new com.google.protobuf.AbstractParser<SslAuthority>() {
+  private static final com.google.protobuf.Parser<ApproveAgentRequestRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ApproveAgentRequestRequest>() {
     @java.lang.Override
-    public SslAuthority parsePartialFrom(
+    public ApproveAgentRequestRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new SslAuthority(input, extensionRegistry);
+      return new ApproveAgentRequestRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<SslAuthority> parser() {
+  public static com.google.protobuf.Parser<ApproveAgentRequestRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<SslAuthority> getParserForType() {
+  public com.google.protobuf.Parser<ApproveAgentRequestRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.ar4k.agent.tunnels.http.grpc.beacon.SslAuthority getDefaultInstanceForType() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
