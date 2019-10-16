@@ -1,0 +1,6 @@
+task buildDockerRasa(type: Exec) {
+    executable = "docker"
+    args "build","-t","ecss-rasa-nlu:latest","-f","Dockerfile.rasa","--no-cache","."
+}
+
+

@@ -50,9 +50,9 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
-import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
@@ -68,7 +68,10 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 
+// TODO: Dopo la registrazione usare i certificati ottenuti per riconnettersi
 public class BeaconClient implements Runnable, AutoCloseable {
+
+  private static final int DELTA_BETWEEN_PORT_AND_ENFORECED_PORT = 1;
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
@@ -106,7 +109,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private ByteString caAfterRegistration = null;
   private String caServer = null;
   private String hostTarget = null;
+  private String hostTargetEnforced = null;
   private int port = 0; // se zero esclude la connessione diretta ed eventualmente passa al discovery
+  private int portEnforced = 0;
   private String privateFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".key";
   private String certFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".pem";
 
@@ -114,7 +119,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
     private Anima anima = null;
     private RpcConversation rpcConversation = null;
     private String host = null;
+    private String hostTargetEnforced = null;
     private int port = 0;
+    private int portEnforced = 0;
     private int discoveryPort = 0;
     private String discoveryFilter = null;
     private String uniqueName = null;
@@ -243,21 +250,50 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
 
     public BeaconClient build() {
-      return new BeaconClient(anima, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
-          certChainFile, certFile, privateFile, aliasBeaconClientInKeystore, aliasBeaconClientRequestCertInKeystore,
-          beaconCaChainPem);
+      return new BeaconClient(anima, rpcConversation, host, hostTargetEnforced, port, portEnforced, discoveryPort,
+          discoveryFilter, uniqueName, certChainFile, certFile, privateFile, aliasBeaconClientInKeystore,
+          aliasBeaconClientRequestCertInKeystore, beaconCaChainPem);
+    }
+
+    public int getPortEnforced() {
+      return portEnforced;
+    }
+
+    public Builder setPortEnforced(int portEnforced) {
+      this.portEnforced = portEnforced;
+      return this;
+    }
+
+    public String getHostTargetEnforced() {
+      return hostTargetEnforced;
+    }
+
+    public Builder setHostTargetEnforced(String hostTargetEnforced) {
+      this.hostTargetEnforced = hostTargetEnforced;
+      return this;
     }
   }
 
-  private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
-      String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-      String aliasBeaconClientInKeystore, String aliasBeaconClientRequestCertInKeystore, String beaconCaChainPem) {
+  private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, String hostTargetEnforced, int port,
+      int portEnforced, int discoveryPort, String discoveryFilter, String uniqueName, String certChainFile,
+      String certFile, String privateFile, String aliasBeaconClientInKeystore,
+      String aliasBeaconClientRequestCertInKeystore, String beaconCaChainPem) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
     this.anima = anima;
     this.hostTarget = host;
+    if (hostTargetEnforced == null && this.hostTarget != null) {
+      this.hostTargetEnforced = this.hostTarget;
+    } else {
+      this.hostTargetEnforced = hostTargetEnforced;
+    }
     this.port = port;
+    if (portEnforced == 0 && port > 0) {
+      this.portEnforced = port + DELTA_BETWEEN_PORT_AND_ENFORECED_PORT;
+    } else {
+      this.portEnforced = portEnforced;
+    }
     if (aliasBeaconClientInKeystore != null) {
       this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
     }
@@ -281,7 +317,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     } else {
       generateCertificate();
     }
-    if (this.port != 0) {
+    if (this.port > 0) {
       try {
         // TODO Verificare perché il certificato usa la firma del master (in sign o
         // generando il csr?)
@@ -483,9 +519,11 @@ public class BeaconClient implements Runnable, AutoCloseable {
       logger.logException(e);
     }
     if (result.equals(StatusValue.GOOD)) {
-      // passa a connessione con nuovo
-      channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-      startConnection(hostTarget, port);
+      channel.shutdown().awaitTermination(15, TimeUnit.SECONDS);
+      channel.shutdownNow();
+      logger.warn("Client Beacon registered. Connecting to enforced endpoint (" + hostTargetEnforced + ":"
+          + portEnforced + ")");
+      startConnection(hostTargetEnforced, portEnforced);
     }
     return result;
   }
@@ -507,7 +545,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
             && registerStatus.equals(StatusValue.GOOD)) {
           checkPollChannel();
           sendHardwareInfo();
-          Thread.sleep((long) getPollingFreq());
+          Thread.sleep(getPollingFreq());
         } else {
           Thread.sleep(defaultPollingFreq);
         }
@@ -807,7 +845,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     // TODO Auto-generated method stub
 
   }

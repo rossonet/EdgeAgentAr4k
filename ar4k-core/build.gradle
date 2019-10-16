@@ -41,10 +41,12 @@ dependencies {
   compile group: 'org.yaml', name: 'snakeyaml', version: '1.24'
 
   // grpc
-  compile ( "io.grpc:grpc-netty-shaded:1.24.0") //{ exclude (group:"com.google.guava",module:"guava")}
+  compile ("io.grpc:grpc-netty-shaded:1.24.0") //{ exclude (group:"com.google.guava",module:"guava")}
   compile ('io.grpc:grpc-protobuf:1.24.0')//{ exclude (group:"com.google.guava",module:"guava")}
   compile ('io.grpc:grpc-stub:1.24.0')//{ exclude (group:"com.google.guava",module:"guava")}
   compile ("io.grpc:grpc-auth:1.24.0")//{ exclude (group:"com.google.guava",module:"guava")}
+  compile group: 'io.grpc', name: 'grpc-netty-shaded', version: '1.24.0'
+
   //compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
   //script engine groovy-jsr223

@@ -161,7 +161,7 @@ public class GrpcBeaconTests {
   }
 
   @Test
-  public void checkRemoteList() throws InterruptedException, IOException, ParseException {
+  public void checkRemoteList() throws Exception {
     client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
         .setHost("localhost").setDiscoveryPort(0).build();
     Thread.sleep(6000L);
@@ -172,9 +172,11 @@ public class GrpcBeaconTests {
     // String status = client.registerToBeacon(Anima.generateNewUniqueName());
     System.out.println("REGISTER STATUS: [register code] " + client.getAgentUniqueName());
     // assertEquals("GOOD", status);
+    Thread.sleep(6000L);
     List<Agent> list = client.listAgentsConnectedToBeacon();
     assertEquals(list.isEmpty(), false);
     System.out.println("I'm " + list.get(0).getAgentUniqueName());
+    Thread.sleep(6000L);
   }
 
   @Test

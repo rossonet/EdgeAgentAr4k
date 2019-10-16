@@ -70,13 +70,16 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconServer implements Runnable, AutoCloseable {
 
+  private static final int DELTA_BETWEEN_PORT_AND_ENFORECED_PORT = 1;
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconServer.class.toString());
   private static final long defaultTimeOut = 10000L;
   private static final long waitReplyLoopWaitTime = 300L;
 
   private int port = 0;
+  private int portEnforced = 0;
   private Server server = null;
+  private Server serverEnforced = null;
   private int defaultPollTime = 6000;
   private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>(); // elenco agenti connessi
@@ -114,6 +117,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     private String aliasBeaconServerInKeystore = null;
     private String aliasBeaconServerRequestCertInKeystore = null;
     private String caChainPem = null;
+    private int portEnforced = 0;
 
     public Anima getAnima() {
       return anima;
@@ -224,20 +228,36 @@ public class BeaconServer implements Runnable, AutoCloseable {
     }
 
     public BeaconServer build() {
-      return new BeaconServer(anima, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery, certChainFile,
-          certFile, privateKeyFile, aliasBeaconServerInKeystore, aliasBeaconServerRequestCertInKeystore, caChainPem);
+      return new BeaconServer(anima, port, portEnforced, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
+          certChainFile, certFile, privateKeyFile, aliasBeaconServerInKeystore, aliasBeaconServerRequestCertInKeystore,
+          caChainPem);
+    }
+
+    public int getPortEnforced() {
+      return portEnforced;
+    }
+
+    public Builder setPortEnforced(int portEnforced) {
+      this.portEnforced = portEnforced;
+      return this;
     }
   }
 
-  private BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
-      String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
+  private BeaconServer(Anima animaTarget, int port, int portEnforced, int discoveryPort, String broadcastAddress,
+      boolean acceptCerts, String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
       String aliasBeaconServerInKeystore, String aliasBeaconServerRequestCertInKeystore, String caChainPem) {
     this.anima = animaTarget;
     if (aliasBeaconServerInKeystore != null)
       this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
     if (aliasBeaconServerRequestCertInKeystore != null)
       this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
-    this.port = port;
+    if (port > 0)
+      this.port = port;
+    if (portEnforced > 0) {
+      this.portEnforced = portEnforced;
+    } else if (this.port > 0) {
+      this.portEnforced = this.port + DELTA_BETWEEN_PORT_AND_ENFORECED_PORT;
+    }
     if (certChainFile != null)
       this.certChainFile = certChainFile;
     if (certFile != null)
@@ -263,7 +283,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     // writePrivateKey(this.aliasBeaconServerRequestCertInKeystore, animaTarget,
     // this.privateKeyFile);
     writePrivateKey(anima.getMyAliasCertInKeystore(), animaTarget, this.privateKeyFile);
-    logger.info("Starting beacon server");
+    logger.info("Starting beacon server for Registration");
     try {
       ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
           .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
@@ -273,10 +293,21 @@ public class BeaconServer implements Runnable, AutoCloseable {
     } catch (SSLException e) {
       logger.logException(e);
     }
+    logger.info("Starting beacon Enforced");
+    try {
+      ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(portEnforced)
+          .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
+              .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.REQUIRE).build());
+      serverEnforced = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
+          .addService(new DataService()).build();
+    } catch (SSLException e) {
+      logger.logException(e);
+    }
   }
 
   private class AuthorizationInterceptor implements ServerInterceptor {
 
+    @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata,
         final ServerCallHandler<ReqT, RespT> serverCallHandler) {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
@@ -284,7 +315,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
         logger.debug("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
         logger.info("SSL DATA PEER HOST: " + sslSession.getPeerHost());
         logger.info("SSL DATA PROTOCOL: " + sslSession.getProtocol());
-        logger.info("SSL DATA SSL SESSION: " + sslSession.getSessionContext());
+        if (sslSession.getSessionContext() != null) {
+          logger.info("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
+        }
         logger.info("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
         logger.info("SSL DATA CERTIFICATE CHAIN:");
         for (X509Certificate i : sslSession.getPeerCertificateChain()) {
@@ -378,8 +411,10 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   public void start() throws IOException {
     server.start();
-    running = true;
     logger.info("Server Beacon started, listening on " + port);
+    serverEnforced.start();
+    logger.info("Server Beacon Enforced started, listening on " + portEnforced);
+    running = true;
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -399,6 +434,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
     if (server != null) {
       server.shutdown();
     }
+    if (serverEnforced != null) {
+      serverEnforced.shutdown();
+    }
     running = false;
     if (socketFlashBeacon != null)
       socketFlashBeacon.close();
@@ -407,6 +445,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
   public void blockUntilShutdown() throws InterruptedException {
     if (server != null) {
       server.awaitTermination();
+    }
+    if (serverEnforced != null) {
+      serverEnforced.awaitTermination();
     }
   }
 
@@ -701,7 +742,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
           sendFlashUdp();
       }
       try {
-        Thread.sleep((long) defaultPollTime);
+        Thread.sleep(defaultPollTime);
       } catch (InterruptedException e) {
         logger.info("in Beacon server loop error " + e.getMessage());
         logger.logException(e);
@@ -807,8 +848,16 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     // TODO Auto-generated method stub
 
+  }
+
+  public int getPortEnforced() {
+    return portEnforced;
+  }
+
+  public void setPortEnforced(int portEnforced) {
+    this.portEnforced = portEnforced;
   }
 }
