@@ -19,6 +19,7 @@ import org.springframework.boot.system.ApplicationHome;
 public class UserSpaceByteSystemCommandHelper {
 
   private UserSpaceByteSystemCommandHelper() {
+    throw new UnsupportedOperationException("Just for static usage");
   }
 
   public static String runShellCommandLineByteToByte(String shellCommand, String endCharacter, Ar4kLogger logger,

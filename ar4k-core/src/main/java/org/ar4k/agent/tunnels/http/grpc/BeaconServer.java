@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
+import javax.security.cert.X509Certificate;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.ConfigHelper;
@@ -27,7 +28,6 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
-import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
@@ -68,7 +68,7 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.stub.StreamObserver;
 
-public class BeaconServer implements Runnable {
+public class BeaconServer implements Runnable, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconServer.class.toString());
@@ -101,7 +101,135 @@ public class BeaconServer implements Runnable {
   private String aliasBeaconServerRequestCertInKeystore = "beacon-server-crt-request";
   private String caChainPem = null;
 
-  public BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
+  public static class Builder {
+    private Anima anima = null;
+    private int port = 0;
+    private int discoveryPort = 0;
+    private String broadcastAddress = null;
+    private boolean acceptCerts = false;
+    private String stringDiscovery = null;
+    private String certChainFile = null;
+    private String certFile = null;
+    private String privateKeyFile = null;
+    private String aliasBeaconServerInKeystore = null;
+    private String aliasBeaconServerRequestCertInKeystore = null;
+    private String caChainPem = null;
+
+    public Anima getAnima() {
+      return anima;
+    }
+
+    public Builder setAnima(Anima anima) {
+      this.anima = anima;
+      return this;
+    }
+
+    public int getPort() {
+      return port;
+    }
+
+    public Builder setPort(int port) {
+      this.port = port;
+      return this;
+    }
+
+    public int getDiscoveryPort() {
+      return discoveryPort;
+    }
+
+    public Builder setDiscoveryPort(int discoveryPort) {
+      this.discoveryPort = discoveryPort;
+      return this;
+    }
+
+    public String getBroadcastAddress() {
+      return broadcastAddress;
+    }
+
+    public Builder setBroadcastAddress(String broadcastAddress) {
+      this.broadcastAddress = broadcastAddress;
+      return this;
+    }
+
+    public boolean isAcceptCerts() {
+      return acceptCerts;
+    }
+
+    public Builder setAcceptCerts(boolean acceptCerts) {
+      this.acceptCerts = acceptCerts;
+      return this;
+    }
+
+    public String getStringDiscovery() {
+      return stringDiscovery;
+    }
+
+    public Builder setStringDiscovery(String stringDiscovery) {
+      this.stringDiscovery = stringDiscovery;
+      return this;
+    }
+
+    public String getCertChainFile() {
+      return certChainFile;
+    }
+
+    public Builder setCertChainFile(String certChainFile) {
+      this.certChainFile = certChainFile;
+      return this;
+    }
+
+    public String getCertFile() {
+      return certFile;
+    }
+
+    public Builder setCertFile(String certFile) {
+      this.certFile = certFile;
+      return this;
+    }
+
+    public String getPrivateKeyFile() {
+      return privateKeyFile;
+    }
+
+    public Builder setPrivateKeyFile(String privateKeyFile) {
+      this.privateKeyFile = privateKeyFile;
+      return this;
+    }
+
+    public String getAliasBeaconServerInKeystore() {
+      return aliasBeaconServerInKeystore;
+    }
+
+    public Builder setAliasBeaconServerInKeystore(String aliasBeaconServerInKeystore) {
+      this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
+      return this;
+    }
+
+    public String getAliasBeaconServerRequestCertInKeystore() {
+      return aliasBeaconServerRequestCertInKeystore;
+    }
+
+    public Builder setAliasBeaconServerRequestCertInKeystore(String aliasBeaconServerRequestCertInKeystore) {
+      this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
+      return this;
+    }
+
+    public String getCaChainPem() {
+      return caChainPem;
+    }
+
+    public Builder setCaChainPem(String caChainPem) {
+      this.caChainPem = caChainPem;
+      return this;
+    }
+
+    public BeaconServer build() {
+      return new BeaconServer(anima, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery, certChainFile,
+          certFile, privateKeyFile, aliasBeaconServerInKeystore, aliasBeaconServerRequestCertInKeystore, caChainPem);
+    }
+  }
+
+  private BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
       String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
       String aliasBeaconServerInKeystore, String aliasBeaconServerRequestCertInKeystore, String caChainPem) {
     this.anima = animaTarget;
@@ -154,7 +282,15 @@ public class BeaconServer implements Runnable {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
       try {
         logger.debug("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
-        logger.info("SSL DATA PEER: " + sslSession.getPeerPrincipal().getName());
+        logger.info("SSL DATA PEER HOST: " + sslSession.getPeerHost());
+        logger.info("SSL DATA PROTOCOL: " + sslSession.getProtocol());
+        logger.info("SSL DATA SSL SESSION: " + sslSession.getSessionContext());
+        logger.info("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
+        logger.info("SSL DATA CERTIFICATE CHAIN:");
+        for (X509Certificate i : sslSession.getPeerCertificateChain()) {
+          logger.info(" - " + i.toString());
+        }
+        logger.info("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
       } catch (SSLPeerUnverifiedException e) {
         logger.info("SSL CERT NOT VERIFIED");
       }
@@ -305,10 +441,11 @@ public class BeaconServer implements Runnable {
           + uniqueClientNameForBeacon);
       logger.debug(
           "Certificate for beacon client (CA): " + getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima));
-      RegisterReply reply = RegisterReply.newBuilder()
+      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder()
           .setCa(ByteString.copyFrom(
-              getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))))
-          .setCert(certFromCsr)
+              getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))));
+      replyBuilder.setCert(certFromCsr);
+      RegisterReply reply = replyBuilder
           .setStatusRegistration(
               Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
           .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
@@ -380,7 +517,8 @@ public class BeaconServer implements Runnable {
     public void listAgentsRequestComplete(Empty request, StreamObserver<ListAgentsRequestReply> responseObserver) {
       List<AgentRequest> values = new ArrayList<>();
       for (RegistrationRequest r : listAgentRequest) {
-        Builder a = AgentRequest.newBuilder().setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
+        org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder a = AgentRequest.newBuilder()
+            .setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
         if (r.approved && r.approvedDate != null)
           a.setApproved(r.approvedDate);
         if (r.completed != null)
@@ -666,5 +804,11 @@ public class BeaconServer implements Runnable {
 
   public String getPrivateKeyFile() {
     return privateKeyFile;
+  }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
   }
 }

@@ -15,4 +15,10 @@ public class RemoteBeaconAgentHomunculus implements Homunculus {
     this.remoteAgent = remoteAgent;
   }
 
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

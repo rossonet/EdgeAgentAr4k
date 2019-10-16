@@ -22,10 +22,10 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 /**
  * Classe astratta da implementare per i servizi gestiti dalla piattaforma Ar4k.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
- * 
+ *
+ *
  */
 public abstract class AbstractAr4kService implements ServiceComponent {
 
@@ -76,7 +76,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
     }
     // sleep
     try {
-      Thread.sleep((long) configuration.clockRunnableClass);
+      Thread.sleep(configuration.clockRunnableClass);
     } catch (InterruptedException e) {
       logger.warn(e.getMessage());
       logger.logException(e);
@@ -85,7 +85,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
 
   @Override
   public synchronized void start() {
-    if (processo == null && configuration != null && configuration.name != null && configuration.name != "") {
+    if (processo == null && configuration != null && configuration.name != null && !configuration.name.isEmpty()) {
       processo = new Thread(this);
       processo.setName(configuration.name);
       processo.start();

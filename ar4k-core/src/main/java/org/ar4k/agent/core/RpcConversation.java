@@ -136,4 +136,10 @@ public class RpcConversation implements RpcExecutor {
     this.scriptSessions = scriptSessions;
   }
 
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
+
 }

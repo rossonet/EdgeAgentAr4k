@@ -13,5 +13,11 @@ public class SshdConnectionHandlerHomunculus implements Homunculus, Factory<Comm
     // TODO Auto-generated method stub
     return null;
   }
-  
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
+
 }

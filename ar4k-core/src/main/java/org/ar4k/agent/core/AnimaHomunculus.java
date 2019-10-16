@@ -151,4 +151,10 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     this.anima = anima;
   }
 
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
+
 }

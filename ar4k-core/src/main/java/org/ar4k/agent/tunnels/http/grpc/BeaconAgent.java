@@ -10,7 +10,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.json.JSONObject;
 
-public class BeaconAgent {
+public class BeaconAgent implements AutoCloseable {
 
   private static final int queueSize = 50;
 
@@ -64,6 +64,12 @@ public class BeaconAgent {
     return "BeaconAgent [getAgentUniqueName()=" + getAgentUniqueName() + ", getHardwareInfoAsJson()="
         + getHardwareInfoAsJson().toString(2) + ", getPollingFrequency()=" + getPollingFrequency()
         + ", getTimestampRegistration()=" + getTimestampRegistration() + "]";
+  }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
   }
 
 }

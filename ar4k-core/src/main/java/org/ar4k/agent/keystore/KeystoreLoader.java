@@ -89,6 +89,10 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 
 public class KeystoreLoader {
 
+  private KeystoreLoader() {
+    throw new UnsupportedOperationException("Just for static usage");
+  }
+
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(KeystoreLoader.class.toString());
 

@@ -8,7 +8,7 @@ public interface ServiceComponent extends Ar4kComponent, Runnable {
   public void setAnima(Anima anima);
 
   public void start();
-  
+
   public void stop();
 
 }

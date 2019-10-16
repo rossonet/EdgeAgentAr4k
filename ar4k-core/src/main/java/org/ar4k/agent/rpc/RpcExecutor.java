@@ -7,7 +7,7 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
 
-public interface RpcExecutor {
+public interface RpcExecutor extends AutoCloseable {
 
   public String elaborateMessage(String message);
 

@@ -30,13 +30,12 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 public class NetworkHelper {
-  
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(NetworkHelper.class.toString());
 
   private NetworkHelper() {
-    System.out.println("Just for static usage");
+    throw new UnsupportedOperationException("Just for static usage");
   }
 
   /*

@@ -88,4 +88,10 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
     this.remoteHomunculus = remoteHomunculus;
   }
 
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

@@ -56,11 +56,15 @@ import oshi.software.os.OperatingSystem;
  */
 public class HardwareHelper {
 
+  private HardwareHelper() {
+    throw new UnsupportedOperationException("Just for static usage");
+  }
+
   public static final boolean debugFreezeHal = false;
   private static final int BUFFER_SIZE = 512;
 
-  public static HardwareInfo getSystemInfo() throws IOException, InterruptedException, ParseException {
-    final HardwareInfo dato = new HardwareInfo();
+  public static HardwareInfoData getSystemInfo() throws IOException, InterruptedException, ParseException {
+    final HardwareInfoData dato = new HardwareInfoData();
     oshi.SystemInfo si = new oshi.SystemInfo();
     Runtime runtime = Runtime.getRuntime();
     OperatingSystemMXBean mbean = ManagementFactory.getOperatingSystemMXBean();

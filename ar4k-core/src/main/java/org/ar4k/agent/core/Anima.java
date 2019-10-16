@@ -16,7 +16,6 @@ package org.ar4k.agent.core;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -94,7 +93,7 @@ import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
 
 /**
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina a
@@ -108,12 +107,15 @@ import jdbm.RecordManagerFactory;
 // Non funzionano le annotazioni sotto. Nel primo stati non chiamano il metodo. Bisogna mtterci un Thread.sleep
 //@EnableWithStateMachine
 //@WithStateMachine
-public class Anima implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, Closeable {
+public class Anima
+    implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private final String dbDataStorePath = "~/.ar4k/anima_datastore-" + UUID.randomUUID().toString();
+  // private final String dbDataStorePath = "~/.ar4k/anima_datastore-" +
+  // UUID.randomUUID().toString();
+  private final String dbDataStorePath = "~/.ar4k/anima_datastore";
   private final String dbDataStoreName = "datastore";
 
   private static transient String registrationPin = ConfigHelper.createRandomRegistryId();
@@ -190,16 +192,16 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   // configurazione iniziale di bootStrap derivata dalle variabili Spring
   private Ar4kConfig bootStrapConfig = null;
   private AnimaStates stateTarget = AnimaStates.RUNNING;
-  private Map<Instant, AnimaStates> statesBefore = new HashMap<Instant, AnimaStates>();
+  private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
   // TODO implementare l'esecuzione dei pre e post script
 
-  private Set<KeystoreConfig> keyStores = new HashSet<KeystoreConfig>();
+  private Set<KeystoreConfig> keyStores = new HashSet<>();
 
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
 
-  private Set<Ar4kComponent> components = new HashSet<Ar4kComponent>();
+  private Set<Ar4kComponent> components = new HashSet<>();
 
   private Map<String, Object> dataStore = null;
 
@@ -260,6 +262,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    @Override
     public void run() {
       try {
         sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
@@ -271,12 +274,13 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     private void sendEvent(Map<String, Object> healthMessage) {
       if (anima == null && Anima.getApplicationContext() != null
           && Anima.getApplicationContext().getBean(Anima.class) != null
-          && ((Anima) Anima.getApplicationContext().getBean(Anima.class)).getDataAddress() != null) {
-        anima = (Anima) Anima.getApplicationContext().getBean(Anima.class);
+          && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
+        anima = Anima.getApplicationContext().getBean(Anima.class);
       }
       HealthMessage<String> messageObject = new HealthMessage<>();
       messageObject.setPayload(gson.toJson(healthMessage));
-      anima.getDataAddress().getChannel("health").send(messageObject);
+      if (anima != null && anima.getDataAddress() != null && anima.getDataAddress().getChannel("health") != null)
+        anima.getDataAddress().getChannel("health").send(messageObject);
     }
   };
   // task per health
@@ -310,7 +314,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       // logger.warn("create admin user with config password");
       Ar4kUserDetails admin = new Ar4kUserDetails();
       admin.setUsername("admin");
-      admin.setPassword(passwordEncoder.encode((CharSequence) adminPassword));
+      admin.setPassword(passwordEncoder.encode(adminPassword));
       SimpleGrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
       SimpleGrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
       ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
@@ -335,7 +339,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     boolean foundWeb = false;
     ks.keyStoreAlias = keystoreMainAlias;
     ks.keystorePassword = keystorePassword;
-    ks.filePathPre = fileKeystore.replaceFirst("^~", System.getProperty("user.home"));
+    ks.filePathPre = fileKeystore != null ? fileKeystore.replaceFirst("^~", System.getProperty("user.home")) : null;
     if (fileKeystore != null && !fileKeystore.isEmpty()) {
       if (new File(ks.filePathPre).exists()) {
         foundFile = true;
@@ -491,8 +495,9 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       animaHomunculus.registerNewSession(sessionId, sessionId);
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
       rpc.setShell(shell);
-      beaconClient = new BeaconClient(this, rpc, urlTarget.getHost(), urlTarget.getPort(), discoveryPort,
-          discoveryFilter, getAgentUniqueName(), null, null, null, null, null, beaconCaChainPem);
+      beaconClient = new BeaconClient.Builder().setUniqueName(getAgentUniqueName()).setAnima(this)
+          .setBeaconCaChainPem(beaconCaChainPem).setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
+          .setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
@@ -504,7 +509,6 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
       }
     } catch (IOException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
-      // logger.logException(e);
     }
     return beaconClient;
   }
@@ -649,8 +653,11 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     if (stateTarget == null && runtimeConfig != null) {
       stateTarget = runtimeConfig.targetRunLevel;
     }
-    if (stateTarget.equals(AnimaStates.RUNNING))
+    if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING))
       animaStateMachine.sendEvent(AnimaEvents.START);
+    else {
+      logger.warn("stateTarget is null in runtime config");
+    }
   }
 
   // workaround Spring State Machine
@@ -686,7 +693,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     Method method = potConfig.getClass().getMethod("instantiate");
     Ar4kComponent targetService;
     targetService = (Ar4kComponent) method.invoke(potConfig);
-    targetService.setConfiguration((PotConfig) potConfig);
+    targetService.setConfiguration(potConfig);
     components.add(targetService);
     targetService.init();
   }
@@ -696,14 +703,14 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
     Method method = confServizio.getClass().getMethod("instantiate");
     ServiceComponent targetService;
     targetService = (ServiceComponent) method.invoke(confServizio);
-    targetService.setConfiguration((ServiceConfig) confServizio);
+    targetService.setConfiguration(confServizio);
     targetService.setAnima(this);
     components.add(targetService);
     targetService.start();
   }
 
   public Map<String, String> getEnvironmentVariables() {
-    Map<String, String> ritorno = new HashMap<String, String>();
+    Map<String, String> ritorno = new HashMap<>();
     ritorno.put("ar4k.fileKeystore", fileKeystore);
     ritorno.put("ar4k.webKeystore", webKeystore);
     ritorno.put("ar4k.dnsKeystore", dnsKeystore);
@@ -769,7 +776,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
   }
 
   public Collection<ServiceComponent> getServices() {
-    Set<ServiceComponent> target = new HashSet<ServiceComponent>();
+    Set<ServiceComponent> target = new HashSet<>();
     for (Ar4kComponent bean : components) {
       if (bean instanceof ServiceComponent) {
         target.add((ServiceComponent) bean);
@@ -801,7 +808,7 @@ public class Anima implements ApplicationContextAware, ApplicationListener<Appli
 
   public String getLogoUrl() {
     String logo = "/static/img/ar4k.png";
-    if (logoUrl != null && logoUrl != "") {
+    if (logoUrl != null && !logoUrl.isEmpty()) {
       logo = logoUrl;
     }
     if (runtimeConfig != null && runtimeConfig.logoUrl != null) {

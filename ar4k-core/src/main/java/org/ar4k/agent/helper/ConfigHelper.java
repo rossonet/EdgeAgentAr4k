@@ -33,6 +33,10 @@ import com.google.gson.GsonBuilder;
 
 public class ConfigHelper {
 
+  private ConfigHelper() {
+    throw new UnsupportedOperationException("Just for static usage");
+  }
+
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(ConfigHelper.class.toString());
 
@@ -70,10 +74,6 @@ public class ConfigHelper {
   public static final String ip = "127.0.0.1";
 
   public static final int defaulBeaconSignvalidity = 100;
-
-  private ConfigHelper() {
-    System.out.println("Just for static usage");
-  }
 
   public static String createRandomRegistryId() {
     StringBuilder val = new StringBuilder();

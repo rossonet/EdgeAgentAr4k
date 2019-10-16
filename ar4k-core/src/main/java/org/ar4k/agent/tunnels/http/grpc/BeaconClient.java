@@ -68,7 +68,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 
-public class BeaconClient implements Runnable {
+public class BeaconClient implements Runnable, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
@@ -107,10 +107,149 @@ public class BeaconClient implements Runnable {
   private String caServer = null;
   private String hostTarget = null;
   private int port = 0; // se zero esclude la connessione diretta ed eventualmente passa al discovery
-  private String privateFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".key";;
-  private String certFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".pem";;
+  private String privateFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".key";
+  private String certFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".pem";
 
-  public BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
+  public static class Builder {
+    private Anima anima = null;
+    private RpcConversation rpcConversation = null;
+    private String host = null;
+    private int port = 0;
+    private int discoveryPort = 0;
+    private String discoveryFilter = null;
+    private String uniqueName = null;
+    private String certChainFile = null;
+    private String certFile = null;
+    private String privateFile = null;
+    private String aliasBeaconClientInKeystore = null;
+    private String aliasBeaconClientRequestCertInKeystore = null;
+    private String beaconCaChainPem = null;
+
+    public Anima getAnima() {
+      return anima;
+    }
+
+    public Builder setAnima(Anima anima) {
+      this.anima = anima;
+      return this;
+    }
+
+    public RpcConversation getRpcConversation() {
+      return rpcConversation;
+    }
+
+    public Builder setRpcConversation(RpcConversation rpcConversation) {
+      this.rpcConversation = rpcConversation;
+      return this;
+    }
+
+    public String getHost() {
+      return host;
+    }
+
+    public Builder setHost(String host) {
+      this.host = host;
+      return this;
+    }
+
+    public int getPort() {
+      return port;
+    }
+
+    public Builder setPort(int port) {
+      this.port = port;
+      return this;
+    }
+
+    public int getDiscoveryPort() {
+      return discoveryPort;
+    }
+
+    public Builder setDiscoveryPort(int discoveryPort) {
+      this.discoveryPort = discoveryPort;
+      return this;
+    }
+
+    public String getDiscoveryFilter() {
+      return discoveryFilter;
+    }
+
+    public Builder setDiscoveryFilter(String discoveryFilter) {
+      this.discoveryFilter = discoveryFilter;
+      return this;
+    }
+
+    public String getUniqueName() {
+      return uniqueName;
+    }
+
+    public Builder setUniqueName(String uniqueName) {
+      this.uniqueName = uniqueName;
+      return this;
+    }
+
+    public String getCertChainFile() {
+      return certChainFile;
+    }
+
+    public Builder setCertChainFile(String certChainFile) {
+      this.certChainFile = certChainFile;
+      return this;
+    }
+
+    public String getCertFile() {
+      return certFile;
+    }
+
+    public Builder setCertFile(String certFile) {
+      this.certFile = certFile;
+      return this;
+    }
+
+    public String getPrivateFile() {
+      return privateFile;
+    }
+
+    public Builder setPrivateFile(String privateFile) {
+      this.privateFile = privateFile;
+      return this;
+    }
+
+    public String getAliasBeaconClientInKeystore() {
+      return aliasBeaconClientInKeystore;
+    }
+
+    public Builder setAliasBeaconClientInKeystore(String aliasBeaconClientInKeystore) {
+      this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
+      return this;
+    }
+
+    public String getAliasBeaconClientRequestCertInKeystore() {
+      return aliasBeaconClientRequestCertInKeystore;
+    }
+
+    public Builder setAliasBeaconClientRequestCertInKeystore(String aliasBeaconClientRequestCertInKeystore) {
+      this.aliasBeaconClientRequestCertInKeystore = aliasBeaconClientRequestCertInKeystore;
+      return this;
+    }
+
+    public String getBeaconCaChainPem() {
+      return beaconCaChainPem;
+    }
+
+    public Builder setBeaconCaChainPem(String beaconCaChainPem) {
+      this.beaconCaChainPem = beaconCaChainPem;
+      return this;
+    }
+
+    public BeaconClient build() {
+      return new BeaconClient(anima, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
+          certChainFile, certFile, privateFile, aliasBeaconClientInKeystore, aliasBeaconClientRequestCertInKeystore,
+          beaconCaChainPem);
+    }
+  }
+
+  private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
       String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
       String aliasBeaconClientInKeystore, String aliasBeaconClientRequestCertInKeystore, String beaconCaChainPem) {
     this.localExecutor = rpcConversation;
@@ -665,6 +804,12 @@ public class BeaconClient implements Runnable {
 
   public void setCaServer(String caServer) {
     this.caServer = caServer;
+  }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
   }
 
 }

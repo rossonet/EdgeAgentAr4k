@@ -84,11 +84,13 @@ public class BeaconService extends AbstractAr4kService {
   @Override
   public void init() {
     try {
-      beaconServer = new BeaconServer(anima, configuration.port, configuration.discoveryPort,
-          configuration.broadcastAddress, configuration.acceptAllCerts, configuration.stringDiscovery,
-          configuration.certChainFile, configuration.certFile, configuration.privateKeyFile,
-          configuration.aliasBeaconServerInKeystore, configuration.aliasBeaconServerRequestCertInKeystore,
-          configuration.caChainPem);
+      beaconServer = new BeaconServer.Builder().setAnima(anima).setPort(configuration.port)
+          .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
+          .setAliasBeaconServerRequestCertInKeystore(configuration.aliasBeaconServerRequestCertInKeystore)
+          .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
+          .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
+          .setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
+          .setBroadcastAddress(configuration.broadcastAddress).setAcceptCerts(configuration.acceptAllCerts).build();
       beaconServer.start();
     } catch (IOException e) {
       logger.logException(e);
@@ -119,8 +121,8 @@ public class BeaconService extends AbstractAr4kService {
 
   @Override
   public void stop() {
-    // TODO Auto-generated method stub
-
+    beaconServer.stop();
+    beaconServer = null;
   }
 
 }

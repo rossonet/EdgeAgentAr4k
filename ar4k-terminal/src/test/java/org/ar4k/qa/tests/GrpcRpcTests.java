@@ -98,17 +98,19 @@ public class GrpcRpcTests {
     KeystoreConfig ks = new KeystoreConfig();
     ks.create(anima.getAgentUniqueName(), ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
         ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,
-        anima.getMyAliasCertInKeystore());
+        anima.getMyAliasCertInKeystore(), true);
     anima.setMyIdentityKeystore(ks);
     context = new AnnotationConfigApplicationContext(this.getClass());
     shell = context.getBean(Shell.class);
-    server = new BeaconServer(anima, port, 0, "255.255.255.255", false, "TESTING", null, null, null, null);
+    server = new BeaconServer.Builder().setAnima(anima).setPort(port).setDiscoveryPort(0).setStringDiscovery("TESTING")
+        .setBroadcastAddress("255.255.255.255").setAcceptCerts(true).build();
     server.start();
     rpcConversation = new RpcConversation();
     rpcConversation.setShell(shell);
     Thread.sleep(3000L);
-    client = new BeaconClient(anima, rpcConversation, "127.0.0.1", port, 0, "TESTING", generateNewUniqueName(), null,
-        null, null);
+    client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
+        .setHost("localhost").setDiscoveryPort(0).setDiscoveryFilter("TESTING").setUniqueName(generateNewUniqueName())
+        .build();
   }
 
   private static String generateNewUniqueName() {
@@ -131,6 +133,7 @@ public class GrpcRpcTests {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }

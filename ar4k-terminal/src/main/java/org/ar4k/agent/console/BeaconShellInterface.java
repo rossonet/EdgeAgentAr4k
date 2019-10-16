@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
@@ -90,7 +89,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addBeaconService(@ShellOption(optOut = true) @Valid BeaconServiceConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+    getWorkingConfig().pots.add(service);
   }
 
   @ShellMethod(value = "Start Beacon server on the enviroment in where the agent is running", group = "Beacon Server Commands")
@@ -103,8 +102,9 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
       throws IOException {
-    tmpServer = new BeaconServer(anima, port, discoveryPort, discoveryAddress, acceptAllCerts, discoveryMessage, null,
-        null, null, null);
+    tmpServer = new BeaconServer.Builder().setAnima(anima).setPort(port).setDiscoveryPort(discoveryPort)
+        .setStringDiscovery(discoveryMessage).setBroadcastAddress(discoveryAddress).setAcceptCerts(acceptAllCerts)
+        .build();
     tmpServer.start();
     return true;
   }
@@ -132,7 +132,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the target Beacon Serve URL. If the port is 0 work just the discovery", defaultValue = "http://127.0.0.1:6599") String beaconServer,
       @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage) {
-    tmpClient = anima.connectToBeaconService(beaconServer, discoveryPort, discoveryMessage);
+    tmpClient = anima.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage);
     return true;
   }
 

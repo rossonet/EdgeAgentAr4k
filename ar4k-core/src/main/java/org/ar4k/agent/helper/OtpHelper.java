@@ -35,7 +35,7 @@ import javax.crypto.spec.SecretKeySpec;
 class OtpHelper {
 
   private OtpHelper() {
-    System.out.println("just for static methods");
+    throw new UnsupportedOperationException("Just for static usage");
   }
 
   public static boolean verificaOTP(String seedOTP, String otpCode, int finestraOTP) {
