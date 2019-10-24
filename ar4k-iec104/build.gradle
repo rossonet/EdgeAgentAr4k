@@ -1,0 +1,7 @@
+description = "IoT components IEC104 lib"
+
+dependencies {
+  compile project(':ar4k-core')
+  // IEC104
+  compile group: 'org.openmuc', name: 'j60870', version: '1.2.1'
+}
