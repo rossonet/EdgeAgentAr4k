@@ -16,11 +16,13 @@ package org.ar4k.agent.iot.serial.cnc;
 
 import java.io.Serializable;
 
+import org.ar4k.agent.core.data.Ar4kChannel;
+
 import com.beust.jcommander.Parameter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Filtro con espressione regolare per l'input ottenuto via
  *         seriale/telnet da una CNC con endpoint camel di destinazione.
  *
@@ -32,7 +34,7 @@ public class RouterMessagesCnc implements Serializable {
   @Parameter(names = "--regExp", description = "regular expression to find")
   public String regExp = ".*";
 
-  @Parameter(names = "--camelEndpoint", description = "Camel label that rappresent the destination for the message")
-  public String camelEndpoint = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpoint", description = "internal queue for the messages found by the regular expression")
+  public Ar4kChannel endpoint = null;
 
 }

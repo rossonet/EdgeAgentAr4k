@@ -33,14 +33,14 @@ import io.atomix.core.map.AtomicMap;
 import io.atomix.protocols.raft.partition.RaftPartitionGroup;
 import io.atomix.utils.net.Address;
 
-public class AtomixTribeComponent implements Ar4kComponent {
+public class HazelcastComponent implements Ar4kComponent {
 
   private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private TribeConfig configuration = null;
+  private HazelcastConfig configuration = null;
 
   private Atomix atomix = null;
 
@@ -56,11 +56,11 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   // (Anima) Anima.getApplicationContext().getBean("anima");
 
-  public AtomixTribeComponent(Anima anima, TribeConfig tribeConfig) {
+  public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
   }
 
-  public AtomixTribeComponent(TribeConfig tribeConfig) {
+  public HazelcastComponent(HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
   }
 
@@ -155,7 +155,7 @@ public class AtomixTribeComponent implements Ar4kComponent {
 
   @Override
   public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (TribeConfig) configuration;
+    this.configuration = (HazelcastConfig) configuration;
   }
 
   @Override

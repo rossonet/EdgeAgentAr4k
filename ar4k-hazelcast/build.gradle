@@ -2,11 +2,6 @@ description = "Atomix integration component"
 
 dependencies {
   compile project(':ar4k-core')
-  //compile project(':ar4k-cluster')
-  compile group: 'io.atomix', name: 'atomix', version: '3.1.5'
-  compile group: 'io.atomix', name: 'atomix-raft', version: '3.1.5'
-  compile group: 'io.atomix', name: 'atomix-primary-backup', version: '3.1.5'
-  compile group: 'joda-time', name: 'joda-time', version: '2.10.3'
-  // Attenzione alla correlazione tra le versioni!!!
-  compile group: 'com.google.guava', name: 'guava', version: '23.0'
+  compile group: 'com.hazelcast', name: 'hazelcast', version: '3.12.2'
+  compile group: 'com.hazelcast', name: 'hazelcast-kubernetes', version: '1.5.1'
 }

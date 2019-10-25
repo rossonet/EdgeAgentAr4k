@@ -17,6 +17,7 @@ package org.ar4k.agent.opcua;
 import java.io.Serializable;
 
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.opcua.OpcUaService.DataChangeTrigger;
 import org.ar4k.agent.opcua.OpcUaService.DeadbandType;
 
@@ -59,6 +60,6 @@ public class OpcUaNode implements Serializable {
   public Ar4kChannel writeChannel = null;
 
   @Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind with regex")
-  public Ar4kChannel bindDirectoryChannel = null;
+  public IDirectChannel bindDirectoryChannel = null;
 
 }

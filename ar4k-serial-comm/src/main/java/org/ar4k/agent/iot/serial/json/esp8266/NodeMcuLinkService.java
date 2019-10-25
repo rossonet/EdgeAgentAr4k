@@ -1,12 +1,12 @@
-package org.ar4k.agent.iot.serial.json.wifi;
+package org.ar4k.agent.iot.serial.json.esp8266;
 
-import org.ar4k.agent.iot.serial.cnc.CncService;
+import org.ar4k.agent.iot.serial.SerialService;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
-public class MarlinService extends CncService {
+public class NodeMcuLinkService extends SerialService {
 
   @Override
   public void loop() {

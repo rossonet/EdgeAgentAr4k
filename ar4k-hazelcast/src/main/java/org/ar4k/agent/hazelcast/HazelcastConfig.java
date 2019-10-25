@@ -12,7 +12,7 @@ import org.joda.time.Instant;
 import com.beust.jcommander.Parameter;
 import com.google.gson.TypeAdapter;
 
-public class TribeConfig extends AbstractServiceConfig {
+public class HazelcastConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -2924869182396567535L;
 
@@ -57,7 +57,7 @@ public class TribeConfig extends AbstractServiceConfig {
 
   @Override
   public Ar4kComponent instantiate() {
-    return new AtomixTribeComponent(this);
+    return new HazelcastComponent(this);
   }
 
   @Override
@@ -82,7 +82,7 @@ public class TribeConfig extends AbstractServiceConfig {
 
   @Override
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new TribeConfigJsonAdapter();
+    return new HazelcastConfigJsonAdapter();
   }
 
   @Override

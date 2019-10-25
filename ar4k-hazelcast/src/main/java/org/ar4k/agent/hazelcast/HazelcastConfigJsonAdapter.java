@@ -8,7 +8,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class TribeConfigJsonAdapter extends TypeAdapter<ServiceConfig> {
+public class HazelcastConfigJsonAdapter extends TypeAdapter<ServiceConfig> {
 
   @Override
   public void write(JsonWriter out, ServiceConfig value) throws IOException {

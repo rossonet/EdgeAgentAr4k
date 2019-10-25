@@ -1,8 +1,7 @@
-package org.ar4k.agent.iot.serial.json;
+package org.ar4k.agent.iot.serial.json.esp8266;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -18,17 +17,17 @@ import org.springframework.shell.standard.ShellOption;
  *
  */
 
-@ShellCommandGroup("CNC Commands")
+@ShellCommandGroup("IoT Commands")
 @ShellComponent
 @EnableMBeanExport
-@ManagedResource(objectName = "bean:name=marlinInterface", description = "Ar4k Agent Marlin Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "marlinInterface")
-public class MarlinShellInterface extends AbstractShellHelper {
+@ManagedResource(objectName = "bean:name=iotNodeMcuInterface", description = "Ar4k Agent IoT NodeMcu Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotNodeMcuInterface")
+public class NodeMcuLinkShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "Add a 3D printer with Marlin firmware to the selected configuration", group = "CNC Commands")
+  @ShellMethod(value = "Add a NodeMcu controller connected via wifi", group = "IoT Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+  public void addMarlinService(@ShellOption(optOut = true) @Valid NodeMcuLinkConfig service) {
+    getWorkingConfig().pots.add(service);
   }
 
 }

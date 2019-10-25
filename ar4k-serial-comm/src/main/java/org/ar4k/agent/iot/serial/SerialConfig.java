@@ -1,21 +1,9 @@
-/**
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
 package org.ar4k.agent.iot.serial;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 
@@ -29,7 +17,7 @@ import com.google.gson.TypeAdapter;
  */
 public class SerialConfig extends AbstractServiceConfig {
 
-  private static final long serialVersionUID = -864164279161787378L;
+  private static final long serialVersionUID = -864164274161787378L;
 
   @Parameter(names = "--serial", description = "serial port")
   public String serial = "/dev/ttyACM0";
@@ -43,24 +31,26 @@ public class SerialConfig extends AbstractServiceConfig {
   @Parameter(names = "--queueSize", description = "Queue size for the message received", validateWith = ConventionalNotationValidator.class)
   public int queueSize = 10000;
 
-  @Parameter(names = "--camelEndpointWrite", description = "Camel label for the consumer of the write")
-  public String camelEndpointWriteSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpointWrite", description = "internal channel to write the data to the serial port")
+  public Ar4kChannel endpointWrite = null;
 
-  @Parameter(names = "--camelEndpointRead", description = "Camel label for the producer of the read")
-  public String camelEndpointReadSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpointRead", description = "internal channel to send data from serial port")
+  public Ar4kChannel endpointRead = null;
 
-  @Parameter(names = "--camelEndpointWriteOk", description = "Camel label for the producer of the write confirm")
-  public String camelEndpointWriteOk = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpointReadByte", description = "internal channel to send data from serial port in byte")
+  public Ar4kChannel endpointReadByte = null;
 
-  @Parameter(names = "--camelEndpointReadByte", description = "Camel label for the producer of the read byte arrived")
-  public String camelEndpointReadOk = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpointWriteByte", description = "internal channel to write the data to the serial port in byte")
+  public Ar4kChannel endpointWriteByte = null;
 
-  @Parameter(names = "--camelEndpointResetSerial", description = "Camel label for the consumer queue for reset the serial interface")
-  public String camelResetSerial = "log:?level=INFO&showBody=true";
+  @Parameter(names = "--endpointMetaSerial", description = "internal channel for manage the serial with AT commands")
+  public Ar4kChannel endpointMetaSerial = null;
+
+  @Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind")
+  public IDirectChannel bindDirectoryChannel = null;
 
   @Override
   public SerialService instantiate() {
-    // System.out.println("Serial service start");
     SerialService ss = new SerialService();
     ss.setConfiguration(this);
     return ss;
@@ -68,7 +58,7 @@ public class SerialConfig extends AbstractServiceConfig {
 
   @Override
   public int getPriority() {
-    return 5;
+    return 3;
   }
 
   @Override

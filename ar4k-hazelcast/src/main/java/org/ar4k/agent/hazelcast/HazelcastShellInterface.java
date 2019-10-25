@@ -18,7 +18,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -35,25 +34,25 @@ import org.springframework.web.bind.annotation.RestController;
 import io.atomix.core.set.DistributedSet;
 
 /**
- * 
+ *
  * Interfaccia da linea di comando per per la gestione dell'aggregazione in
  * comunità di microservice.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
 @ShellCommandGroup("Tribe Commands")
 @ShellComponent
 @EnableMBeanExport
-@ManagedResource(objectName = "bean:name=tribeInterface", description = "Ar4k Agent Tribe Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "tribeInterface")
+@ManagedResource(objectName = "bean:name=hazelcastInterface", description = "Ar4k Agent Hazelcast Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "hazelcastInterface")
 @RestController
-@RequestMapping("/tribeInterface")
+@RequestMapping("/hazelcastInterface")
 
-// TODO mappa le variabili definite in conf al bus e mette a disposizione un bean per accedere a tipi dati in cluster (tipo ecss) 
+// TODO mappa le variabili definite in conf al bus e mette a disposizione un bean per accedere a tipi dati in cluster (tipo ecss)
 
-public class TribeShellInterface extends AbstractShellHelper {
+public class HazelcastShellInterface extends AbstractShellHelper {
 
-  AtomixTribeComponent selectedAtomix = null;
+  HazelcastComponent selectedAtomix = null;
 
   protected Availability testAtomixNodeNull() {
     return selectedAtomix == null ? Availability.available()
@@ -67,8 +66,8 @@ public class TribeShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Create Atomix node", group = "Tribe Commands")
   @ManagedOperation
   @ShellMethodAvailability("testAtomixNodeNull")
-  public void tribeJoin(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
-    selectedAtomix = new AtomixTribeComponent(tribe);
+  public void tribeJoin(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
+    selectedAtomix = new HazelcastComponent(tribe);
     selectedAtomix.init();
   }
 
@@ -97,8 +96,8 @@ public class TribeShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Add tribe config to the selected configuration", group = "Tribe Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addTribe(@ShellOption(optOut = true) @Valid TribeConfig tribe) {
-    getWorkingConfig().pots.add((PotConfig) tribe);
+  public void addTribe(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
+    getWorkingConfig().pots.add(tribe);
   }
 
   @ShellMethod(value = "List data in Atomix", group = "Tribe Commands")

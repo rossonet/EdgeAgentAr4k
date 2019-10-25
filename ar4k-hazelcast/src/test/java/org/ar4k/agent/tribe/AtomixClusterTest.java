@@ -11,8 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.ar4k.agent.hazelcast.AtomixTribeComponent;
-import org.ar4k.agent.hazelcast.TribeConfig;
+import org.ar4k.agent.hazelcast.HazelcastComponent;
+import org.ar4k.agent.hazelcast.HazelcastConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,12 +24,12 @@ public class AtomixClusterTest {
 
   String host = null;
 
-  TribeConfig tc1 = new TribeConfig();
-  TribeConfig tc2 = new TribeConfig();
-  TribeConfig tc3 = new TribeConfig();
-  AtomixTribeComponent n1 = null;
-  AtomixTribeComponent n2 = null;
-  AtomixTribeComponent n3 = null;
+  HazelcastConfig tc1 = new HazelcastConfig();
+  HazelcastConfig tc2 = new HazelcastConfig();
+  HazelcastConfig tc3 = new HazelcastConfig();
+  HazelcastComponent n1 = null;
+  HazelcastComponent n2 = null;
+  HazelcastComponent n3 = null;
 
   @Before
   public void setUp() throws Exception {
@@ -106,9 +106,9 @@ public class AtomixClusterTest {
     System.out.println(tc1.name);
     System.out.println(tc2.name);
     System.out.println(tc3.name);
-    n1 = (AtomixTribeComponent) tc1.instantiate();
-    n2 = (AtomixTribeComponent) tc2.instantiate();
-    n3 = (AtomixTribeComponent) tc3.instantiate();
+    n1 = (HazelcastComponent) tc1.instantiate();
+    n2 = (HazelcastComponent) tc2.instantiate();
+    n3 = (HazelcastComponent) tc3.instantiate();
     n1.init();
     n2.init();
     n3.init();
