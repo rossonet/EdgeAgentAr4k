@@ -1,4 +1,4 @@
-package org.ar4k.agent.tunnels.http.grpc;
+package org.ar4k.agent.tunnels.http.beacon;
 
 import java.io.File;
 import java.io.FileWriter;

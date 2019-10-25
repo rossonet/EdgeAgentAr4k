@@ -16,8 +16,8 @@ package org.ar4k.gw.studio.grpc;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
-import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
+import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
 
 public class GrpcBeaconDataTests {
 

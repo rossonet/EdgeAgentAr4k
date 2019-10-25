@@ -52,7 +52,7 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.spring.HealthMessage;
-import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
+import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 //import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
@@ -195,6 +195,7 @@ public class Anima
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
   // TODO implementare l'esecuzione dei pre e post script
+  // TODO implementare refresh config da prima configurazione
 
   private Set<KeystoreConfig> keyStores = new HashSet<>();
 

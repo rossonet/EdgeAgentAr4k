@@ -1,5 +1,6 @@
 package org.ar4k.agent.core.data.channels;
 
+import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.Channel;
 import org.springframework.integration.channel.PriorityChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
@@ -179,6 +180,11 @@ public class IPriorityChannel extends Channel implements PollableChannel, Pollab
   @Override
   public boolean unsubscribe(MessageHandler handler) {
     return false;
+  }
+
+  @Override
+  public Class<? extends Ar4kChannel> getChannelClass() {
+    return this.getClass();
   }
 
 }

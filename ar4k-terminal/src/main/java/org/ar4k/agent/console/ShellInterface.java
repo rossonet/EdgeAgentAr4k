@@ -90,7 +90,7 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 
 /**
  * Interfaccia da linea di comando principale.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
@@ -327,6 +327,7 @@ public class ShellInterface extends AbstractShellHelper {
     return "saved";
   }
 
+//TODO verificare il caricamento
   @ShellMethod("Import the selected configuration from json text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -341,7 +342,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigYaml(
       @ShellOption(help = "configuration exported by export-selected-config-yaml") String yamlConfig) {
-    setWorkingConfig((Ar4kConfig) ConfigHelper.fromYaml(yamlConfig));
+    setWorkingConfig(ConfigHelper.fromYaml(yamlConfig));
   }
 
   // TODO: risolvere gli oggetti annidati
@@ -372,6 +373,29 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig(confCreated);
   }
 
+  @ShellMethod("Modify selected configuration")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public void modifySelectedConfig() {
+    // TODO: implementare
+    throw new UnsupportedOperationException();
+  }
+
+  @ShellMethod("Remove a service from selected configuration")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOk")
+  public void removeServiceSelectedConfig(@ShellOption(help = "service name to delete") String serviceName) {
+    for (ConfigSeed a : getWorkingConfig().pots) {
+      try {
+        if (a.getName() != null && a.getName().equals(serviceName)) {
+          getWorkingConfig().pots.remove(a);
+        }
+      } catch (Exception ee) {
+        logger.logException(ee);
+      }
+    }
+  }
+
   @ShellMethod("List configs in runtime session")
   @ManagedOperation
   @ShellMethodAvailability("testListConfigOk")
@@ -385,10 +409,10 @@ public class ShellInterface extends AbstractShellHelper {
     return risposta;
   }
 
-  @ShellMethod(value = "List tunnel in selected config", group = "Tunnel Commands")
+  @ShellMethod(value = "List services in selected config")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public String listTunnelsSelectedConfig() {
+  public String listServicesSelectedConfig() {
     String risposta = "";
     for (ConfigSeed a : getWorkingConfig().pots) {
       try {

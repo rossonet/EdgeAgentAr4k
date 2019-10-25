@@ -1,4 +1,4 @@
-package org.ar4k.agent.config.tribe;
+package org.ar4k.agent.hazelcast;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;

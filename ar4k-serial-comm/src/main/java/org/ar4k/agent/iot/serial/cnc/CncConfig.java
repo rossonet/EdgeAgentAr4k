@@ -33,10 +33,10 @@ public class CncConfig extends SerialConfig {
   // mappa con espressione regolare il testo dei messaggi della console su
   // particolari code
   @Parameter(names = "--replies", description = "List of triggered message to route to differents Camel's destination")
-  public List<RouterMessagesCnc> replies = new ArrayList<RouterMessagesCnc>();
+  public List<RouterMessagesCnc> replies = new ArrayList<>();
 
   @Parameter(names = "--cronCommands", description = "List of commands send in loop")
-  public List<TriggerCommand> cronCommands = new ArrayList<TriggerCommand>();
+  public List<TriggerCommand> cronCommands = new ArrayList<>();
 
   @Parameter(names = "--defaultTimeoutCommand", description = "Default timeout for the command sent to the CNC")
   public long defaultTimeoutCommand = 5000L;
@@ -46,9 +46,10 @@ public class CncConfig extends SerialConfig {
     cronCommands.add(new TriggerCommand());
   }
 
+  @Override
   public CncService instantiate() {
-    // System.out.println("Serial service start");
     CncService ss = new CncService();
+    ss.setConfiguration(this);
     return ss;
   }
 

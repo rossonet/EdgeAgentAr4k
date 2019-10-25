@@ -16,66 +16,68 @@ public interface Ar4kChannel {
     INIT, WAITING_ENDPOINTS, RUNNING, FAULT, PAUSED, DETROY
   }
 
-  public String getNodeId();
+  String getNodeId();
 
-  public void setNodeId(String nodeId);
+  Class<? extends Ar4kChannel> getChannelClass();
 
-  public void setDataType(DataType dataType);
+  void setNodeId(String nodeId);
 
-  public DataType getDataType();
+  void setDataType(DataType dataType);
 
-  public void setCreateData(Instant createData);
+  DataType getDataType();
 
-  public Instant getCreateData();
+  void setCreateData(Instant createData);
 
-  public void setDescription(String description);
+  Instant getCreateData();
 
-  public String getDescription();
+  void setDescription(String description);
 
-  public Type getChannelType();
+  String getDescription();
 
-  public void setChannelType(Type channelType);
+  Type getChannelType();
 
-  public boolean isRemote();
+  void setChannelType(Type channelType);
 
-  public int addLogLine(String text);
+  boolean isRemote();
 
-  public int getLogLineSize();
+  int addLogLine(String text);
 
-  public void clearLog();
+  int getLogLineSize();
 
-  public String pollLogLine();
+  void clearLog();
 
-  public int getLogQueueSize();
+  String pollLogLine();
 
-  public void setLogQueueSize(int logQueueSize);
+  int getLogQueueSize();
 
-  public Status getStatus();
+  void setLogQueueSize(int logQueueSize);
 
-  public AbstractMessageChannel getChannel();
+  Status getStatus();
 
-  public void setTags(List<String> tags);
+  AbstractMessageChannel getChannel();
 
-  public List<String> getTags();
+  void setTags(List<String> tags);
 
-  public String getDomainId();
+  List<String> getTags();
 
-  public void setDomainId(String domainId);
+  String getDomainId();
 
-  public String getNameSpace();
+  void setDomainId(String domainId);
 
-  public void setNameSpace(String nameSpace);
+  String getNameSpace();
 
-  public void setFatherOfScope(String scope, Ar4kChannel father);
+  void setNameSpace(String nameSpace);
 
-  public void addChildOfScope(String scope, Ar4kChannel child);
+  void setFatherOfScope(String scope, Ar4kChannel father);
 
-  public List<Ar4kChannel> getChildsOfScope(String scope);
+  void addChildOfScope(String scope, Ar4kChannel child);
 
-  public int getChildsCountOfScope(String scope);
+  List<Ar4kChannel> getChildsOfScope(String scope);
 
-  public void removeParentsOfScope(String scope);
+  int getChildsCountOfScope(String scope);
 
-  public Ar4kChannel getFatherOfScope(String scope);
+  void removeParentsOfScope(String scope);
+
+  Ar4kChannel getFatherOfScope(String scope);
 
 }

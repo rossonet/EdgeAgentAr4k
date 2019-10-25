@@ -1,4 +1,4 @@
-package org.ar4k.agent.tribe;
+package org.ar4k.agent.hazelcast;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.logger.Ar4kLogger;

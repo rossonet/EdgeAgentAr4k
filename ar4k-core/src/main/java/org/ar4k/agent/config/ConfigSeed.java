@@ -10,20 +10,20 @@ import com.google.gson.TypeAdapter;
 
 public interface ConfigSeed extends Serializable, Cloneable {
 
-  public String getName();
+  String getName();
 
-  public String getDescription();
+  String getDescription();
 
-  public Collection<String> getTags();
+  Collection<String> getTags();
 
-  public Instant getCreationDate();
+  Instant getCreationDate();
 
-  public Instant getLastUpdateDate();
+  Instant getLastUpdateDate();
 
-  public UUID getUniqueId();
+  UUID getUniqueId();
 
-  public int getPriority();
+  int getPriority();
 
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter();
+  TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter();
 
 }

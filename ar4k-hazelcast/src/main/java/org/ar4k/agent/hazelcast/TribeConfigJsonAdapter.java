@@ -1,4 +1,4 @@
-package org.ar4k.agent.config.tribe;
+package org.ar4k.agent.hazelcast;
 
 import java.io.IOException;
 

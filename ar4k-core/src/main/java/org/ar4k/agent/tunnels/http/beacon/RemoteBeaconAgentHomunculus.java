@@ -1,4 +1,4 @@
-package org.ar4k.agent.tunnels.http.grpc;
+package org.ar4k.agent.tunnels.http.beacon;
 
 import org.ar4k.agent.rpc.Homunculus;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;

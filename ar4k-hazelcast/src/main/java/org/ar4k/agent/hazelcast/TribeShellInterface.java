@@ -12,16 +12,14 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console.tribe;
+package org.ar4k.agent.hazelcast;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.ar4k.agent.config.PotConfig;
-import org.ar4k.agent.config.tribe.TribeConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;

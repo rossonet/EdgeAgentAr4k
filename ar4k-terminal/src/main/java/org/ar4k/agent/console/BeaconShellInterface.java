@@ -23,10 +23,10 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.tunnels.http.grpc.BeaconAgent;
-import org.ar4k.agent.tunnels.http.grpc.BeaconClient;
-import org.ar4k.agent.tunnels.http.grpc.BeaconServer;
-import org.ar4k.agent.tunnels.http.grpc.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.ar4k.agent.iot.serial.marlin;
 
@@ -144,9 +144,11 @@ public class MarlinConfig extends CncConfig {
     cronCommands.add(printTime);
   }
 
+  @Override
   public MarlinService instantiate() {
     // System.out.println("Serial service start");
     MarlinService ss = new MarlinService();
+    ss.setConfiguration(this);
     return ss;
   }
 

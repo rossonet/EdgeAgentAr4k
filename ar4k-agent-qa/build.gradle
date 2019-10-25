@@ -18,7 +18,7 @@ dependencies {
   //compile project(':onion')
   //compile project(':paho')
   compile project(':ar4k-serial-comm')
-  //compile project(':opcua')
+  compile project(':ar4k-opcua')
   //compile project(':zeromq')
   //compile project(':kafka')
   //compile project(':zeroc-ice')

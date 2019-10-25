@@ -1,4 +1,4 @@
-package org.ar4k.agent.iot.serial.json.discovery;
+package org.ar4k.agent.iot.serial.json.wifi;
 
 import org.ar4k.agent.iot.serial.cnc.CncService;
 

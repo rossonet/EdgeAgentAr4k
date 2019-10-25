@@ -18,16 +18,13 @@ import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
-import org.ar4k.agent.iot.serial.BaudRateValidator;
-import org.ar4k.agent.iot.serial.ConventionalNotationValidator;
-import org.ar4k.agent.iot.serial.SerialService;
 
 import com.beust.jcommander.Parameter;
 import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Configurazione porta seriale collegata all'agente.
  */
 public class SerialConfig extends AbstractServiceConfig {
@@ -61,9 +58,11 @@ public class SerialConfig extends AbstractServiceConfig {
   @Parameter(names = "--camelEndpointResetSerial", description = "Camel label for the consumer queue for reset the serial interface")
   public String camelResetSerial = "log:?level=INFO&showBody=true";
 
+  @Override
   public SerialService instantiate() {
     // System.out.println("Serial service start");
     SerialService ss = new SerialService();
+    ss.setConfiguration(this);
     return ss;
   }
 

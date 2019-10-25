@@ -73,9 +73,8 @@ subprojects {
     }
     repositories {
       mavenCentral()
-      maven { url "https://plugins.gradle.org/m2/" }
       jcenter()
-      maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
+      maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
       classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
@@ -103,6 +102,7 @@ subprojects {
     maven { url "https://dl.bintray.com/ethereum/maven/" }
     maven { url "http://nexus.pentaho.org/content/groups/omni"}
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
   }
 
   task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }

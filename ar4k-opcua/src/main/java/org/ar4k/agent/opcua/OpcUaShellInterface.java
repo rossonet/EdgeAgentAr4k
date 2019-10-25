@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.iot.serial;
+package org.ar4k.agent.opcua;
 
 import javax.validation.Valid;
 
@@ -35,29 +35,29 @@ import com.google.gson.GsonBuilder;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Interfaccia da linea di comando per configurazione della connessione
- *         seriale.
+ *         OPC UA.
  *
  */
 
-@ShellCommandGroup("Serial Commands")
+@ShellCommandGroup("OPC UA Commands")
 @ShellComponent
 @EnableMBeanExport
-@ManagedResource(objectName = "bean:name=serialInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "serialInterface")
+@ManagedResource(objectName = "bean:name=opcUaInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "opcUaInterface")
 @RestController
-@RequestMapping("/serialInterface")
-public class SerialShellInterface extends AbstractShellHelper {
+@RequestMapping("/opcUaInterface")
+public class OpcUaShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
   @ManagedOperation
   public String listSerialPorts() {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(SerialService.getSerialDevice());
+    return null;// gson.toJson(OpcUaService.getSerialDevice());
   }
 
   @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
+  public void addSerialService(@ShellOption(optOut = true) @Valid OpcUaConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

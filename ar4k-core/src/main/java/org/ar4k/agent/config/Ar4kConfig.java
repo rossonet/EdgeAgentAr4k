@@ -47,6 +47,12 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--name", description = "name")
   public String name = UUID.randomUUID().toString();
 
+  @Parameter(names = "--nextConfigDns", description = "if set the configuration is monitored and replaced in runtine when change")
+  public String nextConfigDns = null;
+
+  @Parameter(names = "--nextConfigWeb", description = "if set the configuration is monitored and replaced in runtine when change")
+  public String nextConfigWeb = null;
+
   @Parameter(names = "--prompt", description = "prompt when configuration is selected")
   public String prompt = "studio";
 
@@ -84,13 +90,13 @@ public class Ar4kConfig implements ConfigSeed {
   public String license = "GNU AFFERO GENERAL PUBLIC LICENSE";
 
   @Parameter(names = "--tags", description = "tags", variableArity = true)
-  public Collection<String> tags = new HashSet<String>();
+  public Collection<String> tags = new HashSet<>();
 
   @Parameter(names = "--contexts", description = "contexts", variableArity = true)
-  public Collection<String> contexts = new HashSet<String>();
+  public Collection<String> contexts = new HashSet<>();
 
   @Parameter(names = "--groups", description = "groups", variableArity = true)
-  public Collection<String> groups = new HashSet<String>();
+  public Collection<String> groups = new HashSet<>();
 
   @Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
   public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
@@ -120,7 +126,7 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--logoUrl", description = "default log url")
   public String logoUrl = "/static/img/ar4k.png";
 
-  public Collection<PotConfig> pots = new HashSet<PotConfig>();
+  public Collection<PotConfig> pots = new HashSet<>();
 
   @Override
   public String getName() {
@@ -173,5 +179,11 @@ public class Ar4kConfig implements ConfigSeed {
         + ", postScript=" + postScript + ", keyStorePassword=" + keyStorePassword + ", keyStorePath=" + keyStorePath
         + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath
         + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
+  }
+
+  public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
+    // TODO: per update configurazione (usare campo version o sottoinsieme di
+    // campi). Lo scopo è escludere le uguali e le vecchie
+    return false;
   }
 }

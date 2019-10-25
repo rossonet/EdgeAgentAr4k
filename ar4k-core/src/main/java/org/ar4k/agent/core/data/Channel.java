@@ -35,7 +35,7 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   @Parameter(names = "--domainId", description = "unique global domain for the data")
   private String domainId = "AR4K";
 
-  private AbstractMessageChannel channel = null;
+  private transient AbstractMessageChannel channel = null;
 
   private Type channelTypeRequest = null;
 
@@ -49,15 +49,15 @@ public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel
   @Parameter(names = "--dataType", description = "data type for the channel", validateWith = DataTypeValidator.class)
   private DataType dataType = DataType.STRING;
 
-  private List<String> tags = new ArrayList<String>();
+  private List<String> tags = new ArrayList<>();
 
-  private Queue<String> lastLogs = new ConcurrentLinkedQueue<String>();
+  private Queue<String> lastLogs = new ConcurrentLinkedQueue<>();
 
   @Parameter(names = "--namespace", description = "namespace for the data")
   private String nameSpace = "default";
 
   private boolean isRemote = false;
-  
+
   @Override
   public String getNodeId() {
     return nodeId;

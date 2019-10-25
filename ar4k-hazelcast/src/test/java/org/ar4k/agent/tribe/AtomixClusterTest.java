@@ -11,7 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.ar4k.agent.config.tribe.TribeConfig;
+import org.ar4k.agent.hazelcast.AtomixTribeComponent;
+import org.ar4k.agent.hazelcast.TribeConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
