@@ -14,7 +14,7 @@
     */
 package org.ar4k.agent.hazelcast;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -31,7 +31,7 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.atomix.core.set.DistributedSet;
+import com.hazelcast.core.Member;
 
 /**
  *
@@ -52,45 +52,46 @@ import io.atomix.core.set.DistributedSet;
 
 public class HazelcastShellInterface extends AbstractShellHelper {
 
-  HazelcastComponent selectedAtomix = null;
+  HazelcastComponent hazelcastInstance = null;
 
-  protected Availability testAtomixNodeNull() {
-    return selectedAtomix == null ? Availability.available()
-        : Availability.unavailable("a Atomix node exists with status " + selectedAtomix.getStatusString());
+  protected Availability testHazelCastNodeNull() {
+    return hazelcastInstance == null ? Availability.available()
+        : Availability.unavailable("a Hazelcast node exists with status " + hazelcastInstance.getStatusString());
   }
 
-  protected Availability testAtomixNodeRunning() {
-    return selectedAtomix != null ? Availability.available() : Availability.unavailable("no Beacon client are running");
+  protected Availability testHazelcastNodeRunning() {
+    return hazelcastInstance != null ? Availability.available()
+        : Availability.unavailable("no Beacon client are running");
   }
 
-  @ShellMethod(value = "Create Atomix node", group = "Tribe Commands")
+  @ShellMethod(value = "Create Hazelcast", group = "Tribe Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeNull")
+  @ShellMethodAvailability("testHazelCastNodeNull")
   public void tribeJoin(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
-    selectedAtomix = new HazelcastComponent(tribe);
-    selectedAtomix.init();
+    hazelcastInstance = new HazelcastComponent(tribe);
+    hazelcastInstance.init();
   }
 
-  @ShellMethod(value = "Get status for Atomix node", group = "Tribe Commands")
+  @ShellMethod(value = "Get status of Hazelcast istance", group = "Tribe Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
+  @ShellMethodAvailability("testHazelcastNodeRunning")
   public String tribeStatus() {
-    return selectedAtomix.getStatusString();
+    return hazelcastInstance.getStatusString();
   }
 
   @ShellMethod(value = "List nodes joined to the cluster", group = "Tribe Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
-  public List<String> tribeList() {
-    return selectedAtomix.listAtomixNodes();
+  @ShellMethodAvailability("testHazelcastNodeRunning")
+  public Set<Member> tribeList() {
+    return hazelcastInstance.createOrGetHazelcastInstance().getCluster().getMembers();
   }
 
-  @ShellMethod(value = "Stop Atomix node", group = "Tribe Commands")
+  @ShellMethod(value = "Stop Hazelcast instance", group = "Tribe Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
+  @ShellMethodAvailability("testHazelcastNodeRunning")
   public void tribeStop() {
-    selectedAtomix.kill();
-    selectedAtomix = null;
+    hazelcastInstance.kill();
+    hazelcastInstance = null;
   }
 
   @ShellMethod(value = "Add tribe config to the selected configuration", group = "Tribe Commands")
@@ -98,28 +99,6 @@ public class HazelcastShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addTribe(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
     getWorkingConfig().pots.add(tribe);
-  }
-
-  @ShellMethod(value = "List data in Atomix", group = "Tribe Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
-  public DistributedSet<String> atomixKeySet() {
-    return selectedAtomix.getAtomixMap().keySet();
-  }
-
-  @ShellMethod(value = "Put data in Atomix map", group = "Tribe Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
-  public void atomixPut(@ShellOption(help = "key for the data. If the key exists will be override") String key,
-      @ShellOption(help = "value for the key") String value) {
-    selectedAtomix.getAtomixMap().put(key, value);
-  }
-
-  @ShellMethod(value = "Get data in Atomix map", group = "Tribe Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testAtomixNodeRunning")
-  public Object atomixGet(@ShellOption(help = "key for the data") String key) {
-    return selectedAtomix.getAtomixMap().get(key);
   }
 
 }

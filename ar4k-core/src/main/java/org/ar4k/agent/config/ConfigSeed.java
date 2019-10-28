@@ -2,7 +2,6 @@ package org.ar4k.agent.config;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.UUID;
 
 import org.joda.time.Instant;
 
@@ -20,7 +19,7 @@ public interface ConfigSeed extends Serializable, Cloneable {
 
   Instant getLastUpdateDate();
 
-  UUID getUniqueId();
+  String getUniqueId();
 
   int getPriority();
 

@@ -1,11 +1,11 @@
 package org.ar4k.agent.hazelcast;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 
@@ -18,37 +18,23 @@ public class HazelcastConfig extends AbstractServiceConfig {
 
   public Instant creationDate = new Instant();
   public Instant lastUpdate = new Instant();
-  public UUID uniqueId = UUID.randomUUID();
 
-  @Parameter(names = "--port", description = "tcp bind port")
-  public Integer port = 12600;
-
-  @Parameter(names = "--host", description = "tcp bind host")
-  public String hostBind = "127.0.0.1";
-
-  @Parameter(names = "--joinLinks", description = "list of Atomix machines for system group", variableArity = true)
-  public Set<String> joinLinks = new HashSet<String>();
-
-  @Parameter(names = "--multicastIp", description = "the multicast ip for the discovery server")
-  public String multicastIp = "224.0.0.66";
-
-  @Parameter(names = "--multicastPort", description = "the multicast port for the discovery server")
-  public Integer multicastPort = 6566;
-
-  @Parameter(names = "--active", description = "false if the server will not start at boot time; else true")
-  public boolean active = true;
-
-  @Parameter(names = "--rack", description = "the rack parameter for Atomix. See: https://atomix.io/docs/latest/user-manual/cluster-management/member-groups/")
-  public String rack = "rack-tag";
-
-  @Parameter(names = "--zone", description = "the zone parameter for Atomix. See: https://atomix.io/docs/latest/user-manual/cluster-management/member-groups/")
-  public String zone = uniqueId.toString();
-
-  @Parameter(names = "--mapName", description = "the name for the map in where store the data")
-  public String mapName = "base-map";
-
-  @Parameter(names = "--storage", description = "the path for the raft storage")
-  public String storagePath = "/tmp/" + UUID.randomUUID().toString();
+  @Parameter(names = "--uniqueName", description = "the uniqueName of node for the cluster")
+  public String uniqueName = Anima.getApplicationContext().getBean(Anima.class).getAgentUniqueName();
+  @Parameter(names = "--beanName", description = "the beanName for the Spring registration")
+  public String beanName = "hazelcast-instance";
+  @Parameter(names = "--groupName", description = "the optional group name")
+  public String groupName = null;
+  @Parameter(names = "--groupPassword", description = "the password of group if it is needed")
+  public String groupPassword = null;
+  @Parameter(names = "--multiCastEnable", description = "is multicast plugin enbled?")
+  public boolean multiCastEnable = true;
+  @Parameter(names = "--members", description = "the members of the cluster", arity = 0)
+  public List<String> members = new ArrayList<>();
+  @Parameter(names = "--kubernetesEnabled", description = "is kubernetes plugin enbled?")
+  public boolean kubernetesEnabled = false;
+  @Parameter(names = "--kubernetesNameSpace", description = "the kubernetes name space of the cluster")
+  public String kubernetesNameSpace = null;
 
   @Override
   public String getName() {
@@ -71,8 +57,8 @@ public class HazelcastConfig extends AbstractServiceConfig {
   }
 
   @Override
-  public UUID getUniqueId() {
-    return uniqueId;
+  public String getUniqueId() {
+    return uniqueName;
   }
 
   @Override
@@ -87,7 +73,62 @@ public class HazelcastConfig extends AbstractServiceConfig {
 
   @Override
   public boolean isSpringBean() {
-    // TODO implementare come spring bean
     return true;
+  }
+
+  public String getKubernetesNameSpace() {
+    return kubernetesNameSpace;
+  }
+
+  public boolean isKubernetes() {
+    return kubernetesEnabled;
+  }
+
+  public List<String> getMembers() {
+    return members;
+  }
+
+  public boolean isMultiCast() {
+    return multiCastEnable;
+  }
+
+  public String getGroupPassword() {
+    return groupPassword;
+  }
+
+  public String getGroup() {
+    return groupName;
+  }
+
+  public String getBeanName() {
+    return beanName;
+  }
+
+  public void setBeanName(String beanName) {
+    this.beanName = beanName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
+  public void setGroupPassword(String groupPassword) {
+    this.groupPassword = groupPassword;
+  }
+
+  public void setMultiCastEnable(boolean multiCastEnable) {
+    this.multiCastEnable = multiCastEnable;
+  }
+
+  public void setMembers(List<String> members) {
+    this.members = members;
+  }
+
+  public void setKubernetesEnabled(boolean kubernetesEnabled) {
+    this.kubernetesEnabled = kubernetesEnabled;
+  }
+
+  public void setKubernetesNameSpace(String kubernetesNameSpace) {
+    this.kubernetesNameSpace = kubernetesNameSpace;
   }
 }

@@ -42,7 +42,7 @@ public class Ar4kConfig implements ConfigSeed {
 
   public Instant creationDate = new Instant();
   public Instant lastUpdate = new Instant();
-  public UUID uniqueId = UUID.randomUUID();
+  public String uniqueId = UUID.randomUUID().toString();
 
   @Parameter(names = "--name", description = "name")
   public String name = UUID.randomUUID().toString();
@@ -144,7 +144,7 @@ public class Ar4kConfig implements ConfigSeed {
   }
 
   @Override
-  public UUID getUniqueId() {
+  public String getUniqueId() {
     return uniqueId;
   }
 

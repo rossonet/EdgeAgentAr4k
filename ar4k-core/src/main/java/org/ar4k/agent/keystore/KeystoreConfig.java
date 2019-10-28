@@ -59,7 +59,7 @@ public class KeystoreConfig implements ConfigSeed {
 
   public Instant creationDate = new Instant();
   public Instant lastUpdate = new Instant();
-  public UUID uniqueId = UUID.randomUUID();
+  public String uniqueId = UUID.randomUUID().toString();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
   public String filePathPre = "~/.ar4k/default.keystore";
@@ -306,7 +306,7 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   @Override
-  public UUID getUniqueId() {
+  public String getUniqueId() {
     return uniqueId;
   }
 

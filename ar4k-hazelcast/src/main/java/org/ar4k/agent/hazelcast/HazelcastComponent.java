@@ -1,37 +1,27 @@
 package org.ar4k.agent.hazelcast;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-
-import io.atomix.cluster.Member;
-import io.atomix.cluster.MemberId;
-import io.atomix.cluster.Node;
-import io.atomix.cluster.discovery.BootstrapDiscoveryProvider;
-import io.atomix.cluster.discovery.NodeDiscoveryProvider;
-import io.atomix.core.Atomix;
-import io.atomix.core.AtomixBuilder;
-import io.atomix.core.election.Leadership;
-import io.atomix.core.map.AtomicMap;
-import io.atomix.protocols.raft.partition.RaftPartitionGroup;
-import io.atomix.utils.net.Address;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.GroupConfig;
+import com.hazelcast.config.JoinConfig;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IList;
+import com.hazelcast.core.IMap;
+import com.hazelcast.core.IQueue;
+import com.hazelcast.core.ITopic;
+import com.hazelcast.cp.lock.FencedLock;
 
 public class HazelcastComponent implements Ar4kComponent {
 
@@ -40,112 +30,23 @@ public class HazelcastComponent implements Ar4kComponent {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
+  private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+
   private HazelcastConfig configuration = null;
 
-  private Atomix atomix = null;
+  private HazelcastInstance hazelcastInstance = null;
 
-  private AtomicMap<String, Object> map = null;
-
-  private boolean startStatus = false;
-
-  Leadership<MemberId> leadership = null;
-
-  private boolean discoveryOn = true;
-
-  private Map<String, String> hostAddressNodes = new HashMap<String, String>();
-
-  // (Anima) Anima.getApplicationContext().getBean("anima");
+  private String beanName = null;
 
   public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
+    this.anima = anima;
+    beanName = this.configuration.getBeanName();
   }
 
   public HazelcastComponent(HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
-  }
-
-  private class RunConnection implements Runnable {
-
-    public void connect() {
-      try {
-        AtomixBuilder builder = Atomix.builder();
-        builder.withMemberId(configuration.name).withAddress(new Address(configuration.hostBind, configuration.port));
-        if (discoveryOn) {
-          builder.withMulticastEnabled();
-          builder.withMulticastAddress(Address.from(configuration.multicastIp + ":" + configuration.multicastPort));
-        } else {
-          Node[] nodesToAdd = new Node[hostAddressNodes.size()];
-          int counter = 0;
-          for (Entry<String, String> singleData : hostAddressNodes.entrySet()) {
-            nodesToAdd[counter] = Node.builder().withId(singleData.getKey())
-                .withAddress(Address.from(singleData.getValue())).build();
-            counter++;
-          }
-          NodeDiscoveryProvider bootstrapProvider = BootstrapDiscoveryProvider.builder().withNodes(nodesToAdd).build();
-          builder.withMembershipProvider(bootstrapProvider);
-        }
-        builder.withRackId(configuration.rack);
-        builder.withHost(configuration.hostBind);
-        builder.withZoneId(configuration.zone);
-        builder.withReachabilityTimeout(Duration.of(120, ChronoUnit.SECONDS));
-        // builder.addProfile(Profile.dataGrid());
-        builder.withManagementGroup(RaftPartitionGroup.builder("system").withMembers(configuration.joinLinks)
-            .withDataDirectory(new File(
-                configuration.storagePath.replaceFirst("^~", System.getProperty("user.home")) + "/system-raft"))
-            .withNumPartitions(1).build());
-        /*
-         * builder.withPartitionGroups(PrimaryBackupPartitionGroup.builder("data")
-         * .withMemberGroupStrategy(MemberGroupStrategy.NODE_AWARE).withNumPartitions(32
-         * ).build());
-         */
-        builder.withPartitionGroups(RaftPartitionGroup.builder("raft")
-            .withDataDirectory(
-                new File(configuration.storagePath.replaceFirst("^~", System.getProperty("user.home")) + "/data-raft"))
-            .withNumPartitions(3).withMembers(configuration.joinLinks).build()).build();
-        atomix = builder.build();
-        atomix.start().join();
-        startStatus = true;
-      } catch (Exception ae) {
-        logger.logException(ae);
-        startStatus = false;
-      }
-    }
-
-    @Override
-    public void run() {
-      connect();
-      // getAtomixMap();
-    }
-  }
-
-  public List<String> listAtomixNodes() {
-    List<String> ritorno = new ArrayList<String>();
-    if (atomix != null && atomix.getMembershipService() != null) {
-      Set<Member> ms = atomix.getMembershipService().getMembers();
-      for (Member a : ms) {
-        ritorno.add(a.address().host() + ":" + a.address().port());
-      }
-    }
-    return ritorno;
-  }
-
-  public boolean isConnected() {
-    return (atomix != null && atomix.isRunning()) ? true : false;
-  }
-
-  @Override
-  public void init() {
-    Thread t = new Thread(new RunConnection());
-    t.setName("start-atomix");
-    t.start();
-  }
-
-  @Override
-  public void kill() {
-    if (atomix != null)
-      atomix.stop();
-    atomix = null;
-    map = null;
+    beanName = this.configuration.getBeanName();
   }
 
   @Override
@@ -159,20 +60,17 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   @Override
-  public String getStatusString() {
-    return atomix != null ? ("[running: " + String.valueOf(atomix.isRunning()) + "]")
-        : (startStatus ? "started" : "fault");
-  }
-
-  @Override
   public JsonElement getStatusJson() {
     return gson.toJsonTree(configuration);
   }
 
   @Override
   public void setBeanName(String name) {
-    // TODO Auto-generated method stub
+    beanName = name;
+  }
 
+  public String getBeanName() {
+    return beanName;
   }
 
   @Override
@@ -180,36 +78,90 @@ public class HazelcastComponent implements Ar4kComponent {
     kill();
   }
 
-  public Atomix getAtomix() {
-    return atomix;
+  @Override
+  public void init() {
+    createOrGetHazelcastInstance();
+    registerBean();
   }
 
-  public void sendChatMessage(String message) {
-    atomix.getCommunicationService().broadcast("chat", message);
+  private void registerBean() {
+    ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(beanName, this);
   }
 
-  public AtomicMap<String, Object> getAtomixMap() {
-    if (map == null) {
-      map = atomix.<String, Object>atomicMapBuilder(configuration.mapName).withCacheEnabled().withCacheSize(1000)
-          .withKeyType(String.class).build();
+  @Override
+  public void kill() {
+    if (hazelcastInstance != null) {
+      hazelcastInstance.shutdown();
+      hazelcastInstance = null;
     }
-    return map;
+    deregisterBean();
   }
 
-  public boolean isDiscoveryOn() {
-    return discoveryOn;
+  private void deregisterBean() {
+    ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().destroyBean(this);
   }
 
-  public void setDiscoveryOn(boolean discoveryOn) {
-    this.discoveryOn = discoveryOn;
+  @Override
+  public String getStatusString() {
+    return hazelcastInstance != null ? hazelcastInstance.getCluster().getClusterState().toString()
+        : "hazelcastInstance null";
   }
 
-  public Map<String, String> getHostAddressNodes() {
-    return hostAddressNodes;
+  public HazelcastInstance createOrGetHazelcastInstance() {
+    if (hazelcastInstance == null) {
+      hazelcastInstance = Hazelcast.newHazelcastInstance(generateHazelcastConfig());
+    }
+    return hazelcastInstance;
   }
 
-  public void setHostAddressNodes(Map<String, String> hostAddressNodes) {
-    this.hostAddressNodes = hostAddressNodes;
+  private Config generateHazelcastConfig() {
+    Config config = new Config();
+    config.setInstanceName(
+        configuration.getUniqueId() != null ? configuration.getUniqueId() : anima.getAgentUniqueName());
+    JoinConfig joinConfig = config.getNetworkConfig().getJoin();
+    if (configuration.isMultiCast()) {
+      joinConfig.getMulticastConfig().setEnabled(false);
+    }
+    if (configuration.getMembers() != null && !configuration.getMembers().isEmpty()) {
+      joinConfig.getTcpIpConfig().setMembers(configuration.getMembers());
+      joinConfig.getTcpIpConfig().setEnabled(true);
+    }
+    if (configuration.getGroup() != null && !configuration.getGroup().isEmpty()) {
+      config.getGroupConfig().setName(configuration.getGroup());
+      if (configuration.getGroupPassword() != null && !configuration.getGroupPassword().isEmpty()) {
+        config.setGroupConfig(new GroupConfig(configuration.getGroup(), configuration.getGroupPassword()));
+      } else {
+        config.setGroupConfig(new GroupConfig(configuration.getGroup()));
+      }
+    }
+    if (configuration.isKubernetes()) {
+      joinConfig.getKubernetesConfig().setEnabled(true);
+    }
+    if (configuration.getKubernetesNameSpace() != null && !configuration.getKubernetesNameSpace().isEmpty()) {
+      logger.info("running on namespace " + configuration.getKubernetesNameSpace());
+      joinConfig.getKubernetesConfig().setProperty("namespace", configuration.getKubernetesNameSpace());
+    }
+    return config;
+  }
+
+  IMap<Object, Object> getMap(String mapName) {
+    return createOrGetHazelcastInstance().getMap(mapName);
+  }
+
+  IList<Object> getList(String listName) {
+    return createOrGetHazelcastInstance().getList(listName);
+  }
+
+  ITopic<Object> getTopic(String topicName) {
+    return createOrGetHazelcastInstance().getTopic(topicName);
+  }
+
+  IQueue<Object> getQueue(String queueName) {
+    return createOrGetHazelcastInstance().getQueue(queueName);
+  }
+
+  FencedLock getLock(String lockName) {
+    return createOrGetHazelcastInstance().getCPSubsystem().getLock(lockName);
   }
 
 }

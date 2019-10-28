@@ -4,19 +4,17 @@ configurations { openNLPCompile }
 dependencies {
 	compile project(':ar4k-core')
 	  // rules engine
-  	compile group: 'org.drools', name: 'drools-core', version: '7.11.0.Final'
-  	compile group: 'org.drools', name: 'drools-compiler', version: '7.11.0.Final'
+  	compile group: 'org.drools', name: 'drools-core', version: '7.28.0.Final'
+  	compile group: 'org.drools', name: 'drools-compiler', version: '7.28.0.Final'
     // OpenNLP
-    compile group: 'org.apache.opennlp', name: 'opennlp-uima', version: '1.9.0'
-    compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.9.0'
-    openNLPCompile 'org.apache.opennlp:opennlp-tools:1.9.0'
+    compile group: 'org.apache.opennlp', name: 'opennlp-uima', version: '1.9.1'
+    compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.9.1'
+    openNLPCompile 'org.apache.opennlp:opennlp-tools:1.9.1'
     compile group: 'com.joestelmach', name: 'natty', version: '0.13'
     compile group: 'com.bladecoder.ink', name: 'blade-ink', version: '0.5.0'
     // dipendenza per i file di trainning OpenNLP Examples
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.23.1'
-
 }
-
 
 task createModelsDir {
 	doLast{

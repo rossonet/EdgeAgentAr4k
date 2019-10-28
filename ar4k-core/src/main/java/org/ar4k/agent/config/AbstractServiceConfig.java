@@ -21,18 +21,17 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
-
 import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
 
 /**
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Configurazione astratta servizio Agente Ar4k.
- * 
+ *
  */
 
 public abstract class AbstractServiceConfig implements ServiceConfig {
@@ -41,7 +40,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();
-  private UUID uniqueId = UUID.randomUUID();
+  private String uniqueId = UUID.randomUUID().toString();
 
   @Parameter(names = "--name", description = "service name", required = true)
   public String name;
@@ -56,10 +55,10 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   public String context = "main-context";
 
   @Parameter(names = "--groups", description = "service groups (multi selection)", variableArity = true, required = false)
-  public Collection<String> groups = new ArrayList<String>();
+  public Collection<String> groups = new ArrayList<>();
 
   @Parameter(names = "--ports", description = "service tcp port reserved for this host (multi selection)", variableArity = true, required = false)
-  public Collection<Integer> ports = new ArrayList<Integer>();
+  public Collection<Integer> ports = new ArrayList<>();
 
   @Parameter(names = "--tags", description = "service tags (multi selection)", variableArity = true, required = false)
   public Collection<String> tags;
@@ -81,7 +80,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
   // @Parameter(names = "--data", description = "additional data for this service
   // (multi selection)", variableArity = true)
-  public Map<String, Object> data = new HashMap<String, Object>();
+  public Map<String, Object> data = new HashMap<>();
 
   @Parameter(names = "--clockRunnableClass", description = "clock for the runnable thread")
   public int clockRunnableClass = 1000;
@@ -127,7 +126,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   }
 
   @Override
-  public UUID getUniqueId() {
+  public String getUniqueId() {
     return uniqueId;
   }
 

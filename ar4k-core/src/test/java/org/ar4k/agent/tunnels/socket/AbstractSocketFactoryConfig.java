@@ -33,7 +33,7 @@ public abstract class AbstractSocketFactoryConfig implements PotConfig {
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();
-  private UUID uniqueId = UUID.randomUUID();
+  private String uniqueId = UUID.randomUUID().toString();
 
   @Parameter(names = "--name", description = "tunnel name", required = true)
   public String name;
@@ -69,11 +69,11 @@ public abstract class AbstractSocketFactoryConfig implements PotConfig {
   }
 
   @Override
-  public UUID getUniqueId() {
+  public String getUniqueId() {
     return uniqueId;
   }
 
-  public void setUniqueId(UUID uniqueId) {
+  public void setUniqueId(String uniqueId) {
     this.uniqueId = uniqueId;
   }
 

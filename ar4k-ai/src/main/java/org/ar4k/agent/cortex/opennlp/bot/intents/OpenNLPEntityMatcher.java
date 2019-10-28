@@ -3,11 +3,11 @@ package org.ar4k.agent.cortex.opennlp.bot.intents;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.ar4k.agent.cortex.opennlp.core.Intent;
 import org.ar4k.agent.cortex.memory.TimeContextConversation;
 import org.ar4k.agent.cortex.opennlp.core.Entity;
 import org.ar4k.agent.cortex.opennlp.core.EntityMatch;
 import org.ar4k.agent.cortex.opennlp.core.EntityMatcher;
+import org.ar4k.agent.cortex.opennlp.core.Intent;
 import org.ar4k.agent.cortex.opennlp.core.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,10 @@ public class OpenNLPEntityMatcher implements EntityMatcher {
   private Logger log = LoggerFactory.getLogger(OpenNLPEntityMatcher.class);
 
   /** Map of NER models. */
-  private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<String, TokenNameFinderModel>();
+  private HashMap<String, TokenNameFinderModel> nerModels = new HashMap<>();
 
   /** Map of slot models. These share the NER models. */
-  private HashMap<String, TokenNameFinderModel> entityModels = new HashMap<String, TokenNameFinderModel>();
+  private HashMap<String, TokenNameFinderModel> entityModels = new HashMap<>();
 
   /** The tokenizer to use. */
   private Tokenizer tokenizer;
@@ -71,7 +71,7 @@ public class OpenNLPEntityMatcher implements EntityMatcher {
   public HashMap<Entity, EntityMatch> match(TimeContextConversation context, Intent intent, String utterance) {
     String[] utteranceTokens = tokenizer.tokenize(utterance);
 
-    HashMap<Entity, EntityMatch> matchedEntities = new HashMap<Entity, EntityMatch>();
+    HashMap<Entity, EntityMatch> matchedEntities = new HashMap<>();
 
     for (Entity entity : intent.getEntities()) {
       log.debug("Looking for entity {}", entity.getName());

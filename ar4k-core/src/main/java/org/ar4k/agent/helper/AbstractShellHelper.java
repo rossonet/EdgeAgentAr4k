@@ -31,12 +31,12 @@ import javax.management.ReflectionException;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
-import org.ar4k.agent.core.RpcConversation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
@@ -180,7 +180,7 @@ public abstract class AbstractShellHelper {
   protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {
     Ar4kUserDetails u = new Ar4kUserDetails();
     u.setUsername(username);
-    u.setPassword(passwordEncoder.encode((CharSequence) password));
+    u.setPassword(passwordEncoder.encode(password));
     List<SimpleGrantedAuthority> a = new ArrayList<>();
     for (String p : authorities.split(",")) {
       SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
@@ -218,7 +218,7 @@ public abstract class AbstractShellHelper {
     ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
     Ar4kConfig newTarget = (Ar4kConfig) ois.readObject();
     ois.close();
-    newTarget.uniqueId = UUID.randomUUID();
+    newTarget.uniqueId = UUID.randomUUID().toString();
     newTarget.name = newName;
     newTarget.prompt = newPrompt;
     return newTarget;
@@ -226,7 +226,7 @@ public abstract class AbstractShellHelper {
 
   protected static Collection<String> listMbeans()
       throws ReflectionException, IntrospectionException, InstanceNotFoundException {
-    List<String> ritorno = new ArrayList<String>();
+    List<String> ritorno = new ArrayList<>();
     MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
     Set<ObjectInstance> instances = mbs.queryMBeans(null, null);
     Iterator<ObjectInstance> iterator = instances.iterator();
