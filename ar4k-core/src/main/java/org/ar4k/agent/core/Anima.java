@@ -859,6 +859,10 @@ public class Anima
       dataStore.clear();
   }
 
+  public Map<String, Object> getDataStore() {
+    return dataStore;
+  }
+
   public boolean dataStoreExists() {
     return (dataStore != null);
   }

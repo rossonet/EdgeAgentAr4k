@@ -3,7 +3,6 @@ package org.ar4k.agent.cortex.opennlp.bot.intents;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.ar4k.agent.cortex.memory.TimeContextConversation;
 import org.ar4k.agent.cortex.opennlp.core.Entity;
 import org.ar4k.agent.cortex.opennlp.core.EntityMatch;
 import org.ar4k.agent.cortex.opennlp.core.EntityMatcher;

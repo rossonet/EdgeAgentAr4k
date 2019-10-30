@@ -61,7 +61,7 @@ public class HazelcastShellInterface extends AbstractShellHelper {
 
   protected Availability testHazelcastNodeRunning() {
     return hazelcastInstance != null ? Availability.available()
-        : Availability.unavailable("no Beacon client are running");
+        : Availability.unavailable("no Hazelcast client are running");
   }
 
   @ShellMethod(value = "Create Hazelcast", group = "Tribe Commands")

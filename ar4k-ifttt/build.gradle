@@ -1,0 +1,5 @@
+description = "IoT components IFTTT"
+
+dependencies {
+  compile project(':ar4k-core')
+}
