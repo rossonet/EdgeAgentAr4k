@@ -4,6 +4,8 @@ bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
 
+src/main/resources/models/*
+
 ### OUTPUT ###
 spring-shell.log
 Ar4kAgent
