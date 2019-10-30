@@ -67,7 +67,7 @@ public class OpenNLPEntityMatcher implements EntityMatcher {
   }
 
   @Override
-  public HashMap<Entity, EntityMatch> match(TimeContextConversation context, Intent intent, String utterance) {
+  public HashMap<Entity, EntityMatch> match(Intent intent, String utterance) {
     String[] utteranceTokens = tokenizer.tokenize(utterance);
 
     HashMap<Entity, EntityMatch> matchedEntities = new HashMap<>();
@@ -90,7 +90,7 @@ public class OpenNLPEntityMatcher implements EntityMatcher {
         log.debug("Matching for {} against {}", entity.getName(), matches);
 
         // TODO what to do with multi matches?
-        EntityMatch match = entity.match(matches[0], context);
+        EntityMatch match = entity.match(matches[0]);
         if (match != null) {
           matchedEntities.put(entity, match);
           log.debug("Match found {}", match);

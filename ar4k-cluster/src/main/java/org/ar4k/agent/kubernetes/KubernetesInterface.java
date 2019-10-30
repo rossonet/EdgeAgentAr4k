@@ -341,7 +341,7 @@ public class KubernetesInterface extends AbstractShellHelper {
 
   // TODO register e list services k8s
 
-  @ShellMethod(value = "Run Kops (K8s admin tool) (https://github.com/kubernetes/kops)", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Run Kops (K8s admin tool) (https://github.com/kubernetes/kops)", group = "Kubernetes Commands")
   @ManagedOperation
   public String runKopsCommandLine(
       @ShellOption(help = "command to execute in Kops", defaultValue = "help") String command) {
@@ -363,7 +363,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Create a K8s cluster with minikube command line and login to it (https://github.com/kubernetes/minikube)", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Create a K8s cluster with minikube command line and login to it (https://github.com/kubernetes/minikube)", group = "Kubernetes Commands")
   @ManagedOperation
   @ShellMethodAvailability("testApiClientNull")
   public String createK8sWithMiniKube(
@@ -386,7 +386,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Delete a K8s cluster with MiniKube command line", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Delete a K8s cluster with MiniKube command line", group = "Kubernetes Commands")
   @ManagedOperation
   @ShellMethodAvailability("testApiClientNull")
   public String removeK8sWithMiniKube(
@@ -397,7 +397,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Get the status of the MiniKube cluster", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Get the status of the MiniKube cluster", group = "Kubernetes Commands")
   @ManagedOperation
   public String getMiniKubeStatus(
       @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName) {
@@ -406,7 +406,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Start the MiniKube cluster dashboard", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Start the MiniKube cluster dashboard", group = "Kubernetes Commands")
   @ManagedOperation
   @ShellMethodAvailability("testMiniKubeDashboardNull")
   public String getMiniKubeDashboard(
@@ -424,7 +424,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Start a KubeFlow system", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Start a KubeFlow system", group = "Kubernetes Commands")
   @ManagedOperation
   public String installKubeFlow(
       @ShellOption(help = "directory for the configuration", defaultValue = "kubeflow") String dirPath,
@@ -487,7 +487,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     return result.toString();
   }
 
-  @ShellMethod(value = "Stop the MiniKube cluster dashboard", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Stop the MiniKube cluster dashboard", group = "Kubernetes Commands")
   @ManagedOperation
   @ShellMethodAvailability("testMiniKubeDashboardRunning")
   public void stopMiniKubeDashboard() {
@@ -495,7 +495,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     miniKubeDashboard = null;
   }
 
-  @ShellMethod(value = "Run MiniKube (K8s admin tool) (https://github.com/kubernetes/minikube)", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Run MiniKube (K8s admin tool) (https://github.com/kubernetes/minikube)", group = "Kubernetes Commands")
   @ManagedOperation
   public String runMiniKubeCommandLine(
       @ShellOption(help = "virtual machine name for MiniKube", defaultValue = "mini-k8s") String vmName,
@@ -572,7 +572,7 @@ public class KubernetesInterface extends AbstractShellHelper {
     }
   }
 
-  @ShellMethod(value = "Run KubeCtl from original binary (K8s admin tool) (https://kubernetes.io/docs/reference/kubectl/kubectl/)", group = "Kubernetes Admin Commands")
+  @ShellMethod(value = "Run KubeCtl from original binary (K8s admin tool) (https://kubernetes.io/docs/reference/kubectl/kubectl/)", group = "Kubernetes Commands")
   @ManagedOperation
   public String runKubectlCommandLine(
       @ShellOption(help = "command to execute in KubeCtl", defaultValue = "help") String command) {
@@ -597,9 +597,9 @@ public class KubernetesInterface extends AbstractShellHelper {
   /*
    * @ShellMethod(value = "List recipe of Helm managed by the platform", group =
    * "K8s Helm Commands")
-   * 
+   *
    * @ManagedOperation public Set<String> listK8sHelmRecipe(
-   * 
+   *
    * @ShellOption(help = "package for searching", defaultValue =
    * "org.ar4k.agent.kubernetes.helm") String packageName) { Set<String> rit = new
    * HashSet<>(); ClassPathScanningCandidateComponentProvider provider = new
@@ -612,19 +612,19 @@ public class KubernetesInterface extends AbstractShellHelper {
    * c.getBeanClassName() + "\n" + o.getDescription() + "\n[" + o.linkSite() +
    * "]"); } catch (InstantiationException | IllegalAccessException |
    * ClassNotFoundException e) { logger.logException(e); } } return rit; }
-   * 
+   *
    * @ShellMethod(value = "Install Helm recipe", group = "K8s Helm Commands")
-   * 
+   *
    * @ManagedOperation public void installK8sHelmRecipe(@ShellOption(help =
    * "name for the pod") String name,
-   * 
+   *
    * @ShellOption(help = "recipe class") String className) { try { HelmRecipe o =
    * (HelmRecipe) Class.forName(name).newInstance(); o.setName(name);
    * runHelmCommandLine(String.join("install ", o.getCmdRecipe())); } catch
    * (InstantiationException | IllegalAccessException | ClassNotFoundException e)
    * { logger.logException(e); } }
    */
-  @ShellMethod(value = "Run Helm (K8s package manager) (https://helm.sh/)", group = "K8s Helm Commands")
+  @ShellMethod(value = "Run Helm (K8s package manager) (https://helm.sh/)", group = "Kubernetes Commands")
   @ManagedOperation
   public String runHelmCommandLine(
       @ShellOption(help = "command to execute with Helm", defaultValue = "help") String command) {

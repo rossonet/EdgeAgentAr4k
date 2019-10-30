@@ -46,7 +46,7 @@ public class DroolsShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Add a Drools interface to the selected configuration", group = "AI Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSerialService(@ShellOption(optOut = true) @Valid DroolsConfig service) {
+  public void addDroolsService(@ShellOption(optOut = true) @Valid DroolsConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

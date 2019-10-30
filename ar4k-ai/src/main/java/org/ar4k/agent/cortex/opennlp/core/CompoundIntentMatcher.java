@@ -21,7 +21,7 @@ public class CompoundIntentMatcher implements IntentMatcher {
 
   /**
    * Constructor for the class.
-   * 
+   *
    * @param firstMatcher  The first intent matcher.
    * @param secondMatcher The second intent matcher.
    */
@@ -32,20 +32,19 @@ public class CompoundIntentMatcher implements IntentMatcher {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.rabidgremlin.mutters.core.IntentMatcher#match(String utterance,
    * Context context, Set<String> expectedIntents)
-   * 
+   *
    */
   @Override
-  public IntentMatch match(String utterance, TimeContextConversation context, Set<String> expectedIntents,
-      HashMap<String, Object> debugValues) {
+  public IntentMatch match(String utterance, Set<String> expectedIntents, HashMap<String, Object> debugValues) {
     // see if we can find match in first matcher
-    IntentMatch match = firstMatcher.match(utterance, context, expectedIntents, debugValues);
+    IntentMatch match = firstMatcher.match(utterance, expectedIntents, debugValues);
 
     // no ? try second one
     if (match == null) {
-      match = secondMatcher.match(utterance, context, expectedIntents, debugValues);
+      match = secondMatcher.match(utterance, expectedIntents, debugValues);
     }
 
     return match;

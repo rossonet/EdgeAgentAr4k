@@ -102,8 +102,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
    * Context context, Set<String> expectedIntents)
    */
   @Override
-  public IntentMatch match(String utterance, TimeContextConversation context, Set<String> expectedIntents,
-      HashMap<String, Object> debugValues) {
+  public IntentMatch match(String utterance, Set<String> expectedIntents, HashMap<String, Object> debugValues) {
     // utterance is blank, nothing to match on
     if (StringUtils.isBlank(utterance)) {
       return null;
@@ -227,7 +226,7 @@ public abstract class AbstractMachineLearningIntentMatcher implements IntentMatc
     }
 
     // do NER
-    HashMap<Entity, EntityMatch> matchedEntities = entityMatcher.match(context, bestIntent, utterance);
+    HashMap<Entity, EntityMatch> matchedEntities = entityMatcher.match(bestIntent, utterance);
 
     // return best match
     return new IntentMatch(bestIntent, matchedEntities, utterance);

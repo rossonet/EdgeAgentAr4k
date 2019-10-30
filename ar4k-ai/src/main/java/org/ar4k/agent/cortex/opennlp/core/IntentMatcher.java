@@ -16,7 +16,7 @@ public interface IntentMatcher {
   /**
    * This returns the best intent match for the user's utterance. Can return null
    * to indicate no good match found.
-   * 
+   *
    * @param utterance       The user's utterance.
    * @param context         The user's context, helps with extracting data from
    *                        the user's utterance.
@@ -27,7 +27,6 @@ public interface IntentMatcher {
    *                        required.
    * @return The best intent match or null if no good match.
    */
-  IntentMatch match(String utterance, TimeContextConversation context, Set<String> expectedIntents,
-      HashMap<String, Object> debugValues);
+  IntentMatch match(String utterance, Set<String> expectedIntents, HashMap<String, Object> debugValues);
 
 }

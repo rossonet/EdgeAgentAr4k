@@ -20,7 +20,7 @@ public class CompoundEntity extends Entity {
 
   /**
    * Constructor.
-   * 
+   *
    * @param name         The name of the slot.
    * @param firstEntity  The first slot to try match with.
    * @param secondEntity The second slot to try match against,
@@ -33,15 +33,15 @@ public class CompoundEntity extends Entity {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.rabidgremlin.mutters.core#match(String token, Context context)
-   * 
+   *
    */
   @Override
-  public EntityMatch match(String token, TimeContextConversation context) {
-    EntityMatch match = firstEntity.match(token, context);
+  public EntityMatch match(String token) {
+    EntityMatch match = firstEntity.match(token);
     if (match == null) {
-      match = secondEntity.match(token, context);
+      match = secondEntity.match(token);
     }
 
     return match;
@@ -49,9 +49,9 @@ public class CompoundEntity extends Entity {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see com.rabidgremlin.mutters.core#getName()
-   * 
+   *
    */
   @Override
   public String getName() {

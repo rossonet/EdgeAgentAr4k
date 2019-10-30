@@ -114,6 +114,8 @@ public class Anima
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
+  public static final String MASTER_DATA_SCOPE = "local-agent";
+
   private final String dbDataStorePath = "~/.ar4k/anima_datastore";
   private final String dbDataStoreName = "datastore";
 
@@ -445,24 +447,23 @@ public class Anima
   }
 
   private void popolateAddressSpace() {
-    String scope = "ar4k-system";
     AbstractChannel systemChannel = new INoDataChannel();
     systemChannel.setNodeId("system");
     systemChannel.setDescription("local JVM system");
     AbstractChannel loggerChannel = new IPublishSubscribeChannel();
     loggerChannel.setNodeId("logger");
     loggerChannel.setDescription("logger queue");
-    loggerChannel.setFatherOfScope(scope, systemChannel);
+    loggerChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
     dataAddress.addDataChannel(loggerChannel);
     AbstractChannel healthChannel = new IPublishSubscribeChannel();
     healthChannel.setNodeId("health");
     healthChannel.setDescription("local machine hardware and software stats");
-    healthChannel.setFatherOfScope(scope, systemChannel);
+    healthChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
     dataAddress.addDataChannel(healthChannel);
     AbstractChannel cmdChannel = new IQueueChannel();
     cmdChannel.setNodeId("command");
     cmdChannel.setDescription("RPC interface");
-    cmdChannel.setFatherOfScope(scope, systemChannel);
+    cmdChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
     dataAddress.addDataChannel(cmdChannel);
     // start health regular messages
     timer.scheduleAtFixedRate(repeatedTask, delay, period);
@@ -842,10 +843,10 @@ public class Anima
 
   /*
    * public Set<KeystoreConfig> getKeyStores() { return keyStores; }
-   * 
+   *
    * public void addKeyStores(KeystoreConfig keyStore) {
    * this.keyStores.add(keyStore); }
-   * 
+   *
    * public void delKeyStores(KeystoreConfig keyStore) {
    * this.keyStores.remove(keyStore); }
    */

@@ -10,25 +10,25 @@ package org.ar4k.agent.cortex.opennlp.core;
 public abstract class Entity {
   /**
    * This method returns a slot match if the slot matches the given token.
-   * 
+   *
    * @param token   The token to match against.
    * @param context The user's context. Provides data to help with slot matching.
    * @return A SlotMatch if the slot was matched or null if there was no match.
    */
-  public abstract EntityMatch match(String token, TimeContextConversation context);
+  public abstract EntityMatch match(String token);
 
   /**
    * This method returns the name of the slot.
-   * 
+   *
    * @return The name of the slot.
    */
   public abstract String getName();
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.lang.Object#hashCode()
-   * 
+   *
    */
   @Override
   public int hashCode() {
@@ -43,9 +43,9 @@ public abstract class Entity {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.lang.Object#equals(Object obj)
-   * 
+   *
    */
   @Override
   public boolean equals(Object obj) {

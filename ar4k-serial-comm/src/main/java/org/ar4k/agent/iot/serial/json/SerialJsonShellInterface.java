@@ -17,16 +17,16 @@ import org.springframework.shell.standard.ShellOption;
  *
  */
 
-@ShellCommandGroup("IoT Commands")
+@ShellCommandGroup("Serial Commands")
 @ShellComponent
 @EnableMBeanExport
 @ManagedResource(objectName = "bean:name=iotSerialInterface", description = "Ar4k Agent IoT Serial Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotSerialInterface")
 public class SerialJsonShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "Add a IoT serial interface", group = "IoT Commands")
+  @ShellMethod(value = "Add a serial interface with json semantic", group = "Serial Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addIotSerialService(@ShellOption(optOut = true) @Valid SerialJsonConfig service) {
+  public void addJsonSerialService(@ShellOption(optOut = true) @Valid SerialJsonConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

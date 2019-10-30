@@ -26,7 +26,7 @@ public class NodeMcuLinkShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Add a NodeMcu controller connected via wifi", group = "IoT Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addMarlinService(@ShellOption(optOut = true) @Valid NodeMcuLinkConfig service) {
+  public void addNodeMcuService(@ShellOption(optOut = true) @Valid NodeMcuLinkConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

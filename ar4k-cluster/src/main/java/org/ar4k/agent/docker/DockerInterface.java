@@ -293,7 +293,7 @@ public class DockerInterface extends AbstractShellHelper {
     return execCommand(containerId, command);
   }
 
-  @ShellMethod(value = "Initialize Swarm sub-system on Docker system", group = "Docker Library")
+  @ShellMethod(value = "Initialize Swarm sub-system on Docker system", group = "Docker Commands")
   @ManagedOperation
   @ShellMethodAvailability("testDockerClientRunning")
   public void initializeSwarm(@ShellOption(help = "the cluster name") String name) {
@@ -302,7 +302,7 @@ public class DockerInterface extends AbstractShellHelper {
     dockerClient.initializeSwarmCmd(swarmSpec).exec();
   }
 
-  @ShellMethod(value = "Run Portainer on Docker system", group = "Docker Library")
+  @ShellMethod(value = "Run Portainer on Docker system", group = "Docker Commands")
   @ManagedOperation
   @ShellMethodAvailability("testDockerClientRunning")
   public String startPortainerContainer(

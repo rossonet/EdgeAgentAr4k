@@ -35,6 +35,10 @@ public class HazelcastConfig extends AbstractServiceConfig {
   public boolean kubernetesEnabled = false;
   @Parameter(names = "--kubernetesNameSpace", description = "the kubernetes name space of the cluster")
   public String kubernetesNameSpace = null;
+  @Parameter(names = "--internalDirectoryChannel", description = "internal directory channel for message topics")
+  public String bindDirectoryChannel = null;
+  @Parameter(names = "--topics", description = "topics to subscribe", arity = 0)
+  public List<String> topics = new ArrayList<>();
 
   @Override
   public String getName() {
@@ -130,5 +134,37 @@ public class HazelcastConfig extends AbstractServiceConfig {
 
   public void setKubernetesNameSpace(String kubernetesNameSpace) {
     this.kubernetesNameSpace = kubernetesNameSpace;
+  }
+
+  public List<String> getTopics() {
+    return topics;
+  }
+
+  public void setTopics(List<String> topics) {
+    this.topics = topics;
+  }
+
+  public Instant getLastUpdate() {
+    return lastUpdate;
+  }
+
+  public String getUniqueName() {
+    return uniqueName;
+  }
+
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public boolean isMultiCastEnable() {
+    return multiCastEnable;
+  }
+
+  public boolean isKubernetesEnabled() {
+    return kubernetesEnabled;
+  }
+
+  public String getBindDirectoryChannel() {
+    return bindDirectoryChannel;
   }
 }

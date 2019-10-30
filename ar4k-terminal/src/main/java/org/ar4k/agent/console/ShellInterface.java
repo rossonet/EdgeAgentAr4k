@@ -637,7 +637,7 @@ public class ShellInterface extends AbstractShellHelper {
     p.setLabel(executorLabel);
     p.setTcpPort(port);
     p.setCommand(cmd);
-    p.start();
+    p.eval(cmd);
     ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
     return true;
   }
@@ -703,7 +703,7 @@ public class ShellInterface extends AbstractShellHelper {
     if (listProcesses().get(label) != null) {
       try {
         listProcesses().get(label).close();
-      } catch (IOException e) {
+      } catch (Exception e) {
         logger.logException(e);
       }
       listProcesses().remove(label);

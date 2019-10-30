@@ -1,10 +1,14 @@
 package org.ar4k.agent.hazelcast;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -37,6 +41,9 @@ public class HazelcastComponent implements Ar4kComponent {
   private HazelcastInstance hazelcastInstance = null;
 
   private String beanName = null;
+
+  private Set<EnternalMessageHandler> subscriberTopicsFromExternal = new HashSet<>();
+  private Set<InternalMessageHandler> subscriberTopicsFromInternal = new HashSet<>();
 
   public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
@@ -82,6 +89,23 @@ public class HazelcastComponent implements Ar4kComponent {
   public void init() {
     createOrGetHazelcastInstance();
     registerBean();
+    popolateDataTopics();
+  }
+
+  private void popolateDataTopics() {
+    AbstractChannel channelRoot = anima.getDataAddress().getChannel(configuration.getBindDirectoryChannel());
+    for (String singleTopicLabel : configuration.getTopics()) {
+      ITopic<Object> sigleTopic = getTopic(singleTopicLabel);
+      AbstractChannel singleAr4kchannel = new IPublishSubscribeChannel();
+      singleAr4kchannel.setFatherOfScope(Anima.MASTER_DATA_SCOPE, channelRoot);
+      anima.getDataAddress().addDataChannel(singleAr4kchannel);
+      EnternalMessageHandler externalHandlerSubscriber = new EnternalMessageHandler(sigleTopic, singleAr4kchannel);
+      InternalMessageHandler internalHandlerSubscribe = new InternalMessageHandler(singleAr4kchannel, sigleTopic);
+      singleAr4kchannel.subscribe(internalHandlerSubscribe);
+      sigleTopic.addMessageListener(externalHandlerSubscriber);
+      subscriberTopicsFromExternal.add(externalHandlerSubscriber);
+      subscriberTopicsFromInternal.add(internalHandlerSubscribe);
+    }
   }
 
   private void registerBean() {
@@ -90,11 +114,21 @@ public class HazelcastComponent implements Ar4kComponent {
 
   @Override
   public void kill() {
+    deregisterBean();
     if (hazelcastInstance != null) {
       hazelcastInstance.shutdown();
       hazelcastInstance = null;
     }
-    deregisterBean();
+    for (EnternalMessageHandler subscriber : subscriberTopicsFromExternal) {
+      subscriber.getSource().destroy();
+      try {
+        subscriber.getTarget().close();
+      } catch (IOException e) {
+        logger.logException(e);
+      }
+    }
+    subscriberTopicsFromExternal.clear();
+    subscriberTopicsFromInternal.clear();
   }
 
   private void deregisterBean() {

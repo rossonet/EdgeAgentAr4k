@@ -17,10 +17,6 @@ public class DataAddress {
 
   public DataAddress() {
     dataChannels.clear();
-    // add log channel
-    // add command channel
-    // add health channel
-    // add info service channel
   }
 
   private Collection<AbstractChannel> dataChannels = new HashSet<>();
