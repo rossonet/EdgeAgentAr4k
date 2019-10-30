@@ -1,7 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.Ar4kChannel;
-import org.ar4k.agent.core.data.Channel;
+import org.ar4k.agent.core.data.AbstractChannel;
 import org.springframework.integration.channel.PriorityChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
 import org.springframework.integration.support.management.Statistics;
@@ -9,12 +9,12 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
 
-public class IPriorityChannel extends Channel implements PollableChannel, PollableChannelManagement {
+public class IPriorityChannel extends AbstractChannel implements PollableChannel, PollableChannelManagement {
 
   public IPriorityChannel() {
     PriorityChannel c = new PriorityChannel();
     super.setChannel(c);
-    super.setChannelType(Type.PriorityChannel);
+    super.setChannelType(Type.PRIORITY);
   }
 
   @Override

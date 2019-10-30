@@ -27,13 +27,13 @@ import org.springframework.statemachine.state.State;
 @EnableStateMachine
 /**
  * State machine per gestore principale del ciclo di vita
- * 
+ *
  * @author andrea
  *
  */
 public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<AnimaStates, AnimaEvents> {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Anima.class.toString());
+      .getLogger(AnimaStateMachineConfig.class.toString());
 
   @Autowired
   Anima anima;
@@ -60,12 +60,15 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART).and()
         .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.STASIS).event(AnimaEvents.PAUSE).and()
         .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
         .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART).and()
         .withExternal().source(AnimaStates.STASIS).target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and()
         .withExternal().source(AnimaStates.STASIS).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
-        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.FAULTED).event(AnimaEvents.STOP);
+        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
+        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART);
   }
 
   @Bean
@@ -90,6 +93,9 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
           anima.runPots();
           anima.runServices();
         }
+        if (anima.getState().equals(AnimaStates.STASIS)) {
+          anima.prepareAgentStasis();
+        }
         // logger.info("State change to " + to.getId());
         anima.stateChanged();
         // System.out.println("State change to " + to.getId());
@@ -111,6 +117,10 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
                 .error("To change the state to CONFIGURED is needed a configuration. anima.getRuntimeConfig() is null");
             return false;
           }
+        } else if (context.getEvent().equals(AnimaEvents.RESTART)) {
+          logger.warn("The agent will be restarted. Please wait...");
+          anima.prepareRestart();
+          return true;
         } else {
           return true;
         }

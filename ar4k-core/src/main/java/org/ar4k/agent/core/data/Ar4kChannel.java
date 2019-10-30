@@ -6,10 +6,10 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
 import org.joda.time.Instant;
 import org.springframework.integration.channel.AbstractMessageChannel;
 
-public interface Ar4kChannel {
+public interface Ar4kChannel extends AutoCloseable {
 
   public static enum Type {
-    PublishSubscribeChannel, QueueChannel, PriorityChannel, RendezvousChannel, DirectChannel, ExecutorChannel
+    PUBLISH_SUBSCRIBE, QUEUE, PRIORITY, RENDEZVOUS, DIRECT, EXECUTOR
   }
 
   public static enum Status {

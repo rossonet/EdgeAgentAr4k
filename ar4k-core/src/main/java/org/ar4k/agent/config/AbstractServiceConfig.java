@@ -30,13 +30,13 @@ import com.beust.jcommander.Parameter;
  *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Configurazione astratta servizio Agente Ar4k.
+ *         Configurazione astratta servizio.
  *
  */
 
 public abstract class AbstractServiceConfig implements ServiceConfig {
 
-  private static final long serialVersionUID = 4934166738722721336L;
+  private static final long serialVersionUID = 4934166738722721736L;
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();
@@ -78,12 +78,11 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   @Parameter(names = "--remote", description = "true if the service is managed outside the JVM", required = false)
   public boolean remote = false;
 
-  // @Parameter(names = "--data", description = "additional data for this service
-  // (multi selection)", variableArity = true)
+  @Parameter(names = "--serviceData", description = "additional data for this service(multi selection)", arity = 0)
   public Map<String, Object> data = new HashMap<>();
 
   @Parameter(names = "--clockRunnableClass", description = "clock for the runnable thread")
-  public int clockRunnableClass = 1000;
+  public int clockRunnableClass = 5000;
 
   @Parameter(names = "--targetRunLevel", description = "the default runlevel for the service when the system start", validateWith = ServiceStatusValidator.class)
   public ServiceStates targetRunLevel = ServiceStates.RUNNING;

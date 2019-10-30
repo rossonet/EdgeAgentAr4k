@@ -59,7 +59,7 @@ import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
-import org.ar4k.agent.rpc.xpra.XpraSessionProcess;
+import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;

@@ -18,13 +18,13 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.StringChatRpcMessage;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
 import org.ar4k.agent.core.data.channels.IPriorityChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.channels.IRendezvousChannel;
+import org.ar4k.agent.core.data.messages.StringChatRpcMessage;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;

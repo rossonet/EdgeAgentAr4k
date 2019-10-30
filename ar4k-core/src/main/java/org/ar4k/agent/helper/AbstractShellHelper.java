@@ -124,7 +124,7 @@ public abstract class AbstractShellHelper {
       ok = false;
       message += "you have to select a config before";
     }
-    if (anima.getKeyStores().size() < 1) {
+    if (anima.getMyIdentityKeystore() == null) {
       if (ok == false) {
         message += " and ";
       }

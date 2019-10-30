@@ -21,10 +21,10 @@ import org.springframework.messaging.SubscribableChannel;
 
 import com.beust.jcommander.Parameter;
 
-public abstract class Channel implements Ar4kChannel, Closeable, PollableChannel, SubscribableChannel {
+public abstract class AbstractChannel implements Ar4kChannel, Closeable, PollableChannel, SubscribableChannel {
 
   protected static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Channel.class.toString());
+      .getLogger(AbstractChannel.class.toString());
 
   @Parameter(names = "--logQueueSize", description = "size of queue for the logs")
   private int logQueueSize = 50;

@@ -22,4 +22,10 @@ public class HealthMessage<S> implements RpcMessage<String> {
     rawString = elaborateMessage;
   }
 
+  @Override
+  public void close() throws Exception {
+    rawString = null;
+    header = null;
+  }
+
 }

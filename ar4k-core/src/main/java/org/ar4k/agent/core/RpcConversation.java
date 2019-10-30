@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolation;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.core.data.messages.StringChatRpcMessage;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.rpc.Homunculus;
 import org.ar4k.agent.rpc.RpcExecutor;

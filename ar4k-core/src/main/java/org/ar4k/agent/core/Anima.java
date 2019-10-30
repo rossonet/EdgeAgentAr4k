@@ -24,9 +24,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -38,7 +42,7 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.data.Channel;
+import org.ar4k.agent.core.data.AbstractChannel;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
@@ -104,17 +108,12 @@ import jdbm.RecordManagerFactory;
 @EnableMBeanExport
 @Scope("singleton")
 @EnableJms
-// Non funzionano le annotazioni sotto. Nel primo stati non chiamano il metodo. Bisogna mtterci un Thread.sleep
-//@EnableWithStateMachine
-//@WithStateMachine
 public class Anima
     implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  // private final String dbDataStorePath = "~/.ar4k/anima_datastore-" +
-  // UUID.randomUUID().toString();
   private final String dbDataStorePath = "~/.ar4k/anima_datastore";
   private final String dbDataStoreName = "datastore";
 
@@ -190,14 +189,14 @@ public class Anima
   // configurazione obbiettivo durante le transizioni
   private Ar4kConfig targetConfig = null;
   // configurazione iniziale di bootStrap derivata dalle variabili Spring
-  private Ar4kConfig bootStrapConfig = null;
+  private Ar4kConfig bootstrapConfig = null;
   private AnimaStates stateTarget = AnimaStates.RUNNING;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
   // TODO implementare l'esecuzione dei pre e post script
   // TODO implementare refresh config da prima configurazione
 
-  private Set<KeystoreConfig> keyStores = new HashSet<>();
+  // private Set<KeystoreConfig> keyStores = new HashSet<>();
 
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
@@ -228,13 +227,13 @@ public class Anima
   }
 
   // tipi di router interno supportato per gestire lo scambio dei messagi tra gli
-  // agenti, per la definizione della secutrity sul routing
+  // agenti, per la definizione della policy security sul routing public
   public static enum AnimaRouterType {
     NONE, PRODUCTION, DEVELOP, ROAD
   }
 
   public static enum AnimaEvents {
-    BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION
+    BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART
   }
 
   @ManagedOperation
@@ -254,12 +253,12 @@ public class Anima
   private long delay = 35000L;
   private long period = 15000L;
 
-  private Timer timer = new Timer("TimerHealth");
+  private transient Timer timer = new Timer("TimerHealth");
 
   // task per health
   private TimerTask repeatedTask = new TimerTask() {
 
-    private Anima anima = null;
+    private transient Anima anima = null;
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -384,7 +383,7 @@ public class Anima
           ConfigHelper.ip, ks.keyStoreAlias, true);
       logger.debug("keystore created");
     }
-    addKeyStores(ks);
+    // addKeyStores(ks);
     setMyIdentityKeystore(ks);
     setMyAliasCertInKeystore(ks.keyStoreAlias);
     logger.info("Certificate for anima created: "
@@ -395,14 +394,12 @@ public class Anima
   @PostConstruct
   public void afterSpringInit() throws Exception {
     afterSpringInitFlag = true;
-    // animaStateMachine.start();
     checkDualStart();
   }
 
   // workaround Spring State Machine
   // @OnStateMachineStart
   public synchronized void initAgent() {
-    // System.out.println("First state " + consoleOnly);
     if (!consoleOnly) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
     } else {
@@ -429,13 +426,13 @@ public class Anima
       // logger.warn(e.getMessage());
       logger.logException(e);
     }
-    bootStrapConfig = resolveBootstrapConfig();
+    bootstrapConfig = resolveBootstrapConfig();
     popolateAddressSpace();
     setInitialAuth();
     setMasterKeystore();
     checkBeaconClient();
-    if (runtimeConfig == null && targetConfig == null && bootStrapConfig != null) {
-      targetConfig = bootStrapConfig;
+    if (runtimeConfig == null && targetConfig == null && bootstrapConfig != null) {
+      targetConfig = bootstrapConfig;
     }
     if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
       if (targetConfig != null)
@@ -449,24 +446,25 @@ public class Anima
 
   private void popolateAddressSpace() {
     String scope = "ar4k-system";
-    Channel systemChannel = new INoDataChannel();
+    AbstractChannel systemChannel = new INoDataChannel();
     systemChannel.setNodeId("system");
     systemChannel.setDescription("local JVM system");
-    Channel loggerChannel = new IPublishSubscribeChannel();
+    AbstractChannel loggerChannel = new IPublishSubscribeChannel();
     loggerChannel.setNodeId("logger");
     loggerChannel.setDescription("logger queue");
     loggerChannel.setFatherOfScope(scope, systemChannel);
     dataAddress.addDataChannel(loggerChannel);
-    Channel healthChannel = new IPublishSubscribeChannel();
+    AbstractChannel healthChannel = new IPublishSubscribeChannel();
     healthChannel.setNodeId("health");
     healthChannel.setDescription("local machine hardware and software stats");
     healthChannel.setFatherOfScope(scope, systemChannel);
     dataAddress.addDataChannel(healthChannel);
-    Channel cmdChannel = new IQueueChannel();
+    AbstractChannel cmdChannel = new IQueueChannel();
     cmdChannel.setNodeId("command");
     cmdChannel.setDescription("RPC interface");
     cmdChannel.setFatherOfScope(scope, systemChannel);
     dataAddress.addDataChannel(cmdChannel);
+    // start health regular messages
     timer.scheduleAtFixedRate(repeatedTask, delay, period);
   }
 
@@ -661,10 +659,20 @@ public class Anima
     }
   }
 
+  Comparator<PotConfig> comparatorOrderPots = new Comparator<PotConfig>() {
+    @Override
+    public int compare(PotConfig o1, PotConfig o2) {
+      return Integer.compare(o1.getPriority(), o2.getPriority());
+    }
+  };
+
   // workaround Spring State Machine
   // @OnStateChanged(target = "RUNNING")
+  // avvia i servizi
   public synchronized void runServices() {
-    for (PotConfig confServizio : runtimeConfig.pots) {
+    List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
+    Collections.sort(sortedList, comparatorOrderPots);
+    for (PotConfig confServizio : sortedList) {
       if (confServizio instanceof ServiceConfig) {
         try {
           runSeedService((ServiceConfig) confServizio);
@@ -678,8 +686,11 @@ public class Anima
 
   // workaround Spring State Machine
   // @OnStateChanged(target = "RUNNING")
+  // inizializza pots semplici e servizi
   public synchronized void runPots() {
-    for (PotConfig confVaso : runtimeConfig.pots) {
+    List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
+    Collections.sort(sortedList, comparatorOrderPots);
+    for (PotConfig confVaso : sortedList) {
       try {
         runSeedPot(confVaso);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
@@ -707,9 +718,11 @@ public class Anima
     targetService.setConfiguration(confServizio);
     targetService.setAnima(this);
     components.add(targetService);
+    // targetService.init();
     targetService.start();
   }
 
+  // adminPassword è escluso
   public Map<String, String> getEnvironmentVariables() {
     Map<String, String> ritorno = new HashMap<>();
     ritorno.put("ar4k.fileKeystore", fileKeystore);
@@ -750,8 +763,7 @@ public class Anima
     configTxt += "ar4k.webConfig: " + webConfig + "\n";
     configTxt += "ar4k.dnsConfig: " + dnsConfig + "\n";
     configTxt += "ar4k.baseConfig: " + baseConfig + "\n";
-    // configTxt += "ar4k.beaconCaChainPem: " + beaconCaChainPem + "\n";
-    configTxt += "ar4k.beaconCaChainPem: xxx\n";
+    configTxt += "ar4k.beaconCaChainPem: " + beaconCaChainPem + "\n";
     configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
     configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
     configTxt += "ar4k.beaconDiscoveryPort: " + beaconDiscoveryPort + "\n";
@@ -768,8 +780,8 @@ public class Anima
   }
 
   @Override
-  public void setApplicationContext(ApplicationContext ac) throws BeansException {
-    Anima.applicationContext = ac;
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    Anima.applicationContext = applicationContext;
   }
 
   public static ApplicationContext getApplicationContext() throws BeansException {
@@ -780,6 +792,16 @@ public class Anima
     Set<ServiceComponent> target = new HashSet<>();
     for (Ar4kComponent bean : components) {
       if (bean instanceof ServiceComponent) {
+        target.add((ServiceComponent) bean);
+      }
+    }
+    return target;
+  }
+
+  public Collection<ServiceComponent> getPotsOnly() {
+    Set<ServiceComponent> target = new HashSet<>();
+    for (Ar4kComponent bean : components) {
+      if (!(bean instanceof ServiceComponent)) {
         target.add((ServiceComponent) bean);
       }
     }
@@ -818,18 +840,15 @@ public class Anima
     return logo;
   }
 
-  public Set<KeystoreConfig> getKeyStores() {
-    return keyStores;
-  }
-
-  public void addKeyStores(KeystoreConfig keyStore) {
-    this.keyStores.add(keyStore);
-  }
-
-  public void delKeyStores(KeystoreConfig keyStore) {
-    this.keyStores.remove(keyStore);
-  }
-
+  /*
+   * public Set<KeystoreConfig> getKeyStores() { return keyStores; }
+   * 
+   * public void addKeyStores(KeystoreConfig keyStore) {
+   * this.keyStores.add(keyStore); }
+   * 
+   * public void delKeyStores(KeystoreConfig keyStore) {
+   * this.keyStores.remove(keyStore); }
+   */
   public void setTargetConfig(Ar4kConfig config) {
     targetConfig = config;
   }
@@ -950,7 +969,7 @@ public class Anima
         + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder + ", webConfigOrder="
         + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder + ", base64ConfigOrder=" + base64ConfigOrder
         + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly + ", logoUrl=" + logoUrl + ", runtimeConfig="
-        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootStrapConfig=" + bootStrapConfig + ", stateTarget="
+        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootStrapConfig=" + bootstrapConfig + ", stateTarget="
         + stateTarget + ", statesBefore=" + statesBefore + ", beanName=" + beanName + "]";
   }
 
@@ -972,6 +991,16 @@ public class Anima
 
   public static String getRegistrationPin() {
     return registrationPin;
+  }
+
+  public void prepareAgentStasis() {
+    // TODO Da implementare la gestione dello stop
+
+  }
+
+  public void prepareRestart() {
+    // TODO Gestisce il restart con nuova configurazione
+
   }
 
 }

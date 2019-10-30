@@ -16,7 +16,7 @@ package org.ar4k.gw.studio;
 
 import java.io.IOException;
 
-import org.ar4k.agent.rpc.xpra.XpraSessionProcess;
+import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,6 +46,7 @@ public class Xpra {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -54,11 +55,10 @@ public class Xpra {
   @Test
   public void xpraTestClass() throws InterruptedException, IOException {
     XpraSessionProcess xpra = new XpraSessionProcess();
-    xpra.start();
+    xpra.eval("xterm");
     Thread.sleep(5 * 1000);
     System.out.println(xpra.getTcpPort());
     Thread.sleep(2 * 60 * 1000);
-    xpra.stop();
     System.out.println(xpra.getOutput());
     System.out.println(xpra.getErrors());
     xpra.close();

@@ -1,17 +1,17 @@
 package org.ar4k.agent.rpc.process;
 
-import java.io.Closeable;
+public interface AgentProcess extends AutoCloseable {
 
-public interface AgentProcess extends Closeable {
+  boolean isAlive();
 
-  public boolean isAlive();
+  String getLabel();
 
-  public String getLabel();
+  void setLabel(String label);
 
-  public void setLabel(String label);
+  String getOutput();
 
-  public String getOutput();
+  String getErrors();
 
-  public String getErrors();
+  void eval(String script);
 
 }

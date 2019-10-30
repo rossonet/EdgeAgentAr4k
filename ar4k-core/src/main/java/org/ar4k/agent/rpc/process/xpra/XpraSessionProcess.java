@@ -1,4 +1,4 @@
-package org.ar4k.agent.rpc.xpra;
+package org.ar4k.agent.rpc.process.xpra;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +9,9 @@ import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.process.AgentProcess;
+import org.ar4k.agent.rpc.process.Ar4kRpcProcess;
 
+@Ar4kRpcProcess
 public class XpraSessionProcess implements AgentProcess {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -20,12 +22,15 @@ public class XpraSessionProcess implements AgentProcess {
   private String command = "xterm";
   private String label;
 
-  public void start() {
+  private void start(String command) {
+    if (command != null && !command.isEmpty()) {
+      this.command = command;
+    }
     if (tcpPort == 0) {
       tcpPort = NetworkHelper.findAvailablePort(14500);
     }
     ProcessBuilder builder = new ProcessBuilder("xpra", "start", "--bind-tcp=0.0.0.0:" + String.valueOf(tcpPort),
-        "--daemon=no", "--html=on", "--start=" + command);
+        "--daemon=no", "--html=on", "--start=" + this.command);
     try {
       xpraProcess = builder.start();
     } catch (IOException e) {
@@ -33,7 +38,7 @@ public class XpraSessionProcess implements AgentProcess {
     }
   }
 
-  public void stop() {
+  private void stop() {
     if (xpraProcess != null) {
       xpraProcess.destroy();
       if (xpraProcess.isAlive()) {
@@ -99,6 +104,7 @@ public class XpraSessionProcess implements AgentProcess {
     return reply;
   }
 
+  @Override
   public String toString() {
     return isAlive() ? "Xpra server running on port " + String.valueOf(tcpPort) : "Xpra server is dead";
   }
@@ -106,6 +112,11 @@ public class XpraSessionProcess implements AgentProcess {
   @Override
   public void close() throws IOException {
     stop();
+  }
+
+  @Override
+  public void eval(String script) {
+    start(script);
   }
 
 }

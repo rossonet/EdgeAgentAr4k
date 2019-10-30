@@ -1,7 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.Ar4kChannel;
-import org.ar4k.agent.core.data.Channel;
+import org.ar4k.agent.core.data.AbstractChannel;
 import org.springframework.integration.channel.RendezvousChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
 import org.springframework.integration.support.management.Statistics;
@@ -9,12 +9,12 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
 
-public class IRendezvousChannel extends Channel implements PollableChannel, PollableChannelManagement {
+public class IRendezvousChannel extends AbstractChannel implements PollableChannel, PollableChannelManagement {
 
   public IRendezvousChannel() {
     RendezvousChannel c = new RendezvousChannel();
     super.setChannel(c);
-    super.setChannelType(Type.RendezvousChannel);
+    super.setChannelType(Type.RENDEZVOUS);
   }
 
   @Override

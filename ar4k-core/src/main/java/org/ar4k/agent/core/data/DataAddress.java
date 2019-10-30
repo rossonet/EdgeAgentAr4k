@@ -23,15 +23,15 @@ public class DataAddress {
     // add info service channel
   }
 
-  private Collection<Channel> dataChannels = new HashSet<>();
+  private Collection<AbstractChannel> dataChannels = new HashSet<>();
 
-  public Collection<Channel> getDataChannels() {
+  public Collection<AbstractChannel> getDataChannels() {
     return dataChannels;
   }
 
-  public Channel getChannel(String channelId) {
-    Channel r = null;
-    for (Channel c : getDataChannels()) {
+  public AbstractChannel getChannel(String channelId) {
+    AbstractChannel r = null;
+    for (AbstractChannel c : getDataChannels()) {
       if (c.getNodeId().equals(channelId)) {
         r = c;
         break;
@@ -40,13 +40,13 @@ public class DataAddress {
     return r;
   }
 
-  public void addDataChannel(Channel dataChannel) {
+  public void addDataChannel(AbstractChannel dataChannel) {
     dataChannel.startDataChannel();
     this.dataChannels.add(dataChannel);
     logger.info(dataChannel.getNodeId() + " [" + dataChannel.getDescription() + "] started");
   }
 
-  public void removeDataChannel(Channel dataChannel) {
+  public void removeDataChannel(AbstractChannel dataChannel) {
     dataChannel.stopDataChannel();
     this.dataChannels.remove(dataChannel);
     logger.info(dataChannel.getNodeId() + " [" + dataChannel.getDescription() + "] removed");
@@ -57,14 +57,14 @@ public class DataAddress {
   }
 
   public void clearDataChannels() {
-    for (Channel target : this.dataChannels) {
+    for (AbstractChannel target : this.dataChannels) {
       removeDataChannel(target);
     }
   }
 
   public Collection<String> listChannels() {
     Collection<String> result = new ArrayList<>();
-    for (Channel c : getDataChannels()) {
+    for (AbstractChannel c : getDataChannels()) {
       result.add(c.getNodeId() + " [" + c.getDescription() + "] "
           + (c.getChannel() != null ? c.getChannel().getBeanName() : c.getStatus())
           + (c.getChannel() != null ? " -> " + c.getChannel().getFullChannelName() : ""));

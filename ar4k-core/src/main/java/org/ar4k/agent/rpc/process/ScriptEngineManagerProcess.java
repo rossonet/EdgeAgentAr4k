@@ -15,6 +15,7 @@ import javax.script.ScriptException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
+@Ar4kRpcProcess
 public class ScriptEngineManagerProcess implements AgentProcess {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -48,6 +49,7 @@ public class ScriptEngineManagerProcess implements AgentProcess {
     engine.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
   }
 
+  @Override
   public void eval(String script) {
     try {
       runned = true;
@@ -115,6 +117,7 @@ public class ScriptEngineManagerProcess implements AgentProcess {
     return getResult().toString();
   }
 
+  @Override
   public String toString() {
     return isAlive() ? getOutput().substring(0, 40) : "Script is dead";
   }

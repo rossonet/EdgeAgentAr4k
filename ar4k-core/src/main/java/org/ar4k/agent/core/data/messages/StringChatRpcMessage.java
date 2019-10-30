@@ -1,9 +1,9 @@
-package org.ar4k.agent.logger;
+package org.ar4k.agent.core.data.messages;
 
 import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class LoggerMessage<S> implements RpcMessage<String> {
+public class StringChatRpcMessage<S> implements RpcMessage<String> {
 
   private String rawString = null;
   private MessageHeaders header = null;
@@ -20,6 +20,12 @@ public class LoggerMessage<S> implements RpcMessage<String> {
 
   public void setPayload(String elaborateMessage) {
     rawString = elaborateMessage;
+  }
+
+  @Override
+  public void close() throws Exception {
+    rawString = null;
+    header = null;
   }
 
 }

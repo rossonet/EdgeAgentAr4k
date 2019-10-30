@@ -15,7 +15,6 @@
 package org.ar4k.agent.tunnels.socket.ssl;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.validator.KeystoreValidator;
 import org.ar4k.agent.config.validator.ProxyValidator;
 import org.ar4k.agent.tunnels.socket.AbstractSocketFactoryConfig;
 
@@ -24,7 +23,7 @@ import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  * Configurzione tunnel SSL
  *
  */
@@ -61,13 +60,15 @@ public class SocketFactorySslConfig extends AbstractSocketFactoryConfig {
 
   @Parameter(names = "--proxyPassword", description = "the password for the connection to the proxy", required = false)
   public String proxyPassword = null;
-
-  @Parameter(names = "--keystoreAuth", description = "keystore to authenticate to the server", validateWith = KeystoreValidator.class)
-  public String keystoreAuth = null;
-
-  @Parameter(names = "--keystoreTrust", description = "keystore to checking the server cert", validateWith = KeystoreValidator.class)
-  public String keystoreTrust = null;
-
+  /*
+   * @Parameter(names = "--keystoreAuth", description =
+   * "keystore to authenticate to the server", validateWith =
+   * KeystoreValidator.class) public String keystoreAuth = null;
+   * 
+   * @Parameter(names = "--keystoreTrust", description =
+   * "keystore to checking the server cert", validateWith =
+   * KeystoreValidator.class) public String keystoreTrust = null;
+   */
   @Parameter(names = "--algorithms", description = "crypto algorithms to use")
   public String algorithms = "TLS";
 

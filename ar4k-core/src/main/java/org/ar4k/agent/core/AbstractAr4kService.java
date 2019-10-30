@@ -74,7 +74,6 @@ public abstract class AbstractAr4kService implements ServiceComponent {
         loop();
       }
     }
-    // sleep
     try {
       Thread.sleep(configuration.clockRunnableClass);
     } catch (InterruptedException e) {

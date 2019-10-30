@@ -1,7 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.Ar4kChannel;
-import org.ar4k.agent.core.data.Channel;
+import org.ar4k.agent.core.data.AbstractChannel;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
 import org.springframework.integration.support.management.Statistics;
@@ -9,12 +9,12 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
 
-public class IQueueChannel extends Channel implements PollableChannel, PollableChannelManagement {
+public class IQueueChannel extends AbstractChannel implements PollableChannel, PollableChannelManagement {
 
   public IQueueChannel() {
     QueueChannel c = new QueueChannel(50);
     super.setChannel(c);
-    super.setChannelType(Type.QueueChannel);
+    super.setChannelType(Type.QUEUE);
   }
 
   @Override

@@ -8,21 +8,12 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
-
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.keystore.KeystoreLoader;
-import org.springframework.beans.BeansException;
 
 public class SslSocketFactory extends SocketFactory {
 
@@ -64,16 +55,16 @@ public class SslSocketFactory extends SocketFactory {
       context = SSLContext.getInstance(config.algorithms);
       kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
       tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-      kmf.init(
-          KeystoreLoader.getKeyStoreAfterLoad(config.keystoreAuth,
-              ((Anima) Anima.getApplicationContext().getBean("Anima")).getKeyStores()),
-          KeystoreLoader.getPasswordKeystore(config.keystoreAuth,
-              ((Anima) Anima.getApplicationContext().getBean("Anima")).getKeyStores()).toCharArray());
-      tmf.init(KeystoreLoader.getKeyStoreAfterLoad(config.keystoreAuth,
-          ((Anima) Anima.getApplicationContext().getBean("Anima")).getKeyStores()));
+      /*
+       * kmf.init( KeystoreLoader.getKeyStoreAfterLoad(config.keystoreAuth, ((Anima)
+       * Anima.getApplicationContext().getBean("Anima")).getKeyStores()),
+       * KeystoreLoader.getPasswordKeystore(config.keystoreAuth, ((Anima)
+       * Anima.getApplicationContext().getBean("Anima")).getKeyStores()).toCharArray()
+       * ); tmf.init(KeystoreLoader.getKeyStoreAfterLoad(config.keystoreAuth, ((Anima)
+       * Anima.getApplicationContext().getBean("Anima")).getKeyStores()));
+       */
       context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-    } catch (NoSuchAlgorithmException | BeansException | KeyStoreException | CertificateException | IOException
-        | UnrecoverableKeyException | KeyManagementException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return context.getSocketFactory();
@@ -91,23 +82,28 @@ public class SslSocketFactory extends SocketFactory {
     return setSocketOptions(result);
   }
 
+  @Override
   public Socket createSocket() throws IOException {
     return getSslSocket(null, 0);
   }
 
+  @Override
   public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
     return getSslSocket(host, port);
   }
 
+  @Override
   public Socket createSocket(InetAddress address, int port) throws IOException {
     return getSslSocket(address.getHostName(), port);
   }
 
+  @Override
   public Socket createSocket(String host, int port, InetAddress clientAddress, int clientPort)
       throws IOException, UnknownHostException {
     return getSslSocket(host, port);
   }
 
+  @Override
   public Socket createSocket(InetAddress address, int port, InetAddress clientAddress, int clientPort)
       throws IOException {
     return getSslSocket(address.getHostName(), port);

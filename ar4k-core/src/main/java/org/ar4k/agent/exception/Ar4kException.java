@@ -15,16 +15,16 @@
 package org.ar4k.agent.exception;
 
 /**
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l.
  *
- *         Gestore eccezioni.
+ *         Eccezione generica
  *
  */
 
 public class Ar4kException extends java.lang.RuntimeException {
 
-  private static final long serialVersionUID = -2275905233254878407L;
+  private static final long serialVersionUID = -2275905233256878407L;
 
   public Ar4kException() {
     super();

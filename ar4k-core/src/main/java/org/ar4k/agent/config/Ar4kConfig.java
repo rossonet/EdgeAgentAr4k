@@ -183,7 +183,7 @@ public class Ar4kConfig implements ConfigSeed {
 
   public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
     // TODO: per update configurazione (usare campo version o sottoinsieme di
-    // campi). Lo scopo è escludere le uguali e le vecchie
+    // campi). Lo scopo è escludere le uguali e le vecchie e uguali
     return false;
   }
 }
