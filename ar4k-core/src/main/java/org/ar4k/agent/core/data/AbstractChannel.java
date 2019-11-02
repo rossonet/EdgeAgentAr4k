@@ -248,6 +248,9 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
   public void setFatherOfScope(String scope, Ar4kChannel father) {
     scopeFather.put(scope, father);
     ((AbstractChannel) father).addChildOfScope(scope, this);
+    if (dataAddress != null) {
+      dataAddress.callAddressSpaceRefresh(this);
+    }
   }
 
   private void addChildOfScope(String scope, Ar4kChannel child) {
@@ -273,6 +276,9 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
     if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
       ((AbstractChannel) scopeFather.get(scope)).removeChildrenOfScope(scope);
       scopeFather.remove(scope);
+      if (dataAddress != null) {
+        dataAddress.callAddressSpaceRefresh(this);
+      }
     }
   }
 

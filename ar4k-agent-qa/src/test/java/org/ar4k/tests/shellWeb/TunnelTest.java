@@ -36,7 +36,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.MethodTarget;
@@ -80,6 +79,7 @@ public class TunnelTest {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -91,7 +91,7 @@ public class TunnelTest {
     try {
       Map<String, MethodTarget> commands = shell.listCommands();
       System.out.println("\nCOMMANDS\n---------------------------\n" + String.join(", ", commands.keySet()));
-      List<String> comandi = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
       comandi.add("help");
       for (String hi : commands.keySet()) {
         comandi.add("help " + hi);
@@ -109,8 +109,8 @@ public class TunnelTest {
   public void testActivationAr4kNet() throws InterruptedException {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
-      List<String> post = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
+      List<String> post = new ArrayList<>();
       String labelTest = UUID.randomUUID().toString();
       String ksFile = labelTest + ".keystore";
       comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
@@ -144,8 +144,8 @@ public class TunnelTest {
   public void testActivationProxy() throws InterruptedException {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
-      List<String> post = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
+      List<String> post = new ArrayList<>();
       String labelTest = UUID.randomUUID().toString();
       String ksFile = labelTest + ".keystore";
       comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
@@ -179,8 +179,8 @@ public class TunnelTest {
   public void testActivationSsh() throws InterruptedException {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
-      List<String> post = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
+      List<String> post = new ArrayList<>();
       String labelTest = UUID.randomUUID().toString();
       String ksFile = labelTest + ".keystore";
       comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);
@@ -214,8 +214,8 @@ public class TunnelTest {
   public void testActivationStunnel() throws InterruptedException {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
-      List<String> post = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
+      List<String> post = new ArrayList<>();
       String labelTest = UUID.randomUUID().toString();
       String ksFile = labelTest + ".keystore";
       comandi.add("add-keystore --label " + labelTest + " --filePath " + ksFile);

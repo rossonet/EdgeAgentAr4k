@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 
 /**
  * TFTPServer
- * 
+ *
  * This class is an implementation of the TFTP PROTOCOL (REVISION 2) RFC1350
  * standard.
  *
@@ -79,6 +79,7 @@ public class TFTPServer {
       final int reqtype = ParseRQ(buf, requestedFile);
 
       new Thread() {
+        @Override
         public void run() {
           try {
             DatagramSocket sendSocket = new DatagramSocket(0);
@@ -105,9 +106,9 @@ public class TFTPServer {
 
   /**
    * receiveFrom
-   * 
+   *
    * Reads the first block of data, i.e., the request for action (read or write).
-   * 
+   *
    * @param socket socket to read from
    * @param buf    where to store the read data
    * @return the Internet socket address of the client
@@ -128,9 +129,9 @@ public class TFTPServer {
 
   /**
    * ParseRQ
-   * 
+   *
    * parse the request for the type of request.
-   * 
+   *
    * @param buf           received request
    * @param requestedFile
    * @return request_type
@@ -175,7 +176,7 @@ public class TFTPServer {
 
   /**
    * HandleRQ
-   * 
+   *
    * @param sendSocket
    * @param string     directory and filename is file
    * @param opRrq      read or write
@@ -204,6 +205,11 @@ public class TFTPServer {
           length = in.read(buf);
         } catch (IOException e) {
           System.err.println("Error reading file.");
+          try {
+            in.close();
+          } catch (IOException e1) {
+            e1.printStackTrace();
+          }
           return;
         }
 
@@ -217,6 +223,11 @@ public class TFTPServer {
         } else {
           System.err.println("Error. Lost connection.");
           sendError(sendSocket, ERR_LOST, "Lost connection.");
+          try {
+            in.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
           return;
         }
 
@@ -297,9 +308,9 @@ public class TFTPServer {
 
   /**
    * ReadAndWriteData
-   * 
+   *
    * Handles sending an OP_ACK packet and receiving a data packet.
-   * 
+   *
    * @param sendSocket
    * @param sendAck    OP_ACK packet to be sent
    * @param block      block number it is expecting
@@ -353,9 +364,9 @@ public class TFTPServer {
 
   /**
    * WriteAndReadAck
-   * 
+   *
    * Handles sending a data packet and receiving an ack packet.
-   * 
+   *
    * @param sendSocket
    * @param sender
    * @param blockNum
@@ -408,9 +419,9 @@ public class TFTPServer {
 
   /**
    * ackPacket
-   * 
+   *
    * Constructs an ack packet for the given block number.
-   * 
+   *
    * @param block
    * @return ackPacket
    */
@@ -425,9 +436,9 @@ public class TFTPServer {
 
   /**
    * dataPacket
-   * 
+   *
    * Constructs an OP_DAT packet
-   * 
+   *
    * @param block  current block number
    * @param data   data to be sent
    * @param length lengh of data
@@ -445,9 +456,9 @@ public class TFTPServer {
 
   /**
    * getAck
-   * 
+   *
    * Returns the OP_ACK packer number.
-   * 
+   *
    * @param ack Received Datagram Packet
    * @return OP_ACK number or -1 if not an OP_ACK
    */
@@ -465,9 +476,9 @@ public class TFTPServer {
 
   /**
    * getData
-   * 
+   *
    * Returns the block number of the data packet.
-   * 
+   *
    * @param data Received datagram packet.
    * @return block number or -1 if connection dropped.
    */
@@ -485,9 +496,9 @@ public class TFTPServer {
 
   /**
    * sendError
-   * 
+   *
    * Sends a single error packet to sendSocket
-   * 
+   *
    * @param sendSocket
    * @param errorCode
    * @param errMsg
@@ -512,9 +523,9 @@ public class TFTPServer {
 
   /**
    * parseError
-   * 
+   *
    * Parses an error message and displays its contents.
-   * 
+   *
    * @param buffer
    */
   private void parseError(ByteBuffer buffer) {

@@ -17,6 +17,7 @@ package org.ar4k.agent.opcua;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -57,7 +58,7 @@ public class OpcUaShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSerialService(@ShellOption(optOut = true) @Valid OpcUaConfig service) {
+  public void addSerialService(@ShellOption(optOut = true) @Valid OpcUaClientConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

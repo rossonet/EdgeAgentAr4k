@@ -12,12 +12,14 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.opcua.client;
 
 import java.io.Serializable;
 
-import org.ar4k.agent.opcua.OpcUaService.DataChangeTrigger;
-import org.ar4k.agent.opcua.OpcUaService.DeadbandType;
+import org.ar4k.agent.opcua.DataChangeTriggerValidator;
+import org.ar4k.agent.opcua.DeadbandTypeValidator;
+import org.ar4k.agent.opcua.Enumerator.DataChangeTrigger;
+import org.ar4k.agent.opcua.Enumerator.DeadbandType;
 
 import com.beust.jcommander.Parameter;
 
@@ -26,7 +28,7 @@ import com.beust.jcommander.Parameter;
  *
  *         sottocrizione a nodo opc ua semplice o multiplo con espressione regolare
  */
-public class OpcUaNode implements Serializable {
+public class OpcUaClientNode implements Serializable {
 
   private static final long serialVersionUID = 970930410169105077L;
 
@@ -52,12 +54,15 @@ public class OpcUaNode implements Serializable {
   public DataChangeTrigger dataChangeTrigger = DataChangeTrigger.statusOrValueOrTimestamp;
 
   @Parameter(names = "--internalTargetChannel", description = "internal channel to send the update from the node")
-  public String nextStepChannel = null;
+  public String readChannel = null;
 
   @Parameter(names = "--internalWriteInputChannel", description = "internal channel to write the data in the node")
   public String writeChannel = null;
 
-  @Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind with regex")
-  public String bindDirectoryChannel = null;
+  @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
+  public String fatherOfChannels = null;
+
+  @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
+  public String scopeOfChannels = null;
 
 }

@@ -31,13 +31,11 @@ import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
 import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.Extensions;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -48,9 +46,9 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 /*
- * 
+ *
  * @author Andrea Ambrosini
- * 
+ *
  *         Generatore di certificati self signed.
  */
 
@@ -111,6 +109,7 @@ public class SelfSignedCertificateGenerator {
 
     certificateBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(isCa));
 
+    @SuppressWarnings("unused")
     BasicConstraints basicConstraints = new BasicConstraints(true);
 
     // Authority Key Identifier

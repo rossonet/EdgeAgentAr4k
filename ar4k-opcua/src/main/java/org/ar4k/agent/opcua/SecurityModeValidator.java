@@ -16,7 +16,7 @@ package org.ar4k.agent.opcua;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.opcua.OpcUaService.SecurityMode;
+import org.ar4k.agent.opcua.Enumerator.SecurityMode;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

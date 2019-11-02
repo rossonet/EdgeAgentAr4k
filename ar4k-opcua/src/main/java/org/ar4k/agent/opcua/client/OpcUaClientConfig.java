@@ -12,15 +12,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.opcua.client;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.opcua.OpcUaService.CryptoMode;
-import org.ar4k.agent.opcua.OpcUaService.SecurityMode;
+import org.ar4k.agent.opcua.CryptoModeValidator;
+import org.ar4k.agent.opcua.Enumerator.CryptoMode;
+import org.ar4k.agent.opcua.Enumerator.SecurityMode;
+import org.ar4k.agent.opcua.SecurityModeValidator;
 
 import com.beust.jcommander.Parameter;
 import com.google.gson.TypeAdapter;
@@ -30,7 +32,7 @@ import com.google.gson.TypeAdapter;
  *
  *         Configurazione client OPC UA collegata all'agente.
  */
-public class OpcUaConfig extends AbstractServiceConfig {
+public class OpcUaClientConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -864167279161787378L;
 
@@ -56,11 +58,11 @@ public class OpcUaConfig extends AbstractServiceConfig {
   public String aliasCertificateInKeystore = null;
 
   @Parameter(names = "--subscriptions", description = "List of node to subscribe", variableArity = true)
-  Collection<OpcUaNode> subscriptions = new HashSet<>();
+  Collection<OpcUaClientNode> subscriptions = new HashSet<>();
 
   @Override
-  public OpcUaService instantiate() {
-    OpcUaService ss = new OpcUaService();
+  public OpcUaClientService instantiate() {
+    OpcUaClientService ss = new OpcUaClientService();
     ss.setConfiguration(this);
     return ss;
   }
@@ -72,7 +74,7 @@ public class OpcUaConfig extends AbstractServiceConfig {
 
   @Override
   public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new OpcUaConfigJsonAdapter();
+    return new OpcUaClientConfigJsonAdapter();
   }
 
   @Override

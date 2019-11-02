@@ -1,4 +1,4 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.opcua.client;
 
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
@@ -11,26 +11,10 @@ import org.json.JSONObject;
  *
  *         Servizio di connessione seriale.
  */
-public class OpcUaService extends AbstractAr4kService {
-
-  public enum SecurityMode {
-    signAndEncrypt, sign, none
-  }
-
-  public enum CryptoMode {
-    basic256Sha256, basic256, basic128Rsa15, none
-  }
-
-  public enum DeadbandType {
-    none, absolute, percent
-  }
-
-  public enum DataChangeTrigger {
-    status, statusOrValue, statusOrValueOrTimestamp
-  }
+public class OpcUaClientService extends AbstractAr4kService {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(OpcUaService.class.toString());
+      .getLogger(OpcUaClientService.class.toString());
 
   @Override
   public void stop() {

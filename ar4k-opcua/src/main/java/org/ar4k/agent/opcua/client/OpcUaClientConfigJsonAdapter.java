@@ -1,4 +1,4 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.opcua.client;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class OpcUaConfigJsonAdapter extends TypeAdapter<ServiceConfig> {
+public class OpcUaClientConfigJsonAdapter extends TypeAdapter<ServiceConfig> {
 
   @Override
   public void write(JsonWriter out, ServiceConfig value) throws IOException {

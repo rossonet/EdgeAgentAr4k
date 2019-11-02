@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +23,7 @@ import org.springframework.messaging.MessageChannel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class DataAddress {
+public class DataAddress implements AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(DataAddress.class.toString());
@@ -39,6 +40,7 @@ public class DataAddress {
   private long delay = 35000L;
   private long period = 15000L;
 
+  private transient Set<DataAddressChange> callbacks = new HashSet<>();
   private transient Timer timer = new Timer("TimerHealth");
 
   public Collection<Ar4kChannel> getDataChannels() {
@@ -54,6 +56,20 @@ public class DataAddress {
       }
     }
     return r;
+  }
+
+  public void callAddressSpaceRefresh(Ar4kChannel nodeUpdated) {
+    for (DataAddressChange target : callbacks) {
+      target.onDataAddressUpdate(nodeUpdated);
+    }
+  }
+
+  public void addCallbackOnChange(DataAddressChange callback) {
+    callbacks.add(callback);
+  }
+
+  public void removeCallbackOnChange(DataAddressChange callback) {
+    callbacks.remove(callback);
   }
 
   public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType) {
@@ -76,6 +92,9 @@ public class DataAddress {
         this.dataChannels.add(returnChannel);
         returnChannel.setDataAddress(this);
         logger.info(returnChannel.getNodeId() + " [" + returnChannel.getDescription() + "] started");
+        for (DataAddressChange target : callbacks) {
+          target.onDataAddressCreate(returnChannel);
+        }
       } catch (Exception a) {
         logger.logException(a);
       }
@@ -90,6 +109,9 @@ public class DataAddress {
       logger.logException(e);
     }
     this.dataChannels.remove(dataChannel);
+    for (DataAddressChange target : callbacks) {
+      target.onDataAddressDelete(dataChannel.toString());
+    }
     logger.info(dataChannel.getNodeId() + " [" + dataChannel.getDescription() + "] removed");
   }
 
@@ -185,6 +207,12 @@ public class DataAddress {
     cmdChannel.setFatherOfScope(getDefaultScope(), systemChannel);
     // start health regular messages
     timer.scheduleAtFixedRate(repeatedTask, delay, period);
+  }
+
+  @Override
+  public void close() throws Exception {
+    clearDataChannels();
+    callbacks.clear();
   }
 
 }

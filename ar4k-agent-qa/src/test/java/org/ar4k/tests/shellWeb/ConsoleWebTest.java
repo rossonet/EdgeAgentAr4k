@@ -36,7 +36,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.shell.Input;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.MethodTarget;
@@ -44,8 +43,8 @@ import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = { ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false",
@@ -79,6 +78,7 @@ public class ConsoleWebTest {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -90,7 +90,7 @@ public class ConsoleWebTest {
     try {
       Map<String, MethodTarget> commands = shell.listCommands();
       System.out.println("\nCOMMANDS\n---------------------------\n" + String.join(", ", commands.keySet()));
-      List<String> comandi = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
       comandi.add("help");
       for (String hi : commands.keySet()) {
         comandi.add("help " + hi);
@@ -112,7 +112,7 @@ public class ConsoleWebTest {
   public void testBase() {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
       comandi.add("test --test-string " + UUID.randomUUID().toString());
       testCommands(comandi);
       ok = true;
@@ -126,7 +126,7 @@ public class ConsoleWebTest {
   public void createBaseConfigAndExport() {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
       comandi.add("create-selected-config --name testconf --promptColor RED --prompt test");
       comandi.add("get-selected-config-base64");
       comandi.add("get-selected-config-json");
@@ -147,7 +147,7 @@ public class ConsoleWebTest {
   public void cloneBaseConfig() {
     boolean ok = false;
     try {
-      List<String> comandi = new ArrayList<String>();
+      List<String> comandi = new ArrayList<>();
       comandi.add("create-selected-config --name testconf --promptColor RED --prompt test4");
       comandi.add("set-selected-config-as-runtime");
       comandi.add("list-config");
@@ -171,7 +171,7 @@ public class ConsoleWebTest {
     String fileConfBase64 = "test_base_" + tagCheck;
     boolean ok = false;
     try {
-      List<String> comandiCreate = new ArrayList<String>();
+      List<String> comandiCreate = new ArrayList<>();
       comandiCreate.add("create-selected-config --name testconf --promptColor YELLOW --prompt test --tag " + tagCheck);
       comandiCreate.add("get-selected-config-base64");
       comandiCreate.add("get-selected-config-json");
@@ -180,13 +180,13 @@ public class ConsoleWebTest {
       comandiCreate.add("list-config");
       comandiCreate.add("unset-selected-config");
       testCommands(comandiCreate);
-      List<String> comandiReloadJson = new ArrayList<String>();
+      List<String> comandiReloadJson = new ArrayList<>();
       comandiReloadJson.add("load-selected-config-base64 --filename " + fileConfBase64);
       comandiCreate.add("unset-selected-config");
       // comandiReloadJson.add("save-selected-config-json --filename " +
       // fileCheckBase);
       testCommands(comandiReloadJson);
-      List<String> comandiReloadBase = new ArrayList<String>();
+      List<String> comandiReloadBase = new ArrayList<>();
       comandiReloadBase.add("load-selected-config-json --filename " + fileConfJson);
       comandiCreate.add("unset-selected-config");
       // comandiReloadBase.add("save-selected-config-json --filename " +
