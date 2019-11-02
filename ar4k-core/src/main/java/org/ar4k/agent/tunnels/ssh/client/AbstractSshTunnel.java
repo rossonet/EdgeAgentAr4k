@@ -18,16 +18,14 @@ import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Servizio tunnel SSH.
  *
  */
@@ -88,9 +86,10 @@ public abstract class AbstractSshTunnel extends AbstractAr4kService {
   }
 
   @Override
-  public JsonElement getStatusJson() {
-    Gson gson = new GsonBuilder().create();
-    return gson.toJsonTree(session);
+  public JSONObject getStatusJson() {
+    JSONObject end = new JSONObject();
+    end.put("status", getStatusString());
+    return end;
   }
 
 }

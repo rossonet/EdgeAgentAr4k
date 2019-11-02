@@ -63,9 +63,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
     serviceStatus = ServiceStates.STAMINAL;
   }
 
-  public synchronized void loop() {
-    logger.info("test loop service");
-  }
+  public abstract void loop();
 
   @Override
   public void run() {

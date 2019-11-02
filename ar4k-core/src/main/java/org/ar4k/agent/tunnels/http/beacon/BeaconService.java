@@ -22,10 +22,7 @@ import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -108,9 +105,10 @@ public class BeaconService extends AbstractAr4kService {
   }
 
   @Override
-  public JsonElement getStatusJson() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJsonTree(getStatusString());
+  public JSONObject getStatusJson() {
+    JSONObject end = new JSONObject();
+    end.put("status", getStatusString());
+    return end;
   }
 
   @Override

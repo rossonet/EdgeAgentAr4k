@@ -33,8 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -42,11 +40,7 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.data.AbstractChannel;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.data.channels.INoDataChannel;
-import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
-import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -55,7 +49,6 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.spring.HealthMessage;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 //import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
 //import org.ar4k.agent.tribe.AtomixTribeComponent;
@@ -89,9 +82,6 @@ import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import io.grpc.ConnectivityState;
 import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
@@ -113,8 +103,6 @@ public class Anima
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
-
-  public static final String MASTER_DATA_SCOPE = "local-agent";
 
   private final String dbDataStorePath = "~/.ar4k/anima_datastore";
   private final String dbDataStoreName = "datastore";
@@ -251,41 +239,6 @@ public class Anima
   public boolean isRunning() {
     return AnimaStates.RUNNING.equals(getState());
   }
-
-  private long delay = 35000L;
-  private long period = 15000L;
-
-  private transient Timer timer = new Timer("TimerHealth");
-
-  // task per health
-  private TimerTask repeatedTask = new TimerTask() {
-
-    private transient Anima anima = null;
-
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    @Override
-    public void run() {
-      try {
-        sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
-      } catch (Exception e) {
-        logger.logException(e);
-      }
-    }
-
-    private void sendEvent(Map<String, Object> healthMessage) {
-      if (anima == null && Anima.getApplicationContext() != null
-          && Anima.getApplicationContext().getBean(Anima.class) != null
-          && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
-        anima = Anima.getApplicationContext().getBean(Anima.class);
-      }
-      HealthMessage<String> messageObject = new HealthMessage<>();
-      messageObject.setPayload(gson.toJson(healthMessage));
-      if (anima != null && anima.getDataAddress() != null && anima.getDataAddress().getChannel("health") != null)
-        anima.getDataAddress().getChannel("health").send(messageObject);
-    }
-  };
-  // task per health
 
   @Override
   public void close() {
@@ -447,26 +400,7 @@ public class Anima
   }
 
   private void popolateAddressSpace() {
-    AbstractChannel systemChannel = new INoDataChannel();
-    systemChannel.setNodeId("system");
-    systemChannel.setDescription("local JVM system");
-    AbstractChannel loggerChannel = new IPublishSubscribeChannel();
-    loggerChannel.setNodeId("logger");
-    loggerChannel.setDescription("logger queue");
-    loggerChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
-    dataAddress.addDataChannel(loggerChannel);
-    AbstractChannel healthChannel = new IPublishSubscribeChannel();
-    healthChannel.setNodeId("health");
-    healthChannel.setDescription("local machine hardware and software stats");
-    healthChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
-    dataAddress.addDataChannel(healthChannel);
-    AbstractChannel cmdChannel = new IQueueChannel();
-    cmdChannel.setNodeId("command");
-    cmdChannel.setDescription("RPC interface");
-    cmdChannel.setFatherOfScope(MASTER_DATA_SCOPE, systemChannel);
-    dataAddress.addDataChannel(cmdChannel);
-    // start health regular messages
-    timer.scheduleAtFixedRate(repeatedTask, delay, period);
+    dataAddress.firstStart();
   }
 
   private void checkBeaconClient() {

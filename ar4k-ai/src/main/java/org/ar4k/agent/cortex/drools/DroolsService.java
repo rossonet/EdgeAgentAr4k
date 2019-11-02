@@ -17,6 +17,7 @@ import org.ar4k.agent.cortex.annotation.Ar4kDroolsContext;
 import org.ar4k.agent.cortex.annotation.DroolsGlobalClass;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.json.JSONObject;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieModule;
@@ -282,7 +283,7 @@ public class DroolsService extends AbstractAr4kService {
   }
 
   @Override
-  public JsonElement getStatusJson() {
+  public JSONObject getStatusJson() {
     JsonElement result = null;
     Gson gson = new Gson();
     if (isStateless()) {
@@ -290,12 +291,18 @@ public class DroolsService extends AbstractAr4kService {
     } else {
       result = gson.toJsonTree(getKieSession(configuration.getSessionName()).getGlobals());
     }
-    return result;
+    return new JSONObject(result.getAsString());
   }
 
   @Override
   public void close() throws Exception {
     stop();
+  }
+
+  @Override
+  public void loop() {
+    // TODO Auto-generated method stub
+
   }
 
 }

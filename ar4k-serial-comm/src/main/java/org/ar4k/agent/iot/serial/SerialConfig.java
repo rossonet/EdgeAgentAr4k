@@ -2,8 +2,6 @@ package org.ar4k.agent.iot.serial;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.data.Ar4kChannel;
-import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 
@@ -32,22 +30,22 @@ public class SerialConfig extends AbstractServiceConfig {
   public int queueSize = 10000;
 
   @Parameter(names = "--endpointWrite", description = "internal channel to write the data to the serial port")
-  public Ar4kChannel endpointWrite = null;
+  public String endpointWrite = null;
 
   @Parameter(names = "--endpointRead", description = "internal channel to send data from serial port")
-  public Ar4kChannel endpointRead = null;
+  public String endpointRead = null;
 
   @Parameter(names = "--endpointReadByte", description = "internal channel to send data from serial port in byte")
-  public Ar4kChannel endpointReadByte = null;
+  public String endpointReadByte = null;
 
   @Parameter(names = "--endpointWriteByte", description = "internal channel to write the data to the serial port in byte")
-  public Ar4kChannel endpointWriteByte = null;
+  public String endpointWriteByte = null;
 
-  @Parameter(names = "--endpointMetaSerial", description = "internal channel for manage the serial with AT commands")
-  public Ar4kChannel endpointMetaSerial = null;
+  @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
+  public String fatherOfChannels = null;
 
-  @Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind")
-  public IDirectChannel bindDirectoryChannel = null;
+  @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
+  public String scopeOfChannels = null;
 
   @Override
   public SerialService instantiate() {
@@ -58,7 +56,7 @@ public class SerialConfig extends AbstractServiceConfig {
 
   @Override
   public int getPriority() {
-    return 3;
+    return 4;
   }
 
   @Override

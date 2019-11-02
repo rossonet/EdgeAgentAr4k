@@ -21,14 +21,13 @@ import javax.annotation.PostConstruct;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
-
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Gestore servizio per connessioni irc.
- * 
+ *
  */
 public class IrcHomunculusService extends AbstractAr4kService {
 
@@ -79,7 +78,7 @@ public class IrcHomunculusService extends AbstractAr4kService {
   }
 
   @Override
-  public JsonElement getStatusJson() {
+  public JSONObject getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }

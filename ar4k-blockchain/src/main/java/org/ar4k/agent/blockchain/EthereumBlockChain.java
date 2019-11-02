@@ -2,7 +2,7 @@ package org.ar4k.agent.blockchain;
 
 import java.io.IOException;
 
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 public class EthereumBlockChain extends AbstractBlockChainManager {
 
@@ -13,7 +13,7 @@ public class EthereumBlockChain extends AbstractBlockChainManager {
   }
 
   @Override
-  public JsonElement getStatusJson() {
+  public JSONObject getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }
@@ -21,13 +21,13 @@ public class EthereumBlockChain extends AbstractBlockChainManager {
   @Override
   public void setBeanName(String name) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void close() throws IOException {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

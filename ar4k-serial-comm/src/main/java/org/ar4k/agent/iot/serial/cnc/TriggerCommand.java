@@ -16,9 +16,6 @@ package org.ar4k.agent.iot.serial.cnc;
 
 import java.io.Serializable;
 
-import org.joda.time.Instant;
-import org.joda.time.Period;
-
 import com.beust.jcommander.Parameter;
 
 /*
@@ -31,19 +28,28 @@ public class TriggerCommand implements Serializable {
 
   private static final long serialVersionUID = 970930400109105077L;
 
-  private Instant lastCall = new Instant();
+  private transient byte[] cacheCommandByte = null;
 
   @Parameter(names = "--command", description = "Command to send")
   public String command = "M115\n";
 
-  @Parameter(names = "--timer", description = "one shot every seconds")
+  @Parameter(names = "--timer", description = "timer moltiplicator")
   public int timer = 120;
 
-  public void fire(CncService chiamante) {
-    if (new Period(lastCall, new Instant()).toStandardSeconds().getSeconds() > timer) {
-      chiamante.onMessageString(command);
-      // System.out.println("invio: [" + command + "]");
-      lastCall = new Instant();
+  public byte[] getBytesCommand() {
+    createCache();
+    return cacheCommandByte;
+  }
+
+  private void createCache() {
+    if (cacheCommandByte == null) {
+      cacheCommandByte = command.getBytes();
     }
   }
+
+  public long getSizeBytesCommand() {
+    createCache();
+    return cacheCommandByte.length;
+  }
+
 }

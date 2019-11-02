@@ -15,8 +15,11 @@
 package org.ar4k.agent.iot.serial.cnc;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 
 import com.beust.jcommander.Parameter;
 
@@ -27,7 +30,7 @@ import com.beust.jcommander.Parameter;
  *         seriale/telnet da una CNC con endpoint camel di destinazione.
  *
  */
-public class RouterMessagesCnc implements Serializable {
+public class RouterMessagesCnc implements Serializable, compilePattern {
 
   private static final long serialVersionUID = 7183637837535639684L;
 
@@ -35,6 +38,36 @@ public class RouterMessagesCnc implements Serializable {
   public String regExp = ".*";
 
   @Parameter(names = "--endpoint", description = "internal queue for the messages found by the regular expression")
-  public Ar4kChannel endpoint = null;
+  public String endpoint = null;
+
+  private transient IPublishSubscribeChannel cacheChannel = null;
+  private transient Pattern pattern = null;
+
+  public boolean matches(String testString) {
+    compilePattern();
+    return pattern.matcher(testString).matches();
+  }
+
+  private void compilePattern() {
+    if (pattern == null) {
+      pattern = Pattern.compile(regExp);
+    }
+  }
+
+  public String getElaboratedMessage(String testString) {
+    compilePattern();
+    return testString;
+  }
+
+  public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
+    if (cacheChannel == null) {
+      Ar4kChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class);
+      cacheChannel = (IPublishSubscribeChannel) Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class);
+      cacheChannel.setFatherOfScope(scopeOfChannels, father);
+    }
+    return cacheChannel;
+  }
 
 }

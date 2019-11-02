@@ -19,8 +19,7 @@ public class InternalMessageHandler implements MessageHandler {
 
   @Override
   public void handleMessage(Message<?> message) throws MessagingException {
-    // TODO Auto-generated method stub
-
+    target.publish(message.getPayload());
   }
 
   public ITopic<Object> getTarget() {

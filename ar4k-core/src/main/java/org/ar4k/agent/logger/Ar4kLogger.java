@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.LoggerMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Logger
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l.
  *
  */
@@ -71,7 +72,7 @@ public class Ar4kLogger implements Logger {
   }
 
   public void logException(Exception e) {
-    Map<String, Object> o = new HashMap<String, Object>();
+    Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
     o.put("level", LogLevel.EXCEPTION.name());
@@ -80,7 +81,7 @@ public class Ar4kLogger implements Logger {
   }
 
   public void logException(int errore, Exception e) {
-    Map<String, Object> o = new HashMap<String, Object>();
+    Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
     o.put("level", LogLevel.EXCEPTION.name());
@@ -89,27 +90,26 @@ public class Ar4kLogger implements Logger {
   }
 
   private void sendEvent(LogLevel level, String logMessage) {
-    Map<String, Object> o = new HashMap<String, Object>();
+    Map<String, Object> o = new HashMap<>();
     o.put("msg", logMessage);
     o.put("level", level.toString());
     sendEvent(level, o);
   }
 
   private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
-    // logger.info(gson.toJson(logMessage));
     try {
       if (anima == null && Anima.getApplicationContext() != null
           && Anima.getApplicationContext().getBean(Anima.class) != null
-          && ((Anima) Anima.getApplicationContext().getBean(Anima.class)).getDataAddress() != null) {
-        anima = (Anima) Anima.getApplicationContext().getBean(Anima.class);
+          && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
+        anima = Anima.getApplicationContext().getBean(Anima.class);
       }
       if (anima != null) {
         LoggerMessage<String> messageObject = new LoggerMessage<>();
         messageObject.setPayload(gson.toJson(logMessage));
-        anima.getDataAddress().getChannel("logger").send(messageObject);
+        ((IPublishSubscribeChannel) anima.getDataAddress().getChannel("logger")).send(messageObject);
       }
     } catch (Exception aa) {
-      // gestisce il bootstrap
+      System.out.println("SEND LOG MESSAGE EXCEPTION [" + level + "] -> " + logMessage.toString());
     }
   }
 

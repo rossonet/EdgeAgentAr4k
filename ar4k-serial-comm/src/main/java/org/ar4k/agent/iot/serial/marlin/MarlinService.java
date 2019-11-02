@@ -8,9 +8,4 @@ import org.ar4k.agent.iot.serial.cnc.CncService;
  */
 public class MarlinService extends CncService {
 
-  @Override
-  public void loop() {
-    super.loop();
-  }
-
 }

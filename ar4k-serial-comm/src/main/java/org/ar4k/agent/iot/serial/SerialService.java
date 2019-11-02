@@ -16,201 +16,111 @@ package org.ar4k.agent.iot.serial;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringEscapeUtils;
 //import org.ar4k.agent.camel.DynamicRouteBuilder;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.channels.INoDataChannel;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.json.JSONObject;
+import org.springframework.messaging.MessageHeaders;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.google.gson.JsonElement;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Servizio di connessione seriale.
  */
-public class SerialService extends AbstractAr4kService {
+public class SerialService extends AbstractAr4kService implements SerialPortDataListener {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SerialService.class.toString());
 
-  // porta serial target
   private SerialPort comPort = null;
 
-  // id camel route per write seriale
-  private String rottaWrite = null;
-
-  // iniettata vedi set/get
   private SerialConfig configuration = null;
 
-  // iniettata vedi set/get
-  private Anima anima = null;
+  private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
 
-  // baudrate seriale
   public static enum BaudRate {
     bs150, bs300, bs600, bs1200, bs1800, bs2400, bs4800, bs7200, bs9600, bs14400, bs19200, bs38400, bs56000, bs57600,
     bs76800, bs115200, bs128000, bs230400, bs250000, auto
 
   }
 
-  // template configurazione bit parità
   public static enum ConventionalNotation {
     _8N1, _7E1
   }
 
-  public Queue<String> lastMessage = null;
+  private IPublishSubscribeChannel readChannelBytes = null;
 
-  public SerialService() {
-  }
+  private IPublishSubscribeChannel readChannel = null;
 
-  @Override
-  @PostConstruct
-  public void postCostructor() {
-    super.postCostructor();
-  }
+  private IPublishSubscribeChannel writeChannel = null;
+
+  private IPublishSubscribeChannel writeChannelBytes = null;
+
+  private HandlerBytesWriter handlerBytesWriter = null;
+
+  private HandlerStringWriter handlerStringWriter = null;
 
   @Override
   public synchronized void loop() {
-    // crea la coda se vuota
-    if (lastMessage == null) {
-      lastMessage = new ArrayBlockingQueue<String>(configuration.queueSize);
-    }
-    // se non è stata creata la porta
     if (comPort == null) {
-      try {
-        comPort = SerialPort.getCommPort(configuration.serial);
-        // TODO: percorso della seriale come path e numero. Per ora prima porta della
-        // macchina.
-        // comPort = SerialPort.getCommPorts()[0];
-      } catch (Exception ee) {
-        logger.logException(ee);
-      }
-      // configura baudrate e bit controllo
-      comPort.setBaudRate(Integer.valueOf(configuration.baudRate.name().replace("bs", "")));
-      if (configuration.conventionalNotation.equals(ConventionalNotation._8N1)) {
-        comPort.setNumDataBits(8);
-        comPort.setNumStopBits(1);
-        comPort.setParity(0);
-      }
-      if (configuration.conventionalNotation.equals(ConventionalNotation._7E1)) {
-        comPort.setNumDataBits(7);
-        comPort.setNumStopBits(1);
-        comPort.setParity(1);
-      }
-      // apre la porta
-      comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, configuration.clockRunnableClass,
-          configuration.clockRunnableClass);
-      comPort.openPort();
-      // System.out.println("serial port timeout: " + comPort.getReadTimeout());
+      openPort();
     } else {
-      // setta la callback
-      if (rottaWrite == null) {
-        /*
-         * DynamicRouteBuilder costruttore = new DynamicRouteBuilder(anima.camelContext,
-         * configuration.camelEndpointWriteSerial,
-         * "bean:anima?method=onCamelMessageToRoute");
-         */
-        try {
-          // TODO: sistemare con JMS
-          // anima.camelContext.addRoutes(costruttore);
-          // rottaWrite = costruttore.getIdRotta();
-        } catch (Exception e) {
-          logger.logException(e);
-        }
-        // anima.registeredCallback.put(rottaWrite, this);
-      }
-      // leggi tutti i dati
-      byte[] newData = null;
-      int numRead = 0;
-      if (comPort.bytesAvailable() > 0) {
-        newData = new byte[comPort.bytesAvailable()];
-        numRead = comPort.readBytes(newData, newData.length);
-      }
-      if (numRead > 0) {
-        // cancella l'ultimo elemnto dalla coda se piena
-        if (configuration.queueSize > 0 && (((ArrayBlockingQueue<String>) lastMessage).remainingCapacity() < 1)) {
-          lastMessage.poll();
-        }
-        lastMessage.offer(new String(newData, StandardCharsets.UTF_8));
-        /*
-         * anima.camelContext.createProducerTemplate().sendBody(configuration.
-         * camelEndpointReadSerial, new String(newData, StandardCharsets.UTF_8));
-         * anima.camelContext.createProducerTemplate().sendBody(configuration.
-         * camelEndpointReadOk, String.valueOf(numRead));
-         */
-      }
-      // recupera le disconnessioni
-      if (comPort.isOpen() != true) {
-        comPort = null;
-      }
+      checkPort();
     }
+  }
+
+  private void checkPort() {
+    if (comPort.isOpen() != true) {
+      comPort = null;
+    }
+  }
+
+  private void openPort() {
+    try {
+      comPort = SerialPort.getCommPort(configuration.serial);
+    } catch (Exception ee) {
+      logger.logException(ee);
+    }
+    // configura baudrate e bit controllo
+    comPort.setBaudRate(Integer.valueOf(configuration.baudRate.name().replace("bs", "")));
+    if (configuration.conventionalNotation.equals(ConventionalNotation._8N1)) {
+      comPort.setNumDataBits(8);
+      comPort.setNumStopBits(1);
+      comPort.setParity(0);
+    }
+    if (configuration.conventionalNotation.equals(ConventionalNotation._7E1)) {
+      comPort.setNumDataBits(7);
+      comPort.setNumStopBits(1);
+      comPort.setParity(1);
+    }
+    // apre la porta
+    comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, configuration.clockRunnableClass,
+        configuration.clockRunnableClass);
+    comPort.openPort();
+    comPort.addDataListener(this);
   }
 
   @Override
   public void kill() {
-    if (rottaWrite != null) {
-      try {
-        /*
-         * anima.camelContext.stopRoute(rottaWrite, 10L, TimeUnit.MILLISECONDS);
-         * anima.camelContext.removeRoute(rottaWrite);
-         */
-        rottaWrite = null;
-      } catch (Exception e) {
-        logger.logException(e);
-      }
-    }
-    comPort.closePort();
-    comPort = null;
-    super.kill();
-  }
-
-  @Override
-  protected void finalize() {
-    try {
-      /*
-       * anima.camelContext.stopRoute(rottaWrite, 10L, TimeUnit.MILLISECONDS);
-       * anima.camelContext.removeRoute(rottaWrite);
-       */
-      rottaWrite = null;
+    if (comPort != null) {
       comPort.closePort();
       comPort = null;
-    } catch (Exception e) {
-      logger.logException(e);
     }
-  }
-
-  // ricezione messaggio
-  public synchronized String onCamelMessage(Object message) {
-    String ret = "ko";
-    if (message != null) {
-      byte[] mes = ((byte[]) message);
-      String messaggioStringa = "";
-      messaggioStringa = StringEscapeUtils.unescapeJava(new String(mes, StandardCharsets.UTF_8));
-      // System.out.println("received from Camel [" + String.valueOf((byte[]) message)
-      // + "]\nin String: ["
-      // + messaggioStringa + "]");
-      comPort.writeBytes(messaggioStringa.getBytes(), messaggioStringa.getBytes().length);
-      /*
-       * anima.camelContext.createProducerTemplate().sendBody(configuration.
-       * camelEndpointWriteOk, String.valueOf(messaggioStringa.getBytes().length));
-       */
-      ret = "ok";
-    }
-    return ret;
-  }
-
-  // ricezione messaggio
-  public synchronized String onMessageString(String message) {
-    return onCamelMessage(message.getBytes());
+    super.kill();
   }
 
   @Override
@@ -242,37 +152,97 @@ public class SerialService extends AbstractAr4kService {
 
   @Override
   public void init() {
-    // TODO Auto-generated method stub
+    popolateDataTopics();
+  }
 
+  private void popolateDataTopics() {
+    Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
+        INoDataChannel.class);
+    readChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
+        IPublishSubscribeChannel.class);
+    readChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress()
+        .createOrGetDataChannel(configuration.endpointRead, IPublishSubscribeChannel.class);
+    writeChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
+        IPublishSubscribeChannel.class);
+    writeChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress()
+        .createOrGetDataChannel(configuration.endpointRead, IPublishSubscribeChannel.class);
+    readChannel.addTag("serial-read");
+    readChannelBytes.addTag("serial-read-bytes");
+    writeChannel.addTag("serial-write");
+    writeChannelBytes.addTag("serial-write-bytes");
+    readChannel.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+        : anima.getDataAddress().getDefaultScope(), channelRoot);
+    readChannelBytes.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+        : anima.getDataAddress().getDefaultScope(), channelRoot);
+    writeChannel.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+        : anima.getDataAddress().getDefaultScope(), channelRoot);
+    writeChannelBytes.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+        : anima.getDataAddress().getDefaultScope(), channelRoot);
+    handlerBytesWriter = new HandlerBytesWriter(this);
+    handlerStringWriter = new HandlerStringWriter(this);
+    writeChannel.subscribe(handlerStringWriter);
+    writeChannelBytes.subscribe(handlerBytesWriter);
   }
 
   @Override
   public void setConfiguration(ConfigSeed configuration) {
-    // TODO Auto-generated method stub
-
+    this.configuration = (SerialConfig) configuration;
   }
 
   @Override
   public String getStatusString() {
-    // TODO Auto-generated method stub
-    return null;
+    return comPort != null ? comPort.getPortDescription() : "DISCONNECTED";
   }
 
   @Override
-  public JsonElement getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
+  public JSONObject getStatusJson() {
+    JSONObject end = new JSONObject();
+    end.put("status", getStatusString());
+    return end;
   }
 
   @Override
   public void close() throws IOException {
-    // TODO Auto-generated method stub
-
+    kill();
   }
 
   @Override
   public void stop() {
-    // TODO Auto-generated method stub
+    kill();
+  }
 
+  @Override
+  public int getListeningEvents() {
+    return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+  }
+
+  @Override
+  public void serialEvent(SerialPortEvent message) {
+    callProtectedEvent(message);
+    SerialMessage messageToBytes = new SerialMessage();
+    SerialMessage messageToString = new SerialMessage();
+    final Map<String, Object> headersMapString = new HashMap<>();
+    headersMapString.put("serial-port", message.getSerialPort());
+    headersMapString.put("publish-source", message.getSource());
+    headersMapString.put("type", "string");
+    final MessageHeaders headersString = new MessageHeaders(headersMapString);
+    messageToString.setHeaders(headersString);
+    final Map<String, Object> headersMapBytes = new HashMap<>();
+    headersMapBytes.put("serial-port", message.getSerialPort());
+    headersMapBytes.put("publish-source", message.getSource());
+    headersMapBytes.put("type", "bytes");
+    final MessageHeaders headersBytes = new MessageHeaders(headersMapBytes);
+    messageToBytes.setHeaders(headersBytes);
+    messageToBytes.setPayload(message.getReceivedData());
+    messageToString.setPayload(new String(message.getReceivedData(), StandardCharsets.UTF_8));
+    readChannelBytes.send(messageToBytes);
+    readChannel.send(messageToString);
+  }
+
+  protected void callProtectedEvent(SerialPortEvent message) {
+  }
+
+  public SerialPort getComPort() {
+    return comPort;
   }
 }

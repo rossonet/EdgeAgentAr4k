@@ -10,12 +10,12 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.core.Message;
 import com.hazelcast.core.MessageListener;
 
-public class EnternalMessageHandler implements MessageListener<Object> {
+public class ExternalMessageHandler implements MessageListener<Object> {
 
   private ITopic<Object> source = null;
   private AbstractChannel target = null;
 
-  public EnternalMessageHandler(ITopic<Object> source, AbstractChannel target) {
+  public ExternalMessageHandler(ITopic<Object> source, AbstractChannel target) {
     this.source = source;
     this.target = target;
   }
@@ -24,9 +24,9 @@ public class EnternalMessageHandler implements MessageListener<Object> {
   public void onMessage(Message<Object> message) {
     HazelcastMessage messageTo = new HazelcastMessage();
     final Map<String, Object> headersMap = new HashMap<>();
-    headersMap.put("publishingMember", message.getPublishingMember());
-    headersMap.put("publishTime", message.getPublishTime());
-    headersMap.put("publishSource", message.getSource());
+    headersMap.put("publishing-member", message.getPublishingMember());
+    headersMap.put("publish-time", message.getPublishTime());
+    headersMap.put("publish-source", message.getSource());
     final MessageHeaders headers = new MessageHeaders(headersMap);
     messageTo.setHeaders(headers);
     messageTo.setPayload(message.getMessageObject());

@@ -3,7 +3,9 @@ package org.ar4k.agent.core.data;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -23,8 +25,8 @@ import com.beust.jcommander.Parameter;
 
 public abstract class AbstractChannel implements Ar4kChannel, Closeable, PollableChannel, SubscribableChannel {
 
-  protected static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(AbstractChannel.class.toString());
+  protected static transient final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton()
+      .getLoggerFactory().getLogger(AbstractChannel.class.toString());
 
   @Parameter(names = "--logQueueSize", description = "size of queue for the logs")
   private int logQueueSize = 50;
@@ -34,12 +36,6 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
 
   @Parameter(names = "--domainId", description = "unique global domain for the data")
   private String domainId = "AR4K";
-
-  private transient AbstractMessageChannel channel = null;
-
-  private Type channelTypeRequest = null;
-
-  private Status status = Status.INIT;
 
   @Parameter(names = "--description", description = "description for this node", required = false)
   private String description = null;
@@ -57,6 +53,17 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
   private String nameSpace = "default";
 
   private boolean isRemote = false;
+
+  private transient DataAddress dataAddress = null;
+
+  private transient AbstractMessageChannel channel = null;
+
+  private Type channelTypeRequest = null;
+
+  private Status status = Status.INIT;
+
+  private Map<String, List<Ar4kChannel>> scopeChildren = new HashMap<>();
+  private Map<String, Ar4kChannel> scopeFather = new HashMap<>();
 
   @Override
   public String getNodeId() {
@@ -168,6 +175,11 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
   }
 
   @Override
+  public void addTag(String tag) {
+    tags.add(tag);
+  }
+
+  @Override
   public String getDomainId() {
     return domainId;
   }
@@ -195,26 +207,18 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
     this.channel = channel;
   }
 
-  public void startDataChannel() {
-    startFunction();
+  private void startFunction() {
     setStatus(Status.WAITING_ENDPOINTS);
-  }
-
-  public void stopDataChannel() {
-    stopFunction();
-    setStatus(Status.DETROY);
-  }
-
-  protected void startFunction() {
     getChannel().setBeanName(getNodeId());
     getChannel().setComponentName(getNodeId());
     ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(getNodeId(),
         getChannel());
   }
 
-  protected void stopFunction() {
+  private void stopFunction() {
     ((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory())
         .destroySingleton(getNodeId());
+    setStatus(Status.DETROY);
   }
 
   @Override
@@ -228,8 +232,12 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
   @Override
   public void close() throws IOException {
     try {
+      stopFunction();
+      dataAddress = null;
       getChannel().destroy();
       setChannel(null);
+      scopeChildren.clear();
+      scopeFather.clear();
     } catch (Exception e) {
       logger.logException(e);
       setChannel(null);
@@ -238,35 +246,62 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
 
   @Override
   public void setFatherOfScope(String scope, Ar4kChannel father) {
-    // TODO Auto-generated method stub
+    scopeFather.put(scope, father);
+    ((AbstractChannel) father).addChildOfScope(scope, this);
+  }
+
+  private void addChildOfScope(String scope, Ar4kChannel child) {
+    scopeChildren.get(scope).add(child);
   }
 
   @Override
-  public void addChildOfScope(String scope, Ar4kChannel child) {
-    // TODO Auto-generated method stub
+  public List<Ar4kChannel> getChildrenOfScope(String scope) {
+    return scopeChildren.get(scope);
   }
 
   @Override
-  public List<Ar4kChannel> getChildsOfScope(String scope) {
-    // TODO Auto-generated method stub
-    return null;
+  public int getChildrenCountOfScope(String scope) {
+    return scopeChildren.get(scope).size();
+  }
+
+  private void removeChildrenOfScope(String scope) {
+    scopeChildren.remove(scope);
   }
 
   @Override
-  public int getChildsCountOfScope(String scope) {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public void removeParentsOfScope(String scope) {
-    // TODO Auto-generated method stub
+  public void removeFatherOfScope(String scope) {
+    if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
+      ((AbstractChannel) scopeFather.get(scope)).removeChildrenOfScope(scope);
+      scopeFather.remove(scope);
+    }
   }
 
   @Override
   public Ar4kChannel getFatherOfScope(String scope) {
-    // TODO Auto-generated method stub
-    return null;
+    return scopeFather.get(scope);
+  }
+
+  @Override
+  public String getScopeAbsoluteNameByScope(String scope) {
+    StringBuilder reply = new StringBuilder();
+    if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
+      if (scopeFather.get(scope).getScopeAbsoluteNameByScope(scope) != null) {
+        reply.append(scopeFather.get(scope).getScopeAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
+      }
+    }
+    reply.append(getNodeId());
+    return reply.toString();
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    return dataAddress;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    startFunction();
+    this.dataAddress = dataAddress;
   }
 
 }

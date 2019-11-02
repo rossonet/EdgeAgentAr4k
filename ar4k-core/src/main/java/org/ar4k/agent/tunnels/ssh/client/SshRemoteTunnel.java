@@ -19,7 +19,7 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Servizio tunnel SSH.
  *
  */
@@ -42,6 +42,12 @@ public class SshRemoteTunnel extends AbstractSshTunnel {
   @Override
   public void init() {
     startTunnel();
+  }
+
+  @Override
+  public void loop() {
+    // TODO Auto-generated method stub
+
   }
 
 }

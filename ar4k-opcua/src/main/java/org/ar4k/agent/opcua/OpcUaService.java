@@ -4,8 +4,7 @@ import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -52,13 +51,19 @@ public class OpcUaService extends AbstractAr4kService {
   }
 
   @Override
-  public JsonElement getStatusJson() {
+  public JSONObject getStatusJson() {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void loop() {
     // TODO Auto-generated method stub
 
   }

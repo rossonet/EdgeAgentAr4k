@@ -18,6 +18,8 @@ public interface Ar4kChannel extends AutoCloseable {
 
   String getNodeId();
 
+  String getScopeAbsoluteNameByScope(String scope);
+
   Class<? extends Ar4kChannel> getChannelClass();
 
   void setNodeId(String nodeId);
@@ -70,14 +72,18 @@ public interface Ar4kChannel extends AutoCloseable {
 
   void setFatherOfScope(String scope, Ar4kChannel father);
 
-  void addChildOfScope(String scope, Ar4kChannel child);
+  void removeFatherOfScope(String scope);
 
-  List<Ar4kChannel> getChildsOfScope(String scope);
+  List<Ar4kChannel> getChildrenOfScope(String scope);
 
-  int getChildsCountOfScope(String scope);
-
-  void removeParentsOfScope(String scope);
+  int getChildrenCountOfScope(String scope);
 
   Ar4kChannel getFatherOfScope(String scope);
+
+  DataAddress getDataAddress();
+
+  void setDataAddress(DataAddress dataAddress);
+
+  void addTag(String tag);
 
 }

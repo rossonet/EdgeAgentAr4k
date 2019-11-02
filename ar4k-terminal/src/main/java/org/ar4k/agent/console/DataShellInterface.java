@@ -16,8 +16,6 @@ package org.ar4k.agent.console;
 
 import java.util.Collection;
 
-import javax.validation.Valid;
-
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
 import org.ar4k.agent.core.data.channels.IPriorityChannel;
@@ -77,64 +75,98 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
   public void sendToDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId,
       @ShellOption(help = "message to send") String message,
       @ShellOption(help = "timeout for blocking call") int timeout) {
-    StringChatRpcMessage<String> messageObject = new StringChatRpcMessage<String>();
+    StringChatRpcMessage<String> messageObject = new StringChatRpcMessage<>();
     messageObject.setPayload(message);
-    anima.getDataAddress().getChannel(channelId).send(messageObject, timeout);
+    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
+      ((IPriorityChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
+      ((IQueueChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
+      ((IRendezvousChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+      ((IDirectChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+      ((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+      ((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+    else
+      logger.error("can't send message to " + channelId);
   }
 
   @ShellMethod(value = "Subscribe channel and view the output in console", group = "Data Server Commands")
   @ManagedOperation
   public void subscribeDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId) {
-    anima.getDataAddress().getChannel(channelId).subscribe(this);
+    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+      ((IDirectChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+      ((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+      ((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
+    else
+      logger.error(channelId + " is not subscribable");
   }
 
   @ShellMethod(value = "Poll a message from a channel", group = "Data Server Commands")
   @ManagedOperation
   public void pollDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId,
       @ShellOption(help = "timeout for blocking call") int timeout) {
-    anima.getDataAddress().getChannel(channelId).receive(timeout);
+    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
+      ((IPriorityChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
+      ((IQueueChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
+      ((IRendezvousChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout);
+    else
+      logger.error(channelId + " is not pollable");
   }
 
   @ShellMethod(value = "Unsubscribe channel", group = "Data Server Commands")
   @ManagedOperation
   public void unsubscribeDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId) {
-    anima.getDataAddress().getChannel(channelId).unsubscribe(this);
+    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+      ((IDirectChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+      ((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
+    else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+      ((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
+    else
+      logger.error(channelId + " is not subscribable");
   }
 
   @ShellMethod(value = "Add a direct data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataDirectChannel(@ShellOption(optOut = true) @Valid IDirectChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataDirectChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class);
   }
 
   @ShellMethod(value = "Add a executor data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataExecutorChannel(@ShellOption(optOut = true) @Valid IExecutorChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataExecutorChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class);
   }
 
   @ShellMethod(value = "Add a priority data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataPriorityChannel(@ShellOption(optOut = true) @Valid IPriorityChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataPriorityChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class);
   }
 
   @ShellMethod(value = "Add a publish/subscribe  data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataPubSubChannel(@ShellOption(optOut = true) @Valid IPublishSubscribeChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataPubSubChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class);
   }
 
   @ShellMethod(value = "Add a queue data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataQueueChannel(@ShellOption(optOut = true) @Valid IQueueChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataQueueChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class);
   }
 
   @ShellMethod(value = "Add a rendezvous data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
-  public void addDataRendezvousChannel(@ShellOption(optOut = true) @Valid IRendezvousChannel dataChannel) {
-    anima.getDataAddress().addDataChannel(dataChannel);
+  public void addDataRendezvousChannel(@ShellOption(help = "node name") String dataChannel) {
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class);
   }
 
   @ShellMethod(value = "Remove data channel from the address space", group = "Data Server Commands")

@@ -16,10 +16,7 @@ package org.ar4k.agent.tunnels.socket.ssl;
 
 import org.ar4k.agent.tunnels.socket.AbstractSocketFactoryComponent;
 import org.ar4k.agent.tunnels.socket.AbstractSocketFactoryConfig;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
+import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -47,13 +44,15 @@ public class SocketFactorySsl extends AbstractSocketFactoryComponent {
   }
 
   @Override
-  public JsonElement getStatusJson() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJsonTree(configuration);
+  public JSONObject getStatusJson() {
+    JSONObject end = new JSONObject();
+    end.put("status", getStatusString());
+    return end;
   }
 
+  @Override
   public AbstractSocketFactoryConfig getConfiguration() {
-    return (AbstractSocketFactoryConfig)configuration;
+    return configuration;
   }
 
   public void setConfiguration(SocketFactorySslConfig configuration) {

@@ -77,7 +77,7 @@ import reactor.core.publisher.Mono;
 
 /*
  * @author Andrea Ambrosini
- * 
+ *
  *         Controller web per interfaccia demo Agente Ar4k
  *
  */
@@ -155,16 +155,17 @@ public class DashboardWebController {
       model.addAttribute("properties", getProperties());
       targetPage = "tableEnv.html";
       break;
-    case "keystores":
-      model.addAttribute("keys", anima.getKeyStores());
-      targetPage = "tableKeyStores.html";
-      break;
+    // TODO ripristinare kaystore
+    /*
+     * case "keystores": model.addAttribute("keys", anima.getKeyStores());
+     * targetPage = "tableKeyStores.html"; break;
+     */
     case "conf":
       model.addAttribute("configs", getConfigs());
       targetPage = "tableConf.html";
       break;
     case "logger":
-      Map<String, LoggerLevels> loggers = new HashMap<String, LoggerLevels>();
+      Map<String, LoggerLevels> loggers = new HashMap<>();
       for (LoggersEndpoint log : loggersEndpoint) {
         for (String linea : ((Map<String, LoggerLevels>) log.loggers().get("loggers")).keySet()) {
           loggers.put(linea, ((Map<String, LoggerLevels>) log.loggers().get("loggers")).get(linea));
@@ -174,7 +175,7 @@ public class DashboardWebController {
       targetPage = "tableLogger.html";
       break;
     case "web":
-      List<RequestMappingInfo> map = new ArrayList<RequestMappingInfo>();
+      List<RequestMappingInfo> map = new ArrayList<>();
       for (RequestMappingInfoHandlerMapping rm : listRequestMapping) {
         for (RequestMappingInfo a : rm.getHandlerMethods().keySet()) {
           map.add(a);
@@ -184,7 +185,7 @@ public class DashboardWebController {
       targetPage = "tableWeb.html";
       break;
     case "metrics":
-      List<Meter> meters = new ArrayList<Meter>();
+      List<Meter> meters = new ArrayList<>();
       for (MeterRegistry mr : listMetrics) {
         for (Meter m : mr.getMeters()) {
           meters.add(m);
@@ -223,27 +224,28 @@ public class DashboardWebController {
   @ResponseBody
   public Mono<Map<String, Object>> ar4kDataStart(Authentication authentication) {
     // model.addAttribute("selectedMenu", "dashboard");
-    Map<String, Object> risposta = new HashMap<String, Object>();
+    Map<String, Object> risposta = new HashMap<>();
     risposta.put("user", authentication.getName());
     risposta.put("roles", authentication.getAuthorities());
     risposta.put("properties", getProperties());
-    risposta.put("keys", anima.getKeyStores());
+    // TODO ripristinare kaystore
+    // risposta.put("keys", anima.getKeyStores());
     risposta.put("configs", getConfigs());
     risposta.put("logo", anima.getLogoUrl());
-    Map<String, LoggerLevels> loggers = new HashMap<String, LoggerLevels>();
+    Map<String, LoggerLevels> loggers = new HashMap<>();
     for (LoggersEndpoint log : loggersEndpoint) {
       for (String linea : ((Map<String, LoggerLevels>) log.loggers().get("loggers")).keySet()) {
         loggers.put(linea, ((Map<String, LoggerLevels>) log.loggers().get("loggers")).get(linea));
       }
     }
     risposta.put("loggers", loggers);
-    List<RequestMappingInfo> map = new ArrayList<RequestMappingInfo>();
+    List<RequestMappingInfo> map = new ArrayList<>();
     for (RequestMappingInfoHandlerMapping rm : listRequestMapping) {
       for (RequestMappingInfo a : rm.getHandlerMethods().keySet()) {
         map.add(a);
       }
     }
-    List<Meter> meters = new ArrayList<Meter>();
+    List<Meter> meters = new ArrayList<>();
     for (MeterRegistry mr : listMetrics) {
       for (Meter m : mr.getMeters()) {
         meters.add(m);
@@ -259,7 +261,7 @@ public class DashboardWebController {
   @ResponseBody
   public Mono<JSONObject> ar4kStatus() {
     JSONObject json = new JSONObject();
-    json.put("run-level", (String) anima.getState().name());
+    json.put("run-level", anima.getState().name());
     JSONArray runtimeServices = new JSONArray();
     JSONObject runtimeConfig = new JSONObject();
     for (ServiceComponent st : anima.getServices()) {
@@ -299,7 +301,7 @@ public class DashboardWebController {
   }
 
   private Map<String, String> getProperties() {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     for (Iterator<?> it = ((AbstractEnvironment) env).getPropertySources().iterator(); it.hasNext();) {
       PropertySource<?> propertySource = (PropertySource<?>) it.next();
       if (propertySource instanceof MapPropertySource) {

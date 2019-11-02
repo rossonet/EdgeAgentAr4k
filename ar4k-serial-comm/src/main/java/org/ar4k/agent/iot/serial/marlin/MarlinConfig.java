@@ -3,7 +3,6 @@
  */
 package org.ar4k.agent.iot.serial.marlin;
 
-import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.iot.serial.cnc.CncConfig;
 import org.ar4k.agent.iot.serial.cnc.RouterMessagesCnc;
@@ -19,66 +18,26 @@ public class MarlinConfig extends CncConfig {
 
   private static final long serialVersionUID = -864164279161787378L;
 
-  // TODO: completare descrizioni
-  @Parameter(names = "--endpointAutoHome", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointAutoHome = null;
-  @Parameter(names = "--endpointBackward", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointBackward = null;
-  @Parameter(names = "--endpointForward", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointForward = null;
-  @Parameter(names = "--endpointLeft", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointLeft = null;
-  @Parameter(names = "--endpointRigth", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointRigth = null;
-  @Parameter(names = "--endpointUp", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointUp = null;
-  @Parameter(names = "--endpointDown", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointDown = null;
-  @Parameter(names = "--endpointSpeed", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointSpeed = null;
-  @Parameter(names = "--endpointFlowRate", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointFlowRate = null;
-  @Parameter(names = "--endpointFeedRate", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointFeedRate = null;
-  @Parameter(names = "--endpointMoveTo", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointMoveTo = null;
-  @Parameter(names = "--endpointFan", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointFan = null;
-  @Parameter(names = "--endpointEstruderTemp", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointEstruderTemp = null;
-  @Parameter(names = "--endpointBedTemp", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointBedTemp = null;
-  @Parameter(names = "--endpointExtrude", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointExtrude = null;
-  @Parameter(names = "--endpointDisableMotors", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointDisableMotors = null;
-  @Parameter(names = "--endpointEnableMotors", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointEnableMotors = null;
-  @Parameter(names = "--endpointEmergency", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointEmergency = null;
-  @Parameter(names = "--endpointReset", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointReset = null;
-
-  // output trigger
-  @Parameter(names = "--endpointOutTemp", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointOutTemp = null;
-  @Parameter(names = "--endpointOutAbsolutePosition", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointOutAbsolutePosition = null;
-  @Parameter(names = "--endpointOutFirmware", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointOutFirmware = null;
-  @Parameter(names = "--endpointOutSetting", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointOutSetting = null;
-  @Parameter(names = "--endpointProgress", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointProgress = null;
-  @Parameter(names = "--endpointListSdFiles", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointListSdFiles = null;
-  @Parameter(names = "--endpointPrintTime", description = "internal channel for consumer AutoHome")
-  public Ar4kChannel endpointPrintTime = null;
+  @Parameter(names = "--endpointOutTemp", description = "internal channel for consumer temp data")
+  public String endpointOutTemp = null;
+  @Parameter(names = "--endpointOutAbsolutePosition", description = "internal channel for consumer absolute position data")
+  public String endpointOutAbsolutePosition = null;
+  @Parameter(names = "--endpointOutFirmware", description = "internal channel for consumer firmware data")
+  public String endpointOutFirmware = null;
+  @Parameter(names = "--endpointOutSetting", description = "internal channel for consumer setting data")
+  public String endpointOutSetting = null;
+  @Parameter(names = "--endpointProgress", description = "internal channel for consumer progress data")
+  public String endpointProgress = null;
+  @Parameter(names = "--endpointListSdFiles", description = "internal channel for consumer list sd file data")
+  public String endpointListSdFiles = null;
+  @Parameter(names = "--endpointPrintTime", description = "internal channel for consumer print time data")
+  public String endpointPrintTime = null;
 
   @Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind with regex")
   public IDirectChannel bindDirectoryChannel = null;
 
-  public MarlinConfig() {
+  @Override
+  public MarlinService instantiate() {
     // temperatura x
     TriggerCommand temperatura = new TriggerCommand();
     RouterMessagesCnc temperaturaFind = new RouterMessagesCnc();
@@ -132,13 +91,13 @@ public class MarlinConfig extends CncConfig {
     printTime.timer = 37;
     printTime.command = "M31\n";
 
-    replies.add(temperaturaFind);
-    replies.add(posizioneAssolutaFind);
-    replies.add(configurazioneFind);
-    replies.add(avanzamentoFind);
-    replies.add(listaFileSdFind);
-    replies.add(printTimeFind);
-    replies.add(firmwareFind);
+    repliesAnalizer.add(temperaturaFind);
+    repliesAnalizer.add(posizioneAssolutaFind);
+    repliesAnalizer.add(configurazioneFind);
+    repliesAnalizer.add(avanzamentoFind);
+    repliesAnalizer.add(listaFileSdFind);
+    repliesAnalizer.add(printTimeFind);
+    repliesAnalizer.add(firmwareFind);
 
     cronCommands.add(temperatura);
     cronCommands.add(posizioneAssoluta);
@@ -146,11 +105,6 @@ public class MarlinConfig extends CncConfig {
     cronCommands.add(avanzamento);
     cronCommands.add(listaFileSd);
     cronCommands.add(printTime);
-  }
-
-  @Override
-  public MarlinService instantiate() {
-    // System.out.println("Serial service start");
     MarlinService ss = new MarlinService();
     ss.setConfiguration(this);
     return ss;

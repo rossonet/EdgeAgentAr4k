@@ -7,15 +7,16 @@ import java.util.Set;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.config.JoinConfig;
@@ -42,7 +43,7 @@ public class HazelcastComponent implements Ar4kComponent {
 
   private String beanName = null;
 
-  private Set<EnternalMessageHandler> subscriberTopicsFromExternal = new HashSet<>();
+  private Set<ExternalMessageHandler> subscriberTopicsFromExternal = new HashSet<>();
   private Set<InternalMessageHandler> subscriberTopicsFromInternal = new HashSet<>();
 
   public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
@@ -67,8 +68,8 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   @Override
-  public JsonElement getStatusJson() {
-    return gson.toJsonTree(configuration);
+  public JSONObject getStatusJson() {
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
   @Override
@@ -93,15 +94,25 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   private void popolateDataTopics() {
-    AbstractChannel channelRoot = anima.getDataAddress().getChannel(configuration.getBindDirectoryChannel());
+    Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
+        INoDataChannel.class);
     for (String singleTopicLabel : configuration.getTopics()) {
       ITopic<Object> sigleTopic = getTopic(singleTopicLabel);
-      AbstractChannel singleAr4kchannel = new IPublishSubscribeChannel();
-      singleAr4kchannel.setFatherOfScope(Anima.MASTER_DATA_SCOPE, channelRoot);
-      anima.getDataAddress().addDataChannel(singleAr4kchannel);
-      EnternalMessageHandler externalHandlerSubscriber = new EnternalMessageHandler(sigleTopic, singleAr4kchannel);
-      InternalMessageHandler internalHandlerSubscribe = new InternalMessageHandler(singleAr4kchannel, sigleTopic);
-      singleAr4kchannel.subscribe(internalHandlerSubscribe);
+      IPublishSubscribeChannel singleAr4kchannelRead = (IPublishSubscribeChannel) anima.getDataAddress()
+          .createOrGetDataChannel(singleTopicLabel, IPublishSubscribeChannel.class);
+      IPublishSubscribeChannel singleAr4kchannelWrite = (IPublishSubscribeChannel) anima.getDataAddress()
+          .createOrGetDataChannel(configuration.getWriteTopic(singleTopicLabel), IPublishSubscribeChannel.class);
+      singleAr4kchannelRead.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+          : anima.getDataAddress().getDefaultScope(), channelRoot);
+      singleAr4kchannelRead.addTag("hazelcast-read");
+      singleAr4kchannelRead.addTag(singleTopicLabel);
+      singleAr4kchannelWrite.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+          : anima.getDataAddress().getDefaultScope(), channelRoot);
+      singleAr4kchannelWrite.addTag("hazelcast-write");
+      singleAr4kchannelWrite.addTag(singleTopicLabel);
+      ExternalMessageHandler externalHandlerSubscriber = new ExternalMessageHandler(sigleTopic, singleAr4kchannelRead);
+      InternalMessageHandler internalHandlerSubscribe = new InternalMessageHandler(singleAr4kchannelWrite, sigleTopic);
+      singleAr4kchannelWrite.subscribe(internalHandlerSubscribe);
       sigleTopic.addMessageListener(externalHandlerSubscriber);
       subscriberTopicsFromExternal.add(externalHandlerSubscriber);
       subscriberTopicsFromInternal.add(internalHandlerSubscribe);
@@ -119,7 +130,7 @@ public class HazelcastComponent implements Ar4kComponent {
       hazelcastInstance.shutdown();
       hazelcastInstance = null;
     }
-    for (EnternalMessageHandler subscriber : subscriberTopicsFromExternal) {
+    for (ExternalMessageHandler subscriber : subscriberTopicsFromExternal) {
       subscriber.getSource().destroy();
       try {
         subscriber.getTarget().close();

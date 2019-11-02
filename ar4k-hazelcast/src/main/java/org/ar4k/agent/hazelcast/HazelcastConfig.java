@@ -1,7 +1,10 @@
 package org.ar4k.agent.hazelcast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
@@ -35,10 +38,12 @@ public class HazelcastConfig extends AbstractServiceConfig {
   public boolean kubernetesEnabled = false;
   @Parameter(names = "--kubernetesNameSpace", description = "the kubernetes name space of the cluster")
   public String kubernetesNameSpace = null;
-  @Parameter(names = "--internalDirectoryChannel", description = "internal directory channel for message topics")
-  public String bindDirectoryChannel = null;
-  @Parameter(names = "--topics", description = "topics to subscribe", arity = 0)
-  public List<String> topics = new ArrayList<>();
+  @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
+  public String fatherOfChannels = null;
+  @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
+  public String scopeOfChannels = null;
+  @Parameter(names = "--topics", description = "topics to subscribe and write queue", arity = 0)
+  public Map<String, String> topics = new HashMap<>();
 
   @Override
   public String getName() {
@@ -136,11 +141,15 @@ public class HazelcastConfig extends AbstractServiceConfig {
     this.kubernetesNameSpace = kubernetesNameSpace;
   }
 
-  public List<String> getTopics() {
-    return topics;
+  public Set<String> getTopics() {
+    return topics.keySet();
   }
 
-  public void setTopics(List<String> topics) {
+  public String getWriteTopic(String readTopic) {
+    return topics.get(readTopic);
+  }
+
+  public void setTopics(Map<String, String> topics) {
     this.topics = topics;
   }
 
@@ -164,7 +173,20 @@ public class HazelcastConfig extends AbstractServiceConfig {
     return kubernetesEnabled;
   }
 
-  public String getBindDirectoryChannel() {
-    return bindDirectoryChannel;
+  public String getFatherOfChannels() {
+    return fatherOfChannels;
   }
+
+  public void setFatherOfChannels(String fatherOfChannels) {
+    this.fatherOfChannels = fatherOfChannels;
+  }
+
+  public String getScopeOfChannels() {
+    return scopeOfChannels;
+  }
+
+  public void setScopeOfChannels(String scopeOfChannels) {
+    this.scopeOfChannels = scopeOfChannels;
+  }
+
 }
