@@ -47,7 +47,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
   private Thread processo = null;
 
   // iniettata in costruzione (vedi get/set)
-  private Anima anima;
+  protected Anima anima;
 
   // iniettata in costruzione (vedi get/set)
   private AbstractServiceConfig configuration;

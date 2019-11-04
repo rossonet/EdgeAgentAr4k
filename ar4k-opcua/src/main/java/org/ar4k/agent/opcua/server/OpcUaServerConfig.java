@@ -52,6 +52,9 @@ public class OpcUaServerConfig extends AbstractServiceConfig {
   @Parameter(names = "--productUri", description = "product URI")
   public String productUri = "urn:ar4k:agent:opcua-server";
 
+  @Parameter(names = "--namespaceUri", description = "namespace URI")
+  public String namespaceUri = "urn:ar4k:agent:namespace";
+
   @Parameter(names = "--manufacturerName", description = "manufacturer name")
   public String manufacturerName = "Agent xxx";
 

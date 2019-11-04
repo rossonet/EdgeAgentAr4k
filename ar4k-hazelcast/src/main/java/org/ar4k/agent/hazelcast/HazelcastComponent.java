@@ -95,19 +95,19 @@ public class HazelcastComponent implements Ar4kComponent {
 
   private void popolateDataTopics() {
     Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
-        INoDataChannel.class);
+        INoDataChannel.class, (String) null, null);
     for (String singleTopicLabel : configuration.getTopics()) {
       ITopic<Object> sigleTopic = getTopic(singleTopicLabel);
       IPublishSubscribeChannel singleAr4kchannelRead = (IPublishSubscribeChannel) anima.getDataAddress()
-          .createOrGetDataChannel(singleTopicLabel, IPublishSubscribeChannel.class);
+          .createOrGetDataChannel(singleTopicLabel, IPublishSubscribeChannel.class, channelRoot,
+              configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+                  : anima.getDataAddress().getDefaultScope());
       IPublishSubscribeChannel singleAr4kchannelWrite = (IPublishSubscribeChannel) anima.getDataAddress()
-          .createOrGetDataChannel(configuration.getWriteTopic(singleTopicLabel), IPublishSubscribeChannel.class);
-      singleAr4kchannelRead.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-          : anima.getDataAddress().getDefaultScope(), channelRoot);
+          .createOrGetDataChannel(configuration.getWriteTopic(singleTopicLabel), IPublishSubscribeChannel.class,
+              channelRoot, configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+                  : anima.getDataAddress().getDefaultScope());
       singleAr4kchannelRead.addTag("hazelcast-read");
       singleAr4kchannelRead.addTag(singleTopicLabel);
-      singleAr4kchannelWrite.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-          : anima.getDataAddress().getDefaultScope(), channelRoot);
       singleAr4kchannelWrite.addTag("hazelcast-write");
       singleAr4kchannelWrite.addTag(singleTopicLabel);
       ExternalMessageHandler externalHandlerSubscriber = new ExternalMessageHandler(sigleTopic, singleAr4kchannelRead);

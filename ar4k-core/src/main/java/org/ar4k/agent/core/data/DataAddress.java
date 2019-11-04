@@ -72,7 +72,13 @@ public class DataAddress implements AutoCloseable {
     callbacks.remove(callback);
   }
 
-  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType) {
+  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, String father,
+      String scope) {
+    return createOrGetDataChannel(nodeId, channelType, getChannel(father), scope);
+  }
+
+  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, Ar4kChannel father,
+      String scope) {
     Ar4kChannel returnChannel = null;
     if (getChannel(nodeId) != null) {
       returnChannel = getChannel(nodeId);
@@ -91,6 +97,9 @@ public class DataAddress implements AutoCloseable {
         returnChannel = (Ar4kChannel) ctor.newInstance();
         this.dataChannels.add(returnChannel);
         returnChannel.setDataAddress(this);
+        if (father != null) {
+          returnChannel.setFatherOfScope(scope, father);
+        }
         logger.info(returnChannel.getNodeId() + " [" + returnChannel.getDescription() + "] started");
         for (DataAddressChange target : callbacks) {
           target.onDataAddressCreate(returnChannel);
@@ -192,19 +201,16 @@ public class DataAddress implements AutoCloseable {
   // task per health
 
   public void firstStart() {
-    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class);
+    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, (String) null, null);
     systemChannel.setDescription("local JVM system");
-    Ar4kChannel loggerChannel = createOrGetDataChannel("logger", IPublishSubscribeChannel.class);
+    Ar4kChannel loggerChannel = createOrGetDataChannel("logger", IPublishSubscribeChannel.class, systemChannel,
+        getDefaultScope());
     loggerChannel.setDescription("logger queue");
-    loggerChannel.setFatherOfScope(getDefaultScope(), systemChannel);
-    Ar4kChannel healthChannel = createOrGetDataChannel("health", IPublishSubscribeChannel.class);
+    Ar4kChannel healthChannel = createOrGetDataChannel("health", IPublishSubscribeChannel.class, systemChannel,
+        getDefaultScope());
     healthChannel.setDescription("local machine hardware and software stats");
-    healthChannel.setFatherOfScope(getDefaultScope(), systemChannel);
-    Ar4kChannel cmdChannel = createOrGetDataChannel("command", IQueueChannel.class);
-    healthChannel.setDescription("local machine hardware and software stats");
-    healthChannel.setFatherOfScope(getDefaultScope(), systemChannel);
+    Ar4kChannel cmdChannel = createOrGetDataChannel("command", IQueueChannel.class, systemChannel, getDefaultScope());
     cmdChannel.setDescription("RPC interface");
-    cmdChannel.setFatherOfScope(getDefaultScope(), systemChannel);
     // start health regular messages
     timer.scheduleAtFixedRate(repeatedTask, delay, period);
   }

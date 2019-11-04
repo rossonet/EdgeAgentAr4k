@@ -3,7 +3,7 @@ package org.ar4k.agent.core.data.messages;
 import org.ar4k.agent.rpc.RpcMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class StringChatRpcMessage<S> implements RpcMessage<String> {
+public class StringChatRpcMessage implements RpcMessage<String> {
 
   private String rawString = null;
   private MessageHeaders header = null;

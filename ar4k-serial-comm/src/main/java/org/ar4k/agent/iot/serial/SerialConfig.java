@@ -66,6 +66,6 @@ public class SerialConfig extends AbstractServiceConfig {
 
   @Override
   public boolean isSpringBean() {
-    return true;
+    return false;
   }
 }

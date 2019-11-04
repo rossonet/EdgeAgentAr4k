@@ -58,7 +58,7 @@ public class Ar4kLogger implements Logger {
 
   public static LogLevel level = LogLevel.INFO;
 
-  private static String stackTraceToString(Throwable e) {
+  public static String stackTraceToString(Throwable e) {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     e.printStackTrace(pw);

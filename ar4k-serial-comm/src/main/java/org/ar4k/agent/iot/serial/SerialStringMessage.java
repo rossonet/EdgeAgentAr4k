@@ -3,12 +3,12 @@ package org.ar4k.agent.iot.serial;
 import org.ar4k.agent.core.data.messages.Ar4kMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class SerialMessage implements Ar4kMessage<Object> {
+public class SerialStringMessage implements Ar4kMessage<String> {
 
-  private Object payload = null;
+  private String payload = null;
   private MessageHeaders headers = null;
 
-  public void setPayload(Object payload) {
+  public void setPayload(String payload) {
     this.payload = payload;
   }
 
@@ -17,7 +17,7 @@ public class SerialMessage implements Ar4kMessage<Object> {
   }
 
   @Override
-  public Object getPayload() {
+  public String getPayload() {
     return payload;
   }
 

@@ -20,8 +20,8 @@ import java.util.Map;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
-import org.ar4k.agent.iot.serial.SerialMessage;
 import org.ar4k.agent.iot.serial.SerialService;
+import org.ar4k.agent.iot.serial.SerialStringMessage;
 import org.springframework.messaging.MessageHeaders;
 
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -79,14 +79,14 @@ public class CncService extends SerialService {
     for (RouterMessagesCnc testRoute : configuration.repliesAnalizer) {
       final String messageTxt = new String(message.getReceivedData(), Charsets.UTF_8);
       if (testRoute.matches(messageTxt)) {
-        SerialMessage messageToString = new SerialMessage();
+        SerialStringMessage messageToString = new SerialStringMessage();
         final Map<String, Object> headersMapString = new HashMap<>();
         headersMapString.put("serial-port", message.getSerialPort());
         headersMapString.put("publish-source", message.getSource());
         headersMapString.put("type", "string");
-        final MessageHeaders headersString = new MessageHeaders(headersMapString);
-        messageToString.setHeaders(headersString);
-        messageToString.setPayload(messageToString);
+        final MessageHeaders headersStringMessage = new MessageHeaders(headersMapString);
+        messageToString.setHeaders(headersStringMessage);
+        messageToString.setPayload(messageTxt);
         IPublishSubscribeChannel channel = testRoute.getAr4kChannel(configuration.fatherOfChannels,
             configuration.scopeOfChannels);
         channel.send(messageToString);

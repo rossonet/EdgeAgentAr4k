@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 //import org.ar4k.agent.camel.DynamicRouteBuilder;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
@@ -157,27 +158,27 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   private void popolateDataTopics() {
     Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
-        INoDataChannel.class);
+        INoDataChannel.class, (String) null, null);
     readChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
-        IPublishSubscribeChannel.class);
-    readChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress()
-        .createOrGetDataChannel(configuration.endpointRead, IPublishSubscribeChannel.class);
+        IPublishSubscribeChannel.class, channelRoot,
+        configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+            : anima.getDataAddress().getDefaultScope());
+    readChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+        configuration.endpointRead, IPublishSubscribeChannel.class, channelRoot,
+        configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+            : anima.getDataAddress().getDefaultScope());
     writeChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
-        IPublishSubscribeChannel.class);
-    writeChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress()
-        .createOrGetDataChannel(configuration.endpointRead, IPublishSubscribeChannel.class);
+        IPublishSubscribeChannel.class, channelRoot,
+        configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+            : anima.getDataAddress().getDefaultScope());
+    writeChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+        configuration.endpointRead, IPublishSubscribeChannel.class, channelRoot,
+        configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+            : anima.getDataAddress().getDefaultScope());
     readChannel.addTag("serial-read");
     readChannelBytes.addTag("serial-read-bytes");
     writeChannel.addTag("serial-write");
     writeChannelBytes.addTag("serial-write-bytes");
-    readChannel.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-        : anima.getDataAddress().getDefaultScope(), channelRoot);
-    readChannelBytes.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-        : anima.getDataAddress().getDefaultScope(), channelRoot);
-    writeChannel.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-        : anima.getDataAddress().getDefaultScope(), channelRoot);
-    writeChannelBytes.setFatherOfScope(configuration.scopeOfChannels != null ? configuration.scopeOfChannels
-        : anima.getDataAddress().getDefaultScope(), channelRoot);
     handlerBytesWriter = new HandlerBytesWriter(this);
     handlerStringWriter = new HandlerStringWriter(this);
     writeChannel.subscribe(handlerStringWriter);
@@ -219,8 +220,8 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   @Override
   public void serialEvent(SerialPortEvent message) {
     callProtectedEvent(message);
-    SerialMessage messageToBytes = new SerialMessage();
-    SerialMessage messageToString = new SerialMessage();
+    SerialBytesMessage messageToBytes = new SerialBytesMessage();
+    SerialStringMessage messageToString = new SerialStringMessage();
     final Map<String, Object> headersMapString = new HashMap<>();
     headersMapString.put("serial-port", message.getSerialPort());
     headersMapString.put("publish-source", message.getSource());
@@ -233,7 +234,7 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
     headersMapBytes.put("type", "bytes");
     final MessageHeaders headersBytes = new MessageHeaders(headersMapBytes);
     messageToBytes.setHeaders(headersBytes);
-    messageToBytes.setPayload(message.getReceivedData());
+    messageToBytes.setPayload(ArrayUtils.toObject(message.getReceivedData()));
     messageToString.setPayload(new String(message.getReceivedData(), StandardCharsets.UTF_8));
     readChannelBytes.send(messageToBytes);
     readChannel.send(messageToString);

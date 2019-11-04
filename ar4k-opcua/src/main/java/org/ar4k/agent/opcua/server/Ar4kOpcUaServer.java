@@ -59,15 +59,19 @@ public class Ar4kOpcUaServer {
   }
 
   private OpcUaServer server = null;
+  /*
+   * private int tcpBindPort = 45341; private int httpsBindPort = 8443; private
+   * String bindAddress = "0.0.0.0"; private String serverText =
+   * "Ar4k Agent OPC UA Server"; private String productUri =
+   * "urn:ar4k:agent:opcua-server"; private String manufacturerName = "Agent xxx";
+   * private String productName = "Ar4k Agent"; private String serverPath =
+   * "/agent/discovery";
+   */
+  private final org.ar4k.agent.opcua.server.OpcUaServerConfig configuration;
 
-  private int tcpBindPort = 45341;
-  private int httpsBindPort = 8443;
-  private String bindAddress = "0.0.0.0";
-  private String serverText = "Ar4k Agent OPC UA Server";
-  private String productUri = "urn:ar4k:agent:opcua-server";
-  private String manufacturerName = "Agent xxx";
-  private String productName = "Ar4k Agent";
-  private String serverPath = "/agent/discovery";
+  public Ar4kOpcUaServer(org.ar4k.agent.opcua.server.OpcUaServerConfig configuration) {
+    this.configuration = configuration;
+  }
 
   public void prepare() throws Exception {
     File securityTempDir = new File(System.getProperty("java.io.tmpdir"), "security");
@@ -91,7 +95,7 @@ public class Ar4kOpcUaServer {
 
     SelfSignedHttpsCertificateBuilder httpsCertificateBuilder = new SelfSignedHttpsCertificateBuilder(httpsKeyPair);
     httpsCertificateBuilder.setCommonName(HostnameUtil.getHostname());
-    HostnameUtil.getHostnames(bindAddress).forEach(httpsCertificateBuilder::addDnsName);
+    HostnameUtil.getHostnames(configuration.bindAddress).forEach(httpsCertificateBuilder::addDnsName);
     X509Certificate httpsCertificate = httpsCertificateBuilder.build();
 
     UsernameIdentityValidator identityValidator = new UsernameIdentityValidator(true, authChallenge -> {
@@ -117,18 +121,18 @@ public class Ar4kOpcUaServer {
     Set<EndpointConfiguration> endpointConfigurations = createEndpointConfigurations(certificate);
 
     OpcUaServerConfig serverConfig = OpcUaServerConfig.builder().setApplicationUri(applicationUri)
-        .setApplicationName(LocalizedText.english(serverText)).setEndpoints(endpointConfigurations)
-        .setBuildInfo(
-            new BuildInfo(productUri, manufacturerName, productName, OpcUaServer.SDK_VERSION, "", DateTime.now()))
+        .setApplicationName(LocalizedText.english(configuration.serverText)).setEndpoints(endpointConfigurations)
+        .setBuildInfo(new BuildInfo(configuration.productUri, configuration.manufacturerName, configuration.productName,
+            OpcUaServer.SDK_VERSION, "", DateTime.now()))
         .setCertificateManager(certificateManager).setTrustListManager(trustListManager)
         .setCertificateValidator(certificateValidator).setHttpsKeyPair(httpsKeyPair)
         .setHttpsCertificate(httpsCertificate)
         .setIdentityValidator(new CompositeValidator(identityValidator, x509IdentityValidator))
-        .setProductUri(productUri).build();
+        .setProductUri(configuration.productUri).build();
 
     server = new OpcUaServer(serverConfig);
 
-    OpcUaNamespace namespace = new OpcUaNamespace(server);
+    OpcUaNamespace namespace = new OpcUaNamespace(server, configuration);
     namespace.startup();
   }
 
@@ -136,11 +140,11 @@ public class Ar4kOpcUaServer {
     Set<EndpointConfiguration> endpointConfigurations = new LinkedHashSet<>();
 
     List<String> bindAddresses = newArrayList();
-    bindAddresses.add(bindAddress);
+    bindAddresses.add(configuration.bindAddress);
 
     Set<String> hostnames = new LinkedHashSet<>();
     hostnames.add(HostnameUtil.getHostname());
-    hostnames.addAll(HostnameUtil.getHostnames(bindAddress));
+    hostnames.addAll(HostnameUtil.getHostnames(configuration.bindAddress));
 
     for (String bindAddress : bindAddresses) {
       for (String hostname : hostnames) {
@@ -172,7 +176,7 @@ public class Ar4kOpcUaServer {
          * OPC UA Server requires a different address for this Endpoint it shall create
          * the address by appending the path "/discovery" to its base address.
          */
-        EndpointConfiguration.Builder discoveryBuilder = builder.copy().setPath(serverPath)
+        EndpointConfiguration.Builder discoveryBuilder = builder.copy().setPath(configuration.serverPath)
             .setSecurityPolicy(SecurityPolicy.None).setSecurityMode(MessageSecurityMode.None);
 
         endpointConfigurations.add(buildTcpEndpoint(discoveryBuilder));
@@ -184,11 +188,13 @@ public class Ar4kOpcUaServer {
   }
 
   private EndpointConfiguration buildTcpEndpoint(EndpointConfiguration.Builder base) {
-    return base.copy().setTransportProfile(TransportProfile.TCP_UASC_UABINARY).setBindPort(tcpBindPort).build();
+    return base.copy().setTransportProfile(TransportProfile.TCP_UASC_UABINARY).setBindPort(configuration.serverPort)
+        .build();
   }
 
   private EndpointConfiguration buildHttpsEndpoint(EndpointConfiguration.Builder base) {
-    return base.copy().setTransportProfile(TransportProfile.HTTPS_UABINARY).setBindPort(httpsBindPort).build();
+    return base.copy().setTransportProfile(TransportProfile.HTTPS_UABINARY).setBindPort(configuration.serverPortHttps)
+        .build();
   }
 
   public OpcUaServer getServer() {
@@ -201,54 +207,6 @@ public class Ar4kOpcUaServer {
 
   public CompletableFuture<OpcUaServer> shutdown() {
     return server.shutdown();
-  }
-
-  public String getBindAddress() {
-    return bindAddress;
-  }
-
-  public void setBindAddress(String bindAddress) {
-    this.bindAddress = bindAddress;
-  }
-
-  public String getServerText() {
-    return serverText;
-  }
-
-  public void setServerText(String serverText) {
-    this.serverText = serverText;
-  }
-
-  public String getProductUri() {
-    return productUri;
-  }
-
-  public void setProductUri(String productUri) {
-    this.productUri = productUri;
-  }
-
-  public String getManufacturerName() {
-    return manufacturerName;
-  }
-
-  public void setManufacturerName(String manufacturerName) {
-    this.manufacturerName = manufacturerName;
-  }
-
-  public String getProductName() {
-    return productName;
-  }
-
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
-
-  public String getServerPath() {
-    return serverPath;
-  }
-
-  public void setServerPath(String serverPath) {
-    this.serverPath = serverPath;
   }
 
 }

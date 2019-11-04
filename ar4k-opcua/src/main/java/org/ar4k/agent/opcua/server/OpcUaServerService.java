@@ -63,13 +63,7 @@ public class OpcUaServerService extends AbstractAr4kService {
   private void initializeServerOpcUa() {
     if (server == null) {
       try {
-        server = new Ar4kOpcUaServer();
-        server.setBindAddress(configuration.bindAddress);
-        server.setManufacturerName(configuration.manufacturerName);
-        server.setProductName(configuration.productName);
-        server.setProductUri(configuration.productUri);
-        server.setServerPath(configuration.serverPath);
-        server.setServerText(configuration.serverText);
+        server = new Ar4kOpcUaServer(configuration);
         server.startup();
       } catch (Exception e) {
         logger.logException(e);

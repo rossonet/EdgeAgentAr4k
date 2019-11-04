@@ -27,8 +27,8 @@ import com.beust.jcommander.ParameterException;
 public class RpcConversation implements RpcExecutor {
 
   private Map<String, Ar4kConfig> configurations = new HashMap<>();
-  private Map<String, KeystoreConfig> keyStores = new HashMap<String, KeystoreConfig>();
-  private Map<String, PotConfig> components = new HashMap<String, PotConfig>();
+  private Map<String, KeystoreConfig> keyStores = new HashMap<>();
+  private Map<String, PotConfig> components = new HashMap<>();
   private Map<String, AgentProcess> scriptSessions = new HashMap<>();
   private Homunculus homunculus = null;
   private String workingConfig = null;
@@ -65,7 +65,7 @@ public class RpcConversation implements RpcExecutor {
 
   @Override
   public RpcMessage<? extends String> elaborateMessage(RpcMessage<? extends String> message) {
-    StringChatRpcMessage<String> reply = new StringChatRpcMessage<>();
+    StringChatRpcMessage reply = new StringChatRpcMessage();
     reply.setPayload(elaborateMessage(message.getPayload()));
     return reply;
   }

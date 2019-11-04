@@ -40,6 +40,8 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
   @Parameter(names = "--endpoint", description = "internal queue for the messages found by the regular expression")
   public String endpoint = null;
 
+  private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+
   private transient IPublishSubscribeChannel cacheChannel = null;
   private transient Pattern pattern = null;
 
@@ -62,10 +64,10 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
   public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
     if (cacheChannel == null) {
       Ar4kChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
-          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class);
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, (String) null, null);
       cacheChannel = (IPublishSubscribeChannel) Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
-          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class);
-      cacheChannel.setFatherOfScope(scopeOfChannels, father);
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, father,
+              scopeOfChannels != null ? scopeOfChannels : anima.getDataAddress().getDefaultScope());
     }
     return cacheChannel;
   }

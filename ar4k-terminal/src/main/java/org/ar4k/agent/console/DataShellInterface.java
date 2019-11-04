@@ -75,7 +75,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
   public void sendToDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId,
       @ShellOption(help = "message to send") String message,
       @ShellOption(help = "timeout for blocking call") int timeout) {
-    StringChatRpcMessage<String> messageObject = new StringChatRpcMessage<>();
+    StringChatRpcMessage messageObject = new StringChatRpcMessage();
     messageObject.setPayload(message);
     if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
       ((IPriorityChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
@@ -136,37 +136,37 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
   @ShellMethod(value = "Add a direct data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataDirectChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Add a executor data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataExecutorChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Add a priority data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataPriorityChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Add a publish/subscribe  data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataPubSubChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Add a queue data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataQueueChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Add a rendezvous data channel to the address space", group = "Data Server Commands")
   @ManagedOperation
   public void addDataRendezvousChannel(@ShellOption(help = "node name") String dataChannel) {
-    anima.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class);
+    anima.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class, (String) null, null);
   }
 
   @ShellMethod(value = "Remove data channel from the address space", group = "Data Server Commands")
