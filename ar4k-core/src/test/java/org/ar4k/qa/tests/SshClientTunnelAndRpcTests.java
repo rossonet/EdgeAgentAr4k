@@ -12,9 +12,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.studio;
+package org.ar4k.qa.tests;
 
-import org.ar4k.gw.studio.tunnels.socket.SocketFactoryConfig;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -26,7 +25,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 @Ignore
-public class MultiTunnel {
+public class SshClientTunnelAndRpcTests {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -53,10 +52,8 @@ public class MultiTunnel {
 
   @Test
   public void test() {
-    SocketFactoryConfig socketConfig = new SocketFactoryConfig();
-    socketConfig.name = "Test socket";
-    //SocketTunnel st = socketConfig.instantiate();
-    
+    // TODO: Primi test per provare le API Java
+    System.out.println("Not yet implemented");
   }
 
 }

@@ -341,9 +341,8 @@ public class Anima
     // addKeyStores(ks);
     setMyIdentityKeystore(ks);
     setMyAliasCertInKeystore(ks.keyStoreAlias);
-    logger.info("Certificate for anima created: "
-        + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal().toString() + " - alias "
-        + ks.keyStoreAlias);
+    logger.info("Certificate for anima created: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
+        + " - alias " + ks.keyStoreAlias);
   }
 
   @PostConstruct

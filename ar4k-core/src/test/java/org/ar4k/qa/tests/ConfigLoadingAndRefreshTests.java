@@ -54,7 +54,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class DataStoreTests {
+public class ConfigLoadingAndRefreshTests {
 
   @Autowired
   Anima anima;

@@ -209,10 +209,12 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
 
   private void startFunction() {
     setStatus(Status.WAITING_ENDPOINTS);
-    getChannel().setBeanName(getNodeId());
-    getChannel().setComponentName(getNodeId());
-    ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(getNodeId(),
-        getChannel());
+    if (getChannel() != null) {
+      getChannel().setBeanName(getNodeId());
+      getChannel().setComponentName(getNodeId());
+      ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(getNodeId(),
+          getChannel());
+    }
   }
 
   private void stopFunction() {
@@ -254,6 +256,10 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
   }
 
   private void addChildOfScope(String scope, Ar4kChannel child) {
+    logger.info("add child " + child.getNodeId() + " to " + getNodeId() + " for scope " + scope);
+    if (!scopeChildren.containsKey(scope)) {
+      scopeChildren.put(scope, new ArrayList<>());
+    }
     scopeChildren.get(scope).add(child);
   }
 

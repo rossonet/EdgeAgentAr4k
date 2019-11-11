@@ -50,7 +50,7 @@ public class DataAddress implements AutoCloseable {
   public Ar4kChannel getChannel(String channelId) {
     Ar4kChannel r = null;
     for (Ar4kChannel c : getDataChannels()) {
-      if (c.getNodeId().equals(channelId)) {
+      if (c.getNodeId() != null && c.getNodeId().equals(channelId)) {
         r = c;
         break;
       }
@@ -94,7 +94,9 @@ public class DataAddress implements AutoCloseable {
           channelType = INoDataChannel.class;
         }
         Constructor<?> ctor = channelType.getConstructor();
+        logger.info("create channel " + nodeId + " of type " + channelType);
         returnChannel = (Ar4kChannel) ctor.newInstance();
+        returnChannel.setNodeId(nodeId);
         this.dataChannels.add(returnChannel);
         returnChannel.setDataAddress(this);
         if (father != null) {

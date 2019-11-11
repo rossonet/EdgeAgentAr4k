@@ -20,6 +20,8 @@ dependencies {
   compile project(':ar4k-opcua')
   compile project(':ar4k-modbus')
   compile project(':ar4k-ifttt')
+  compile project(':ar4k-bacnet')
+  compile project(':ar4k-step7')
   compile project(':ar4k-iec104')
   compile project(':ar4k-zeromq')
   compile project(':ar4k-kafka')

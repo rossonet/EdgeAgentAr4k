@@ -12,21 +12,21 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.studio;
+package org.ar4k.qa.tests;
 
-import org.ar4k.gw.studio.tunnels.socket.SocketFactoryConfig;
+import java.io.IOException;
+
+import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-@Ignore
-public class MultiTunnel {
+public class XpraServiceTests {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -46,17 +46,22 @@ public class MultiTunnel {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
   };
 
   @Test
-  public void test() {
-    SocketFactoryConfig socketConfig = new SocketFactoryConfig();
-    socketConfig.name = "Test socket";
-    //SocketTunnel st = socketConfig.instantiate();
-    
+  public void xpraTestClass() throws InterruptedException, IOException {
+    XpraSessionProcess xpra = new XpraSessionProcess();
+    xpra.eval("xterm");
+    Thread.sleep(5 * 1000);
+    System.out.println("XPRA PORT FOR TEST tcp:127.0.0.1:" + xpra.getTcpPort());
+    Thread.sleep(1 * 60 * 1000);
+    System.out.println(xpra.getOutput());
+    System.out.println(xpra.getErrors());
+    xpra.close();
   }
 
 }

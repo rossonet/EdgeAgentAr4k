@@ -26,12 +26,16 @@ import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 
+import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.helper.ConfigHelper;
-import org.ar4k.agent.tunnels.socket.ssl.SocketFactorySslConfig;
+import org.ar4k.agent.spring.Ar4kAuthenticationManager;
+import org.ar4k.agent.spring.Ar4kuserDetailsService;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
+import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -39,8 +43,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.springframework.context.annotation.Configuration;
+import org.junit.runner.RunWith;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.SpringShellAutoConfiguration;
 import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
 import org.springframework.shell.jline.JLineShellAutoConfiguration;
@@ -51,19 +57,16 @@ import org.springframework.shell.standard.commands.StandardCommandsAutoConfigura
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Configuration
-@Import({
-    // Core runtime
-    SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class,
-    // Various Resolvers
+@RunWith(SpringJUnit4ClassRunner.class)
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class,
-    // Built-In Commands
-    StandardCommandsAutoConfiguration.class,
-    // Sample Commands
-    Commands.class, FileValueProvider.class })
+    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
+    Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
+@SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class SaveAndLoadConfigurationTests {
 
@@ -77,6 +80,7 @@ public class SaveAndLoadConfigurationTests {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -94,7 +98,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.pots.add((PotConfig) s1);
+    c.pots.add(s1);
     c.pots.add(s2);
     ConfigSeed a = ConfigHelper.fromJson(ConfigHelper.toJson(c));
     assertTrue(check.equals(((Ar4kConfig) a).author));
@@ -114,7 +118,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.pots.add((PotConfig) s1);
+    c.pots.add(s1);
     c.pots.add(s2);
     String checkText = ConfigHelper.toBase64(c);
     System.out.println("base64 config: " + checkText);
@@ -138,7 +142,7 @@ public class SaveAndLoadConfigurationTests {
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
     s2.name = "stunnel config";
     s2.note = check;
-    c.pots.add((PotConfig) s1);
+    c.pots.add(s1);
     c.pots.add(s2);
     ConfigSeed a = ConfigHelper.fromBase64Rsa(ConfigHelper.toBase64Rsa(c, "privateKeyAlias"));
     assertTrue(check.equals(((Ar4kConfig) a).author));
