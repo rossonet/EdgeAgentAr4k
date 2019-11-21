@@ -53,6 +53,9 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--nextConfigWeb", description = "if set the configuration is monitored and replaced in runtine when change")
   public String nextConfigWeb = null;
 
+  @Parameter(names = "--configCheckPeriod", description = "the between every check for the config changes (ms)")
+  public Integer configCheckPeriod = 10000;
+
   @Parameter(names = "--prompt", description = "prompt when configuration is selected")
   public String prompt = "studio";
 
@@ -182,8 +185,6 @@ public class Ar4kConfig implements ConfigSeed {
   }
 
   public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
-    // TODO: per update configurazione (usare campo version o sottoinsieme di
-    // campi). Lo scopo è escludere le uguali e le vecchie e uguali
-    return false;
+    return lastUpdate.isAfter(runtimeConfig.lastUpdate);
   }
 }

@@ -10,6 +10,8 @@ import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.core.data.messages.StringChatRpcMessage;
 import org.ar4k.agent.keystore.KeystoreConfig;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.Homunculus;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.RpcMessage;
@@ -25,6 +27,9 @@ import com.beust.jcommander.ParameterException;
 
 // una singola converrsazione via RPC
 public class RpcConversation implements RpcExecutor {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(RpcConversation.class.toString());
 
   private Map<String, Ar4kConfig> configurations = new HashMap<>();
   private Map<String, KeystoreConfig> keyStores = new HashMap<>();
@@ -50,7 +55,7 @@ public class RpcConversation implements RpcExecutor {
         result = o.toString();
       else
         result = "ok";
-    } catch (ParameterValidationException | ParameterException a) {
+    } catch (Exception a) {
       if (a instanceof ParameterValidationException)
         for (ConstraintViolation<Object> s : ((ParameterValidationException) a).getConstraintViolations()) {
           result += s.getMessage() + "\n";
@@ -59,6 +64,7 @@ public class RpcConversation implements RpcExecutor {
         result += ((ParameterException) a).getMessage();
       }
       result += "Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.";
+      logger.logException(a);
     }
     return result;
   }
@@ -139,8 +145,7 @@ public class RpcConversation implements RpcExecutor {
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
-
+    logger.debug("rpc coversation closed");
   }
 
 }

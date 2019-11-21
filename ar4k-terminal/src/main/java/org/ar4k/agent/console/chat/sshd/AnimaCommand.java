@@ -139,7 +139,7 @@ public class AnimaCommand implements Command {
         } else {
           sendMessage("x");
         }
-        if (((int) c) == 13)
+        if ((c) == 13)
           break;
         messageBuilder.append((char) c);
       }
@@ -200,32 +200,35 @@ public class AnimaCommand implements Command {
             readLineString(inputStream, messageBuilder, true);
             String message = messageBuilder.toString();
             if (message != null && !message.isEmpty()) {
-              if (!message.contains(COMPLETION_CHAR)) {
-                String elaborateMessage = executor.elaborateMessage(message);
-                // logger.debug("*** remote command " + message + " -> " + elaborateMessage);
-                sendMessage("\n\r" + elaborateMessage.replaceAll("\n", "\n\r"));
-                printPrompt();
-              } else if (message.equals(EXIT_MESSAGE + "\n")) {
-                running = false;
+              if (!message.contains(COMPLETION_CHAR) && !message.equals(EXIT_MESSAGE)) {
+                try {
+                  String elaborateMessage = executor.elaborateMessage(message);
+                  // logger.debug("*** remote command " + message + " -> " + elaborateMessage);
+                  sendMessage("\n\r" + elaborateMessage.replaceAll("\n", "\n\r"));
+                  printPrompt();
+                } catch (Exception re) {
+                  logger.logException(re);
+                }
               } else {
                 String response = completeMessage(message);
                 sendMessage("\n\r" + response.replaceAll("\n", "\n\r"));
                 printPrompt();
+              }
+              if (message.equals(EXIT_MESSAGE)) {
+                running = false;
               }
             } else {
               sendMessage("\n\r");
               printPrompt();
             }
           }
-        } catch (IOException e) {
+        } catch (Exception e) {
           logger.logException(e);
         }
       }
-      try
-
-      {
+      try {
         outputStream.flush();
-      } catch (IOException e) {
+      } catch (Exception e) {
         logger.logException(e);
       }
       logger.warn("*** exit from remote sshd session");
@@ -235,8 +238,8 @@ public class AnimaCommand implements Command {
 
     private void printPrompt() {
       try {
-        sendMessage(username + "@" + anima.getAgentUniqueName() + " # ");
-      } catch (IOException e) {
+        sendMessage("\n\r" + username + "@" + anima.getAgentUniqueName() + " # ");
+      } catch (Exception e) {
         logger.logException(e);
       }
 

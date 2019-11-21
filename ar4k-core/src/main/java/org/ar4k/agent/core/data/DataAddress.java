@@ -28,8 +28,14 @@ public class DataAddress implements AutoCloseable {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(DataAddress.class.toString());
 
-  public DataAddress() {
+  private Anima anima = null;
+
+  // task per health
+  private HealthTimer repeatedTask = new HealthTimer();
+
+  public DataAddress(Anima anima) {
     dataChannels.clear();
+    this.anima = anima;
   }
 
   private Collection<Ar4kChannel> dataChannels = new HashSet<>();
@@ -172,12 +178,19 @@ public class DataAddress implements AutoCloseable {
     this.levelSeparator = levelSeparator;
   }
 
-  // task per health
-  private TimerTask repeatedTask = new TimerTask() {
+  private class HealthTimer extends TimerTask {
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private transient Anima anima = null;
 
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public Anima getAnima() {
+      return anima;
+    }
+
+    public void setAnima(Anima anima) {
+      this.anima = anima;
+    }
 
     @Override
     public void run() {
@@ -189,18 +202,22 @@ public class DataAddress implements AutoCloseable {
     }
 
     private void sendEvent(Map<String, Object> healthMessage) {
-      if (anima == null && Anima.getApplicationContext() != null
-          && Anima.getApplicationContext().getBean(Anima.class) != null
-          && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
-        anima = Anima.getApplicationContext().getBean(Anima.class);
+      try {
+        if (anima == null && Anima.getApplicationContext() != null
+            && Anima.getApplicationContext().getBean(Anima.class) != null
+            && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
+          anima = Anima.getApplicationContext().getBean(Anima.class);
+        }
+      } catch (Exception ee) {
+        logger.debug(Ar4kLogger.stackTraceToString(ee));
       }
-      HealthMessage<String> messageObject = new HealthMessage<>();
-      messageObject.setPayload(gson.toJson(healthMessage));
-      if (anima != null && anima.getDataAddress() != null && anima.getDataAddress().getChannel("health") != null)
+      if (anima != null && anima.getDataAddress() != null && anima.getDataAddress().getChannel("health") != null) {
+        HealthMessage<String> messageObject = new HealthMessage<>();
+        messageObject.setPayload(gson.toJson(healthMessage));
         ((IPublishSubscribeChannel) anima.getDataAddress().getChannel("health")).send(messageObject);
+      }
     }
   };
-  // task per health
 
   public void firstStart() {
     Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, (String) null, null);
@@ -214,6 +231,7 @@ public class DataAddress implements AutoCloseable {
     Ar4kChannel cmdChannel = createOrGetDataChannel("command", IQueueChannel.class, systemChannel, getDefaultScope());
     cmdChannel.setDescription("RPC interface");
     // start health regular messages
+    repeatedTask.setAnima(anima);
     timer.scheduleAtFixedRate(repeatedTask, delay, period);
   }
 

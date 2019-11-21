@@ -32,7 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableConfigurationProperties(Ar4kStarterProperties.class)
 /**
  * Classe starter per inclusione come libreria in ambiente Spring Boot.
- * 
+ *
  * @author Andrea Ambrosini
  */
 public class Ar4kAutoConfiguration {

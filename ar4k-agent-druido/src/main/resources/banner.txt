@@ -10,10 +10,9 @@ ${AnsiColor.RED}
  |_.__/ \__, | |_| \_\___/|___/___/\___/|_| |_|\___|\__|  
         |___/                                             
 
-${AnsiColor.MAGENTA}Small version
+${AnsiColor.YELLOW}DRUIDO
+${AnsiColor.GREEN}Robot and domotic agent
 
-${AnsiColor.GREEN}BUILD ${application.version}
-${AnsiColor.MAGENTA}based on Spring Boot Framework${spring-boot.formatted-version}
 ${AnsiColor.DEFAULT}
 Type ${AnsiColor.RED}help${AnsiColor.DEFAULT} to list the available commands
 

@@ -60,15 +60,16 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
         .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
-        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART).and()
-        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.STASIS).event(AnimaEvents.PAUSE).and()
-        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.KILLED).event(AnimaEvents.STOP).and()
-        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
-        .withExternal().source(AnimaStates.RUNNING).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART).and()
-        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and()
-        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.RUNNING).event(AnimaEvents.START).and()
-        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and()
-        .withExternal().source(AnimaStates.STASIS).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART);
+        .withExternal().source(AnimaStates.CONFIGURED).target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART)
+        .guard(guardConfig()).and().withExternal().source(AnimaStates.RUNNING).target(AnimaStates.STASIS)
+        .event(AnimaEvents.PAUSE).and().withExternal().source(AnimaStates.RUNNING).target(AnimaStates.KILLED)
+        .event(AnimaEvents.STOP).and().withExternal().source(AnimaStates.RUNNING).target(AnimaStates.FAULTED)
+        .event(AnimaEvents.EXCEPTION).and().withExternal().source(AnimaStates.RUNNING).target(AnimaStates.CONFIGURED)
+        .event(AnimaEvents.RESTART).guard(guardConfig()).and().withExternal().source(AnimaStates.STASIS)
+        .target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and().withExternal().source(AnimaStates.STASIS)
+        .target(AnimaStates.RUNNING).event(AnimaEvents.START).and().withExternal().source(AnimaStates.STASIS)
+        .target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal().source(AnimaStates.STASIS)
+        .target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART);
   }
 
   @Bean
@@ -92,13 +93,12 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         if (anima.getState().equals(AnimaStates.RUNNING)) {
           anima.runPots();
           anima.runServices();
+          anima.startCheckingNextConfig();
         }
         if (anima.getState().equals(AnimaStates.STASIS)) {
           anima.prepareAgentStasis();
         }
-        // logger.info("State change to " + to.getId());
         anima.stateChanged();
-        // System.out.println("State change to " + to.getId());
       }
     };
   }

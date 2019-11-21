@@ -71,8 +71,6 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 // TODO: Dopo la registrazione usare i certificati ottenuti per riconnettersi
 public class BeaconClient implements Runnable, AutoCloseable {
 
-  private static final int DELTA_BETWEEN_PORT_AND_ENFORECED_PORT = 1;
-
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
   public static final CharSequence COMPLETION_CHAR = "?";
@@ -111,7 +109,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private String hostTarget = null;
   private String hostTargetEnforced = null;
   private int port = 0; // se zero esclude la connessione diretta ed eventualmente passa al discovery
-  private int portEnforced = 0;
   private String privateFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".key";
   private String certFile = "/tmp/beacon-client-" + UUID.randomUUID().toString() + ".pem";
 
@@ -121,7 +118,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
     private String host = null;
     private String hostTargetEnforced = null;
     private int port = 0;
-    private int portEnforced = 0;
     private int discoveryPort = 0;
     private String discoveryFilter = null;
     private String uniqueName = null;
@@ -250,18 +246,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
 
     public BeaconClient build() {
-      return new BeaconClient(anima, rpcConversation, host, hostTargetEnforced, port, portEnforced, discoveryPort,
-          discoveryFilter, uniqueName, certChainFile, certFile, privateFile, aliasBeaconClientInKeystore,
+      return new BeaconClient(anima, rpcConversation, host, hostTargetEnforced, port, discoveryPort, discoveryFilter,
+          uniqueName, certChainFile, certFile, privateFile, aliasBeaconClientInKeystore,
           aliasBeaconClientRequestCertInKeystore, beaconCaChainPem);
-    }
-
-    public int getPortEnforced() {
-      return portEnforced;
-    }
-
-    public Builder setPortEnforced(int portEnforced) {
-      this.portEnforced = portEnforced;
-      return this;
     }
 
     public String getHostTargetEnforced() {
@@ -275,9 +262,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, String hostTargetEnforced, int port,
-      int portEnforced, int discoveryPort, String discoveryFilter, String uniqueName, String certChainFile,
-      String certFile, String privateFile, String aliasBeaconClientInKeystore,
-      String aliasBeaconClientRequestCertInKeystore, String beaconCaChainPem) {
+      int discoveryPort, String discoveryFilter, String uniqueName, String certChainFile, String certFile,
+      String privateFile, String aliasBeaconClientInKeystore, String aliasBeaconClientRequestCertInKeystore,
+      String beaconCaChainPem) {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
@@ -289,11 +276,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
       this.hostTargetEnforced = hostTargetEnforced;
     }
     this.port = port;
-    if (portEnforced == 0 && port > 0) {
-      this.portEnforced = port + DELTA_BETWEEN_PORT_AND_ENFORECED_PORT;
-    } else {
-      this.portEnforced = portEnforced;
-    }
     if (aliasBeaconClientInKeystore != null) {
       this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
     }
@@ -323,7 +305,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
         // generando il csr?)
         // writePrivateKey(this.aliasBeaconClientRequestCertInKeystore, anima,
         // this.privateFile);
-        writePrivateKey(anima.getMyAliasCertInKeystore(), anima, this.privateFile);
         startConnection(this.hostTarget, this.port);
         actionRegister();
       } catch (SSLException e) {
@@ -336,6 +317,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private void startConnection(String host, int port) throws SSLException {
     generateCaFile();
     generateCertFile();
+    writePrivateKey(anima.getMyAliasCertInKeystore(), anima, privateFile);
     runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
         .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(certChainFile)).build()));
   }
@@ -519,11 +501,13 @@ public class BeaconClient implements Runnable, AutoCloseable {
       logger.logException(e);
     }
     if (result.equals(StatusValue.GOOD)) {
-      channel.shutdown().awaitTermination(15, TimeUnit.SECONDS);
+      asyncStub = null;
+      blockingStub = null;
+      // channel.shutdown().awaitTermination(15, TimeUnit.SECONDS);
       channel.shutdownNow();
-      logger.warn("Client Beacon registered. Connecting to enforced endpoint (" + hostTargetEnforced + ":"
-          + portEnforced + ")");
-      startConnection(hostTargetEnforced, portEnforced);
+      channel = null;
+      logger.warn("Client Beacon registered. reconnect to beacon with cert");
+      startConnection(hostTargetEnforced, port);
     }
     return result;
   }

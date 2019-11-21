@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -110,6 +113,8 @@ public class Anima
   private static transient String registrationPin = ConfigHelper.createRandomRegistryId();
   private String agentUniqueName = ConfigHelper.generateNewUniqueName();
 
+  private Timer timerScheduler = null;
+
   @Autowired
   private Shell shell;
 
@@ -184,9 +189,6 @@ public class Anima
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
   // TODO implementare l'esecuzione dei pre e post script
-  // TODO implementare refresh config da prima configurazione
-
-  // private Set<KeystoreConfig> keyStores = new HashSet<>();
 
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
@@ -203,7 +205,7 @@ public class Anima
 
   private BeaconClient beaconClient = null;
 
-  private DataAddress dataAddress = new DataAddress();
+  private DataAddress dataAddress = new DataAddress(this);
 
   private KeystoreConfig myIdentityKeystore = null;
   private String myAliasCertInKeystore = "agent";
@@ -257,10 +259,20 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateChanged(target = "KILLED")
   public synchronized void finalizeAgent() {
-    for (Ar4kComponent targetService : components) {
-      targetService.kill();
+    try {
+      for (Ar4kComponent targetService : components) {
+        targetService.kill();
+      }
+      components.clear();
+      if (new Timer() != null) {
+        timerScheduler.cancel();
+        timerScheduler.purge();
+        timerScheduler = null;
+      }
+    } catch (Exception aa) {
+      logger.warn("error during finalize phase");
+      logger.logException(aa);
     }
-    components = null;
   }
 
   @SuppressWarnings("unchecked")
@@ -405,6 +417,9 @@ public class Anima
   private void checkBeaconClient() {
     if ((webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) || beaconDiscoveryPort != 0) {
       try {
+        if (webRegistrationEndpoint == null || webRegistrationEndpoint.isEmpty()) {
+          webRegistrationEndpoint = "http://localhost:0";
+        }
         logger.info("TRY CONECTION TO BEACON AT " + webRegistrationEndpoint);
         connectToBeaconService(webRegistrationEndpoint, beaconCaChainPem, beaconDiscoveryPort,
             beaconDiscoveryFilterString);
@@ -459,7 +474,7 @@ public class Anima
       if (liv == webConfigOrder && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
         try {
           logger.info("try webConfigDownload");
-          targetConfig = webConfigDownload();
+          targetConfig = webConfigDownload(webConfig);
         } catch (Exception e) {
           logger.logException(e);
         }
@@ -467,8 +482,8 @@ public class Anima
       }
       if (liv == dnsConfigOrder && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
         try {
-          logger.info("try dnsConfigOrder");
-          targetConfig = dnsConfigDownload();
+          logger.info("try dnsConfigDownload");
+          targetConfig = dnsConfigDownload(dnsConfig);
         } catch (Exception e) {
           logger.logException(e);
         }
@@ -495,10 +510,10 @@ public class Anima
     return targetConfig;
   }
 
-  private Ar4kConfig dnsConfigDownload() {
+  private Ar4kConfig dnsConfigDownload(String dnsTarget) {
     StringBuilder resultString = new StringBuilder();
-    String hostPart = dnsConfig.split("\\.")[0];
-    String domainPart = dnsConfig.replaceAll("^" + hostPart, "");
+    String hostPart = dnsTarget.split("\\.")[0];
+    String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
     System.out.println("Using H:" + hostPart + " D:" + domainPart);
     Set<String> errors = new HashSet<>();
     try {
@@ -553,27 +568,33 @@ public class Anima
       }
       bufferedReader.close();
       resultConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
+      return resultConfig;
     } catch (IOException | ClassNotFoundException e) {
       if (logger != null)
         logger.logException(e);
+      return null;
     }
-    return resultConfig;
   }
 
-  public Ar4kConfig webConfigDownload() {
+  public Ar4kConfig webConfigDownload(String webConfigTarget) {
     String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf";
-    try (BufferedInputStream in = new BufferedInputStream(new URL(webConfig).openStream());
+    try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
         FileOutputStream fileOutputStream = new FileOutputStream(temporaryFile)) {
       byte dataBuffer[] = new byte[1024];
       int bytesRead;
       while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
         fileOutputStream.write(dataBuffer, 0, bytesRead);
       }
-    } catch (IOException e) {
+      return loadConfigFromFile(temporaryFile);
+    } catch (ConnectException c) {
+      logger.info(webConfigTarget + " is unreachable");
+      return null;
+    } catch (Exception e) {
       if (logger != null)
         logger.logException(e);
+      return null;
     }
-    return loadConfigFromFile(temporaryFile);
+
   }
 
   // workaround Spring State Machine
@@ -586,9 +607,10 @@ public class Anima
     if (stateTarget == null && runtimeConfig != null) {
       stateTarget = runtimeConfig.targetRunLevel;
     }
-    if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING))
+    if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING)) {
+      timerScheduler = new Timer();
       animaStateMachine.sendEvent(AnimaEvents.START);
-    else {
+    } else {
       logger.warn("stateTarget is null in runtime config");
     }
   }
@@ -928,13 +950,59 @@ public class Anima
   }
 
   public void prepareAgentStasis() {
-    // TODO Da implementare la gestione dello stop
-
+    logger.warn("PUTTING AGENT IN STASIS STATE...");
+    finalizeAgent();
   }
 
   public void prepareRestart() {
-    // TODO Gestisce il restart con nuova configurazione
+    logger.warn("RESTARTING AGENT...");
+    finalizeAgent();
+  }
 
+  public void startCheckingNextConfig() {
+    if (runtimeConfig != null && (runtimeConfig.nextConfigDns != null || runtimeConfig.nextConfigWeb != null)
+        && runtimeConfig.configCheckPeriod != null && runtimeConfig.configCheckPeriod > 0) {
+      if (runtimeConfig.nextConfigDns != null) {
+        timerScheduler.schedule(checkDnsConfigUpdate(runtimeConfig.nextConfigDns), runtimeConfig.configCheckPeriod,
+            runtimeConfig.configCheckPeriod);
+        logger.warn("scheduled periodically configuration checking on dns " + runtimeConfig.nextConfigDns
+            + " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+      }
+      if (runtimeConfig.nextConfigWeb != null) {
+        timerScheduler.schedule(checkWebConfigUpdate(runtimeConfig.nextConfigWeb), runtimeConfig.configCheckPeriod,
+            runtimeConfig.configCheckPeriod);
+        logger.warn("scheduled periodically configuration checking on url " + runtimeConfig.nextConfigWeb
+            + " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+      }
+    }
+  }
+
+  private TimerTask checkWebConfigUpdate(String nextConfigWeb) {
+    return new TimerTask() {
+      @Override
+      public void run() {
+        Ar4kConfig newTargetConfig = webConfigDownload(nextConfigWeb);
+        checkPolledConfig(newTargetConfig);
+      }
+    };
+  }
+
+  private TimerTask checkDnsConfigUpdate(String nextConfigDns) {
+    return new TimerTask() {
+      @Override
+      public void run() {
+        Ar4kConfig newTargetConfig = dnsConfigDownload(nextConfigDns);
+        checkPolledConfig(newTargetConfig);
+      }
+    };
+  }
+
+  private final void checkPolledConfig(Ar4kConfig newTargetConfig) {
+    if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
+      logger.warn("Found new config " + newTargetConfig.toString());
+      runtimeConfig = newTargetConfig;
+      sendEvent(AnimaEvents.RESTART);
+    }
   }
 
 }

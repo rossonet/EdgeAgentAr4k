@@ -55,6 +55,7 @@ import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.rpc.process.AgentProcess;
@@ -305,6 +306,20 @@ public class ShellInterface extends AbstractShellHelper {
     return ConfigHelper.toYaml(getWorkingConfig());
   }
 
+  @ShellMethod("View the runtime configuration in json text")
+  @ManagedOperation
+  @ShellMethodAvailability("testRuntimeConfigOk")
+  public String getRuntimeConfigJson() {
+    return ConfigHelper.toJson(anima.getRuntimeConfig());
+  }
+
+  @ShellMethod("View the runtime configuration in Yaml text")
+  @ManagedOperation
+  @ShellMethodAvailability("testRuntimeConfigOk")
+  public String getRuntimeConfigYaml() {
+    return ConfigHelper.toYaml(anima.getRuntimeConfig());
+  }
+
   @ShellMethod("Save selected configuration in json text file")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
@@ -443,7 +458,7 @@ public class ShellInterface extends AbstractShellHelper {
 
   @ShellMethod("Clone a config in the runtime list with a new id, name and prompt")
   @ManagedOperation
-  @ShellMethodAvailability("testListConfigOk")
+  @ShellMethodAvailability("testRuntimeConfigOk")
   public String cloneConfig(@ShellOption(help = "the id of the config to clone from") String idConfig,
       @ShellOption(help = "the name of the new config") String newName,
       @ShellOption(help = "the promp for the new config") String newPrompt) throws IOException, ClassNotFoundException {
@@ -619,6 +634,12 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   public String getBeansInfo() throws IOException, InterruptedException, ParseException {
     return printBeans();
+  }
+
+  @ShellMethod(value = "Get info about threads on the system", group = "Monitoring Commands")
+  @ManagedOperation
+  public String getThreadsInfo() {
+    return ReflectionUtils.logThreadInfo();
   }
 
   @ShellMethod(value = "Get variable from Spring Framework", group = "Monitoring Commands")

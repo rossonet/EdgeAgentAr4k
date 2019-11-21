@@ -18,21 +18,31 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
+import org.springframework.shell.Shell;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Gestore servizio per connessioni irc.
+ *         Gestore servizio per connessioni ssh.
  *
  */
 public class SshdHomunculusService extends AbstractAr4kService {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(SshdHomunculusService.class.toString());
+
   // iniettata vedi set/get
   private SshdHomunculusConfig configuration = null;
+  private SshServer server = null;
 
   @Override
   @PostConstruct
@@ -63,6 +73,20 @@ public class SshdHomunculusService extends AbstractAr4kService {
 
   @Override
   public void init() {
+    server = SshServer.setUpDefaultServer();
+    server.setHost(configuration.broadcastAddress);
+    server.setPort(configuration.port);
+    server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+    logger.warn("keys for sshd server generated");
+    Ar4kAnimaShellFactory shellFactory = new Ar4kAnimaShellFactory(Anima.getApplicationContext().getBean(Anima.class),
+        Anima.getApplicationContext().getBean(Shell.class));
+    server.setShellFactory(shellFactory);
+    try {
+      server.start();
+      logger.info("starting sshd server on " + getStatusString());
+    } catch (IOException e) {
+      logger.logException(e);
+    }
 
   }
 
@@ -73,25 +97,31 @@ public class SshdHomunculusService extends AbstractAr4kService {
 
   @Override
   public String getStatusString() {
-    // TODO Auto-generated method stub
-    return null;
+    return server != null ? (server.getHost() + ":" + server.getPort()) : "stopped";
   }
 
   @Override
   public JSONObject getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
+    JSONObject o = new JSONObject();
+    o.put("status", getStatusString());
+    return o;
   }
 
   @Override
   public void close() throws IOException {
-    // TODO Auto-generated method stub
-
+    stop();
+    if (server != null)
+      server.close();
   }
 
   @Override
   public void stop() {
-    // TODO Auto-generated method stub
+    if (server != null)
+      try {
+        server.stop();
+      } catch (IOException e) {
+        logger.logException(e);
+      }
 
   }
 

@@ -152,8 +152,9 @@ public abstract class AbstractShellHelper {
   }
 
   protected Availability testRuntimeConfigOk() {
-    return anima.getRuntimeConfig() != null ? Availability.available()
-        : Availability.unavailable("you have to configure a runtime config before");
+    return (anima.getRuntimeConfig() != null && getSessionId() != null) ? Availability.available()
+        : anima.getRuntimeConfig() != null ? Availability.unavailable("you have to configure a runtime config before")
+            : Availability.unavailable("you must login in the system or to be in INIT status");
   }
 
   protected Availability testListConfigOk() {
