@@ -64,9 +64,9 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
   public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
     if (cacheChannel == null) {
       Ar4kChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
-          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, (String) null, null);
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null, null);
       cacheChannel = (IPublishSubscribeChannel) Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
-          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, father,
+          .createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "cache data of the CNC", father,
               scopeOfChannels != null ? scopeOfChannels : anima.getDataAddress().getDefaultScope());
     }
     return cacheChannel;

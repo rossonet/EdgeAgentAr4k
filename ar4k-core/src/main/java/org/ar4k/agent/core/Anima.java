@@ -25,7 +25,9 @@ import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +42,7 @@ import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
@@ -53,8 +56,6 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
-//import org.ar4k.agent.tunnels.socket.ISocketFactoryComponent;
-//import org.ar4k.agent.tribe.AtomixTribeComponent;
 import org.joda.time.Instant;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -79,11 +80,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
-import org.xbill.DNS.DClass;
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.TextParseException;
-import org.xbill.DNS.Type;
 
 import io.grpc.ConnectivityState;
 import jdbm.RecordManager;
@@ -332,8 +329,21 @@ public class Anima
       }
       if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
         logger.info("try keystore from dns: " + dnsKeystore);
-        // TODO: implementare scaricamento keystore da DNS
-        // logger.warn("use keystore from DNS, domain: " + webKeystore);
+        String hostPart = dnsKeystore.split("\\.")[0];
+        String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
+        System.out.println("Using H:" + hostPart + " D:" + domainPart);
+        try {
+          String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+          try {
+            if (payloadString != null && payloadString.length() > 0) {
+              FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
+            }
+          } catch (IOException e) {
+            logger.logException(e);
+          }
+        } catch (UnknownHostException | TextParseException e) {
+          logger.logException(e);
+        }
       }
     }
     if (keystorePassword != null && !keystorePassword.isEmpty()) {
@@ -457,6 +467,8 @@ public class Anima
       }
     } catch (IOException e) {
       logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
+    } catch (UnrecoverableKeyException e) {
+      logger.warn(e.getMessage());
     }
     return beaconClient;
   }
@@ -511,46 +523,20 @@ public class Anima
   }
 
   private Ar4kConfig dnsConfigDownload(String dnsTarget) {
-    StringBuilder resultString = new StringBuilder();
     String hostPart = dnsTarget.split("\\.")[0];
     String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
     System.out.println("Using H:" + hostPart + " D:" + domainPart);
-    Set<String> errors = new HashSet<>();
     try {
-      Lookup l = new Lookup(hostPart + "-max" + domainPart, Type.TXT, DClass.IN);
-      l.setResolver(new SimpleResolver());
-      l.run();
-      if (l.getResult() == Lookup.SUCCESSFUL) {
-        int chunkSize = Integer.valueOf(l.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
-        if (chunkSize > 0) {
-          for (int c = 0; c < chunkSize; c++) {
-            Lookup cl = new Lookup(hostPart + "-" + String.valueOf(c) + domainPart, Type.TXT, DClass.IN);
-            cl.setResolver(new SimpleResolver());
-            cl.run();
-            if (cl.getResult() == Lookup.SUCCESSFUL) {
-              resultString.append(cl.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
-            } else {
-              errors.add(
-                  "error in chunk " + hostPart + "-" + String.valueOf(c) + domainPart + " -> " + cl.getErrorString());
-            }
-          }
-        } else {
-          errors.add("error, size of data is " + l.getAnswers()[0].rdataToString());
-        }
-      } else {
-        errors.add("no " + hostPart + "-max" + domainPart + " record found -> " + l.getErrorString());
-      }
-      if (!errors.isEmpty()) {
-        logger.error(errors.toString());
+      String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+      try {
+        return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
+            ? ConfigHelper.fromBase64(payloadString.toString())
+            : null);
+      } catch (ClassNotFoundException | IOException e) {
+        logger.logException(e);
+        return null;
       }
     } catch (UnknownHostException | TextParseException e) {
-      logger.logException(e);
-    }
-    try {
-      return (Ar4kConfig) ((errors.isEmpty() && resultString.length() > 0)
-          ? ConfigHelper.fromBase64(resultString.toString())
-          : null);
-    } catch (ClassNotFoundException | IOException e) {
       logger.logException(e);
       return null;
     }

@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.nio.charset.Charset;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -50,7 +51,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
-import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import com.google.protobuf.ByteString;
 
@@ -69,6 +69,7 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconServer implements Runnable, AutoCloseable {
 
+  private static final String TMP_BEACON_PATH_DEFAULT = "/tmp/beacon-server-" + UUID.randomUUID().toString();
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconServer.class.toString());
   private static final long defaultTimeOut = 10000L;
@@ -93,11 +94,10 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private int discoveryPort = 0;
   private String broadcastAddress = "255.255.255.255";
   private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
-  private String certChainFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
-  private String certFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".pem";
-  private String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
+  private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
+  private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
+  private String privateKeyFile = TMP_BEACON_PATH_DEFAULT + ".key";
   private String aliasBeaconServerInKeystore = "beacon-server";
-  private String aliasBeaconServerRequestCertInKeystore = "beacon-server-crt-request";
   private String caChainPem = null;
 
   public static class Builder {
@@ -222,21 +222,19 @@ public class BeaconServer implements Runnable, AutoCloseable {
       return this;
     }
 
-    public BeaconServer build() {
+    public BeaconServer build() throws UnrecoverableKeyException {
       return new BeaconServer(anima, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery, certChainFile,
-          certFile, privateKeyFile, aliasBeaconServerInKeystore, aliasBeaconServerRequestCertInKeystore, caChainPem);
+          certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem);
     }
 
   }
 
   private BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
       String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
-      String aliasBeaconServerInKeystore, String aliasBeaconServerRequestCertInKeystore, String caChainPem) {
+      String aliasBeaconServerInKeystore, String caChainPem) throws UnrecoverableKeyException {
     this.anima = animaTarget;
     if (aliasBeaconServerInKeystore != null)
       this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
-    if (aliasBeaconServerRequestCertInKeystore != null)
-      this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
     if (port > 0)
       this.port = port;
     if (certChainFile != null)
@@ -256,19 +254,16 @@ public class BeaconServer implements Runnable, AutoCloseable {
     if (animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
       logger.info("Certificate for Beacon server is present in keystore");
     } else {
-      generateCertificate();
+      throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore + " not found in keystore");
     }
     writePemCa(anima.getMyAliasCertInKeystore(), animaTarget, this.certChainFile);
     writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
-    // TODO VERIFICARE PERCHE' RICHIEDE LA CHIAVE MASTER
-    // writePrivateKey(this.aliasBeaconServerRequestCertInKeystore, animaTarget,
-    // this.privateKeyFile);
     writePrivateKey(anima.getMyAliasCertInKeystore(), animaTarget, this.privateKeyFile);
     logger.info("Starting beacon server for Registration");
     try {
       ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
           .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
-              .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.OPTIONAL).build());
+              .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.REQUIRE).build());
       server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
           .addService(new DataService()).build();
     } catch (Exception e) {
@@ -284,15 +279,15 @@ public class BeaconServer implements Runnable, AutoCloseable {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
       try {
         logger.debug("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
-        logger.info("SSL DATA PEER HOST: " + sslSession.getPeerHost());
-        logger.info("SSL DATA PROTOCOL: " + sslSession.getProtocol());
+        logger.debug("SSL DATA PEER HOST: " + sslSession.getPeerHost());
+        logger.debug("SSL DATA PROTOCOL: " + sslSession.getProtocol());
         if (sslSession.getSessionContext() != null) {
-          logger.info("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
+          logger.debug("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
         }
-        logger.info("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
-        logger.info("SSL DATA CERTIFICATE CHAIN:");
+        logger.debug("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
+        logger.debug("SSL DATA CERTIFICATE CHAIN:");
         for (X509Certificate i : sslSession.getPeerCertificateChain()) {
-          logger.info(" - " + i.toString());
+          logger.debug(" - " + i.toString());
         }
         logger.info("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
       } catch (SSLPeerUnverifiedException e) {
@@ -300,17 +295,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
       }
       return serverCallHandler.startCall(serverCall, metadata);
     }
-  }
-
-  private void generateCertificate() {
-    logger.info("Create certificate for beacon server with alias " + aliasBeaconServerRequestCertInKeystore);
-    anima.getMyIdentityKeystore().create(anima.getAgentUniqueName() + "-bs", ConfigHelper.organization,
-        ConfigHelper.unit, ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
-        ConfigHelper.dns, ConfigHelper.ip, aliasBeaconServerRequestCertInKeystore, true);
-    PKCS10CertificationRequest csr = anima.getMyIdentityKeystore()
-        .getPKCS10CertificationRequest(aliasBeaconServerRequestCertInKeystore);
-    anima.getMyIdentityKeystore().signCertificateBase64(csr, aliasBeaconServerInKeystore, 400,
-        anima.getMyAliasCertInKeystore());
   }
 
   private static void writePrivateKey(String aliasBeaconServer, Anima animaTarget, String privateKey) {
@@ -437,7 +421,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     // TODO inserire il meccanismo per la coda autorizzativa
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
       String uniqueClientNameForBeacon = UUID.randomUUID().toString();
-      logger.debug("Try to sign request: " + request.toString());
+      logger.warn("** Try to sign request beacon client: " + request.toString());
       String certFromCsr = getCertForRegistration(anima.getMyAliasCertInKeystore(), request.getName(),
           request.getRequestCsr(), request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
       logger.debug("Certificate for beacon client (signed): "
@@ -812,8 +796,24 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   @Override
   public void close() {
-    // TODO Auto-generated method stub
-
+    if (server != null) {
+      server.shutdown();
+    }
+    if (agentLabelRegisterReplies != null) {
+      agentLabelRegisterReplies.clear();
+    }
+    if (listAgentRequest != null) {
+      listAgentRequest.clear();
+    }
+    running = false;
+    anima = null;
+    if (process != null) {
+      process.interrupt();
+    }
+    if (socketFlashBeacon != null) {
+      socketFlashBeacon.close();
+      socketFlashBeacon = null;
+    }
   }
 
 }

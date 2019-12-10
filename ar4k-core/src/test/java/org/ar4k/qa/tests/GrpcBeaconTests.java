@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
@@ -91,7 +92,7 @@ public class GrpcBeaconTests {
     System.out.println("Beacon server starting");
     server = new BeaconServer.Builder().setAnima(anima).setPort(port)
         .setStringDiscovery("AR4K-BEACON-" + UUID.randomUUID().toString()).setBroadcastAddress("255.255.255.255")
-        .setAcceptCerts(true).build();
+        .setAcceptCerts(true).setAliasBeaconServerInKeystore(anima.getMyAliasCertInKeystore()).build();
     server.start();
     System.out.println("Beacon server started");
     Thread.sleep(3000L);
@@ -143,11 +144,12 @@ public class GrpcBeaconTests {
   }
 
   @Test
-  public void implementTestClass() {
+  public void implementTestClass() throws UnrecoverableKeyException {
     try {
       Thread.sleep(2000L);
       client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-          .setHost("localhost").setDiscoveryPort(0).build();
+          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+          .build();
       Thread.sleep(10000L);
       String ls = client.getStateConnection().name();
       System.out.println("LAST STATE: " + ls);
@@ -158,12 +160,13 @@ public class GrpcBeaconTests {
   }
 
   @Test
-  public void testRegistration() {
+  public void testRegistration() throws UnrecoverableKeyException {
     try {
       changeLogLevel("DEBUG");
       Thread.sleep(2000L);
       client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-          .setHost("localhost").setDiscoveryPort(0).build();
+          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+          .build();
       Thread.sleep(2000L);
       String ls = client.getStateConnection().name();
       System.out.println("LAST STATE: " + ls);
@@ -177,7 +180,8 @@ public class GrpcBeaconTests {
   @Test
   public void checkRemoteList() throws Exception {
     client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-        .setHost("localhost").setDiscoveryPort(0).build();
+        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+        .build();
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);
@@ -194,9 +198,11 @@ public class GrpcBeaconTests {
   }
 
   @Test
-  public void checkDiscoveryRegistration() throws InterruptedException, IOException, ParseException {
+  public void checkDiscoveryRegistration()
+      throws InterruptedException, IOException, ParseException, UnrecoverableKeyException {
     client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-        .setHost("localhost").setDiscoveryPort(0).build();
+        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+        .build();
     Thread.sleep(12000L);
     String ls = client.getStateConnection().name();
     System.out.println("LAST STATE: " + ls);

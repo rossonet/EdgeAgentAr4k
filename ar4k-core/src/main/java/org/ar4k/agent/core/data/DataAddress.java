@@ -78,13 +78,13 @@ public class DataAddress implements AutoCloseable {
     callbacks.remove(callback);
   }
 
-  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, String father,
-      String scope) {
-    return createOrGetDataChannel(nodeId, channelType, getChannel(father), scope);
+  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, String description,
+      String father, String scope) {
+    return createOrGetDataChannel(nodeId, channelType, description, getChannel(father), scope);
   }
 
-  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, Ar4kChannel father,
-      String scope) {
+  public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType, String description,
+      Ar4kChannel father, String scope) {
     Ar4kChannel returnChannel = null;
     if (getChannel(nodeId) != null) {
       returnChannel = getChannel(nodeId);
@@ -103,6 +103,7 @@ public class DataAddress implements AutoCloseable {
         logger.info("create channel " + nodeId + " of type " + channelType);
         returnChannel = (Ar4kChannel) ctor.newInstance();
         returnChannel.setNodeId(nodeId);
+        returnChannel.setDescription(description);
         this.dataChannels.add(returnChannel);
         returnChannel.setDataAddress(this);
         if (father != null) {
@@ -184,10 +185,6 @@ public class DataAddress implements AutoCloseable {
 
     private transient Anima anima = null;
 
-    public Anima getAnima() {
-      return anima;
-    }
-
     public void setAnima(Anima anima) {
       this.anima = anima;
     }
@@ -220,16 +217,12 @@ public class DataAddress implements AutoCloseable {
   };
 
   public void firstStart() {
-    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, (String) null, null);
-    systemChannel.setDescription("local JVM system");
-    Ar4kChannel loggerChannel = createOrGetDataChannel("logger", IPublishSubscribeChannel.class, systemChannel,
-        getDefaultScope());
-    loggerChannel.setDescription("logger queue");
-    Ar4kChannel healthChannel = createOrGetDataChannel("health", IPublishSubscribeChannel.class, systemChannel,
-        getDefaultScope());
-    healthChannel.setDescription("local machine hardware and software stats");
-    Ar4kChannel cmdChannel = createOrGetDataChannel("command", IQueueChannel.class, systemChannel, getDefaultScope());
-    cmdChannel.setDescription("RPC interface");
+    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
+        (String) null, null);
+    createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel, getDefaultScope());
+    createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
+        systemChannel, getDefaultScope());
+    createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope());
     // start health regular messages
     repeatedTask.setAnima(anima);
     timer.scheduleAtFixedRate(repeatedTask, delay, period);

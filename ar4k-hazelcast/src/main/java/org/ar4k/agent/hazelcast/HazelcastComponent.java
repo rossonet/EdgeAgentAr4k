@@ -95,16 +95,17 @@ public class HazelcastComponent implements Ar4kComponent {
 
   private void popolateDataTopics() {
     Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
-        INoDataChannel.class, (String) null, null);
+        INoDataChannel.class, "Hazelcast root component", (String) null, null);
     for (String singleTopicLabel : configuration.getTopics()) {
       ITopic<Object> sigleTopic = getTopic(singleTopicLabel);
       IPublishSubscribeChannel singleAr4kchannelRead = (IPublishSubscribeChannel) anima.getDataAddress()
-          .createOrGetDataChannel(singleTopicLabel, IPublishSubscribeChannel.class, channelRoot,
-              configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+          .createOrGetDataChannel(singleTopicLabel, IPublishSubscribeChannel.class, singleTopicLabel + " read channel",
+              channelRoot, configuration.scopeOfChannels != null ? configuration.scopeOfChannels
                   : anima.getDataAddress().getDefaultScope());
       IPublishSubscribeChannel singleAr4kchannelWrite = (IPublishSubscribeChannel) anima.getDataAddress()
           .createOrGetDataChannel(configuration.getWriteTopic(singleTopicLabel), IPublishSubscribeChannel.class,
-              channelRoot, configuration.scopeOfChannels != null ? configuration.scopeOfChannels
+              singleTopicLabel + " write channel", channelRoot,
+              configuration.scopeOfChannels != null ? configuration.scopeOfChannels
                   : anima.getDataAddress().getDefaultScope());
       singleAr4kchannelRead.addTag("hazelcast-read");
       singleAr4kchannelRead.addTag(singleTopicLabel);

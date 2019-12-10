@@ -26,23 +26,23 @@ public class SerialConfig extends AbstractServiceConfig {
   @Parameter(names = "--convenionalNotation", description = "convenionalNotation", validateWith = ConventionalNotationValidator.class)
   public ConventionalNotation conventionalNotation = ConventionalNotation._8N1;
 
-  @Parameter(names = "--queueSize", description = "Queue size for the message received", validateWith = ConventionalNotationValidator.class)
+  @Parameter(names = "--queueSize", description = "queue size for the message received", validateWith = ConventionalNotationValidator.class)
   public int queueSize = 10000;
 
   @Parameter(names = "--endpointWrite", description = "internal channel to write the data to the serial port")
-  public String endpointWrite = null;
+  private String endpointWrite = null;
 
   @Parameter(names = "--endpointRead", description = "internal channel to send data from serial port")
-  public String endpointRead = null;
+  private String endpointRead = null;
 
   @Parameter(names = "--endpointReadByte", description = "internal channel to send data from serial port in byte")
-  public String endpointReadByte = null;
+  private String endpointReadByte = null;
 
   @Parameter(names = "--endpointWriteByte", description = "internal channel to write the data to the serial port in byte")
-  public String endpointWriteByte = null;
+  private String endpointWriteByte = null;
 
   @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
-  public String fatherOfChannels = null;
+  private String fatherOfChannels = null;
 
   @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
   public String scopeOfChannels = null;
@@ -67,5 +67,85 @@ public class SerialConfig extends AbstractServiceConfig {
   @Override
   public boolean isSpringBean() {
     return false;
+  }
+
+  public String getSerial() {
+    return serial;
+  }
+
+  public void setSerial(String serial) {
+    this.serial = serial;
+  }
+
+  public BaudRate getBaudRate() {
+    return baudRate;
+  }
+
+  public void setBaudRate(BaudRate baudRate) {
+    this.baudRate = baudRate;
+  }
+
+  public ConventionalNotation getConventionalNotation() {
+    return conventionalNotation;
+  }
+
+  public void setConventionalNotation(ConventionalNotation conventionalNotation) {
+    this.conventionalNotation = conventionalNotation;
+  }
+
+  public int getQueueSize() {
+    return queueSize;
+  }
+
+  public void setQueueSize(int queueSize) {
+    this.queueSize = queueSize;
+  }
+
+  public String getEndpointWrite() {
+    return endpointWrite != null ? endpointWrite : serial.replace("/", "_") + "_endpointWrite";
+  }
+
+  public void setEndpointWrite(String endpointWrite) {
+    this.endpointWrite = endpointWrite;
+  }
+
+  public String getEndpointRead() {
+    return endpointRead != null ? endpointRead : serial.replace("/", "_") + "_endpointRead";
+  }
+
+  public void setEndpointRead(String endpointRead) {
+    this.endpointRead = endpointRead;
+  }
+
+  public String getEndpointReadByte() {
+    return endpointReadByte != null ? endpointReadByte : serial.replace("/", "_") + "_endpointReadByte";
+  }
+
+  public void setEndpointReadByte(String endpointReadByte) {
+    this.endpointReadByte = endpointReadByte;
+  }
+
+  public String getEndpointWriteByte() {
+    return endpointWriteByte != null ? endpointWriteByte : serial.replace("/", "_") + "_endpointWriteByte";
+  }
+
+  public void setEndpointWriteByte(String endpointWriteByte) {
+    this.endpointWriteByte = endpointWriteByte;
+  }
+
+  public String getFatherOfChannels() {
+    return fatherOfChannels != null ? fatherOfChannels : serial.replace("/", "_");
+  }
+
+  public void setFatherOfChannels(String fatherOfChannels) {
+    this.fatherOfChannels = fatherOfChannels;
+  }
+
+  public String getScopeOfChannels() {
+    return scopeOfChannels;
+  }
+
+  public void setScopeOfChannels(String scopeOfChannels) {
+    this.scopeOfChannels = scopeOfChannels;
   }
 }

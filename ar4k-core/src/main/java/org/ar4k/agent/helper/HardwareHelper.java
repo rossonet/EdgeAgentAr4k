@@ -26,20 +26,30 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.ar4k.agent.exception.Ar4kException;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.TextParseException;
+import org.xbill.DNS.Type;
 
 import com.pi4j.platform.PlatformManager;
 import com.pi4j.system.NetworkInfo;
@@ -50,7 +60,7 @@ import oshi.software.os.OperatingSystem;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Helper generico.
  *
  */
@@ -59,6 +69,9 @@ public class HardwareHelper {
   private HardwareHelper() {
     throw new UnsupportedOperationException("Just for static usage");
   }
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(HardwareHelper.class.toString());
 
   public static final boolean debugFreezeHal = false;
   private static final int BUFFER_SIZE = 512;
@@ -71,13 +84,13 @@ public class HardwareHelper {
     dato.setSystemLoadAverage(mbean.getSystemLoadAverage());
     dato.setHardwareRuntimetotalmemory(runtime.totalMemory());
     dato.setHardwareRuntimefreememory(runtime.freeMemory());
-    List<RootFileSystem> fileSystem = new ArrayList<RootFileSystem>();
+    List<RootFileSystem> fileSystem = new ArrayList<>();
     for (File root : File.listRoots()) {
       RootFileSystem rootFs = new RootFileSystem();
       rootFs.setAbsolutePath(root.getAbsoluteFile());
       rootFs.setFreeSpace(root.getFreeSpace());
       rootFs.setTotalSpace(root.getTotalSpace());
-      List<RootFileSystem> childs = new ArrayList<RootFileSystem>();
+      List<RootFileSystem> childs = new ArrayList<>();
       if (root != null && root.listFiles() != null)
         for (File figlio : root.listFiles()) {
           RootFileSystem figlioFs = new RootFileSystem();
@@ -404,6 +417,41 @@ public class HardwareHelper {
         fileOutputStream.close();
     }
     return result;
+  }
+
+  public static String resolveFileFromDns(String hostPart, String domainPart)
+      throws TextParseException, UnknownHostException {
+    StringBuilder resultString = new StringBuilder();
+    Set<String> errors = new HashSet<>();
+    Lookup l = new Lookup(hostPart + "-max" + domainPart, Type.TXT, DClass.IN);
+    l.setResolver(new SimpleResolver());
+    l.run();
+    if (l.getResult() == Lookup.SUCCESSFUL) {
+      int chunkSize = Integer.valueOf(l.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+      if (chunkSize > 0) {
+        for (int c = 0; c < chunkSize; c++) {
+          Lookup cl = new Lookup(hostPart + "-" + String.valueOf(c) + domainPart, Type.TXT, DClass.IN);
+          cl.setResolver(new SimpleResolver());
+          cl.run();
+          if (cl.getResult() == Lookup.SUCCESSFUL) {
+            resultString.append(cl.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+          } else {
+            errors.add(
+                "error in chunk " + hostPart + "-" + String.valueOf(c) + domainPart + " -> " + cl.getErrorString());
+          }
+        }
+      } else {
+        errors.add("error, size of data is " + l.getAnswers()[0].rdataToString());
+      }
+    } else {
+      errors.add("no " + hostPart + "-max" + domainPart + " record found -> " + l.getErrorString());
+    }
+    if (!errors.isEmpty()) {
+      logger.error(errors.toString());
+      return null;
+    } else {
+      return resultString.toString();
+    }
   }
 
   public static void extractTarGz(String path, InputStream in) throws IOException {

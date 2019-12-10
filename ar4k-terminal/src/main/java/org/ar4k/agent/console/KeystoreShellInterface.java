@@ -14,14 +14,19 @@
     */
 package org.ar4k.agent.console;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Map.Entry;
 
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -80,7 +85,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     return ok ? Availability.available() : Availability.unavailable(message);
   }
 
-  @ShellMethod(value = "List keystores managed by the platflorm", group = "Keytools Commands")
+  @ShellMethod(value = "List keystoresin session", group = "Keytools Commands")
   @ManagedOperation
   @ShellMethodAvailability("testOneKey")
   public String listKeystore() {
@@ -88,10 +93,17 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     return gson.toJson(((RpcConversation) anima.getRpc(getSessionId())).getKeyStores());
   }
 
-  @ShellMethod(value = "Add a keystore to the platform", group = "Keytools Commands")
+  @ShellMethod(value = "Add a keystore to the session", group = "Keytools Commands")
   @ManagedOperation
   public void addKeystore(@ShellOption(optOut = true) @Valid KeystoreConfig keyStore) {
     ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().put(keyStore.getUniqueId(), keyStore);
+  }
+
+  @ShellMethod(value = "Add runtime keystore to the session", group = "Keytools Commands")
+  @ManagedOperation
+  public void addKeystoreRuntime() {
+    ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().put(anima.getMyIdentityKeystore().getUniqueId(),
+        anima.getMyIdentityKeystore());
   }
 
   @ShellMethod(value = "Check a keystore selected by alias", group = "Keytools Commands")
@@ -102,9 +114,27 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     for (Entry<String, KeystoreConfig> t : ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().entrySet()) {
       if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
         ok = true;
+        break;
       }
     }
     return ok;
+  }
+
+  @ShellMethod(value = "View dns version base64 text prepared for dns of a keystore selected by alias", group = "Keytools Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testOneKey")
+  public String getKeystoreForDns(@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
+      @ShellOption(help = "the hostname for this configuration") String name) throws IOException {
+    String returnText = null;
+    for (Entry<String, KeystoreConfig> t : ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().entrySet()) {
+      if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
+        File file = new File(t.getValue().filePathPre);
+        String base64content = Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(file));
+        returnText = ConfigHelper.toBase64ForDns(name, base64content);
+        break;
+      }
+    }
+    return returnText;
   }
 
   @ShellMethod(value = "Save a new keypair in the keystore", group = "Keytools Commands")
@@ -121,6 +151,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
         if (t.getValue().label.equals(keystoreLabel)
             && t.getValue().setClientKeyPair(base64Key, base64Crt, entryAlias)) {
           ok = true;
+          break;
         }
       }
     } catch (NoSuchAlgorithmException e) {
@@ -149,6 +180,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
       if (t.getValue().label.equals(keystoreLabel) && t.getValue().createSelfSignedCert(commonName, organization, unit,
           locality, state, country, uri, dns, ip, entryAlias, isCa)) {
         ok = true;
+        break;
       }
     }
     return ok;
@@ -186,10 +218,8 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     return out;
   }
 
-  // TODO: provare getPKCS10CertificationRequestBase64
-  // @ShellMethod(value = "Get a CSR in base64 format to request a sign from
-  // authority", group = "Keytools Commands")
-  // @ManagedOperation
+  @ShellMethod(value = "Get a CSR in base64 format to request a sign from authority", group = "Keytools Commands")
+  @ManagedOperation
   @ShellMethodAvailability("testOneKey")
   public String getPKCS10CertificationRequestBase64(
       @ShellOption(help = "label assigned to the keystore") String keystoreLabel,

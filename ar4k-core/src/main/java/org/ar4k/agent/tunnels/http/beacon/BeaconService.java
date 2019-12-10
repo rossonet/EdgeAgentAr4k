@@ -15,6 +15,7 @@
 package org.ar4k.agent.tunnels.http.beacon;
 
 import java.io.IOException;
+import java.security.UnrecoverableKeyException;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
@@ -91,6 +92,8 @@ public class BeaconService extends AbstractAr4kService {
       beaconServer.start();
     } catch (IOException e) {
       logger.logException(e);
+    } catch (UnrecoverableKeyException e) {
+      logger.warn(e.getMessage());
     }
   }
 

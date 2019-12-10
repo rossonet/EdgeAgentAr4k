@@ -119,7 +119,7 @@ public class ConfigHelper {
     return gson.toJson(configObject);
   }
 
-  public static String toBase64(ConfigSeed configObject) throws IOException {
+  public static String toBase64(Object configObject) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ObjectOutputStream oos = new ObjectOutputStream(baos);
     oos.writeObject(configObject);
@@ -127,7 +127,7 @@ public class ConfigHelper {
     return Base64.getEncoder().encodeToString(baos.toByteArray());
   }
 
-  public static String toBase64ForDns(String name, ConfigSeed configObject) throws IOException {
+  public static String toBase64ForDns(String name, Object configObject) throws IOException {
     Iterable<String> chunks = Splitter.fixedLength(254).split(toBase64(configObject));
     StringBuilder result = new StringBuilder();
     int counter = 0;

@@ -17,9 +17,11 @@ package org.ar4k.agent.iot.serial;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.iot.serial.json.SerialJsonService;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -47,6 +49,17 @@ import com.google.gson.GsonBuilder;
 @RequestMapping("/serialInterface")
 public class SerialShellInterface extends AbstractShellHelper {
 
+  private SerialJsonService serialService = null;
+
+  protected Availability testSerialServiceNull() {
+    return serialService == null ? Availability.available()
+        : Availability.unavailable("a Serial service exists with status " + serialService.getStatusString());
+  }
+
+  protected Availability testSerialServiceRunning() {
+    return serialService != null ? Availability.available() : Availability.unavailable("no serial service are running");
+  }
+
   @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
   @ManagedOperation
   public String listSerialPorts() {
@@ -59,6 +72,23 @@ public class SerialShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
     getWorkingConfig().pots.add(service);
+  }
+
+  @ShellMethod(value = "Create Serial service", group = "Serial Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSerialServiceNull")
+  public void createSerialService(@ShellOption(optOut = true) @Valid SerialConfig configuration) {
+    serialService = new SerialJsonService();
+    serialService.setConfiguration(configuration);
+    serialService.init();
+  }
+
+  @ShellMethod(value = "Stop serial instance", group = "Serial Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSerialServiceRunning")
+  public void serialInstanceStop() {
+    serialService.kill();
+    serialService = null;
   }
 
 }

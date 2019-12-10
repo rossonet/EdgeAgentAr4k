@@ -15,6 +15,7 @@
 package org.ar4k.agent.console;
 
 import java.io.IOException;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,7 +102,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the broadcast target for the discovery message", defaultValue = "255.255.255.255") String discoveryAddress,
       @ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
-      throws IOException {
+      throws IOException, UnrecoverableKeyException {
     tmpServer = new BeaconServer.Builder().setAnima(anima).setPort(port).setDiscoveryPort(discoveryPort)
         .setStringDiscovery(discoveryMessage).setBroadcastAddress(discoveryAddress).setAcceptCerts(acceptAllCerts)
         .build();

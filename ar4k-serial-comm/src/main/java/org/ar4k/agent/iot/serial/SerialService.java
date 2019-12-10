@@ -63,6 +63,8 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
     _8N1, _7E1
   }
 
+  private Ar4kChannel channelRoot = null;
+
   private IPublishSubscribeChannel readChannelBytes = null;
 
   private IPublishSubscribeChannel readChannel = null;
@@ -77,6 +79,10 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   @Override
   public synchronized void loop() {
+    openSerialPort();
+  }
+
+  private void openSerialPort() {
     if (comPort == null) {
       openPort();
     } else {
@@ -85,13 +91,15 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   }
 
   private void checkPort() {
-    if (comPort.isOpen() != true) {
+    if (comPort.isOpen()) {
       comPort = null;
+      openPort();
     }
   }
 
   private void openPort() {
     try {
+      logger.debug("try to open serial port " + configuration.serial);
       comPort = SerialPort.getCommPort(configuration.serial);
     } catch (Exception ee) {
       logger.logException(ee);
@@ -113,10 +121,16 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
         configuration.clockRunnableClass);
     comPort.openPort();
     comPort.addDataListener(this);
+    logger.debug("Serial port " + comPort.getSystemPortName() + " opened");
   }
 
   @Override
   public void kill() {
+    anima.getDataAddress().removeDataChannel(writeChannelBytes);
+    anima.getDataAddress().removeDataChannel(writeChannel);
+    anima.getDataAddress().removeDataChannel(readChannelBytes);
+    anima.getDataAddress().removeDataChannel(readChannel);
+    anima.getDataAddress().removeDataChannel(channelRoot);
     if (comPort != null) {
       comPort.closePort();
       comPort = null;
@@ -157,22 +171,27 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   }
 
   private void popolateDataTopics() {
-    Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
-        INoDataChannel.class, (String) null, null);
-    readChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
-        IPublishSubscribeChannel.class, channelRoot,
+    openSerialPort();
+    channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.getFatherOfChannels(),
+        INoDataChannel.class, "serial port " + comPort.getSystemPortName() + " root node", (String) null, null);
+    readChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+        configuration.getEndpointRead(), IPublishSubscribeChannel.class,
+        "serial port " + comPort.getSystemPortName() + " read channel", channelRoot,
         configuration.scopeOfChannels != null ? configuration.scopeOfChannels
             : anima.getDataAddress().getDefaultScope());
     readChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
-        configuration.endpointRead, IPublishSubscribeChannel.class, channelRoot,
+        configuration.getEndpointReadByte(), IPublishSubscribeChannel.class,
+        "serial port " + comPort.getSystemPortName() + " read bytes node", channelRoot,
         configuration.scopeOfChannels != null ? configuration.scopeOfChannels
             : anima.getDataAddress().getDefaultScope());
-    writeChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(configuration.endpointRead,
-        IPublishSubscribeChannel.class, channelRoot,
+    writeChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+        configuration.getEndpointWrite(), IPublishSubscribeChannel.class,
+        "serial port " + comPort.getSystemPortName() + " write node", channelRoot,
         configuration.scopeOfChannels != null ? configuration.scopeOfChannels
             : anima.getDataAddress().getDefaultScope());
     writeChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
-        configuration.endpointRead, IPublishSubscribeChannel.class, channelRoot,
+        configuration.getEndpointWriteByte(), IPublishSubscribeChannel.class,
+        "serial port " + comPort.getSystemPortName() + " write bytes node", channelRoot,
         configuration.scopeOfChannels != null ? configuration.scopeOfChannels
             : anima.getDataAddress().getDefaultScope());
     readChannel.addTag("serial-read");
@@ -192,7 +211,7 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   @Override
   public String getStatusString() {
-    return comPort != null ? comPort.getPortDescription() : "DISCONNECTED";
+    return comPort != null ? comPort.getSystemPortName() + " [" + comPort.isOpen() + "]" : "DISCONNECTED";
   }
 
   @Override
@@ -214,11 +233,14 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   @Override
   public int getListeningEvents() {
-    return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+    logger.debug("received listening request from serial port");
+    return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
   }
 
   @Override
   public void serialEvent(SerialPortEvent message) {
+    logger.debug("received serialEvent request from serial port");
+    logger.debug("received from serial port => " + message != null ? message.toString() : "NaN");
     callProtectedEvent(message);
     SerialBytesMessage messageToBytes = new SerialBytesMessage();
     SerialStringMessage messageToString = new SerialStringMessage();

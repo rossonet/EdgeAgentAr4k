@@ -87,7 +87,7 @@ public class CncService extends SerialService {
         final MessageHeaders headersStringMessage = new MessageHeaders(headersMapString);
         messageToString.setHeaders(headersStringMessage);
         messageToString.setPayload(messageTxt);
-        IPublishSubscribeChannel channel = testRoute.getAr4kChannel(configuration.fatherOfChannels,
+        IPublishSubscribeChannel channel = testRoute.getAr4kChannel(configuration.getFatherOfChannels(),
             configuration.scopeOfChannels);
         channel.send(messageToString);
       }

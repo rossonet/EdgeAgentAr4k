@@ -133,9 +133,10 @@ public class NodeMcuLinkService extends AbstractAr4kService implements TcpServer
       messageDecoded.put("stack-trace", Ar4kLogger.stackTraceToString(a));
     }
     Ar4kChannel channelRoot = anima.getDataAddress().createOrGetDataChannel(configuration.fatherOfChannels,
-        INoDataChannel.class, (String) null, null);
+        INoDataChannel.class, "nodeMcu root node", (String) null, null);
     IPublishSubscribeChannel channelTarget = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
-        destination, IPublishSubscribeChannel.class, channelRoot, configuration.scopeOfChannels);
+        destination, IPublishSubscribeChannel.class, "target channel for nodeMcu", channelRoot,
+        configuration.scopeOfChannels);
     JSONMessage internalMessage = new JSONMessage();
     internalMessage.setPayload(messageDecoded);
     channelTarget.send(internalMessage);
