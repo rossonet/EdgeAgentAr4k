@@ -18,6 +18,7 @@ dependencies {
   compile project(':ar4k-paho')
   compile project(':ar4k-serial-comm')
   compile project(':ar4k-opcua')
+  compile project(':ar4k-video')
   compile project(':ar4k-modbus')
   compile project(':ar4k-ifttt')
   compile project(':ar4k-bacnet')
