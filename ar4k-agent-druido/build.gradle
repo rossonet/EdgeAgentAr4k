@@ -9,6 +9,7 @@ dependencies {
   compile project(':ar4k-serial-comm')
   compile project(':ar4k-ai')
   compile project(':ar4k-ifttt')
+  compile project(':ar4k-iec104')
   compile project(':ar4k-cluster')
   compile project(':ar4k-hazelcast')
 }

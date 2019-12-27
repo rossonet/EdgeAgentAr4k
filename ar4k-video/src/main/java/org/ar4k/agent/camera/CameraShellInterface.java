@@ -14,14 +14,27 @@
     */
 package org.ar4k.agent.camera;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.validation.Valid;
 
+import org.ar4k.agent.camera.messages.VideoMessage;
 import org.ar4k.agent.camera.usb.UsbCameraConfig;
 import org.ar4k.agent.camera.usb.UsbCameraService;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHandler;
+import org.springframework.messaging.MessagingException;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -50,7 +63,11 @@ import com.google.gson.GsonBuilder;
 @RequestMapping("/cameraInterface")
 public class CameraShellInterface extends AbstractShellHelper {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(UsbCameraService.class.toString());
+
   private UsbCameraService camera = null;
+  private VideoInterface videoInterface = null;
 
   protected Availability testUsbCameraServiceNull() {
     return camera == null ? Availability.available()
@@ -94,4 +111,68 @@ public class CameraShellInterface extends AbstractShellHelper {
     camera = null;
   }
 
+  @ShellMethod(value = "Subscribe video and view the output in a X window", group = "Camera Commands")
+  @ManagedOperation
+  public void subscribeVideoChannel(@ShellOption(help = "channel id (nodeId)") String channelId) {
+    if (videoInterface == null) {
+      videoInterface = new VideoInterface();
+    }
+    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class)) {
+      ((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).subscribe(videoInterface);
+    } else
+      logger.error(channelId + " is not subscribable");
+  }
+
+  private class VideoInterface implements MessageHandler {
+
+    JFrame window = null;
+    ImagePanel panel = null;
+    AtomicBoolean started = new AtomicBoolean(false);
+
+    @Override
+    public void handleMessage(Message<?> message) throws MessagingException {
+      if (started.get() == false) {
+        started.set(true);
+        if (panel == null) {
+          panel = new ImagePanel();
+        }
+        if (window == null) {
+          String videoQueueName = "Video queue " + message.getHeaders().get("source").toString();
+          logger.info("open window " + videoQueueName);
+          window = new JFrame(videoQueueName);
+          final Double width = Double.valueOf(message.getHeaders().get("size-width").toString());
+          final Double height = Double.valueOf(message.getHeaders().get("size-height").toString());
+          int roundWidth = (int) Math.round(width);
+          int roundHeight = (int) Math.round(height);
+          logger.info("size: " + roundWidth + "x" + roundHeight);
+          window.add(panel);
+          window.setResizable(true);
+          window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+          window.pack();
+          window.setSize(roundWidth, roundHeight);
+          window.setVisible(true);
+        }
+      }
+      panel.setImage(((VideoMessage) message).getPayload());
+    }
+
+    public class ImagePanel extends JPanel {
+
+      private static final long serialVersionUID = 4289146356652598217L;
+      private BufferedImage image = null;
+
+      public void setImage(BufferedImage image) {
+        this.image = image;
+        super.repaint();
+      }
+
+      @Override
+      protected void paintComponent(Graphics g) {
+        if (image != null) {
+          super.paintComponent(g);
+          g.drawImage(image, 0, 0, this);
+        }
+      }
+    }
+  }
 }

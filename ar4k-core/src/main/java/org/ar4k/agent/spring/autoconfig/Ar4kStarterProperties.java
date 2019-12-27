@@ -21,10 +21,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Proprità per bootstrap agente. Questa classe è utitilizzata da
  * Ar4kAutoConfiguration.
- * 
+ *
  * @author Andrea Ambrosini
- * 
- * 
+ *
+ *
  */
 
 @ConfigurationProperties(prefix = AR4K_PREFIX)
@@ -46,14 +46,14 @@ public class Ar4kStarterProperties {
   private String webRegistrationEndpoint = "https://xxxx.com";
   private String dnsRegistrationEndpoint = "subdomain.domain.com";
   private String beaconDiscoveryFilterString = "AR4K";
-  private int beaconDiscoveryPort = 33666;
-  private int fileConfigOrder = 1;
-  private int webConfigOrder = 2;
-  private int dnsConfigOrder = 0;
-  private int baseConfigOrder = 3;
-  private long threadSleep = 500;
-  private boolean consoleOnly = false;
-  private boolean test = true;
+  private String beaconDiscoveryPort = "33666";
+  private String fileConfigOrder = "1";
+  private String webConfigOrder = "2";
+  private String dnsConfigOrder = "0";
+  private String baseConfigOrder = "3";
+  private String threadSleep = "500";
+  private String consoleOnly = "false";
+  private String test = "true";
   private String logoUrl = "/static/img/ar4k.png";
 
   public String getConfPath() {
@@ -168,59 +168,59 @@ public class Ar4kStarterProperties {
     this.dnsRegistrationEndpoint = dnsRegistrationEndpoint;
   }
 
-  public int getFileConfigOrder() {
+  public String getFileConfigOrder() {
     return fileConfigOrder;
   }
 
-  public void setFileConfigOrder(int fileConfigOrder) {
+  public void setFileConfigOrder(String fileConfigOrder) {
     this.fileConfigOrder = fileConfigOrder;
   }
 
-  public int getWebConfigOrder() {
+  public String getWebConfigOrder() {
     return webConfigOrder;
   }
 
-  public void setWebConfigOrder(int webConfigOrder) {
+  public void setWebConfigOrder(String webConfigOrder) {
     this.webConfigOrder = webConfigOrder;
   }
 
-  public int getDnsConfigOrder() {
+  public String getDnsConfigOrder() {
     return dnsConfigOrder;
   }
 
-  public void setDnsConfigOrder(int dnsConfigOrder) {
+  public void setDnsConfigOrder(String dnsConfigOrder) {
     this.dnsConfigOrder = dnsConfigOrder;
   }
 
-  public int getBaseConfigOrder() {
+  public String getBaseConfigOrder() {
     return baseConfigOrder;
   }
 
-  public void setBaseConfigOrder(int baseConfigOrder) {
+  public void setBaseConfigOrder(String baseConfigOrder) {
     this.baseConfigOrder = baseConfigOrder;
   }
 
-  public long getThreadSleep() {
+  public String getThreadSleep() {
     return threadSleep;
   }
 
-  public void setThreadSleep(long threadSleep) {
+  public void setThreadSleep(String threadSleep) {
     this.threadSleep = threadSleep;
   }
 
-  public boolean isConsoleOnly() {
+  public String isConsoleOnly() {
     return consoleOnly;
   }
 
-  public void setConsoleOnly(boolean consoleOnly) {
+  public void setConsoleOnly(String consoleOnly) {
     this.consoleOnly = consoleOnly;
   }
 
-  public boolean isTest() {
+  public String isTest() {
     return test;
   }
 
-  public void setTest(boolean test) {
+  public void setTest(String test) {
     this.test = test;
   }
 
@@ -240,11 +240,11 @@ public class Ar4kStarterProperties {
     this.beaconDiscoveryFilterString = beaconDiscoveryFilterString;
   }
 
-  public int getBeaconDiscoveryPort() {
+  public String getBeaconDiscoveryPort() {
     return beaconDiscoveryPort;
   }
 
-  public void setBeaconDiscoveryPort(int beaconDiscoveryPort) {
+  public void setBeaconDiscoveryPort(String beaconDiscoveryPort) {
     this.beaconDiscoveryPort = beaconDiscoveryPort;
   }
 

@@ -7,5 +7,5 @@ dependencies {
   compile group: 'com.github.sarxos', name: 'webcam-capture-driver-ipcam', version: '0.3.12'
   compile group: 'com.github.sarxos', name: 'webcam-capture-driver-vlcj', version: '0.3.12'
   compile group: 'com.github.sarxos', name: 'webcam-capture-driver-opencv', version: '0.3.12'
-  //compile group: 'com.github.sarxos', name: 'webcam-capture-driver-ffmpeg-cli', version: '0.3.12'
+  compile group: 'org.bytedeco', name: 'javacv-platform', version: '1.5.2'  
   }

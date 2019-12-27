@@ -159,19 +159,19 @@ public class Anima
   @Value("${ar4k.beaconDiscoveryFilterString}")
   private String beaconDiscoveryFilterString;
   @Value("${ar4k.beaconDiscoveryPort}")
-  private Integer beaconDiscoveryPort;
+  private String beaconDiscoveryPort;
   @Value("${ar4k.fileConfigOrder}")
-  private Integer fileConfigOrder;
+  private String fileConfigOrder;
   @Value("${ar4k.webConfigOrder}")
-  private Integer webConfigOrder;
+  private String webConfigOrder;
   @Value("${ar4k.dnsConfigOrder}")
-  private Integer dnsConfigOrder;
+  private String dnsConfigOrder;
   @Value("${ar4k.baseConfigOrder}")
-  private Integer base64ConfigOrder;
+  private String base64ConfigOrder;
   @Value("${ar4k.threadSleep}")
-  private Long threadSleep;
+  private String threadSleep;
   @Value("${ar4k.consoleOnly}")
-  private boolean consoleOnly;
+  private String consoleOnly;
   @Value("${ar4k.logoUrl}")
   private String logoUrl;
 
@@ -329,19 +329,16 @@ public class Anima
       }
       if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
         logger.info("try keystore from dns: " + dnsKeystore);
-        String hostPart = dnsKeystore.split("\\.")[0];
-        String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
-        System.out.println("Using H:" + hostPart + " D:" + domainPart);
         try {
+          String hostPart = dnsKeystore.split("\\.")[0];
+          String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
+          System.out.println("Using H:" + hostPart + " D:" + domainPart);
           String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
-          try {
-            if (payloadString != null && payloadString.length() > 0) {
-              FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
-            }
-          } catch (IOException e) {
-            logger.logException(e);
+          if (payloadString != null && payloadString.length() > 0) {
+            FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
           }
-        } catch (UnknownHostException | TextParseException e) {
+        } catch (Exception e) {
+          logger.warn("dnsKeystore -> " + dnsKeystore);
           logger.logException(e);
         }
       }
@@ -376,7 +373,7 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateMachineStart
   public synchronized void initAgent() {
-    if (!consoleOnly) {
+    if (!Boolean.valueOf(consoleOnly)) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
     } else {
       logger.warn("console only true, run just the command line");
@@ -425,13 +422,14 @@ public class Anima
   }
 
   private void checkBeaconClient() {
-    if ((webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty()) || beaconDiscoveryPort != 0) {
+    if ((webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty())
+        || Integer.valueOf(beaconDiscoveryPort) != 0) {
       try {
         if (webRegistrationEndpoint == null || webRegistrationEndpoint.isEmpty()) {
           webRegistrationEndpoint = "http://localhost:0";
         }
         logger.info("TRY CONECTION TO BEACON AT " + webRegistrationEndpoint);
-        connectToBeaconService(webRegistrationEndpoint, beaconCaChainPem, beaconDiscoveryPort,
+        connectToBeaconService(webRegistrationEndpoint, beaconCaChainPem, Integer.valueOf(beaconDiscoveryPort),
             beaconDiscoveryFilterString);
       } catch (Exception e) {
         logger.warn("Beacon connection not ok: " + e.getMessage());
@@ -478,12 +476,32 @@ public class Anima
   private Ar4kConfig resolveBootstrapConfig() {
     Ar4kConfig targetConfig = null;
     int maxConfig = 0;
-    maxConfig = Integer.max(maxConfig, webConfigOrder);
-    maxConfig = Integer.max(maxConfig, dnsConfigOrder);
-    maxConfig = Integer.max(maxConfig, base64ConfigOrder);
-    maxConfig = Integer.max(maxConfig, fileConfigOrder);
+    try {
+      maxConfig = Integer.max(maxConfig, webConfigOrder != null ? Integer.valueOf(webConfigOrder) : 6);
+    } catch (Exception a) {
+      logger.warn("webConfigOrder -> " + webConfigOrder);
+      webConfigOrder = "6";
+    }
+    try {
+      maxConfig = Integer.max(maxConfig, dnsConfigOrder != null ? Integer.valueOf(dnsConfigOrder) : 6);
+    } catch (Exception a) {
+      logger.warn("dnsConfigOrder -> " + dnsConfigOrder);
+      dnsConfigOrder = "6";
+    }
+    try {
+      maxConfig = Integer.max(maxConfig, base64ConfigOrder != null ? Integer.valueOf(base64ConfigOrder) : 6);
+    } catch (Exception a) {
+      logger.warn("base64ConfigOrder -> " + base64ConfigOrder);
+      base64ConfigOrder = "6";
+    }
+    try {
+      maxConfig = Integer.max(maxConfig, fileConfigOrder != null ? Integer.valueOf(fileConfigOrder) : 6);
+    } catch (Exception a) {
+      logger.warn("fileConfigOrder -> " + fileConfigOrder);
+      fileConfigOrder = "6";
+    }
     for (int liv = 0; liv <= maxConfig; liv++) {
-      if (liv == webConfigOrder && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
+      if (liv == Integer.valueOf(webConfigOrder) && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
         try {
           logger.info("try webConfigDownload");
           targetConfig = webConfigDownload(webConfig);
@@ -492,7 +510,7 @@ public class Anima
         }
         break;
       }
-      if (liv == dnsConfigOrder && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
+      if (liv == Integer.valueOf(dnsConfigOrder) && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
         try {
           logger.info("try dnsConfigDownload");
           targetConfig = dnsConfigDownload(dnsConfig);
@@ -501,7 +519,8 @@ public class Anima
         }
         break;
       }
-      if (liv == base64ConfigOrder && targetConfig == null && baseConfig != null && !baseConfig.isEmpty()) {
+      if (liv == Integer.valueOf(base64ConfigOrder) && targetConfig == null && baseConfig != null
+          && !baseConfig.isEmpty()) {
         try {
           logger.info("try fromBase64");
           targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
@@ -510,7 +529,8 @@ public class Anima
         }
         break;
       }
-      if (liv == fileConfigOrder && targetConfig == null && fileConfig != null && !fileConfig.isEmpty()) {
+      if (liv == Integer.valueOf(fileConfigOrder) && targetConfig == null && fileConfig != null
+          && !fileConfig.isEmpty()) {
         try {
           logger.info("try fileConfig");
           targetConfig = loadConfigFromFile(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
@@ -782,15 +802,6 @@ public class Anima
     return logo;
   }
 
-  /*
-   * public Set<KeystoreConfig> getKeyStores() { return keyStores; }
-   *
-   * public void addKeyStores(KeystoreConfig keyStore) {
-   * this.keyStores.add(keyStore); }
-   *
-   * public void delKeyStores(KeystoreConfig keyStore) {
-   * this.keyStores.remove(keyStore); }
-   */
   public void setTargetConfig(Ar4kConfig config) {
     targetConfig = config;
   }

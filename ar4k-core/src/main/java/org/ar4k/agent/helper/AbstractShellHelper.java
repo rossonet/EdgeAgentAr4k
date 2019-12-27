@@ -57,7 +57,7 @@ public abstract class AbstractShellHelper {
   private static final Long load = 1500L;
 
   @Value("${ar4k.test}")
-  protected final boolean flagTestOk = false;
+  protected final String flagTestOk = "false";
 
   @Autowired
   protected ApplicationContext applicationContext;
@@ -75,7 +75,7 @@ public abstract class AbstractShellHelper {
   }
 
   protected Availability testOk() {
-    return flagTestOk ? Availability.available()
+    return Boolean.valueOf(flagTestOk) ? Availability.available()
         : Availability.unavailable("test command not available in this configuration");
   }
 
