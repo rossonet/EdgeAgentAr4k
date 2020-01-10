@@ -16,7 +16,6 @@ package org.ar4k.agent.druido;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.UUID;
 
 import org.ar4k.agent.camera.CameraShellInterface;
 import org.ar4k.agent.camera.usb.UsbCameraConfig;
@@ -42,6 +41,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.InputProvider;
 import org.springframework.shell.Shell;
@@ -56,7 +56,6 @@ import org.springframework.shell.standard.StandardAPIAutoConfiguration;
 import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.TestPropertySource;
 
 @Configuration
 @Import({
@@ -71,14 +70,15 @@ import org.springframework.test.context.TestPropertySource;
     Commands.class, FileValueProvider.class, CameraShellInterface.class, AnimaStateMachineConfig.class,
     AnimaHomunculus.class, Ar4kuserDetailsService.class, Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class,
     Anima.class, DataShellInterface.class })
-@TestPropertySource(locations = "classpath:application.properties")
+@PropertySource("classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class VideoStreamTests {
 
   public BeanFactory context = null;
-  Anima anima = new Anima();
 
-  Shell shell;
+  Anima anima = null;
+
+  Shell shell = null;
 
   @Bean
   @Autowired
@@ -88,7 +88,8 @@ public class VideoStreamTests {
 
   @Before
   public void setUp() throws Exception {
-    anima.setAgentUniqueName(UUID.randomUUID().toString().replaceAll("-", ""));
+    anima = new Anima();
+    System.out.println("\n\n" + anima.toString() + "\n\n");
     KeystoreConfig ks = new KeystoreConfig();
     ks.create(anima.getAgentUniqueName(), ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
         ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,
@@ -100,7 +101,8 @@ public class VideoStreamTests {
 
   @After
   public void tearDown() throws Exception {
-
+    anima.close();
+    anima = null;
   }
 
   @Rule
@@ -137,7 +139,8 @@ public class VideoStreamTests {
     Thread.sleep(6000L);
     DataShellInterface datashellInteface = context.getBean(DataShellInterface.class);
     System.out.println("channels: " + datashellInteface.listDataChannels());
-    Thread.sleep(6000L);
+    interfaceVideo.subscribeVideoChannel("image-global");
+    Thread.sleep(2 * 60000L);
   }
 
   @Test
@@ -151,7 +154,8 @@ public class VideoStreamTests {
     Thread.sleep(6000L);
     DataShellInterface datashellInteface = context.getBean(DataShellInterface.class);
     System.out.println("channels: " + datashellInteface.listDataChannels());
-    Thread.sleep(6000L);
+    interfaceVideo.subscribeVideoChannel("image-global");
+    Thread.sleep(2 * 60000L);
   }
 
 }

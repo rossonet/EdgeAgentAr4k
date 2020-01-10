@@ -74,11 +74,13 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.TextParseException;
 
@@ -104,11 +106,11 @@ public class Anima
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private final String dbDataStorePath = "~/.ar4k/anima_datastore";
-  private final String dbDataStoreName = "datastore";
+  private static transient final String registrationPin = ConfigHelper.createRandomRegistryId();
+  private final String agentUniqueName = ConfigHelper.generateNewUniqueName();
 
-  private static transient String registrationPin = ConfigHelper.createRandomRegistryId();
-  private String agentUniqueName = ConfigHelper.generateNewUniqueName();
+  private final String dbDataStorePath = "~/.ar4k/anima_datastore_" + agentUniqueName;
+  private final String dbDataStoreName = "datastore";
 
   private Timer timerScheduler = null;
 
@@ -116,7 +118,10 @@ public class Anima
   private Shell shell;
 
   @Autowired
-  private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
+  private StateMachineFactory<AnimaStates, AnimaEvents> factoryStateMachine;
+
+  // @Autowired
+  private StateMachine<AnimaStates, AnimaEvents> animaStateMachine = null;
 
   @Autowired
   private AnimaHomunculus animaHomunculus;
@@ -198,7 +203,7 @@ public class Anima
 
   private transient RecordManager recMan = null;
 
-  private String beanName = null;
+  private String beanName = "anima";
 
   private BeaconClient beaconClient = null;
 
@@ -241,9 +246,23 @@ public class Anima
 
   @Override
   public void close() {
-    animaStateMachine.sendEvent(AnimaEvents.STOP);
-    animaStateMachine.stop();
-    animaStateMachine = null;
+    if (animaStateMachine != null) {
+      animaStateMachine.sendEvent(AnimaEvents.STOP);
+      animaStateMachine.stop();
+      animaStateMachine = null;
+    }
+    if (timerScheduler != null) {
+      timerScheduler.cancel();
+      timerScheduler = null;
+    }
+    if (recMan != null) {
+      try {
+        recMan.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      recMan = null;
+    }
   }
 
   // workaround Spring State Machine
@@ -279,10 +298,10 @@ public class Anima
       Ar4kUserDetails admin = new Ar4kUserDetails();
       admin.setUsername("admin");
       admin.setPassword(passwordEncoder.encode(adminPassword));
-      SimpleGrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
-      SimpleGrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
-      ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
-      ((Set<SimpleGrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityUser);
+      GrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+      GrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
+      ((Set<GrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
+      ((Set<GrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityUser);
       boolean free = true;
       for (Ar4kUserDetails q : localUsers) {
         if (q.getUsername().equals("admin")) {
@@ -298,70 +317,74 @@ public class Anima
   }
 
   private void setMasterKeystore() {
-    KeystoreConfig ks = new KeystoreConfig();
-    boolean foundFile = false;
-    boolean foundWeb = false;
-    ks.keyStoreAlias = keystoreMainAlias;
-    ks.keystorePassword = keystorePassword;
-    ks.filePathPre = fileKeystore != null ? fileKeystore.replaceFirst("^~", System.getProperty("user.home")) : null;
-    if (fileKeystore != null && !fileKeystore.isEmpty()) {
-      if (new File(ks.filePathPre).exists()) {
-        foundFile = true;
-        logger.info("use keystore " + ks.toString());
-      } else {
-        logger.info("keystore file name not found, using parameters " + ks.toString());
-      }
-    } else {
-      logger.info("value of fileKeystore is null, use: " + ks.toString());
-    }
-    if (!foundFile) {
-      if (webKeystore != null && !webKeystore.isEmpty()) {
-        try {
-          logger.info("try keystore from url: " + webKeystore);
-          HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystore);
-        } catch (Exception e) {
-          foundWeb = false;
-          // logger.logException(e);
-        }
-        if (new File(ks.filePathPre).exists()) {
-          foundWeb = true;
-        }
-      }
-      if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
-        logger.info("try keystore from dns: " + dnsKeystore);
-        try {
-          String hostPart = dnsKeystore.split("\\.")[0];
-          String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
-          System.out.println("Using H:" + hostPart + " D:" + domainPart);
-          String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
-          if (payloadString != null && payloadString.length() > 0) {
-            FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
-          }
-        } catch (Exception e) {
-          logger.warn("dnsKeystore -> " + dnsKeystore);
-          logger.logException(e);
-        }
-      }
-    }
-    if (keystorePassword != null && !keystorePassword.isEmpty()) {
-      ks.keystorePassword = keystorePassword;
-    }
-    if (keystoreMainAlias != null && !keystoreMainAlias.isEmpty()) {
+    if (myIdentityKeystore == null) {
+      KeystoreConfig ks = new KeystoreConfig();
+      boolean foundFile = false;
+      boolean foundWeb = false;
       ks.keyStoreAlias = keystoreMainAlias;
+      ks.keystorePassword = keystorePassword;
+      ks.filePathPre = fileKeystore != null ? fileKeystore.replace("~", System.getProperty("user.home")) : null;
+      if (fileKeystore != null && !fileKeystore.isEmpty()) {
+        if (new File(ks.filePathPre).exists()) {
+          foundFile = true;
+          logger.info("use keystore " + ks.toString());
+        } else {
+          logger.info("keystore file name not found, using parameters " + ks.toString());
+        }
+      } else {
+        logger.info("value of fileKeystore is null, use: " + ks.toString());
+      }
+      if (!foundFile) {
+        if (webKeystore != null && !webKeystore.isEmpty()) {
+          try {
+            logger.info("try keystore from url: " + webKeystore);
+            HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystore);
+          } catch (Exception e) {
+            foundWeb = false;
+            // logger.logException(e);
+          }
+          if (new File(ks.filePathPre).exists()) {
+            foundWeb = true;
+          }
+        }
+        if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
+          logger.info("try keystore from dns: " + dnsKeystore);
+          try {
+            String hostPart = dnsKeystore.split("\\.")[0];
+            String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
+            System.out.println("Using H:" + hostPart + " D:" + domainPart);
+            String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+            if (payloadString != null && payloadString.length() > 0) {
+              FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
+            }
+          } catch (Exception e) {
+            logger.warn("dnsKeystore -> " + dnsKeystore);
+            logger.logException(e);
+          }
+        }
+      }
+      if (keystorePassword != null && !keystorePassword.isEmpty()) {
+        ks.keystorePassword = keystorePassword;
+      }
+      if (keystoreMainAlias != null && !keystoreMainAlias.isEmpty()) {
+        ks.keyStoreAlias = keystoreMainAlias;
+      }
+      // se alla fine non è stato trovato un keystore, lo creo
+      if (!new File(fileKeystore.replace("~", System.getProperty("user.home"))).exists()) {
+        logger.warn("new keystore: " + ks.toString());
+        ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
+            ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
+            ConfigHelper.ip, ks.keyStoreAlias, true);
+        logger.debug("keystore created");
+      }
+      // addKeyStores(ks);
+      setMyIdentityKeystore(ks);
+      setMyAliasCertInKeystore(ks.keyStoreAlias);
+      logger.info("Certificate for anima created: "
+          + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal() + " - alias " + ks.keyStoreAlias);
+    } else {
+      logger.info("Use keystore " + myIdentityKeystore.toString());
     }
-    // se alla fine non è stato trovato un keystore, lo creo
-    if (!new File(fileKeystore.replaceFirst("^~", System.getProperty("user.home"))).exists()) {
-      logger.warn("new keystore: " + ks.toString());
-      ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
-          ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
-          ConfigHelper.ip, ks.keyStoreAlias, true);
-      logger.debug("keystore created");
-    }
-    // addKeyStores(ks);
-    setMyIdentityKeystore(ks);
-    setMyAliasCertInKeystore(ks.keyStoreAlias);
-    logger.info("Certificate for anima created: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
-        + " - alias " + ks.keyStoreAlias);
   }
 
   @PostConstruct
@@ -386,17 +409,16 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateChanged(target = "STAMINAL")
   public synchronized void startingAgent() {
-    new File(confPath.replaceFirst("^~", System.getProperty("user.home"))).mkdirs();
-    fileConfig = fileConfig.replaceFirst("^~", System.getProperty("user.home"));
+    new File(confPath.replace("~", System.getProperty("user.home"))).mkdirs();
+    fileConfig = fileConfig.replace("~", System.getProperty("user.home"));
     try {
       if (dataStore == null) {
         recMan = RecordManagerFactory
-            .createRecordManager(dbDataStorePath.replaceFirst("^~", System.getProperty("user.home")));
+            .createRecordManager(dbDataStorePath.replace("~", System.getProperty("user.home")));
         dataStore = recMan.treeMap(dbDataStoreName);
         logger.info("datastore on Anima started");
       }
     } catch (IOException e) {
-      // logger.warn(e.getMessage());
       logger.logException(e);
     }
     bootstrapConfig = resolveBootstrapConfig();
@@ -457,7 +479,6 @@ public class Anima
       if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
         logger.info("found Beacon endpoint: " + urlBeacon);
         if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
-          setAgentUniqueName(beaconClient.getAgentUniqueName());
           logger.info("the unique name is changed in " + getAgentUniqueName());
         }
       } else {
@@ -533,7 +554,7 @@ public class Anima
           && !fileConfig.isEmpty()) {
         try {
           logger.info("try fileConfig");
-          targetConfig = loadConfigFromFile(fileConfig.replaceFirst("^~", System.getProperty("user.home")));
+          targetConfig = loadConfigFromFile(fileConfig.replace("~", System.getProperty("user.home")));
         } catch (Exception e) {
           logger.logException(e);
         }
@@ -566,7 +587,7 @@ public class Anima
     Ar4kConfig resultConfig = null;
     try {
       String config = "";
-      FileReader fileReader = new FileReader(pathConfig.replaceFirst("^~", System.getProperty("user.home")));
+      FileReader fileReader = new FileReader(pathConfig.replace("~", System.getProperty("user.home")));
       BufferedReader bufferedReader = new BufferedReader(fileReader);
       String line = null;
       while ((line = bufferedReader.readLine()) != null) {
@@ -787,6 +808,7 @@ public class Anima
   private synchronized void checkDualStart() {
     logger.info("STARTING AGENT...");
     if (onApplicationEventFlag && afterSpringInitFlag) {
+      animaStateMachine = factoryStateMachine.getStateMachine();
       animaStateMachine.start();
     }
   }
@@ -897,11 +919,6 @@ public class Anima
     return agentUniqueName;
   }
 
-  public void setAgentUniqueName(String agentUniqueName) {
-    if (agentUniqueName != null && !agentUniqueName.isEmpty())
-      this.agentUniqueName = agentUniqueName;
-  }
-
   public DataAddress getDataAddress() {
     return dataAddress;
   }
@@ -910,20 +927,8 @@ public class Anima
     this.dataAddress = dataAddress;
   }
 
-  @Override
-  public String toString() {
-    return "Anima [dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName=" + dbDataStoreName + ", agentUniqueName="
-        + agentUniqueName + ", fileKeystore=" + fileKeystore + ", webKeystore=" + webKeystore + ", dnsKeystore="
-        + dnsKeystore + ", keystorePassword=" + keystorePassword + ", keystoreMainAlias=" + keystoreMainAlias
-        + ", confPath=" + confPath + ", fileConfig=" + fileConfig + ", webConfig=" + webConfig + ", dnsConfig="
-        + dnsConfig + ", baseConfig=" + baseConfig + ", beaconCaChainPem=" + beaconCaChainPem
-        + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
-        + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString=" + beaconDiscoveryFilterString
-        + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder + ", webConfigOrder="
-        + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder + ", base64ConfigOrder=" + base64ConfigOrder
-        + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly + ", logoUrl=" + logoUrl + ", runtimeConfig="
-        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootStrapConfig=" + bootstrapConfig + ", stateTarget="
-        + stateTarget + ", statesBefore=" + statesBefore + ", beanName=" + beanName + "]";
+  public String getDbDataStoreName() {
+    return dbDataStoreName;
   }
 
   public KeystoreConfig getMyIdentityKeystore() {
@@ -1000,6 +1005,41 @@ public class Anima
       runtimeConfig = newTargetConfig;
       sendEvent(AnimaEvents.RESTART);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "Anima [dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName=" + dbDataStoreName + ", agentUniqueName="
+        + agentUniqueName + ", animaHomunculus=" + animaHomunculus + ", fileKeystore=" + fileKeystore + ", webKeystore="
+        + webKeystore + ", dnsKeystore=" + dnsKeystore + ", keystorePassword=" + keystorePassword
+        + ", keystoreMainAlias=" + keystoreMainAlias + ", confPath=" + confPath + ", fileConfig=" + fileConfig
+        + ", webConfig=" + webConfig + ", dnsConfig=" + dnsConfig + ", baseConfig=" + baseConfig + ", beaconCaChainPem="
+        + beaconCaChainPem + ", adminPassword=" + adminPassword + ", webRegistrationEndpoint=" + webRegistrationEndpoint
+        + ", dnsRegistrationEndpoint=" + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString="
+        + beaconDiscoveryFilterString + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder="
+        + fileConfigOrder + ", webConfigOrder=" + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder
+        + ", base64ConfigOrder=" + base64ConfigOrder + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly
+        + ", logoUrl=" + logoUrl + ", runtimeConfig=" + runtimeConfig + ", targetConfig=" + targetConfig
+        + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget=" + stateTarget + ", statesBefore=" + statesBefore
+        + ", components=" + components + ", dataStore=" + dataStore + ", localUsers=" + localUsers + ", beanName="
+        + beanName + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore=" + myAliasCertInKeystore
+        + "]";
+  }
+
+  public StateMachine<AnimaStates, AnimaEvents> getAnimaStateMachine() {
+    return animaStateMachine;
+  }
+
+  public void setAnimaStateMachine(StateMachine<AnimaStates, AnimaEvents> animaStateMachine) {
+    this.animaStateMachine = animaStateMachine;
+  }
+
+  public String getFileKeystore() {
+    return fileKeystore;
+  }
+
+  public String getDbDataStorePath() {
+    return dbDataStorePath;
   }
 
 }

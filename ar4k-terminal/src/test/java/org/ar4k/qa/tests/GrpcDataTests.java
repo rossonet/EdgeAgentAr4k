@@ -94,7 +94,6 @@ public class GrpcDataTests {
 
   @Before
   public void setUp() throws Exception {
-    anima.setAgentUniqueName(UUID.randomUUID().toString().replaceAll("-", ""));
     KeystoreConfig ks = new KeystoreConfig();
     ks.create(anima.getAgentUniqueName(), ConfigHelper.organization, ConfigHelper.unit, ConfigHelper.locality,
         ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns, ConfigHelper.ip,

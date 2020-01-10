@@ -74,7 +74,7 @@ public class KeystoreConfig implements ConfigSeed {
   public String keyStoreAlias = "ca";
 
   public String filePath() {
-    return filePathPre.replaceFirst("^~", System.getProperty("user.home"));
+    return filePathPre.replace("~", System.getProperty("user.home"));
   }
 
   public boolean check() {

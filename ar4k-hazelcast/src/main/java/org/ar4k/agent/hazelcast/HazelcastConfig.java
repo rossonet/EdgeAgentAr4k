@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 
@@ -23,7 +22,7 @@ public class HazelcastConfig extends AbstractServiceConfig {
   public Instant lastUpdate = new Instant();
 
   @Parameter(names = "--uniqueName", description = "the uniqueName of node for the cluster")
-  public String uniqueName = Anima.getApplicationContext().getBean(Anima.class).getAgentUniqueName();
+  public String uniqueName = anima.getAgentUniqueName();
   @Parameter(names = "--beanName", description = "the beanName for the Spring registration")
   public String beanName = "hazelcast-instance";
   @Parameter(names = "--groupName", description = "the optional group name")
@@ -32,14 +31,14 @@ public class HazelcastConfig extends AbstractServiceConfig {
   public String groupPassword = null;
   @Parameter(names = "--multiCastEnable", description = "is multicast plugin enbled?")
   public boolean multiCastEnable = true;
-  @Parameter(names = "--members", description = "the members of the cluster", arity = 0)
+  @Parameter(names = "--members", description = "the member nodes of the cluster", arity = 0)
   public List<String> members = new ArrayList<>();
-  @Parameter(names = "--kubernetesEnabled", description = "is kubernetes plugin enbled?")
+  @Parameter(names = "--kubernetesEnabled", description = "is kubernetes plugin enabled?")
   public boolean kubernetesEnabled = false;
   @Parameter(names = "--kubernetesNameSpace", description = "the kubernetes name space of the cluster")
   public String kubernetesNameSpace = null;
   @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
-  public String fatherOfChannels = null;
+  public String fatherOfChannels = "hazelcast-connection";
   @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
   public String scopeOfChannels = null;
   @Parameter(names = "--topics", description = "topics to subscribe and write queue", arity = 0)

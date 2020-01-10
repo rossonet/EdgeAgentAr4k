@@ -35,7 +35,7 @@ public class HazelcastComponent implements Ar4kComponent {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
-  private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+  private Anima anima = null;
 
   private HazelcastConfig configuration = null;
 
@@ -53,6 +53,7 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   public HazelcastComponent(HazelcastConfig tribeConfig) {
+    anima = tribeConfig.anima;
     this.configuration = tribeConfig;
     beanName = this.configuration.getBeanName();
   }

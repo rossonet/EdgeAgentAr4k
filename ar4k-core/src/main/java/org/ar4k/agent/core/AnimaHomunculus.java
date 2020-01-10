@@ -44,10 +44,12 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     this.rpcIds = new ConcurrentHashMap<>();
   }
 
+  @Override
   public List<Object> getAllPrincipals() {
     return new ArrayList<>(principals.keySet());
   }
 
+  @Override
   public List<SessionInformation> getAllSessions(Object principal, boolean includeExpiredSessions) {
     List<SessionInformation> list = null;
     if (principal != null && principals.containsKey(principal)) {
@@ -71,6 +73,7 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     return list;
   }
 
+  @Override
   public SessionInformation getSessionInformation(String sessionId) {
     Assert.hasText(sessionId, "SessionId required as per interface contract");
     return sessionIds.get(sessionId);
@@ -81,11 +84,13 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     return rpcIds.get(sessionId);
   }
 
+  @Override
   public void onApplicationEvent(SessionDestroyedEvent event) {
     String sessionId = event.getId();
     removeSessionInformation(sessionId);
   }
 
+  @Override
   public void refreshLastRequest(String sessionId) {
     Assert.hasText(sessionId, "SessionId required as per interface contract");
     SessionInformation info = getSessionInformation(sessionId);
@@ -94,6 +99,7 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     }
   }
 
+  @Override
   public void registerNewSession(String sessionId, Object principal) {
     Assert.hasText(sessionId, "SessionId required as per interface contract");
     Assert.notNull(principal, "Principal required as per interface contract");
@@ -114,6 +120,7 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     }
   }
 
+  @Override
   public void removeSessionInformation(String sessionId) {
     Assert.hasText(sessionId, "SessionId required as per interface contract");
     SessionInformation info = getSessionInformation(sessionId);
@@ -147,14 +154,9 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     return anima;
   }
 
-  public void setAnima(Anima anima) {
-    this.anima = anima;
-  }
-
   @Override
   public void close() throws Exception {
     // TODO Auto-generated method stub
-
   }
 
 }

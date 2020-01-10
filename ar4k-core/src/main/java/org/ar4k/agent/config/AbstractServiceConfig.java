@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
+import org.ar4k.agent.core.Anima;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -37,6 +38,9 @@ import com.beust.jcommander.Parameter;
 public abstract class AbstractServiceConfig implements ServiceConfig {
 
   private static final long serialVersionUID = 4934166738722721736L;
+
+  private static final transient String animaBeanName = "anima";
+  public transient Anima anima = ((Anima) Anima.getApplicationContext().getBean(animaBeanName));
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();
