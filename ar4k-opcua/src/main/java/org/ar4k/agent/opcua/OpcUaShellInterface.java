@@ -18,9 +18,7 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -28,9 +26,6 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -42,23 +37,16 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("OPC UA Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=opcUaInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "opcUaInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=opcUaInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "opcUaInterface")
 @RestController
 @RequestMapping("/opcUaInterface")
 public class OpcUaShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
-  @ManagedOperation
-  public String listSerialPorts() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return null;// gson.toJson(OpcUaService.getSerialDevice());
-  }
-
-  @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
+  @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "OPC UA Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSerialService(@ShellOption(optOut = true) @Valid OpcUaClientConfig service) {
+  public void addOpcUaClientService(@ShellOption(optOut = true) @Valid OpcUaClientConfig service) {
     getWorkingConfig().pots.add(service);
   }
 

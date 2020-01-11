@@ -23,14 +23,11 @@ import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.console.chat.sshd.firstCommand.Ar4kProcessShellFactory;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.Shell;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -49,8 +46,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Ssh Server Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=sshdInterface", description = "Ar4k Agent SSHD RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshdInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=sshdInterface", description = "Ar4k Agent SSHD RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshdInterface")
 @RestController
 @RequestMapping("/sshdInterface")
 public class SshdShellInterface extends AbstractShellHelper {
@@ -74,7 +71,7 @@ public class SshdShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+    getWorkingConfig().pots.add(service);
   }
 
   @ShellMethod(value = "Start SSHD remote management server that use local bash process", group = "Ssh Server Commands")

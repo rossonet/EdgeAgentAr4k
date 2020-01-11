@@ -16,12 +16,9 @@ package org.ar4k.agent.console;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -32,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Interfaccia a linea di comando per gestione tunnel SSH.
  */
 
 @ShellCommandGroup("Tunnel Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=sshInterface", description = "Ar4k Agent Ssh Tunnel", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=sshInterface", description = "Ar4k Agent Ssh Tunnel", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshInterface")
 @RestController
 @RequestMapping("/sshInterface")
 public class SshShellInterface extends AbstractShellHelper {
@@ -48,7 +45,7 @@ public class SshShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshNetworkPoint(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+    getWorkingConfig().pots.add(service);
   }
 
 }

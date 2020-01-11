@@ -16,11 +16,8 @@ package org.ar4k.agent.xmpp;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -37,8 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Homunculus Jabber")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=jabberInterface", description = "Ar4k Agent Jabber Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "jabberInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=jabberInterface", description = "Ar4k Agent Jabber Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "jabberInterface")
 @RestController
 @RequestMapping("/jabberInterface")
 public class JabberHomunculusShellInterface extends AbstractShellHelper {
@@ -47,7 +44,7 @@ public class JabberHomunculusShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addJabberConnection(@ShellOption(optOut = true) @Valid JabberHomunculusConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+    getWorkingConfig().pots.add(service);
   }
 
 }

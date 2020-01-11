@@ -173,10 +173,10 @@ public class HardwareHelper {
     }
     // System.out.println("check2");
     // X RaspBerry
-    try {
-      dato.setPiPlatformName(PlatformManager.getPlatform().getLabel());
-    } catch (Exception ex) {
-    }
+    /*
+     * try { dato.setPiPlatformName(PlatformManager.getPlatform().getLabel()); }
+     * catch (Exception ex) { }
+     */
     try {
       dato.setPiPlatformID(PlatformManager.getPlatform().getId());
     } catch (Exception ex) {

@@ -3,9 +3,7 @@ package org.ar4k.agent.iot.serial.json;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -20,8 +18,8 @@ import org.springframework.shell.standard.ShellOption;
 
 @ShellCommandGroup("Serial Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=iotSerialInterface", description = "Ar4k Agent IoT Serial Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotSerialInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=iotSerialInterface", description = "Ar4k Agent IoT Serial Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotSerialInterface")
 public class SerialJsonShellInterface extends AbstractShellHelper {
 
   private SerialJsonService serialServiceJson = null;

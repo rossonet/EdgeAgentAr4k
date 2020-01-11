@@ -38,10 +38,8 @@ import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -51,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Interfaccia a riga di comando per la gestione dell'interfaccia PCAP.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
@@ -59,8 +57,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Pcap Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=pcapInterface", description = "Ar4k Agent pcap interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "pcapInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=pcapInterface", description = "Ar4k Agent pcap interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "pcapInterface")
 @RestController
 @RequestMapping("/pcapInterface")
 public class PcapShellInterface extends AbstractShellHelper {

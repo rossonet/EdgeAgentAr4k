@@ -17,9 +17,7 @@ package org.ar4k.agent.cortex.drools;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -37,8 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("AI Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=droolsInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "droolsInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=droolsInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "droolsInterface")
 @RestController
 @RequestMapping("/droolsInterface")
 public class DroolsShellInterface extends AbstractShellHelper {

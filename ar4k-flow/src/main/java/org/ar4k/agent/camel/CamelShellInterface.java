@@ -21,9 +21,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -37,14 +35,14 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Interfaccia a riga di comando per la gestione dei servizi Apache Camel.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
 @ShellCommandGroup("Camel Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=camelInterface", description = "Ar4k Agent camel interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "camelInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=camelInterface", description = "Ar4k Agent camel interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "camelInterface")
 @RestController
 @RequestMapping("/camelInterface")
 
@@ -55,7 +53,7 @@ public class CamelShellInterface extends AbstractShellHelper {
   @Autowired
   public CamelContext camelContext;
 
-  Map<String, String> camelComponents = new HashMap<String, String>();
+  Map<String, String> camelComponents = new HashMap<>();
 
   @ShellMethod(value = "List camel endpoints managed by the platflorm", group = "Camel Commands")
   @ManagedOperation

@@ -29,9 +29,7 @@ import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
@@ -57,8 +55,8 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Camera Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=cameraInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "cameraInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=cameraInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "cameraInterface")
 @RestController
 @RequestMapping("/cameraInterface")
 public class CameraShellInterface extends AbstractShellHelper {

@@ -24,9 +24,7 @@ import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.channels.IRendezvousChannel;
 import org.ar4k.agent.core.data.messages.StringChatRpcMessage;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
@@ -45,8 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Data Server Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=dataInterface", description = "Ar4k Agent Data Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "dataInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=dataInterface", description = "Ar4k Agent Data Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "dataInterface")
 @RestController
 @RequestMapping("/dataInterface")
 public class DataShellInterface extends AbstractShellHelper implements MessageHandler {

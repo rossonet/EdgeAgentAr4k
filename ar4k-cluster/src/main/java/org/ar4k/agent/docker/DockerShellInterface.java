@@ -70,11 +70,11 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Docker Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=dockerInterface", description = "Ar4k Agent Docker Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "dockerInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=dockerInterface", description = "Ar4k Agent Docker Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "dockerInterface")
 @RestController
 @RequestMapping("/dockerInterface")
-public class DockerInterface extends AbstractShellHelper {
+public class DockerShellInterface extends AbstractShellHelper {
 
   private static final String PORTAINER_IMAGE = "portainer/portainer:latest";
 

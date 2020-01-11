@@ -4,6 +4,10 @@ bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
 *.ar4k.conf
+*.log
+*.log.*.gz
+training-data/*
+*.ks
 
 training-data/*
 

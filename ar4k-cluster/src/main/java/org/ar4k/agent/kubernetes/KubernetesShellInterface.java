@@ -72,13 +72,13 @@ import io.kubernetes.client.util.Yaml;
 
 @ShellCommandGroup("Kubernetes Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=kubernetesInterface", description = "Ar4k Agent Kubernetes Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "kubernetesInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=kubernetesInterface", description = "Ar4k Agent Kubernetes Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "kubernetesInterface")
 @RestController
 @RequestMapping("/kubernetesInterface")
 //TODO finire implementazione console per gestire il deploy in cluster
 //TODO implementare un gestore di cluster come servizio che utilizza i canali per mettere a disposizione servizi
-public class KubernetesInterface extends AbstractShellHelper {
+public class KubernetesShellInterface extends AbstractShellHelper {
   @Autowired
   Shell shell;
 

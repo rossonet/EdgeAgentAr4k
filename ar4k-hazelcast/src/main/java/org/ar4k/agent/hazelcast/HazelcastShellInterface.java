@@ -19,9 +19,7 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -43,8 +41,8 @@ import com.hazelcast.core.Member;
 
 @ShellCommandGroup("Tribe Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=hazelcastInterface", description = "Ar4k Agent Hazelcast Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "hazelcastInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=hazelcastInterface", description = "Ar4k Agent Hazelcast Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "hazelcastInterface")
 @RestController
 @RequestMapping("/hazelcastInterface")
 

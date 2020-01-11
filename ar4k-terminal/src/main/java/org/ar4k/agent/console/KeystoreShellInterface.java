@@ -30,9 +30,7 @@ import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -54,8 +52,8 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Keytools Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=keytoolsInterface", description = "Ar4k Agent keytools interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "keytoolsInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=keytoolsInterface", description = "Ar4k Agent keytools interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "keytoolsInterface")
 @RestController
 @RequestMapping("/keytoolsInterface")
 public class KeystoreShellInterface extends AbstractShellHelper {

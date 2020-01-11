@@ -3,8 +3,11 @@
 bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
-
+*.log
+*.log.*.gz
 training-data/*
+*.ks
+
 
 ### OUTPUT ###
 spring-shell.log

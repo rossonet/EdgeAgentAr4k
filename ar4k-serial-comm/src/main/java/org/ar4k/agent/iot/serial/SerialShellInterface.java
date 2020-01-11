@@ -18,9 +18,7 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.iot.serial.json.SerialJsonService;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -43,8 +41,8 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Serial Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=serialInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "serialInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=serialInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "serialInterface")
 @RestController
 @RequestMapping("/serialInterface")
 public class SerialShellInterface extends AbstractShellHelper {

@@ -10,7 +10,7 @@ dependencies {
   compile("org.apache.camel:camel-printer:${project.ext.camelVersion}")
   compile("org.apache.camel:camel-ftp:${project.ext.camelVersion}")
   compile("org.apache.camel:camel-git:${project.ext.camelVersion}")
-  compile("org.apache.camel:camel-quartz2:${project.ext.camelVersion}")
+ // compile("org.apache.camel:camel-quartz2:${project.ext.camelVersion}")
   compile("org.apache.camel:camel-exec:${project.ext.camelVersion}")
   compile("org.apache.camel:camel-crypto:${project.ext.camelVersion}")
   compile("org.apache.camel:camel-websocket:${project.ext.camelVersion}")

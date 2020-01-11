@@ -24,9 +24,7 @@ import org.ethereum.core.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -36,14 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Interfaccia da linea di comando per per la gestione dell'aggregazione in
  * comunità di microservice.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
 @ShellCommandGroup("Ethereum Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=ethereumInterface", description = "Ar4k Agent Ethereum Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "ethereumInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=ethereumInterface", description = "Ar4k Agent Ethereum Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "ethereumInterface")
 @RestController
 @RequestMapping("/ethereumInterface")
 @ConditionalOnProperty(name = "ar4k.ethereum", havingValue = "true")
@@ -56,8 +54,8 @@ public class EthereumShellInterface {
   @Autowired
   Anima anima;
 
-  List<Block> genesisBlocks = new ArrayList<Block>();
-  List<Repository> repositories = new ArrayList<Repository>();
+  List<Block> genesisBlocks = new ArrayList<>();
+  List<Repository> repositories = new ArrayList<>();
 
   @ShellMethod(value = "Create a Ethereum network", group = "Ethereum Commands")
   @ManagedOperation

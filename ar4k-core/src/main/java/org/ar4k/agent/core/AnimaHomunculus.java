@@ -156,7 +156,13 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
+    sessionIds.clear();
+    rpcIds.clear();
+  }
+
+  @Override
+  public String toString() {
+    return "AnimaHomunculus [getAllPrincipals()=" + getAllPrincipals() + "]";
   }
 
 }

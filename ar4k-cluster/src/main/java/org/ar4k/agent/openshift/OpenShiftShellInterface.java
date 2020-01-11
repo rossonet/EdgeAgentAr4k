@@ -16,8 +16,6 @@ package org.ar4k.agent.openshift;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Shell;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -32,12 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("OpenShift Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=openshiftInterface", description = "Ar4k Agent OpenShift Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "openshiftInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=openshiftInterface", description = "Ar4k Agent OpenShift Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "openshiftInterface")
 @RestController
 @RequestMapping("/openshiftInterface")
 //TODO completare
-public class OpenShiftInterface extends AbstractShellHelper {
+public class OpenShiftShellInterface extends AbstractShellHelper {
 
   @Autowired
   Shell shell;

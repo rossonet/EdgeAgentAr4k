@@ -65,12 +65,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -80,7 +78,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.TextParseException;
 
@@ -95,9 +92,9 @@ import jdbm.RecordManagerFactory;
  *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina a
  *         stati dei servizi e funge da Bean principale per l'uso delle API Ar4k
  */
-@ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
+//@ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
 @Component("anima")
-@EnableMBeanExport
+//@EnableMBeanExport
 @Scope("singleton")
 @EnableJms
 public class Anima
@@ -116,12 +113,12 @@ public class Anima
 
   @Autowired
   private Shell shell;
-
+  /*
+   * @Autowired private StateMachineFactory<AnimaStates, AnimaEvents>
+   * factoryStateMachine;
+   */
   @Autowired
-  private StateMachineFactory<AnimaStates, AnimaEvents> factoryStateMachine;
-
-  // @Autowired
-  private StateMachine<AnimaStates, AnimaEvents> animaStateMachine = null;
+  private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
 
   @Autowired
   private AnimaHomunculus animaHomunculus;
@@ -237,7 +234,8 @@ public class Anima
 
   @ManagedOperation
   public AnimaStates getState() {
-    return animaStateMachine.getState().getId();
+    return (animaStateMachine != null && animaStateMachine.getState() != null) ? animaStateMachine.getState().getId()
+        : null;
   }
 
   public boolean isRunning() {
@@ -280,7 +278,7 @@ public class Anima
         targetService.kill();
       }
       components.clear();
-      if (new Timer() != null) {
+      if (timerScheduler != null) {
         timerScheduler.cancel();
         timerScheduler.purge();
         timerScheduler = null;
@@ -806,9 +804,9 @@ public class Anima
   }
 
   private synchronized void checkDualStart() {
-    logger.info("STARTING AGENT...");
     if (onApplicationEventFlag && afterSpringInitFlag) {
-      animaStateMachine = factoryStateMachine.getStateMachine();
+      logger.info("STARTING AGENT...");
+      // animaStateMachine = factoryStateMachine.getStateMachine();
       animaStateMachine.start();
     }
   }
@@ -1028,10 +1026,6 @@ public class Anima
 
   public StateMachine<AnimaStates, AnimaEvents> getAnimaStateMachine() {
     return animaStateMachine;
-  }
-
-  public void setAnimaStateMachine(StateMachine<AnimaStates, AnimaEvents> animaStateMachine) {
-    this.animaStateMachine = animaStateMachine;
   }
 
   public String getFileKeystore() {

@@ -21,14 +21,11 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.Client.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.Shell;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -47,8 +44,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("IRC Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=ircInterface", description = "Ar4k Agent IRC RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "ircInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=ircInterface", description = "Ar4k Agent IRC RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "ircInterface")
 @RestController
 @RequestMapping("/ircInterface")
 public class IrcShellInterface extends AbstractShellHelper {
@@ -72,7 +69,7 @@ public class IrcShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addIrcManagerToSelectedConfig(@ShellOption(optOut = true) @Valid IrcHomunculusConfig service) {
-    getWorkingConfig().pots.add((PotConfig) service);
+    getWorkingConfig().pots.add(service);
   }
 
   @ShellMethod(value = "Start IRC remote management connection", group = "IRC Commands")

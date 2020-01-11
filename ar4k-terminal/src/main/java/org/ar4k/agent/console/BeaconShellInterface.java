@@ -34,9 +34,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -54,8 +52,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Beacon Server Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=beaconInterface", description = "Ar4k Agent Beacon Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "beaconInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=beaconInterface", description = "Ar4k Agent Beacon Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "beaconInterface")
 @RestController
 @RequestMapping("/beaconInterface")
 public class BeaconShellInterface extends AbstractShellHelper {

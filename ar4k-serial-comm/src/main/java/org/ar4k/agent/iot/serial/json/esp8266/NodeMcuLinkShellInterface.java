@@ -3,9 +3,7 @@ package org.ar4k.agent.iot.serial.json.esp8266;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -19,8 +17,8 @@ import org.springframework.shell.standard.ShellOption;
 
 @ShellCommandGroup("IoT Commands")
 @ShellComponent
-@EnableMBeanExport
-@ManagedResource(objectName = "bean:name=iotNodeMcuInterface", description = "Ar4k Agent IoT NodeMcu Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotNodeMcuInterface")
+//@EnableMBeanExport
+//@ManagedResource(objectName = "bean:name=iotNodeMcuInterface", description = "Ar4k Agent IoT NodeMcu Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotNodeMcuInterface")
 public class NodeMcuLinkShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Add a NodeMcu controller connected via wifi", group = "IoT Commands")
