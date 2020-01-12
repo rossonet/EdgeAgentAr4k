@@ -104,8 +104,7 @@ public class GrpcDataTests {
     server = new BeaconServer.Builder().setAnima(anima).setPort(port).setDiscoveryPort(0).setStringDiscovery("TESTING")
         .setBroadcastAddress("255.255.255.255").setAcceptCerts(true).build();
     server.start();
-    rpcConversation = new RpcConversation();
-    rpcConversation.setShell(shell);
+    rpcConversation = new RpcConversation(shell);
     Thread.sleep(3000L);
     client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
         .setHost("localhost").setDiscoveryPort(0).setDiscoveryFilter("TESTING").setUniqueName(generateNewUniqueName())

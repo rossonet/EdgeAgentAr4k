@@ -346,7 +346,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("sessionOk")
   public void importSelectedConfigJson(
       @ShellOption(help = "configuration exported by export-selected-config-json") String jsonConfig) {
-    setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig));
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class));
   }
 
   // TODO verificare il caricamento

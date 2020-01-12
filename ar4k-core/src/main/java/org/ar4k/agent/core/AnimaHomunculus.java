@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.shell.Shell;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -26,6 +27,9 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
 
   @Autowired
   private Anima anima;
+
+  @Autowired
+  private Shell shell;
 
   protected final Log logger = LogFactory.getLog(AnimaHomunculus.class);
   private final ConcurrentMap<Object, Set<String>> principals;
@@ -112,7 +116,7 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
     sessionIds.put(sessionId, new SessionInformation(principal, sessionId, new Date()));
     Set<String> sessionsUsedByPrincipal = principals.computeIfAbsent(principal, key -> new CopyOnWriteArraySet<>());
     sessionsUsedByPrincipal.add(sessionId);
-    RpcConversation rpc = new RpcConversation();
+    RpcConversation rpc = new RpcConversation(shell);
     rpc.setHomunculus(this);
     rpcIds.put(sessionId, rpc);
     if (logger.isTraceEnabled()) {

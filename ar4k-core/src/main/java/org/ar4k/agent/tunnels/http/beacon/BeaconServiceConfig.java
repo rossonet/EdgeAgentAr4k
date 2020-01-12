@@ -17,11 +17,8 @@ package org.ar4k.agent.tunnels.http.beacon;
 import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.json.BeaconServiceConfigJsonAdapter;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -55,15 +52,11 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format", required = false)
   public String caChainPem = null;
 
+  @Override
   public BeaconService instantiate() {
     BeaconService ss = new BeaconService();
     ss.setConfiguration(this);
     return ss;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new BeaconServiceConfigJsonAdapter();
   }
 
   @Override

@@ -25,7 +25,7 @@ import org.springframework.shell.Shell;
 
 import com.beust.jcommander.ParameterException;
 
-// una singola converrsazione via RPC
+// una singola conversazione via RPC
 public class RpcConversation implements RpcExecutor {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -38,7 +38,11 @@ public class RpcConversation implements RpcExecutor {
   private Homunculus homunculus = null;
   private String workingConfig = null;
 
-  private Shell shell = null;
+  private final Shell shell;
+
+  public RpcConversation(Shell shell) {
+    this.shell = shell;
+  }
 
   @Override
   public String elaborateMessage(String message) {
@@ -129,10 +133,6 @@ public class RpcConversation implements RpcExecutor {
 
   public Shell getShell() {
     return shell;
-  }
-
-  public void setShell(Shell shell) {
-    this.shell = shell;
   }
 
   public Map<String, AgentProcess> getScriptSessions() {

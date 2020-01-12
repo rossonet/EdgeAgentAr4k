@@ -15,16 +15,13 @@
 package org.ar4k.agent.console.chat.sshd;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.json.SshdHomunculusConfigJsonAdapter;
 import org.ar4k.agent.core.Ar4kComponent;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Configurazione servizio connessione IRC.
  *
  */
@@ -37,19 +34,15 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = 6301077946480730173L;
 
+  @Override
   public Ar4kComponent instantiate() {
     SshdHomunculusService ss = new SshdHomunculusService();
-    return (Ar4kComponent) ss;
+    return ss;
   }
 
   @Override
   public int getPriority() {
     return 15;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new SshdHomunculusConfigJsonAdapter();
   }
 
   @Override

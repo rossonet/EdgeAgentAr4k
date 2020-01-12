@@ -14,11 +14,7 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.json.SshRemoteConfigJsonAdapter;
-
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -41,14 +37,10 @@ public class SshRemoteConfig extends AbstractSshConfig {
   @Parameter(names = "--bindPort", description = "local port to bind for the connection")
   public int bindPort = 2200;
 
+  @Override
   public SshLocalTunnel instantiate() {
     SshLocalTunnel ss = new SshLocalTunnel();
     return ss;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new SshRemoteConfigJsonAdapter();
   }
 
   @Override

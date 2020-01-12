@@ -14,17 +14,14 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.json.SshLocalConfigJsonAdapter;
-
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Configurazione servizio tunnel SSH
  */
+
 public class SshLocalConfig extends AbstractSshConfig {
 
   private static final long serialVersionUID = 6322932417278452420L;
@@ -45,11 +42,6 @@ public class SshLocalConfig extends AbstractSshConfig {
   public SshLocalTunnel instantiate() {
     SshLocalTunnel ss = new SshLocalTunnel();
     return ss;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new SshLocalConfigJsonAdapter();
   }
 
   @Override

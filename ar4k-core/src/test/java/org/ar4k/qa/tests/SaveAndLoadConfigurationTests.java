@@ -100,7 +100,9 @@ public class SaveAndLoadConfigurationTests {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    ConfigSeed a = ConfigHelper.fromJson(ConfigHelper.toJson(c));
+    String jsonConfig = ConfigHelper.toJson(c);
+    System.out.println("CONFIG:\n" + jsonConfig);
+    ConfigSeed a = ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class);
     assertTrue(check.equals(((Ar4kConfig) a).author));
     assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
     assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));

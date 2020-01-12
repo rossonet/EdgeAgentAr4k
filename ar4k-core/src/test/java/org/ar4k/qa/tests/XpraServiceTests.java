@@ -58,9 +58,7 @@ public class XpraServiceTests {
     xpra.eval("xterm");
     Thread.sleep(5 * 1000);
     System.out.println("XPRA PORT FOR TEST tcp:127.0.0.1:" + xpra.getTcpPort());
-    Thread.sleep(1 * 60 * 1000);
-    System.out.println(xpra.getOutput());
-    System.out.println(xpra.getErrors());
+    Thread.sleep(20 * 1000);
     xpra.close();
   }
 

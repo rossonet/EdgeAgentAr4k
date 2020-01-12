@@ -23,6 +23,8 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.json.PotInterfaceAdapter;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.yaml.snakeyaml.Yaml;
@@ -113,8 +115,7 @@ public class ConfigHelper {
 
   public static String toJson(ConfigSeed configObject) {
     GsonBuilder builder = new GsonBuilder();
-    // builder.registerTypeAdapter(ConfigSeed.class, new
-    // ConfigSeedJsonAdapter<ConfigSeed>());
+    builder.registerTypeAdapter(PotConfig.class, new PotInterfaceAdapter());
     Gson gson = builder.setPrettyPrinting().create();
     return gson.toJson(configObject);
   }
@@ -156,9 +157,11 @@ public class ConfigHelper {
     return Base64.getEncoder().encodeToString(baos.toByteArray());
   }
 
-  public static ConfigSeed fromJson(String jsonConfig) {
-    Gson gson = new Gson();
-    return gson.fromJson(jsonConfig, ConfigSeed.class);
+  public static ConfigSeed fromJson(String jsonConfig, Class<? extends ConfigSeed> targetClass) {
+    GsonBuilder builder = new GsonBuilder();
+    builder.registerTypeAdapter(PotConfig.class, new PotInterfaceAdapter());
+    Gson gson = builder.setPrettyPrinting().create();
+    return gson.fromJson(jsonConfig, targetClass);
   }
 
   public static ConfigSeed fromBase64(String base64Config) throws IOException, ClassNotFoundException {

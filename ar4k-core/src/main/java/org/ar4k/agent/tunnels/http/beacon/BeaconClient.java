@@ -56,6 +56,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
+import org.springframework.shell.Shell;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -92,8 +93,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
   private Agent me = null;
 
-  private RpcConversation localExecutor = new RpcConversation();
-  private transient Anima anima = null;
+  private transient RpcConversation localExecutor;
+  private final transient Anima anima;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
   private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
   private String discoveryFilter = "AR4K";
@@ -244,6 +245,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
     this.anima = anima;
+    this.localExecutor = new RpcConversation(Anima.getApplicationContext().getBean(Shell.class));
     this.hostTarget = host;
     this.port = port;
     if (aliasBeaconClientInKeystore != null) {

@@ -76,7 +76,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.shell.Shell;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.TextParseException;
@@ -111,8 +110,6 @@ public class Anima
 
   private Timer timerScheduler = null;
 
-  @Autowired
-  private Shell shell;
   /*
    * @Autowired private StateMachineFactory<AnimaStates, AnimaEvents>
    * factoryStateMachine;
@@ -470,7 +467,7 @@ public class Anima
       String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
       animaHomunculus.registerNewSession(sessionId, sessionId);
       RpcConversation rpc = animaHomunculus.getRpc(sessionId);
-      rpc.setShell(shell);
+      // rpc.setShell(shell);
       beaconClient = new BeaconClient.Builder().setUniqueName(getAgentUniqueName()).setAnima(this)
           .setBeaconCaChainPem(beaconCaChainPem).setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
           .setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();

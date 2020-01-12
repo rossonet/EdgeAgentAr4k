@@ -14,19 +14,18 @@
     */
 package org.ar4k.gw.studio.tunnels.socket.ssl;
 
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.validator.ProxyValidator;
 import org.ar4k.gw.studio.tunnels.socket.AbstractSocketFactoryConfig;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- * Configurzione tunnel SSL
+ * Configurazione tunnel SSL
  *
  */
+
 public class SocketFactorySslConfig extends AbstractSocketFactoryConfig {
 
   private static final long serialVersionUID = 707686741192996924L;
@@ -64,7 +63,7 @@ public class SocketFactorySslConfig extends AbstractSocketFactoryConfig {
    * @Parameter(names = "--keystoreAuth", description =
    * "keystore to authenticate to the server", validateWith =
    * KeystoreValidator.class) public String keystoreAuth = null;
-   * 
+   *
    * @Parameter(names = "--keystoreTrust", description =
    * "keystore to checking the server cert", validateWith =
    * KeystoreValidator.class) public String keystoreTrust = null;
@@ -79,12 +78,6 @@ public class SocketFactorySslConfig extends AbstractSocketFactoryConfig {
     SocketFactorySsl ss = new SocketFactorySsl();
     ss.setConfiguration(this);
     return ss;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

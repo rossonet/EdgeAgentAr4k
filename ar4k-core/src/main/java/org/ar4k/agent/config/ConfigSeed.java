@@ -5,8 +5,6 @@ import java.util.Collection;
 
 import org.joda.time.Instant;
 
-import com.google.gson.TypeAdapter;
-
 public interface ConfigSeed extends Serializable, Cloneable {
 
   String getName();
@@ -22,7 +20,5 @@ public interface ConfigSeed extends Serializable, Cloneable {
   String getUniqueId();
 
   int getPriority();
-
-  TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter();
 
 }

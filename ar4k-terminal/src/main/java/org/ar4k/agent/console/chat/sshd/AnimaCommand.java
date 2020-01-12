@@ -14,7 +14,6 @@ import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.command.Command;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -32,9 +31,9 @@ public class AnimaCommand implements Command {
   private static final CharSequence COMPLETION_CHAR = "?";
   private static final CharSequence EXIT_MESSAGE = "exit";
 
-  private Shell shell = null;
-  private Anima anima = null;
-  private RpcExecutor executor = null;
+  private final Shell shell;
+  private final Anima anima;
+  private RpcExecutor rpcExecutor = null;
   private final String sessionId = UUID.randomUUID().toString();
   private ExitCallback exitCallback = null;
   private OutputStream errorStream = null;
@@ -89,7 +88,7 @@ public class AnimaCommand implements Command {
       counter++;
     }
     CompletionContext context = new CompletionContext(clean, word, pos);
-    List<CompletionProposal> listCompletionProposal = executor.complete(context);
+    List<CompletionProposal> listCompletionProposal = rpcExecutor.complete(context);
     StringBuffer response = new StringBuffer();
     for (CompletionProposal prop : listCompletionProposal) {
       response.append(prop.toString() + (prop.description() != null ? " => " + prop.description() : "") + "\n");
@@ -105,7 +104,7 @@ public class AnimaCommand implements Command {
     outputStream.close();
     errorStream.flush();
     errorStream.close();
-    executor = null;
+    rpcExecutor = null;
   }
 
   @Override
@@ -178,8 +177,7 @@ public class AnimaCommand implements Command {
               try {
                 String session = anima.loginAgent(username, password, sessionId);
                 if (anima.isSessionValid(session) && session.equals(sessionId)) {
-                  executor = anima.getRpc(sessionId);
-                  ((RpcConversation) executor).setShell(shell);
+                  rpcExecutor = anima.getRpc(sessionId);
                   logged = true;
                   printPrompt();
                 } else {
@@ -202,7 +200,7 @@ public class AnimaCommand implements Command {
             if (message != null && !message.isEmpty()) {
               if (!message.contains(COMPLETION_CHAR) && !message.equals(EXIT_MESSAGE)) {
                 try {
-                  String elaborateMessage = executor.elaborateMessage(message);
+                  String elaborateMessage = rpcExecutor.elaborateMessage(message);
                   // logger.debug("*** remote command " + message + " -> " + elaborateMessage);
                   sendMessage("\n\r" + elaborateMessage.replaceAll("\n", "\n\r"));
                   printPrompt();

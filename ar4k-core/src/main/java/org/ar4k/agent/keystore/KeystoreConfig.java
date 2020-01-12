@@ -32,7 +32,6 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.json.KeystoreConfigJsonAdapter;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -42,7 +41,6 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -313,11 +311,6 @@ public class KeystoreConfig implements ConfigSeed {
   @Override
   public int getPriority() {
     return 4;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new KeystoreConfigJsonAdapter();
   }
 
   @Override

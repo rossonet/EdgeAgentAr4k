@@ -12,8 +12,8 @@ public class Ar4kAnimaShellFactory implements ShellFactory {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Ar4kAnimaShellFactory.class.toString());
 
-  private Anima anima = null;
-  private Shell shell = null;
+  private final Anima anima;
+  private final Shell shell;
 
   public Ar4kAnimaShellFactory(Anima anima, Shell shell) {
     this.anima = anima;

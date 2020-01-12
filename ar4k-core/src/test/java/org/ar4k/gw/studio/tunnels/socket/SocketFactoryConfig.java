@@ -14,14 +14,11 @@
     */
 package org.ar4k.gw.studio.tunnels.socket;
 
-import org.ar4k.agent.config.ConfigSeed;
-
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Rappresentazione di singolo socket per connessione.
  *
  */
@@ -46,6 +43,7 @@ public class SocketFactoryConfig extends AbstractSocketFactoryConfig {
     return ss;
   }
 
+  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("soTimeout: " + soTimeout + "\n");
@@ -56,9 +54,4 @@ public class SocketFactoryConfig extends AbstractSocketFactoryConfig {
     return sb.toString();
   }
 
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

@@ -16,6 +16,7 @@ package org.ar4k.qa.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
@@ -139,7 +140,8 @@ public class AuthenticationAndRpcTests {
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     RpcConversation rpc = (RpcConversation) anima.getRpc(sessionId);
-    assertEquals("prova echo", rpc.elaborateMessage("prova echo"));
+    System.out.println(rpc.listCommands().toString());
+    assertTrue(rpc.elaborateMessage("help").contains("Display or save the history of previously run commands"));
   }
 
   @Test
@@ -173,7 +175,7 @@ public class AuthenticationAndRpcTests {
     sessionRegistry.registerNewSession(sessionId2, principal1);
     sessionRegistry.registerNewSession(sessionId3, principal2);
 
-    assertThat(sessionRegistry.getAllPrincipals()).hasSize(2);
+    assertThat(sessionRegistry.getAllPrincipals()).hasSize(3);
     assertThat(sessionRegistry.getAllPrincipals().contains(principal1)).isTrue();
     assertThat(sessionRegistry.getAllPrincipals().contains(principal2)).isTrue();
   }
