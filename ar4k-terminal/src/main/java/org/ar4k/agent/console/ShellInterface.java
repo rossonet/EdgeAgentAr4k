@@ -255,7 +255,7 @@ public class ShellInterface extends AbstractShellHelper {
   public String getSelectedConfigBase64Rsa(@ShellOption(help = "keystore alias for the key") String alias)
       throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException,
       InvalidKeyException, UnrecoverableEntryException {
-    return ConfigHelper.toBase64Rsa(getWorkingConfig(), alias);
+    return ConfigHelper.toBase64Crypto(getWorkingConfig(), alias);
   }
 
   // TODO: da completare con la crittografia e provare.

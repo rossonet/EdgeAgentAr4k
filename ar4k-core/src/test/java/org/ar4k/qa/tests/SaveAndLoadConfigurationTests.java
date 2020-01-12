@@ -17,11 +17,9 @@ package org.ar4k.qa.tests;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
+import java.security.cert.CertificateEncodingException;
 import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
@@ -36,6 +34,7 @@ import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
+import org.bouncycastle.cms.CMSException;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -44,6 +43,7 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -69,6 +69,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class SaveAndLoadConfigurationTests {
+
+  @Autowired
+  Anima anima;
 
   @Before
   public void setUp() throws Exception {
@@ -131,9 +134,8 @@ public class SaveAndLoadConfigurationTests {
   }
 
   @Test
-  public void saveAndRestoreToFromBase64Rsa()
-      throws InterruptedException, ClassNotFoundException, IOException, InvalidKeyException, KeyStoreException,
-      NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException {
+  public void saveAndRestoreToFromBase64Rsa() throws CertificateEncodingException, ClassNotFoundException,
+      NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IOException, CMSException {
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
@@ -146,7 +148,10 @@ public class SaveAndLoadConfigurationTests {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    ConfigSeed a = ConfigHelper.fromBase64Rsa(ConfigHelper.toBase64Rsa(c, "privateKeyAlias"));
+    System.out.println("Anima -> " + anima);
+    String baseCrypto = ConfigHelper.toBase64Crypto(c, "my-keystore-alias");
+    System.out.println("CRYPTO " + baseCrypto);
+    ConfigSeed a = ConfigHelper.fromBase64Crypto(baseCrypto, "my-keystore-alias");
     assertTrue(check.equals(((Ar4kConfig) a).author));
     assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
     assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));

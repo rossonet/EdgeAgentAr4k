@@ -5,28 +5,41 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
+import java.security.PrivateKey;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Random;
 import java.util.UUID;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.bouncycastle.cms.CMSAlgorithm;
+import org.bouncycastle.cms.CMSEnvelopedData;
+import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessableByteArray;
+import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.KeyTransRecipientInformation;
+import org.bouncycastle.cms.RecipientInformation;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OutputEncryptor;
 import org.yaml.snakeyaml.Yaml;
 
 import com.google.common.base.Splitter;
@@ -140,21 +153,39 @@ public class ConfigHelper {
     return result.toString();
   }
 
-  public static String toBase64Rsa(ConfigSeed configObject, String aliasPrivateKey)
-      throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException,
-      UnrecoverableEntryException, NoSuchPaddingException, InvalidKeyException {
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    keyStore.load(null);
-    KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(aliasPrivateKey, null);
-    Cipher inputCipher = Cipher.getInstance("SHA256withRSA");
-    inputCipher.init(Cipher.ENCRYPT_MODE, privateKeyEntry.getCertificate().getPublicKey());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    CipherOutputStream cipherOutputStream = new CipherOutputStream(baos, inputCipher);
-    ObjectOutputStream oos = new ObjectOutputStream(cipherOutputStream);
-    oos.writeObject(configObject);
-    cipherOutputStream.close();
-    oos.close();
-    return Base64.getEncoder().encodeToString(baos.toByteArray());
+  public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate)
+      throws CertificateEncodingException, CMSException, IOException {
+    byte[] encryptedData = null;
+    if (null != data && null != encryptionCertificate) {
+      CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator = new CMSEnvelopedDataGenerator();
+      JceKeyTransRecipientInfoGenerator jceKey = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
+      cmsEnvelopedDataGenerator.addRecipientInfoGenerator(jceKey);
+      CMSTypedData msg = new CMSProcessableByteArray(data);
+      OutputEncryptor encryptor = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+          .setProvider(new BouncyCastleProvider()).build();
+      CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator.generate(msg, encryptor);
+      encryptedData = cmsEnvelopedData.getEncoded();
+    }
+    return encryptedData;
+  }
+
+  public static byte[] decryptData(byte[] encryptedData, PrivateKey decryptionKey) throws CMSException {
+    byte[] decryptedData = null;
+    if (null != encryptedData && null != decryptionKey) {
+      CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
+      Collection<RecipientInformation> recipients = envelopedData.getRecipientInfos().getRecipients();
+      KeyTransRecipientInformation recipientInfo = (KeyTransRecipientInformation) recipients.iterator().next();
+      JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
+      return recipientInfo.getContent(recipient);
+    }
+    return decryptedData;
+  }
+
+  public static String toBase64Crypto(ConfigSeed configObject, String aliasKey)
+      throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
+    X509Certificate certificate = Anima.getApplicationContext().getBean(Anima.class).getMyIdentityKeystore()
+        .getClientCertificate(aliasKey);
+    return Base64.getEncoder().encodeToString(encryptData(toBase64(configObject).getBytes("UTF-8"), certificate));
   }
 
   public static ConfigSeed fromJson(String jsonConfig, Class<? extends ConfigSeed> targetClass) {
@@ -172,13 +203,10 @@ public class ConfigHelper {
     return rit;
   }
 
-  // TODO: da completare con la crittografia e provare
-  public static ConfigSeed fromBase64Rsa(String base64RsaConfig) throws IOException, ClassNotFoundException {
-    byte[] data = Base64.getDecoder().decode(base64RsaConfig);
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    ConfigSeed rit = (ConfigSeed) ois.readObject();
-    ois.close();
-    return rit;
+  public static ConfigSeed fromBase64Crypto(String base64RsaConfig, String aliasKey)
+      throws ClassNotFoundException, IOException, CMSException, NoSuchAlgorithmException, NoSuchPaddingException {
+    PrivateKey key = Anima.getApplicationContext().getBean(Anima.class).getMyIdentityKeystore().getPrivateKey(aliasKey);
+    return fromBase64(new String(decryptData(Base64.getDecoder().decode(base64RsaConfig), key)));
   }
 
   public static Ar4kConfig fromYaml(String yamlConfig) {
