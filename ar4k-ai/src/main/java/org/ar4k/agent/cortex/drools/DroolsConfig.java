@@ -4,10 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -30,11 +28,6 @@ public class DroolsConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 7;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new DroolsConfigJsonAdapter();
   }
 
   @Override

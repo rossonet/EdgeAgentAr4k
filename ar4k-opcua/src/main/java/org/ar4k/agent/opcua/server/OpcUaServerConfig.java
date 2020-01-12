@@ -15,15 +15,12 @@
 package org.ar4k.agent.opcua.server;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.opcua.CryptoModeValidator;
 import org.ar4k.agent.opcua.Enumerator.CryptoMode;
 import org.ar4k.agent.opcua.Enumerator.SecurityMode;
 import org.ar4k.agent.opcua.SecurityModeValidator;
-import org.ar4k.agent.opcua.client.OpcUaClientConfigJsonAdapter;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -83,11 +80,6 @@ public class OpcUaServerConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 8;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new OpcUaClientConfigJsonAdapter();
   }
 
   @Override

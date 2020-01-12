@@ -15,22 +15,20 @@
 package org.ar4k.agent.xmpp;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Configurazione servizio connessione XMPP.
  *
  */
 public class JabberHomunculusConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -4642788033911032726L;
-  
+
   @Parameter(names = "--soTimeout", description = "enable/disable SO_TIMEOUT with the specified timeout, in milliseconds")
   public Integer soTimeout = null;
   @Parameter(names = "--tcpNoDelay", description = "enable/disable TCP_NODELAY (disable/enable Nagle's algorithm)")
@@ -42,20 +40,16 @@ public class JabberHomunculusConfig extends AbstractServiceConfig {
   @Parameter(names = "--reuseAddress", description = "enable/disable the SO_REUSEADDR socket option")
   public Boolean reuseAddress = null;
 
+  @Override
   public Ar4kComponent instantiate() {
     // System.out.println("Serial service start");
     JabberHomunculusService ss = new JabberHomunculusService();
-    return (Ar4kComponent) ss;
+    return ss;
   }
 
   @Override
   public int getPriority() {
     return 6;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new JabberHomunculusConfigJsonAdapter();
   }
 
   @Override

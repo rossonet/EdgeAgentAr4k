@@ -4,9 +4,6 @@
 package org.ar4k.agent.pcap;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-
-import com.google.gson.TypeAdapter;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -26,12 +23,6 @@ public class PcapSnifferConfig extends AbstractServiceConfig {
   @Override
   public boolean isSpringBean() {
     return false;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

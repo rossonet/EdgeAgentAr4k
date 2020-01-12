@@ -15,14 +15,11 @@
 package org.ar4k.agent.console.chat.irc;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
-
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
- * 
+ *
  *         Configurazione servizio connessione IRC.
  *
  */
@@ -30,16 +27,11 @@ public class IrcHomunculusConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = 6301077946480730173L;
 
+  @Override
   public Ar4kComponent instantiate() {
     // System.out.println("Serial service start");
     IrcHomunculusService ss = new IrcHomunculusService();
-    return (Ar4kComponent) ss;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    // TODO Auto-generated method stub
-    return null;
+    return ss;
   }
 
   @Override

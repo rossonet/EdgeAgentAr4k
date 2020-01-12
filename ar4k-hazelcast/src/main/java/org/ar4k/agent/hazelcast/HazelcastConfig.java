@@ -7,12 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 public class HazelcastConfig extends AbstractServiceConfig {
 
@@ -72,11 +70,6 @@ public class HazelcastConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 2;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new HazelcastConfigJsonAdapter();
   }
 
   @Override

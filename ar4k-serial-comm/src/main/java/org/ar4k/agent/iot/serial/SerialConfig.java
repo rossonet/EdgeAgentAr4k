@@ -1,12 +1,10 @@
 package org.ar4k.agent.iot.serial;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 
 import com.beust.jcommander.Parameter;
-import com.google.gson.TypeAdapter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -57,11 +55,6 @@ public class SerialConfig extends AbstractServiceConfig {
   @Override
   public int getPriority() {
     return 4;
-  }
-
-  @Override
-  public TypeAdapter<? extends ConfigSeed> getJsonTypeAdapter() {
-    return new SerialConfigJsonAdapter();
   }
 
   @Override

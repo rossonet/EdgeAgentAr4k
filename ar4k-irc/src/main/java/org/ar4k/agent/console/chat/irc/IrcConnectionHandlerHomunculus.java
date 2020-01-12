@@ -24,12 +24,12 @@ import net.engio.mbassy.listener.Handler;
 public class IrcConnectionHandlerHomunculus implements Homunculus {
 
   private static final CharSequence COMPLETION_CHAR = "?";
-  private Client client = null;
-  private RpcConversation executor = new RpcConversation();
+  private final Client client;
+  private final RpcConversation executor;
 
   public IrcConnectionHandlerHomunculus(Client client, Shell shell) {
     this.client = client;
-    executor.setShell(shell);
+    this.executor = new RpcConversation(shell);
   }
 
   @Handler
