@@ -131,7 +131,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the target Beacon Serve URL. If the port is 0 work just the discovery", defaultValue = "http://127.0.0.1:6599") String beaconServer,
       @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage) {
-    tmpClient = anima.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage);
+    tmpClient = anima.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage, true);
     return true;
   }
 
