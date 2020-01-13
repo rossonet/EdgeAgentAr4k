@@ -28,7 +28,7 @@ public class DataAddress implements AutoCloseable {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(DataAddress.class.toString());
 
-  private Anima anima = null;
+  private final Anima anima;
 
   // task per health
   private HealthTimer repeatedTask = new HealthTimer();

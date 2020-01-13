@@ -18,8 +18,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.UUID;
 
-import javax.validation.constraints.Size;
-
 import org.ar4k.agent.config.validator.AnsiColorValidator;
 import org.ar4k.agent.config.validator.Ar4kStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
@@ -108,13 +106,6 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--postScript", description = "post script in format <LANGUAGE>:<SCRIPT>")
   public String postScript = null;
 
-  @Parameter(names = "--keyStorePassword", description = "keyStore password", password = true)
-  @Size(min = 8)
-  public String keyStorePassword = "secA4.rk!8";
-
-  @Parameter(names = "--keyStorePath", description = "keyStore file path")
-  public String keyStorePath = "~/.ar4k/key-store";
-
   @Parameter(names = "--initializeKeystore", description = "initialize the keystore if need", arity = 0)
   public boolean initializeKeystore = true;
 
@@ -172,9 +163,8 @@ public class Ar4kConfig implements ConfigSeed {
         + dataCenter + ", version=" + version + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion
         + ", author=" + author + ", project=" + project + ", license=" + license + ", tags=" + tags + ", contexts="
         + contexts + ", groups=" + groups + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript
-        + ", postScript=" + postScript + ", keyStorePassword=" + keyStorePassword + ", keyStorePath=" + keyStorePath
-        + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath
-        + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
+        + ", postScript=" + postScript + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath="
+        + sshdAuthorizedKeysPath + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
   }
 
   public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {

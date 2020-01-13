@@ -264,7 +264,7 @@ public class DashboardWebController {
     json.put("run-level", anima.getState().name());
     JSONArray runtimeServices = new JSONArray();
     JSONObject runtimeConfig = new JSONObject();
-    for (ServiceComponent st : anima.getServices()) {
+    for (ServiceComponent st : anima.getServicesOnly()) {
       JSONObject sjt = new JSONObject();
       sjt.put("status", st.getStatusString());
       sjt.put("status", st.getConfiguration().getName());
@@ -293,7 +293,7 @@ public class DashboardWebController {
   public Mono<JSONObject> ar4kEthereum() {
     JSONObject json = new JSONObject();
     // TODO: filtrare solo i blockchains
-    for (ServiceComponent st : anima.getServices()) {
+    for (ServiceComponent st : anima.getServicesOnly()) {
       JSONObject sjt = new JSONObject();
       sjt.put("configuration", st.getConfiguration());
     }

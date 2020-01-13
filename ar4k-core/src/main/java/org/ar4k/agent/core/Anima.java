@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -41,6 +42,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.Ar4kConfig;
@@ -55,12 +57,14 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.spring.autoconfig.Ar4kStarterProperties;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -96,24 +100,30 @@ import jdbm.RecordManagerFactory;
 //@EnableMBeanExport
 @Scope("singleton")
 @EnableJms
+@EnableConfigurationProperties(Ar4kStarterProperties.class)
 public class Anima
     implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
+
+  private static final String TILDE = "~";
+
+  public static final String USER_HOME = System.getProperty("user.home");
+
+  public static final String DEFAULT_KS_PATH = "default-new.ks";
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
   private static transient final String registrationPin = ConfigHelper.createRandomRegistryId();
+  // assegnato da Spring tramite setter al boot
+  private static ApplicationContext applicationContext;
+
   private final String agentUniqueName = ConfigHelper.generateNewUniqueName();
 
-  private final String dbDataStorePath = "~/.ar4k/anima_datastore_" + agentUniqueName;
+  private final String dbDataStorePath = USER_HOME + "/.ar4k/anima_datastore_" + agentUniqueName;
   private final String dbDataStoreName = "datastore";
 
   private Timer timerScheduler = null;
 
-  /*
-   * @Autowired private StateMachineFactory<AnimaStates, AnimaEvents>
-   * factoryStateMachine;
-   */
   @Autowired
   private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
 
@@ -126,53 +136,8 @@ public class Anima
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  // parametri importate da Spring Boot
-  @Value("${ar4k.fileKeystore}")
-  private String fileKeystore;
-  @Value("${ar4k.webKeystore}")
-  private String webKeystore;
-  @Value("${ar4k.dnsKeystore}")
-  private String dnsKeystore;
-  @Value("${ar4k.keystorePassword}")
-  private String keystorePassword;
-  @Value("${ar4k.keystoreMainAlias}")
-  private String keystoreMainAlias;
-  @Value("${ar4k.confPath}")
-  private String confPath;
-  @Value("${ar4k.fileConfig}")
-  private String fileConfig;
-  @Value("${ar4k.webConfig}")
-  private String webConfig;
-  @Value("${ar4k.dnsConfig}")
-  private String dnsConfig;
-  @Value("${ar4k.baseConfig}")
-  private String baseConfig;
-  @Value("${ar4k.beaconCaChainPem}")
-  private String beaconCaChainPem;
-  @Value("${ar4k.adminPassword}")
-  private String adminPassword;
-  @Value("${ar4k.webRegistrationEndpoint}")
-  private String webRegistrationEndpoint;
-  @Value("${ar4k.dnsRegistrationEndpoint}")
-  private String dnsRegistrationEndpoint;
-  @Value("${ar4k.beaconDiscoveryFilterString}")
-  private String beaconDiscoveryFilterString;
-  @Value("${ar4k.beaconDiscoveryPort}")
-  private String beaconDiscoveryPort;
-  @Value("${ar4k.fileConfigOrder}")
-  private String fileConfigOrder;
-  @Value("${ar4k.webConfigOrder}")
-  private String webConfigOrder;
-  @Value("${ar4k.dnsConfigOrder}")
-  private String dnsConfigOrder;
-  @Value("${ar4k.baseConfigOrder}")
-  private String base64ConfigOrder;
-  @Value("${ar4k.threadSleep}")
-  private String threadSleep;
-  @Value("${ar4k.consoleOnly}")
-  private String consoleOnly;
-  @Value("${ar4k.logoUrl}")
-  private String logoUrl;
+  @Autowired
+  private Ar4kStarterProperties starterProperties;
 
   // gestione configurazioni
   // attuale configurazione in runtime
@@ -185,9 +150,6 @@ public class Anima
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
   // TODO implementare l'esecuzione dei pre e post script
-
-  // assegnato da Spring tramite setter al boot
-  private static ApplicationContext applicationContext;
 
   private Set<Ar4kComponent> components = new HashSet<>();
 
@@ -232,7 +194,7 @@ public class Anima
   @ManagedOperation
   public AnimaStates getState() {
     return (animaStateMachine != null && animaStateMachine.getState() != null) ? animaStateMachine.getState().getId()
-        : null;
+        : AnimaStates.INIT;
   }
 
   public boolean isRunning() {
@@ -241,6 +203,7 @@ public class Anima
 
   @Override
   public void close() {
+    finalizeAgent();
     if (animaStateMachine != null) {
       animaStateMachine.sendEvent(AnimaEvents.STOP);
       animaStateMachine.stop();
@@ -257,6 +220,13 @@ public class Anima
         e.printStackTrace();
       }
       recMan = null;
+    }
+    if (animaHomunculus != null) {
+      try {
+        animaHomunculus.close();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -288,11 +258,11 @@ public class Anima
 
   @SuppressWarnings("unchecked")
   private void setInitialAuth() {
-    if (adminPassword != null && !adminPassword.isEmpty()) {
+    if (starterProperties.getAdminPassword() != null && !starterProperties.getAdminPassword().isEmpty()) {
       // logger.warn("create admin user with config password");
       Ar4kUserDetails admin = new Ar4kUserDetails();
       admin.setUsername("admin");
-      admin.setPassword(passwordEncoder.encode(adminPassword));
+      admin.setPassword(passwordEncoder.encode(starterProperties.getAdminPassword()));
       GrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
       GrantedAuthority grantedAuthorityUser = new SimpleGrantedAuthority("ROLE_USER");
       ((Set<GrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
@@ -306,7 +276,7 @@ public class Anima
       }
       if (free == true) {
         localUsers.add(admin);
-        logger.warn("create user " + admin.getUsername());
+        logger.warn("created user " + admin.getUsername());
       }
     }
   }
@@ -316,10 +286,12 @@ public class Anima
       KeystoreConfig ks = new KeystoreConfig();
       boolean foundFile = false;
       boolean foundWeb = false;
-      ks.keyStoreAlias = keystoreMainAlias;
-      ks.keystorePassword = keystorePassword;
-      ks.filePathPre = fileKeystore != null ? fileKeystore.replace("~", System.getProperty("user.home")) : null;
-      if (fileKeystore != null && !fileKeystore.isEmpty()) {
+      ks.keyStoreAlias = starterProperties.getKeystoreMainAlias();
+      ks.keystorePassword = starterProperties.getKeystorePassword();
+      ks.filePathPre = starterProperties.getFileKeystore() != null
+          ? starterProperties.getFileKeystore().replace(TILDE, USER_HOME)
+          : DEFAULT_KS_PATH;
+      if (starterProperties.getFileKeystore() != null && !starterProperties.getFileKeystore().isEmpty()) {
         if (new File(ks.filePathPre).exists()) {
           foundFile = true;
           logger.info("use keystore " + ks.toString());
@@ -330,10 +302,10 @@ public class Anima
         logger.info("value of fileKeystore is null, use: " + ks.toString());
       }
       if (!foundFile) {
-        if (webKeystore != null && !webKeystore.isEmpty()) {
+        if (starterProperties.getWebKeystore() != null && !starterProperties.getWebKeystore().isEmpty()) {
           try {
-            logger.info("try keystore from url: " + webKeystore);
-            HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystore);
+            logger.info("try keystore from url: " + starterProperties.getWebKeystore());
+            HardwareHelper.downloadFileFromUrl(ks.filePathPre, starterProperties.getWebKeystore());
           } catch (Exception e) {
             foundWeb = false;
             // logger.logException(e);
@@ -342,30 +314,32 @@ public class Anima
             foundWeb = true;
           }
         }
-        if (!foundWeb && dnsKeystore != null && !dnsKeystore.isEmpty()) {
-          logger.info("try keystore from dns: " + dnsKeystore);
-          try {
-            String hostPart = dnsKeystore.split("\\.")[0];
-            String domainPart = dnsKeystore.replaceAll("^" + hostPart, "");
-            System.out.println("Using H:" + hostPart + " D:" + domainPart);
-            String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
-            if (payloadString != null && payloadString.length() > 0) {
-              FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
+        if (!foundWeb && !foundFile) {
+          if (starterProperties.getDnsKeystore() != null && !starterProperties.getDnsKeystore().isEmpty()) {
+            logger.info("try keystore from dns: " + starterProperties.getDnsKeystore());
+            try {
+              String hostPart = starterProperties.getDnsKeystore().split("\\.")[0];
+              String domainPart = starterProperties.getDnsKeystore().replaceAll("^" + hostPart, "");
+              System.out.println("Using H:" + hostPart + " D:" + domainPart);
+              String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+              if (payloadString != null && payloadString.length() > 0) {
+                FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
+              }
+            } catch (Exception e) {
+              logger.warn("dnsKeystore -> " + starterProperties.getDnsKeystore());
+              logger.logException(e);
             }
-          } catch (Exception e) {
-            logger.warn("dnsKeystore -> " + dnsKeystore);
-            logger.logException(e);
           }
         }
       }
-      if (keystorePassword != null && !keystorePassword.isEmpty()) {
-        ks.keystorePassword = keystorePassword;
+      if (starterProperties.getKeystorePassword() != null && !starterProperties.getKeystorePassword().isEmpty()) {
+        ks.keystorePassword = starterProperties.getKeystorePassword();
       }
-      if (keystoreMainAlias != null && !keystoreMainAlias.isEmpty()) {
-        ks.keyStoreAlias = keystoreMainAlias;
+      if (starterProperties.getKeystoreMainAlias() != null && !starterProperties.getKeystoreMainAlias().isEmpty()) {
+        ks.keyStoreAlias = starterProperties.getKeystoreMainAlias();
       }
       // se alla fine non è stato trovato un keystore, lo creo
-      if (!new File(fileKeystore.replace("~", System.getProperty("user.home"))).exists()) {
+      if (!new File(starterProperties.getFileKeystore().replace(TILDE, USER_HOME)).exists()) {
         logger.warn("new keystore: " + ks.toString());
         ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
             ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
@@ -391,7 +365,7 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateMachineStart
   public synchronized void initAgent() {
-    if (!Boolean.valueOf(consoleOnly)) {
+    if (!Boolean.valueOf(starterProperties.isConsoleOnly())) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
     } else {
       logger.warn("console only true, run just the command line");
@@ -404,12 +378,10 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateChanged(target = "STAMINAL")
   public synchronized void startingAgent() {
-    new File(confPath.replace("~", System.getProperty("user.home"))).mkdirs();
-    fileConfig = fileConfig.replace("~", System.getProperty("user.home"));
+    new File(starterProperties.getConfPath().replace(TILDE, USER_HOME)).mkdirs();
     try {
       if (dataStore == null) {
-        recMan = RecordManagerFactory
-            .createRecordManager(dbDataStorePath.replace("~", System.getProperty("user.home")));
+        recMan = RecordManagerFactory.createRecordManager(dbDataStorePath.replace(TILDE, USER_HOME));
         dataStore = recMan.treeMap(dbDataStoreName);
         logger.info("datastore on Anima started");
       }
@@ -439,15 +411,18 @@ public class Anima
   }
 
   private void checkBeaconClient() {
-    if ((webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty())
-        || Integer.valueOf(beaconDiscoveryPort) != 0) {
+    if ((starterProperties.getWebRegistrationEndpoint() != null
+        && !starterProperties.getWebRegistrationEndpoint().isEmpty())
+        || Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
       try {
-        if (webRegistrationEndpoint == null || webRegistrationEndpoint.isEmpty()) {
-          webRegistrationEndpoint = "http://localhost:0";
+        if (starterProperties.getWebRegistrationEndpoint() == null
+            || starterProperties.getWebRegistrationEndpoint().isEmpty()) {
+          throw new UnknownHostException();
         }
-        logger.info("TRY CONECTION TO BEACON AT " + webRegistrationEndpoint);
-        connectToBeaconService(webRegistrationEndpoint, beaconCaChainPem, Integer.valueOf(beaconDiscoveryPort),
-            beaconDiscoveryFilterString);
+        logger.info("TRY CONECTION TO BEACON AT " + starterProperties.getWebRegistrationEndpoint());
+        connectToBeaconService(starterProperties.getWebRegistrationEndpoint(), starterProperties.getBeaconCaChainPem(),
+            Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
+            starterProperties.getBeaconDiscoveryFilterString(), false);
       } catch (Exception e) {
         logger.warn("Beacon connection not ok: " + e.getMessage());
         // logger.logException(e);
@@ -456,35 +431,36 @@ public class Anima
   }
 
   public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
-      String discoveryFilter) {
+      String discoveryFilter, boolean force) {
     URL urlTarget = null;
     if (beaconClient != null) {
       logger.info("This agent is connected to another Beacon service");
-    }
-    try {
-      if (urlBeacon != null)
-        urlTarget = new URL(urlBeacon);
-      String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
-      animaHomunculus.registerNewSession(sessionId, sessionId);
-      RpcConversation rpc = animaHomunculus.getRpc(sessionId);
-      // rpc.setShell(shell);
-      beaconClient = new BeaconClient.Builder().setUniqueName(getAgentUniqueName()).setAnima(this)
-          .setBeaconCaChainPem(beaconCaChainPem).setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
-          .setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
-      if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
-        logger.info("found Beacon endpoint: " + urlBeacon);
-        if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
-          logger.info("the unique name is changed in " + getAgentUniqueName());
+      return null;
+    } else {
+      try {
+        if (urlBeacon != null)
+          urlTarget = new URL(urlBeacon);
+        String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
+        animaHomunculus.registerNewSession(sessionId, sessionId);
+        RpcConversation rpc = animaHomunculus.getRpc(sessionId);
+        beaconClient = new BeaconClient.Builder().setUniqueName(getAgentUniqueName()).setAnima(this)
+            .setBeaconCaChainPem(beaconCaChainPem).setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
+            .setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
+        if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
+          logger.info("found Beacon endpoint: " + urlBeacon);
+          if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
+            logger.info("the unique name is changed in " + getAgentUniqueName());
+          }
+        } else {
+          logger.info("the Beacon endpoint " + urlBeacon + " return " + beaconClient.getStateConnection());
         }
-      } else {
-        logger.info("the Beacon endpoint " + urlBeacon + " return " + beaconClient.getStateConnection());
+      } catch (IOException e) {
+        logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
+      } catch (UnrecoverableKeyException e) {
+        logger.warn(e.getMessage());
       }
-    } catch (IOException e) {
-      logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
-    } catch (UnrecoverableKeyException e) {
-      logger.warn(e.getMessage());
+      return beaconClient;
     }
-    return beaconClient;
   }
 
   // trova la configurazione appropriata per il bootstrap in funzione dei
@@ -493,63 +469,72 @@ public class Anima
     Ar4kConfig targetConfig = null;
     int maxConfig = 0;
     try {
-      maxConfig = Integer.max(maxConfig, webConfigOrder != null ? Integer.valueOf(webConfigOrder) : 6);
+      maxConfig = Integer.max(maxConfig,
+          starterProperties.getWebConfigOrder() != null ? Integer.valueOf(starterProperties.getWebConfigOrder()) : 6);
     } catch (Exception a) {
-      logger.warn("webConfigOrder -> " + webConfigOrder);
-      webConfigOrder = "6";
+      logger.warn("webConfigOrder -> " + starterProperties.getWebConfigOrder());
+      maxConfig = 6;
     }
     try {
-      maxConfig = Integer.max(maxConfig, dnsConfigOrder != null ? Integer.valueOf(dnsConfigOrder) : 6);
+      maxConfig = Integer.max(maxConfig,
+          starterProperties.getDnsConfigOrder() != null ? Integer.valueOf(starterProperties.getDnsConfigOrder()) : 6);
     } catch (Exception a) {
-      logger.warn("dnsConfigOrder -> " + dnsConfigOrder);
-      dnsConfigOrder = "6";
+      logger.warn("dnsConfigOrder -> " + starterProperties.getDnsConfigOrder());
+      maxConfig = 6;
     }
     try {
-      maxConfig = Integer.max(maxConfig, base64ConfigOrder != null ? Integer.valueOf(base64ConfigOrder) : 6);
+      maxConfig = Integer.max(maxConfig,
+          starterProperties.getBaseConfigOrder() != null ? Integer.valueOf(starterProperties.getBaseConfigOrder()) : 6);
     } catch (Exception a) {
-      logger.warn("base64ConfigOrder -> " + base64ConfigOrder);
-      base64ConfigOrder = "6";
+      logger.warn("base64ConfigOrder -> " + starterProperties.getBaseConfigOrder());
+      maxConfig = 5;
     }
     try {
-      maxConfig = Integer.max(maxConfig, fileConfigOrder != null ? Integer.valueOf(fileConfigOrder) : 6);
+      maxConfig = Integer.max(maxConfig,
+          starterProperties.getFileConfigOrder() != null ? Integer.valueOf(starterProperties.getFileConfigOrder()) : 6);
     } catch (Exception a) {
-      logger.warn("fileConfigOrder -> " + fileConfigOrder);
-      fileConfigOrder = "6";
+      logger.warn("fileConfigOrder -> " + starterProperties.getFileConfigOrder());
+      maxConfig = 4;
     }
     for (int liv = 0; liv <= maxConfig; liv++) {
-      if (liv == Integer.valueOf(webConfigOrder) && targetConfig == null && webConfig != null && !webConfig.isEmpty()) {
+      if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
+          && starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
         try {
           logger.info("try webConfigDownload");
-          targetConfig = webConfigDownload(webConfig);
+          targetConfig = webConfigDownload(starterProperties.getWebConfig(),
+              starterProperties.getKeystoreConfigAlias());
         } catch (Exception e) {
           logger.logException(e);
         }
         break;
       }
-      if (liv == Integer.valueOf(dnsConfigOrder) && targetConfig == null && dnsConfig != null && !dnsConfig.isEmpty()) {
+      if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
+          && starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
         try {
           logger.info("try dnsConfigDownload");
-          targetConfig = dnsConfigDownload(dnsConfig);
+          targetConfig = dnsConfigDownload(starterProperties.getDnsConfig(),
+              starterProperties.getKeystoreConfigAlias());
         } catch (Exception e) {
           logger.logException(e);
         }
         break;
       }
-      if (liv == Integer.valueOf(base64ConfigOrder) && targetConfig == null && baseConfig != null
-          && !baseConfig.isEmpty()) {
+      if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
+          && starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
         try {
           logger.info("try fromBase64");
-          targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(baseConfig);
+          targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
         } catch (Exception e) {
           logger.logException(e);
         }
         break;
       }
-      if (liv == Integer.valueOf(fileConfigOrder) && targetConfig == null && fileConfig != null
-          && !fileConfig.isEmpty()) {
+      if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
+          && starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
         try {
           logger.info("try fileConfig");
-          targetConfig = loadConfigFromFile(fileConfig.replace("~", System.getProperty("user.home")));
+          targetConfig = loadConfigFromFile(starterProperties.getFileConfig().replace(TILDE, USER_HOME),
+              starterProperties.getKeystoreConfigAlias());
         } catch (Exception e) {
           logger.logException(e);
         }
@@ -558,17 +543,24 @@ public class Anima
     return targetConfig;
   }
 
-  private Ar4kConfig dnsConfigDownload(String dnsTarget) {
+  private Ar4kConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
     String hostPart = dnsTarget.split("\\.")[0];
     String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
     System.out.println("Using H:" + hostPart + " D:" + domainPart);
     try {
       String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
       try {
-        return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
-            ? ConfigHelper.fromBase64(payloadString.toString())
-            : null);
-      } catch (ClassNotFoundException | IOException e) {
+        if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
+          return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
+              ? ConfigHelper.fromBase64Crypto(payloadString.toString(), cryptoAlias)
+              : null);
+        } else {
+          return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
+              ? ConfigHelper.fromBase64(payloadString.toString())
+              : null);
+        }
+      } catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
+          | CMSException e) {
         logger.logException(e);
         return null;
       }
@@ -578,28 +570,34 @@ public class Anima
     }
   }
 
-  public Ar4kConfig loadConfigFromFile(String pathConfig) {
+  public Ar4kConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
     Ar4kConfig resultConfig = null;
     try {
       String config = "";
-      FileReader fileReader = new FileReader(pathConfig.replace("~", System.getProperty("user.home")));
+      FileReader fileReader = new FileReader(pathConfig.replace(TILDE, USER_HOME));
       BufferedReader bufferedReader = new BufferedReader(fileReader);
       String line = null;
       while ((line = bufferedReader.readLine()) != null) {
         config = config + line;
       }
       bufferedReader.close();
-      resultConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
+      if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
+        resultConfig = (Ar4kConfig) ConfigHelper.fromBase64Crypto(config, cryptoAlias);
+      } else {
+        resultConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
+      }
       return resultConfig;
-    } catch (IOException | ClassNotFoundException e) {
+    } catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
+        | CMSException e) {
       if (logger != null)
         logger.logException(e);
       return null;
     }
   }
 
-  public Ar4kConfig webConfigDownload(String webConfigTarget) {
-    String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf";
+  public Ar4kConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
+    String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf"
+        + ((cryptoAlias != null && !cryptoAlias.isEmpty()) ? ".crypto" : "");
     try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
         FileOutputStream fileOutputStream = new FileOutputStream(temporaryFile)) {
       byte dataBuffer[] = new byte[1024];
@@ -607,7 +605,7 @@ public class Anima
       while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
         fileOutputStream.write(dataBuffer, 0, bytesRead);
       }
-      return loadConfigFromFile(temporaryFile);
+      return loadConfigFromFile(temporaryFile, cryptoAlias);
     } catch (ConnectException c) {
       logger.info(webConfigTarget + " is unreachable");
       return null;
@@ -637,7 +635,7 @@ public class Anima
     }
   }
 
-  Comparator<PotConfig> comparatorOrderPots = new Comparator<PotConfig>() {
+  private Comparator<PotConfig> comparatorOrderPots = new Comparator<PotConfig>() {
     @Override
     public int compare(PotConfig o1, PotConfig o2) {
       return Integer.compare(o1.getPriority(), o2.getPriority());
@@ -703,58 +701,33 @@ public class Anima
   // adminPassword è escluso
   public Map<String, String> getEnvironmentVariables() {
     Map<String, String> ritorno = new HashMap<>();
-    ritorno.put("ar4k.fileKeystore", fileKeystore);
-    ritorno.put("ar4k.webKeystore", webKeystore);
-    ritorno.put("ar4k.dnsKeystore", dnsKeystore);
-    ritorno.put("ar4k.keystorePassword", keystorePassword);
-    ritorno.put("ar4k.keystoreMainAlias", keystoreMainAlias);
-    ritorno.put("ar4k.confPath", confPath);
-    ritorno.put("ar4k.fileConfig", fileConfig);
-    ritorno.put("ar4k.webConfig", webConfig);
-    ritorno.put("ar4k.dnsConfig", dnsConfig);
-    ritorno.put("ar4k.baseConfig", baseConfig);
-    ritorno.put("ar4k.beaconCaChainPem", beaconCaChainPem);
-    ritorno.put("ar4k.webRegistrationEndpoint", webRegistrationEndpoint);
-    ritorno.put("ar4k.dnsRegistrationEndpoint", dnsRegistrationEndpoint);
-    ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(beaconDiscoveryPort));
-    ritorno.put("ar4k.beaconDiscoveryFilterString", beaconDiscoveryFilterString);
-    ritorno.put("ar4k.fileConfigOrder", String.valueOf(fileConfigOrder));
-    ritorno.put("ar4k.webConfigOrder", String.valueOf(webConfigOrder));
-    ritorno.put("ar4k.dnsConfigOrder", String.valueOf(dnsConfigOrder));
-    ritorno.put("ar4k.baseConfigOrder", String.valueOf(base64ConfigOrder));
-    ritorno.put("ar4k.threadSleep", String.valueOf(threadSleep));
-    ritorno.put("ar4k.consoleOnly", String.valueOf(consoleOnly));
-    ritorno.put("ar4k.logoUrl", String.valueOf(logoUrl));
+    ritorno.put("ar4k.fileKeystore", starterProperties.getFileKeystore());
+    ritorno.put("ar4k.webKeystore", starterProperties.getWebKeystore());
+    ritorno.put("ar4k.dnsKeystore", starterProperties.getDnsKeystore());
+    ritorno.put("ar4k.keystorePassword", starterProperties.getKeystorePassword());
+    ritorno.put("ar4k.keystoreMainAlias", starterProperties.getKeystoreMainAlias());
+    ritorno.put("ar4k.confPath", starterProperties.getConfPath());
+    ritorno.put("ar4k.fileConfig", starterProperties.getFileConfig());
+    ritorno.put("ar4k.webConfig", starterProperties.getWebConfig());
+    ritorno.put("ar4k.dnsConfig", starterProperties.getDnsConfig());
+    ritorno.put("ar4k.baseConfig", starterProperties.getBaseConfig());
+    ritorno.put("ar4k.beaconCaChainPem", starterProperties.getBeaconCaChainPem());
+    ritorno.put("ar4k.webRegistrationEndpoint", starterProperties.getWebRegistrationEndpoint());
+    ritorno.put("ar4k.dnsRegistrationEndpoint", starterProperties.getDnsRegistrationEndpoint());
+    ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(starterProperties.getBeaconDiscoveryPort()));
+    ritorno.put("ar4k.beaconDiscoveryFilterString", starterProperties.getBeaconDiscoveryFilterString());
+    ritorno.put("ar4k.fileConfigOrder", String.valueOf(starterProperties.getFileConfigOrder()));
+    ritorno.put("ar4k.webConfigOrder", String.valueOf(starterProperties.getWebConfigOrder()));
+    ritorno.put("ar4k.dnsConfigOrder", String.valueOf(starterProperties.getDnsConfigOrder()));
+    ritorno.put("ar4k.baseConfigOrder", String.valueOf(starterProperties.getBaseConfigOrder()));
+    ritorno.put("ar4k.threadSleep", String.valueOf(starterProperties.getThreadSleep()));
+    ritorno.put("ar4k.consoleOnly", String.valueOf(starterProperties.isConsoleOnly()));
+    ritorno.put("ar4k.logoUrl", String.valueOf(starterProperties.getLogoUrl()));
     return ritorno;
   }
 
   public String getEnvironmentVariablesAsString() {
-    String configTxt = "ENV found:\n---------------------------------------------------------------\n";
-    configTxt += "ar4k.fileKeystore: " + fileKeystore + "\n";
-    configTxt += "ar4k.webKeystore: " + webKeystore + "\n";
-    configTxt += "ar4k.dnsKeystore: " + dnsKeystore + "\n";
-    // configTxt += "ar4k.keystorePassword: " + keystorePassword + "\n";
-    configTxt += "ar4k.keystorePassword: xxx\n";
-    configTxt += "ar4k.keystoreMainAlias: " + keystoreMainAlias + "\n";
-    configTxt += "ar4k.confPath: " + confPath + "\n";
-    configTxt += "ar4k.fileConfig: " + fileConfig + "\n";
-    configTxt += "ar4k.webConfig: " + webConfig + "\n";
-    configTxt += "ar4k.dnsConfig: " + dnsConfig + "\n";
-    configTxt += "ar4k.baseConfig: " + baseConfig + "\n";
-    configTxt += "ar4k.beaconCaChainPem: " + beaconCaChainPem + "\n";
-    configTxt += "ar4k.webRegistrationEndpoint: " + webRegistrationEndpoint + "\n";
-    configTxt += "ar4k.dnsRegistrationEndpoint: " + dnsRegistrationEndpoint + "\n";
-    configTxt += "ar4k.beaconDiscoveryPort: " + beaconDiscoveryPort + "\n";
-    configTxt += "ar4k.beaconDiscoveryFilterString: " + beaconDiscoveryFilterString + "\n";
-    configTxt += "ar4k.fileConfigOrder: " + fileConfigOrder + "\n";
-    configTxt += "ar4k.webConfigOrder: " + webConfigOrder + "\n";
-    configTxt += "ar4k.dnsConfigOrder: " + dnsConfigOrder + "\n";
-    configTxt += "ar4k.baseConfigOrder: " + base64ConfigOrder + "\n";
-    configTxt += "ar4k.threadSleep: " + threadSleep + "\n";
-    configTxt += "ar4k.logoUrl: " + logoUrl + "\n";
-    configTxt += "ar4k.consoleOnly: " + consoleOnly
-        + "\n---------------------------------------------------------------\n";
-    return configTxt;
+    return starterProperties.toString();
   }
 
   @Override
@@ -766,7 +739,7 @@ public class Anima
     return applicationContext;
   }
 
-  public Collection<ServiceComponent> getServices() {
+  public Collection<ServiceComponent> getServicesOnly() {
     Set<ServiceComponent> target = new HashSet<>();
     for (Ar4kComponent bean : components) {
       if (bean instanceof ServiceComponent) {
@@ -803,15 +776,14 @@ public class Anima
   private synchronized void checkDualStart() {
     if (onApplicationEventFlag && afterSpringInitFlag) {
       logger.info("STARTING AGENT...");
-      // animaStateMachine = factoryStateMachine.getStateMachine();
       animaStateMachine.start();
     }
   }
 
   public String getLogoUrl() {
     String logo = "/static/img/ar4k.png";
-    if (logoUrl != null && !logoUrl.isEmpty()) {
-      logo = logoUrl;
+    if (starterProperties.getLogoUrl() != null && !starterProperties.getLogoUrl().isEmpty()) {
+      logo = starterProperties.getLogoUrl();
     }
     if (runtimeConfig != null && runtimeConfig.logoUrl != null) {
       logo = runtimeConfig.logoUrl;
@@ -978,7 +950,7 @@ public class Anima
     return new TimerTask() {
       @Override
       public void run() {
-        Ar4kConfig newTargetConfig = webConfigDownload(nextConfigWeb);
+        Ar4kConfig newTargetConfig = webConfigDownload(nextConfigWeb, starterProperties.getKeystoreConfigAlias());
         checkPolledConfig(newTargetConfig);
       }
     };
@@ -988,7 +960,7 @@ public class Anima
     return new TimerTask() {
       @Override
       public void run() {
-        Ar4kConfig newTargetConfig = dnsConfigDownload(nextConfigDns);
+        Ar4kConfig newTargetConfig = dnsConfigDownload(nextConfigDns, starterProperties.getKeystoreConfigAlias());
         checkPolledConfig(newTargetConfig);
       }
     };
@@ -1002,31 +974,24 @@ public class Anima
     }
   }
 
-  @Override
-  public String toString() {
-    return "Anima [dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName=" + dbDataStoreName + ", agentUniqueName="
-        + agentUniqueName + ", animaHomunculus=" + animaHomunculus + ", fileKeystore=" + fileKeystore + ", webKeystore="
-        + webKeystore + ", dnsKeystore=" + dnsKeystore + ", keystorePassword=" + keystorePassword
-        + ", keystoreMainAlias=" + keystoreMainAlias + ", confPath=" + confPath + ", fileConfig=" + fileConfig
-        + ", webConfig=" + webConfig + ", dnsConfig=" + dnsConfig + ", baseConfig=" + baseConfig + ", beaconCaChainPem="
-        + beaconCaChainPem + ", adminPassword=" + adminPassword + ", webRegistrationEndpoint=" + webRegistrationEndpoint
-        + ", dnsRegistrationEndpoint=" + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString="
-        + beaconDiscoveryFilterString + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder="
-        + fileConfigOrder + ", webConfigOrder=" + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder
-        + ", base64ConfigOrder=" + base64ConfigOrder + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly
-        + ", logoUrl=" + logoUrl + ", runtimeConfig=" + runtimeConfig + ", targetConfig=" + targetConfig
-        + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget=" + stateTarget + ", statesBefore=" + statesBefore
-        + ", components=" + components + ", dataStore=" + dataStore + ", localUsers=" + localUsers + ", beanName="
-        + beanName + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore=" + myAliasCertInKeystore
-        + "]";
-  }
-
   public StateMachine<AnimaStates, AnimaEvents> getAnimaStateMachine() {
     return animaStateMachine;
   }
 
+  @Override
+  public String toString() {
+    return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName="
+        + dbDataStoreName + ", timerScheduler=" + timerScheduler + ", animaStateMachine=" + animaStateMachine
+        + ", animaHomunculus=" + animaHomunculus + ", starterProperties=" + starterProperties + ", runtimeConfig="
+        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget="
+        + stateTarget + ", statesBefore=" + statesBefore + ", components=" + components + ", dataStore=" + dataStore
+        + ", localUsers=" + localUsers + ", beanName=" + beanName + ", beaconClient=" + beaconClient + ", dataAddress="
+        + dataAddress + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore="
+        + myAliasCertInKeystore + "]";
+  }
+
   public String getFileKeystore() {
-    return fileKeystore;
+    return starterProperties.getFileKeystore();
   }
 
   public String getDbDataStorePath() {

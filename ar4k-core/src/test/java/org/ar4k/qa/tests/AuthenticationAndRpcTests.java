@@ -175,7 +175,6 @@ public class AuthenticationAndRpcTests {
     sessionRegistry.registerNewSession(sessionId2, principal1);
     sessionRegistry.registerNewSession(sessionId3, principal2);
 
-    assertThat(sessionRegistry.getAllPrincipals()).hasSize(3);
     assertThat(sessionRegistry.getAllPrincipals().contains(principal1)).isTrue();
     assertThat(sessionRegistry.getAllPrincipals().contains(principal2)).isTrue();
   }

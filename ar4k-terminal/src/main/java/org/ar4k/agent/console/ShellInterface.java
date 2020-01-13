@@ -14,7 +14,9 @@
     */
 package org.ar4k.agent.console;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -22,11 +24,8 @@ import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
+import java.security.cert.CertificateEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +61,7 @@ import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.bouncycastle.cms.CMSException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
@@ -249,45 +249,46 @@ public class ShellInterface extends AbstractShellHelper {
     importSelectedConfigBase64(config);
   }
 
-  @ShellMethod("View the selected configuration in base64 text crypted in RSA")
+  @ShellMethod("View the selected configuration in base64 text crypted")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public String getSelectedConfigBase64Rsa(@ShellOption(help = "keystore alias for the key") String alias)
-      throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, NoSuchPaddingException,
-      InvalidKeyException, UnrecoverableEntryException {
+  public String getSelectedConfigBase64Crypto(@ShellOption(help = "keystore alias for the key") String alias)
+      throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
     return ConfigHelper.toBase64Crypto(getWorkingConfig(), alias);
   }
 
-  // TODO: da completare con la crittografia e provare.
-  @ShellMethod("Save selected configuration in base64 text file crypted in RSA")
+  @ShellMethod("Save selected configuration in base64 text file crypted")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public String saveSelectedConfigBase64Rsa(
-      @ShellOption(help = "file for saving the configuration. The system will add .conf.base64.rsa.ar4k to the string") String filename,
-      @ShellOption(help = "keystore alias for the key") String alias) throws InvalidKeyException, KeyStoreException,
-      NoSuchAlgorithmException, CertificateException, NoSuchPaddingException, UnrecoverableEntryException, IOException {
-    Files.write(Paths.get(filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.base64.rsa.ar4k"),
-        getSelectedConfigBase64Rsa(alias).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+  public String saveSelectedConfigBase64Crypto(
+      @ShellOption(help = "file for saving the configuration. The system will add .conf.base64.crypto.ar4k to the string") String filename,
+      @ShellOption(help = "keystore alias for the key") String alias)
+      throws CertificateEncodingException, UnsupportedEncodingException, IOException, CMSException {
+    Files.write(Paths.get(filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.base64.crypto.ar4k"),
+        getSelectedConfigBase64Crypto(alias).getBytes(), StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING);
     return "saved";
   }
 
-  @ShellMethod("Import the selected configuration from base64 text crypted in RSA")
+  @ShellMethod("Import the selected configuration from base64 text crypted")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
-  public void importSelectedConfigBase64Rsa(
-      @ShellOption(help = "configuration exported by export-selected-config-base64-rsa") String base64Config)
-      throws IOException, ClassNotFoundException {
-    setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Rsa(base64Config));
+  public void importSelectedConfigBase64Crypted(
+      @ShellOption(help = "configuration exported by export-selected-config-base64-crypted") String base64ConfigCrypto,
+      @ShellOption(help = "alias key in Anima repository") String aliasKey)
+      throws ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, IOException, CMSException {
+    setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Crypto(base64ConfigCrypto, aliasKey));
   }
 
-  @ShellMethod("Load selected configuration from a base64 text file crypted in RSA")
+  @ShellMethod("Load selected configuration from a base64 text file crypted")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
-  public void loadSelectedConfigBase64Rsa(
-      @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.rsa.ar4k to the string") String filename)
-      throws IOException, ClassNotFoundException {
-    String config = readFromFile(filename, ".conf.base64.rsa.ar4k");
-    importSelectedConfigBase64Rsa(config);
+  public void loadSelectedConfigBase64Crypted(
+      @ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.crypto.ar4k to the string") String filename,
+      @ShellOption(help = "alias key in Anima repository") String aliasKey) throws FileNotFoundException, IOException,
+      ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, CMSException {
+    String config = readFromFile(filename, ".conf.base64.crypto.ar4k");
+    importSelectedConfigBase64Crypted(config, aliasKey);
   }
 
   @ShellMethod("View the selected configuration in json text")
@@ -340,7 +341,6 @@ public class ShellInterface extends AbstractShellHelper {
     return "saved";
   }
 
-//TODO verificare il caricamento
   @ShellMethod("Import the selected configuration from json text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -349,7 +349,6 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class));
   }
 
-  // TODO verificare il caricamento
   @ShellMethod("Import the selected configuration from yaml text")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -358,7 +357,6 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig(ConfigHelper.fromYaml(yamlConfig));
   }
 
-  // TODO: risolvere gli oggetti annidati
   @ShellMethod("Load selected configuration from a json text file")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -541,7 +539,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testIsRunningOk")
   public String listService() {
     String risposta = "";
-    for (ServiceComponent servizio : anima.getServices()) {
+    for (ServiceComponent servizio : anima.getServicesOnly()) {
       risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, servizio.getConfiguration().getUniqueId().toString(),
           AnsiColor.DEFAULT, " - ", servizio.getConfiguration().getName(), " [", AnsiColor.RED,
           servizio.getStatusString(), AnsiColor.DEFAULT, "]\n");

@@ -98,17 +98,30 @@ public class SaveAndLoadConfigurationTests {
     SshLocalConfig s1 = new SshLocalConfig();
     s1.name = "ssh config";
     s1.note = check;
-    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
-    s2.name = "stunnel config";
-    s2.note = check;
     c.pots.add(s1);
-    c.pots.add(s2);
     String jsonConfig = ConfigHelper.toJson(c);
     System.out.println("CONFIG:\n" + jsonConfig);
     ConfigSeed a = ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class);
     assertTrue(check.equals(((Ar4kConfig) a).author));
     assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
-    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
+  }
+
+  @Test
+  public void saveAndRestoreToFromYaml() throws InterruptedException, ClassNotFoundException, IOException {
+    Ar4kConfig c = new Ar4kConfig();
+    String check = UUID.randomUUID().toString();
+    c.name = "test salvataggio json";
+    c.author = check;
+    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+    s2.name = "stunnel config";
+    s2.note = check;
+    c.pots.add(s2);
+    String checkText = ConfigHelper.toYaml(c);
+    System.out.println("yaml config: " + checkText);
+    ConfigSeed a = ConfigHelper.fromYaml(checkText);
+    System.out.println("Anima -> " + anima);
+    assertTrue(check.equals(((Ar4kConfig) a).author));
+    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
   }
 
   @Test
@@ -117,7 +130,7 @@ public class SaveAndLoadConfigurationTests {
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
     c.author = check;
-    SshLocalConfig s1 = new SshLocalConfig();
+    SocketFactorySslConfig s1 = new SocketFactorySslConfig();
     s1.name = "ssh config";
     s1.note = check;
     SocketFactorySslConfig s2 = new SocketFactorySslConfig();
@@ -129,12 +142,12 @@ public class SaveAndLoadConfigurationTests {
     System.out.println("base64 config: " + checkText);
     ConfigSeed a = ConfigHelper.fromBase64(checkText);
     assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
     assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
   }
 
   @Test
-  public void saveAndRestoreToFromBase64Rsa() throws CertificateEncodingException, ClassNotFoundException,
+  public void saveAndRestoreToFromBase64Crypto() throws CertificateEncodingException, ClassNotFoundException,
       NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IOException, CMSException {
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
@@ -143,7 +156,7 @@ public class SaveAndLoadConfigurationTests {
     SshLocalConfig s1 = new SshLocalConfig();
     s1.name = "ssh config";
     s1.note = check;
-    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+    SshLocalConfig s2 = new SshLocalConfig();
     s2.name = "stunnel config";
     s2.note = check;
     c.pots.add(s1);
@@ -154,7 +167,7 @@ public class SaveAndLoadConfigurationTests {
     ConfigSeed a = ConfigHelper.fromBase64Crypto(baseCrypto, "my-keystore-alias");
     assertTrue(check.equals(((Ar4kConfig) a).author));
     assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
-    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
+    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
   }
 
 }

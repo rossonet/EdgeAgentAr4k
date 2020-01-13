@@ -14,12 +14,14 @@
     */
 package org.ar4k.qa.tests;
 
-import java.util.UUID;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
 import org.jline.builtins.Commands;
@@ -32,6 +34,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.SpringShellAutoConfiguration;
 import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
@@ -59,6 +64,15 @@ public class ProcessEngineTests {
   @Autowired
   Anima anima;
 
+  @Autowired
+  private SessionRegistry sessionRegistry;
+
+  private String getSessionId() {
+    List<SessionInformation> ss = sessionRegistry.getAllSessions(SecurityContextHolder.getContext().getAuthentication(),
+        false);
+    return ss.isEmpty() ? null : ss.get(0).getSessionId();
+  }
+
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
@@ -74,30 +88,23 @@ public class ProcessEngineTests {
   };
 
   @Test
-  public void putInDataStore() throws InterruptedException {
-    Thread.sleep(2000L);
-    while (anima == null || !anima.getState().toString().equals("STAMINAL") || !anima.dataStoreExists()) {
-      if (anima != null && anima.getState().toString().equals("INIT")) {
-        anima.sendEvent(AnimaEvents.BOOTSTRAP);
-      }
-      try {
-        System.out.println("STATE A: " + anima.getState());
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      Thread.sleep(2000L);
-    }
-    String stringa = UUID.randomUUID().toString();
-    boolean primo = true;
-    for (int i = 0; i < 10000; i++) {
-      if (primo) {
-        anima.setContextData(stringa, UUID.randomUUID().toString());
-        primo = false;
-      } else {
-        anima.setContextData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-      }
-    }
-    System.out.println("STATE B: " + anima.getContextData(stringa));
+  public void listProcessEngine() throws InterruptedException {
+    System.out.println(ScriptEngineManagerProcess.listScriptEngines());
+  }
+
+  @Test
+  public void runJavaScriptEngine() throws InterruptedException {
+    ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
+    p.setLabel("javascript test");
+    p.setEngine("nashorn");
+    long start = System.currentTimeMillis();
+    Thread.sleep(10L);
+    p.eval("print('Hello Java World'); Java.type(\"java.lang.System\").currentTimeMillis()");
+    Thread.sleep(10L);
+    long stop = System.currentTimeMillis();
+    System.out.println("START -> " + start + "; OUT -> " + p.getOutput() + "; STOP -> " + stop);
+    assertTrue(start < Long.valueOf(p.getOutput()));
+    assertTrue(Long.valueOf(p.getOutput()) < System.currentTimeMillis());
   }
 
 }

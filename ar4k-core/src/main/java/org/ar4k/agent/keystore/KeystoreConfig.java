@@ -32,6 +32,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -60,7 +61,7 @@ public class KeystoreConfig implements ConfigSeed {
   public String uniqueId = UUID.randomUUID().toString();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
-  public String filePathPre = "~/.ar4k/default.keystore";
+  public String filePathPre = Anima.DEFAULT_KS_PATH;
 
   @Parameter(names = "--keystorePassword", description = "keystore password")
   public String keystorePassword = "secA4.rk!8";

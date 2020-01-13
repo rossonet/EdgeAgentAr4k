@@ -17,10 +17,8 @@ package org.ar4k.agent.spring.autoconfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kHealthIndicator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,17 +27,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @ConditionalOnClass(Anima.class)
-@EnableConfigurationProperties(Ar4kStarterProperties.class)
 /**
  * Classe starter per inclusione come libreria in ambiente Spring Boot.
  *
  * @author Andrea Ambrosini
  */
 public class Ar4kAutoConfiguration {
-
-  @SuppressWarnings("unused")
-  @Autowired
-  private Ar4kStarterProperties properties;
 
   @Bean
   @ConditionalOnBean(Anima.class)
