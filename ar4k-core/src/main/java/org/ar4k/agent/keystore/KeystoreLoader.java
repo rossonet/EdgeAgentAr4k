@@ -81,9 +81,9 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 
 /*
- * 
+ *
  * @author Andrea Andrea
- * 
+ *
  *         Helper keystore.
  */
 
@@ -192,7 +192,7 @@ public class KeystoreLoader {
       byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
       PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
       PrivateKey privKey = kf.generatePrivate(keySpec);
-      KeyPair clientKeyPair = new KeyPair(pubKey, (PrivateKey) privKey);
+      KeyPair clientKeyPair = new KeyPair(pubKey, privKey);
       // PrivateKey privateKey = privKey;
       keyStore.setKeyEntry(alias, clientKeyPair.getPrivate(), passwordChar,
           new X509Certificate[] { clientCertificate });
@@ -231,7 +231,7 @@ public class KeystoreLoader {
         }
       }
       X509Certificate certificate = builder.build();
-      logger.info("created master CA " + certificate.toString());
+      logger.debug("created certificate " + certificate.toString());
       keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       serverKeyStore = null;
@@ -414,7 +414,7 @@ public class KeystoreLoader {
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
     File serverKeyStore = new File(keyStorePath);
     keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
-    X500Name x500 = (X500Name) new JcaX509CertificateHolder(c).getSubject();
+    X500Name x500 = new JcaX509CertificateHolder(c).getSubject();
     byte[] encoded = k.getPublic().getEncoded();
     SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(ASN1Sequence.getInstance(encoded));
     PKCS10CertificationRequestBuilder p10Builder = new PKCS10CertificationRequestBuilder(x500, subjectPublicKeyInfo);
@@ -482,7 +482,7 @@ public class KeystoreLoader {
           || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
         logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE" + "\n");
       } else {
-        logger.info(((X509Certificate) getClientCertificate(keyStorePath, alias, password)).getSubjectDN() + "\n");
+        logger.info(getClientCertificate(keyStorePath, alias, password).getSubjectDN() + "\n");
       }
       X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
           // These are the details of the CA
@@ -617,7 +617,7 @@ public class KeystoreLoader {
     File serverKeyStore = new File(keyStorePath);
     keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
     // System.out.println(keyStore.size());
-    List<String> ritorno = new ArrayList<String>();
+    List<String> ritorno = new ArrayList<>();
     Enumeration<String> enu = keyStore.aliases();
     while (enu.hasMoreElements()) {
       ritorno.add(enu.nextElement());

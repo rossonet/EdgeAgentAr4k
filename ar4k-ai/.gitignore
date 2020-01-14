@@ -3,6 +3,12 @@
 bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
+src/main/resources/models/en-cat-taxi-intents.bin
+src/main/resources/models/en-ner-address.bin
+src/main/resources/models/en-ner-dates.bin
+src/main/resources/models/en-ner-locations.bin
+src/main/resources/models/en-ner-persons.bin
+
 
 src/main/resources/models/*
 

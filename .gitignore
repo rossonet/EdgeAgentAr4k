@@ -4,6 +4,7 @@ bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
 training-data/*
+*.hprof
 
 ### OUTPUT ###
 spring-shell.log

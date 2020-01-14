@@ -90,6 +90,20 @@ public class ConfigHelper {
 
   public static final int defaulBeaconSignvalidity = 100;
 
+  private static final String TILDE = "~";
+  public static final String USER_HOME = System.getProperty("user.home");
+
+  public static String resolveWorkingString(String input, boolean isFile) {
+    String resultString = null;
+    if (isFile) {
+      resultString = input.replace(TILDE, USER_HOME);
+    } else {
+      resultString = input;
+    }
+    return resultString.replace("{hostname}", dns).replace("{env-check}", "test-conf")
+        .replace("{env-check}", "test-conf").replace("{mac}", NetworkHelper.getFirstMacAddressAsString());
+  }
+
   public static String createRandomRegistryId() {
     StringBuilder val = new StringBuilder();
     val.append("AR");
@@ -153,6 +167,19 @@ public class ConfigHelper {
     return result.toString();
   }
 
+  public static String toBase64ForDnsCrypto(String name, Object configObject, String aliasKey)
+      throws IOException, CertificateEncodingException, CMSException {
+    Iterable<String> chunks = Splitter.fixedLength(254).split(toBase64Crypto(configObject, aliasKey));
+    StringBuilder result = new StringBuilder();
+    int counter = 0;
+    for (String s : chunks) {
+      result.append(name + "-" + String.valueOf(counter) + "\tIN\tTXT\t" + '"' + s + '"' + "\n");
+      counter++;
+    }
+    result.append(name + "-max" + "\tIN\tTXT\t" + '"' + String.valueOf(counter) + '"' + "\n");
+    return result.toString();
+  }
+
   public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate)
       throws CertificateEncodingException, CMSException, IOException {
     byte[] encryptedData = null;
@@ -181,7 +208,7 @@ public class ConfigHelper {
     return decryptedData;
   }
 
-  public static String toBase64Crypto(ConfigSeed configObject, String aliasKey)
+  public static String toBase64Crypto(Object configObject, String aliasKey)
       throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
     X509Certificate certificate = Anima.getApplicationContext().getBean(Anima.class).getMyIdentityKeystore()
         .getClientCertificate(aliasKey);

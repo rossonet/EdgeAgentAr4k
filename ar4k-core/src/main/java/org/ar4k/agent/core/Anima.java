@@ -16,15 +16,19 @@ package org.ar4k.agent.core;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
@@ -104,10 +108,6 @@ import jdbm.RecordManagerFactory;
 public class Anima
     implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
-  private static final String TILDE = "~";
-
-  public static final String USER_HOME = System.getProperty("user.home");
-
   public static final String DEFAULT_KS_PATH = "default-new.ks";
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -119,7 +119,6 @@ public class Anima
 
   private final String agentUniqueName = ConfigHelper.generateNewUniqueName();
 
-  private final String dbDataStorePath = USER_HOME + "/.ar4k/anima_datastore_" + agentUniqueName;
   private final String dbDataStoreName = "datastore";
 
   private Timer timerScheduler = null;
@@ -172,6 +171,8 @@ public class Anima
 
   private transient boolean afterSpringInitFlag = false;
 
+  private transient boolean firstStateFired = false;
+
   public static enum AnimaStates {
     INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
   }
@@ -183,7 +184,7 @@ public class Anima
   }
 
   public static enum AnimaEvents {
-    BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART
+    BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
   }
 
   @ManagedOperation
@@ -203,23 +204,11 @@ public class Anima
 
   @Override
   public void close() {
-    finalizeAgent();
+    resetAgent();
     if (animaStateMachine != null) {
       animaStateMachine.sendEvent(AnimaEvents.STOP);
       animaStateMachine.stop();
       animaStateMachine = null;
-    }
-    if (timerScheduler != null) {
-      timerScheduler.cancel();
-      timerScheduler = null;
-    }
-    if (recMan != null) {
-      try {
-        recMan.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      recMan = null;
     }
     if (animaHomunculus != null) {
       try {
@@ -251,8 +240,30 @@ public class Anima
         timerScheduler = null;
       }
     } catch (Exception aa) {
-      logger.warn("error during finalize phase");
-      logger.logException(aa);
+      logger.logException("error during finalize phase", aa);
+    }
+  }
+
+  // workaround Spring State Machine
+  // @OnStateChanged(target = "KILLED")
+  public synchronized void resetAgent() {
+    finalizeAgent();
+    try {
+      if (recMan != null) {
+        try {
+          recMan.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        recMan = null;
+      }
+      bootstrapConfig = null;
+      targetConfig = null;
+      runtimeConfig = null;
+      dataAddress.close();
+      dataAddress = new DataAddress(this);
+    } catch (Exception aa) {
+      logger.logException("error during reloading phase", aa);
     }
   }
 
@@ -286,71 +297,106 @@ public class Anima
       KeystoreConfig ks = new KeystoreConfig();
       boolean foundFile = false;
       boolean foundWeb = false;
-      ks.keyStoreAlias = starterProperties.getKeystoreMainAlias();
-      ks.keystorePassword = starterProperties.getKeystorePassword();
-      ks.filePathPre = starterProperties.getFileKeystore() != null
-          ? starterProperties.getFileKeystore().replace(TILDE, USER_HOME)
-          : DEFAULT_KS_PATH;
-      if (starterProperties.getFileKeystore() != null && !starterProperties.getFileKeystore().isEmpty()) {
-        if (new File(ks.filePathPre).exists()) {
-          foundFile = true;
-          logger.info("use keystore " + ks.toString());
-        } else {
-          logger.info("keystore file name not found, using parameters " + ks.toString());
-        }
-      } else {
-        logger.info("value of fileKeystore is null, use: " + ks.toString());
-      }
-      if (!foundFile) {
-        if (starterProperties.getWebKeystore() != null && !starterProperties.getWebKeystore().isEmpty()) {
-          try {
-            logger.info("try keystore from url: " + starterProperties.getWebKeystore());
-            HardwareHelper.downloadFileFromUrl(ks.filePathPre, starterProperties.getWebKeystore());
-          } catch (Exception e) {
-            foundWeb = false;
-            // logger.logException(e);
-          }
-          if (new File(ks.filePathPre).exists()) {
-            foundWeb = true;
-          }
-        }
-        if (!foundWeb && !foundFile) {
-          if (starterProperties.getDnsKeystore() != null && !starterProperties.getDnsKeystore().isEmpty()) {
-            logger.info("try keystore from dns: " + starterProperties.getDnsKeystore());
-            try {
-              String hostPart = starterProperties.getDnsKeystore().split("\\.")[0];
-              String domainPart = starterProperties.getDnsKeystore().replaceAll("^" + hostPart, "");
-              System.out.println("Using H:" + hostPart + " D:" + domainPart);
-              String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
-              if (payloadString != null && payloadString.length() > 0) {
-                FileUtils.writeByteArrayToFile(new File(ks.filePathPre), Base64.getDecoder().decode(payloadString));
-              }
-            } catch (Exception e) {
-              logger.warn("dnsKeystore -> " + starterProperties.getDnsKeystore());
-              logger.logException(e);
-            }
-          }
-        }
-      }
+      boolean foundDns = false;
       if (starterProperties.getKeystorePassword() != null && !starterProperties.getKeystorePassword().isEmpty()) {
         ks.keystorePassword = starterProperties.getKeystorePassword();
       }
       if (starterProperties.getKeystoreMainAlias() != null && !starterProperties.getKeystoreMainAlias().isEmpty()) {
         ks.keyStoreAlias = starterProperties.getKeystoreMainAlias();
       }
+      ks.filePathPre = starterProperties.getFileKeystore() != null
+          ? ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true)
+          : DEFAULT_KS_PATH;
+      if (starterProperties.getFileKeystore() != null && !starterProperties.getFileKeystore().isEmpty()) {
+        if (new File(ks.filePathPre).exists()) {
+          if (ks.check()) {
+            foundFile = true;
+            logger.info("use keystore file " + ks.toString());
+          } else {
+            logger.info("keystore not works");
+          }
+        } else {
+          logger.warn("keystore file not found (" + ks.toString() + ")");
+        }
+      } else {
+        logger.info("value of fileKeystore is null, use: " + ks.toString());
+      }
+      if (!foundFile) {
+        try {
+          Files.deleteIfExists(Paths.get(ks.filePathPre));
+        } catch (IOException e) {
+          logger.logException("error deleting wrong keystore", e);
+        }
+        if (starterProperties.getWebKeystore() != null && !starterProperties.getWebKeystore().isEmpty()) {
+          try {
+            logger.info("try keystore from web url: "
+                + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+            HardwareHelper.downloadFileFromUrl(ks.filePathPre,
+                ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+          } catch (Exception e) {
+            foundWeb = false;
+            logger.warn("webKeystore " + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false)
+                + " not found");
+            logger.logExceptionDebug(e);
+          }
+          if (new File(ks.filePathPre).exists() && ks.check()) {
+            foundWeb = true;
+            logger.info(
+                "found web keystore " + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+          }
+        }
+        if (!foundWeb && !foundFile) {
+          try {
+            Files.deleteIfExists(Paths.get(ks.filePathPre));
+          } catch (IOException e) {
+            logger.logException("error deleting wrong keystore", e);
+          }
+          if (starterProperties.getDnsKeystore() != null && !starterProperties.getDnsKeystore().isEmpty()) {
+            logger.info("try keystore from dns: "
+                + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
+            try {
+              String hostPart = ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
+                  .split("\\.")[0];
+              String domainPart = ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
+                  .replaceAll("^" + hostPart, "");
+              String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+              byte[] data = Base64.getDecoder().decode(payloadString);
+              ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+              byte[] returnData = (byte[]) ois.readObject();
+              ois.close();
+              if (payloadString != null && payloadString.length() > 0) {
+                FileUtils.writeByteArrayToFile(new File(ks.filePathPre), returnData);
+              }
+              if (new File(ks.filePathPre).exists() && ks.check()) {
+                foundDns = true;
+                logger.info("found dns keystore "
+                    + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
+              }
+            } catch (Exception e) {
+              logger.warn("dnsKeystore " + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
+                  + " not found");
+              logger.logException(e);
+            }
+          }
+        }
+      }
       // se alla fine non è stato trovato un keystore, lo creo
-      if (!new File(starterProperties.getFileKeystore().replace(TILDE, USER_HOME)).exists()) {
+      if (!foundWeb && !foundFile && !foundDns) {
+        try {
+          Files.deleteIfExists(Paths.get(ks.filePathPre));
+        } catch (IOException e) {
+          logger.logException("error deleting wrong keystore", e);
+        }
         logger.warn("new keystore: " + ks.toString());
         ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
             ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
             ConfigHelper.ip, ks.keyStoreAlias, true);
-        logger.debug("keystore created");
       }
       // addKeyStores(ks);
       setMyIdentityKeystore(ks);
       setMyAliasCertInKeystore(ks.keyStoreAlias);
-      logger.info("Certificate for anima created: "
-          + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal() + " - alias " + ks.keyStoreAlias);
+      logger.info("Certificate for anima: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
+          + " - alias " + ks.keyStoreAlias);
     } else {
       logger.info("Use keystore " + myIdentityKeystore.toString());
     }
@@ -378,20 +424,22 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateChanged(target = "STAMINAL")
   public synchronized void startingAgent() {
-    new File(starterProperties.getConfPath().replace(TILDE, USER_HOME)).mkdirs();
+    new File(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)).mkdirs();
     try {
       if (dataStore == null) {
-        recMan = RecordManagerFactory.createRecordManager(dbDataStorePath.replace(TILDE, USER_HOME));
+        recMan = RecordManagerFactory
+            .createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
+                + "/anima_datastore_" + agentUniqueName);
         dataStore = recMan.treeMap(dbDataStoreName);
         logger.info("datastore on Anima started");
       }
     } catch (IOException e) {
-      logger.logException(e);
+      logger.logException("datastore on Anima problem", e);
     }
+    setMasterKeystore();
     bootstrapConfig = resolveBootstrapConfig();
     popolateAddressSpace();
     setInitialAuth();
-    setMasterKeystore();
     checkBeaconClient();
     if (runtimeConfig == null && targetConfig == null && bootstrapConfig != null) {
       targetConfig = bootstrapConfig;
@@ -419,13 +467,14 @@ public class Anima
             || starterProperties.getWebRegistrationEndpoint().isEmpty()) {
           throw new UnknownHostException();
         }
-        logger.info("TRY CONECTION TO BEACON AT " + starterProperties.getWebRegistrationEndpoint());
-        connectToBeaconService(starterProperties.getWebRegistrationEndpoint(), starterProperties.getBeaconCaChainPem(),
-            Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
+        logger.info("TRY CONNECTION TO BEACON AT "
+            + ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
+        connectToBeaconService(ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
+            starterProperties.getBeaconCaChainPem(), Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
             starterProperties.getBeaconDiscoveryFilterString(), false);
       } catch (Exception e) {
         logger.warn("Beacon connection not ok: " + e.getMessage());
-        // logger.logException(e);
+        logger.logExceptionDebug(e);
       }
     }
   }
@@ -497,46 +546,60 @@ public class Anima
       maxConfig = 4;
     }
     for (int liv = 0; liv <= maxConfig; liv++) {
+      logger.info(String.valueOf(liv) + "/" + maxConfig + " searching config...");
       if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
           && starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
         try {
-          logger.info("try webConfigDownload");
-          targetConfig = webConfigDownload(starterProperties.getWebConfig(),
+          logger.info("try webConfig");
+          targetConfig = webConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getWebConfig(), false),
               starterProperties.getKeystoreConfigAlias());
+          if (targetConfig != null) {
+            logger.info("found webConfig");
+            break;
+          }
         } catch (Exception e) {
-          logger.logException(e);
+          logger.logException("error in webconfig download", e);
         }
-        break;
       }
       if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
           && starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
         try {
-          logger.info("try dnsConfigDownload");
-          targetConfig = dnsConfigDownload(starterProperties.getDnsConfig(),
+          logger.info("try dnsConfig");
+          targetConfig = dnsConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false),
               starterProperties.getKeystoreConfigAlias());
+          if (targetConfig != null) {
+            logger.info("found dnsConfig");
+            break;
+          }
         } catch (Exception e) {
-          logger.logException(e);
+          logger.logException("error in dns config download", e);
         }
-        break;
       }
       if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
           && starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
         try {
-          logger.info("try fromBase64");
+          logger.info("try base64Config");
           targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
+          if (targetConfig != null) {
+            logger.info("found base64Config");
+            break;
+          }
         } catch (Exception e) {
-          logger.logException(e);
+          logger.logException("error in baseconfig", e);
         }
-        break;
       }
       if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
           && starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
         try {
           logger.info("try fileConfig");
-          targetConfig = loadConfigFromFile(starterProperties.getFileConfig().replace(TILDE, USER_HOME),
+          targetConfig = loadConfigFromFile(ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
               starterProperties.getKeystoreConfigAlias());
+          if (targetConfig != null) {
+            logger.info("found fileConfig");
+            break;
+          }
         } catch (Exception e) {
-          logger.logException(e);
+          logger.logException("error in fileconfig", e);
         }
       }
     }
@@ -546,7 +609,6 @@ public class Anima
   private Ar4kConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
     String hostPart = dnsTarget.split("\\.")[0];
     String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
-    System.out.println("Using H:" + hostPart + " D:" + domainPart);
     try {
       String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
       try {
@@ -561,11 +623,11 @@ public class Anima
         }
       } catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
           | CMSException e) {
-        logger.logException(e);
+        logger.logException("error in dns download using H:" + hostPart + " D:" + domainPart, e);
         return null;
       }
     } catch (UnknownHostException | TextParseException e) {
-      logger.logException(e);
+      logger.logException("error in dns download using H:" + hostPart + " D:" + domainPart, e);
       return null;
     }
   }
@@ -574,7 +636,7 @@ public class Anima
     Ar4kConfig resultConfig = null;
     try {
       String config = "";
-      FileReader fileReader = new FileReader(pathConfig.replace(TILDE, USER_HOME));
+      FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
       BufferedReader bufferedReader = new BufferedReader(fileReader);
       String line = null;
       while ((line = bufferedReader.readLine()) != null) {
@@ -589,8 +651,11 @@ public class Anima
       return resultConfig;
     } catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
         | CMSException e) {
-      if (logger != null)
-        logger.logException(e);
+      if (e instanceof java.io.FileNotFoundException) {
+        logger.warn("config file not found " + pathConfig);
+      } else if (logger != null) {
+        logger.logException("error in config file", e);
+      }
       return null;
     }
   }
@@ -609,9 +674,13 @@ public class Anima
     } catch (ConnectException c) {
       logger.info(webConfigTarget + " is unreachable");
       return null;
+    } catch (UnknownHostException u) {
+      logger.info(webConfigTarget + " is not a valid host name");
+      return null;
     } catch (Exception e) {
+      logger.warn("url for web config failed: " + webConfigTarget);
       if (logger != null)
-        logger.logException(e);
+        logger.logException("error in web config", e);
       return null;
     }
 
@@ -774,7 +843,8 @@ public class Anima
   }
 
   private synchronized void checkDualStart() {
-    if (onApplicationEventFlag && afterSpringInitFlag) {
+    if (onApplicationEventFlag && afterSpringInitFlag && !firstStateFired) {
+      firstStateFired = true;
       logger.info("STARTING AGENT...");
       animaStateMachine.start();
     }
@@ -928,6 +998,11 @@ public class Anima
     finalizeAgent();
   }
 
+  public void reloadAgent() {
+    logger.warn("RELOAD AGENT...");
+    resetAgent();
+  }
+
   public void startCheckingNextConfig() {
     if (runtimeConfig != null && (runtimeConfig.nextConfigDns != null || runtimeConfig.nextConfigWeb != null)
         && runtimeConfig.configCheckPeriod != null && runtimeConfig.configCheckPeriod > 0) {
@@ -980,22 +1055,17 @@ public class Anima
 
   @Override
   public String toString() {
-    return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStorePath=" + dbDataStorePath + ", dbDataStoreName="
-        + dbDataStoreName + ", timerScheduler=" + timerScheduler + ", animaStateMachine=" + animaStateMachine
-        + ", animaHomunculus=" + animaHomunculus + ", starterProperties=" + starterProperties + ", runtimeConfig="
-        + runtimeConfig + ", targetConfig=" + targetConfig + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget="
-        + stateTarget + ", statesBefore=" + statesBefore + ", components=" + components + ", dataStore=" + dataStore
-        + ", localUsers=" + localUsers + ", beanName=" + beanName + ", beaconClient=" + beaconClient + ", dataAddress="
-        + dataAddress + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore="
-        + myAliasCertInKeystore + "]";
+    return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStoreName=" + dbDataStoreName + ", timerScheduler="
+        + timerScheduler + ", animaStateMachine=" + animaStateMachine + ", animaHomunculus=" + animaHomunculus
+        + ", starterProperties=" + starterProperties + ", runtimeConfig=" + runtimeConfig + ", targetConfig="
+        + targetConfig + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget=" + stateTarget + ", statesBefore="
+        + statesBefore + ", components=" + components + ", dataStore=" + dataStore + ", localUsers=" + localUsers
+        + ", beanName=" + beanName + ", beaconClient=" + beaconClient + ", dataAddress=" + dataAddress
+        + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore=" + myAliasCertInKeystore + "]";
   }
 
   public String getFileKeystore() {
-    return starterProperties.getFileKeystore();
-  }
-
-  public String getDbDataStorePath() {
-    return dbDataStorePath;
+    return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
   }
 
 }

@@ -17,7 +17,6 @@ package org.ar4k.agent.console;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Map.Entry;
 
 import javax.validation.Valid;
@@ -83,7 +82,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     return ok ? Availability.available() : Availability.unavailable(message);
   }
 
-  @ShellMethod(value = "List keystoresin session", group = "Keytools Commands")
+  @ShellMethod(value = "List keystores in session", group = "Keytools Commands")
   @ManagedOperation
   @ShellMethodAvailability("testOneKey")
   public String listKeystore() {
@@ -118,7 +117,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     return ok;
   }
 
-  @ShellMethod(value = "View dns version base64 text prepared for dns of a keystore selected by alias", group = "Keytools Commands")
+  @ShellMethod(value = "View version base64 text prepared for dns of a keystore selected by alias", group = "Keytools Commands")
   @ManagedOperation
   @ShellMethodAvailability("testOneKey")
   public String getKeystoreForDns(@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
@@ -127,8 +126,8 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     for (Entry<String, KeystoreConfig> t : ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().entrySet()) {
       if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
         File file = new File(t.getValue().filePathPre);
-        String base64content = Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(file));
-        returnText = ConfigHelper.toBase64ForDns(name, base64content);
+        byte[] data = FileUtils.readFileToByteArray(file);
+        returnText = ConfigHelper.toBase64ForDns(name, data);
         break;
       }
     }

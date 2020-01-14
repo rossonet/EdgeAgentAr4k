@@ -126,11 +126,11 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   @Override
   public void kill() {
-    anima.getDataAddress().removeDataChannel(writeChannelBytes);
-    anima.getDataAddress().removeDataChannel(writeChannel);
-    anima.getDataAddress().removeDataChannel(readChannelBytes);
-    anima.getDataAddress().removeDataChannel(readChannel);
-    anima.getDataAddress().removeDataChannel(channelRoot);
+    anima.getDataAddress().removeDataChannel(writeChannelBytes, true);
+    anima.getDataAddress().removeDataChannel(writeChannel, true);
+    anima.getDataAddress().removeDataChannel(readChannelBytes, true);
+    anima.getDataAddress().removeDataChannel(readChannel, true);
+    anima.getDataAddress().removeDataChannel(channelRoot, true);
     if (comPort != null) {
       comPort.closePort();
       comPort = null;

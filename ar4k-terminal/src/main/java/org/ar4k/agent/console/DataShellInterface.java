@@ -180,7 +180,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
   @ShellMethod(value = "Remove data channel from the address space", group = "Data Server Commands")
   @ManagedOperation
   public void removeDataChannel(@ShellOption(help = "target channel id to remove") String idChannel) {
-    anima.getDataAddress().removeDataChannel(idChannel);
+    anima.getDataAddress().removeDataChannel(idChannel, true);
   }
 
   @ShellMethod(value = "Clear address space", group = "Data Server Commands")

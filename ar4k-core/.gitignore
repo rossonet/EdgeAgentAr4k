@@ -6,6 +6,10 @@ src/main/resources/static
 databases/*
 orientdb/*
 src/main/resources/models
+tmp/
+default.keystore.ks
+*.ar4k.conf.crypto
+*.ar4k.conf
 
 ### OUTPUT ###
 spring-shell.log

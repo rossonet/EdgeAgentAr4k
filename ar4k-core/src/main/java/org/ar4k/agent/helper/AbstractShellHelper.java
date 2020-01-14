@@ -175,7 +175,7 @@ public abstract class AbstractShellHelper {
   }
 
   protected Availability testIsRunningOk() {
-    return anima.isRunning() ? Availability.available() : Availability.unavailable("there are no configs in memory");
+    return anima.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
   }
 
   protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {

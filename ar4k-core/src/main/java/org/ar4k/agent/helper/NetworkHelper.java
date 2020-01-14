@@ -55,7 +55,7 @@ public class NetworkHelper {
    * be found.
    *
    * @param address the address to resolve.
-   * 
+   *
    * @return the addresses and hostnames that were resolved from {@code address}.
    */
   public static Set<String> getHostnames(String address) {
@@ -120,6 +120,26 @@ public class NetworkHelper {
         }
     }
     return !portTaken;
+  }
+
+  public static String getFirstMacAddressAsString() {
+    try {
+      InetAddress ip = InetAddress.getLocalHost();
+      NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+      if (network != null) {
+        byte[] mac = network.getHardwareAddress();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mac.length; i++) {
+          sb.append(String.format("%02X%s", mac[i], ""));
+        }
+        return sb.toString().toLowerCase();
+      } else {
+        return "xxxxxx";
+      }
+    } catch (Exception e) {
+      logger.logException(e);
+      return "";
+    }
   }
 
 }

@@ -80,12 +80,22 @@ public class Ar4kLogger implements Logger {
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
-  public void logException(int errore, Exception e) {
+  public void logExceptionDebug(Exception e) {
     Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
+    o.put("level", LogLevel.DEBUG.name());
+    logger.debug("Exception -> " + stackTraceToString(e));
+    sendEvent(LogLevel.DEBUG, o);
+  }
+
+  public void logException(String error, Exception e) {
+    Map<String, Object> o = new HashMap<>();
+    o.put("msg", e.getMessage());
+    o.put("error", error);
+    o.put("exception", stackTraceToString(e));
     o.put("level", LogLevel.EXCEPTION.name());
-    logger.info("Exception -> " + stackTraceToString(e));
+    logger.info(error + " -> " + stackTraceToString(e));
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
@@ -109,7 +119,8 @@ public class Ar4kLogger implements Logger {
         ((IPublishSubscribeChannel) anima.getDataAddress().getChannel("logger")).send(messageObject);
       }
     } catch (Exception aa) {
-      System.out.println("SEND LOG MESSAGE EXCEPTION [" + level + "] -> " + logMessage.toString());
+      if (!level.equals(LogLevel.DEBUG))
+        logger.debug("SEND LOG MESSAGE EXCEPTION [" + level + "] -> " + logMessage.toString());
     }
   }
 

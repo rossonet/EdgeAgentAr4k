@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
-import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -71,7 +70,15 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         .target(AnimaStates.KILLED).event(AnimaEvents.HIBERNATION).and().withExternal().source(AnimaStates.STASIS)
         .target(AnimaStates.RUNNING).event(AnimaEvents.START).and().withExternal().source(AnimaStates.STASIS)
         .target(AnimaStates.FAULTED).event(AnimaEvents.EXCEPTION).and().withExternal().source(AnimaStates.STASIS)
-        .target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART);
+        .target(AnimaStates.CONFIGURED).event(AnimaEvents.RESTART).guard(guardConfig()).and().withExternal()
+        .source(AnimaStates.INIT).target(AnimaStates.INIT).event(AnimaEvents.COMPLETE_RELOAD).guard(guardConfig()).and()
+        .withExternal().source(AnimaStates.STAMINAL).target(AnimaStates.INIT).event(AnimaEvents.COMPLETE_RELOAD)
+        .guard(guardConfig()).and().withExternal().source(AnimaStates.KILLED).target(AnimaStates.INIT)
+        .event(AnimaEvents.COMPLETE_RELOAD).guard(guardConfig()).and().withExternal().source(AnimaStates.CONFIGURED)
+        .target(AnimaStates.INIT).event(AnimaEvents.COMPLETE_RELOAD).guard(guardConfig()).and().withExternal()
+        .source(AnimaStates.FAULTED).target(AnimaStates.INIT).event(AnimaEvents.COMPLETE_RELOAD).guard(guardConfig())
+        .and().withExternal().source(AnimaStates.RUNNING).target(AnimaStates.INIT).event(AnimaEvents.COMPLETE_RELOAD)
+        .guard(guardConfig());
   }
 
   @Bean
@@ -122,6 +129,10 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         } else if (context.getEvent().equals(AnimaEvents.RESTART)) {
           logger.warn("The agent will be restarted. Please wait...");
           anima.prepareRestart();
+          return true;
+        } else if (context.getEvent().equals(AnimaEvents.COMPLETE_RELOAD)) {
+          logger.warn("Agent reload starting. Please wait...");
+          anima.reloadAgent();
           return true;
         } else {
           return true;

@@ -211,12 +211,21 @@ public class ShellInterface extends AbstractShellHelper {
     return ConfigHelper.toBase64(getWorkingConfig());
   }
 
-  @ShellMethod("View dns version base64 text prepared for dns")
+  @ShellMethod("View base64 config text prepared for dns")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public String getSelectedConfigForDns(@ShellOption(help = "the hostname for this configuration") String name)
       throws IOException {
     return ConfigHelper.toBase64ForDns(name, getWorkingConfig());
+  }
+
+  @ShellMethod("View base64 config text prepared for dns encrypted")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public String getSelectedConfigForDnsEncrypted(@ShellOption(help = "the hostname for this configuration") String name,
+      @ShellOption(help = "the alias in ca for the certificate") String certificateAlias)
+      throws IOException, CertificateEncodingException, CMSException {
+    return ConfigHelper.toBase64ForDnsCrypto(name, getWorkingConfig(), certificateAlias);
   }
 
   @ShellMethod("Save selected configuration in base64 text file")
@@ -488,7 +497,7 @@ public class ShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "View the actual status", group = "Agent Life Cycle Commands")
   @ManagedOperation
-  public String getAr4kAgentStatus() {
+  public String getAgentStatus() {
     return anima.getState().name();
   }
 
@@ -501,7 +510,7 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethod(value = "Set a event to the agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
-  public void setAr4kAgentStatus(
+  public void setAgentStatus(
       @ShellOption(help = "target status", valueProvider = Ar4kEventsValuesProvider.class) AnimaEvents target) {
     anima.sendEvent(target);
   }
@@ -510,28 +519,29 @@ public class ShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("sessionOkOrStatusInit")
   public void goodbye() {
-    setAr4kAgentStatus(AnimaEvents.STOP);
+    setAgentStatus(AnimaEvents.STOP);
     System.exit(0);
   }
 
   @ShellMethod(value = "Pause agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testIsRunningOk")
+  @ShellMethodAvailability("sessionOkOrStatusInit")
   public void pause() {
-    setAr4kAgentStatus(AnimaEvents.PAUSE);
+    setAgentStatus(AnimaEvents.PAUSE);
   }
 
   @ShellMethod(value = "Restart agent", group = "Agent Life Cycle Commands")
   @ManagedOperation
-  @ShellMethodAvailability("testIsRunningOk")
+  @ShellMethodAvailability("sessionOkOrStatusInit")
   public void restart() {
-    setAr4kAgentStatus(AnimaEvents.STOP);
-    try {
-      Thread.sleep(3000L);
-    } catch (InterruptedException e) {
-      logger.logException(e);
-    }
-    setAr4kAgentStatus(AnimaEvents.START);
+    setAgentStatus(AnimaEvents.RESTART);
+  }
+
+  @ShellMethod(value = "Reload agent", group = "Agent Life Cycle Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("sessionOkOrStatusInit")
+  public void completeReload() {
+    setAgentStatus(AnimaEvents.COMPLETE_RELOAD);
   }
 
   @ShellMethod(value = "List runtime services", group = "Agent Life Cycle Commands")

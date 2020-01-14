@@ -16,7 +16,7 @@ package org.ar4k.agent.spring.autoconfig;
 
 import static org.ar4k.agent.spring.autoconfig.Ar4kStarterProperties.AR4K_PREFIX;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -32,12 +32,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Ar4kStarterProperties {
 
   public static final String AR4K_PREFIX = "ar4k";
-  private String confPath = Anima.USER_HOME + "/.ar4k";
-  private String fileConfig = Anima.USER_HOME + "/.ar4k/defaultBoot.config.base64.ar4k";
+  private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
+  private String fileConfig = ConfigHelper.USER_HOME + "/.ar4k/defaultBoot.config.base64.ar4k";
   private String webConfig = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k";
   private String dnsConfig = "ar4k-agent-config.rossonet.com";
   private String baseConfig = "";
-  private String fileKeystore = Anima.USER_HOME + "/.ar4k/default.keystore";
+  private String fileKeystore = ConfigHelper.USER_HOME + "/.ar4k/default.keystore";
   private String webKeystore = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.keystore";
   private String dnsKeystore = "ar4k-agent-keystore.rossonet.com";
   private String keystoreMainAlias = "main-agent";

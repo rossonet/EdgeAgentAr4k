@@ -120,26 +120,29 @@ public class DataAddress implements AutoCloseable {
     return returnChannel;
   }
 
-  public void removeDataChannel(Ar4kChannel dataChannel) {
+  public void removeDataChannel(Ar4kChannel dataChannel, boolean clearList) {
     try {
+      logger.info("Try to remove dataChannel " + dataChannel.getNodeId());
       dataChannel.close();
     } catch (Exception e) {
       logger.logException(e);
     }
-    this.dataChannels.remove(dataChannel);
+    if (clearList) {
+      this.dataChannels.remove(dataChannel);
+    }
     for (DataAddressChange target : callbacks) {
       target.onDataAddressDelete(dataChannel.toString());
     }
     logger.info(dataChannel.getNodeId() + " [" + dataChannel.getDescription() + "] removed");
   }
 
-  public void removeDataChannel(String dataChannel) {
-    removeDataChannel(getChannel(dataChannel));
+  public void removeDataChannel(String dataChannel, boolean clearList) {
+    removeDataChannel(getChannel(dataChannel), clearList);
   }
 
   public void clearDataChannels() {
     for (Ar4kChannel target : this.dataChannels) {
-      removeDataChannel(target);
+      removeDataChannel(target, false);
     }
     this.dataChannels.clear();
   }
