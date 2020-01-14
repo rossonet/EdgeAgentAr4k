@@ -49,6 +49,12 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--nextConfigWeb", description = "if set the configuration is monitored and replaced in runtine when change")
   public String nextConfigWeb = null;
 
+  @Parameter(names = "--nextConfigFile", description = "if set the configuration is monitored and replaced in runtine when change")
+  public String nextConfigFile = null;
+
+  @Parameter(names = "--nextConfigReload", description = "if set to true the agent will be reload after the configuration change else it will be just restarted")
+  public Boolean nextConfigReload = false;
+
   @Parameter(names = "--configCheckPeriod", description = "the between every check for the config changes (ms)")
   public Integer configCheckPeriod = 10000;
 
@@ -100,11 +106,17 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
   public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
 
-  @Parameter(names = "--preScript", description = "pre script in format <LANGUAGE>:<SCRIPT>")
+  @Parameter(names = "--preScript", description = "pre script")
   public String preScript = null;
 
-  @Parameter(names = "--postScript", description = "post script in format <LANGUAGE>:<SCRIPT>")
+  @Parameter(names = "--postScript", description = "post script")
   public String postScript = null;
+
+  @Parameter(names = "--preScriptLanguage", description = "pre script language")
+  public String preScriptLanguage = "groovy";
+
+  @Parameter(names = "--postScriptLanguage", description = "post script language")
+  public String postScriptLanguage = "groovy";
 
   @Parameter(names = "--initializeKeystore", description = "initialize the keystore if need", arity = 0)
   public boolean initializeKeystore = true;

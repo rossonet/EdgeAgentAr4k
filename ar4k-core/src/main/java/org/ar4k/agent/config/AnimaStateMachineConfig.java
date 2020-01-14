@@ -46,8 +46,7 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
 
   @Override
   public void configure(StateMachineStateConfigurer<AnimaStates, AnimaEvents> states) throws Exception {
-    states.withStates().initial(AnimaStates.INIT)// .end(AnimaStates.KILLED).end(AnimaStates.FAULTED)
-        .states(EnumSet.allOf(AnimaStates.class));
+    states.withStates().initial(AnimaStates.INIT).states(EnumSet.allOf(AnimaStates.class));
   }
 
   @Override
@@ -100,8 +99,10 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
           anima.configureAgent();
         }
         if (anima.getState().equals(AnimaStates.RUNNING)) {
+          anima.runPreScript();
           anima.runPots();
           anima.runServices();
+          anima.runPostScript();
           anima.startCheckingNextConfig();
         }
         if (anima.getState().equals(AnimaStates.STASIS)) {

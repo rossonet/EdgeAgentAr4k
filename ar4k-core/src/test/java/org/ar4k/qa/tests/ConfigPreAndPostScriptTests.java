@@ -14,17 +14,27 @@
     */
 package org.ar4k.qa.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.UUID;
 
 import org.ar4k.agent.config.AnimaStateMachineConfig;
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Anima.AnimaEvents;
+import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.jline.builtins.Commands;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,18 +63,25 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
     FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
     Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = "classpath:application-file-prepost.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ProcessEngineTests {
+public class ConfigPreAndPostScriptTests {
 
   @Autowired
   Anima anima;
+
+  final String fileName = "/tmp/test-config-prepost.ar4k";
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
     System.out.println(anima.getState());
+  }
+
+  @After
+  public void tearDownAfterClass() throws Exception {
+    Files.deleteIfExists(Paths.get(fileName));
   }
 
   @Rule
@@ -76,24 +93,33 @@ public class ProcessEngineTests {
   };
 
   @Test
-  public void listProcessEngine() throws InterruptedException {
-    System.out.println(ScriptEngineManagerProcess.listScriptEngines());
-  }
-
-  @Test
-  public void runJavaScriptEngine() throws InterruptedException, IOException {
-    ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
-    p.setLabel("javascript test");
-    p.setEngine("nashorn");
-    long start = System.currentTimeMillis();
-    Thread.sleep(10L);
-    p.eval("print('Hello Java World'); Java.type(\"java.lang.System\").currentTimeMillis()");
-    Thread.sleep(10L);
-    long stop = System.currentTimeMillis();
-    System.out.println("START -> " + start + "; OUT -> " + p.getOutput() + "; STOP -> " + stop);
-    assertTrue(start < Long.valueOf(p.getOutput()));
-    assertTrue(Long.valueOf(p.getOutput()) < System.currentTimeMillis());
-    p.close();
+  public void checkConfigFileWithReload() throws InterruptedException, IOException {
+    Ar4kConfig c = new Ar4kConfig();
+    String check = UUID.randomUUID().toString();
+    c.name = "test salvataggio conf";
+    c.author = check;
+    SocketFactorySslConfig s1 = new SocketFactorySslConfig();
+    s1.name = "ssh config";
+    s1.note = check;
+    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+    s2.name = "stunnel config";
+    s2.note = check;
+    c.pots.add(s1);
+    c.pots.add(s2);
+    c.preScriptLanguage = "js";
+    c.preScript = "print('Hello Java World from config pre script');";
+    c.postScript = "println('Hello World from groovy')";
+    Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING);
+    assertEquals(anima.getState(), AnimaStates.STAMINAL);
+    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+    Thread.sleep(3000);
+    System.out.println(anima.getState());
+    Thread.sleep(3000);
+    assertEquals(anima.getState(), AnimaStates.RUNNING);
+    assertTrue(check.equals(anima.getRuntimeConfig().author));
+    assertTrue(check.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
+    assertTrue(check.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
   }
 
 }

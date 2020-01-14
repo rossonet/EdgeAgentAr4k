@@ -60,6 +60,7 @@ import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
+import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.Ar4kUserDetails;
 import org.ar4k.agent.spring.autoconfig.Ar4kStarterProperties;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
@@ -145,10 +146,10 @@ public class Anima
   private Ar4kConfig targetConfig = null;
   // configurazione iniziale di bootStrap derivata dalle variabili Spring
   private Ar4kConfig bootstrapConfig = null;
+  // configurazione per il reload
+  private transient Ar4kConfig reloadConfig = null;
   private AnimaStates stateTarget = AnimaStates.RUNNING;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
-
-  // TODO implementare l'esecuzione dei pre e post script
 
   private Set<Ar4kComponent> components = new HashSet<>();
 
@@ -516,92 +517,101 @@ public class Anima
   // parametri di configurazione
   private Ar4kConfig resolveBootstrapConfig() {
     Ar4kConfig targetConfig = null;
-    int maxConfig = 0;
-    try {
-      maxConfig = Integer.max(maxConfig,
-          starterProperties.getWebConfigOrder() != null ? Integer.valueOf(starterProperties.getWebConfigOrder()) : 6);
-    } catch (Exception a) {
-      logger.warn("webConfigOrder -> " + starterProperties.getWebConfigOrder());
-      maxConfig = 6;
-    }
-    try {
-      maxConfig = Integer.max(maxConfig,
-          starterProperties.getDnsConfigOrder() != null ? Integer.valueOf(starterProperties.getDnsConfigOrder()) : 6);
-    } catch (Exception a) {
-      logger.warn("dnsConfigOrder -> " + starterProperties.getDnsConfigOrder());
-      maxConfig = 6;
-    }
-    try {
-      maxConfig = Integer.max(maxConfig,
-          starterProperties.getBaseConfigOrder() != null ? Integer.valueOf(starterProperties.getBaseConfigOrder()) : 6);
-    } catch (Exception a) {
-      logger.warn("base64ConfigOrder -> " + starterProperties.getBaseConfigOrder());
-      maxConfig = 5;
-    }
-    try {
-      maxConfig = Integer.max(maxConfig,
-          starterProperties.getFileConfigOrder() != null ? Integer.valueOf(starterProperties.getFileConfigOrder()) : 6);
-    } catch (Exception a) {
-      logger.warn("fileConfigOrder -> " + starterProperties.getFileConfigOrder());
-      maxConfig = 4;
-    }
-    for (int liv = 0; liv <= maxConfig; liv++) {
-      logger.info(String.valueOf(liv) + "/" + maxConfig + " searching config...");
-      if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
-          && starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
-        try {
-          logger.info("try webConfig");
-          targetConfig = webConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getWebConfig(), false),
-              starterProperties.getKeystoreConfigAlias());
-          if (targetConfig != null) {
-            logger.info("found webConfig");
-            break;
+    if (reloadConfig == null) {
+      int maxConfig = 0;
+      try {
+        maxConfig = Integer.max(maxConfig,
+            starterProperties.getWebConfigOrder() != null ? Integer.valueOf(starterProperties.getWebConfigOrder()) : 6);
+      } catch (Exception a) {
+        logger.warn("webConfigOrder -> " + starterProperties.getWebConfigOrder());
+        maxConfig = 6;
+      }
+      try {
+        maxConfig = Integer.max(maxConfig,
+            starterProperties.getDnsConfigOrder() != null ? Integer.valueOf(starterProperties.getDnsConfigOrder()) : 6);
+      } catch (Exception a) {
+        logger.warn("dnsConfigOrder -> " + starterProperties.getDnsConfigOrder());
+        maxConfig = 6;
+      }
+      try {
+        maxConfig = Integer.max(maxConfig,
+            starterProperties.getBaseConfigOrder() != null ? Integer.valueOf(starterProperties.getBaseConfigOrder())
+                : 6);
+      } catch (Exception a) {
+        logger.warn("base64ConfigOrder -> " + starterProperties.getBaseConfigOrder());
+        maxConfig = 5;
+      }
+      try {
+        maxConfig = Integer.max(maxConfig,
+            starterProperties.getFileConfigOrder() != null ? Integer.valueOf(starterProperties.getFileConfigOrder())
+                : 6);
+      } catch (Exception a) {
+        logger.warn("fileConfigOrder -> " + starterProperties.getFileConfigOrder());
+        maxConfig = 4;
+      }
+      for (int liv = 0; liv <= maxConfig; liv++) {
+        logger.info(String.valueOf(liv) + "/" + maxConfig + " searching config...");
+        if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
+            && starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
+          try {
+            logger.info("try webConfig");
+            targetConfig = webConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getWebConfig(), false),
+                starterProperties.getKeystoreConfigAlias());
+            if (targetConfig != null) {
+              logger.info("found webConfig");
+              break;
+            }
+          } catch (Exception e) {
+            logger.logException("error in webconfig download", e);
           }
-        } catch (Exception e) {
-          logger.logException("error in webconfig download", e);
+        }
+        if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
+            && starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
+          try {
+            logger.info("try dnsConfig");
+            targetConfig = dnsConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false),
+                starterProperties.getKeystoreConfigAlias());
+            if (targetConfig != null) {
+              logger.info(
+                  "found dnsConfig " + ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false));
+              break;
+            }
+          } catch (Exception e) {
+            logger.logException("error in dns config download", e);
+          }
+        }
+        if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
+            && starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
+          try {
+            logger.info("try base64Config");
+            targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
+            if (targetConfig != null) {
+              logger.info("found base64Config");
+              break;
+            }
+          } catch (Exception e) {
+            logger.logException("error in baseconfig", e);
+          }
+        }
+        if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
+            && starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
+          try {
+            logger.info("try fileConfig");
+            targetConfig = loadConfigFromFile(
+                ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
+                starterProperties.getKeystoreConfigAlias());
+            if (targetConfig != null) {
+              logger.info(
+                  "found fileConfig " + ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true));
+              break;
+            }
+          } catch (Exception e) {
+            logger.logException("error in fileconfig", e);
+          }
         }
       }
-      if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
-          && starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
-        try {
-          logger.info("try dnsConfig");
-          targetConfig = dnsConfigDownload(ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false),
-              starterProperties.getKeystoreConfigAlias());
-          if (targetConfig != null) {
-            logger.info("found dnsConfig");
-            break;
-          }
-        } catch (Exception e) {
-          logger.logException("error in dns config download", e);
-        }
-      }
-      if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
-          && starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
-        try {
-          logger.info("try base64Config");
-          targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
-          if (targetConfig != null) {
-            logger.info("found base64Config");
-            break;
-          }
-        } catch (Exception e) {
-          logger.logException("error in baseconfig", e);
-        }
-      }
-      if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
-          && starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
-        try {
-          logger.info("try fileConfig");
-          targetConfig = loadConfigFromFile(ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
-              starterProperties.getKeystoreConfigAlias());
-          if (targetConfig != null) {
-            logger.info("found fileConfig");
-            break;
-          }
-        } catch (Exception e) {
-          logger.logException("error in fileconfig", e);
-        }
-      }
+    } else {
+      targetConfig = reloadConfig;
     }
     return targetConfig;
   }
@@ -652,7 +662,7 @@ public class Anima
     } catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
         | CMSException e) {
       if (e instanceof java.io.FileNotFoundException) {
-        logger.warn("config file not found " + pathConfig);
+        logger.debug("config file not found " + pathConfig);
       } else if (logger != null) {
         logger.logException("error in config file", e);
       }
@@ -1004,8 +1014,17 @@ public class Anima
   }
 
   public void startCheckingNextConfig() {
-    if (runtimeConfig != null && (runtimeConfig.nextConfigDns != null || runtimeConfig.nextConfigWeb != null)
+    reloadConfig = null;
+    if (runtimeConfig != null
+        && (runtimeConfig.nextConfigFile != null || runtimeConfig.nextConfigDns != null
+            || runtimeConfig.nextConfigWeb != null)
         && runtimeConfig.configCheckPeriod != null && runtimeConfig.configCheckPeriod > 0) {
+      if (runtimeConfig.nextConfigFile != null) {
+        timerScheduler.schedule(checkFileConfigUpdate(runtimeConfig.nextConfigFile), runtimeConfig.configCheckPeriod,
+            runtimeConfig.configCheckPeriod);
+        logger.warn("scheduled periodically configuration checking on file " + runtimeConfig.nextConfigFile
+            + " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+      }
       if (runtimeConfig.nextConfigDns != null) {
         timerScheduler.schedule(checkDnsConfigUpdate(runtimeConfig.nextConfigDns), runtimeConfig.configCheckPeriod,
             runtimeConfig.configCheckPeriod);
@@ -1041,11 +1060,26 @@ public class Anima
     };
   }
 
+  private TimerTask checkFileConfigUpdate(String nextConfigFile) {
+    return new TimerTask() {
+      @Override
+      public void run() {
+        Ar4kConfig newTargetConfig = loadConfigFromFile(nextConfigFile, starterProperties.getKeystoreConfigAlias());
+        checkPolledConfig(newTargetConfig);
+      }
+    };
+  }
+
   private final void checkPolledConfig(Ar4kConfig newTargetConfig) {
     if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
       logger.warn("Found new config " + newTargetConfig.toString());
+      reloadConfig = newTargetConfig;
       runtimeConfig = newTargetConfig;
-      sendEvent(AnimaEvents.RESTART);
+      if (newTargetConfig.nextConfigReload == null || newTargetConfig.nextConfigReload == false) {
+        sendEvent(AnimaEvents.RESTART);
+      } else {
+        sendEvent(AnimaEvents.COMPLETE_RELOAD);
+      }
     }
   }
 
@@ -1066,6 +1100,43 @@ public class Anima
 
   public String getFileKeystore() {
     return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
+  }
+
+  public void runPreScript() {
+    if (runtimeConfig.preScript != null && runtimeConfig.preScriptLanguage != null && !runtimeConfig.preScript.isEmpty()
+        && !runtimeConfig.preScriptLanguage.isEmpty()) {
+      logger.info("run pre script in language " + runtimeConfig.preScriptLanguage);
+      String scriptLabel = "prescript";
+      try {
+        scriptRunner(scriptLabel, runtimeConfig.preScriptLanguage, runtimeConfig.preScript);
+      } catch (Exception a) {
+        logger.logException("error running " + scriptLabel, a);
+      }
+    }
+  }
+
+  private void scriptRunner(String scriptLabel, String scriptLanguage, String script) {
+    ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
+    p.setLabel(scriptLabel);
+    p.setEngine(scriptLanguage);
+    p.eval(script);
+    String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + scriptLabel;
+    animaHomunculus.registerNewSession(sessionId, sessionId);
+    RpcConversation rpc = animaHomunculus.getRpc(sessionId);
+    rpc.getScriptSessions().put(scriptLabel, p);
+  }
+
+  public void runPostScript() {
+    if (runtimeConfig.postScript != null && runtimeConfig.postScriptLanguage != null
+        && !runtimeConfig.postScript.isEmpty() && !runtimeConfig.postScriptLanguage.isEmpty()) {
+      logger.info("run post script in language " + runtimeConfig.postScriptLanguage);
+      String scriptLabel = "postscript";
+      try {
+        scriptRunner(scriptLabel, runtimeConfig.postScriptLanguage, runtimeConfig.postScript);
+      } catch (Exception a) {
+        logger.logException("error running " + scriptLabel, a);
+      }
+    }
   }
 
 }

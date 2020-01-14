@@ -96,7 +96,7 @@ public class ConfigLoadingAndRefreshFileTests {
   public void checkConfigFileWithReload() throws InterruptedException, IOException {
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
-    c.name = "test salvataggio json";
+    c.name = "test salvataggio";
     c.author = check;
     SocketFactorySslConfig s1 = new SocketFactorySslConfig();
     s1.name = "ssh config";
