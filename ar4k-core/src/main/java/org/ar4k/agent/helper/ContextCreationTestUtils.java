@@ -58,9 +58,12 @@ public class ContextCreationTestUtils implements Callable<Anima>, ApplicationLis
   }
 
   public ContextCreationTestUtils(Class<?> startClass, ExecutorService executor, String logger, String keyStore,
-      int serverPort, List<String> additionalArgs, Ar4kConfig config, String mainAliasInKeystore) {
+      int serverPort, List<String> additionalArgs, Ar4kConfig config, String mainAliasInKeystore,
+      String keystoreBeaconAlias, String webRegistrationEndpoint) {
     this(startClass, executor, logger, keyStore, serverPort, additionalArgs);
     args.add("--ar4k.keystoreMainAlias=" + mainAliasInKeystore);
+    args.add("--ar4k.keystoreBeaconAlias=" + keystoreBeaconAlias);
+    args.add("--ar4k.webRegistrationEndpoint=" + webRegistrationEndpoint);
     try {
       args.add("--ar4k.baseConfig=" + ConfigHelper.toBase64(config));
     } catch (IOException e) {
@@ -96,6 +99,8 @@ public class ContextCreationTestUtils implements Callable<Anima>, ApplicationLis
        * Thread.sleep(500L); }
        */
       System.out.println("Anima -> " + anima.toString() + " [" + anima.getState() + "]");
+      System.out.println("Enviroment -> " + anima.getEnvironmentVariablesAsString());
+      System.out.println("Configuration -> " + anima.getRuntimeConfig());
       return context.getBean(Anima.class);
     } catch (Exception e) {
       e.printStackTrace();

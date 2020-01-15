@@ -39,7 +39,6 @@ public class BeaconService extends AbstractAr4kService {
   // iniettata vedi set/get
   private BeaconServiceConfig configuration = null;
 
-  // iniettata vedi set/get
   private Anima anima = null;
 
   private BeaconServer beaconServer = null;
@@ -117,13 +116,18 @@ public class BeaconService extends AbstractAr4kService {
   @Override
   public void close() throws IOException {
     if (beaconServer != null)
-      beaconServer.stop();
+      beaconServer.close();
   }
 
   @Override
   public void stop() {
     beaconServer.stop();
     beaconServer = null;
+  }
+
+  @Override
+  public String toString() {
+    return "BeaconService [configuration=" + configuration + ", beaconServer=" + beaconServer + "]";
   }
 
 }

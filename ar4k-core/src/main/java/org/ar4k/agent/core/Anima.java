@@ -494,12 +494,13 @@ public class Anima
         }
         logger.info("TRY CONNECTION TO BEACON AT "
             + ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
-        connectToBeaconService(ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
+        beaconClient = connectToBeaconService(
+            ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
             starterProperties.getBeaconCaChainPem(), Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
             starterProperties.getBeaconDiscoveryFilterString(), false);
       } catch (Exception e) {
         logger.warn("Beacon connection not ok: " + e.getMessage());
-        logger.debug(Ar4kLogger.stackTraceToString(e, 6));
+        logger.info(Ar4kLogger.stackTraceToString(e, 6));
       }
     }
   }
@@ -507,33 +508,35 @@ public class Anima
   public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
       String discoveryFilter, boolean force) {
     URL urlTarget = null;
-    if (beaconClient != null) {
-      logger.info("This agent is connected to another Beacon service");
-      return null;
-    } else {
+    BeaconClient beaconClientTarget = null;
+    {
       try {
         if (urlBeacon != null)
           urlTarget = new URL(urlBeacon);
         String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
         animaHomunculus.registerNewSession(sessionId, sessionId);
         RpcConversation rpc = animaHomunculus.getRpc(sessionId);
-        beaconClient = new BeaconClient.Builder().setUniqueName(getAgentUniqueName()).setAnima(this)
-            .setBeaconCaChainPem(beaconCaChainPem).setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
-            .setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
-        if (beaconClient != null && beaconClient.getStateConnection().equals(ConnectivityState.READY)) {
+        beaconClientTarget = new BeaconClient.Builder()
+            .setAliasBeaconClientInKeystore(starterProperties.getKeystoreBeaconAlias())
+            .setUniqueName(getAgentUniqueName()).setAnima(this).setBeaconCaChainPem(beaconCaChainPem)
+            .setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort).setPort(urlTarget.getPort())
+            .setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
+        if (beaconClientTarget != null && beaconClientTarget.getStateConnection().equals(ConnectivityState.READY)) {
           logger.info("found Beacon endpoint: " + urlBeacon);
-          if (!getAgentUniqueName().equals(beaconClient.getAgentUniqueName())) {
+          if (!getAgentUniqueName().equals(beaconClientTarget.getAgentUniqueName())) {
             logger.info("the unique name is changed in " + getAgentUniqueName());
           }
         } else {
-          logger.info("the Beacon endpoint " + urlBeacon + " return " + beaconClient.getStateConnection());
+          logger.info("the Beacon endpoint " + urlBeacon + " return " + beaconClientTarget.getStateConnection());
         }
       } catch (IOException e) {
         logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
       } catch (UnrecoverableKeyException e) {
         logger.warn(e.getMessage());
+      } catch (Exception e) {
+        logger.info(Ar4kLogger.stackTraceToString(e, 6));
       }
-      return beaconClient;
+      return beaconClientTarget;
     }
   }
 
@@ -755,6 +758,7 @@ public class Anima
     Collections.sort(sortedList, comparatorOrderPots);
     for (PotConfig confServizio : sortedList) {
       if (confServizio instanceof ServiceConfig) {
+        logger.info("run " + confServizio + " as service");
         try {
           runSeedService((ServiceConfig) confServizio);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
@@ -772,11 +776,14 @@ public class Anima
     List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
     Collections.sort(sortedList, comparatorOrderPots);
     for (PotConfig confVaso : sortedList) {
-      try {
-        runSeedPot(confVaso);
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-          | SecurityException e) {
-        throw new Ar4kException("problem trying to run " + confVaso.getName(), e.getCause());
+      if (!(confVaso instanceof ServiceConfig)) {
+        logger.info("run " + confVaso + " as pot");
+        try {
+          runSeedPot(confVaso);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+            | SecurityException e) {
+          throw new Ar4kException("problem trying to run " + confVaso.getName(), e.getCause());
+        }
       }
     }
   }
@@ -799,7 +806,7 @@ public class Anima
     targetService.setConfiguration(confServizio);
     targetService.setAnima(this);
     components.add(targetService);
-    // targetService.init();
+    targetService.init();
     targetService.start();
   }
 
@@ -811,16 +818,17 @@ public class Anima
     ritorno.put("ar4k.dnsKeystore", starterProperties.getDnsKeystore());
     ritorno.put("ar4k.keystorePassword", starterProperties.getKeystorePassword());
     ritorno.put("ar4k.keystoreMainAlias", starterProperties.getKeystoreMainAlias());
+    ritorno.put("ar4k.keystoreBeaconAlias", starterProperties.getKeystoreBeaconAlias());
     ritorno.put("ar4k.confPath", starterProperties.getConfPath());
     ritorno.put("ar4k.fileConfig", starterProperties.getFileConfig());
     ritorno.put("ar4k.webConfig", starterProperties.getWebConfig());
     ritorno.put("ar4k.dnsConfig", starterProperties.getDnsConfig());
     ritorno.put("ar4k.baseConfig", starterProperties.getBaseConfig());
-    ritorno.put("ar4k.beaconCaChainPem", starterProperties.getBeaconCaChainPem());
     ritorno.put("ar4k.webRegistrationEndpoint", starterProperties.getWebRegistrationEndpoint());
     ritorno.put("ar4k.dnsRegistrationEndpoint", starterProperties.getDnsRegistrationEndpoint());
     ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(starterProperties.getBeaconDiscoveryPort()));
     ritorno.put("ar4k.beaconDiscoveryFilterString", starterProperties.getBeaconDiscoveryFilterString());
+    ritorno.put("ar4k.beaconCaChainPem", starterProperties.getBeaconCaChainPem());
     ritorno.put("ar4k.fileConfigOrder", String.valueOf(starterProperties.getFileConfigOrder()));
     ritorno.put("ar4k.webConfigOrder", String.valueOf(starterProperties.getWebConfigOrder()));
     ritorno.put("ar4k.dnsConfigOrder", String.valueOf(starterProperties.getDnsConfigOrder()));
@@ -1163,6 +1171,10 @@ public class Anima
         logger.logException("error running " + scriptLabel, a);
       }
     }
+  }
+
+  public BeaconClient getBeaconClient() {
+    return beaconClient;
   }
 
 }

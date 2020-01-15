@@ -60,6 +60,15 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   }
 
   @Override
+  public String toString() {
+    return "BeaconServiceConfig [port=" + port + ", discoveryPort=" + discoveryPort + ", broadcastAddress="
+        + broadcastAddress + ", acceptAllCerts=" + acceptAllCerts + ", stringDiscovery=" + stringDiscovery
+        + ", certChainFile=" + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
+        + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", aliasBeaconServerRequestCertInKeystore="
+        + aliasBeaconServerRequestCertInKeystore + ", caChainPem=" + caChainPem + "]";
+  }
+
+  @Override
   public boolean isSpringBean() {
     return false;
   }

@@ -39,8 +39,9 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
   private static final long serialVersionUID = 4934166738722721736L;
 
-  private static final transient String animaBeanName = "anima";
-  public transient Anima anima = ((Anima) Anima.getApplicationContext().getBean(animaBeanName));
+  protected transient Anima anima = Anima.getApplicationContext() != null
+      ? Anima.getApplicationContext().getBean(Anima.class)
+      : null;
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();

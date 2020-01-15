@@ -23,7 +23,6 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
@@ -82,7 +81,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;
-  private transient Anima anima = null;
+  private transient Anima anima = Anima.getApplicationContext() != null
+      ? Anima.getApplicationContext().getBean(Anima.class)
+      : null;
 
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
@@ -251,15 +252,18 @@ public class BeaconServer implements Runnable, AutoCloseable {
       this.broadcastAddress = broadcastAddress;
     if (stringDiscovery != null)
       this.stringDiscovery = stringDiscovery;
-    if (animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
-      logger.info("Certificate for Beacon server is present in keystore");
+    if (animaTarget != null && animaTarget.getMyIdentityKeystore() != null
+        && animaTarget.getMyIdentityKeystore().listCertificate() != null
+        && animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
+      logger.info("Certificate " + this.aliasBeaconServerInKeystore + " for Beacon server is present in keystore");
     } else {
-      throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore + " not found in keystore");
+      throw new UnrecoverableKeyException(
+          "key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + animaTarget + "]");
     }
     writePemCa(anima.getMyAliasCertInKeystore(), animaTarget, this.certChainFile);
     writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
-    writePrivateKey(anima.getMyAliasCertInKeystore(), animaTarget, this.privateKeyFile);
-    logger.info("Starting beacon server for Registration");
+    writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFile);
+    logger.info("Starting beacon server");
     try {
       ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
           .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
@@ -278,18 +282,18 @@ public class BeaconServer implements Runnable, AutoCloseable {
         final ServerCallHandler<ReqT, RespT> serverCallHandler) {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
       try {
-        logger.debug("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
-        logger.debug("SSL DATA PEER HOST: " + sslSession.getPeerHost());
-        logger.debug("SSL DATA PROTOCOL: " + sslSession.getProtocol());
+        logger.trace("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
+        logger.trace("SSL DATA PEER HOST: " + sslSession.getPeerHost());
+        logger.trace("SSL DATA PROTOCOL: " + sslSession.getProtocol());
         if (sslSession.getSessionContext() != null) {
-          logger.debug("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
+          logger.trace("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
         }
-        logger.debug("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
-        logger.debug("SSL DATA CERTIFICATE CHAIN:");
+        logger.trace("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
+        logger.trace("SSL DATA CERTIFICATE CHAIN:");
         for (X509Certificate i : sslSession.getPeerCertificateChain()) {
-          logger.debug(" - " + i.toString());
+          logger.trace(" - " + i.toString());
         }
-        logger.info("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
+        logger.trace("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
       } catch (SSLPeerUnverifiedException e) {
         logger.info("SSL CERT NOT VERIFIED");
       }
@@ -332,16 +336,12 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private String getPemCaStrForRegistrationReply(String aliasBeaconServer, Anima animaTarget) {
     StringBuilder writer = new StringBuilder();
     String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-    String pemTxtClient = animaTarget.getMyIdentityKeystore().getCaPem("beacon-client");
     String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
     writer.append("-----BEGIN CERTIFICATE-----\n");
-    writer.append(pemTxtClient);
+    writer.append(pemTxtCa);
     writer.append("\n-----END CERTIFICATE-----\n");
     writer.append("-----BEGIN CERTIFICATE-----\n");
     writer.append(pemTxtBase);
-    writer.append("\n-----END CERTIFICATE-----\n");
-    writer.append("-----BEGIN CERTIFICATE-----\n");
-    writer.append(pemTxtCa);
     writer.append("\n-----END CERTIFICATE-----\n");
     return writer.toString();
   }
@@ -350,14 +350,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
       String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-      // String pemTxtCa =
-      // animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxtBase);
       writer.write("\n-----END CERTIFICATE-----\n");
-      // writer.write("-----BEGIN CERTIFICATE-----\n");
-      // writer.write(pemTxtCa);
-      // writer.write("\n-----END CERTIFICATE-----\n");
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -371,8 +366,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
-        // Use stderr here since the logger may have been reset by its JVM shutdown
-        // hook.
         System.err.println("*** shutting down Beacon server since JVM is shutting down");
         BeaconServer.this.stop();
       }
@@ -386,6 +379,8 @@ public class BeaconServer implements Runnable, AutoCloseable {
   public void stop() {
     if (server != null) {
       server.shutdown();
+      server.shutdownNow();
+      server = null;
     }
     running = false;
     if (socketFlashBeacon != null) {
@@ -408,147 +403,118 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
     @Override
     public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
-      responseObserver.onNext(Status.newBuilder().setStatusValue(StatusValue.GOOD.getNumber()).build());
-      responseObserver.onCompleted();
+      try {
+        responseObserver.onNext(Status.newBuilder().setStatusValue(StatusValue.GOOD.getNumber()).build());
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
+      }
     }
 
     @Override
     public void sendCommandReply(CommandReplyRequest request, StreamObserver<Status> responseObserver) {
-      repliesQueue.put(request.getUniqueIdRequest(), request);
-      responseObserver.onNext(Status.newBuilder().setStatus(StatusValue.GOOD).build());
-      responseObserver.onCompleted();
+      try {
+        repliesQueue.put(request.getUniqueIdRequest(), request);
+        responseObserver.onNext(Status.newBuilder().setStatus(StatusValue.GOOD).build());
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
+      }
     }
 
     @Override
     // TODO inserire il meccanismo per la coda autorizzativa
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
-      String uniqueClientNameForBeacon = UUID.randomUUID().toString();
-      logger.warn("** Try to sign request beacon client: " + request.toString());
-      String certFromCsr = getCertForRegistration(anima.getMyAliasCertInKeystore(), request.getName(),
-          request.getRequestCsr(), request.getJsonHealth(), request.getDisplayKey(), uniqueClientNameForBeacon);
-      logger.debug("Certificate for beacon client (signed): "
-          + anima.getMyIdentityKeystore().getClientCertificate(uniqueClientNameForBeacon) + " - alias "
-          + uniqueClientNameForBeacon);
-      logger.debug(
-          "Certificate for beacon client (CA): " + getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima));
-      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder()
-          .setCa(ByteString.copyFrom(
-              getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima).getBytes(Charset.forName("UTF-8"))));
-      replyBuilder.setCert(certFromCsr);
-      RegisterReply reply = replyBuilder
-          .setStatusRegistration(
-              Status.newBuilder().setStatus(certFromCsr != null ? StatusValue.GOOD : StatusValue.WAIT_HUMAN))
-          .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
-      agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
-      responseObserver.onNext(reply);
-      responseObserver.onCompleted();
-    }
-
-    private String getCertForRegistration(String idAuth, String name, String requestCsr, String jsonHealth,
-        String consoleKey, String targetAlias) {
-      String result = null;
-      if (acceptAllCerts) {
-        result = anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
-            ConfigHelper.defaulBeaconSignvalidity, idAuth);
-      } else {
-        result = checkRegistrationServer(idAuth, name, requestCsr, consoleKey, targetAlias, jsonHealth);
-      }
-      return result;
-    }
-
-    private String checkRegistrationServer(String idAuth, String name, String requestCsr, String consoleKey,
-        String targetAlias, String jsonHealth) {
-      boolean isNewRequest = true;
-      boolean isAccepted = false;
-      RegistrationRequest request = new RegistrationRequest();
-      request.idAuth = idAuth;
-      request.name = name;
-      request.requestCsr = requestCsr;
-      request.consoleKey = consoleKey;
-      request.targetAlias = targetAlias;
-      request.jsonHealth = jsonHealth;
-      request.lastCall = new Date();
-      request.time = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
-      for (RegistrationRequest singleRequestArchived : listAgentRequest) {
-        if (singleRequestArchived.equals(request)) {
-          isNewRequest = false;
-          if (singleRequestArchived.approved && singleRequestArchived.approvedDate != null) {
-            isAccepted = true;
-            singleRequestArchived.completed = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
-          }
-          break;
-        }
-      }
-      if (isNewRequest) {
-        listAgentRequest.add(request);
-      }
-      if (isAccepted) {
-        return anima.getMyIdentityKeystore().signCertificateBase64(requestCsr, targetAlias,
-            ConfigHelper.defaulBeaconSignvalidity, idAuth);
-      } else {
-        return null;
+      try {
+        String uniqueClientNameForBeacon = request.getName();
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder()
+            .setCa(ByteString.copyFrom(getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima)
+                .getBytes(Charset.forName("UTF-8"))));
+        RegisterReply reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
+            .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+        agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
       }
     }
 
     @Override
     public void listAgents(Empty request, StreamObserver<ListAgentsReply> responseObserver) {
-      List<Agent> values = new ArrayList<>();
-      for (BeaconAgent r : agentLabelRegisterReplies) {
-        Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName()).build();
-        values.add(a);
+      try {
+        List<Agent> values = new ArrayList<>();
+        for (BeaconAgent r : agentLabelRegisterReplies) {
+          Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName()).build();
+          values.add(a);
+        }
+        ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
+            .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
       }
-      ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
-          .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
-      responseObserver.onNext(reply);
-      responseObserver.onCompleted();
     }
 
     @Override
     public void listAgentsRequestComplete(Empty request, StreamObserver<ListAgentsRequestReply> responseObserver) {
-      List<AgentRequest> values = new ArrayList<>();
-      for (RegistrationRequest r : listAgentRequest) {
-        org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder a = AgentRequest.newBuilder()
-            .setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
-        if (r.approved && r.approvedDate != null)
-          a.setApproved(r.approvedDate);
-        if (r.completed != null)
-          a.setRegistrationCompleted(r.completed);
-        values.add(a.build());
+      try {
+        List<AgentRequest> values = new ArrayList<>();
+        for (RegistrationRequest r : listAgentRequest) {
+          org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder a = AgentRequest.newBuilder()
+              .setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
+          if (r.approved && r.approvedDate != null)
+            a.setApproved(r.approvedDate);
+          if (r.completed != null)
+            a.setRegistrationCompleted(r.completed);
+          values.add(a.build());
+        }
+        ListAgentsRequestReply reply = ListAgentsRequestReply.newBuilder().addAllRequests(values)
+            .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
       }
-      ListAgentsRequestReply reply = ListAgentsRequestReply.newBuilder().addAllRequests(values)
-          .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
-      responseObserver.onNext(reply);
-      responseObserver.onCompleted();
     }
 
     @Override
     public void approveAgentRequest(ApproveAgentRequestRequest request, StreamObserver<Status> responseObserver) {
-      org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder status = Status.newBuilder().setStatus(StatusValue.BAD);
-      for (RegistrationRequest r : listAgentRequest) {
-        if (r.idRequest.equals(request.getIdRequest())) {
-          r.approved = true;
-          r.approvedDate = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
-          r.pemApproved = request.getCert();
-          r.note = request.getNote();
-          status = Status.newBuilder().setStatus(StatusValue.GOOD);
+      try {
+        org.ar4k.agent.tunnels.http.grpc.beacon.Status.Builder status = Status.newBuilder().setStatus(StatusValue.BAD);
+        for (RegistrationRequest r : listAgentRequest) {
+          if (r.idRequest.equals(request.getIdRequest())) {
+            r.approved = true;
+            r.approvedDate = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+            r.pemApproved = request.getCert();
+            r.note = request.getNote();
+            status = Status.newBuilder().setStatus(StatusValue.GOOD);
+          }
         }
+        responseObserver.onNext(status.build());
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
       }
-      responseObserver.onNext(status.build());
-      responseObserver.onCompleted();
     }
 
     @Override
     public void pollingCmdQueue(Agent request, StreamObserver<FlowMessage> responseObserver) {
-      List<RequestToAgent> values = new ArrayList<>();
-      for (BeaconAgent at : agentLabelRegisterReplies) {
-        if (at.getAgentUniqueName().equals(request.getAgentUniqueName())) {
-          values.addAll(at.getCommandsToBeExecute());
-          break;
+      try {
+        List<RequestToAgent> values = new ArrayList<>();
+        for (BeaconAgent at : agentLabelRegisterReplies) {
+          if (at.getAgentUniqueName().equals(request.getAgentUniqueName())) {
+            values.addAll(at.getCommandsToBeExecute());
+            break;
+          }
         }
+        FlowMessage fm = FlowMessage.newBuilder().addAllToDoList(values).build();
+        responseObserver.onNext(fm);
+        responseObserver.onCompleted();
+      } catch (Exception a) {
+        logger.logException(a);
       }
-      FlowMessage fm = FlowMessage.newBuilder().addAllToDoList(values).build();
-      responseObserver.onNext(fm);
-      responseObserver.onCompleted();
     }
 
     @Override
@@ -701,7 +667,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   public void sendFlashUdp() {
     try {
-      // Open a random port to send the package
       if (socketFlashBeacon == null) {
         socketFlashBeacon = new DatagramSocket();
         socketFlashBeacon.setBroadcast(true);
@@ -805,11 +770,17 @@ public class BeaconServer implements Runnable, AutoCloseable {
     if (listAgentRequest != null) {
       listAgentRequest.clear();
     }
-    running = false;
     anima = null;
-    if (process != null) {
-      process.interrupt();
-    }
+  }
+
+  @Override
+  public String toString() {
+    return "BeaconServer [port=" + port + ", server=" + server + ", defaultPollTime=" + defaultPollTime
+        + ", defaultBeaconFlashMoltiplicator=" + defaultBeaconFlashMoltiplicator + ", agentLabelRegisterReplies="
+        + agentLabelRegisterReplies + ", acceptAllCerts=" + acceptAllCerts + ", running=" + running + ", discoveryPort="
+        + discoveryPort + ", broadcastAddress=" + broadcastAddress + ", stringDiscovery=" + stringDiscovery
+        + ", certChainFile=" + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
+        + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
   }
 
 }

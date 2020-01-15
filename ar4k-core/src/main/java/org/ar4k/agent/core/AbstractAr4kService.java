@@ -92,6 +92,7 @@ public abstract class AbstractAr4kService implements ServiceComponent {
 
   @Override
   public synchronized void kill() {
+    stop();
     serviceStatus = ServiceStates.KILLED;
   }
 

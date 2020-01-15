@@ -62,9 +62,12 @@ import com.google.gson.GsonBuilder;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class KeystoreTests {
 
+  private static final String passwordKeystore = "passw!ord";
+  private static final String fileKeystore = "/tmp/testks";
+
   @Before
   public void setUp() throws Exception {
-    File serverKeyStore = new File(KeystoreLoader.demoKeystore);
+    File serverKeyStore = new File(fileKeystore);
     if (!serverKeyStore.exists()) {
       serverKeyStore.delete();
     }
@@ -86,10 +89,11 @@ public class KeystoreTests {
   public void createSelfSignedCert() throws Exception {
     Map<String, Object> ritorno = new HashMap<>();
     // KeyStoreLoader loader = new KeyStoreLoader();
-    KeystoreLoader.create();
-    ritorno.put("crt-master", KeystoreLoader.getClientCertificateBase64("master").toString());
-    ritorno.put("key-master", KeystoreLoader.getPrivateKeyBase64("master").toString());
-    ritorno.put("list", KeystoreLoader.listCertificate());
+    KeystoreLoader.create("master", fileKeystore, passwordKeystore);
+    ritorno.put("crt-master",
+        KeystoreLoader.getClientCertificateBase64("master", fileKeystore, passwordKeystore).toString());
+    ritorno.put("key-master", KeystoreLoader.getPrivateKeyBase64("master", fileKeystore, passwordKeystore).toString());
+    ritorno.put("list", KeystoreLoader.listCertificate(fileKeystore, passwordKeystore));
     Map<String, Object> root = new HashMap<>();
     root.put("data", ritorno);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -100,11 +104,12 @@ public class KeystoreTests {
   public void createCsr() throws Exception {
     Map<String, Object> ritorno = new HashMap<>();
     // KeyStoreLoader loader = new KeyStoreLoader();
-    KeystoreLoader.create();
-    KeystoreLoader.createSelfSignedCert();
-    ritorno.put("csr", KeystoreLoader.getPKCS10CertificationRequest("client1"));
-    ritorno.put("csr-base64", KeystoreLoader.getPKCS10CertificationRequestBase64("client1"));
-    ritorno.put("list", KeystoreLoader.listCertificate());
+    KeystoreLoader.create("master", fileKeystore, passwordKeystore);
+    KeystoreLoader.createSelfSignedCert("client1", fileKeystore, passwordKeystore);
+    ritorno.put("csr", KeystoreLoader.getPKCS10CertificationRequest("client1", fileKeystore, passwordKeystore));
+    ritorno.put("csr-base64",
+        KeystoreLoader.getPKCS10CertificationRequestBase64("client1", fileKeystore, passwordKeystore));
+    ritorno.put("list", KeystoreLoader.listCertificate(fileKeystore, passwordKeystore));
     Map<String, Object> root = new HashMap<>();
     root.put("data", ritorno);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -115,13 +120,16 @@ public class KeystoreTests {
   public void createCsrAndFirm() throws Exception {
     Map<String, Object> ritorno = new HashMap<>();
     // KeyStoreLoader loader = new KeyStoreLoader();
-    KeystoreLoader.create();
-    KeystoreLoader.createSelfSignedCert();
-    PKCS10CertificationRequest csr = KeystoreLoader.getPKCS10CertificationRequest("client1");
+    KeystoreLoader.create("master", fileKeystore, passwordKeystore);
+    KeystoreLoader.createSelfSignedCert("client1", fileKeystore, passwordKeystore);
+    PKCS10CertificationRequest csr = KeystoreLoader.getPKCS10CertificationRequest("client1", fileKeystore,
+        passwordKeystore);
     // ritorno.put("csr", csr);
-    ritorno.put("csr-base64", KeystoreLoader.getPKCS10CertificationRequestBase64("client1"));
-    ritorno.put("signed", KeystoreLoader.signCertificateBase64(csr, "client1-signed", 4, "master"));
-    ritorno.put("list", KeystoreLoader.listCertificate());
+    ritorno.put("csr-base64",
+        KeystoreLoader.getPKCS10CertificationRequestBase64("client1", fileKeystore, passwordKeystore));
+    ritorno.put("signed",
+        KeystoreLoader.signCertificateBase64(csr, "client1-signed", 4, "client1", fileKeystore, passwordKeystore));
+    ritorno.put("list", KeystoreLoader.listCertificate(fileKeystore, passwordKeystore));
     Map<String, Object> root = new HashMap<>();
     root.put("data", ritorno);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -131,16 +139,17 @@ public class KeystoreTests {
   @Test
   public void createMasterAndSelfSignedCert() throws Exception {
     Map<String, Object> ritorno = new HashMap<>();
-    KeystoreLoader.create();
-    ritorno.put("crt-master", KeystoreLoader.getClientCertificateBase64("master").toString());
-    ritorno.put("key-master", KeystoreLoader.getPrivateKeyBase64("master").toString());
+    KeystoreLoader.create("master", fileKeystore, passwordKeystore);
+    ritorno.put("crt-master",
+        KeystoreLoader.getClientCertificateBase64("master", fileKeystore, passwordKeystore).toString());
+    ritorno.put("key-master", KeystoreLoader.getPrivateKeyBase64("master", fileKeystore, passwordKeystore).toString());
     Map<String, Object> root = new HashMap<>();
-    KeystoreLoader.createSelfSignedCert();
+    KeystoreLoader.createSelfSignedCert("client1", fileKeystore, passwordKeystore);
     // ritorno.put("crt-client",
     // KeyStoreLoader.getClientCertificateBase64("client1").toString());
     // ritorno.put("key-client",
     // KeyStoreLoader.getPrivateKeyBase64("client1").toString());
-    ritorno.put("list", KeystoreLoader.listCertificate());
+    ritorno.put("list", KeystoreLoader.listCertificate(fileKeystore, passwordKeystore));
     root.put("data", ritorno);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     System.out.println(gson.toJson(root));

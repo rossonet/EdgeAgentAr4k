@@ -132,7 +132,7 @@ public class BeaconShellInterface extends AbstractShellHelper {
       @ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
       @ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage) {
     tmpClient = anima.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage, true);
-    return true;
+    return tmpClient != null ? true : false;
   }
 
   @ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Client Commands")
@@ -154,6 +154,14 @@ public class BeaconShellInterface extends AbstractShellHelper {
     }
     Collections.sort(result);
     return result;
+  }
+
+  @ShellMethod(value = "stop the Beacon client connection", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public void stopBeaconClient() {
+    tmpClient.close();
+    tmpClient = null;
   }
 
   @ShellMethod(value = "Run command on a agent connected by Beacon", group = "Beacon Client Commands")

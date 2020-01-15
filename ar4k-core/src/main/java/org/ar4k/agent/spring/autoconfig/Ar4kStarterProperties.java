@@ -42,6 +42,7 @@ public class Ar4kStarterProperties {
   private String dnsKeystore = "ar4k-agent-keystore.rossonet.com";
   private String keystoreMainAlias = "main-agent";
   private String keystoreConfigAlias = "";
+  private String keystoreBeaconAlias = "";
   private String keystorePassword = "se-A4.rk!9";
   private String beaconCaChainPem = "beacon-ca-pem";
   private String adminPassword = "a4c8ff551a";
@@ -263,13 +264,22 @@ public class Ar4kStarterProperties {
     return "Ar4kStarterProperties [confPath=" + confPath + ", fileConfig=" + fileConfig + ", webConfig=" + webConfig
         + ", dnsConfig=" + dnsConfig + ", baseConfig=" + baseConfig + ", fileKeystore=" + fileKeystore
         + ", webKeystore=" + webKeystore + ", dnsKeystore=" + dnsKeystore + ", keystoreMainAlias=" + keystoreMainAlias
-        + ", keystoreConfigAlias=" + keystoreConfigAlias + ", beaconCaChainPem=" + beaconCaChainPem
-        + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
+        + ", keystoreConfigAlias=" + keystoreConfigAlias + ", keystoreBeaconAlias=" + keystoreBeaconAlias
+        + ", keystorePassword=" + keystorePassword + ", beaconCaChainPem=" + beaconCaChainPem + ", adminPassword="
+        + adminPassword + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
         + dnsRegistrationEndpoint + ", beaconDiscoveryFilterString=" + beaconDiscoveryFilterString
         + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder + ", webConfigOrder="
         + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder + ", baseConfigOrder=" + baseConfigOrder
         + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly + ", test=" + test + ", logoUrl=" + logoUrl
         + "]";
+  }
+
+  public String getKeystoreBeaconAlias() {
+    return keystoreBeaconAlias;
+  }
+
+  public void setKeystoreBeaconAlias(String keystoreBeaconAlias) {
+    this.keystoreBeaconAlias = keystoreBeaconAlias;
   }
 
 }
