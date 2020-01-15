@@ -27,6 +27,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +59,14 @@ public class KeystoreConfig implements ConfigSeed {
 
   public Instant creationDate = new Instant();
   public Instant lastUpdate = new Instant();
+
   public String uniqueId = UUID.randomUUID().toString();
+
+  @Parameter(names = "--description", description = "keystore description")
+  public String description = "";
+
+  @Parameter(names = "--tags", description = "tags", variableArity = true)
+  public Collection<String> tags = new HashSet<>();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
   public String filePathPre = Anima.DEFAULT_KS_PATH;
@@ -206,16 +214,17 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   public X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
-      String alias) {
+      String caAlias) {
     X509Certificate ritorno = null;
-    ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
+    ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), caAlias, keystorePassword);
     return ritorno;
   }
 
-  public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity, String alias) {
+  public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity,
+      String caAlias) {
     String ritorno = null;
     try {
-      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), alias, keystorePassword);
+      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), caAlias, keystorePassword);
     } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
         | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | CMSException e) {
       logger.logException(e);
@@ -224,22 +233,10 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
-  public X509Certificate signCertificate(String csr, String targetAlias, int validity) {// , String alias) {
-    X509Certificate ritorno = null;
-    try {
-      ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), targetAlias, keystorePassword);
-    } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
-        | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | ClassNotFoundException
-        | CMSException e) {
-      throw new Ar4kException("problem with keystore", e);
-    }
-    return ritorno;
-  }
-
-  public String signCertificateBase64(String csr, String targetAlias, int validity, String alias) {
+  public String signCertificateBase64(String csr, String targetAlias, int validity, String caAlias) {
     String ritorno = null;
     try {
-      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), alias, keystorePassword);
+      ritorno = KeystoreLoader.signCertificateBase64(csr, targetAlias, validity, filePath(), caAlias, keystorePassword);
     } catch (IOException | UnrecoverableKeyException | OperatorCreationException | KeyStoreException
         | NoSuchAlgorithmException | CertificateException | NoSuchProviderException | ClassNotFoundException
         | CMSException e) {
@@ -323,14 +320,12 @@ public class KeystoreConfig implements ConfigSeed {
 
   @Override
   public String getDescription() {
-    // TODO Auto-generated method stub
-    return null;
+    return description;
   }
 
   @Override
   public Collection<String> getTags() {
-    // TODO Auto-generated method stub
-    return null;
+    return tags;
   }
 
 }

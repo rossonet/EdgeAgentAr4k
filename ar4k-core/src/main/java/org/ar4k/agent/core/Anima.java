@@ -261,7 +261,9 @@ public class Anima
       bootstrapConfig = null;
       targetConfig = null;
       runtimeConfig = null;
-      dataAddress.close();
+      if (dataAddress != null) {
+        dataAddress.close();
+      }
       dataAddress = new DataAddress(this);
     } catch (Exception aa) {
       logger.logException("error during reloading phase", aa);
@@ -309,15 +311,19 @@ public class Anima
           ? ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true)
           : DEFAULT_KS_PATH;
       if (starterProperties.getFileKeystore() != null && !starterProperties.getFileKeystore().isEmpty()) {
-        if (new File(ks.filePathPre).exists()) {
-          if (ks.check()) {
-            foundFile = true;
-            logger.info("use keystore file " + ks.toString());
+        try {
+          if (new File(ks.filePathPre).exists()) {
+            if (ks.check()) {
+              foundFile = true;
+              logger.info("use keystore file " + ks.toString());
+            } else {
+              logger.info("keystore not works");
+            }
           } else {
-            logger.info("keystore not works");
+            logger.warn("keystore file not found (" + ks.toString() + ")");
           }
-        } else {
-          logger.warn("keystore file not found (" + ks.toString() + ")");
+        } catch (Exception a) {
+          logger.warn("keystore error -> " + a.getMessage());
         }
       } else {
         logger.info("value of fileKeystore is null, use: " + ks.toString());
@@ -338,13 +344,20 @@ public class Anima
             foundWeb = false;
             logger.warn("webKeystore " + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false)
                 + " not found");
-            logger.logExceptionDebug(e);
+            // logger.logExceptionDebug(e);
           }
-          if (new File(ks.filePathPre).exists() && ks.check()) {
-            foundWeb = true;
-            logger.info(
-                "found web keystore " + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+          try {
+            if (new File(ks.filePathPre).exists() && ks.check()) {
+              foundWeb = true;
+              logger.info(
+                  "found web keystore " + ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+            } else {
+              logger.info("web keystore not works");
+            }
+          } catch (Exception a) {
+            logger.info("keystore error -> " + a.getMessage());
           }
+
         }
         if (!foundWeb && !foundFile) {
           try {
@@ -353,9 +366,9 @@ public class Anima
             logger.logException("error deleting wrong keystore", e);
           }
           if (starterProperties.getDnsKeystore() != null && !starterProperties.getDnsKeystore().isEmpty()) {
-            logger.info("try keystore from dns: "
-                + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
             try {
+              logger.info("try keystore from dns: "
+                  + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
               String hostPart = ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
                   .split("\\.")[0];
               String domainPart = ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
@@ -368,15 +381,21 @@ public class Anima
               if (payloadString != null && payloadString.length() > 0) {
                 FileUtils.writeByteArrayToFile(new File(ks.filePathPre), returnData);
               }
-              if (new File(ks.filePathPre).exists() && ks.check()) {
-                foundDns = true;
-                logger.info("found dns keystore "
-                    + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
+              try {
+                if (new File(ks.filePathPre).exists() && ks.check()) {
+                  foundDns = true;
+                  logger.info("found dns keystore "
+                      + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
+                } else {
+                  logger.info("dns keystore not works");
+                }
+              } catch (Exception a) {
+                logger.info("keystore error -> " + a.getMessage());
               }
             } catch (Exception e) {
               logger.warn("dnsKeystore " + ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
                   + " not found");
-              logger.logException(e);
+              // logger.logExceptionDebug(e);
             }
           }
         }
@@ -412,7 +431,8 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateMachineStart
   public synchronized void initAgent() {
-    if (!Boolean.valueOf(starterProperties.isConsoleOnly())) {
+    if (starterProperties.isConsoleOnly() != null
+        && !(starterProperties.isConsoleOnly().equals("true") || starterProperties.isConsoleOnly().equals("yes"))) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
     } else {
       logger.warn("console only true, run just the command line");
@@ -441,7 +461,11 @@ public class Anima
     bootstrapConfig = resolveBootstrapConfig();
     popolateAddressSpace();
     setInitialAuth();
-    checkBeaconClient();
+    try {
+      checkBeaconClient();
+    } catch (Exception a) {
+      logger.warn("Error connecting beacon client -> " + Ar4kLogger.stackTraceToString(a, 4));
+    }
     if (runtimeConfig == null && targetConfig == null && bootstrapConfig != null) {
       targetConfig = bootstrapConfig;
     }
@@ -475,7 +499,7 @@ public class Anima
             starterProperties.getBeaconDiscoveryFilterString(), false);
       } catch (Exception e) {
         logger.warn("Beacon connection not ok: " + e.getMessage());
-        logger.logExceptionDebug(e);
+        logger.debug(Ar4kLogger.stackTraceToString(e, 6));
       }
     }
   }

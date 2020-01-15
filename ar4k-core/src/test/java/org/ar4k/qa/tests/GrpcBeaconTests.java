@@ -96,8 +96,6 @@ public class GrpcBeaconTests {
     server.start();
     System.out.println("Beacon server started");
     Thread.sleep(3000L);
-    // client = new BeaconClient(rpcConversation, "127.0.0.1", port);
-    // Gestione dei certificati
   }
 
   private void changeLogLevel(String gwlog) {
@@ -118,8 +116,9 @@ public class GrpcBeaconTests {
   public void tearDown() throws Exception {
     if (client != null)
       client.shutdown();
-    if (server != null)
-      server.stop();
+    if (server != null) {
+      server.close();
+    }
     Files.delete(new File("/home/andrea/.ar4k/default.keystore"));
   }
 

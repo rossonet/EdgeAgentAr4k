@@ -388,8 +388,10 @@ public class BeaconServer implements Runnable, AutoCloseable {
       server.shutdown();
     }
     running = false;
-    if (socketFlashBeacon != null)
+    if (socketFlashBeacon != null) {
       socketFlashBeacon.close();
+      socketFlashBeacon = null;
+    }
   }
 
   public void blockUntilShutdown() throws InterruptedException {
@@ -796,9 +798,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   @Override
   public void close() {
-    if (server != null) {
-      server.shutdown();
-    }
+    stop();
     if (agentLabelRegisterReplies != null) {
       agentLabelRegisterReplies.clear();
     }
@@ -809,10 +809,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
     anima = null;
     if (process != null) {
       process.interrupt();
-    }
-    if (socketFlashBeacon != null) {
-      socketFlashBeacon.close();
-      socketFlashBeacon = null;
     }
   }
 

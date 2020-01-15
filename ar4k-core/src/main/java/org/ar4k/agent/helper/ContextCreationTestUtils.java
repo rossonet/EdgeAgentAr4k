@@ -1,11 +1,13 @@
 package org.ar4k.agent.helper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -52,6 +54,17 @@ public class ContextCreationTestUtils implements Callable<Anima>, ApplicationLis
     args.add("--ar4k.fileKeystore=" + keyStore);
     if (additionalArgs != null) {
       args.addAll(additionalArgs);
+    }
+  }
+
+  public ContextCreationTestUtils(Class<?> startClass, ExecutorService executor, String logger, String keyStore,
+      int serverPort, List<String> additionalArgs, Ar4kConfig config, String mainAliasInKeystore) {
+    this(startClass, executor, logger, keyStore, serverPort, additionalArgs);
+    args.add("--ar4k.keystoreMainAlias=" + mainAliasInKeystore);
+    try {
+      args.add("--ar4k.baseConfig=" + ConfigHelper.toBase64(config));
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 

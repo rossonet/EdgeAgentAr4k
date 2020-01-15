@@ -16,7 +16,10 @@ package org.ar4k.agent.logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ar4k.agent.core.Anima;
@@ -69,6 +72,22 @@ public class Ar4kLogger implements Logger {
       response = " [M] " + sw.toString();
     }
     return response;
+  }
+
+  public static String stackTraceToString(Exception a, int numLines) {
+    try {
+      List<String> lines = Arrays.asList(stackTraceToString(a).split("\n"));
+      ArrayList<String> al = new ArrayList<>(lines.subList(0, Math.min(lines.size(), numLines)));
+      StringBuilder returnString = new StringBuilder();
+      for (String line : al) {
+        returnString.append(line + "\n");
+      }
+      return returnString.toString();
+    } catch (Exception n) {
+      n.printStackTrace();
+      return stackTraceToString(a);
+    }
+
   }
 
   public void logException(Exception e) {
@@ -433,4 +452,5 @@ public class Ar4kLogger implements Logger {
   public void error(Marker marker, String msg, Throwable t) {
     logger.error(marker, msg, t);
   }
+
 }
