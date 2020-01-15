@@ -220,6 +220,14 @@ public class KeystoreConfig implements ConfigSeed {
     return ritorno;
   }
 
+  public X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
+      String caAlias, PrivateKey privateKey) {
+    X509Certificate ritorno = null;
+    ritorno = KeystoreLoader.signCertificate(csr, targetAlias, validity, filePath(), caAlias, keystorePassword,
+        privateKey);
+    return ritorno;
+  }
+
   public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity,
       String caAlias) {
     String ritorno = null;

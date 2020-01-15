@@ -586,7 +586,7 @@ public class Anima
               break;
             }
           } catch (Exception e) {
-            logger.logException("error in webconfig download", e);
+            logger.warn("error in webconfig download" + Ar4kLogger.stackTraceToString(e, 4));
           }
         }
         if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
@@ -601,7 +601,7 @@ public class Anima
               break;
             }
           } catch (Exception e) {
-            logger.logException("error in dns config download", e);
+            logger.warn("error in dns config download" + Ar4kLogger.stackTraceToString(e, 4));
           }
         }
         if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
@@ -614,7 +614,7 @@ public class Anima
               break;
             }
           } catch (Exception e) {
-            logger.logException("error in baseconfig", e);
+            logger.warn("error in baseconfig" + Ar4kLogger.stackTraceToString(e, 4));
           }
         }
         if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
@@ -630,7 +630,7 @@ public class Anima
               break;
             }
           } catch (Exception e) {
-            logger.logException("error in fileconfig", e);
+            logger.warn("error in fileconfig" + Ar4kLogger.stackTraceToString(e, 4));
           }
         }
       }
@@ -657,11 +657,13 @@ public class Anima
         }
       } catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
           | CMSException e) {
-        logger.logException("error in dns download using H:" + hostPart + " D:" + domainPart, e);
+        logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
+            + Ar4kLogger.stackTraceToString(e, 4));
         return null;
       }
     } catch (UnknownHostException | TextParseException e) {
-      logger.logException("error in dns download using H:" + hostPart + " D:" + domainPart, e);
+      logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
+          + Ar4kLogger.stackTraceToString(e, 4));
       return null;
     }
   }
@@ -688,7 +690,7 @@ public class Anima
       if (e instanceof java.io.FileNotFoundException) {
         logger.debug("config file not found " + pathConfig);
       } else if (logger != null) {
-        logger.logException("error in config file", e);
+        logger.warn("error in config file -> " + Ar4kLogger.stackTraceToString(e, 4));
       }
       return null;
     }
@@ -714,7 +716,7 @@ public class Anima
     } catch (Exception e) {
       logger.warn("url for web config failed: " + webConfigTarget);
       if (logger != null)
-        logger.logException("error in web config", e);
+        logger.warn("Error downloading web config -> " + Ar4kLogger.stackTraceToString(e, 4));
       return null;
     }
 

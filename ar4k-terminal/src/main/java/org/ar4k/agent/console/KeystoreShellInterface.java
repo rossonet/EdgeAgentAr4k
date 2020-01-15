@@ -266,7 +266,8 @@ public class KeystoreShellInterface extends AbstractShellHelper {
     for (Entry<String, KeystoreConfig> t : ((RpcConversation) anima.getRpc(getSessionId())).getKeyStores().entrySet()) {
       if (t.getValue().label.equals(keystoreLabel)) {
         csr = t.getValue().getPKCS10CertificationRequest(entryAlias);
-        x509Cert = t.getValue().signCertificate(csr, signedAlias, Integer.valueOf(validity), caAlias);
+        x509Cert = t.getValue().signCertificate(csr, signedAlias, Integer.valueOf(validity), caAlias,
+            t.getValue().getPrivateKey(entryAlias));
         break;
       }
     }

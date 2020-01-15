@@ -125,7 +125,6 @@ public class KeystoreLoader {
       keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
     }
     KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
-    // TODO verificare se va bene la class per non self-signed
     SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
         .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
         .setCountryCode(country).setApplicationUri(uri).addDnsName(dns).addIpAddress(ip).isCa(isCa);
@@ -467,7 +466,12 @@ public class KeystoreLoader {
   }
 
   public static X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
-      String keyStorePath, String alias, String password) {
+      String keyStorePath, String caAlias, String password) {
+    return signCertificate(csr, targetAlias, validity, keyStorePath, caAlias, password, null);
+  }
+
+  public static X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
+      String keyStorePath, String caAlias, String password, PrivateKey privateKey) {
     try {
       StringBuilder attributes = new StringBuilder();
       for (Attribute attribute : csr.getAttributes()) {
@@ -476,31 +480,21 @@ public class KeystoreLoader {
       logger.info("signing CSR:\n" + csr.getSubject().toString() + "\n" + attributes.toString() + "\n");
       AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-      PrivateKey cakey = getPrivateKey(keyStorePath, alias, password);
-      logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + alias + " ->");
-      if (getClientKeyPair(keyStorePath, alias, password) == null
-          || getClientKeyPair(keyStorePath, alias, password).getPublic() == null) {
+      PrivateKey cakey = getPrivateKey(keyStorePath, caAlias, password);
+      logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + caAlias + " ->");
+      if (getClientKeyPair(keyStorePath, caAlias, password) == null
+          || getClientKeyPair(keyStorePath, caAlias, password).getPublic() == null) {
         logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE" + "\n");
       } else {
-        logger.info(getClientCertificate(keyStorePath, alias, password).getSubjectDN() + "\n");
+        logger.info(getClientCertificate(keyStorePath, caAlias, password).getSubjectDN() + "\n");
       }
       X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
-          // These are the details of the CA
-          // new X500Name("C=US, L=Vienna, O=Your CA Inc")
-          new X500Name(getClientCertificate(keyStorePath, alias, password).getSubjectX500Principal()
+          new X500Name(getClientCertificate(keyStorePath, caAlias, password).getSubjectX500Principal()
               .getName(X500Principal.RFC2253)),
-          // This should be a serial number that the CA keeps track of
-          new BigInteger(64, new SecureRandom()),
-          // Certificate validity start
-          Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
-          // Certificate validity end
-          Date.from(LocalDateTime.now().plusDays(validity).toInstant(ZoneOffset.UTC)),
-          // Blanket grant the subject as requested in the CSR
-          // A real CA would want to vet this.
-          csr.getSubject(),
-          // Public key of the certificate authority
+          new BigInteger(64, new SecureRandom()), Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
+          Date.from(LocalDateTime.now().plusDays(validity).toInstant(ZoneOffset.UTC)), csr.getSubject(),
           SubjectPublicKeyInfo.getInstance(
-              ASN1Sequence.getInstance(getClientKeyPair(keyStorePath, alias, password).getPublic().getEncoded())));
+              ASN1Sequence.getInstance(getClientKeyPair(keyStorePath, caAlias, password).getPublic().getEncoded())));
 
       ASN1Encodable[] asn1Encodable = new ASN1Encodable[NetworkHelper.getHostnames("0.0.0.0").size()];
       int counter = 0;
@@ -537,21 +531,22 @@ public class KeystoreLoader {
       }
       logger
           .info("saving in keystore alias " + targetAlias + " present in keystore are : " + kstorePresents.toString());
-      logger.info("CERT\n" + certificate.toString());
       logger.info("IssuerDN\n" + certificate.getIssuerDN().getName());
       logger.info("SubjectDN\n" + certificate.getSubjectDN().getName());
       keyStore.setCertificateEntry(targetAlias, certificate);
+      if (privateKey != null) {
+        keyStore.setKeyEntry(targetAlias, privateKey, passwordChar, new X509Certificate[] { certificate });
+      } else {
+        keyStore.setCertificateEntry(targetAlias, certificate);
+      }
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
-      /*
-       * System.out.println("-----BEGIN PKCS #7 SIGNED DATA-----\n");
-       * System.out.println(Base64.getEncoder().encodeToString(signeddata.getEncoded()
-       * )); System.out.println("\n-----END PKCS #7 SIGNED DATA-----\n");
-       */
+      serverKeyStore = null;
       X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(targetAlias);
+      logger.info("CERT\n" + clientCertificate.toString());
       return clientCertificate;
     } catch (Ar4kException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
         | OperatorCreationException | UnrecoverableKeyException a) {
-      logger.logException(a);
+      logger.logException("during certificate signing", a);
       return null;
     }
   }
@@ -616,7 +611,6 @@ public class KeystoreLoader {
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
     File serverKeyStore = new File(keyStorePath);
     keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
-    // System.out.println(keyStore.size());
     List<String> ritorno = new ArrayList<>();
     Enumeration<String> enu = keyStore.aliases();
     while (enu.hasMoreElements()) {
