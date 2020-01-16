@@ -14,6 +14,7 @@
     */
 package org.ar4k.agent.pcap;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -130,6 +131,8 @@ public class PcapShellInterface extends AbstractShellHelper {
       while (continua) {
         try {
           packet = handle.getNextPacketEx();
+        } catch (EOFException a) {
+          continua = false;
         } catch (Exception a) {
           logger.logException(a);
           continua = false;

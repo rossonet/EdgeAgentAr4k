@@ -61,9 +61,7 @@ import io.grpc.ServerCall;
 import io.grpc.ServerCall.Listener;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
-import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
-import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.stub.StreamObserver;
 
 public class BeaconServer implements Runnable, AutoCloseable {
@@ -81,9 +79,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;
-  private transient Anima anima = Anima.getApplicationContext() != null
-      ? Anima.getApplicationContext().getBean(Anima.class)
-      : null;
+  private transient Anima anima = null;
 
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
@@ -252,6 +248,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
       this.broadcastAddress = broadcastAddress;
     if (stringDiscovery != null)
       this.stringDiscovery = stringDiscovery;
+    // TODO SSL facoltativo
     if (animaTarget != null && animaTarget.getMyIdentityKeystore() != null
         && animaTarget.getMyIdentityKeystore().listCertificate() != null
         && animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
@@ -265,11 +262,17 @@ public class BeaconServer implements Runnable, AutoCloseable {
     writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFile);
     logger.info("Starting beacon server");
     try {
-      ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
-          .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
-              .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.REQUIRE).build());
-      server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
-          .addService(new DataService()).build();
+      ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port);
+      // .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new
+      // File(this.privateKeyFile))
+      // .trustManager(new
+      // File(this.certChainFile)).clientAuth(ClientAuth.OPTIONAL).build());
+      // .clientAuth(ClientAuth.REQUIRE).build());
+      // TODO SSL facoltativo
+      // server = serverBuilder.intercept(new
+      // AuthorizationInterceptor()).addService(new RpcService())
+      // .addService(new DataService()).build();
+      server = serverBuilder.addService(new RpcService()).addService(new DataService()).build();
     } catch (Exception e) {
       logger.logException(e);
     }
