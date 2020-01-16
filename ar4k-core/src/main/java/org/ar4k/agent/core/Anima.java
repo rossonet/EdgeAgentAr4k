@@ -769,35 +769,25 @@ public class Anima
     }
   }
 
-  // workaround Spring State Machine
-  // @OnStateChanged(target = "RUNNING")
-  // inizializza pots semplici e servizi
-  public synchronized void runPots() {
-    List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
-    Collections.sort(sortedList, comparatorOrderPots);
-    for (PotConfig confVaso : sortedList) {
-      if (!(confVaso instanceof ServiceConfig)) {
-        logger.info("run " + confVaso + " as pot");
-        try {
-          runSeedPot(confVaso);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-            | SecurityException e) {
-          throw new Ar4kException("problem trying to run " + confVaso.getName(), e.getCause());
-        }
-      }
-    }
-  }
-
-  private void runSeedPot(PotConfig potConfig)
-      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    Method method = potConfig.getClass().getMethod("instantiate");
-    Ar4kComponent targetService;
-    targetService = (Ar4kComponent) method.invoke(potConfig);
-    targetService.setConfiguration(potConfig);
-    components.add(targetService);
-    targetService.init();
-  }
-
+  /*
+   * // workaround Spring State Machine // @OnStateChanged(target = "RUNNING") //
+   * inizializza pots semplici e servizi public synchronized void runPots() {
+   * List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
+   * Collections.sort(sortedList, comparatorOrderPots); for (PotConfig confVaso :
+   * sortedList) { if (!(confVaso instanceof BeaconService)) { logger.info("run "
+   * + confVaso + " as pot"); try { runSeedPot(confVaso); } catch
+   * (IllegalAccessException | IllegalArgumentException |
+   * InvocationTargetException | NoSuchMethodException | SecurityException e) {
+   * throw new Ar4kException("problem trying to run " + confVaso.getName(),
+   * e.getCause()); } } } }
+   * 
+   * private void runSeedPot(PotConfig potConfig) throws NoSuchMethodException,
+   * IllegalAccessException, InvocationTargetException { Method method =
+   * potConfig.getClass().getMethod("instantiate"); Ar4kComponent targetService;
+   * targetService = (Ar4kComponent) method.invoke(potConfig);
+   * targetService.setConfiguration(potConfig); components.add(targetService);
+   * targetService.init(); }
+   */
   private void runSeedService(ServiceConfig confServizio)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     Method method = confServizio.getClass().getMethod("instantiate");

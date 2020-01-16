@@ -79,16 +79,18 @@ public class BeaconService extends AbstractAr4kService {
   }
 
   @Override
-  public void init() {
+  public synchronized void init() {
     try {
-      beaconServer = new BeaconServer.Builder().setAnima(anima).setPort(configuration.port)
-          .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
-          .setAliasBeaconServerRequestCertInKeystore(configuration.aliasBeaconServerRequestCertInKeystore)
-          .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
-          .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
-          .setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
-          .setBroadcastAddress(configuration.broadcastAddress).setAcceptCerts(configuration.acceptAllCerts).build();
-      beaconServer.start();
+      if (beaconServer == null) {
+        beaconServer = new BeaconServer.Builder().setAnima(anima).setPort(configuration.port)
+            .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
+            .setAliasBeaconServerRequestCertInKeystore(configuration.aliasBeaconServerRequestCertInKeystore)
+            .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
+            .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
+            .setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
+            .setBroadcastAddress(configuration.broadcastAddress).setAcceptCerts(configuration.acceptAllCerts).build();
+        beaconServer.start();
+      }
     } catch (IOException e) {
       logger.logException(e);
     } catch (UnrecoverableKeyException e) {
