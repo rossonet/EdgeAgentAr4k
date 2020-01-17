@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.cortex.annotation.Ar4kDroolsContext;
 import org.ar4k.agent.cortex.annotation.DroolsGlobalClass;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -39,7 +41,7 @@ import com.google.gson.JsonElement;
  *
  *         AI Drools
  */
-public class DroolsService extends AbstractAr4kService {
+public class DroolsService implements Ar4kComponent {
 
   private static final String ANIMA_GLOBAL_DROOLS = "anima";
   private static final String DATA_ADDRESS_GLOBAL_DROOLS = "data-address";
@@ -155,7 +157,7 @@ public class DroolsService extends AbstractAr4kService {
       .getLogger(DroolsService.class.toString());
 
   @Override
-  public void stop() {
+  public void kill() {
     if (kieSession != null) {
       kieSession.dispose();
     }
@@ -277,13 +279,54 @@ public class DroolsService extends AbstractAr4kService {
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = (DroolsConfig) configuration;
 
   }
 
   @Override
-  public JSONObject getStatusJson() {
+  public void close() throws Exception {
+    kill();
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public ServiceConfig getConfiguration() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
     JsonElement result = null;
     Gson gson = new Gson();
     if (isStateless()) {
@@ -292,17 +335,6 @@ public class DroolsService extends AbstractAr4kService {
       result = gson.toJsonTree(getKieSession(configuration.getSessionName()).getGlobals());
     }
     return new JSONObject(result.getAsString());
-  }
-
-  @Override
-  public void close() throws Exception {
-    stop();
-  }
-
-  @Override
-  public void loop() {
-    // TODO Auto-generated method stub
-
   }
 
 }

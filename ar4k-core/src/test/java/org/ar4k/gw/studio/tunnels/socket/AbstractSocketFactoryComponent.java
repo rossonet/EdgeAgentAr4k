@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import javax.net.SocketFactory;
 
-import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.ServiceConfig;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -41,18 +41,13 @@ public abstract class AbstractSocketFactoryComponent implements ISocketFactoryCo
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = ((AbstractSocketFactoryConfig) configuration);
   }
 
   @Override
   public SocketFactory getSocketFactory() {
     return socketFactory;
-  }
-
-  @Override
-  public void setBeanName(String name) {
-    beanName = name;
   }
 
   public String getBeanName() {

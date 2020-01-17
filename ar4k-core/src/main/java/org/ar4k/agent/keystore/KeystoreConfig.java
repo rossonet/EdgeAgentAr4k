@@ -324,11 +324,6 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   @Override
-  public int getPriority() {
-    return 4;
-  }
-
-  @Override
   public String toString() {
     return "KeystoreConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
         + ", filePathPre=" + filePathPre + ", keystorePassword=*********" + ", label=" + label + ", caAlias="

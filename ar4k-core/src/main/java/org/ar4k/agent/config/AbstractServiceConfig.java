@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
-import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -39,9 +39,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
   private static final long serialVersionUID = 4934166738722721736L;
 
-  public transient Anima anima = Anima.getApplicationContext() != null
-      ? Anima.getApplicationContext().getBean(Anima.class)
-      : null;
+  public transient Anima anima;
 
   private Instant creationDate = new Instant();
   private Instant lastUpdate = new Instant();
@@ -49,6 +47,9 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
   @Parameter(names = "--name", description = "service name", required = true)
   public String name;
+
+  @Parameter(names = "--dataAddressPrefix", description = "profix for channels in address space of Anima", required = true)
+  public String dataAddressPrefix;
 
   @Parameter(names = "--description", description = "service description", required = false)
   public String description;
@@ -86,8 +87,14 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   @Parameter(names = "--serviceData", description = "additional data for this service(multi selection)", arity = 0)
   public Map<String, Object> data = new HashMap<>();
 
-  @Parameter(names = "--clockRunnableClass", description = "clock for the runnable thread")
+  @Parameter(names = "--clockRunnableWatchDog", description = "interval for watchdog runnable thread")
   public int clockRunnableClass = 5000;
+
+  @Parameter(names = "--timeoutWatchDog", description = "timeout for the watchdog task")
+  public int timeoutWatchDog = 120000;
+
+  @Parameter(names = "--timeoutWatchDog", description = "max watchdog retries before the fault. 0 = no limits")
+  public int watchDogRetries = 0;
 
   @Parameter(names = "--targetRunLevel", description = "the default runlevel for the service when the system start", validateWith = ServiceStatusValidator.class)
   public ServiceStates targetRunLevel = ServiceStates.RUNNING;
@@ -137,6 +144,31 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   @Override
   public int getPriority() {
     return priority;
+  }
+
+  @Override
+  public boolean isSpringBean() {
+    return false;
+  }
+
+  @Override
+  public int getWatchDogInterval() {
+    return clockRunnableClass;
+  }
+
+  @Override
+  public int getMaxRestartRetries() {
+    return watchDogRetries;
+  }
+
+  @Override
+  public int getWatchDogTimeout() {
+    return timeoutWatchDog;
+  }
+
+  @Override
+  public String getDataNamePrefix() {
+    return dataAddressPrefix;
   }
 
 }

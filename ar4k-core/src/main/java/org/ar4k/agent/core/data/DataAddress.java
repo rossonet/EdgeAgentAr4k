@@ -4,50 +4,35 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
-import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
-import org.ar4k.agent.core.data.channels.IQueueChannel;
-import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.ar4k.agent.spring.HealthMessage;
 import org.springframework.messaging.MessageChannel;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class DataAddress implements AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(DataAddress.class.toString());
 
-  private final Anima anima;
+  protected final Anima anima;
 
-  // task per health
-  private HealthTimer repeatedTask = new HealthTimer();
-
-  public DataAddress(Anima anima) {
+  public DataAddress(Anima anima, String dataNamePrefix) {
     dataChannels.clear();
     this.anima = anima;
+    this.dataNamePrefix = dataNamePrefix;
   }
 
-  private Collection<Ar4kChannel> dataChannels = new HashSet<>();
+  protected Collection<Ar4kChannel> dataChannels = new HashSet<>();
 
-  private String defaultScope = "ar4k-ai";
-  private String levelSeparator = "/";
+  protected String defaultScope = "ar4k-ai";
+  protected String levelSeparator = "/";
+  protected final String dataNamePrefix;
 
-  private long delay = 35000L;
-  private long period = 15000L;
-
-  private transient Set<DataAddressChange> callbacks = new HashSet<>();
-  private transient Timer timer = new Timer("TimerHealth");
+  protected transient Set<DataAddressChange> callbacks = new HashSet<>();
 
   public Collection<Ar4kChannel> getDataChannels() {
     return dataChannels;
@@ -180,55 +165,6 @@ public class DataAddress implements AutoCloseable {
 
   public void setLevelSeparator(String levelSeparator) {
     this.levelSeparator = levelSeparator;
-  }
-
-  private class HealthTimer extends TimerTask {
-
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    private transient Anima anima = null;
-
-    public void setAnima(Anima anima) {
-      this.anima = anima;
-    }
-
-    @Override
-    public void run() {
-      try {
-        sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
-      } catch (Exception e) {
-        logger.logException(e);
-      }
-    }
-
-    private void sendEvent(Map<String, Object> healthMessage) {
-      try {
-        if (anima == null && Anima.getApplicationContext() != null
-            && Anima.getApplicationContext().getBean(Anima.class) != null
-            && Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
-          anima = Anima.getApplicationContext().getBean(Anima.class);
-        }
-      } catch (Exception ee) {
-        logger.debug(Ar4kLogger.stackTraceToString(ee));
-      }
-      if (anima != null && anima.getDataAddress() != null && anima.getDataAddress().getChannel("health") != null) {
-        HealthMessage<String> messageObject = new HealthMessage<>();
-        messageObject.setPayload(gson.toJson(healthMessage));
-        ((IPublishSubscribeChannel) anima.getDataAddress().getChannel("health")).send(messageObject);
-      }
-    }
-  };
-
-  public void firstStart() {
-    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
-        (String) null, null);
-    createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel, getDefaultScope());
-    createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
-        systemChannel, getDefaultScope());
-    createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope());
-    // start health regular messages
-    repeatedTask.setAnima(anima);
-    timer.scheduleAtFixedRate(repeatedTask, delay, period);
   }
 
   @Override

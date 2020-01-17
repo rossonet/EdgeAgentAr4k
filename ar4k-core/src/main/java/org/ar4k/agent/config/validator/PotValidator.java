@@ -15,7 +15,7 @@
 package org.ar4k.agent.config.validator;
 
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -24,7 +24,7 @@ import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
 
 /**
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Validatore input per i servizi di tipo tunnel nella configurazione
@@ -40,9 +40,9 @@ public class PotValidator implements IParameterValidator {
     Anima anima = (Anima) Anima.getApplicationContext().getBean("anima");
     boolean ok = false;
     StringBuilder r = new StringBuilder();
-    for (PotConfig a : anima.getRuntimeConfig().pots) {
+    for (ServiceConfig a : anima.getRuntimeConfig().pots) {
       try {
-        ConfigSeed b = (ConfigSeed) a;
+        ConfigSeed b = a;
         if (b.getName().equals(value)) {
           ok = true;
         }

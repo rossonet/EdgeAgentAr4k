@@ -23,7 +23,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -50,9 +49,8 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.Ar4kConfig;
-import org.ar4k.agent.config.PotConfig;
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataAddressAnima;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -111,6 +109,8 @@ public class Anima
 
   public static final String DEFAULT_KS_PATH = "default-new.ks";
 
+  public static String addressSpacePrefix = null;
+
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
 
@@ -151,7 +151,7 @@ public class Anima
   private AnimaStates stateTarget = AnimaStates.RUNNING;
   private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
-  private Set<Ar4kComponent> components = new HashSet<>();
+  private Set<ServiceComponent<Ar4kComponent>> components = new HashSet<>();
 
   private Map<String, Object> dataStore = null;
 
@@ -163,7 +163,7 @@ public class Anima
 
   private BeaconClient beaconClient = null;
 
-  private DataAddress dataAddress = new DataAddress(this);
+  private DataAddressAnima dataAddress = new DataAddressAnima(this, addressSpacePrefix);
 
   private KeystoreConfig myIdentityKeystore = null;
   private String myAliasCertInKeystore = "agent";
@@ -222,17 +222,17 @@ public class Anima
 
   // workaround Spring State Machine
   // @OnStateChanged()
-  public synchronized void stateChanged() {
+  synchronized void stateChanged() {
     logger.info("State change in ANIMA to " + getState());
     statesBefore.put(new Instant(), getState());
   }
 
   // workaround Spring State Machine
   // @OnStateChanged(target = "KILLED")
-  public synchronized void finalizeAgent() {
+  synchronized void finalizeAgent() {
     try {
-      for (Ar4kComponent targetService : components) {
-        targetService.kill();
+      for (ServiceComponent<Ar4kComponent> targetService : components) {
+        targetService.stop();
       }
       components.clear();
       if (timerScheduler != null) {
@@ -247,7 +247,7 @@ public class Anima
 
   // workaround Spring State Machine
   // @OnStateChanged(target = "KILLED")
-  public synchronized void resetAgent() {
+  synchronized void resetAgent() {
     finalizeAgent();
     try {
       if (recMan != null) {
@@ -264,14 +264,14 @@ public class Anima
       if (dataAddress != null) {
         dataAddress.close();
       }
-      dataAddress = new DataAddress(this);
+      dataAddress = new DataAddressAnima(this, addressSpacePrefix);
     } catch (Exception aa) {
       logger.logException("error during reloading phase", aa);
     }
   }
 
   @SuppressWarnings("unchecked")
-  private void setInitialAuth() {
+  void setInitialAuth() {
     if (starterProperties.getAdminPassword() != null && !starterProperties.getAdminPassword().isEmpty()) {
       // logger.warn("create admin user with config password");
       Ar4kUserDetails admin = new Ar4kUserDetails();
@@ -423,14 +423,14 @@ public class Anima
   }
 
   @PostConstruct
-  public void afterSpringInit() throws Exception {
+  void afterSpringInit() throws Exception {
     afterSpringInitFlag = true;
     checkDualStart();
   }
 
   // workaround Spring State Machine
   // @OnStateMachineStart
-  public synchronized void initAgent() {
+  synchronized void initAgent() {
     if (starterProperties.isConsoleOnly() != null
         && !(starterProperties.isConsoleOnly().equals("true") || starterProperties.isConsoleOnly().equals("yes"))) {
       animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
@@ -444,7 +444,7 @@ public class Anima
 
   // workaround Spring State Machine
   // @OnStateChanged(target = "STAMINAL")
-  public synchronized void startingAgent() {
+  synchronized void startingAgent() {
     new File(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)).mkdirs();
     try {
       if (dataStore == null) {
@@ -671,7 +671,7 @@ public class Anima
     }
   }
 
-  public Ar4kConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
+  private Ar4kConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
     Ar4kConfig resultConfig = null;
     try {
       String config = "";
@@ -699,7 +699,7 @@ public class Anima
     }
   }
 
-  public Ar4kConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
+  private Ar4kConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
     String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf"
         + ((cryptoAlias != null && !cryptoAlias.isEmpty()) ? ".crypto" : "");
     try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
@@ -727,7 +727,7 @@ public class Anima
 
   // workaround Spring State Machine
   // @OnStateChanged(target = "CONFIGURED")
-  public synchronized void configureAgent() {
+  synchronized void configureAgent() {
     if (runtimeConfig == null) {
       logger.warn("Required running state without conf");
       animaStateMachine.sendEvent(AnimaEvents.EXCEPTION);
@@ -743,9 +743,9 @@ public class Anima
     }
   }
 
-  private Comparator<PotConfig> comparatorOrderPots = new Comparator<PotConfig>() {
+  private Comparator<ServiceConfig> comparatorOrderPots = new Comparator<ServiceConfig>() {
     @Override
-    public int compare(PotConfig o1, PotConfig o2) {
+    public int compare(ServiceConfig o1, ServiceConfig o2) {
       return Integer.compare(o1.getPriority(), o2.getPriority());
     }
   };
@@ -753,14 +753,14 @@ public class Anima
   // workaround Spring State Machine
   // @OnStateChanged(target = "RUNNING")
   // avvia i servizi
-  public synchronized void runServices() {
-    List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
+  synchronized void runServices() {
+    List<ServiceConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
     Collections.sort(sortedList, comparatorOrderPots);
-    for (PotConfig confServizio : sortedList) {
+    for (ServiceConfig confServizio : sortedList) {
       if (confServizio instanceof ServiceConfig) {
         logger.info("run " + confServizio + " as service");
         try {
-          runSeedService((ServiceConfig) confServizio);
+          runSeedService(confServizio);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
             | SecurityException e) {
           throw new Ar4kException("problem trying to run service " + confServizio.getName(), e.getCause());
@@ -769,35 +769,11 @@ public class Anima
     }
   }
 
-  /*
-   * // workaround Spring State Machine // @OnStateChanged(target = "RUNNING") //
-   * inizializza pots semplici e servizi public synchronized void runPots() {
-   * List<PotConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
-   * Collections.sort(sortedList, comparatorOrderPots); for (PotConfig confVaso :
-   * sortedList) { if (!(confVaso instanceof BeaconService)) { logger.info("run "
-   * + confVaso + " as pot"); try { runSeedPot(confVaso); } catch
-   * (IllegalAccessException | IllegalArgumentException |
-   * InvocationTargetException | NoSuchMethodException | SecurityException e) {
-   * throw new Ar4kException("problem trying to run " + confVaso.getName(),
-   * e.getCause()); } } } }
-   * 
-   * private void runSeedPot(PotConfig potConfig) throws NoSuchMethodException,
-   * IllegalAccessException, InvocationTargetException { Method method =
-   * potConfig.getClass().getMethod("instantiate"); Ar4kComponent targetService;
-   * targetService = (Ar4kComponent) method.invoke(potConfig);
-   * targetService.setConfiguration(potConfig); components.add(targetService);
-   * targetService.init(); }
-   */
   private void runSeedService(ServiceConfig confServizio)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    Method method = confServizio.getClass().getMethod("instantiate");
-    ServiceComponent targetService;
-    targetService = (ServiceComponent) method.invoke(confServizio);
-    targetService.setConfiguration(confServizio);
-    targetService.setAnima(this);
-    components.add(targetService);
-    targetService.init();
-    targetService.start();
+    AnimaService service = new AnimaService(this, confServizio, timerScheduler);
+    components.add(service);
+    service.start();
   }
 
   // adminPassword è escluso
@@ -842,27 +818,7 @@ public class Anima
     return applicationContext;
   }
 
-  public Collection<ServiceComponent> getServicesOnly() {
-    Set<ServiceComponent> target = new HashSet<>();
-    for (Ar4kComponent bean : components) {
-      if (bean instanceof ServiceComponent) {
-        target.add((ServiceComponent) bean);
-      }
-    }
-    return target;
-  }
-
-  public Collection<ServiceComponent> getPotsOnly() {
-    Set<ServiceComponent> target = new HashSet<>();
-    for (Ar4kComponent bean : components) {
-      if (!(bean instanceof ServiceComponent)) {
-        target.add((ServiceComponent) bean);
-      }
-    }
-    return target;
-  }
-
-  public Set<Ar4kComponent> getComponents() {
+  public Set<ServiceComponent<Ar4kComponent>> getComponents() {
     return components;
   }
 
@@ -990,11 +946,11 @@ public class Anima
     return agentUniqueName;
   }
 
-  public DataAddress getDataAddress() {
+  public DataAddressAnima getDataAddress() {
     return dataAddress;
   }
 
-  public void setDataAddress(DataAddress dataAddress) {
+  public void setDataAddress(DataAddressAnima dataAddress) {
     this.dataAddress = dataAddress;
   }
 
@@ -1022,22 +978,22 @@ public class Anima
     return registrationPin;
   }
 
-  public void prepareAgentStasis() {
+  void prepareAgentStasis() {
     logger.warn("PUTTING AGENT IN STASIS STATE...");
     finalizeAgent();
   }
 
-  public void prepareRestart() {
+  void prepareRestart() {
     logger.warn("RESTARTING AGENT...");
     finalizeAgent();
   }
 
-  public void reloadAgent() {
+  void reloadAgent() {
     logger.warn("RELOAD AGENT...");
     resetAgent();
   }
 
-  public void startCheckingNextConfig() {
+  void startCheckingNextConfig() {
     reloadConfig = null;
     if (runtimeConfig != null
         && (runtimeConfig.nextConfigFile != null || runtimeConfig.nextConfigDns != null
@@ -1126,7 +1082,7 @@ public class Anima
     return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
   }
 
-  public void runPreScript() {
+  void runPreScript() {
     if (runtimeConfig.preScript != null && runtimeConfig.preScriptLanguage != null && !runtimeConfig.preScript.isEmpty()
         && !runtimeConfig.preScriptLanguage.isEmpty()) {
       logger.info("run pre script in language " + runtimeConfig.preScriptLanguage);
@@ -1150,7 +1106,7 @@ public class Anima
     rpc.getScriptSessions().put(scriptLabel, p);
   }
 
-  public void runPostScript() {
+  void runPostScript() {
     if (runtimeConfig.postScript != null && runtimeConfig.postScriptLanguage != null
         && !runtimeConfig.postScript.isEmpty() && !runtimeConfig.postScriptLanguage.isEmpty()) {
       logger.info("run post script in language " + runtimeConfig.postScriptLanguage);

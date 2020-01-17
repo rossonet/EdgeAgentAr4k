@@ -1,14 +1,13 @@
 package org.ar4k.agent.core;
 
-// componente gestito come servizio
-public interface ServiceComponent extends Ar4kComponent, Runnable {
+public interface ServiceComponent<S extends Ar4kComponent> extends AutoCloseable {
 
-  public Anima getAnima();
+  S getPot();
 
-  public void setAnima(Anima anima);
+  void start();
 
-  public void start();
+  void stop();
 
-  public void stop();
+  boolean isRunning();
 
 }

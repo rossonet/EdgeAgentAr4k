@@ -20,23 +20,23 @@ package org.ar4k.agent.exception;
  *
  */
 
-public class Ar4kException extends java.lang.RuntimeException {
+public class ServiceWatchDogException extends Ar4kException {
 
-  private static final long serialVersionUID = -2275905233256878407L;
+  private static final long serialVersionUID = 570723204724941542L;
 
-  public Ar4kException() {
+  public ServiceWatchDogException() {
     super();
   }
 
-  public Ar4kException(String s) {
+  public ServiceWatchDogException(String s) {
     super(s);
   }
 
-  public Ar4kException(String s, Throwable throwable) {
+  public ServiceWatchDogException(String s, Throwable throwable) {
     super(s, throwable);
   }
 
-  public Ar4kException(Throwable throwable) {
+  public ServiceWatchDogException(Throwable throwable) {
     super(throwable);
   }
 }

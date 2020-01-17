@@ -14,6 +14,8 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
+import org.ar4k.agent.core.Ar4kComponent;
+
 import com.beust.jcommander.Parameter;
 
 /*
@@ -39,7 +41,7 @@ public class SshLocalConfig extends AbstractSshConfig {
   public int bindPort = 2200;
 
   @Override
-  public SshLocalTunnel instantiate() {
+  public Ar4kComponent instantiate() {
     SshLocalTunnel ss = new SshLocalTunnel();
     return ss;
   }

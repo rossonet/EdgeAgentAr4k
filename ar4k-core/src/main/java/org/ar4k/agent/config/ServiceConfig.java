@@ -2,10 +2,20 @@ package org.ar4k.agent.config;
 
 import org.ar4k.agent.core.Ar4kComponent;
 
-public interface ServiceConfig extends PotConfig {
+public interface ServiceConfig extends ConfigSeed {
 
-  public Ar4kComponent instantiate();
+  Ar4kComponent instantiate();
 
-  public boolean isSpringBean();
+  boolean isSpringBean();
+
+  int getPriority();
+
+  int getWatchDogInterval();
+
+  int getMaxRestartRetries();
+
+  int getWatchDogTimeout();
+
+  String getDataNamePrefix();
 
 }

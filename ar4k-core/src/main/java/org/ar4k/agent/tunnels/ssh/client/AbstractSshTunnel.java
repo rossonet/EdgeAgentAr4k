@@ -14,11 +14,10 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.json.JSONObject;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
@@ -29,7 +28,7 @@ import com.jcraft.jsch.Session;
  *         Servizio tunnel SSH.
  *
  */
-public abstract class AbstractSshTunnel extends AbstractAr4kService {
+public abstract class AbstractSshTunnel implements Ar4kComponent {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(AbstractSshTunnel.class.toString());
@@ -62,34 +61,21 @@ public abstract class AbstractSshTunnel extends AbstractAr4kService {
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = ((AbstractSshConfig) configuration);
   }
 
   @Override
   public void close() {
-    stop();
+    kill();
   }
 
   @Override
-  public void stop() {
+  public void kill() {
     if (session != null)
       session.disconnect();
     session = null;
     jsch = null;
-  }
-
-  @Override
-  public String getStatusString() {
-    return "ssh//" + session.getHost() + ":" + session.getPort() + " ["
-        + (session.isConnected() ? "connected" : "disconnected") + "]";
-  }
-
-  @Override
-  public JSONObject getStatusJson() {
-    JSONObject end = new JSONObject();
-    end.put("status", getStatusString());
-    return end;
   }
 
 }

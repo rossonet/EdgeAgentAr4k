@@ -1,9 +1,8 @@
-package org.ar4k.agent.config;
+package org.ar4k.agent.core;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -25,7 +24,6 @@ import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
-//@EnableStateMachineFactory
 /**
  * State machine per gestore principale del ciclo di vita
  *

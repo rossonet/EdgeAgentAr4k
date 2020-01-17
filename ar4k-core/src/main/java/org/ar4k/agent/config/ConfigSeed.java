@@ -19,6 +19,4 @@ public interface ConfigSeed extends Serializable, Cloneable {
 
   String getUniqueId();
 
-  int getPriority();
-
 }

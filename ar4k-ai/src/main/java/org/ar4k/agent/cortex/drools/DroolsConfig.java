@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -19,7 +20,7 @@ public class DroolsConfig extends AbstractServiceConfig {
   public String aiName = "beelzebub";
 
   @Override
-  public DroolsService instantiate() {
+  public Ar4kComponent instantiate() {
     DroolsService ss = new DroolsService();
     ss.setConfiguration(this);
     return ss;

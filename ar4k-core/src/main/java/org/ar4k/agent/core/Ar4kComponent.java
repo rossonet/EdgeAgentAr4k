@@ -1,22 +1,35 @@
 package org.ar4k.agent.core;
 
-import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.exception.ServiceInitException;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.BeanNameAware;
 
-// compoenente come bean
-public interface Ar4kComponent extends BeanNameAware, AutoCloseable {
+public interface Ar4kComponent extends AutoCloseable {
 
-  void init();
+  public static enum ServiceStates {
+    INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
+  }
+
+  ServiceStates updateAndGetStatus() throws ServiceWatchDogException;
+
+  void init() throws ServiceInitException;
 
   void kill();
 
-  ConfigSeed getConfiguration();
+  Anima getAnima();
 
-  void setConfiguration(ConfigSeed configuration);
+  DataAddress getDataAddress();
 
-  String getStatusString();
+  void setDataAddress(DataAddress dataAddress);
 
-  JSONObject getStatusJson();
+  void setAnima(Anima anima);
+
+  ServiceConfig getConfiguration();
+
+  void setConfiguration(ServiceConfig configuration);
+
+  JSONObject getDescriptionJson();
 
 }

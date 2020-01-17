@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.validation.ConstraintViolation;
 
 import org.ar4k.agent.config.Ar4kConfig;
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.messages.StringChatRpcMessage;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -33,7 +33,7 @@ public class RpcConversation implements RpcExecutor {
 
   private Map<String, Ar4kConfig> configurations = new HashMap<>();
   private Map<String, KeystoreConfig> keyStores = new HashMap<>();
-  private Map<String, PotConfig> components = new HashMap<>();
+  private Map<String, ServiceConfig> components = new HashMap<>();
   private Map<String, AgentProcess> scriptSessions = new HashMap<>();
   private Homunculus homunculus = null;
   private String workingConfig = null;
@@ -111,11 +111,11 @@ public class RpcConversation implements RpcExecutor {
     this.keyStores = keyStores;
   }
 
-  public Map<String, PotConfig> getComponents() {
+  public Map<String, ServiceConfig> getComponents() {
     return components;
   }
 
-  public void setComponents(Map<String, PotConfig> components) {
+  public void setComponents(Map<String, ServiceConfig> components) {
     this.components = components;
   }
 

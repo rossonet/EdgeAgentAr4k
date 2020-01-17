@@ -14,6 +14,10 @@
     */
 package org.ar4k.gw.studio.tunnels.socket;
 
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
 
 /*
@@ -37,23 +41,53 @@ public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
   }
 
   @Override
-  public String getStatusString() {
-    return configuration.toString();
-  }
-
-  @Override
-  public JSONObject getStatusJson() {
-    JSONObject end = new JSONObject();
-    end.put("status", getStatusString());
-    return end;
-  }
-
-  @Override
   public SocketFactoryConfig getConfiguration() {
     return configuration;
   }
 
   public void setConfiguration(SocketFactoryConfig configuration) {
     this.configuration = configuration;
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setConfiguration(ServiceConfig configuration) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -47,6 +47,7 @@ import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
@@ -549,10 +550,11 @@ public class ShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testIsRunningOk")
   public String listService() {
     String risposta = "";
-    for (ServiceComponent servizio : anima.getServicesOnly()) {
-      risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, servizio.getConfiguration().getUniqueId().toString(),
-          AnsiColor.DEFAULT, " - ", servizio.getConfiguration().getName(), " [", AnsiColor.RED,
-          servizio.getStatusString(), AnsiColor.DEFAULT, "]\n");
+    for (ServiceComponent<Ar4kComponent> servizio : anima.getComponents()) {
+      risposta = risposta
+          + AnsiOutput.toString(AnsiColor.GREEN, servizio.getPot().getConfiguration().getUniqueId().toString(),
+              AnsiColor.DEFAULT, " - ", servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED,
+              servizio.getPot(), AnsiColor.DEFAULT, "]\n");
     }
     return risposta;
   }

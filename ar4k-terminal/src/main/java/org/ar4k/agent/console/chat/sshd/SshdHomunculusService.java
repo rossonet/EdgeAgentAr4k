@@ -16,14 +16,13 @@ package org.ar4k.agent.console.chat.sshd;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -35,7 +34,7 @@ import org.springframework.shell.Shell;
  *         Gestore servizio per connessioni ssh.
  *
  */
-public class SshdHomunculusService extends AbstractAr4kService {
+public class SshdHomunculusService implements Ar4kComponent {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SshdHomunculusService.class.toString());
@@ -45,30 +44,13 @@ public class SshdHomunculusService extends AbstractAr4kService {
   private SshServer server = null;
 
   @Override
-  @PostConstruct
-  public void postCostructor() {
-    super.postCostructor();
-  }
-
-  @Override
-  public synchronized void loop() {
-
-  }
-
-  @Override
   public SshdHomunculusConfig getConfiguration() {
     return configuration;
   }
 
   @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
-    super.setConfiguration(configuration);
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = ((SshdHomunculusConfig) configuration);
-  }
-
-  @Override
-  public void kill() {
-    super.kill();
   }
 
   @Override
@@ -83,7 +65,7 @@ public class SshdHomunculusService extends AbstractAr4kService {
     server.setShellFactory(shellFactory);
     try {
       server.start();
-      logger.info("starting sshd server on " + getStatusString());
+      logger.info("starting sshd server on " + this);
     } catch (IOException e) {
       logger.logException(e);
     }
@@ -91,38 +73,56 @@ public class SshdHomunculusService extends AbstractAr4kService {
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (SshdHomunculusConfig) configuration;
-  }
-
-  @Override
-  public String getStatusString() {
-    return server != null ? (server.getHost() + ":" + server.getPort()) : "stopped";
-  }
-
-  @Override
-  public JSONObject getStatusJson() {
-    JSONObject o = new JSONObject();
-    o.put("status", getStatusString());
-    return o;
-  }
-
-  @Override
   public void close() throws IOException {
-    stop();
-    if (server != null)
-      server.close();
+    kill();
   }
 
   @Override
-  public void stop() {
+  public void kill() {
     if (server != null)
       try {
         server.stop();
+        server.close();
       } catch (IOException e) {
         logger.logException(e);
       }
 
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

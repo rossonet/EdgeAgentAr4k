@@ -17,7 +17,7 @@ package org.ar4k.gw.studio.tunnels.socket;
 import java.util.Collection;
 import java.util.UUID;
 
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.AbstractServiceConfig;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -27,7 +27,7 @@ import com.beust.jcommander.Parameter;
  *
  *         Configurazione astratta servizio con funzionalità di tunnel.
  */
-public abstract class AbstractSocketFactoryConfig implements PotConfig {
+public abstract class AbstractSocketFactoryConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = 2256280745924059640L;
 

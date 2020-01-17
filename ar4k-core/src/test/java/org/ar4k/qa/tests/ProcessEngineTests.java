@@ -18,9 +18,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;

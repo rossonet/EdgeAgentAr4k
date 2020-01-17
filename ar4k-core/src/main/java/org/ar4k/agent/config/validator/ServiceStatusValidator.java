@@ -16,18 +16,18 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.core.AbstractAr4kService.ServiceStates;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
 
 /**
- * 
+ *
  * Validatore input stato servizio.
- * 
+ *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- * 
+ *
  */
 public class ServiceStatusValidator implements IParameterValidator {
 
@@ -48,11 +48,11 @@ public class ServiceStatusValidator implements IParameterValidator {
 
 /*
  * class ServiceStatusValuesProvider extends ValueProviderSupport {
- * 
+ *
  * private final static String[] VALUES =
  * Stream.of(ServiceStatus.values()).map(ServiceStatus::name)
  * .toArray(String[]::new);
- * 
+ *
  * @Override public List<CompletionProposal> complete(MethodParameter parameter,
  * CompletionContext completionContext, String[] hints) { return
  * Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList(

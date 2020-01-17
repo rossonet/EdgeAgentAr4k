@@ -24,11 +24,11 @@ import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 
-import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
@@ -110,9 +110,9 @@ public class SaveAndLoadConfigurationTests {
   public void saveAndRestoreToFromYaml() throws InterruptedException, ClassNotFoundException, IOException {
     Ar4kConfig c = new Ar4kConfig();
     String check = UUID.randomUUID().toString();
-    c.name = "test salvataggio json";
+    c.name = "test salvataggio yaml";
     c.author = check;
-    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+    SshLocalConfig s2 = new SshLocalConfig();
     s2.name = "stunnel config";
     s2.note = check;
     c.pots.add(s2);
@@ -121,7 +121,7 @@ public class SaveAndLoadConfigurationTests {
     ConfigSeed a = ConfigHelper.fromYaml(checkText);
     System.out.println("Anima -> " + anima);
     assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
   }
 
   @Test

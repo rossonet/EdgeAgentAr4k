@@ -21,7 +21,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -142,7 +142,7 @@ public class ConfigHelper {
 
   public static String toJson(ConfigSeed configObject) {
     GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(PotConfig.class, new PotInterfaceAdapter());
+    builder.registerTypeAdapter(ServiceConfig.class, new PotInterfaceAdapter());
     Gson gson = builder.setPrettyPrinting().create();
     return gson.toJson(configObject);
   }
@@ -217,7 +217,7 @@ public class ConfigHelper {
 
   public static ConfigSeed fromJson(String jsonConfig, Class<? extends ConfigSeed> targetClass) {
     GsonBuilder builder = new GsonBuilder();
-    builder.registerTypeAdapter(PotConfig.class, new PotInterfaceAdapter());
+    builder.registerTypeAdapter(ServiceConfig.class, new PotInterfaceAdapter());
     Gson gson = builder.setPrettyPrinting().create();
     return gson.fromJson(jsonConfig, targetClass);
   }

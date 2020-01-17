@@ -24,10 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;

@@ -17,10 +17,11 @@ package org.ar4k.agent.tunnels.http.beacon;
 import java.io.IOException;
 import java.security.UnrecoverableKeyException;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ import org.json.JSONObject;
  *         Servizio Beacon per telemetria
  *
  */
-public class BeaconService extends AbstractAr4kService {
+public class BeaconService implements Ar4kComponent {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());
@@ -41,31 +42,9 @@ public class BeaconService extends AbstractAr4kService {
 
   private Anima anima = null;
 
+  private DataAddress dataAddress = null;
+
   private BeaconServer beaconServer = null;
-
-  @Override
-  public synchronized void loop() {
-    if (beaconServer == null) {
-      init();
-    } else {
-      if (beaconServer.isStopped()) {
-        beaconServer.stop();
-        beaconServer = null;
-        init();
-      }
-    }
-  }
-
-  @Override
-  public BeaconServiceConfig getConfiguration() {
-    return configuration;
-  }
-
-  @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
-    super.setConfiguration(configuration);
-    this.configuration = ((BeaconServiceConfig) configuration);
-  }
 
   @Override
   public Anima getAnima() {
@@ -74,7 +53,6 @@ public class BeaconService extends AbstractAr4kService {
 
   @Override
   public void setAnima(Anima anima) {
-    super.setAnima(anima);
     this.anima = anima;
   }
 
@@ -99,37 +77,56 @@ public class BeaconService extends AbstractAr4kService {
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (BeaconServiceConfig) configuration;
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    if (beaconServer == null) {
+      init();
+    } else {
+      if (beaconServer.isStopped()) {
+        beaconServer.stop();
+        beaconServer = null;
+        init();
+      }
+    }
+    return ServiceStates.RUNNING;
   }
 
   @Override
-  public String getStatusString() {
-    return beaconServer != null ? beaconServer.getStatus() : "NaN";
-  }
-
-  @Override
-  public JSONObject getStatusJson() {
-    JSONObject end = new JSONObject();
-    end.put("status", getStatusString());
-    return end;
-  }
-
-  @Override
-  public void close() throws IOException {
-    if (beaconServer != null)
-      beaconServer.close();
-  }
-
-  @Override
-  public void stop() {
+  public void kill() {
     beaconServer.stop();
     beaconServer = null;
   }
 
   @Override
-  public String toString() {
-    return "BeaconService [configuration=" + configuration + ", beaconServer=" + beaconServer + "]";
+  public DataAddress getDataAddress() {
+    return dataAddress;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    this.dataAddress = dataAddress;
+  }
+
+  @Override
+  public void setConfiguration(ServiceConfig configuration) {
+    this.configuration = (BeaconServiceConfig) configuration;
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public void close() throws Exception {
+    if (beaconServer != null) {
+      beaconServer.close();
+    }
+  }
+
+  @Override
+  public ServiceConfig getConfiguration() {
+    return configuration;
   }
 
 }

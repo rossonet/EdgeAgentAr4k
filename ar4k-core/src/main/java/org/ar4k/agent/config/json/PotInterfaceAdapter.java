@@ -2,7 +2,7 @@ package org.ar4k.agent.config.json;
 
 import java.lang.reflect.Type;
 
-import org.ar4k.agent.config.PotConfig;
+import org.ar4k.agent.config.ServiceConfig;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,13 +13,14 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+@SuppressWarnings("rawtypes")
 public class PotInterfaceAdapter implements JsonSerializer, JsonDeserializer {
 
   private static final String CLASSNAME = "CLASSNAME";
   private static final String DATA = "DATA";
 
   @Override
-  public PotConfig deserialize(JsonElement jsonElement, Type type,
+  public ServiceConfig deserialize(JsonElement jsonElement, Type type,
       JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
     JsonObject jsonObject = jsonElement.getAsJsonObject();

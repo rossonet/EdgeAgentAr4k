@@ -14,9 +14,24 @@
     */
 package org.ar4k.agent.core;
 
-import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 
@@ -27,113 +42,173 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
  *
  *
  */
-public abstract class AbstractAr4kService implements ServiceComponent {
+public abstract class AbstractAr4kService implements ServiceComponent<Ar4kComponent> {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(AbstractAr4kService.class.toString());
 
-  // stati servizi
-  public static enum ServiceStates {
-    INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
+  protected Ar4kComponent pot;
+  protected final Timer timerScheduler;
+  protected ExecutorService executor = Executors.newScheduledThreadPool(6);
+  protected int maxFaults;
+  protected int watchDogInterval;
+  protected AtomicLong startRetries = new AtomicLong(1);
+  protected AtomicBoolean stopped = new AtomicBoolean(false);
+  protected Instant lastRestart = null;
+
+  protected int watchDogTimeout = 120000;
+  private TimerTask watchDogTask = null;
+
+  public AbstractAr4kService(Anima anima, ServiceConfig serviceConfig, Timer timerScheduler) {
+    this.timerScheduler = timerScheduler;
+    this.maxFaults = serviceConfig.getMaxRestartRetries();
+    try {
+      Method method = serviceConfig.getClass().getMethod("instantiate");
+      pot = (Ar4kComponent) method.invoke(serviceConfig);
+      pot.setConfiguration(serviceConfig);
+      pot.setAnima(anima);
+      pot.setDataAddress(new DataAddress(anima, serviceConfig.getDataNamePrefix()));
+      if (pot.getDataAddress() != null) {
+        anima.getDataAddress().registerSlave(pot.getDataAddress());
+      }
+      watchDogTimeout = serviceConfig.getWatchDogTimeout();
+      watchDogInterval = serviceConfig.getWatchDogInterval();
+      createTask(timerScheduler);
+    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+        | InvocationTargetException e) {
+      logger.logException("during service " + serviceConfig + " creation", e);
+    }
   }
 
-  // stato servizio
-  private ServiceStates serviceStatus = ServiceStates.INIT;
-
-  // vero se testato
-  private boolean tested = false;
-
-  // thread processo in run
-  private Thread processo = null;
-
-  // iniettata in costruzione (vedi get/set)
-  protected Anima anima;
-
-  // iniettata in costruzione (vedi get/set)
-  private AbstractServiceConfig configuration;
-
-  private String beanName = null;
-
-  public AbstractAr4kService() {
-    serviceStatus = ServiceStates.STARTING;
+  private void createTask(Timer timerScheduler) {
+    watchDogTask = new WatchDogTask();
+    timerScheduler.schedule(watchDogTask, watchDogInterval, watchDogInterval);
   }
 
-  @PostConstruct
-  public void postCostructor() {
-    serviceStatus = ServiceStates.STAMINAL;
+  private class WatchDogTask extends TimerTask {
+    @Override
+    public void run() {
+      getUpdateFromPot();
+    }
   }
-
-  public abstract void loop();
 
   @Override
-  public void run() {
-    while (serviceStatus != ServiceStates.KILLED) {
-      if (serviceStatus == ServiceStates.RUNNING) {
-        loop();
+  public void close() throws Exception {
+    stop();
+    Future<?> callFuture = executor.submit(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          if (pot.getDataAddress() != null) {
+            pot.getAnima().getDataAddress().registerSlave(pot.getDataAddress());
+          }
+          pot.close();
+        } catch (Exception e) {
+          logger.logException(e);
+        }
       }
+    });
+    callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+    executor.shutdownNow();
+  }
+
+  private void notifyException() {
+    if (!stopped.get()) {
+      executor.submit(new Runnable() {
+        @Override
+        public void run() {
+          stop();
+          if (maxFaults == 0 || startRetries.incrementAndGet() < maxFaults) {
+            start();
+          } else {
+            logger.warn("service " + pot.getConfiguration() + " is fault for " + startRetries.get() + " times");
+          }
+        }
+      });
     }
-    try {
-      Thread.sleep(configuration.clockRunnableClass);
-    } catch (InterruptedException e) {
-      logger.warn(e.getMessage());
-      logger.logException(e);
-    }
+  }
+
+  @Override
+  public Ar4kComponent getPot() {
+    return pot;
   }
 
   @Override
   public synchronized void start() {
-    if (processo == null && configuration != null && configuration.name != null && !configuration.name.isEmpty()) {
-      processo = new Thread(this);
-      processo.setName(configuration.name);
-      processo.start();
-      serviceStatus = configuration.targetRunLevel;
+    startRetries.set(1);
+    stopped.set(false);
+    Future<?> callFuture = executor.submit(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          pot.init();
+        } catch (Exception e) {
+          logger.logException("in service " + pot.getConfiguration() + " init", e);
+        }
+      }
+    });
+    try {
+      callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+      lastRestart = Instant.now();
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      logger.logException("service " + pot.getConfiguration() + " timeout during init", e);
+    }
+    if (watchDogTask == null) {
+
+    }
+    logger.info("started service " + getPot().getConfiguration());
+  }
+
+  @Override
+  public synchronized void stop() {
+    stopped.set(true);
+    Future<?> callFuture = executor.submit(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          pot.kill();
+        } catch (Exception e) {
+          logger.logException("in service " + pot.getConfiguration() + " kill", e);
+        }
+      }
+    });
+    try {
+      callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      logger.logException("service " + pot.getConfiguration() + " timeout during kill", e);
+    }
+    logger.info("stopped service " + getPot().getConfiguration());
+  }
+
+  @Override
+  public boolean isRunning() {
+    if (!stopped.get()) {
+      return getUpdateFromPot().equals(ServiceStates.RUNNING);
+    } else {
+      return false;
     }
   }
 
-  @Override
-  public synchronized void kill() {
-    stop();
-    serviceStatus = ServiceStates.KILLED;
+  private ServiceStates getUpdateFromPot() {
+    final Future<ServiceStates> callFuture = executor.submit(new Callable<ServiceStates>() {
+      @Override
+      public ServiceStates call() {
+        try {
+          return pot.updateAndGetStatus();
+        } catch (Exception e) {
+          logger.logException("in service " + pot.getConfiguration() + " update", e);
+          notifyException();
+          return ServiceStates.FAULT;
+        }
+      }
+    });
+    try {
+      return callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      logger.logException("service " + pot.getConfiguration() + " timeout during update", e);
+      notifyException();
+      return ServiceStates.FAULT;
+    }
   }
 
-  @Override
-  public String getStatusString() {
-    return serviceStatus.name();
-  }
-
-  @Override
-  public Anima getAnima() {
-    return anima;
-  }
-
-  @Override
-  public void setAnima(Anima anima) {
-    this.anima = anima;
-  }
-
-  @Override
-  public AbstractServiceConfig getConfiguration() {
-    return configuration;
-  }
-
-  public void setConfiguration(AbstractServiceConfig configuration) {
-    this.configuration = configuration;
-  }
-
-  public boolean isTested() {
-    return tested;
-  }
-
-  public void setTested(boolean tested) {
-    this.tested = tested;
-  }
-
-  @Override
-  public void setBeanName(String name) {
-    beanName = name;
-  }
-
-  public String getBeanName() {
-    return beanName;
-  }
 }

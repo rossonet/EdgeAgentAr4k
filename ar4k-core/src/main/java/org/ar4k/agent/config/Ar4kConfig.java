@@ -130,7 +130,7 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--logoUrl", description = "default log url")
   public String logoUrl = "/static/img/ar4k.png";
 
-  public Collection<PotConfig> pots = new HashSet<>();
+  public Collection<ServiceConfig> pots = new HashSet<>();
 
   @Override
   public String getName() {
@@ -160,11 +160,6 @@ public class Ar4kConfig implements ConfigSeed {
   @Override
   public Collection<String> getTags() {
     return tags;
-  }
-
-  @Override
-  public int getPriority() {
-    return 0;
   }
 
   @Override
