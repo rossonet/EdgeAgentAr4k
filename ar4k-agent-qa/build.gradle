@@ -7,6 +7,7 @@ dependencies {
   compile project(':ar4k-cluster')
   compile project(':ar4k-hazelcast')
   compile project(':ar4k-video')
+  compile project(':ar4k-pcap')
   compile project(':ar4k-serial-comm')
   compile project(':ar4k-terminal')
 }
