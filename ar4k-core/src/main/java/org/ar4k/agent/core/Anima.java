@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.NoSuchPaddingException;
@@ -53,6 +54,7 @@ import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.DataAddressAnima;
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -106,6 +108,13 @@ import jdbm.RecordManagerFactory;
 @EnableConfigurationProperties(Ar4kStarterProperties.class)
 public class Anima
     implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
+
+  public static ContextCreationHelper getNewAnimaInNewContext(Class<?> springMasterClass, ExecutorService executor,
+      String loggerFile, String keyStore, int webPort, List<String> args, Ar4kConfig animaConfig,
+      String mainAliasInKeystore, String keystoreBeaconAlias, String webRegistrationEndpoint) {
+    return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args, animaConfig,
+        mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
+  }
 
   public static final String DEFAULT_KS_PATH = "default-new.ks";
 
@@ -1121,6 +1130,10 @@ public class Anima
 
   public BeaconClient getBeaconClient() {
     return beaconClient;
+  }
+
+  public Ar4kStarterProperties getStarterProperties() {
+    return starterProperties;
   }
 
 }

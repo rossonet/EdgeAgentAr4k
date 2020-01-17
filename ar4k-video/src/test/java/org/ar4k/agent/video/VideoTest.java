@@ -17,8 +17,30 @@ import javax.swing.JFrame;
 
 import org.ar4k.agent.camera.usb.UsbCameraConfig;
 import org.ar4k.agent.camera.usb.UsbCameraService;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.spring.Ar4kAuthenticationManager;
+import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.shell.SpringShellAutoConfiguration;
+import org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration;
+import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.legacy.LegacyAdapterAutoConfiguration;
+import org.springframework.shell.standard.FileValueProvider;
+import org.springframework.shell.standard.StandardAPIAutoConfiguration;
+import org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamMotionDetector;
@@ -26,7 +48,19 @@ import com.github.sarxos.webcam.WebcamMotionEvent;
 import com.github.sarxos.webcam.WebcamMotionListener;
 import com.github.sarxos.webcam.WebcamPanel;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
+    Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+@TestPropertySource(locations = "classpath:application-base.properties")
+@SpringBootConfiguration
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
+
+  @Autowired
+  Anima anima;
 
   public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
@@ -48,7 +82,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     }
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void testDetectionLaboratorio() throws IOException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
@@ -56,29 +90,32 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     config.setVlcjDriverPath("rtsp://admin:westing85;@192.168.0.100:554/");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     detectMotionExample(service.getWebcam());
     System.in.read(); // keep program open
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void testDetectionCiospo() throws IOException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
     config.setVlcjDriverPath(null);
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     detectMotionExample(service.getWebcam());
     System.in.read(); // keep program open
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void testDetectionEsterno() throws IOException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     detectMotionExample(service.getWebcam());
     System.in.read(); // keep program open
@@ -126,6 +163,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     config.setDriver("VlcjDriver");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     System.out.println("Name: " + service.getName());
     System.out.println("FPS: " + service.getFps());
@@ -136,7 +174,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     service.writeToFile("PNG", "/home/andrea/Scrivania/prova.png");
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void getSwingPannelLaboratorioVlc() throws InterruptedException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
@@ -144,6 +182,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     config.setVlcjDriverPath("rtsp://admin:westing85;@192.168.0.100:554/");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     WebcamPanel panel = new WebcamPanel(service.getWebcam());
     panel.setFPSDisplayed(true);
@@ -163,13 +202,14 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     }
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void getSwingPannelCiospo() throws InterruptedException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
     config.setVlcjDriverPath(null);
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     WebcamPanel panel = new WebcamPanel(service.getWebcam());
     panel.setFPSDisplayed(true);
@@ -189,12 +229,13 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     }
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void getSwingPannelEsterno() throws InterruptedException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("VlcjDriver");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     WebcamPanel panel = new WebcamPanel(service.getWebcam());
     panel.setFPSDisplayed(true);
@@ -214,13 +255,14 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
     }
   }
 
-  @Test(timeout = 600000)
+  @Test(timeout = 60000)
   public void getSwingPannelLaboratorioIpCam() throws InterruptedException {
     UsbCameraConfig config = new UsbCameraConfig();
     config.setDriver("IpCamDriver");
     config.setWorkingSize("320x176");
     service = new UsbCameraService();
     service.setConfiguration(config);
+    service.setAnima(anima);
     service.init();
     WebcamPanel panel = new WebcamPanel(service.getWebcam());
     panel.setFPSDisplayed(true);

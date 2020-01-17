@@ -15,6 +15,7 @@
 package org.ar4k.agent.camera.usb;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -59,10 +60,10 @@ public class UsbCameraConfig extends AbstractServiceConfig {
   private String scopeOfChannels = null;
 
   @Override
-  public UsbCameraService instantiate() {
+  public Ar4kComponent instantiate() {
     UsbCameraService ss = new UsbCameraService();
     ss.setConfiguration(this);
-    return ss;
+    return (Ar4kComponent) ss;
   }
 
   @Override

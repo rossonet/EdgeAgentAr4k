@@ -16,7 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.helper.ContextCreationTestUtils;
+import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
@@ -107,18 +107,14 @@ public class BeaconClientServerTests {
     Ar4kConfig config1 = null; // TODO
 
     testAnimas.put(SERVER_LABEL,
-        executor
-            .submit(new ContextCreationTestUtils(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666"))
-            .get());
+        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
     testAnimas.put(CLIENT2_LABEL,
-        executor.submit(new ContextCreationTestUtils(Ar4kAgent.class, executor, "b.log",
-            keyStoreClient2.getAbsolutePath(), 1125, baseArgs, config2, caAlias, caAlias, "https://localhost:33666"))
-            .get());
+        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
+            1125, baseArgs, config2, caAlias, caAlias, "https://localhost:33666")).get());
     testAnimas.put(CLIENT1_LABEL,
-        executor.submit(new ContextCreationTestUtils(Ar4kAgent.class, executor, "c.log",
-            keyStoreClient1.getAbsolutePath(), 1126, baseArgs, config1, caAlias, caAlias, "https://localhost:33666"))
-            .get());
+        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
+            1126, baseArgs, config1, caAlias, caAlias, "https://localhost:33666")).get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
@@ -172,10 +168,8 @@ public class BeaconClientServerTests {
     Ar4kConfig config1 = null; // TODO
 
     testAnimas.put(SERVER_LABEL,
-        executor
-            .submit(new ContextCreationTestUtils(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666"))
-            .get());
+        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
     /*
      * testAnimas.put(CLIENT2_LABEL, executor.submit(new
      * ContextCreationTestUtils(Ar4kAgent.class, executor, "b.log",

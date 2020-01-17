@@ -1,3 +1,3 @@
 #/bin/bash
 # by Ambrosini
-docker build --rm -t ar4k-agent-full:latest .
+docker build --rm -t ar4k-agent-qa:latest .

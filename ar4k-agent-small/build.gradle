@@ -30,7 +30,6 @@ bootJar.doLast { task ->
   ant.checksum file: task.archivePath
 }
 clean {
-
   delete "logs"
   delete "build"
   delete "bin"

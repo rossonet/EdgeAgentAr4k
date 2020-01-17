@@ -51,7 +51,7 @@ public class SerialShellInterface extends AbstractShellHelper {
 
   protected Availability testSerialServiceNull() {
     return serialService == null ? Availability.available()
-        : Availability.unavailable("a Serial service exists with status " + serialService.getStatusString());
+        : Availability.unavailable("a Serial service exists with status " + serialService);
   }
 
   protected Availability testSerialServiceRunning() {

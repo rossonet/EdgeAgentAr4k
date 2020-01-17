@@ -3,6 +3,7 @@
 bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
+*.ar4k.conf
 
 ### OUTPUT ###
 spring-shell.log

@@ -37,6 +37,7 @@ import org.jline.builtins.Commands;
 import org.jline.reader.LineReader;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -75,6 +76,7 @@ import org.springframework.test.context.TestPropertySource;
     Commands.class, FileValueProvider.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Ignore
 public class GrpcDataTests {
 
   public BeanFactory context = null;

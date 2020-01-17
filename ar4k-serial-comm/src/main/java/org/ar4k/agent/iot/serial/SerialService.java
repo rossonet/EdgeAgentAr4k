@@ -20,14 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-//import org.ar4k.agent.camel.DynamicRouteBuilder;
-import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -42,7 +42,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  *
  *         Servizio di connessione seriale.
  */
-public class SerialService extends AbstractAr4kService implements SerialPortDataListener {
+public class SerialService implements Ar4kComponent, SerialPortDataListener {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SerialService.class.toString());
@@ -76,11 +76,6 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   private HandlerBytesWriter handlerBytesWriter = null;
 
   private HandlerStringWriter handlerStringWriter = null;
-
-  @Override
-  public synchronized void loop() {
-    openSerialPort();
-  }
 
   private void openSerialPort() {
     if (comPort == null) {
@@ -135,7 +130,6 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
       comPort.closePort();
       comPort = null;
     }
-    super.kill();
   }
 
   @Override
@@ -144,8 +138,7 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   }
 
   @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
-    super.setConfiguration(configuration);
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = ((SerialConfig) configuration);
   }
 
@@ -156,7 +149,6 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   @Override
   public void setAnima(Anima anima) {
-    super.setAnima(anima);
     this.anima = anima;
   }
 
@@ -205,29 +197,12 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (SerialConfig) configuration;
-  }
-
-  @Override
-  public String getStatusString() {
+  public String toString() {
     return comPort != null ? comPort.getSystemPortName() + " [" + comPort.isOpen() + "]" : "DISCONNECTED";
   }
 
   @Override
-  public JSONObject getStatusJson() {
-    JSONObject end = new JSONObject();
-    end.put("status", getStatusString());
-    return end;
-  }
-
-  @Override
   public void close() throws IOException {
-    kill();
-  }
-
-  @Override
-  public void stop() {
     kill();
   }
 
@@ -267,5 +242,30 @@ public class SerialService extends AbstractAr4kService implements SerialPortData
 
   public SerialPort getComPort() {
     return comPort;
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    openSerialPort();
+    return ServiceStates.RUNNING;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    JSONObject end = new JSONObject();
+    end.put("status", toString());
+    return end;
   }
 }

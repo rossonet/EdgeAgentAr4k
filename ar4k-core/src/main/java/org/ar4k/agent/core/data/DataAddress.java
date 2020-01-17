@@ -173,4 +173,8 @@ public class DataAddress implements AutoCloseable {
     callbacks.clear();
   }
 
+  public String getDataNamePrefix() {
+    return dataNamePrefix;
+  }
+
 }

@@ -26,8 +26,7 @@ public class SerialJsonShellInterface extends AbstractShellHelper {
 
   protected Availability testSerialServiceJsonNull() {
     return serialServiceJson == null ? Availability.available()
-        : Availability
-            .unavailable("a Serial JSON test service exists with status " + serialServiceJson.getStatusString());
+        : Availability.unavailable("a Serial JSON test service exists with status " + serialServiceJson);
   }
 
   protected Availability testSerialServiceRunning() {

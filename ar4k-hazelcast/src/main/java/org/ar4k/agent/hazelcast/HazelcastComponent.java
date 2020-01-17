@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -59,23 +61,13 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   @Override
-  public ConfigSeed getConfiguration() {
+  public ServiceConfig getConfiguration() {
     return configuration;
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = (HazelcastConfig) configuration;
-  }
-
-  @Override
-  public JSONObject getStatusJson() {
-    return new JSONObject(gson.toJsonTree(configuration).getAsString());
-  }
-
-  @Override
-  public void setBeanName(String name) {
-    beanName = name;
   }
 
   public String getBeanName() {
@@ -149,7 +141,7 @@ public class HazelcastComponent implements Ar4kComponent {
   }
 
   @Override
-  public String getStatusString() {
+  public String toString() {
     return hazelcastInstance != null ? hazelcastInstance.getCluster().getClusterState().toString()
         : "hazelcastInstance null";
   }
@@ -209,6 +201,41 @@ public class HazelcastComponent implements Ar4kComponent {
 
   FencedLock getLock(String lockName) {
     return createOrGetHazelcastInstance().getCPSubsystem().getLock(lockName);
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

@@ -54,7 +54,7 @@ public class HazelcastShellInterface extends AbstractShellHelper {
 
   protected Availability testHazelCastNodeNull() {
     return hazelcastInstance == null ? Availability.available()
-        : Availability.unavailable("a Hazelcast node exists with status " + hazelcastInstance.getStatusString());
+        : Availability.unavailable("a Hazelcast node exists with status " + hazelcastInstance);
   }
 
   protected Availability testHazelcastNodeRunning() {
@@ -74,7 +74,7 @@ public class HazelcastShellInterface extends AbstractShellHelper {
   @ManagedOperation
   @ShellMethodAvailability("testHazelcastNodeRunning")
   public String tribeStatus() {
-    return hazelcastInstance.getStatusString();
+    return hazelcastInstance.toString();
   }
 
   @ShellMethod(value = "List nodes joined to the cluster", group = "Tribe Commands")

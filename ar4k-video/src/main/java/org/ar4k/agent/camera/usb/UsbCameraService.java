@@ -20,13 +20,14 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import org.ar4k.agent.camera.messages.VideoMessage;
-import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -48,14 +49,14 @@ import uk.co.caprica.vlcj.medialist.MediaListItem;
  *
  *         Servizio di connessione seriale.
  */
-public class UsbCameraService extends AbstractAr4kService implements Runnable {
+public class UsbCameraService implements Ar4kComponent, Runnable {
 
   public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(UsbCameraService.class.toString());
 
-  private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+  private Anima anima = null;
 
   private UsbCameraConfig configuration = null;
 
@@ -109,7 +110,7 @@ public class UsbCameraService extends AbstractAr4kService implements Runnable {
   }
 
   @Override
-  public UsbCameraConfig getConfiguration() {
+  public ServiceConfig getConfiguration() {
     return configuration;
   }
 
@@ -118,7 +119,7 @@ public class UsbCameraService extends AbstractAr4kService implements Runnable {
   }
 
   @Override
-  public void stop() {
+  public void kill() {
     if (executor != null) {
       executor.shutdownNow();
       executor = null;
@@ -204,25 +205,13 @@ public class UsbCameraService extends AbstractAr4kService implements Runnable {
   }
 
   @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
-    super.setConfiguration(configuration);
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = (UsbCameraConfig) configuration;
   }
 
   @Override
-  public JSONObject getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public void close() throws Exception {
-    stop();
-  }
-
-  @Override
-  public void loop() {
-    // TODO Auto-generated method stub
+    kill();
   }
 
   public static Collection<String> getUsbCameras(String driver) {
@@ -274,8 +263,42 @@ public class UsbCameraService extends AbstractAr4kService implements Runnable {
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
-    this.configuration = (UsbCameraConfig) configuration;
+  public void run() {
+    // TODO Auto-generated method stub
+
   }
 
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    return anima;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    this.anima = anima;
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

@@ -45,6 +45,7 @@ public class Ar4kStarterProperties {
   private String keystoreBeaconAlias = "";
   private String keystorePassword = "se-A4.rk!9";
   private String beaconCaChainPem = "beacon-ca-pem";
+  private String beaconClearText = "true";
   private String adminPassword = "a4c8ff551a";
   private String webRegistrationEndpoint = "https://xxxx.com";
   private String dnsRegistrationEndpoint = "subdomain.domain.com";
@@ -280,6 +281,14 @@ public class Ar4kStarterProperties {
 
   public void setKeystoreBeaconAlias(String keystoreBeaconAlias) {
     this.keystoreBeaconAlias = keystoreBeaconAlias;
+  }
+
+  public String getBeaconClearText() {
+    return beaconClearText;
+  }
+
+  public void setBeaconClearText(String beaconClearText) {
+    this.beaconClearText = beaconClearText;
   }
 
 }

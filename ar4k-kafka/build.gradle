@@ -1,9 +1,0 @@
-description = "IoT components Kafka"
-
-// TODO mappa i DataNode configurati su Kafka
-
-dependencies {
-  compile project(':ar4k-core')
-  // Kafka
-  compile group: 'org.apache.kafka', name: 'kafka-clients', version: '1.0.0'
-}

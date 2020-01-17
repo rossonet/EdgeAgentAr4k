@@ -12,12 +12,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.AbstractAr4kService;
+import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.JSONMessage;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
@@ -35,7 +38,7 @@ import io.netty.handler.logging.LoggingHandler;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
-public class NodeMcuLinkService extends AbstractAr4kService implements TcpServerListener {
+public class NodeMcuLinkService implements Ar4kComponent, TcpServerListener {
 
   private static final String DEVICE_QUEUE_SEPARATOR = "-";
 
@@ -52,15 +55,7 @@ public class NodeMcuLinkService extends AbstractAr4kService implements TcpServer
 
   private final Map<String, JSONObject> cacheDevicesMessages = new HashMap<>();
 
-  @Override
-  public void loop() {
-    sendDiscoveryUdp();
-    try {
-      Thread.sleep(4500L);
-    } catch (InterruptedException e) {
-      logger.logException(e);
-    }
-  }
+  private Anima anima = null;
 
   private void startTcpServer() throws InterruptedException {
     bossGroup = new NioEventLoopGroup(intBossGroup);
@@ -72,7 +67,7 @@ public class NodeMcuLinkService extends AbstractAr4kService implements TcpServer
   }
 
   @Override
-  public void stop() {
+  public void kill() {
     if (bossGroup != null) {
       bossGroup.shutdownGracefully();
     }
@@ -95,19 +90,13 @@ public class NodeMcuLinkService extends AbstractAr4kService implements TcpServer
   }
 
   @Override
-  public void setConfiguration(ConfigSeed configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     this.configuration = (NodeMcuLinkConfig) configuration;
   }
 
   @Override
-  public JSONObject getStatusJson() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public void close() throws Exception {
-    stop();
+    kill();
   }
 
   @Override
@@ -191,6 +180,51 @@ public class NodeMcuLinkService extends AbstractAr4kService implements TcpServer
       logger.logException(ex);
       logger.warn("Exception in discovery flash " + ex.getMessage());
     }
+  }
+
+  @Override
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    sendDiscoveryUdp();
+    try {
+      Thread.sleep(4500L);
+    } catch (InterruptedException e) {
+      logger.logException(e);
+    }
+    return null;
+  }
+
+  @Override
+  public Anima getAnima() {
+    return anima;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    this.anima = anima;
+  }
+
+  @Override
+  public ServiceConfig getConfiguration() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

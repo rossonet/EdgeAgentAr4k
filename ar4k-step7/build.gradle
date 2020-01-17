@@ -1,6 +1,0 @@
-description = "IoT components IFTTT"
-
-dependencies {
-  compile project(':ar4k-core')
-  // https://github.com/s7connector/s7connector
-}

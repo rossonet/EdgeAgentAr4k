@@ -1,7 +1,0 @@
-description = "IRC component"
-
-dependencies {
-  compile project(':ar4k-core')
-  // IRC
-  compile group: 'org.kitteh.irc', name: 'client-lib', version: '7.0.0'
-}

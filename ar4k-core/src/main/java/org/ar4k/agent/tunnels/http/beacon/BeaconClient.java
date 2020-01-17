@@ -61,6 +61,7 @@ import com.google.gson.GsonBuilder;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 
 public class BeaconClient implements Runnable, AutoCloseable {
@@ -267,14 +268,15 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private void startConnection(String host, int port) throws SSLException {
-    // TODO SSL facoltativo
-    generateCaFile();
-    generateCertFile();
-    writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
-    runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext());// .sslContext(GrpcSslContexts.forClient()
-    // .keyManager(new File(certFile), new File(privateFile)).trustManager(new
-    // File(certChainFile)).build()));
-    // TODO SSL facoltativo
+    if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
+      runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext());
+    } else {
+      generateCaFile();
+      generateCertFile();
+      writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
+      runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
+          .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(certChainFile)).build()));
+    }
   }
 
   private static void writePrivateKey(String alias, Anima animaTarget, String privateKey) {

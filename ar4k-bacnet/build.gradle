@@ -1,6 +1,0 @@
-description = "IoT components Bacnet"
-
-dependencies {
-  compile project(':ar4k-core')
-  //https://github.com/infiniteautomation/BACnet4J
-}

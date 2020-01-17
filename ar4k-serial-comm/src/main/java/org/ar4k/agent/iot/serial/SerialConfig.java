@@ -1,6 +1,7 @@
 package org.ar4k.agent.iot.serial;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.core.Ar4kComponent;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 
@@ -46,10 +47,10 @@ public class SerialConfig extends AbstractServiceConfig {
   public String scopeOfChannels = null;
 
   @Override
-  public SerialService instantiate() {
+  public Ar4kComponent instantiate() {
     SerialService ss = new SerialService();
     ss.setConfiguration(this);
-    return ss;
+    return (Ar4kComponent) ss;
   }
 
   @Override

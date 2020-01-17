@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
@@ -39,11 +39,6 @@ public class SerialJsonService extends SerialService {
   private String sb = "";
 
   @Override
-  public void loop() {
-    super.loop();
-  }
-
-  @Override
   public void init() {
     super.init();
     popolateDataTopics();
@@ -55,7 +50,7 @@ public class SerialJsonService extends SerialService {
   }
 
   @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     super.setConfiguration(configuration);
     this.configuration = ((SerialJsonConfig) configuration);
   }

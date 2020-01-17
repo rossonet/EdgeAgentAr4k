@@ -186,6 +186,13 @@ clean {
   delete "*.keystore"
 }
 
+
+task ar4kRegenerateProtoBuf{
+  group "Ar4k Semantic Router Build"
+  description 'Rebuild the GRPC classes from the proto file in core project.'
+  ar4kRegenerateProtoBuf.dependsOn(":ar4k-core:generateProto")
+}
+
 task cleanGradleCache {
   group "Ar4k Semantic Router Build"
   description 'Remove the ar4k artifacts from local Gradle cache'
@@ -219,38 +226,6 @@ task ar4kAllJavaDoc(type: Javadoc) {
   }
 }
 
-task ar4kRegenerateStaticWeb{
-  group "Ar4k frontend web GUI"
-  description 'Rebuild the web interface with Npm in the component reactor-web.'
-  ar4kRegenerateStaticWeb.dependsOn(":ar4k-reactor-web:uiPublish")
-}
-
-task ar4kRegenerateProtoBuf{
-  group "Ar4k Semantic Router Build"
-  description 'Rebuild the GRPC classes from the proto file in core project.'
-  ar4kRegenerateProtoBuf.dependsOn(":ar4k-core:generateProto")
-}
-
-
-task vueGui{
-  group "Ar4k frontend web GUI"
-  description 'Run Vue web UI'
-  vueGui.dependsOn(":ar4k-reactor-web:vueGui")
-}
-
-task ar4kBootJar{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a single fat jar. This is for the standard version.'
-  ar4kBootJar.dependsOn(":ar4k-agent-base:bootJar")
-  ar4kBootJar.dependsOn(":ar4k-agent-base:endBootJar")
-}
-
-task ar4kDockerContainer{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a docker container. This is for the standard version.'
-  ar4kDockerContainer.dependsOn(":ar4k-agent-base:buildDocker")
-}
-
 task ar4kBootJarSmall{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This is the small version.'
@@ -258,30 +233,10 @@ task ar4kBootJarSmall{
   ar4kBootJarSmall.dependsOn(":ar4k-agent-small:endBootJar")
 }
 
-task ar4kBootJarBase{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a single fat jar. This is the base version.'
-  ar4kBootJarBase.dependsOn(":ar4k-agent-base:bootJar")
-  ar4kBootJarBase.dependsOn(":ar4k-agent-base:endBootJar")
-}
-
 task ar4kDockerContainerSmall{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This is for the small version.'
   ar4kDockerContainerSmall.dependsOn(":ar4k-agent-small:buildDocker")
-}
-
-task ar4kDockerContainerBase{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a docker container. This is for the base version.'
-  ar4kDockerContainerBase.dependsOn(":ar4k-agent-base:buildDocker")
-}
-
-task ar4kBootJarFull{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a single fat jar. This is the complete, full, version.'
-  ar4kBootJarFull.dependsOn(":ar4k-agent-full:bootJar")
-  ar4kBootJarFull.dependsOn(":ar4k-agent-full:endBootJar")
 }
 
 task ar4kBootJarQa{
@@ -297,34 +252,16 @@ task ar4kDockerContainerQa{
   ar4kDockerContainerQa.dependsOn(":ar4k-agent-qa:buildDocker")
 }
 
-task ar4kBootJarDruido{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a single fat jar. This is the Druido robot version'
-  ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:bootJar")
-  ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:endBootJar")
-}
-
-task ar4kDockerContainerDruido{
-  group "Ar4k Semantic Router Build"
-  description 'Build Ar4k Semantic Router as a docker container. This is the Druido robot version'
-  ar4kDockerContainerDruido.dependsOn(":ar4k-agent-druido:buildDocker")
-}
 task buildAllDockerContainers{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small, qa and full.'
   buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
-  buildAllDockerContainers.dependsOn(":ar4k-agent-full:buildDocker")
   buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
-  buildAllDockerContainers.dependsOn(":ar4k-agent-base:buildDocker")
-  buildAllDockerContainers.dependsOn(":ar4k-agent-druido:buildDocker")
 }
 
 task buildAllBootJars{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a single fat jar. This builds all the jars: standard, small, qa and full.'
-  buildAllBootJars.dependsOn("ar4kBootJar")
-  buildAllBootJars.dependsOn("ar4kBootJarFull")
   buildAllBootJars.dependsOn("ar4kBootJarSmall")
   buildAllBootJars.dependsOn("ar4kBootJarQa")
-  buildAllBootJars.dependsOn("ar4kBootJarDruido")
 }

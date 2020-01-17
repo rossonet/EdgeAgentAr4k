@@ -69,7 +69,7 @@ public class CameraShellInterface extends AbstractShellHelper {
 
   protected Availability testUsbCameraServiceNull() {
     return camera == null ? Availability.available()
-        : Availability.unavailable("a camera exists with status " + camera.getStatusString());
+        : Availability.unavailable("a camera exists with status " + camera);
   }
 
   protected Availability testUsbCameraServiceRunning() {

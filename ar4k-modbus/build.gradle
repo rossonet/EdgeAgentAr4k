@@ -1,6 +1,0 @@
-description = "IoT components ModBus master/slave lib"
-
-dependencies {
-  compile project(':ar4k-core')
-  compile group: 'com.infiniteautomation', name: 'modbus4j', version: '3.0.3'
-}

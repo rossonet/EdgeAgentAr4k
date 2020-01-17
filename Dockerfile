@@ -1,1 +1,1 @@
-ar4k-agent-base/Dockerfile
+./ar4k-agent-qa/Dockerfile

@@ -17,9 +17,10 @@ package org.ar4k.agent.iot.serial.cnc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
+import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.iot.serial.SerialService;
 import org.ar4k.agent.iot.serial.SerialStringMessage;
 import org.springframework.messaging.MessageHeaders;
@@ -42,14 +43,15 @@ public class CncService extends SerialService {
   private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
 
   @Override
-  public synchronized void loop() {
-    super.loop();
+  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+    super.updateAndGetStatus();
     conteggioLoop++;
     for (TriggerCommand c : configuration.cronCommands) {
       if (conteggioLoop % c.timer == 0) {
         this.getComPort().writeBytes(c.getBytesCommand(), c.getSizeBytesCommand());
       }
     }
+    return ServiceStates.RUNNING;
   }
 
   @Override
@@ -58,7 +60,7 @@ public class CncService extends SerialService {
   }
 
   @Override
-  public void setConfiguration(AbstractServiceConfig configuration) {
+  public void setConfiguration(ServiceConfig configuration) {
     super.setConfiguration(configuration);
     this.configuration = ((CncConfig) configuration);
   }
