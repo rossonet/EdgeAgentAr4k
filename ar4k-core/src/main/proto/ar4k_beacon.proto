@@ -105,10 +105,6 @@ enum AnimaStates {
  
 message Agent {
   string agentUniqueName = 1;
-  //string hardwareInfoAsJson = 2;
-  // string registerCode = 2; // ritornato in registrazione
-  //int32 pollingFrequency = 3;
-  //int64 timestampRegistration = 3;
 }
  
 message ConfigReply {
@@ -134,6 +130,7 @@ message RequestToAgent {
   repeated string words = 5;
   int32 wordIndex = 6;
   int32 position = 7;
+  RequestTunnelMessage tunnelRequest = 8;
 }
 
 enum CommandType {
@@ -156,6 +153,7 @@ message CommandReplyRequest {
   Agent agentDestination = 3;
   repeated string replies = 4;
   repeated string errors = 5;
+  ResponseNetworkChannel tunnelReply = 6;
 }
 
 message HealthRequest {
@@ -316,3 +314,47 @@ enum DataType {
   OBJECT = 9;
   UNKNOWN = 10;
 }
+
+service TunnelServiceV1 {
+  rpc openNetworkChannel(stream TunnelMessage) returns (stream TunnelMessage) {}
+  rpc RequestTunnel(RequestTunnelMessage) returns (ResponseNetworkChannel) {}
+}
+
+message TunnelMessage {
+  Agent agent = 1;
+  int64 targeId = 2;
+  bytes payload = 3;
+  repeated string errors = 4;
+  string uniqueId = 5;
+  int64 sessionId = 6;
+}
+
+message ResponseNetworkChannel {
+  string uniqueIdRequest = 1;
+  int64 targeId = 2;
+}
+
+message RequestTunnelMessage {
+  string uniqueIdRequest = 1;
+  Agent agentSender = 2;
+  Agent agentDestination = 3;
+  TunnelType mode = 4;
+  string destIp = 5;
+  int32 destPort = 6;
+  int32 srcPort = 7;
+  int32 socketSoTimeout = 8;
+  bool socketTcpNoDelay = 9;
+  bool socketKeepAlive = 10;
+  int32 socketReceiveBufferSize = 11;
+  bool socketReuseAddress = 12;
+  int32 socketTrafficClass = 13;
+  int32 socketQos = 14;
+}
+
+enum TunnelType {
+  SERVER_TO_BYTES_TCP = 0;
+  BYTES_TO_CLIENT_TCP = 1;
+  SERVER_TO_BYTES_UDP = 2;
+  BYTES_TO_CLIENT_UDP = 3;
+}
+

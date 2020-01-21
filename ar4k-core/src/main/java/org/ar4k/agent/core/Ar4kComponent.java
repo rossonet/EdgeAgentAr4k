@@ -8,11 +8,11 @@ import org.json.JSONObject;
 
 public interface Ar4kComponent extends AutoCloseable {
 
-  public static enum ServiceStates {
+  public static enum ServiceStatus {
     INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
   }
 
-  ServiceStates updateAndGetStatus() throws ServiceWatchDogException;
+  ServiceStatus updateAndGetStatus() throws ServiceWatchDogException;
 
   void init() throws ServiceInitException;
 

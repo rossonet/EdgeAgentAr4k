@@ -36,6 +36,7 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
   private AbstractSshConfig configuration = null;
 
   private JSch jsch = null;
+
   private Session session = null;
 
   protected Session connect() {
@@ -76,6 +77,14 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
       session.disconnect();
     session = null;
     jsch = null;
+  }
+
+  public JSch getJsch() {
+    return jsch;
+  }
+
+  public Session getSession() {
+    return session;
   }
 
 }

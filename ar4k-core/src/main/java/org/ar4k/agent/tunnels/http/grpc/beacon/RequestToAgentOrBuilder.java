@@ -77,4 +77,17 @@ public interface RequestToAgentOrBuilder extends
    * <code>int32 position = 7;</code>
    */
   int getPosition();
+
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  boolean hasTunnelRequest();
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getTunnelRequest();
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder getTunnelRequestOrBuilder();
 }

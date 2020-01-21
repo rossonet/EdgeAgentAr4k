@@ -3,8 +3,8 @@
 
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
-public interface CommandReplyRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:beacon.CommandReplyRequest)
+public interface RequestTunnelMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:beacon.RequestTunnelMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -44,53 +44,66 @@ public interface CommandReplyRequestOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentDestinationOrBuilder();
 
   /**
-   * <code>repeated string replies = 4;</code>
+   * <code>.beacon.TunnelType mode = 4;</code>
    */
-  java.util.List<java.lang.String>
-      getRepliesList();
+  int getModeValue();
   /**
-   * <code>repeated string replies = 4;</code>
+   * <code>.beacon.TunnelType mode = 4;</code>
    */
-  int getRepliesCount();
-  /**
-   * <code>repeated string replies = 4;</code>
-   */
-  java.lang.String getReplies(int index);
-  /**
-   * <code>repeated string replies = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getRepliesBytes(int index);
+  org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType getMode();
 
   /**
-   * <code>repeated string errors = 5;</code>
+   * <code>string destIp = 5;</code>
    */
-  java.util.List<java.lang.String>
-      getErrorsList();
+  java.lang.String getDestIp();
   /**
-   * <code>repeated string errors = 5;</code>
-   */
-  int getErrorsCount();
-  /**
-   * <code>repeated string errors = 5;</code>
-   */
-  java.lang.String getErrors(int index);
-  /**
-   * <code>repeated string errors = 5;</code>
+   * <code>string destIp = 5;</code>
    */
   com.google.protobuf.ByteString
-      getErrorsBytes(int index);
+      getDestIpBytes();
 
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 destPort = 6;</code>
    */
-  boolean hasTunnelReply();
+  int getDestPort();
+
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 srcPort = 7;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getTunnelReply();
+  int getSrcPort();
+
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 socketSoTimeout = 8;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder getTunnelReplyOrBuilder();
+  int getSocketSoTimeout();
+
+  /**
+   * <code>bool socketTcpNoDelay = 9;</code>
+   */
+  boolean getSocketTcpNoDelay();
+
+  /**
+   * <code>bool socketKeepAlive = 10;</code>
+   */
+  boolean getSocketKeepAlive();
+
+  /**
+   * <code>int32 socketReceiveBufferSize = 11;</code>
+   */
+  int getSocketReceiveBufferSize();
+
+  /**
+   * <code>bool socketReuseAddress = 12;</code>
+   */
+  boolean getSocketReuseAddress();
+
+  /**
+   * <code>int32 socketTrafficClass = 13;</code>
+   */
+  int getSocketTrafficClass();
+
+  /**
+   * <code>int32 socketQos = 14;</code>
+   */
+  int getSocketQos();
 }

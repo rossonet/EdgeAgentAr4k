@@ -43,7 +43,7 @@ public class CncService extends SerialService {
   private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
 
   @Override
-  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
     super.updateAndGetStatus();
     conteggioLoop++;
     for (TriggerCommand c : configuration.cronCommands) {
@@ -51,7 +51,7 @@ public class CncService extends SerialService {
         this.getComPort().writeBytes(c.getBytesCommand(), c.getSizeBytesCommand());
       }
     }
-    return ServiceStates.RUNNING;
+    return ServiceStatus.RUNNING;
   }
 
   @Override

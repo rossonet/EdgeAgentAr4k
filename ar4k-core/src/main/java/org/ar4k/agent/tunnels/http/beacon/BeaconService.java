@@ -77,7 +77,7 @@ public class BeaconService implements Ar4kComponent {
   }
 
   @Override
-  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
     if (beaconServer == null) {
       init();
     } else {
@@ -87,7 +87,7 @@ public class BeaconService implements Ar4kComponent {
         init();
       }
     }
-    return ServiceStates.RUNNING;
+    return ServiceStatus.RUNNING;
   }
 
   @Override

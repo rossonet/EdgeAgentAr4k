@@ -13,10 +13,13 @@ import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
@@ -25,6 +28,7 @@ import javax.security.cert.X509Certificate;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http.beacon.socket.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest;
@@ -46,10 +50,15 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType;
 
 import com.google.protobuf.ByteString;
 
@@ -78,10 +87,12 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private Server server = null;
   private int defaultPollTime = 6000;
   private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
-  private final List<BeaconAgent> agentLabelRegisterReplies = new ArrayList<>(); // elenco agenti connessi
+  private final List<BeaconAgent> agents = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;
   private transient Anima anima = null;
+
+  private transient final List<TunnelRunnerBeaconServer> tunnels = new LinkedList<>();
 
   private Thread process = null;
   private DatagramSocket socketFlashBeacon = null;
@@ -254,7 +265,8 @@ public class BeaconServer implements Runnable, AutoCloseable {
       logger.info("Starting beacon server txt mode");
       try {
         ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port);
-        server = serverBuilder.addService(new RpcService()).addService(new DataService()).build();
+        server = serverBuilder.addService(new RpcService()).addService(new TunnelService())
+            .addService(new DataService()).build();
       } catch (Exception e) {
         logger.logException(e);
       }
@@ -277,7 +289,8 @@ public class BeaconServer implements Runnable, AutoCloseable {
                 .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.OPTIONAL).build());
         server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
             .addService(new DataService()).build();
-        server = serverBuilder.addService(new RpcService()).addService(new DataService()).build();
+        server = serverBuilder.addService(new RpcService()).addService(new DataService())
+            .addService(new TunnelService()).build();
       } catch (Exception e) {
         logger.logException(e);
       }
@@ -405,7 +418,104 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   private class DataService extends DataServiceV1Grpc.DataServiceV1ImplBase {
+//TODO DATASERVICE
+  }
 
+  private class TunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplBase {
+
+    @Override
+    public StreamObserver<TunnelMessage> openNetworkChannel(StreamObserver<TunnelMessage> responseObserver) {
+      return new StreamObserver<TunnelMessage>() {
+
+        private TunnelRunnerBeaconServer target = null;
+        private Queue<TunnelMessage> onNextQueue = new ConcurrentLinkedQueue<>();
+
+        @Override
+        public void onNext(TunnelMessage value) {
+          if (value.getPayload() == null || value.getPayload().isEmpty()) {
+            logger.trace("Received on BeaconServer " + value);
+          } else {
+            logger.trace("Received on BeaconServer " + value.getPayload().toStringUtf8());
+          }
+          onNextQueue.add(value);
+          logger.trace("added to queue");
+          if (target == null) {
+            for (TunnelRunnerBeaconServer t : tunnels) {
+              logger.trace("searching target from: " + t);
+              if (value.getTargeId() == t.getTargeId()) {
+                target = t;
+                break;
+              }
+            }
+          }
+          logger.trace("From BeaconServer send to " + target);
+          if (target != null) {
+            while (!onNextQueue.isEmpty()) {
+              logger.trace("send message from queue");
+              target.onNext(onNextQueue.poll(), responseObserver);
+            }
+          } else {
+            logger.info(
+                "beacon server bytes in cache waiting " + value.getTargeId() + " connection: " + onNextQueue.size());
+          }
+        }
+
+        @Override
+        public void onError(Throwable t) {
+          logger.logException("Error on BeaconServer " + target, t);
+          if (target != null) {
+            target.onError(t, responseObserver);
+          }
+        }
+
+        @Override
+        public void onCompleted() {
+          logger.info("Complete stream on BeaconServer " + target);
+          if (target != null) {
+            target.onCompleted(responseObserver);
+          }
+        }
+
+      };
+    }
+
+    @Override
+    public void requestTunnel(RequestTunnelMessage request, StreamObserver<ResponseNetworkChannel> responseObserver) {
+      logger.info("Beacon client require tunnel -> " + request);
+      try {
+        String idRequest = UUID.randomUUID().toString();
+        logger.debug("searching in " + agents.size() + " agents");
+        for (BeaconAgent at : agents) {
+          if (at.getAgentUniqueName().equals(request.getAgentDestination().getAgentUniqueName())) {
+            RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
+                .setUniqueIdRequest(idRequest).setType(CommandType.EXPOSE_PORT).setTunnelRequest(request).build();
+            at.addRequestForAgent(rta);
+            logger.debug("Required client tunnel to agent target -> " + rta);
+            break;
+          }
+        }
+        CommandReplyRequest cmdReply = waitReply(idRequest, defaultTimeOut);
+        ResponseNetworkChannel channelCreated = cmdReply.getTunnelReply();
+        logger.debug("Beacon client tunnel reply -> " + channelCreated);
+        TunnelRunnerBeaconServer tunnelRunner = new TunnelRunnerBeaconServer(channelCreated.getTargeId(), request,
+            channelCreated);
+        tunnelRunner.setActive(true);
+        if (request.getMode().equals(TunnelType.SERVER_TO_BYTES_TCP)
+            || request.getMode().equals(TunnelType.SERVER_TO_BYTES_UDP)) {
+          tunnelRunner.setServerAgent(request.getAgentDestination());
+          tunnelRunner.setClientAgent(request.getAgentSender());
+        } else if (request.getMode().equals(TunnelType.BYTES_TO_CLIENT_TCP)
+            || request.getMode().equals(TunnelType.BYTES_TO_CLIENT_UDP)) {
+          tunnelRunner.setServerAgent(request.getAgentSender());
+          tunnelRunner.setClientAgent(request.getAgentDestination());
+        }
+        tunnels.add(tunnelRunner);
+        responseObserver.onNext(channelCreated);
+        responseObserver.onCompleted();
+      } catch (Exception e) {
+        logger.logException(e);
+      }
+    }
   }
 
   private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
@@ -441,7 +551,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
                 .getBytes(Charset.forName("UTF-8"))));
         RegisterReply reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
             .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
-        agentLabelRegisterReplies.add(new BeaconAgent(request, reply));
+        agents.add(new BeaconAgent(request, reply));
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
       } catch (Exception a) {
@@ -453,7 +563,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     public void listAgents(Empty request, StreamObserver<ListAgentsReply> responseObserver) {
       try {
         List<Agent> values = new ArrayList<>();
-        for (BeaconAgent r : agentLabelRegisterReplies) {
+        for (BeaconAgent r : agents) {
           Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName()).build();
           values.add(a);
         }
@@ -512,7 +622,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     public void pollingCmdQueue(Agent request, StreamObserver<FlowMessage> responseObserver) {
       try {
         List<RequestToAgent> values = new ArrayList<>();
-        for (BeaconAgent at : agentLabelRegisterReplies) {
+        for (BeaconAgent at : agents) {
           if (at.getAgentUniqueName().equals(request.getAgentUniqueName())) {
             values.addAll(at.getCommandsToBeExecute());
             break;
@@ -530,7 +640,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     public void completeCommand(CompleteCommandRequest request, StreamObserver<CompleteCommandReply> responseObserver) {
       try {
         String idRequest = UUID.randomUUID().toString();
-        for (BeaconAgent at : agentLabelRegisterReplies) {
+        for (BeaconAgent at : agents) {
           if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
             RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
                 .setUniqueIdRequest(idRequest).setType(CommandType.COMPLETE_COMMAND).addAllWords(request.getWordsList())
@@ -560,7 +670,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
         StreamObserver<ElaborateMessageReply> responseObserver) {
       try {
         String idRequest = UUID.randomUUID().toString();
-        for (BeaconAgent at : agentLabelRegisterReplies) {
+        for (BeaconAgent at : agents) {
           if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
             RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
                 .setUniqueIdRequest(idRequest).setType(CommandType.ELABORATE_MESSAGE_COMMAND)
@@ -589,7 +699,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     public void listCommands(ListCommandsRequest request, StreamObserver<ListCommandsReply> responseObserver) {
       try {
         String idRequest = UUID.randomUUID().toString();
-        for (BeaconAgent at : agentLabelRegisterReplies) {
+        for (BeaconAgent at : agents) {
           if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
             RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
                 .setUniqueIdRequest(idRequest).setType(CommandType.LIST_COMMANDS).build();
@@ -613,6 +723,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
         logger.logException(e);
       }
     }
+
   }
 
   public String getStatus() {
@@ -653,7 +764,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   public List<BeaconAgent> getAgentLabelRegisterReplies() {
-    return agentLabelRegisterReplies;
+    return agents;
   }
 
   @Override
@@ -750,7 +861,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     this.stringDiscovery = stringDiscovery;
   }
 
-  public static long getDefaulttimeout() {
+  public static long getDefaultTimeout() {
     return defaultTimeOut;
   }
 
@@ -773,8 +884,8 @@ public class BeaconServer implements Runnable, AutoCloseable {
   @Override
   public void close() {
     stop();
-    if (agentLabelRegisterReplies != null) {
-      agentLabelRegisterReplies.clear();
+    if (agents != null) {
+      agents.clear();
     }
     if (listAgentRequest != null) {
       listAgentRequest.clear();
@@ -786,9 +897,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
   public String toString() {
     return "BeaconServer [port=" + port + ", server=" + server + ", defaultPollTime=" + defaultPollTime
         + ", defaultBeaconFlashMoltiplicator=" + defaultBeaconFlashMoltiplicator + ", agentLabelRegisterReplies="
-        + agentLabelRegisterReplies + ", acceptAllCerts=" + acceptAllCerts + ", running=" + running + ", discoveryPort="
-        + discoveryPort + ", broadcastAddress=" + broadcastAddress + ", stringDiscovery=" + stringDiscovery
-        + ", certChainFile=" + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
+        + agents + ", acceptAllCerts=" + acceptAllCerts + ", running=" + running + ", discoveryPort=" + discoveryPort
+        + ", broadcastAddress=" + broadcastAddress + ", stringDiscovery=" + stringDiscovery + ", certChainFile="
+        + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
         + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
   }
 

@@ -96,6 +96,19 @@ private static final long serialVersionUID = 0L;
             position_ = input.readInt32();
             break;
           }
+          case 66: {
+            org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder subBuilder = null;
+            if (tunnelRequest_ != null) {
+              subBuilder = tunnelRequest_.toBuilder();
+            }
+            tunnelRequest_ = input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(tunnelRequest_);
+              tunnelRequest_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -285,6 +298,27 @@ private static final long serialVersionUID = 0L;
     return position_;
   }
 
+  public static final int TUNNELREQUEST_FIELD_NUMBER = 8;
+  private org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage tunnelRequest_;
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  public boolean hasTunnelRequest() {
+    return tunnelRequest_ != null;
+  }
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getTunnelRequest() {
+    return tunnelRequest_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.getDefaultInstance() : tunnelRequest_;
+  }
+  /**
+   * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder getTunnelRequestOrBuilder() {
+    return getTunnelRequest();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -319,6 +353,9 @@ private static final long serialVersionUID = 0L;
     }
     if (position_ != 0) {
       output.writeInt32(7, position_);
+    }
+    if (tunnelRequest_ != null) {
+      output.writeMessage(8, getTunnelRequest());
     }
     unknownFields.writeTo(output);
   }
@@ -359,6 +396,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(7, position_);
     }
+    if (tunnelRequest_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(8, getTunnelRequest());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -390,6 +431,11 @@ private static final long serialVersionUID = 0L;
         != other.getWordIndex()) return false;
     if (getPosition()
         != other.getPosition()) return false;
+    if (hasTunnelRequest() != other.hasTunnelRequest()) return false;
+    if (hasTunnelRequest()) {
+      if (!getTunnelRequest()
+          .equals(other.getTunnelRequest())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -419,6 +465,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getWordIndex();
     hash = (37 * hash) + POSITION_FIELD_NUMBER;
     hash = (53 * hash) + getPosition();
+    if (hasTunnelRequest()) {
+      hash = (37 * hash) + TUNNELREQUEST_FIELD_NUMBER;
+      hash = (53 * hash) + getTunnelRequest().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -570,6 +620,12 @@ private static final long serialVersionUID = 0L;
 
       position_ = 0;
 
+      if (tunnelRequestBuilder_ == null) {
+        tunnelRequest_ = null;
+      } else {
+        tunnelRequest_ = null;
+        tunnelRequestBuilder_ = null;
+      }
       return this;
     }
 
@@ -613,6 +669,11 @@ private static final long serialVersionUID = 0L;
       result.words_ = words_;
       result.wordIndex_ = wordIndex_;
       result.position_ = position_;
+      if (tunnelRequestBuilder_ == null) {
+        result.tunnelRequest_ = tunnelRequest_;
+      } else {
+        result.tunnelRequest_ = tunnelRequestBuilder_.build();
+      }
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -691,6 +752,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getPosition() != 0) {
         setPosition(other.getPosition());
+      }
+      if (other.hasTunnelRequest()) {
+        mergeTunnelRequest(other.getTunnelRequest());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1166,6 +1230,123 @@ private static final long serialVersionUID = 0L;
       position_ = 0;
       onChanged();
       return this;
+    }
+
+    private org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage tunnelRequest_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder> tunnelRequestBuilder_;
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public boolean hasTunnelRequest() {
+      return tunnelRequestBuilder_ != null || tunnelRequest_ != null;
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getTunnelRequest() {
+      if (tunnelRequestBuilder_ == null) {
+        return tunnelRequest_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.getDefaultInstance() : tunnelRequest_;
+      } else {
+        return tunnelRequestBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public Builder setTunnelRequest(org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage value) {
+      if (tunnelRequestBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        tunnelRequest_ = value;
+        onChanged();
+      } else {
+        tunnelRequestBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public Builder setTunnelRequest(
+        org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder builderForValue) {
+      if (tunnelRequestBuilder_ == null) {
+        tunnelRequest_ = builderForValue.build();
+        onChanged();
+      } else {
+        tunnelRequestBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public Builder mergeTunnelRequest(org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage value) {
+      if (tunnelRequestBuilder_ == null) {
+        if (tunnelRequest_ != null) {
+          tunnelRequest_ =
+            org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.newBuilder(tunnelRequest_).mergeFrom(value).buildPartial();
+        } else {
+          tunnelRequest_ = value;
+        }
+        onChanged();
+      } else {
+        tunnelRequestBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public Builder clearTunnelRequest() {
+      if (tunnelRequestBuilder_ == null) {
+        tunnelRequest_ = null;
+        onChanged();
+      } else {
+        tunnelRequest_ = null;
+        tunnelRequestBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder getTunnelRequestBuilder() {
+      
+      onChanged();
+      return getTunnelRequestFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder getTunnelRequestOrBuilder() {
+      if (tunnelRequestBuilder_ != null) {
+        return tunnelRequestBuilder_.getMessageOrBuilder();
+      } else {
+        return tunnelRequest_ == null ?
+            org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.getDefaultInstance() : tunnelRequest_;
+      }
+    }
+    /**
+     * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder> 
+        getTunnelRequestFieldBuilder() {
+      if (tunnelRequestBuilder_ == null) {
+        tunnelRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder>(
+                getTunnelRequest(),
+                getParentForChildren(),
+                isClean());
+        tunnelRequest_ = null;
+      }
+      return tunnelRequestBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

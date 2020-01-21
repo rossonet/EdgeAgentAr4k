@@ -98,7 +98,6 @@ public class AnimaStateMachineConfig extends EnumStateMachineConfigurerAdapter<A
         }
         if (anima.getState().equals(AnimaStates.RUNNING)) {
           anima.runPreScript();
-          // anima.runPots();
           anima.runServices();
           anima.runPostScript();
           anima.startCheckingNextConfig();

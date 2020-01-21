@@ -74,7 +74,7 @@ public class Ar4kLogger implements Logger {
     return response;
   }
 
-  public static String stackTraceToString(Exception a, int numLines) {
+  public static String stackTraceToString(Throwable a, int numLines) {
     try {
       List<String> lines = Arrays.asList(stackTraceToString(a).split("\n"));
       ArrayList<String> al = new ArrayList<>(lines.subList(0, Math.min(lines.size(), numLines)));
@@ -84,13 +84,12 @@ public class Ar4kLogger implements Logger {
       }
       return returnString.toString();
     } catch (Exception n) {
-      n.printStackTrace();
       return stackTraceToString(a);
     }
 
   }
 
-  public void logException(Exception e) {
+  public void logException(Throwable e) {
     Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
@@ -99,7 +98,7 @@ public class Ar4kLogger implements Logger {
     sendEvent(LogLevel.EXCEPTION, o);
   }
 
-  public void logExceptionDebug(Exception e) {
+  public void logExceptionDebug(Throwable e) {
     Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("exception", stackTraceToString(e));
@@ -108,7 +107,7 @@ public class Ar4kLogger implements Logger {
     sendEvent(LogLevel.DEBUG, o);
   }
 
-  public void logException(String error, Exception e) {
+  public void logException(String error, Throwable e) {
     Map<String, Object> o = new HashMap<>();
     o.put("msg", e.getMessage());
     o.put("error", error);

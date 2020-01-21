@@ -4,21 +4,21 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf type {@code beacon.CommandReplyRequest}
+ * Protobuf type {@code beacon.RequestTunnelMessage}
  */
-public  final class CommandReplyRequest extends
+public  final class RequestTunnelMessage extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:beacon.CommandReplyRequest)
-    CommandReplyRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:beacon.RequestTunnelMessage)
+    RequestTunnelMessageOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use CommandReplyRequest.newBuilder() to construct.
-  private CommandReplyRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use RequestTunnelMessage.newBuilder() to construct.
+  private RequestTunnelMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private CommandReplyRequest() {
+  private RequestTunnelMessage() {
     uniqueIdRequest_ = "";
-    replies_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    mode_ = 0;
+    destIp_ = "";
   }
 
   @java.lang.Override
@@ -26,7 +26,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private CommandReplyRequest(
+  private RequestTunnelMessage(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -77,35 +77,61 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-            if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-              replies_ = new com.google.protobuf.LazyStringArrayList();
-              mutable_bitField0_ |= 0x00000008;
-            }
-            replies_.add(s);
+          case 32: {
+            int rawValue = input.readEnum();
+
+            mode_ = rawValue;
             break;
           }
           case 42: {
             java.lang.String s = input.readStringRequireUtf8();
-            if (!((mutable_bitField0_ & 0x00000010) != 0)) {
-              errors_ = new com.google.protobuf.LazyStringArrayList();
-              mutable_bitField0_ |= 0x00000010;
-            }
-            errors_.add(s);
+
+            destIp_ = s;
             break;
           }
-          case 50: {
-            org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder subBuilder = null;
-            if (tunnelReply_ != null) {
-              subBuilder = tunnelReply_.toBuilder();
-            }
-            tunnelReply_ = input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(tunnelReply_);
-              tunnelReply_ = subBuilder.buildPartial();
-            }
+          case 48: {
 
+            destPort_ = input.readInt32();
+            break;
+          }
+          case 56: {
+
+            srcPort_ = input.readInt32();
+            break;
+          }
+          case 64: {
+
+            socketSoTimeout_ = input.readInt32();
+            break;
+          }
+          case 72: {
+
+            socketTcpNoDelay_ = input.readBool();
+            break;
+          }
+          case 80: {
+
+            socketKeepAlive_ = input.readBool();
+            break;
+          }
+          case 88: {
+
+            socketReceiveBufferSize_ = input.readInt32();
+            break;
+          }
+          case 96: {
+
+            socketReuseAddress_ = input.readBool();
+            break;
+          }
+          case 104: {
+
+            socketTrafficClass_ = input.readInt32();
+            break;
+          }
+          case 112: {
+
+            socketQos_ = input.readInt32();
             break;
           }
           default: {
@@ -123,30 +149,23 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000008) != 0)) {
-        replies_ = replies_.getUnmodifiableView();
-      }
-      if (((mutable_bitField0_ & 0x00000010) != 0)) {
-        errors_ = errors_.getUnmodifiableView();
-      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_CommandReplyRequest_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_RequestTunnelMessage_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_CommandReplyRequest_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_RequestTunnelMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.Builder.class);
+            org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.class, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder.class);
   }
 
-  private int bitField0_;
   public static final int UNIQUEIDREQUEST_FIELD_NUMBER = 1;
   private volatile java.lang.Object uniqueIdRequest_;
   /**
@@ -223,83 +242,136 @@ private static final long serialVersionUID = 0L;
     return getAgentDestination();
   }
 
-  public static final int REPLIES_FIELD_NUMBER = 4;
-  private com.google.protobuf.LazyStringList replies_;
+  public static final int MODE_FIELD_NUMBER = 4;
+  private int mode_;
   /**
-   * <code>repeated string replies = 4;</code>
+   * <code>.beacon.TunnelType mode = 4;</code>
    */
-  public com.google.protobuf.ProtocolStringList
-      getRepliesList() {
-    return replies_;
+  public int getModeValue() {
+    return mode_;
   }
   /**
-   * <code>repeated string replies = 4;</code>
+   * <code>.beacon.TunnelType mode = 4;</code>
    */
-  public int getRepliesCount() {
-    return replies_.size();
-  }
-  /**
-   * <code>repeated string replies = 4;</code>
-   */
-  public java.lang.String getReplies(int index) {
-    return replies_.get(index);
-  }
-  /**
-   * <code>repeated string replies = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getRepliesBytes(int index) {
-    return replies_.getByteString(index);
+  public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType getMode() {
+    @SuppressWarnings("deprecation")
+    org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType result = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.valueOf(mode_);
+    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.UNRECOGNIZED : result;
   }
 
-  public static final int ERRORS_FIELD_NUMBER = 5;
-  private com.google.protobuf.LazyStringList errors_;
+  public static final int DESTIP_FIELD_NUMBER = 5;
+  private volatile java.lang.Object destIp_;
   /**
-   * <code>repeated string errors = 5;</code>
+   * <code>string destIp = 5;</code>
    */
-  public com.google.protobuf.ProtocolStringList
-      getErrorsList() {
-    return errors_;
+  public java.lang.String getDestIp() {
+    java.lang.Object ref = destIp_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      destIp_ = s;
+      return s;
+    }
   }
   /**
-   * <code>repeated string errors = 5;</code>
-   */
-  public int getErrorsCount() {
-    return errors_.size();
-  }
-  /**
-   * <code>repeated string errors = 5;</code>
-   */
-  public java.lang.String getErrors(int index) {
-    return errors_.get(index);
-  }
-  /**
-   * <code>repeated string errors = 5;</code>
+   * <code>string destIp = 5;</code>
    */
   public com.google.protobuf.ByteString
-      getErrorsBytes(int index) {
-    return errors_.getByteString(index);
+      getDestIpBytes() {
+    java.lang.Object ref = destIp_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      destIp_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
-  public static final int TUNNELREPLY_FIELD_NUMBER = 6;
-  private org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel tunnelReply_;
+  public static final int DESTPORT_FIELD_NUMBER = 6;
+  private int destPort_;
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 destPort = 6;</code>
    */
-  public boolean hasTunnelReply() {
-    return tunnelReply_ != null;
+  public int getDestPort() {
+    return destPort_;
   }
+
+  public static final int SRCPORT_FIELD_NUMBER = 7;
+  private int srcPort_;
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 srcPort = 7;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getTunnelReply() {
-    return tunnelReply_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.getDefaultInstance() : tunnelReply_;
+  public int getSrcPort() {
+    return srcPort_;
   }
+
+  public static final int SOCKETSOTIMEOUT_FIELD_NUMBER = 8;
+  private int socketSoTimeout_;
   /**
-   * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+   * <code>int32 socketSoTimeout = 8;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder getTunnelReplyOrBuilder() {
-    return getTunnelReply();
+  public int getSocketSoTimeout() {
+    return socketSoTimeout_;
+  }
+
+  public static final int SOCKETTCPNODELAY_FIELD_NUMBER = 9;
+  private boolean socketTcpNoDelay_;
+  /**
+   * <code>bool socketTcpNoDelay = 9;</code>
+   */
+  public boolean getSocketTcpNoDelay() {
+    return socketTcpNoDelay_;
+  }
+
+  public static final int SOCKETKEEPALIVE_FIELD_NUMBER = 10;
+  private boolean socketKeepAlive_;
+  /**
+   * <code>bool socketKeepAlive = 10;</code>
+   */
+  public boolean getSocketKeepAlive() {
+    return socketKeepAlive_;
+  }
+
+  public static final int SOCKETRECEIVEBUFFERSIZE_FIELD_NUMBER = 11;
+  private int socketReceiveBufferSize_;
+  /**
+   * <code>int32 socketReceiveBufferSize = 11;</code>
+   */
+  public int getSocketReceiveBufferSize() {
+    return socketReceiveBufferSize_;
+  }
+
+  public static final int SOCKETREUSEADDRESS_FIELD_NUMBER = 12;
+  private boolean socketReuseAddress_;
+  /**
+   * <code>bool socketReuseAddress = 12;</code>
+   */
+  public boolean getSocketReuseAddress() {
+    return socketReuseAddress_;
+  }
+
+  public static final int SOCKETTRAFFICCLASS_FIELD_NUMBER = 13;
+  private int socketTrafficClass_;
+  /**
+   * <code>int32 socketTrafficClass = 13;</code>
+   */
+  public int getSocketTrafficClass() {
+    return socketTrafficClass_;
+  }
+
+  public static final int SOCKETQOS_FIELD_NUMBER = 14;
+  private int socketQos_;
+  /**
+   * <code>int32 socketQos = 14;</code>
+   */
+  public int getSocketQos() {
+    return socketQos_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -325,14 +397,38 @@ private static final long serialVersionUID = 0L;
     if (agentDestination_ != null) {
       output.writeMessage(3, getAgentDestination());
     }
-    for (int i = 0; i < replies_.size(); i++) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, replies_.getRaw(i));
+    if (mode_ != org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.SERVER_TO_BYTES_TCP.getNumber()) {
+      output.writeEnum(4, mode_);
     }
-    for (int i = 0; i < errors_.size(); i++) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, errors_.getRaw(i));
+    if (!getDestIpBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, destIp_);
     }
-    if (tunnelReply_ != null) {
-      output.writeMessage(6, getTunnelReply());
+    if (destPort_ != 0) {
+      output.writeInt32(6, destPort_);
+    }
+    if (srcPort_ != 0) {
+      output.writeInt32(7, srcPort_);
+    }
+    if (socketSoTimeout_ != 0) {
+      output.writeInt32(8, socketSoTimeout_);
+    }
+    if (socketTcpNoDelay_ != false) {
+      output.writeBool(9, socketTcpNoDelay_);
+    }
+    if (socketKeepAlive_ != false) {
+      output.writeBool(10, socketKeepAlive_);
+    }
+    if (socketReceiveBufferSize_ != 0) {
+      output.writeInt32(11, socketReceiveBufferSize_);
+    }
+    if (socketReuseAddress_ != false) {
+      output.writeBool(12, socketReuseAddress_);
+    }
+    if (socketTrafficClass_ != 0) {
+      output.writeInt32(13, socketTrafficClass_);
+    }
+    if (socketQos_ != 0) {
+      output.writeInt32(14, socketQos_);
     }
     unknownFields.writeTo(output);
   }
@@ -354,25 +450,48 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getAgentDestination());
     }
-    {
-      int dataSize = 0;
-      for (int i = 0; i < replies_.size(); i++) {
-        dataSize += computeStringSizeNoTag(replies_.getRaw(i));
-      }
-      size += dataSize;
-      size += 1 * getRepliesList().size();
-    }
-    {
-      int dataSize = 0;
-      for (int i = 0; i < errors_.size(); i++) {
-        dataSize += computeStringSizeNoTag(errors_.getRaw(i));
-      }
-      size += dataSize;
-      size += 1 * getErrorsList().size();
-    }
-    if (tunnelReply_ != null) {
+    if (mode_ != org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.SERVER_TO_BYTES_TCP.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getTunnelReply());
+        .computeEnumSize(4, mode_);
+    }
+    if (!getDestIpBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, destIp_);
+    }
+    if (destPort_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, destPort_);
+    }
+    if (srcPort_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(7, srcPort_);
+    }
+    if (socketSoTimeout_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(8, socketSoTimeout_);
+    }
+    if (socketTcpNoDelay_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(9, socketTcpNoDelay_);
+    }
+    if (socketKeepAlive_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(10, socketKeepAlive_);
+    }
+    if (socketReceiveBufferSize_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(11, socketReceiveBufferSize_);
+    }
+    if (socketReuseAddress_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(12, socketReuseAddress_);
+    }
+    if (socketTrafficClass_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(13, socketTrafficClass_);
+    }
+    if (socketQos_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(14, socketQos_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -384,10 +503,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest)) {
+    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage)) {
       return super.equals(obj);
     }
-    org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest other = (org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest) obj;
+    org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage other = (org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage) obj;
 
     if (!getUniqueIdRequest()
         .equals(other.getUniqueIdRequest())) return false;
@@ -401,15 +520,27 @@ private static final long serialVersionUID = 0L;
       if (!getAgentDestination()
           .equals(other.getAgentDestination())) return false;
     }
-    if (!getRepliesList()
-        .equals(other.getRepliesList())) return false;
-    if (!getErrorsList()
-        .equals(other.getErrorsList())) return false;
-    if (hasTunnelReply() != other.hasTunnelReply()) return false;
-    if (hasTunnelReply()) {
-      if (!getTunnelReply()
-          .equals(other.getTunnelReply())) return false;
-    }
+    if (mode_ != other.mode_) return false;
+    if (!getDestIp()
+        .equals(other.getDestIp())) return false;
+    if (getDestPort()
+        != other.getDestPort()) return false;
+    if (getSrcPort()
+        != other.getSrcPort()) return false;
+    if (getSocketSoTimeout()
+        != other.getSocketSoTimeout()) return false;
+    if (getSocketTcpNoDelay()
+        != other.getSocketTcpNoDelay()) return false;
+    if (getSocketKeepAlive()
+        != other.getSocketKeepAlive()) return false;
+    if (getSocketReceiveBufferSize()
+        != other.getSocketReceiveBufferSize()) return false;
+    if (getSocketReuseAddress()
+        != other.getSocketReuseAddress()) return false;
+    if (getSocketTrafficClass()
+        != other.getSocketTrafficClass()) return false;
+    if (getSocketQos()
+        != other.getSocketQos()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -431,86 +562,99 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + AGENTDESTINATION_FIELD_NUMBER;
       hash = (53 * hash) + getAgentDestination().hashCode();
     }
-    if (getRepliesCount() > 0) {
-      hash = (37 * hash) + REPLIES_FIELD_NUMBER;
-      hash = (53 * hash) + getRepliesList().hashCode();
-    }
-    if (getErrorsCount() > 0) {
-      hash = (37 * hash) + ERRORS_FIELD_NUMBER;
-      hash = (53 * hash) + getErrorsList().hashCode();
-    }
-    if (hasTunnelReply()) {
-      hash = (37 * hash) + TUNNELREPLY_FIELD_NUMBER;
-      hash = (53 * hash) + getTunnelReply().hashCode();
-    }
+    hash = (37 * hash) + MODE_FIELD_NUMBER;
+    hash = (53 * hash) + mode_;
+    hash = (37 * hash) + DESTIP_FIELD_NUMBER;
+    hash = (53 * hash) + getDestIp().hashCode();
+    hash = (37 * hash) + DESTPORT_FIELD_NUMBER;
+    hash = (53 * hash) + getDestPort();
+    hash = (37 * hash) + SRCPORT_FIELD_NUMBER;
+    hash = (53 * hash) + getSrcPort();
+    hash = (37 * hash) + SOCKETSOTIMEOUT_FIELD_NUMBER;
+    hash = (53 * hash) + getSocketSoTimeout();
+    hash = (37 * hash) + SOCKETTCPNODELAY_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getSocketTcpNoDelay());
+    hash = (37 * hash) + SOCKETKEEPALIVE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getSocketKeepAlive());
+    hash = (37 * hash) + SOCKETRECEIVEBUFFERSIZE_FIELD_NUMBER;
+    hash = (53 * hash) + getSocketReceiveBufferSize();
+    hash = (37 * hash) + SOCKETREUSEADDRESS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getSocketReuseAddress());
+    hash = (37 * hash) + SOCKETTRAFFICCLASS_FIELD_NUMBER;
+    hash = (53 * hash) + getSocketTrafficClass();
+    hash = (37 * hash) + SOCKETQOS_FIELD_NUMBER;
+    hash = (53 * hash) + getSocketQos();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(byte[] data)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseDelimitedFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseDelimitedFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -523,7 +667,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest prototype) {
+  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -539,26 +683,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code beacon.CommandReplyRequest}
+   * Protobuf type {@code beacon.RequestTunnelMessage}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:beacon.CommandReplyRequest)
-      org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:beacon.RequestTunnelMessage)
+      org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_CommandReplyRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_RequestTunnelMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_CommandReplyRequest_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_RequestTunnelMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.class, org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.Builder.class);
+              org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.class, org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -590,33 +734,45 @@ private static final long serialVersionUID = 0L;
         agentDestination_ = null;
         agentDestinationBuilder_ = null;
       }
-      replies_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000008);
-      errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000010);
-      if (tunnelReplyBuilder_ == null) {
-        tunnelReply_ = null;
-      } else {
-        tunnelReply_ = null;
-        tunnelReplyBuilder_ = null;
-      }
+      mode_ = 0;
+
+      destIp_ = "";
+
+      destPort_ = 0;
+
+      srcPort_ = 0;
+
+      socketSoTimeout_ = 0;
+
+      socketTcpNoDelay_ = false;
+
+      socketKeepAlive_ = false;
+
+      socketReceiveBufferSize_ = 0;
+
+      socketReuseAddress_ = false;
+
+      socketTrafficClass_ = 0;
+
+      socketQos_ = 0;
+
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_CommandReplyRequest_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_RequestTunnelMessage_descriptor;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest getDefaultInstanceForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.getDefaultInstance();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getDefaultInstanceForType() {
+      return org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest build() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest result = buildPartial();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage build() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -624,10 +780,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest buildPartial() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest result = new org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage buildPartial() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage result = new org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage(this);
       result.uniqueIdRequest_ = uniqueIdRequest_;
       if (agentSenderBuilder_ == null) {
         result.agentSender_ = agentSender_;
@@ -639,22 +793,17 @@ private static final long serialVersionUID = 0L;
       } else {
         result.agentDestination_ = agentDestinationBuilder_.build();
       }
-      if (((bitField0_ & 0x00000008) != 0)) {
-        replies_ = replies_.getUnmodifiableView();
-        bitField0_ = (bitField0_ & ~0x00000008);
-      }
-      result.replies_ = replies_;
-      if (((bitField0_ & 0x00000010) != 0)) {
-        errors_ = errors_.getUnmodifiableView();
-        bitField0_ = (bitField0_ & ~0x00000010);
-      }
-      result.errors_ = errors_;
-      if (tunnelReplyBuilder_ == null) {
-        result.tunnelReply_ = tunnelReply_;
-      } else {
-        result.tunnelReply_ = tunnelReplyBuilder_.build();
-      }
-      result.bitField0_ = to_bitField0_;
+      result.mode_ = mode_;
+      result.destIp_ = destIp_;
+      result.destPort_ = destPort_;
+      result.srcPort_ = srcPort_;
+      result.socketSoTimeout_ = socketSoTimeout_;
+      result.socketTcpNoDelay_ = socketTcpNoDelay_;
+      result.socketKeepAlive_ = socketKeepAlive_;
+      result.socketReceiveBufferSize_ = socketReceiveBufferSize_;
+      result.socketReuseAddress_ = socketReuseAddress_;
+      result.socketTrafficClass_ = socketTrafficClass_;
+      result.socketQos_ = socketQos_;
       onBuilt();
       return result;
     }
@@ -693,16 +842,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest) {
-        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest)other);
+      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage) {
+        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest other) {
-      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage other) {
+      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.getDefaultInstance()) return this;
       if (!other.getUniqueIdRequest().isEmpty()) {
         uniqueIdRequest_ = other.uniqueIdRequest_;
         onChanged();
@@ -713,28 +862,39 @@ private static final long serialVersionUID = 0L;
       if (other.hasAgentDestination()) {
         mergeAgentDestination(other.getAgentDestination());
       }
-      if (!other.replies_.isEmpty()) {
-        if (replies_.isEmpty()) {
-          replies_ = other.replies_;
-          bitField0_ = (bitField0_ & ~0x00000008);
-        } else {
-          ensureRepliesIsMutable();
-          replies_.addAll(other.replies_);
-        }
+      if (other.mode_ != 0) {
+        setModeValue(other.getModeValue());
+      }
+      if (!other.getDestIp().isEmpty()) {
+        destIp_ = other.destIp_;
         onChanged();
       }
-      if (!other.errors_.isEmpty()) {
-        if (errors_.isEmpty()) {
-          errors_ = other.errors_;
-          bitField0_ = (bitField0_ & ~0x00000010);
-        } else {
-          ensureErrorsIsMutable();
-          errors_.addAll(other.errors_);
-        }
-        onChanged();
+      if (other.getDestPort() != 0) {
+        setDestPort(other.getDestPort());
       }
-      if (other.hasTunnelReply()) {
-        mergeTunnelReply(other.getTunnelReply());
+      if (other.getSrcPort() != 0) {
+        setSrcPort(other.getSrcPort());
+      }
+      if (other.getSocketSoTimeout() != 0) {
+        setSocketSoTimeout(other.getSocketSoTimeout());
+      }
+      if (other.getSocketTcpNoDelay() != false) {
+        setSocketTcpNoDelay(other.getSocketTcpNoDelay());
+      }
+      if (other.getSocketKeepAlive() != false) {
+        setSocketKeepAlive(other.getSocketKeepAlive());
+      }
+      if (other.getSocketReceiveBufferSize() != 0) {
+        setSocketReceiveBufferSize(other.getSocketReceiveBufferSize());
+      }
+      if (other.getSocketReuseAddress() != false) {
+        setSocketReuseAddress(other.getSocketReuseAddress());
+      }
+      if (other.getSocketTrafficClass() != 0) {
+        setSocketTrafficClass(other.getSocketTrafficClass());
+      }
+      if (other.getSocketQos() != 0) {
+        setSocketQos(other.getSocketQos());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -751,11 +911,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest parsedMessage = null;
+      org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest) e.getUnfinishedMessage();
+        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -764,7 +924,6 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
-    private int bitField0_;
 
     private java.lang.Object uniqueIdRequest_ = "";
     /**
@@ -1069,309 +1228,352 @@ private static final long serialVersionUID = 0L;
       return agentDestinationBuilder_;
     }
 
-    private com.google.protobuf.LazyStringList replies_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    private void ensureRepliesIsMutable() {
-      if (!((bitField0_ & 0x00000008) != 0)) {
-        replies_ = new com.google.protobuf.LazyStringArrayList(replies_);
-        bitField0_ |= 0x00000008;
-       }
+    private int mode_ = 0;
+    /**
+     * <code>.beacon.TunnelType mode = 4;</code>
+     */
+    public int getModeValue() {
+      return mode_;
     }
     /**
-     * <code>repeated string replies = 4;</code>
+     * <code>.beacon.TunnelType mode = 4;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getRepliesList() {
-      return replies_.getUnmodifiableView();
+    public Builder setModeValue(int value) {
+      mode_ = value;
+      onChanged();
+      return this;
     }
     /**
-     * <code>repeated string replies = 4;</code>
+     * <code>.beacon.TunnelType mode = 4;</code>
      */
-    public int getRepliesCount() {
-      return replies_.size();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType getMode() {
+      @SuppressWarnings("deprecation")
+      org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType result = org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.valueOf(mode_);
+      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType.UNRECOGNIZED : result;
     }
     /**
-     * <code>repeated string replies = 4;</code>
+     * <code>.beacon.TunnelType mode = 4;</code>
      */
-    public java.lang.String getReplies(int index) {
-      return replies_.get(index);
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getRepliesBytes(int index) {
-      return replies_.getByteString(index);
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public Builder setReplies(
-        int index, java.lang.String value) {
+    public Builder setMode(org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRepliesIsMutable();
-      replies_.set(index, value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public Builder addReplies(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRepliesIsMutable();
-      replies_.add(value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public Builder addAllReplies(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureRepliesIsMutable();
-      com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, replies_);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public Builder clearReplies() {
-      replies_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000008);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string replies = 4;</code>
-     */
-    public Builder addRepliesBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      ensureRepliesIsMutable();
-      replies_.add(value);
-      onChanged();
-      return this;
-    }
-
-    private com.google.protobuf.LazyStringList errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    private void ensureErrorsIsMutable() {
-      if (!((bitField0_ & 0x00000010) != 0)) {
-        errors_ = new com.google.protobuf.LazyStringArrayList(errors_);
-        bitField0_ |= 0x00000010;
-       }
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public com.google.protobuf.ProtocolStringList
-        getErrorsList() {
-      return errors_.getUnmodifiableView();
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public int getErrorsCount() {
-      return errors_.size();
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public java.lang.String getErrors(int index) {
-      return errors_.get(index);
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getErrorsBytes(int index) {
-      return errors_.getByteString(index);
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public Builder setErrors(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureErrorsIsMutable();
-      errors_.set(index, value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public Builder addErrors(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureErrorsIsMutable();
-      errors_.add(value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public Builder addAllErrors(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureErrorsIsMutable();
-      com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, errors_);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public Builder clearErrors() {
-      errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000010);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated string errors = 5;</code>
-     */
-    public Builder addErrorsBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      ensureErrorsIsMutable();
-      errors_.add(value);
-      onChanged();
-      return this;
-    }
-
-    private org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel tunnelReply_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder> tunnelReplyBuilder_;
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public boolean hasTunnelReply() {
-      return tunnelReplyBuilder_ != null || tunnelReply_ != null;
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getTunnelReply() {
-      if (tunnelReplyBuilder_ == null) {
-        return tunnelReply_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.getDefaultInstance() : tunnelReply_;
-      } else {
-        return tunnelReplyBuilder_.getMessage();
+        throw new NullPointerException();
       }
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public Builder setTunnelReply(org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel value) {
-      if (tunnelReplyBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        tunnelReply_ = value;
-        onChanged();
-      } else {
-        tunnelReplyBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public Builder setTunnelReply(
-        org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder builderForValue) {
-      if (tunnelReplyBuilder_ == null) {
-        tunnelReply_ = builderForValue.build();
-        onChanged();
-      } else {
-        tunnelReplyBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public Builder mergeTunnelReply(org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel value) {
-      if (tunnelReplyBuilder_ == null) {
-        if (tunnelReply_ != null) {
-          tunnelReply_ =
-            org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.newBuilder(tunnelReply_).mergeFrom(value).buildPartial();
-        } else {
-          tunnelReply_ = value;
-        }
-        onChanged();
-      } else {
-        tunnelReplyBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public Builder clearTunnelReply() {
-      if (tunnelReplyBuilder_ == null) {
-        tunnelReply_ = null;
-        onChanged();
-      } else {
-        tunnelReply_ = null;
-        tunnelReplyBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
-     */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder getTunnelReplyBuilder() {
       
+      mode_ = value.getNumber();
       onChanged();
-      return getTunnelReplyFieldBuilder().getBuilder();
+      return this;
     }
     /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+     * <code>.beacon.TunnelType mode = 4;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder getTunnelReplyOrBuilder() {
-      if (tunnelReplyBuilder_ != null) {
-        return tunnelReplyBuilder_.getMessageOrBuilder();
+    public Builder clearMode() {
+      
+      mode_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object destIp_ = "";
+    /**
+     * <code>string destIp = 5;</code>
+     */
+    public java.lang.String getDestIp() {
+      java.lang.Object ref = destIp_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        destIp_ = s;
+        return s;
       } else {
-        return tunnelReply_ == null ?
-            org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.getDefaultInstance() : tunnelReply_;
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
+     * <code>string destIp = 5;</code>
      */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder> 
-        getTunnelReplyFieldBuilder() {
-      if (tunnelReplyBuilder_ == null) {
-        tunnelReplyBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder>(
-                getTunnelReply(),
-                getParentForChildren(),
-                isClean());
-        tunnelReply_ = null;
+    public com.google.protobuf.ByteString
+        getDestIpBytes() {
+      java.lang.Object ref = destIp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        destIp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
       }
-      return tunnelReplyBuilder_;
+    }
+    /**
+     * <code>string destIp = 5;</code>
+     */
+    public Builder setDestIp(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      destIp_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string destIp = 5;</code>
+     */
+    public Builder clearDestIp() {
+      
+      destIp_ = getDefaultInstance().getDestIp();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string destIp = 5;</code>
+     */
+    public Builder setDestIpBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      destIp_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int destPort_ ;
+    /**
+     * <code>int32 destPort = 6;</code>
+     */
+    public int getDestPort() {
+      return destPort_;
+    }
+    /**
+     * <code>int32 destPort = 6;</code>
+     */
+    public Builder setDestPort(int value) {
+      
+      destPort_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 destPort = 6;</code>
+     */
+    public Builder clearDestPort() {
+      
+      destPort_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int srcPort_ ;
+    /**
+     * <code>int32 srcPort = 7;</code>
+     */
+    public int getSrcPort() {
+      return srcPort_;
+    }
+    /**
+     * <code>int32 srcPort = 7;</code>
+     */
+    public Builder setSrcPort(int value) {
+      
+      srcPort_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 srcPort = 7;</code>
+     */
+    public Builder clearSrcPort() {
+      
+      srcPort_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int socketSoTimeout_ ;
+    /**
+     * <code>int32 socketSoTimeout = 8;</code>
+     */
+    public int getSocketSoTimeout() {
+      return socketSoTimeout_;
+    }
+    /**
+     * <code>int32 socketSoTimeout = 8;</code>
+     */
+    public Builder setSocketSoTimeout(int value) {
+      
+      socketSoTimeout_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 socketSoTimeout = 8;</code>
+     */
+    public Builder clearSocketSoTimeout() {
+      
+      socketSoTimeout_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean socketTcpNoDelay_ ;
+    /**
+     * <code>bool socketTcpNoDelay = 9;</code>
+     */
+    public boolean getSocketTcpNoDelay() {
+      return socketTcpNoDelay_;
+    }
+    /**
+     * <code>bool socketTcpNoDelay = 9;</code>
+     */
+    public Builder setSocketTcpNoDelay(boolean value) {
+      
+      socketTcpNoDelay_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool socketTcpNoDelay = 9;</code>
+     */
+    public Builder clearSocketTcpNoDelay() {
+      
+      socketTcpNoDelay_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean socketKeepAlive_ ;
+    /**
+     * <code>bool socketKeepAlive = 10;</code>
+     */
+    public boolean getSocketKeepAlive() {
+      return socketKeepAlive_;
+    }
+    /**
+     * <code>bool socketKeepAlive = 10;</code>
+     */
+    public Builder setSocketKeepAlive(boolean value) {
+      
+      socketKeepAlive_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool socketKeepAlive = 10;</code>
+     */
+    public Builder clearSocketKeepAlive() {
+      
+      socketKeepAlive_ = false;
+      onChanged();
+      return this;
+    }
+
+    private int socketReceiveBufferSize_ ;
+    /**
+     * <code>int32 socketReceiveBufferSize = 11;</code>
+     */
+    public int getSocketReceiveBufferSize() {
+      return socketReceiveBufferSize_;
+    }
+    /**
+     * <code>int32 socketReceiveBufferSize = 11;</code>
+     */
+    public Builder setSocketReceiveBufferSize(int value) {
+      
+      socketReceiveBufferSize_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 socketReceiveBufferSize = 11;</code>
+     */
+    public Builder clearSocketReceiveBufferSize() {
+      
+      socketReceiveBufferSize_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean socketReuseAddress_ ;
+    /**
+     * <code>bool socketReuseAddress = 12;</code>
+     */
+    public boolean getSocketReuseAddress() {
+      return socketReuseAddress_;
+    }
+    /**
+     * <code>bool socketReuseAddress = 12;</code>
+     */
+    public Builder setSocketReuseAddress(boolean value) {
+      
+      socketReuseAddress_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool socketReuseAddress = 12;</code>
+     */
+    public Builder clearSocketReuseAddress() {
+      
+      socketReuseAddress_ = false;
+      onChanged();
+      return this;
+    }
+
+    private int socketTrafficClass_ ;
+    /**
+     * <code>int32 socketTrafficClass = 13;</code>
+     */
+    public int getSocketTrafficClass() {
+      return socketTrafficClass_;
+    }
+    /**
+     * <code>int32 socketTrafficClass = 13;</code>
+     */
+    public Builder setSocketTrafficClass(int value) {
+      
+      socketTrafficClass_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 socketTrafficClass = 13;</code>
+     */
+    public Builder clearSocketTrafficClass() {
+      
+      socketTrafficClass_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int socketQos_ ;
+    /**
+     * <code>int32 socketQos = 14;</code>
+     */
+    public int getSocketQos() {
+      return socketQos_;
+    }
+    /**
+     * <code>int32 socketQos = 14;</code>
+     */
+    public Builder setSocketQos(int value) {
+      
+      socketQos_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 socketQos = 14;</code>
+     */
+    public Builder clearSocketQos() {
+      
+      socketQos_ = 0;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(
@@ -1386,41 +1588,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:beacon.CommandReplyRequest)
+    // @@protoc_insertion_point(builder_scope:beacon.RequestTunnelMessage)
   }
 
-  // @@protoc_insertion_point(class_scope:beacon.CommandReplyRequest)
-  private static final org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:beacon.RequestTunnelMessage)
+  private static final org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest();
+    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage();
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest getDefaultInstance() {
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<CommandReplyRequest>
-      PARSER = new com.google.protobuf.AbstractParser<CommandReplyRequest>() {
+  private static final com.google.protobuf.Parser<RequestTunnelMessage>
+      PARSER = new com.google.protobuf.AbstractParser<RequestTunnelMessage>() {
     @java.lang.Override
-    public CommandReplyRequest parsePartialFrom(
+    public RequestTunnelMessage parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new CommandReplyRequest(input, extensionRegistry);
+      return new RequestTunnelMessage(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<CommandReplyRequest> parser() {
+  public static com.google.protobuf.Parser<RequestTunnelMessage> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<CommandReplyRequest> getParserForType() {
+  public com.google.protobuf.Parser<RequestTunnelMessage> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest getDefaultInstanceForType() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

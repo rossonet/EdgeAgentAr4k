@@ -8,24 +8,10 @@ public interface AgentOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   *string hardwareInfoAsJson = 2;
-   * string registerCode = 2; // ritornato in registrazione
-   *int32 pollingFrequency = 3;
-   *int64 timestampRegistration = 3;
-   * </pre>
-   *
    * <code>string agentUniqueName = 1;</code>
    */
   java.lang.String getAgentUniqueName();
   /**
-   * <pre>
-   *string hardwareInfoAsJson = 2;
-   * string registerCode = 2; // ritornato in registrazione
-   *int32 pollingFrequency = 3;
-   *int64 timestampRegistration = 3;
-   * </pre>
-   *
    * <code>string agentUniqueName = 1;</code>
    */
   com.google.protobuf.ByteString

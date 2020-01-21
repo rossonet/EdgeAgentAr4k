@@ -5,6 +5,4 @@ dependencies {
   // gestione seriale
   compile 'com.fazecast:jSerialComm:2.5.0'
   compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-  // per esp8266 connection
-  compile 'io.netty:netty-all:4.1.5.Final'
 }

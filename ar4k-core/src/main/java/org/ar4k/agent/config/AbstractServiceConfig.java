@@ -22,7 +22,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStatus;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -97,7 +97,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   public int watchDogRetries = 0;
 
   @Parameter(names = "--targetRunLevel", description = "the default runlevel for the service when the system start", validateWith = ServiceStatusValidator.class)
-  public ServiceStates targetRunLevel = ServiceStates.RUNNING;
+  public ServiceStatus targetRunLevel = ServiceStatus.RUNNING;
 
   @Parameter(names = "--pausable", description = "is the server pausable?", arity = 0)
   public boolean pausable = false;

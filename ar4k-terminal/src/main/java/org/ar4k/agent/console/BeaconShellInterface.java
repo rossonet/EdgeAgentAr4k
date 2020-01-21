@@ -142,6 +142,10 @@ public class BeaconShellInterface extends AbstractShellHelper {
     return tmpClient.listAgentsConnectedToBeacon();
   }
 
+  // TODO CRUD channels Beacon
+  // TODO run remote xpra
+  // TODO restart and reload remote agent;
+
   @ShellMethod(value = "List commands on a remote agent connected by Beacon", group = "Beacon Client Commands")
   @ManagedOperation
   @ShellMethodAvailability("testBeaconClientRunning")

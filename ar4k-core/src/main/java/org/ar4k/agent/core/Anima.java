@@ -493,25 +493,43 @@ public class Anima
   }
 
   private void checkBeaconClient() {
-    if ((starterProperties.getWebRegistrationEndpoint() != null
-        && !starterProperties.getWebRegistrationEndpoint().isEmpty())
-        || Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
+    if (runtimeConfig != null && runtimeConfig.beaconServer != null && !runtimeConfig.beaconServer.isEmpty()) {
       try {
-        if (starterProperties.getWebRegistrationEndpoint() == null
-            || starterProperties.getWebRegistrationEndpoint().isEmpty()) {
-          throw new UnknownHostException();
-        }
-        logger.info("TRY CONNECTION TO BEACON AT "
-            + ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
+        logger.info("TRY CONNECTION TO BEACON IN CONFIG RUNTIME AT "
+            + ConfigHelper.resolveWorkingString(filterBeaconUrl(runtimeConfig.beaconServer), false));
         beaconClient = connectToBeaconService(
-            ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
+            ConfigHelper.resolveWorkingString(filterBeaconUrl(runtimeConfig.beaconServer), false),
             starterProperties.getBeaconCaChainPem(), Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
-            starterProperties.getBeaconDiscoveryFilterString(), false);
+            starterProperties.getBeaconDiscoveryFilterString(), true);
       } catch (Exception e) {
-        logger.warn("Beacon connection not ok: " + e.getMessage());
-        logger.info(Ar4kLogger.stackTraceToString(e, 6));
+        logger.warn("Beacon connection in config not ok: " + e.getMessage());
+        logger.info(Ar4kLogger.stackTraceToString(e, 40));
+      }
+    } else {
+      if ((starterProperties.getWebRegistrationEndpoint() != null
+          && !starterProperties.getWebRegistrationEndpoint().isEmpty())
+          || Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
+        try {
+          if (starterProperties.getWebRegistrationEndpoint() == null
+              || starterProperties.getWebRegistrationEndpoint().isEmpty()) {
+            throw new UnknownHostException();
+          }
+          logger.info("TRY CONNECTION TO BEACON AT "
+              + ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
+          beaconClient = connectToBeaconService(
+              ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
+              starterProperties.getBeaconCaChainPem(), Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
+              starterProperties.getBeaconDiscoveryFilterString(), false);
+        } catch (Exception e) {
+          logger.warn("Beacon connection not ok: " + e.getMessage());
+          logger.info(Ar4kLogger.stackTraceToString(e, 6));
+        }
       }
     }
+  }
+
+  private String filterBeaconUrl(String beaconServer) {
+    return beaconServer;
   }
 
   public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
@@ -833,7 +851,7 @@ public class Anima
 
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
-    logger.info(" event: " + event.toString());
+    logger.debug(" event: " + event.toString());
     if (event instanceof ContextRefreshedEvent) {
       // avvio a contesto spring caricato
       onApplicationEventFlag = true;
@@ -1078,13 +1096,13 @@ public class Anima
 
   @Override
   public String toString() {
-    return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStoreName=" + dbDataStoreName + ", timerScheduler="
-        + timerScheduler + ", animaStateMachine=" + animaStateMachine + ", animaHomunculus=" + animaHomunculus
-        + ", starterProperties=" + starterProperties + ", runtimeConfig=" + runtimeConfig + ", targetConfig="
-        + targetConfig + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget=" + stateTarget + ", statesBefore="
-        + statesBefore + ", components=" + components + ", dataStore=" + dataStore + ", localUsers=" + localUsers
-        + ", beanName=" + beanName + ", beaconClient=" + beaconClient + ", dataAddress=" + dataAddress
-        + ", myIdentityKeystore=" + myIdentityKeystore + ", myAliasCertInKeystore=" + myAliasCertInKeystore + "]";
+    return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStoreName=" + dbDataStoreName + ", animaStateMachine="
+        + animaStateMachine + ", animaHomunculus=" + animaHomunculus + ", starterProperties=" + starterProperties
+        + ", runtimeConfig=" + runtimeConfig + ", targetConfig=" + targetConfig + ", bootstrapConfig=" + bootstrapConfig
+        + ", stateTarget=" + stateTarget + ", statesBefore=" + statesBefore + ", components=" + components
+        + ", dataStore=" + dataStore + ", localUsers=" + localUsers + ", beanName=" + beanName + ", beaconClient="
+        + beaconClient + ", dataAddress=" + dataAddress + ", myIdentityKeystore=" + myIdentityKeystore
+        + ", myAliasCertInKeystore=" + myAliasCertInKeystore + "]";
   }
 
   public String getFileKeystore() {

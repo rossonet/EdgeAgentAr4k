@@ -1,5 +1,6 @@
 package org.ar4k.agent.core.data;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -20,12 +21,12 @@ import com.google.gson.GsonBuilder;
 
 public class DataAddressAnima extends DataAddress {
 
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(DataAddressAnima.class.toString());
+
   public DataAddressAnima(Anima anima, String dataNamePrefix) {
     super(anima, dataNamePrefix);
   }
-
-  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(DataAddressAnima.class.toString());
 
   // task per health
   private HealthTimer repeatedTask = new HealthTimer();
@@ -36,6 +37,68 @@ public class DataAddressAnima extends DataAddress {
   private transient Timer timer = new Timer("TimerHealth");
 
   private transient Set<DataAddress> slaves = new HashSet<>();
+
+  @Override
+  public Collection<Ar4kChannel> getDataChannels() {
+    Collection<Ar4kChannel> myData = super.getDataChannels();
+    for (DataAddress slave : slaves) {
+      myData.addAll(slave.getDataChannels());
+    }
+    return myData;
+  }
+
+  @Override
+  public void callAddressSpaceRefresh(Ar4kChannel nodeUpdated) {
+    super.callAddressSpaceRefresh(nodeUpdated);
+    for (DataAddress slave : slaves) {
+      slave.callAddressSpaceRefresh(nodeUpdated);
+    }
+  }
+
+  @Override
+  public void clearDataChannels() {
+    for (DataAddress slave : slaves) {
+      slave.clearDataChannels();
+    }
+    super.clearDataChannels();
+  }
+
+  @Override
+  public Collection<String> listChannels() {
+    Collection<String> myData = super.listChannels();
+    for (DataAddress slave : slaves) {
+      myData.addAll(slave.listChannels());
+    }
+    return myData;
+  }
+
+  @Override
+  public void close() throws Exception {
+    for (DataAddress slave : slaves) {
+      slave.close();
+    }
+    super.close();
+  }
+
+  public void firstStart() {
+    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
+        (String) null, null);
+    createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel, getDefaultScope());
+    createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
+        systemChannel, getDefaultScope());
+    createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope());
+    // start health regular messages
+    repeatedTask.setAnima(anima);
+    timer.scheduleAtFixedRate(repeatedTask, delay, period);
+  }
+
+  public void registerSlave(DataAddress a) {
+    slaves.add(a);
+  }
+
+  public void removeSlave(DataAddress a) {
+    slaves.remove(a);
+  }
 
   private class HealthTimer extends TimerTask {
 
@@ -73,25 +136,5 @@ public class DataAddressAnima extends DataAddress {
       }
     }
   };
-
-  public void firstStart() {
-    Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
-        (String) null, null);
-    createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel, getDefaultScope());
-    createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
-        systemChannel, getDefaultScope());
-    createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope());
-    // start health regular messages
-    repeatedTask.setAnima(anima);
-    timer.scheduleAtFixedRate(repeatedTask, delay, period);
-  }
-
-  public void registerSlave(DataAddress a) {
-    slaves.add(a);
-  }
-
-  public void removeSlave(DataAddress a) {
-    slaves.remove(a);
-  }
 
 }

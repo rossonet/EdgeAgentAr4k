@@ -4,19 +4,19 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf type {@code beacon.Agent}
+ * Protobuf type {@code beacon.ResponseNetworkChannel}
  */
-public  final class Agent extends
+public  final class ResponseNetworkChannel extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:beacon.Agent)
-    AgentOrBuilder {
+    // @@protoc_insertion_point(message_implements:beacon.ResponseNetworkChannel)
+    ResponseNetworkChannelOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use Agent.newBuilder() to construct.
-  private Agent(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ResponseNetworkChannel.newBuilder() to construct.
+  private ResponseNetworkChannel(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private Agent() {
-    agentUniqueName_ = "";
+  private ResponseNetworkChannel() {
+    uniqueIdRequest_ = "";
   }
 
   @java.lang.Override
@@ -24,7 +24,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private Agent(
+  private ResponseNetworkChannel(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -46,7 +46,12 @@ private static final long serialVersionUID = 0L;
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            agentUniqueName_ = s;
+            uniqueIdRequest_ = s;
+            break;
+          }
+          case 16: {
+
+            targeId_ = input.readInt64();
             break;
           }
           default: {
@@ -70,49 +75,58 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_Agent_descriptor;
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ResponseNetworkChannel_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_Agent_fieldAccessorTable
+    return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ResponseNetworkChannel_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class, org.ar4k.agent.tunnels.http.grpc.beacon.Agent.Builder.class);
+            org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.class, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder.class);
   }
 
-  public static final int AGENTUNIQUENAME_FIELD_NUMBER = 1;
-  private volatile java.lang.Object agentUniqueName_;
+  public static final int UNIQUEIDREQUEST_FIELD_NUMBER = 1;
+  private volatile java.lang.Object uniqueIdRequest_;
   /**
-   * <code>string agentUniqueName = 1;</code>
+   * <code>string uniqueIdRequest = 1;</code>
    */
-  public java.lang.String getAgentUniqueName() {
-    java.lang.Object ref = agentUniqueName_;
+  public java.lang.String getUniqueIdRequest() {
+    java.lang.Object ref = uniqueIdRequest_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      agentUniqueName_ = s;
+      uniqueIdRequest_ = s;
       return s;
     }
   }
   /**
-   * <code>string agentUniqueName = 1;</code>
+   * <code>string uniqueIdRequest = 1;</code>
    */
   public com.google.protobuf.ByteString
-      getAgentUniqueNameBytes() {
-    java.lang.Object ref = agentUniqueName_;
+      getUniqueIdRequestBytes() {
+    java.lang.Object ref = uniqueIdRequest_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      agentUniqueName_ = b;
+      uniqueIdRequest_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
+  }
+
+  public static final int TARGEID_FIELD_NUMBER = 2;
+  private long targeId_;
+  /**
+   * <code>int64 targeId = 2;</code>
+   */
+  public long getTargeId() {
+    return targeId_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -129,8 +143,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getAgentUniqueNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, agentUniqueName_);
+    if (!getUniqueIdRequestBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uniqueIdRequest_);
+    }
+    if (targeId_ != 0L) {
+      output.writeInt64(2, targeId_);
     }
     unknownFields.writeTo(output);
   }
@@ -141,8 +158,12 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getAgentUniqueNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, agentUniqueName_);
+    if (!getUniqueIdRequestBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uniqueIdRequest_);
+    }
+    if (targeId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(2, targeId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -154,13 +175,15 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.Agent)) {
+    if (!(obj instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel)) {
       return super.equals(obj);
     }
-    org.ar4k.agent.tunnels.http.grpc.beacon.Agent other = (org.ar4k.agent.tunnels.http.grpc.beacon.Agent) obj;
+    org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel other = (org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel) obj;
 
-    if (!getAgentUniqueName()
-        .equals(other.getAgentUniqueName())) return false;
+    if (!getUniqueIdRequest()
+        .equals(other.getUniqueIdRequest())) return false;
+    if (getTargeId()
+        != other.getTargeId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -172,76 +195,79 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + AGENTUNIQUENAME_FIELD_NUMBER;
-    hash = (53 * hash) + getAgentUniqueName().hashCode();
+    hash = (37 * hash) + UNIQUEIDREQUEST_FIELD_NUMBER;
+    hash = (53 * hash) + getUniqueIdRequest().hashCode();
+    hash = (37 * hash) + TARGEID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getTargeId());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(byte[] data)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseDelimitedFrom(java.io.InputStream input)
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseDelimitedFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent parseFrom(
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -254,7 +280,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.Agent prototype) {
+  public static Builder newBuilder(org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -270,26 +296,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code beacon.Agent}
+   * Protobuf type {@code beacon.ResponseNetworkChannel}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:beacon.Agent)
-      org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder {
+      // @@protoc_insertion_point(builder_implements:beacon.ResponseNetworkChannel)
+      org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_Agent_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ResponseNetworkChannel_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_Agent_fieldAccessorTable
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ResponseNetworkChannel_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class, org.ar4k.agent.tunnels.http.grpc.beacon.Agent.Builder.class);
+              org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.class, org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.Agent.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -307,7 +333,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      agentUniqueName_ = "";
+      uniqueIdRequest_ = "";
+
+      targeId_ = 0L;
 
       return this;
     }
@@ -315,17 +343,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_Agent_descriptor;
+      return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.internal_static_beacon_ResponseNetworkChannel_descriptor;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Agent getDefaultInstanceForType() {
-      return org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getDefaultInstanceForType() {
+      return org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Agent build() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.Agent result = buildPartial();
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel build() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -333,9 +361,10 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.ar4k.agent.tunnels.http.grpc.beacon.Agent buildPartial() {
-      org.ar4k.agent.tunnels.http.grpc.beacon.Agent result = new org.ar4k.agent.tunnels.http.grpc.beacon.Agent(this);
-      result.agentUniqueName_ = agentUniqueName_;
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel buildPartial() {
+      org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel result = new org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel(this);
+      result.uniqueIdRequest_ = uniqueIdRequest_;
+      result.targeId_ = targeId_;
       onBuilt();
       return result;
     }
@@ -374,19 +403,22 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.Agent) {
-        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.Agent)other);
+      if (other instanceof org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel) {
+        return mergeFrom((org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.Agent other) {
-      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()) return this;
-      if (!other.getAgentUniqueName().isEmpty()) {
-        agentUniqueName_ = other.agentUniqueName_;
+    public Builder mergeFrom(org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel other) {
+      if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel.getDefaultInstance()) return this;
+      if (!other.getUniqueIdRequest().isEmpty()) {
+        uniqueIdRequest_ = other.uniqueIdRequest_;
         onChanged();
+      }
+      if (other.getTargeId() != 0L) {
+        setTargeId(other.getTargeId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -403,11 +435,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.ar4k.agent.tunnels.http.grpc.beacon.Agent parsedMessage = null;
+      org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.Agent) e.getUnfinishedMessage();
+        parsedMessage = (org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -417,71 +449,97 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object agentUniqueName_ = "";
+    private java.lang.Object uniqueIdRequest_ = "";
     /**
-     * <code>string agentUniqueName = 1;</code>
+     * <code>string uniqueIdRequest = 1;</code>
      */
-    public java.lang.String getAgentUniqueName() {
-      java.lang.Object ref = agentUniqueName_;
+    public java.lang.String getUniqueIdRequest() {
+      java.lang.Object ref = uniqueIdRequest_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        agentUniqueName_ = s;
+        uniqueIdRequest_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string agentUniqueName = 1;</code>
+     * <code>string uniqueIdRequest = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getAgentUniqueNameBytes() {
-      java.lang.Object ref = agentUniqueName_;
+        getUniqueIdRequestBytes() {
+      java.lang.Object ref = uniqueIdRequest_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        agentUniqueName_ = b;
+        uniqueIdRequest_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string agentUniqueName = 1;</code>
+     * <code>string uniqueIdRequest = 1;</code>
      */
-    public Builder setAgentUniqueName(
+    public Builder setUniqueIdRequest(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      agentUniqueName_ = value;
+      uniqueIdRequest_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string agentUniqueName = 1;</code>
+     * <code>string uniqueIdRequest = 1;</code>
      */
-    public Builder clearAgentUniqueName() {
+    public Builder clearUniqueIdRequest() {
       
-      agentUniqueName_ = getDefaultInstance().getAgentUniqueName();
+      uniqueIdRequest_ = getDefaultInstance().getUniqueIdRequest();
       onChanged();
       return this;
     }
     /**
-     * <code>string agentUniqueName = 1;</code>
+     * <code>string uniqueIdRequest = 1;</code>
      */
-    public Builder setAgentUniqueNameBytes(
+    public Builder setUniqueIdRequestBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      agentUniqueName_ = value;
+      uniqueIdRequest_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long targeId_ ;
+    /**
+     * <code>int64 targeId = 2;</code>
+     */
+    public long getTargeId() {
+      return targeId_;
+    }
+    /**
+     * <code>int64 targeId = 2;</code>
+     */
+    public Builder setTargeId(long value) {
+      
+      targeId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 targeId = 2;</code>
+     */
+    public Builder clearTargeId() {
+      
+      targeId_ = 0L;
       onChanged();
       return this;
     }
@@ -498,41 +556,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:beacon.Agent)
+    // @@protoc_insertion_point(builder_scope:beacon.ResponseNetworkChannel)
   }
 
-  // @@protoc_insertion_point(class_scope:beacon.Agent)
-  private static final org.ar4k.agent.tunnels.http.grpc.beacon.Agent DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:beacon.ResponseNetworkChannel)
+  private static final org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.Agent();
+    DEFAULT_INSTANCE = new org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel();
   }
 
-  public static org.ar4k.agent.tunnels.http.grpc.beacon.Agent getDefaultInstance() {
+  public static org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<Agent>
-      PARSER = new com.google.protobuf.AbstractParser<Agent>() {
+  private static final com.google.protobuf.Parser<ResponseNetworkChannel>
+      PARSER = new com.google.protobuf.AbstractParser<ResponseNetworkChannel>() {
     @java.lang.Override
-    public Agent parsePartialFrom(
+    public ResponseNetworkChannel parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new Agent(input, extensionRegistry);
+      return new ResponseNetworkChannel(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<Agent> parser() {
+  public static com.google.protobuf.Parser<ResponseNetworkChannel> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<Agent> getParserForType() {
+  public com.google.protobuf.Parser<ResponseNetworkChannel> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.ar4k.agent.tunnels.http.grpc.beacon.Agent getDefaultInstanceForType() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

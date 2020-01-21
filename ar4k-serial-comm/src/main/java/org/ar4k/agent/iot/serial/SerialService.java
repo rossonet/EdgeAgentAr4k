@@ -245,9 +245,9 @@ public class SerialService implements Ar4kComponent, SerialPortDataListener {
   }
 
   @Override
-  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
     openSerialPort();
-    return ServiceStates.RUNNING;
+    return ServiceStatus.RUNNING;
   }
 
   @Override

@@ -183,7 +183,7 @@ public class NodeMcuLinkService implements Ar4kComponent, TcpServerListener {
   }
 
   @Override
-  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
     sendDiscoveryUdp();
     try {
       Thread.sleep(4500L);

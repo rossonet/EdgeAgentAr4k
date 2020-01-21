@@ -50,7 +50,7 @@ public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
   }
 
   @Override
-  public ServiceStates updateAndGetStatus() throws ServiceWatchDogException {
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
     // TODO Auto-generated method stub
     return null;
   }

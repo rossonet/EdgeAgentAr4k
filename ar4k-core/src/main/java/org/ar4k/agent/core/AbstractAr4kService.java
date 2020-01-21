@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStatus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -183,22 +183,22 @@ public abstract class AbstractAr4kService implements ServiceComponent<Ar4kCompon
   @Override
   public boolean isRunning() {
     if (!stopped.get()) {
-      return getUpdateFromPot().equals(ServiceStates.RUNNING);
+      return getUpdateFromPot().equals(ServiceStatus.RUNNING);
     } else {
       return false;
     }
   }
 
-  private ServiceStates getUpdateFromPot() {
-    final Future<ServiceStates> callFuture = executor.submit(new Callable<ServiceStates>() {
+  private ServiceStatus getUpdateFromPot() {
+    final Future<ServiceStatus> callFuture = executor.submit(new Callable<ServiceStatus>() {
       @Override
-      public ServiceStates call() {
+      public ServiceStatus call() {
         try {
           return pot.updateAndGetStatus();
         } catch (Exception e) {
           logger.logException("in service " + pot.getConfiguration() + " update", e);
           notifyException();
-          return ServiceStates.FAULT;
+          return ServiceStatus.FAULT;
         }
       }
     });
@@ -207,7 +207,7 @@ public abstract class AbstractAr4kService implements ServiceComponent<Ar4kCompon
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       logger.logException("service " + pot.getConfiguration() + " timeout during update", e);
       notifyException();
-      return ServiceStates.FAULT;
+      return ServiceStatus.FAULT;
     }
   }
 

@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,6 +28,10 @@ import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.ar4k.agent.network.NetworkConfig;
+import org.ar4k.agent.network.NetworkConfig.NetworkMode;
+import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
+import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
@@ -45,11 +50,17 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.LogSeverity;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc.TunnelServiceV1BlockingStub;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc.TunnelServiceV1Stub;
+import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
@@ -77,7 +88,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
   private ManagedChannel channel = null;
   private RpcServiceV1BlockingStub blockingStub = null;
+  private TunnelServiceV1BlockingStub blockingStubTunnel;
   private RpcServiceV1Stub asyncStub = null;
+  private TunnelServiceV1Stub asyncStubTunnel = null;
   private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   private boolean running = false;
@@ -102,6 +115,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
   private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
   private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
+  private List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
 
   public static class Builder {
     private Anima anima = null;
@@ -252,30 +266,32 @@ public class BeaconClient implements Runnable, AutoCloseable {
       this.reservedUniqueName = uniqueName;
     else
       this.reservedUniqueName = UUID.randomUUID().toString();
-    if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-      logger.info("Certificate for Beacon client is present in keystore");
-    } else {
-      throw new UnrecoverableKeyException("key " + this.aliasBeaconClientInKeystore + " not found in keystore");
+    if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
+      if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+        logger.info("Certificate for Beacon client is present in keystore");
+      } else {
+        throw new UnrecoverableKeyException("key " + this.aliasBeaconClientInKeystore + " not found in keystore");
+      }
     }
     if (this.port > 0) {
-      try {
-        startConnection(this.hostTarget, this.port);
-      } catch (SSLException e) {
-        logger.logException(e);
-      }
+      startConnection(this.hostTarget, this.port);
     }
     runInstance();
   }
 
-  private void startConnection(String host, int port) throws SSLException {
+  private void startConnection(String host, int port) {
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext());
     } else {
       generateCaFile();
       generateCertFile();
       writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
-      runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
-          .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(certChainFile)).build()));
+      try {
+        runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
+            .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(certChainFile)).build()));
+      } catch (SSLException e) {
+        logger.logException(e);
+      }
     }
   }
 
@@ -332,7 +348,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
   public void runConnection(ManagedChannelBuilder<?> channelBuilder) {
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
+    blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
     asyncStub = RpcServiceV1Grpc.newStub(channel);
+    asyncStubTunnel = TunnelServiceV1Grpc.newStub(channel);
     actionRegister();
   }
 
@@ -447,8 +465,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
           startConnection(this.hostTarget, this.port);
         }
       } catch (Exception e) {
-        logger.info("in Beacon client loop " + e.getMessage());
-        logger.logException(e);
+        logger.logException("in Beacon client loop", e);
       }
     }
   }
@@ -495,7 +512,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         execCommand(m);
         break;
       case EXPOSE_PORT:
-        notImplemented(m);
+        exposePort(m);
         break;
       case LIST_COMMANDS:
         listCommand(m);
@@ -510,6 +527,23 @@ public class BeaconClient implements Runnable, AutoCloseable {
         notImplemented(m);
         break;
       }
+    }
+  }
+
+  private void exposePort(RequestToAgent m) {
+    try {
+      logger.info("network port required from beacon " + m.getUniqueIdRequest());
+      NetworkConfig config = new BeaconNetworkConfig(m);
+      BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, false, asyncStubTunnel);
+      tunnels.add(tunnel);
+      ResponseNetworkChannel value = ResponseNetworkChannel.newBuilder().setTargeId(tunnel.getTargetId())
+          .setUniqueIdRequest(m.getUniqueIdRequest()).build();
+      CommandReplyRequest request = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
+          .setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).setTunnelReply(value).build();
+      blockingStub.sendCommandReply(request);
+      tunnel.init();
+    } catch (Exception a) {
+      logger.logException(a);
     }
   }
 
@@ -573,8 +607,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
       HealthRequest hr = HealthRequest.newBuilder().setAgentSender(me)
           .setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
       blockingStub.sendHealth(hr);
-    } catch (IOException | InterruptedException | ParseException | io.grpc.StatusRuntimeException e) {
-      logger.warn("sendHardwareInfo -> " + e.getMessage());
+    } catch (Exception e) {
+      logger.warn("error sendHardwareInfo -> " + e.getMessage());
       logger.logException(e);
     }
   }
@@ -652,6 +686,54 @@ public class BeaconClient implements Runnable, AutoCloseable {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
       ListCommandsRequest lcr = ListCommandsRequest.newBuilder().setAgentTarget(a).setAgentSender(me).build();
       return blockingStub.listCommands(lcr);
+    } catch (Exception a) {
+      logger.logException(a);
+      return null;
+    }
+  }
+
+  public List<BeaconNetworkTunnel> getTunnels() {
+    return tunnels;
+  }
+
+  public void removeTunnel(BeaconNetworkTunnel toRemove) {
+    tunnels.remove(toRemove);
+    try {
+      toRemove.close();
+    } catch (Exception e) {
+      logger.logException(e);
+    }
+  }
+
+  public NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config) {
+    BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, true, asyncStubTunnel);
+    try {
+      Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
+      tunnel.setRemoteAgent(a);
+      org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage.Builder request = RequestTunnelMessage.newBuilder()
+          .setAgentSender(me).setAgentDestination(a).setDestIp(config.getClientIp()).setDestPort(config.getClientPort())
+          .setSrcPort(config.getServerPort());
+      if (config.getNetworkProtocol().equals(NetworkProtocol.TCP)) {
+        if (config.getNetworkModeRequested().equals(NetworkMode.CLIENT))
+          request.setMode(TunnelType.BYTES_TO_CLIENT_TCP);
+        else if (config.getNetworkModeRequested().equals(NetworkMode.SERVER)) {
+          request.setMode(TunnelType.SERVER_TO_BYTES_TCP);
+        }
+      } else if (config.getNetworkProtocol().equals(NetworkProtocol.UDP)) {
+        if (config.getNetworkModeRequested().equals(NetworkMode.CLIENT))
+          request.setMode(TunnelType.BYTES_TO_CLIENT_UDP);
+        else if (config.getNetworkModeRequested().equals(NetworkMode.SERVER)) {
+          request.setMode(TunnelType.SERVER_TO_BYTES_UDP);
+        }
+      }
+      logger.debug("request beacon tunnel -> " + request.build().getUniqueIdRequest());
+      ResponseNetworkChannel response = blockingStubTunnel.requestTunnel(request.build());
+      tunnel.setResponseNetworkChannel(response);
+      tunnels.add(tunnel);
+      logger.info("request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
+      tunnel.init();
+      // logger.info("INIT DONE");
+      return tunnel;
     } catch (Exception a) {
       logger.logException(a);
       return null;

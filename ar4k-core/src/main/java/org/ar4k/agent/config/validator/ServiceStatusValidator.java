@@ -16,7 +16,7 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.core.Ar4kComponent.ServiceStates;
+import org.ar4k.agent.core.Ar4kComponent.ServiceStatus;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
@@ -34,10 +34,10 @@ public class ServiceStatusValidator implements IParameterValidator {
   @Override
   public void validate(String name, String value) throws ParameterException {
     try {
-      ServiceStates.valueOf(value);
+      ServiceStatus.valueOf(value);
     } catch (java.lang.IllegalArgumentException aa) {
       StringBuilder b = new StringBuilder();
-      EnumSet.allOf(ServiceStates.class).forEach(v -> {
+      EnumSet.allOf(ServiceStatus.class).forEach(v -> {
         b.append(v.toString() + " ");
       });
       throw new ParameterException("Parameter " + name + " should be in " + b.toString());
