@@ -93,7 +93,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   @Parameter(names = "--timeoutWatchDog", description = "timeout for the watchdog task")
   public int timeoutWatchDog = 120000;
 
-  @Parameter(names = "--timeoutWatchDog", description = "max watchdog retries before the fault. 0 = no limits")
+  @Parameter(names = "--watchDogRetries", description = "max watchdog retries before the fault. 0 = no limits")
   public int watchDogRetries = 0;
 
   @Parameter(names = "--targetRunLevel", description = "the default runlevel for the service when the system start", validateWith = ServiceStatusValidator.class)
