@@ -237,7 +237,11 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
       stopFunction();
       dataAddress = null;
       if (getChannel() != null) {
-        getChannel().destroy();
+        try {
+          getChannel().destroy();
+        } catch (NoSuchMethodError ex) {
+          // può succedere
+        }
         setChannel(null);
       }
       scopeChildren.clear();

@@ -87,6 +87,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private Server server = null;
   private int defaultPollTime = 6000;
   private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
+  // TODO timeout nodi in lista non più connessi
   private final List<BeaconAgent> agents = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;

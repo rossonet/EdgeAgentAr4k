@@ -1,10 +1,9 @@
 package org.ar4k.agent.core.data.channels;
 
-import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.Ar4kChannel;
 import org.springframework.integration.channel.PriorityChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
-import org.springframework.integration.support.management.Statistics;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
@@ -30,81 +29,6 @@ public class IPriorityChannel extends AbstractChannel implements PollableChannel
   @Override
   public Message<?> receive(long timeout) {
     return ((PriorityChannel) getChannel()).receive(timeout);
-  }
-
-  @Override
-  public int getSendCount() {
-    return ((PriorityChannel) getChannel()).getSendCount();
-  }
-
-  @Override
-  public long getSendCountLong() {
-    return ((PriorityChannel) getChannel()).getSendCountLong();
-  }
-
-  @Override
-  public int getSendErrorCount() {
-    return ((PriorityChannel) getChannel()).getSendErrorCount();
-  }
-
-  @Override
-  public long getSendErrorCountLong() {
-    return ((PriorityChannel) getChannel()).getSendErrorCountLong();
-  }
-
-  @Override
-  public double getTimeSinceLastSend() {
-    return ((PriorityChannel) getChannel()).getTimeSinceLastSend();
-  }
-
-  @Override
-  public double getMeanSendRate() {
-    return ((PriorityChannel) getChannel()).getMeanSendRate();
-  }
-
-  @Override
-  public double getMeanErrorRate() {
-    return ((PriorityChannel) getChannel()).getMeanErrorRate();
-  }
-
-  @Override
-  public double getMeanErrorRatio() {
-    return ((PriorityChannel) getChannel()).getMeanErrorRatio();
-  }
-
-  @Override
-  public double getMeanSendDuration() {
-    return ((PriorityChannel) getChannel()).getMeanSendDuration();
-  }
-
-  @Override
-  public double getMinSendDuration() {
-    return ((PriorityChannel) getChannel()).getMinSendDuration();
-  }
-
-  @Override
-  public double getMaxSendDuration() {
-    return ((PriorityChannel) getChannel()).getMaxSendDuration();
-  }
-
-  @Override
-  public double getStandardDeviationSendDuration() {
-    return ((PriorityChannel) getChannel()).getStandardDeviationSendDuration();
-  }
-
-  @Override
-  public Statistics getSendDuration() {
-    return ((PriorityChannel) getChannel()).getSendDuration();
-  }
-
-  @Override
-  public Statistics getSendRate() {
-    return ((PriorityChannel) getChannel()).getSendRate();
-  }
-
-  @Override
-  public Statistics getErrorRate() {
-    return ((PriorityChannel) getChannel()).getErrorRate();
   }
 
   @Override
@@ -145,11 +69,6 @@ public class IPriorityChannel extends AbstractChannel implements PollableChannel
   @Override
   public ManagementOverrides getOverrides() {
     return ((PriorityChannel) getChannel()).getOverrides();
-  }
-
-  @Override
-  public void destroy() throws Exception {
-    ((PriorityChannel) getChannel()).destroy();
   }
 
   @Override

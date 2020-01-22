@@ -1,10 +1,9 @@
 package org.ar4k.agent.core.data.channels;
 
-import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.Ar4kChannel;
 import org.springframework.integration.channel.RendezvousChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
-import org.springframework.integration.support.management.Statistics;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
@@ -30,81 +29,6 @@ public class IRendezvousChannel extends AbstractChannel implements PollableChann
   @Override
   public Message<?> receive(long timeout) {
     return ((RendezvousChannel) getChannel()).receive(timeout);
-  }
-
-  @Override
-  public int getSendCount() {
-    return ((RendezvousChannel) getChannel()).getSendCount();
-  }
-
-  @Override
-  public long getSendCountLong() {
-    return ((RendezvousChannel) getChannel()).getSendCountLong();
-  }
-
-  @Override
-  public int getSendErrorCount() {
-    return ((RendezvousChannel) getChannel()).getSendErrorCount();
-  }
-
-  @Override
-  public long getSendErrorCountLong() {
-    return ((RendezvousChannel) getChannel()).getSendErrorCountLong();
-  }
-
-  @Override
-  public double getTimeSinceLastSend() {
-    return ((RendezvousChannel) getChannel()).getTimeSinceLastSend();
-  }
-
-  @Override
-  public double getMeanSendRate() {
-    return ((RendezvousChannel) getChannel()).getMeanSendRate();
-  }
-
-  @Override
-  public double getMeanErrorRate() {
-    return ((RendezvousChannel) getChannel()).getMeanErrorRate();
-  }
-
-  @Override
-  public double getMeanErrorRatio() {
-    return ((RendezvousChannel) getChannel()).getMeanErrorRatio();
-  }
-
-  @Override
-  public double getMeanSendDuration() {
-    return ((RendezvousChannel) getChannel()).getMeanSendDuration();
-  }
-
-  @Override
-  public double getMinSendDuration() {
-    return ((RendezvousChannel) getChannel()).getMinSendDuration();
-  }
-
-  @Override
-  public double getMaxSendDuration() {
-    return ((RendezvousChannel) getChannel()).getMaxSendDuration();
-  }
-
-  @Override
-  public double getStandardDeviationSendDuration() {
-    return ((RendezvousChannel) getChannel()).getStandardDeviationSendDuration();
-  }
-
-  @Override
-  public Statistics getSendDuration() {
-    return ((RendezvousChannel) getChannel()).getSendDuration();
-  }
-
-  @Override
-  public Statistics getSendRate() {
-    return ((RendezvousChannel) getChannel()).getSendRate();
-  }
-
-  @Override
-  public Statistics getErrorRate() {
-    return ((RendezvousChannel) getChannel()).getErrorRate();
   }
 
   @Override
@@ -145,11 +69,6 @@ public class IRendezvousChannel extends AbstractChannel implements PollableChann
   @Override
   public ManagementOverrides getOverrides() {
     return ((RendezvousChannel) getChannel()).getOverrides();
-  }
-
-  @Override
-  public void destroy() throws Exception {
-    ((RendezvousChannel) getChannel()).destroy();
   }
 
   @Override

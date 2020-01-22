@@ -1,16 +1,16 @@
 group = 'org.ar4k.agent'
-version = '0.8.4'
+version = '0.8.61'
 
 ext{
   sourceCompatibility = 1.8
   springCloudVersion = 'Finchley.M9'
   springStatemachineVersion = '2.1.3.RELEASE'
   camelVersion = '2.17.0'
-  springBootVersion = '2.1.3.RELEASE'
+  springBootVersion = '2.2.4.RELEASE'
 }
 
 buildscript {
-  ext { springBootVersion = '2.1.3.RELEASE' }
+  ext { springBootVersion = '2.2.4.RELEASE' }
   repositories {
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }

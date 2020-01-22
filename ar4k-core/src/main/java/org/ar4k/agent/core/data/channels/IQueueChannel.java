@@ -1,10 +1,9 @@
 package org.ar4k.agent.core.data.channels;
 
-import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.Ar4kChannel;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.support.management.PollableChannelManagement;
-import org.springframework.integration.support.management.Statistics;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.PollableChannel;
@@ -30,81 +29,6 @@ public class IQueueChannel extends AbstractChannel implements PollableChannel, P
   @Override
   public Message<?> receive(long timeout) {
     return ((QueueChannel) getChannel()).receive(timeout);
-  }
-
-  @Override
-  public int getSendCount() {
-    return ((QueueChannel) getChannel()).getSendCount();
-  }
-
-  @Override
-  public long getSendCountLong() {
-    return ((QueueChannel) getChannel()).getSendCountLong();
-  }
-
-  @Override
-  public int getSendErrorCount() {
-    return ((QueueChannel) getChannel()).getSendErrorCount();
-  }
-
-  @Override
-  public long getSendErrorCountLong() {
-    return ((QueueChannel) getChannel()).getSendErrorCountLong();
-  }
-
-  @Override
-  public double getTimeSinceLastSend() {
-    return ((QueueChannel) getChannel()).getTimeSinceLastSend();
-  }
-
-  @Override
-  public double getMeanSendRate() {
-    return ((QueueChannel) getChannel()).getMeanSendRate();
-  }
-
-  @Override
-  public double getMeanErrorRate() {
-    return ((QueueChannel) getChannel()).getMeanErrorRate();
-  }
-
-  @Override
-  public double getMeanErrorRatio() {
-    return ((QueueChannel) getChannel()).getMeanErrorRatio();
-  }
-
-  @Override
-  public double getMeanSendDuration() {
-    return ((QueueChannel) getChannel()).getMeanSendDuration();
-  }
-
-  @Override
-  public double getMinSendDuration() {
-    return ((QueueChannel) getChannel()).getMinSendDuration();
-  }
-
-  @Override
-  public double getMaxSendDuration() {
-    return ((QueueChannel) getChannel()).getMaxSendDuration();
-  }
-
-  @Override
-  public double getStandardDeviationSendDuration() {
-    return ((QueueChannel) getChannel()).getStandardDeviationSendDuration();
-  }
-
-  @Override
-  public Statistics getSendDuration() {
-    return ((QueueChannel) getChannel()).getSendDuration();
-  }
-
-  @Override
-  public Statistics getSendRate() {
-    return ((QueueChannel) getChannel()).getSendRate();
-  }
-
-  @Override
-  public Statistics getErrorRate() {
-    return ((QueueChannel) getChannel()).getErrorRate();
   }
 
   @Override
@@ -145,11 +69,6 @@ public class IQueueChannel extends AbstractChannel implements PollableChannel, P
   @Override
   public ManagementOverrides getOverrides() {
     return ((QueueChannel) getChannel()).getOverrides();
-  }
-
-  @Override
-  public void destroy() throws Exception {
-    ((QueueChannel) getChannel()).destroy();
   }
 
   @Override
