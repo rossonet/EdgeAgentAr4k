@@ -389,4 +389,75 @@ public class BeaconClientServerTests {
   Future<Boolean> serverTCP = null;
   Future<Boolean> clientTCP = null;
   boolean completed = false;
+
+  @Test
+  public void oneServerAsClientTestLocalSsh() throws Exception {
+    List<String> baseArgs = new ArrayList<>();
+    baseArgs.add("--spring.shell.command.quit.enabled=false");
+    baseArgs.add("--logging.level.root=INFO");
+    baseArgs.add("--ar4k.confPath=./tmp");
+    baseArgs.add("--ar4k.fileConfig=./tmp/test.config.base64.ar4k");
+    baseArgs.add("--ar4k.webConfig=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
+    baseArgs.add("--ar4k.dnsConfig=demo1.rossonet.name");
+//    addArgs.add("--ar4k.baseConfig=");
+    baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
+    baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
+    // baseArgs.add("--ar4k.keystoreMainAlias=");
+    baseArgs.add("--ar4k.keystorePassword=secA4.rk!8");
+    baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
+    baseArgs.add("--ar4k.adminPassword=password");
+//    addArgs.add("--ar4k.webRegistrationEndpoint=");
+//    addArgs.add("--ar4k.dnsRegistrationEndpoint=");
+    baseArgs.add("--ar4k.beaconDiscoveryFilterString=TEST-REGISTER");
+    baseArgs.add("--ar4k.beaconDiscoveryPort=33667");
+    baseArgs.add("--ar4k.fileConfigOrder=1");
+    baseArgs.add("--ar4k.webConfigOrder=2");
+    baseArgs.add("--ar4k.dnsConfigOrder=3");
+    baseArgs.add("--ar4k.baseConfigOrder=0");
+    baseArgs.add("--ar4k.threadSleep=1000");
+    baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
+    Ar4kConfig serverConfig = new Ar4kConfig();
+    serverConfig.name = "server-beacon";
+    serverConfig.beaconServer = null;
+    serverConfig.autoRegisterBeaconServer = false;
+    BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
+    beaconServiceConfig.discoveryPort = 33667;
+    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.aliasBeaconServerInKeystore = caAlias;
+    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
+    beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
+    serverConfig.pots.add(beaconServiceConfig);
+
+    testAnimas.put(SERVER_LABEL,
+        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
+    Thread.sleep(15000);
+    for (Anima a : testAnimas.values()) {
+      String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
+      if (animaName.equals("server-beacon")) {
+        Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
+      } else {
+        Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
+      }
+    }
+    Thread.sleep(20000);
+    List<Agent> agents = testAnimas.get(SERVER_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
+    String agentToQuery = null;
+    for (Agent a : agents) {
+      System.out.println("agent found by test -> " + a.getAgentUniqueName());
+      agentToQuery = a.getAgentUniqueName();
+    }
+    String destinationIp = "127.0.0.1";
+    int destinationPort = 22;
+    int srcPort = 8822;
+    // codice
+    NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test", NetworkMode.CLIENT,
+        NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
+    networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
+    System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
+    System.out.println("Try to connect to:\nssh localhost -p " + srcPort);
+    Thread.sleep(120000);
+    System.out.println("package counter [R]:" + networkTunnel.getHub().getPacketReceived() + " [S]:"
+        + networkTunnel.getHub().getPacketSend());
+  }
 }
