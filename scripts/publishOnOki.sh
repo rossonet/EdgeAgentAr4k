@@ -5,5 +5,5 @@ clear;clear
 
 echo on Oki
 ssh root@192.168.0.107  "systemctl stop ar4k"
-scp ar4k-agent-druido/build/libs/ar4k-agent-druido-0.7.2.jar rossonet@192.168.0.107:~/
+scp ar4k-agent-druido/build/libs/ar4k-agent-druido-0.8.63.jar rossonet@192.168.0.107:~/
 ssh root@192.168.0.107  "systemctl start ar4k"
