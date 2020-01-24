@@ -484,22 +484,8 @@ public class BeaconServer implements Runnable, AutoCloseable {
     public void requestTunnel(RequestTunnelMessage request, StreamObserver<ResponseNetworkChannel> responseObserver) {
       logger.info("Beacon client require tunnel -> " + request);
       try {
-        String idRequest = UUID.randomUUID().toString();
-        logger.debug("searching in " + agents.size() + " agents");
-        for (BeaconAgent at : agents) {
-          if (at.getAgentUniqueName().equals(request.getAgentDestination().getAgentUniqueName())) {
-            RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
-                .setUniqueIdRequest(idRequest).setType(CommandType.EXPOSE_PORT).setTunnelRequest(request).build();
-            at.addRequestForAgent(rta);
-            logger.debug("Required client tunnel to agent target -> " + rta);
-            break;
-          }
-        }
-        CommandReplyRequest cmdReply = waitReply(idRequest, defaultTimeOut);
-        ResponseNetworkChannel channelCreated = cmdReply.getTunnelReply();
-        logger.debug("Beacon client tunnel reply -> " + channelCreated);
-        TunnelRunnerBeaconServer tunnelRunner = new TunnelRunnerBeaconServer(channelCreated.getTargeId(), request,
-            channelCreated);
+        long idRequest = UUID.randomUUID().getMostSignificantBits();
+        TunnelRunnerBeaconServer tunnelRunner = new TunnelRunnerBeaconServer(idRequest);
         tunnelRunner.setActive(true);
         if (request.getMode().equals(TunnelType.SERVER_TO_BYTES_TCP)
             || request.getMode().equals(TunnelType.SERVER_TO_BYTES_UDP)) {
@@ -511,6 +497,20 @@ public class BeaconServer implements Runnable, AutoCloseable {
           tunnelRunner.setClientAgent(request.getAgentDestination());
         }
         tunnels.add(tunnelRunner);
+        logger.debug("searching in " + agents.size() + " agents");
+        for (BeaconAgent at : agents) {
+          if (at.getAgentUniqueName().equals(request.getAgentDestination().getAgentUniqueName())) {
+            RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
+                .setUniqueIdRequest(String.valueOf(idRequest)).setType(CommandType.EXPOSE_PORT)
+                .setTunnelRequest(request).build();
+            at.addRequestForAgent(rta);
+            logger.debug("Required client tunnel to agent target -> " + rta);
+            break;
+          }
+        }
+        CommandReplyRequest cmdReply = waitReply(String.valueOf(idRequest), defaultTimeOut);
+        ResponseNetworkChannel channelCreated = cmdReply.getTunnelReply();
+        logger.debug("Beacon client tunnel reply -> " + channelCreated);
         responseObserver.onNext(channelCreated);
         responseObserver.onCompleted();
       } catch (Exception e) {

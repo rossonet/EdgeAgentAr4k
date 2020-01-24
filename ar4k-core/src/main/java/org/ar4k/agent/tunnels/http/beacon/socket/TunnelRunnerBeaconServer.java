@@ -1,10 +1,12 @@
 package org.ar4k.agent.tunnels.http.beacon.socket;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 
 import io.grpc.stub.StreamObserver;
@@ -15,19 +17,16 @@ public class TunnelRunnerBeaconServer {
       .getLogger(TunnelRunnerBeaconServer.class.toString());
 
   private final long targeId;
-  private final RequestTunnelMessage request;
-  private final ResponseNetworkChannel channelCreated;
   private boolean active = false;
   private Agent serverAgent = null;
   private Agent clientAgent = null;
-  private StreamObserver<TunnelMessage> serverObserver = null;
+  private final Map<Long, StreamObserver<TunnelMessage>> serverObserver = new ConcurrentHashMap<>();
+
   private StreamObserver<TunnelMessage> clientObserver = null;
 
-  public TunnelRunnerBeaconServer(long targeId, RequestTunnelMessage request, ResponseNetworkChannel channelCreated) {
-    logger.debug("tunnel " + targeId + " created");
+  public TunnelRunnerBeaconServer(long targeId) {
+    logger.info("tunnel " + targeId + " created");
     this.targeId = targeId;
-    this.request = request;
-    this.channelCreated = channelCreated;
   }
 
   public void setActive(boolean active) {
@@ -36,14 +35,6 @@ public class TunnelRunnerBeaconServer {
 
   public long getTargeId() {
     return targeId;
-  }
-
-  public RequestTunnelMessage getRequest() {
-    return request;
-  }
-
-  public ResponseNetworkChannel getChannelCreated() {
-    return channelCreated;
   }
 
   public boolean isActive() {
@@ -65,12 +56,12 @@ public class TunnelRunnerBeaconServer {
 
   public void onNext(TunnelMessage value, StreamObserver<TunnelMessage> responseObserver) {
     StreamObserver<TunnelMessage> nextAgent = getNextAgentObserver(value, responseObserver);
-    logger.trace("nextAgent -> " + nextAgent);
+    logger.trace("nextAgent -> " + nextAgent + " " + value);
     if (nextAgent != null) {
       logger.trace("Stream observer found");
       nextAgent.onNext(value);
     } else {
-      logger.debug("Stream observer not found for " + value);
+      logger.trace("Stream observer not found for " + value);
     }
   }
 
@@ -82,26 +73,26 @@ public class TunnelRunnerBeaconServer {
       logger.trace("client and service host are different");
       if (value.getAgent().equals(serverAgent)) {
         logger.trace("request from server by Agent");
-        if (serverObserver == null) {
-          serverObserver = responseObserver;
-          logger.debug("serverObserver registered by Agent");
+        if (serverObserver.get(value.getSessionId()) == null) {
+          serverObserver.put(value.getSessionId(), responseObserver);
+          logger.info("new session " + value.getSessionId() + " in tunnel " + value.getTargeId());
         }
         if (clientObserver != null) {
           nextAgentObserver = clientObserver;
         } else {
-          logger.info("clientObserver not found by agent");
+          logger.trace("clientObserver not found by agent");
         }
       }
       if (value.getAgent().equals(clientAgent)) {
         logger.trace("request from client by Agent");
         if (clientObserver == null) {
           clientObserver = responseObserver;
-          logger.debug("clientObserver registered by Agent");
+          logger.trace("clientObserver registered by Agent");
         }
-        if (serverObserver != null) {
-          nextAgentObserver = serverObserver;
+        if (serverObserver.get(value.getSessionId()) != null) {
+          nextAgentObserver = serverObserver.get(value.getSessionId());
         } else {
-          logger.info("serverObserver not found in agent");
+          logger.trace("serverObserver not found in agent");
         }
       }
     }
@@ -110,9 +101,9 @@ public class TunnelRunnerBeaconServer {
         logger.trace("client and service host uniqueId are equal");
         if (value.getUniqueId().startsWith("S_")) {
           logger.trace("request from server by UUID");
-          if (serverObserver == null) {
-            serverObserver = responseObserver;
-            logger.trace("serverObserver registered in uuid");
+          if (serverObserver.get(value.getSessionId()) == null) {
+            serverObserver.put(value.getSessionId(), responseObserver);
+            logger.info("new session " + value.getSessionId() + " in tunnel " + value.getTargeId());
           }
           if (clientObserver != null) {
             nextAgentObserver = clientObserver;
@@ -125,8 +116,8 @@ public class TunnelRunnerBeaconServer {
             clientObserver = responseObserver;
             logger.trace("clientObserver registered in uuid");
           }
-          if (serverObserver != null) {
-            nextAgentObserver = serverObserver;
+          if (serverObserver.get(value.getSessionId()) != null) {
+            nextAgentObserver = serverObserver.get(value.getSessionId());
           } else {
             logger.trace("serverObserver not found in uuid");
           }
@@ -150,12 +141,14 @@ public class TunnelRunnerBeaconServer {
 
   public void onError(Throwable t, StreamObserver<TunnelMessage> responseObserver) {
     logger.logException("Error on TunnelRunnerBeaconServer " + targeId, t);
-
   }
 
   public void onCompleted(StreamObserver<TunnelMessage> responseObserver) {
     logger.debug("Complete on TunnelRunnerBeaconServer " + targeId);
+  }
 
+  public Set<Long> getServerObserver() {
+    return serverObserver.keySet();
   }
 
 }

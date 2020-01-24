@@ -8,6 +8,7 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkHub;
 import org.ar4k.agent.network.NetworkTunnel;
+import org.ar4k.agent.tunnels.http.beacon.socket.Ar4kNetworkHub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc.TunnelServiceV1Stub;
@@ -27,12 +28,12 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
   private long targetId;
   private final TunnelServiceV1Stub asyncStubTunnel;
 
-  public BeaconNetworkTunnel(Agent me, NetworkConfig config, boolean ownerRequest,
-      TunnelServiceV1Stub asyncStubTunnel) {
+  public BeaconNetworkTunnel(Agent me, NetworkConfig config, boolean ownerRequest, TunnelServiceV1Stub asyncStubTunnel,
+      String tunnelId) {
     this.me = me;
     this.config = config;
     this.ownerRequest = ownerRequest;
-    targetId = UUID.randomUUID().getLeastSignificantBits();
+    targetId = Long.valueOf(tunnelId);
     this.asyncStubTunnel = asyncStubTunnel;
     logger.debug("created network object " + targetId);
   }

@@ -268,7 +268,7 @@ public class BeaconClientServerTests {
         Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
       }
     }
-    Thread.sleep(20000);
+    Thread.sleep(5000);
     List<Agent> agents = testAnimas.get(SERVER_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {
@@ -291,11 +291,12 @@ public class BeaconClientServerTests {
           while (true) {
             while (reader.ready()) {
               final int valueNew = reader.read();
+              System.out.println("server test received from beacon client " + valueNew);
               if (last == 0)
                 last = valueNew + 1;
               else {
                 if (last + 1 != valueNew) {
-                  throw new Exception("error in server last cached:" + last + ",new:" + valueNew);
+                  throw new Exception("error in server test last cached:" + last + ",new:" + valueNew);
                 } else {
                   last = valueNew + 1;
                 }
@@ -303,7 +304,7 @@ public class BeaconClientServerTests {
               Thread.sleep(1000);
               w.write(last);
               w.flush();
-              System.out.println("server sent " + last);
+              System.out.println("server test sent to beacon client " + last);
             }
           }
         } catch (Exception a) {
@@ -327,21 +328,21 @@ public class BeaconClientServerTests {
         socketClient.setKeepAlive(true);
         InputStreamReader reader = new InputStreamReader(socketClient.getInputStream());
         PrintWriter w = new PrintWriter(socketClient.getOutputStream(), true);
-        System.out.println("writed from client");
         w.write(1);
         w.flush();
         last = 1;
-        System.out.println("client " + last);
+        System.out.println("client test sent to beacon server " + last);
         try {
           while (true) {
             while (reader.ready()) {
               final int valueNew = reader.read();
+              System.out.println("client test received from beacon server " + valueNew);
               updateClientCounter(valueNew);
               if (last == 0)
                 last = valueNew + 1;
               else {
                 if (last + 1 != valueNew) {
-                  throw new Exception("error in client last cached:" + last + ",new:" + valueNew);
+                  throw new Exception("error in client test last cached:" + last + ",new:" + valueNew);
                 } else {
                   last = valueNew + 1;
                 }
@@ -349,7 +350,7 @@ public class BeaconClientServerTests {
               Thread.sleep(1000);
               w.write(last);
               w.flush();
-              System.out.println("client sent " + last);
+              System.out.println("client test sent to server beacon " + last);
             }
           }
         } catch (Exception a) {
@@ -367,7 +368,7 @@ public class BeaconClientServerTests {
         NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
     networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
     System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
-    Thread.sleep(30000);
+    Thread.sleep(5000);
     System.out.println("try to send package");
     clientTCP = executor.submit(clientRunner);
     Thread.sleep(60000);
@@ -376,7 +377,7 @@ public class BeaconClientServerTests {
 
   protected void updateClientCounter(int valueNew) {
     // System.out.println("counter: " + valueNew);
-    if (valueNew > 40) {
+    if (valueNew > 47) {
       completed = true;
       clientTCP.cancel(true);
       serverTCP.cancel(true);
@@ -440,7 +441,7 @@ public class BeaconClientServerTests {
         Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
       }
     }
-    Thread.sleep(20000);
+    Thread.sleep(5000);
     List<Agent> agents = testAnimas.get(SERVER_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {

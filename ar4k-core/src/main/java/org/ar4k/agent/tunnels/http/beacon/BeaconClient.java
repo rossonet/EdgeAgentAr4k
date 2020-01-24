@@ -534,7 +534,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     try {
       logger.info("network port required from beacon " + m.getUniqueIdRequest());
       NetworkConfig config = new BeaconNetworkConfig(m);
-      BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, false, asyncStubTunnel);
+      BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, false, asyncStubTunnel, m.getUniqueIdRequest());
       tunnels.add(tunnel);
       ResponseNetworkChannel value = ResponseNetworkChannel.newBuilder().setTargeId(tunnel.getTargetId())
           .setUniqueIdRequest(m.getUniqueIdRequest()).build();
@@ -706,7 +706,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config) {
-    BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, true, asyncStubTunnel);
+    BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, true, asyncStubTunnel, "0");
     try {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
       tunnel.setRemoteAgent(a);
@@ -730,7 +730,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       ResponseNetworkChannel response = blockingStubTunnel.requestTunnel(request.build());
       tunnel.setResponseNetworkChannel(response);
       tunnels.add(tunnel);
-      logger.info("request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
+      logger.debug("request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
       tunnel.init();
       // logger.info("INIT DONE");
       return tunnel;
