@@ -132,7 +132,7 @@ public class TunnelRunnerBeaconServer {
   @Override
   public String toString() {
     return "TunnelRunnerBeaconServer [targeId=" + targeId + ", active=" + active + ", serverAgent=" + serverAgent
-        + ", clientAgent=" + clientAgent + "]";
+        + ", clientAgent=" + clientAgent + ", sessions=" + serverObserver.size() + "]";
   }
 
   public Agent getClientAgent() {

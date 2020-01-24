@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.8.62'
+version = '0.8.63'
 
 ext{
   sourceCompatibility = 1.8
@@ -253,11 +253,25 @@ task ar4kDockerContainerQa{
   ar4kDockerContainerQa.dependsOn(":ar4k-agent-qa:buildDocker")
 }
 
+task ar4kBootJarDruido{
+  group "Ar4k Semantic Router Build"
+  description 'Build Ar4k Semantic Router as a single fat jar. This is the Druido robot version'
+  ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:bootJar")
+  ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:endBootJar")
+}
+
+task ar4kDockerContainerDruido{
+  group "Ar4k Semantic Router Build"
+  description 'Build Ar4k Semantic Router as a docker container. This is the Druido robot version'
+  ar4kDockerContainerDruido.dependsOn(":ar4k-agent-druido:buildDocker")
+}
+
 task buildAllDockerContainers{
   group "Ar4k Semantic Router Build"
   description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small, qa and full.'
   buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
   buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
+  buildAllDockerContainers.dependsOn(":ar4k-agent-druido:buildDocker")
 }
 
 task buildAllBootJars{

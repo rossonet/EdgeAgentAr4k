@@ -24,10 +24,14 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.network.NetworkConfig.NetworkMode;
+import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.tunnels.http.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http.beacon.BeaconNetworkConfig;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http.beacon.socket.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
@@ -124,6 +128,15 @@ public class BeaconShellInterface extends AbstractShellHelper {
     return tmpServer.getAgentLabelRegisterReplies();
   }
 
+  @ShellMethod(value = "List tunnels running to the Beacon server", group = "Beacon Server Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public List<TunnelRunnerBeaconServer> listBeaconTunnels() {
+    return tmpServer.getTunnels();
+  }
+
+  // comandi client
+
   @ShellMethod(value = "Connect to a Beacon service as an agent", group = "Beacon Client Commands")
   @ManagedOperation
   @ShellMethodAvailability("testBeaconClientNull")
@@ -140,6 +153,22 @@ public class BeaconShellInterface extends AbstractShellHelper {
   @ShellMethodAvailability("testBeaconClientRunning")
   public List<Agent> listBeaconAgents() {
     return tmpClient.listAgentsConnectedToBeacon();
+  }
+
+  @ShellMethod(value = "Create TCP tunnel over Beacon protocol", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public void createBeaconTunnel(
+      @ShellOption(help = "the unique ID of the remote agent on the other side of tunnel") String agentTarget,
+      @ShellOption(help = "the port for the TCP Server bind") int sourceServerPort,
+      @ShellOption(help = "the destination TCP port for the client side") int destinationIpPort,
+      @ShellOption(help = "the destination ip for the client") String destinationIp,
+      @ShellOption(help = "description of this tunnel") String description,
+      @ShellOption(help = "tunnel name") String name,
+      @ShellOption(help = "the role in TCP connection that the other side have. It should be SERVER or CLIENT") NetworkMode role) {
+    BeaconNetworkConfig config = new BeaconNetworkConfig(name, description, role, NetworkProtocol.TCP, destinationIp,
+        destinationIpPort, sourceServerPort);
+    tmpClient.getNetworkTunnel(agentTarget, config);
   }
 
   // TODO CRUD channels Beacon

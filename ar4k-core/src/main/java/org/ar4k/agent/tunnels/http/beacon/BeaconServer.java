@@ -441,7 +441,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
           onNextQueue.add(value);
           logger.trace("added to queue");
           if (target == null) {
-            for (TunnelRunnerBeaconServer t : tunnels) {
+            for (TunnelRunnerBeaconServer t : getTunnels()) {
               logger.trace("searching target from: " + t);
               if (value.getTargeId() == t.getTargeId()) {
                 target = t;
@@ -496,7 +496,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
           tunnelRunner.setServerAgent(request.getAgentSender());
           tunnelRunner.setClientAgent(request.getAgentDestination());
         }
-        tunnels.add(tunnelRunner);
+        getTunnels().add(tunnelRunner);
         logger.debug("searching in " + agents.size() + " agents");
         for (BeaconAgent at : agents) {
           if (at.getAgentUniqueName().equals(request.getAgentDestination().getAgentUniqueName())) {
@@ -729,6 +729,10 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   public String getStatus() {
     return server != null ? ("running on " + server.getPort()) : null;
+  }
+
+  public List<TunnelRunnerBeaconServer> getTunnels() {
+    return tunnels;
   }
 
   public CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException {
