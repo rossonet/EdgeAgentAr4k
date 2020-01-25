@@ -19,4 +19,5 @@ jobs:
       with:
         name: uploadQa
         path: ar4k-agent-qa/build/libs
+        expires: 86400
 

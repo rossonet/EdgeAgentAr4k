@@ -19,6 +19,7 @@ jobs:
       with:
         name: maven-repo
         path: maven
+        expires: 86400
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2
       env:
