@@ -4,6 +4,9 @@ bin
 !gradle/wrapper/gradle-wrapper.jar
 src/main/resources/static
 *.ks
+*.ar4k.conf.crypto
+*.ar4k.conf
+tmp
 
 ### OUTPUT ###
 spring-shell.log
