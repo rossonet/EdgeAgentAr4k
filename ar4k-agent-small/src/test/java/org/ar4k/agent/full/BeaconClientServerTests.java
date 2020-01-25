@@ -393,7 +393,7 @@ public class BeaconClientServerTests {
 
   protected void updateClientCounter(int valueNew) {
     // System.out.println("counter: " + valueNew);
-    if (valueNew > 47) {
+    if (valueNew > 20) {
       completed = true;
       clientTCP.cancel(true);
       serverTCP.cancel(true);
