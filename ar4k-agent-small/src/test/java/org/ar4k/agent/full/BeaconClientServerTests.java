@@ -83,6 +83,7 @@ public class BeaconClientServerTests {
   }
 
   @Test
+  @Ignore
   public void base3AnimasWithDiscovery() throws Exception {
     List<String> baseArgs = new ArrayList<>();
     baseArgs.add("--spring.shell.command.quit.enabled=false");
@@ -150,6 +151,7 @@ public class BeaconClientServerTests {
   }
 
   @Test
+  @Ignore
   public void oneServerAsClient() throws Exception {
     List<String> baseArgs = new ArrayList<>();
     baseArgs.add("--spring.shell.command.quit.enabled=false");
@@ -219,6 +221,7 @@ public class BeaconClientServerTests {
   }
 
   @Test
+  @Ignore
   public void oneServerAsClientSocketTestLeftNoSsl() throws Exception {
     oneServerAsClientSocketTestLeft(false);
   }
