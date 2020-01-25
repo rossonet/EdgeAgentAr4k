@@ -125,17 +125,17 @@ public class BeaconClientServerTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     testAnimas.put(CLIENT2_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
-                1125, baseArgs, config2, client2AliasInKeystore, client2AliasInKeystore, "https://localhost:33666"))
+                1125, baseArgs, config2, client2AliasInKeystore, client2AliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     testAnimas.put(CLIENT1_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
-                1126, baseArgs, config1, client1AliasInKeystore, client1AliasInKeystore, "https://localhost:33666"))
+                1126, baseArgs, config1, client1AliasInKeystore, client1AliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
@@ -190,7 +190,7 @@ public class BeaconClientServerTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
@@ -271,7 +271,7 @@ public class BeaconClientServerTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
@@ -449,7 +449,7 @@ public class BeaconClientServerTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
             .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
