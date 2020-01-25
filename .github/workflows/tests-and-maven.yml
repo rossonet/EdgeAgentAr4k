@@ -1,52 +1,17 @@
 name: Gradle test and build maven archive
-# This file is a template, and might need editing before it works on your project.
-# This template uses the java:8 docker image because there isn't any
-# official Gradle image at this moment
-#
-# This is the Gradle build system for JVM applications
-# https://gradle.org/
-# https://github.com/gradle/gradle
-image: java:8
 
 on: [push]
 
-# Disable the Gradle daemon for Continuous Integration servers as correctness
-# is usually a priority over speed in CI environments. Using a fresh
-# runtime for each build is more reliable since the runtime is completely
-# isolated from any previous builds.
-variables:
-    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+jobs:
+  build:
 
-# Make the gradle wrapper executable. This essentially downloads a copy of
-# Gradle to build the project with.
-# https://docs.gradle.org/current/userguide/gradle_wrapper.html
-# It is expected that any modern gradle project has a wrapper
-before_script:
-    - chmod +x gradlew
+    runs-on: ubuntu-latest
 
-# We redirect the gradle user home using -g so that it caches the
-# wrapper and dependencies.
-# https://docs.gradle.org/current/userguide/gradle_command_line.html
-#
-# Unfortunately it also caches the build output so
-# cleaning removes reminants of any cached builds.
-# The assemble task actually builds the project.
-# If it fails here, the tests can't run.
-build:
-  stage: build
-  script:
-    - ./gradlew clean test buildAllBootJars ar4kPublishLocalMavenProjects
-  artifacts:
-    paths:
-      - build/*
-    expire_in: 1 week
-  allow_failure: false
-
-# Use the generated build output to run the tests.
-#test:
-#  stage: test
-#  script:
-#    - ./gradlew -g /cache/.gradle check
-
-after_script:
-  - echo "End CI"
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build with Gradle
+      run: ./gradlew clean test buildAllBootJars ar4kPublishLocalMavenProjects
