@@ -610,7 +610,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
      * </pre>
      */
     public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
@@ -701,7 +701,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * TODO gestione kick agent con Beacon
+     * gestione kick agent con Beacon
      * </pre>
      */
     public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
@@ -889,7 +889,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
      * </pre>
      */
     public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
@@ -992,7 +992,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * TODO gestione kick agent con Beacon
+     * gestione kick agent con Beacon
      * </pre>
      */
     public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
@@ -1059,7 +1059,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
      * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
@@ -1151,7 +1151,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * TODO gestione kick agent con Beacon
+     * gestione kick agent con Beacon
      * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Status kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
@@ -1215,7 +1215,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> pollingCmdQueue(
@@ -1310,7 +1310,7 @@ public final class RpcServiceV1Grpc {
 
     /**
      * <pre>
-     * TODO gestione kick agent con Beacon
+     * gestione kick agent con Beacon
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> kickAgent(

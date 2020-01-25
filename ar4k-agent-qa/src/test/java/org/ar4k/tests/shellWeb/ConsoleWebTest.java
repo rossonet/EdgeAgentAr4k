@@ -52,6 +52,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ComponentScan("org.ar4k.agent.console,org.ar4k.agent.core.web,org.ar4k.agent.spring.autoconfig,org.ar4k.agent.spring.autoconfig.web")
 //@Import(TestApplicationRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Ignore
 public class ConsoleWebTest {
 
   @Autowired

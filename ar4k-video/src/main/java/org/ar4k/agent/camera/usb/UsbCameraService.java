@@ -41,6 +41,8 @@ import com.github.sarxos.webcam.ds.ipcam.IpCamMode;
 import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 import com.github.sarxos.webcam.ds.vlcj.VlcjDriver;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import uk.co.caprica.vlcj.medialist.MediaListItem;
 
@@ -49,7 +51,7 @@ import uk.co.caprica.vlcj.medialist.MediaListItem;
  *
  *         Servizio di connessione seriale.
  */
-public class UsbCameraService implements Ar4kComponent, Runnable {
+public class UsbCameraService implements Ar4kComponent {
 
   public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
@@ -71,6 +73,8 @@ public class UsbCameraService implements Ar4kComponent, Runnable {
   private IPublishSubscribeChannel globalMotionDetectQueue = null;
 
   private final Set<VideoCapture> runningIstances = new HashSet<>();
+
+  private DataAddress dataspace;
 
   private class VideoCapture implements Runnable {
     @Override
@@ -263,14 +267,8 @@ public class UsbCameraService implements Ar4kComponent, Runnable {
   }
 
   @Override
-  public void run() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO implementare updateAndGetStatus di UsbCameraService
     return null;
   }
 
@@ -281,14 +279,12 @@ public class UsbCameraService implements Ar4kComponent, Runnable {
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    dataspace = dataAddress;
   }
 
   @Override
@@ -298,7 +294,7 @@ public class UsbCameraService implements Ar4kComponent, Runnable {
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 }

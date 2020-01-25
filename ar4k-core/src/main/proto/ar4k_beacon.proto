@@ -12,7 +12,7 @@ package beacon;
 service RpcServiceV1 {
   // for agent registration
   rpc Register (RegisterRequest) returns (RegisterReply) {}
-  //rpc GetConfigTarget (Agent) returns (ConfigReply) {} // TODO: implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
+  //rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
   rpc PollingCmdQueue (Agent) returns (FlowMessage) {}
   rpc SubscriptionCmdQueue (Agent) returns (stream FlowMessage) {}
   rpc SendChatMessage (ChatMessage) returns (Status) {}
@@ -27,7 +27,7 @@ service RpcServiceV1 {
   rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequestReply) {}
   rpc ListAgentsRequestToDo (Empty) returns (ListAgentsRequestReply) {}
   rpc ApproveAgentRequest (ApproveAgentRequestRequest) returns (Status) {}
-   // TODO gestione kick agent con Beacon
+   // gestione kick agent con Beacon
   rpc KickAgent (Agent) returns (Status) {}
   // RPC on agent
   rpc ElaborateMessage(ElaborateMessageRequest) returns (ElaborateMessageReply) {}
@@ -58,7 +58,7 @@ message Timestamp {
 message RegisterReply {
   string registerCode = 1;  // unique code for the registration on the beacon server
   int32 monitoringFrequency = 2;
-  string cert = 3; // TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+  string cert = 3; // da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
   bytes ca = 4;
   Status statusRegistration = 5;
   int64 timestampRegistration = 6;

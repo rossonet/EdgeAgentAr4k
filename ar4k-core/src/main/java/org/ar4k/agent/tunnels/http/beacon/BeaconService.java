@@ -26,6 +26,9 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
@@ -115,8 +118,8 @@ public class BeaconService implements Ar4kComponent {
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
   @Override

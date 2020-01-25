@@ -320,8 +320,10 @@ public class Ar4kNetworkHub implements NetworkHub {
 
   @Override
   public NetworkStatus getStatus() {
-    // TODO
     NetworkStatus status = NetworkStatus.INIT;
+    if (asyncStubTunnel != null) {
+      status = NetworkStatus.ACTIVE;
+    }
     return status;
   }
 

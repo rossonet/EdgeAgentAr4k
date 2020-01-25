@@ -32,7 +32,7 @@ public interface RegisterReplyOrBuilder extends
 
   /**
    * <pre>
-   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
    * </pre>
    *
    * <code>string cert = 3;</code>
@@ -40,7 +40,7 @@ public interface RegisterReplyOrBuilder extends
   java.lang.String getCert();
   /**
    * <pre>
-   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
    * </pre>
    *
    * <code>string cert = 3;</code>

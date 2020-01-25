@@ -26,6 +26,7 @@ import org.json.JSONObject;
  *         Gestore servizio per connessioni socket.
  *
  */
+// TODO TEST SocketFactory Tunnel
 public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
 
   SocketFactoryConfig configuration = null;
@@ -51,43 +52,43 @@ public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+
     return null;
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public void setConfiguration(ServiceConfig configuration) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 }

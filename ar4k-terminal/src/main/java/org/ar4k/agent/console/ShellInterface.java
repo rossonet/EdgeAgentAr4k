@@ -394,14 +394,6 @@ public class ShellInterface extends AbstractShellHelper {
     setWorkingConfig(confCreated);
   }
 
-  @ShellMethod("Modify selected configuration")
-  @ManagedOperation
-  @ShellMethodAvailability("sessionOk")
-  public void modifySelectedConfig() {
-    // TODO: implementare
-    throw new UnsupportedOperationException();
-  }
-
   @ShellMethod("Remove a service from selected configuration")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")

@@ -48,6 +48,8 @@ public class HazelcastComponent implements Ar4kComponent {
   private Set<ExternalMessageHandler> subscriberTopicsFromExternal = new HashSet<>();
   private Set<InternalMessageHandler> subscriberTopicsFromInternal = new HashSet<>();
 
+  private DataAddress dataspace = null;
+
   public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
     this.configuration = tribeConfig;
     this.anima = anima;
@@ -205,32 +207,28 @@ public class HazelcastComponent implements Ar4kComponent {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO metodo updateAndGetStatus di Hazelcast
     return null;
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
-    return null;
+    return anima;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    dataspace = dataAddress;
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
-
+    this.anima = anima;
   }
 
   @Override

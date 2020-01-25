@@ -77,6 +77,8 @@ public class SerialService implements Ar4kComponent, SerialPortDataListener {
 
   private HandlerStringWriter handlerStringWriter = null;
 
+  private DataAddress dataspace = null;
+
   private void openSerialPort() {
     if (comPort == null) {
       openPort();
@@ -252,14 +254,12 @@ public class SerialService implements Ar4kComponent, SerialPortDataListener {
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    this.dataspace = dataAddress;
   }
 
   @Override

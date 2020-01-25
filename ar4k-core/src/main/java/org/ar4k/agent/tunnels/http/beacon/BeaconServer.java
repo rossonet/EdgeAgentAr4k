@@ -360,7 +360,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   private String getPemCaStrForRegistrationReply(String aliasBeaconServer, Anima animaTarget) {
-    // TODO verificare se serve
     StringBuilder writer = new StringBuilder();
     String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
     writer.append("-----BEGIN CERTIFICATE-----\n");

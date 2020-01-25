@@ -31,7 +31,6 @@ public class TerracottaRecipe implements HelmRecipe {
 
   @Override
   public String linkSite() {
-    // TODO Auto-generated method stub
     return "https://hub.helm.sh/charts/stable/terracotta";
   }
 

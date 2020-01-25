@@ -90,8 +90,9 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
-    
+    remoteHomunculus = null;
+    Agent me = null;
+    blockingStub = null;
   }
 
 }

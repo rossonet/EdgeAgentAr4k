@@ -27,6 +27,8 @@ import org.json.JSONObject;
  *
  *         Servizio tunnel SSL.
  */
+
+// TODO TEST scrivere SocketFactorySsl
 public class SocketFactorySsl extends AbstractSocketFactoryComponent {
 
   // iniettata vedi set/get
@@ -53,43 +55,43 @@ public class SocketFactorySsl extends AbstractSocketFactoryComponent {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public void setConfiguration(ServiceConfig configuration) {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 }

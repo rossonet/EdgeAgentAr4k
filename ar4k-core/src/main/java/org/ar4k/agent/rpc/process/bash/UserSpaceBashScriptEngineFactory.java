@@ -1,82 +1,98 @@
 package org.ar4k.agent.rpc.process.bash;
 
+import static java.util.Arrays.asList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 
+// TODO: provare BashScriptEngineFactory e scrivere tests
 public class UserSpaceBashScriptEngineFactory implements ScriptEngineFactory {
+
+  private static final String NAME = "bash";
+  private static final String ENGINE = "Bash interpreter";
+  private static final String ENGINE_VERSION = new NativeShellRunner(new Bash()).getInstalledVersion();
+  private static final String LANGUAGE = "Bash";
+  private static final String LANGUAGE_VERSION = new NativeShellRunner(new Bash()).getMajorVersion();
+
+  private static final Map<String, Object> parameters = new HashMap<>();
+
+  static {
+    parameters.put(ScriptEngine.NAME, NAME);
+    parameters.put(ScriptEngine.ENGINE, ENGINE);
+    parameters.put(ScriptEngine.ENGINE_VERSION, ENGINE_VERSION);
+    parameters.put(ScriptEngine.LANGUAGE, LANGUAGE);
+    parameters.put(ScriptEngine.LANGUAGE_VERSION, LANGUAGE_VERSION);
+  }
 
   @Override
   public String getEngineName() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    return NAME;
   }
 
   @Override
   public String getEngineVersion() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    return ENGINE_VERSION;
   }
 
   @Override
   public List<String> getExtensions() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return null;
+    return asList("sh", "bash");
   }
 
   @Override
   public List<String> getMimeTypes() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return null;
+    return asList("application/x-sh", "application/x-bash");
   }
 
   @Override
   public List<String> getNames() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return null;
+    return asList("bash", "sh", "Bash");
   }
 
   @Override
   public String getLanguageName() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    return LANGUAGE;
   }
 
   @Override
   public String getLanguageVersion() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    return LANGUAGE_VERSION;
   }
 
   @Override
   public Object getParameter(String key) {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return null;
+    return parameters.get(key);
   }
 
   @Override
   public String getMethodCallSyntax(String obj, String m, String... args) {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    String methodCall = m + " ";
+    for (String arg : args) {
+      methodCall += arg + " ";
+    }
+    return methodCall;
   }
 
   @Override
   public String getOutputStatement(String toDisplay) {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    return "echo -n " + toDisplay;
   }
 
   @Override
   public String getProgram(String... statements) {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return "test";
+    String program = "#!/bin/bash\n";
+    for (String statement : statements) {
+      program += statement + "\n";
+    }
+    return program;
   }
 
   @Override
   public ScriptEngine getScriptEngine() {
-    // TODO UserSpaceBashScriptEngineFactory Auto-generated method stub
-    return null;
+    return new NativeShellScriptEngine(new Bash());
   }
-
 }

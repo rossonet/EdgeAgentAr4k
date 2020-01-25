@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -46,6 +47,7 @@ public class Pcap {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -69,11 +71,12 @@ public class Pcap {
 
   @Test
   // necessita dei permessi di root
+  @Ignore
   public void checkSender() {
     char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm' };
     for (char test : files) {
       String nomeFile = "example/" + test + ".pcap";
-      pcapShellInterface.playPcapFileOnInterface(nomeFile, "wlp1s0", 200L);
+      pcapShellInterface.playPcapFileOnInterface(nomeFile, "lo", 200L);
     }
   }
 

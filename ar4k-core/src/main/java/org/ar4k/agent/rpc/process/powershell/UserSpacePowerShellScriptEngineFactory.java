@@ -5,77 +5,79 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 
+import com.google.common.collect.Lists;
+
+//TODO PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)
 public class UserSpacePowerShellScriptEngineFactory implements ScriptEngineFactory {
 
   @Override
   public String getEngineName() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "Power Shell script engine";
   }
 
   @Override
   public String getEngineVersion() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "NOT WORKING JUST A PLACEHOLDER";
   }
 
   @Override
   public List<String> getExtensions() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
+    // UserSpaceBashBindings Auto-generated method stub
     return null;
   }
 
   @Override
   public List<String> getMimeTypes() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
+    // UserSpaceBashBindings Auto-generated method stub
     return null;
   }
 
   @Override
   public List<String> getNames() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return null;
+    return Lists.newArrayList("powershell", "dos");
   }
 
   @Override
   public String getLanguageName() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "powershell";
   }
 
   @Override
   public String getLanguageVersion() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "0.1";
   }
 
   @Override
   public Object getParameter(String key) {
-    // TODO UserSpaceBashBindings Auto-generated method stub
+    // UserSpaceBashBindings Auto-generated method stub
     return null;
   }
 
   @Override
   public String getMethodCallSyntax(String obj, String m, String... args) {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "to do...";
   }
 
   @Override
   public String getOutputStatement(String toDisplay) {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "wello world";
   }
 
   @Override
   public String getProgram(String... statements) {
-    // TODO UserSpaceBashBindings Auto-generated method stub
-    return "test";
+    // UserSpaceBashBindings Auto-generated method stub
+    return "just for placeholder";
   }
 
   @Override
   public ScriptEngine getScriptEngine() {
-    // TODO UserSpaceBashBindings Auto-generated method stub
+    // UserSpaceBashBindings Auto-generated method stub
     return null;
   }
 

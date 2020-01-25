@@ -8,29 +8,30 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 
+//TODO PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)
 public class UserSpacePowerShellScriptEngine extends AbstractScriptEngine {
 
   @Override
   public Object eval(String script, ScriptContext context) throws ScriptException {
-    // TODO UserSpacePowerShellScriptEngine Auto-generated method stub
+    // UserSpacePowerShellScriptEngine Auto-generated method stub
     return null;
   }
 
   @Override
   public Object eval(Reader reader, ScriptContext context) throws ScriptException {
-    // TODO UserSpacePowerShellScriptEngine Auto-generated method stub
+    // UserSpacePowerShellScriptEngine Auto-generated method stub
     return null;
   }
 
   @Override
   public Bindings createBindings() {
-    // TODO UserSpacePowerShellScriptEngine Auto-generated method stub
+    // UserSpacePowerShellScriptEngine Auto-generated method stub
     return null;
   }
 
   @Override
   public ScriptEngineFactory getFactory() {
-    // TODO UserSpacePowerShellScriptEngine Auto-generated method stub
+    // UserSpacePowerShellScriptEngine Auto-generated method stub
     return null;
   }
 

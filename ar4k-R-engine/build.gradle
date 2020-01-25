@@ -1,0 +1,9 @@
+description = "IoT components R Engine JSR 223"
+
+// carica variabili e riporta i valori su mqtt 
+
+dependencies {
+  compile project(':ar4k-core')
+  // TODO scrivere test script engine R
+  compile group: 'org.renjin', name: 'renjin-script-engine', version: '3.5-beta43'
+}

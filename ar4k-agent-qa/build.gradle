@@ -10,6 +10,7 @@ dependencies {
   compile project(':ar4k-pcap')
   compile project(':ar4k-serial-comm')
   compile project(':ar4k-terminal')
+  compile project(':ar4k-R-engine')
 }
 
 bootJar {

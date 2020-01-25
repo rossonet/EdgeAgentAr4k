@@ -37,6 +37,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BeaconClientServerTests {
@@ -407,6 +408,7 @@ public class BeaconClientServerTests {
   boolean completed = false;
 
   @Test
+  @Ignore
   public void oneServerAsClientTestLocalSsh() throws Exception {
     List<String> baseArgs = new ArrayList<>();
     baseArgs.add("--spring.shell.command.quit.enabled=false");

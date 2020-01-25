@@ -19,10 +19,10 @@ import java.text.ParseException;
 
 import org.ar4k.agent.camera.CameraShellInterface;
 import org.ar4k.agent.camera.usb.UsbCameraConfig;
-import org.ar4k.agent.config.AnimaStateMachineConfig;
 import org.ar4k.agent.console.DataShellInterface;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
@@ -31,6 +31,7 @@ import org.jline.builtins.Commands;
 import org.jline.reader.LineReader;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -72,6 +73,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
     Anima.class, DataShellInterface.class })
 @PropertySource("classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Ignore
 public class VideoStreamTests {
 
   public BeanFactory context = null;

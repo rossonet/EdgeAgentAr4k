@@ -28,6 +28,9 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
 import org.springframework.shell.Shell;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
@@ -42,6 +45,10 @@ public class SshdHomunculusService implements Ar4kComponent {
   // iniettata vedi set/get
   private SshdHomunculusConfig configuration = null;
   private SshServer server = null;
+
+  private Anima anima = null;
+
+  private DataAddress dataspace = null;
 
   @Override
   public SshdHomunculusConfig getConfiguration() {
@@ -91,38 +98,34 @@ public class SshdHomunculusService implements Ar4kComponent {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO implementare updateAndGetStatus di SshdHomunculusService
     return null;
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
-    return null;
+    return anima;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    dataspace = dataAddress;
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
-
+    this.anima = anima;
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

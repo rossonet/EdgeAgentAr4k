@@ -25,6 +25,9 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.EventLoopGroup;
@@ -56,6 +59,8 @@ public class NodeMcuLinkService implements Ar4kComponent, TcpServerListener {
   private final Map<String, JSONObject> cacheDevicesMessages = new HashMap<>();
 
   private Anima anima = null;
+
+  private DataAddress dataspace = null;
 
   private void startTcpServer() throws InterruptedException {
     bossGroup = new NioEventLoopGroup(intBossGroup);
@@ -200,14 +205,12 @@ public class NodeMcuLinkService implements Ar4kComponent, TcpServerListener {
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    dataspace = dataAddress;
   }
 
   @Override
@@ -217,14 +220,13 @@ public class NodeMcuLinkService implements Ar4kComponent, TcpServerListener {
 
   @Override
   public ServiceConfig getConfiguration() {
-    // TODO Auto-generated method stub
-    return null;
+    return configuration;
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

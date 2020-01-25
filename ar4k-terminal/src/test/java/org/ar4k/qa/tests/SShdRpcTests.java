@@ -24,6 +24,7 @@ import org.ar4k.agent.console.chat.sshd.SshdShellInterface;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -57,6 +58,7 @@ import org.springframework.test.context.TestPropertySource;
     Commands.class, FileValueProvider.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Ignore
 public class SShdRpcTests {
 
   SshdShellInterface component = null;
@@ -79,6 +81,7 @@ public class SShdRpcTests {
 
   @Rule
   public TestWatcher watcher = new TestWatcher() {
+    @Override
     protected void starting(Description description) {
       System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
     }
@@ -94,7 +97,7 @@ public class SShdRpcTests {
     server.setPublickeyAuthenticator(AcceptAllPublickeyAuthenticator.INSTANCE);
     server.setShellFactory(new SshdConnectionHandlerHomunculus());
     server.start();
-    Thread.sleep(1000 * 60 * 5);
+    Thread.sleep(1000 * 60 * 1);
   }
 
 }

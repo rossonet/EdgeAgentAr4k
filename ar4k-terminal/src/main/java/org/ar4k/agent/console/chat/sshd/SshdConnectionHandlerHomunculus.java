@@ -6,17 +6,18 @@ import org.ar4k.agent.rpc.Homunculus;
 
 //import net.engio.mbassy.listener.Handler;
 
+// TODO implementare SshdConnectionHandlerHomunculus
 public class SshdConnectionHandlerHomunculus implements Homunculus, Factory<Command> {
 
   @Override
   public Command create() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 

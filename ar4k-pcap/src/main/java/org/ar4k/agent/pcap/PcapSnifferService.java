@@ -7,76 +7,77 @@ import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
+// TODO implementare servizio di sniffing PCAP verso dataspace
 public class PcapSnifferService implements Ar4kComponent {
+
+  private ServiceConfig configuration;
+  private Anima anima;
+  private DataAddress dataspace;
 
   @Override
   public void init() {
-    // TODO Auto-generated method stub
+    // init method of PCAP service
 
   }
 
   @Override
   public void setConfiguration(ServiceConfig configuration) {
-    // TODO Auto-generated method stub
-
+    this.configuration = configuration;
   }
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
-
+    // metodo close di PCAP service
   }
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
   @Override
   public void kill() {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
 
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
-    return null;
+    return anima;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    this.dataspace = dataAddress;
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
-
+    this.anima = anima;
   }
 
   @Override
   public ServiceConfig getConfiguration() {
-    // TODO Auto-generated method stub
-    return null;
+    return configuration;
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

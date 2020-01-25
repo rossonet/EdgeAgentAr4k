@@ -172,7 +172,7 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object cert_;
   /**
    * <pre>
-   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
    * </pre>
    *
    * <code>string cert = 3;</code>
@@ -191,7 +191,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
    * </pre>
    *
    * <code>string cert = 3;</code>
@@ -768,7 +768,7 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object cert_ = "";
     /**
      * <pre>
-     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
      * </pre>
      *
      * <code>string cert = 3;</code>
@@ -787,7 +787,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
      * </pre>
      *
      * <code>string cert = 3;</code>
@@ -807,7 +807,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
      * </pre>
      *
      * <code>string cert = 3;</code>
@@ -824,7 +824,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
      * </pre>
      *
      * <code>string cert = 3;</code>
@@ -837,7 +837,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * TODO: da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
      * </pre>
      *
      * <code>string cert = 3;</code>

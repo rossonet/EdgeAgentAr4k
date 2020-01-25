@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.8.63'
+version = '0.8.64'
 
 ext{
   sourceCompatibility = 1.8
@@ -100,9 +100,10 @@ subprojects {
     mavenCentral()
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://dl.bintray.com/ethereum/maven/" }
-    maven { url "http://nexus.pentaho.org/content/groups/omni"}
+    //maven { url "http://nexus.pentaho.org/content/groups/omni"}
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
+    maven { url "https://nexus.bedatadriven.com/content/groups/public" }
   }
 
   task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }

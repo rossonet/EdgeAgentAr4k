@@ -46,13 +46,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
-//TODO: test concole da implementare
+//TODO TEST test concole da implementare -> TunnelTest
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = { ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false",
     InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false" })
 @ComponentScan("org.ar4k.agent")
 //@Import(TestApplicationRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Ignore
 public class TunnelTest {
 
   @Autowired

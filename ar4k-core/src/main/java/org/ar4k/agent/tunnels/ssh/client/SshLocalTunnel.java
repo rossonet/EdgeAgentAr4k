@@ -21,6 +21,9 @@ import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
@@ -33,6 +36,10 @@ public class SshLocalTunnel extends AbstractSshTunnel {
       .getLogger(SshLocalTunnel.class.toString());
 
   private SshLocalConfig configuration = null;
+
+  private DataAddress dataspace;
+
+  private Anima anima;
 
   private void startTunnel() {
     try {
@@ -50,38 +57,34 @@ public class SshLocalTunnel extends AbstractSshTunnel {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO updateAndGetStatus di SshLocalTunnel
     return null;
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
-    return null;
+    return anima;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
-    return null;
+    return dataspace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
-
+    dataspace = dataAddress;
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
-
+    this.anima = anima;
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
-    return null;
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }
