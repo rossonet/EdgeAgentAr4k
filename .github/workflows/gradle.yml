@@ -1,4 +1,4 @@
-name: Gradle all tasks
+name: Gradle test and build maven archive
 
 on: [push]
 
