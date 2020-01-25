@@ -3,8 +3,6 @@ package org.ar4k.agent.full;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
@@ -22,11 +20,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.ContextCreationHelper;
+import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
@@ -40,7 +38,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.ResourceUtils;
 
 public class BeaconClientServerTests {
 
@@ -55,18 +52,21 @@ public class BeaconClientServerTests {
   private final String serverAliasInKeystore = "server";
   private final String client2AliasInKeystore = "client2";
   private final String client1AliasInKeystore = "client1";
-  private final String caAlias = "ca";
+  private final String passwordKs = "password";
 
   @Before
-  public void before() throws IOException {
-    try {
-      File keyStoreMaster = ResourceUtils.getFile("classpath:test-beacon.tkeystore");
-      FileUtils.copyFile(keyStoreMaster, keyStoreServer);
-      FileUtils.copyFile(keyStoreMaster, keyStoreClient1);
-      FileUtils.copyFile(keyStoreMaster, keyStoreClient2);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
+  public void before() throws Exception {
+    KeystoreLoader.create(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
+    KeystoreLoader.create(client2AliasInKeystore, keyStoreClient1.getAbsolutePath(), passwordKs);
+    KeystoreLoader.create(client1AliasInKeystore, keyStoreClient2.getAbsolutePath(), passwordKs);
+    /*
+     * try { File keyStoreMaster =
+     * ResourceUtils.getFile("classpath:test-beacon.tkeystore");
+     * FileUtils.copyFile(keyStoreMaster, keyStoreServer);
+     * FileUtils.copyFile(keyStoreMaster, keyStoreClient1);
+     * FileUtils.copyFile(keyStoreMaster, keyStoreClient2); } catch
+     * (FileNotFoundException e) { e.printStackTrace(); }
+     */
   }
 
   @After
@@ -94,7 +94,7 @@ public class BeaconClientServerTests {
     baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
     baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
     // baseArgs.add("--ar4k.keystoreMainAlias=");
-    baseArgs.add("--ar4k.keystorePassword=secA4.rk!8");
+    baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
     baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
     baseArgs.add("--ar4k.adminPassword=password");
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
@@ -114,7 +114,7 @@ public class BeaconClientServerTests {
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
-    beaconServiceConfig.aliasBeaconServerInKeystore = caAlias;
+    beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
@@ -122,14 +122,20 @@ public class BeaconClientServerTests {
     Ar4kConfig config1 = null; // TODO
 
     testAnimas.put(SERVER_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+            .get());
     testAnimas.put(CLIENT2_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
-            1125, baseArgs, config2, caAlias, caAlias, "https://localhost:33666")).get());
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
+                1125, baseArgs, config2, client2AliasInKeystore, client2AliasInKeystore, "https://localhost:33666"))
+            .get());
     testAnimas.put(CLIENT1_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
-            1126, baseArgs, config1, caAlias, caAlias, "https://localhost:33666")).get());
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
+                1126, baseArgs, config1, client1AliasInKeystore, client1AliasInKeystore, "https://localhost:33666"))
+            .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
@@ -155,7 +161,7 @@ public class BeaconClientServerTests {
     baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
     baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
     // baseArgs.add("--ar4k.keystoreMainAlias=");
-    baseArgs.add("--ar4k.keystorePassword=secA4.rk!8");
+    baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
     baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
     baseArgs.add("--ar4k.adminPassword=password");
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
@@ -175,23 +181,16 @@ public class BeaconClientServerTests {
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
-    beaconServiceConfig.aliasBeaconServerInKeystore = caAlias;
+    beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
     testAnimas.put(SERVER_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
-    /*
-     * testAnimas.put(CLIENT2_LABEL, executor.submit(new
-     * ContextCreationTestUtils(Ar4kAgent.class, executor, "b.log",
-     * keyStoreClient2.getAbsolutePath(), 1125, baseArgs, config2, caAlias, caAlias,
-     * "https://localhost:33666")) .get()); testAnimas.put(CLIENT1_LABEL,
-     * executor.submit(new ContextCreationTestUtils(Ar4kAgent.class, executor,
-     * "c.log", keyStoreClient1.getAbsolutePath(), 1126, baseArgs, config1, caAlias,
-     * caAlias, "https://localhost:33666")) .get());
-     */
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+            .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
@@ -219,8 +218,20 @@ public class BeaconClientServerTests {
   }
 
   @Test
-  public void oneServerAsClientSocketTestLeft() throws Exception {
+  public void oneServerAsClientSocketTestLeftNoSsl() throws Exception {
+    oneServerAsClientSocketTestLeft(false);
+  }
+
+  @Test
+  public void oneServerAsClientSocketTestLeftSsl() throws Exception {
+    oneServerAsClientSocketTestLeft(true);
+  }
+
+  private void oneServerAsClientSocketTestLeft(boolean ssl) throws Exception {
     List<String> baseArgs = new ArrayList<>();
+    if (ssl) {
+      baseArgs.add("--ar4k.beaconClearText=false");
+    }
     baseArgs.add("--spring.shell.command.quit.enabled=false");
     baseArgs.add("--logging.level.root=INFO");
     baseArgs.add("--ar4k.confPath=./tmp");
@@ -231,7 +242,7 @@ public class BeaconClientServerTests {
     baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
     baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
     // baseArgs.add("--ar4k.keystoreMainAlias=");
-    baseArgs.add("--ar4k.keystorePassword=secA4.rk!8");
+    baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
     baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
     baseArgs.add("--ar4k.adminPassword=password");
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
@@ -251,14 +262,16 @@ public class BeaconClientServerTests {
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
-    beaconServiceConfig.aliasBeaconServerInKeystore = caAlias;
+    beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
     testAnimas.put(SERVER_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+            .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
@@ -283,6 +296,7 @@ public class BeaconClientServerTests {
 
       @Override
       public Boolean call() throws Exception {
+        @SuppressWarnings("resource")
         ServerSocket serverSocket = new ServerSocket(destinationPort);
         Socket socket = serverSocket.accept();
         PrintWriter w = new PrintWriter(socket.getOutputStream(), true);
@@ -323,6 +337,7 @@ public class BeaconClientServerTests {
       @Override
       public Boolean call() throws Exception {
         SocketAddress endpoint = new InetSocketAddress(destinationIp, srcPort);
+        @SuppressWarnings("resource")
         Socket socketClient = new Socket();
         socketClient.connect(endpoint, 60000);
         socketClient.setKeepAlive(true);
@@ -404,7 +419,7 @@ public class BeaconClientServerTests {
     baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
     baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
     // baseArgs.add("--ar4k.keystoreMainAlias=");
-    baseArgs.add("--ar4k.keystorePassword=secA4.rk!8");
+    baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
     baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
     baseArgs.add("--ar4k.adminPassword=password");
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
@@ -424,14 +439,16 @@ public class BeaconClientServerTests {
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
-    beaconServiceConfig.aliasBeaconServerInKeystore = caAlias;
+    beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
     testAnimas.put(SERVER_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, caAlias, caAlias, "https://localhost:33666")).get());
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://localhost:33666"))
+            .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";

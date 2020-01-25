@@ -268,7 +268,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
       this.reservedUniqueName = UUID.randomUUID().toString();
     if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-        logger.info("Certificate for Beacon client is present in keystore");
+        logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
+            + "' for Beacon client is present in keystore");
       } else {
         throw new UnrecoverableKeyException("key " + this.aliasBeaconClientInKeystore + " not found in keystore");
       }
@@ -288,7 +289,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
       try {
         runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
-            .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(certChainFile)).build()));
+            .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(this.certChainFile)).build()));
       } catch (SSLException e) {
         logger.logException(e);
       }
@@ -314,14 +315,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private void generateCaFile() {
     try {
       FileWriter writer = new FileWriter(new File(certChainFile));
-      // if (getCaServer() == null || getCaServer().isEmpty()) {
+      // TODO meccanismo per trovare la catena in automatico
       String pemTxtClient = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClientInKeystore);
-      String pemTxtCa = anima.getMyIdentityKeystore().getCaPem(anima.getMyAliasCertInKeystore());
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxtClient);
-      writer.write("\n-----END CERTIFICATE-----\n");
-      writer.write("-----BEGIN CERTIFICATE-----\n");
-      writer.write(pemTxtCa);
       writer.write("\n-----END CERTIFICATE-----\n");
       /*
        * } else { writer.write(getCaServer()); }

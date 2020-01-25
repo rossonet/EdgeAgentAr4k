@@ -8,11 +8,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
+import org.joda.time.Instant;
 import org.json.JSONObject;
 
 public class BeaconAgent implements AutoCloseable {
 
   private static final int queueSize = 50;
+
+  private Instant lastCall = Instant.now();
 
   private final RegisterRequest registerRequest;
   private final RegisterReply registerReply;
@@ -44,6 +47,7 @@ public class BeaconAgent implements AutoCloseable {
     while (!cmdCalls.isEmpty()) {
       r.add(cmdCalls.poll());
     }
+    lastCall = Instant.now();
     return r;
   }
 
@@ -68,8 +72,11 @@ public class BeaconAgent implements AutoCloseable {
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
+    cmdCalls.clear();
+  }
 
+  public Instant getLastCall() {
+    return lastCall;
   }
 
 }

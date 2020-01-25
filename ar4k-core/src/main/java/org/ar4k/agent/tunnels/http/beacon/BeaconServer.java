@@ -82,6 +82,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
       .getLogger(BeaconServer.class.toString());
   private static final long defaultTimeOut = 10000L;
   private static final long waitReplyLoopWaitTime = 300L;
+  private static final long TIMEOUT_AGENT_POOL = 15 * 60 * 1000;
 
   private int port = 0;
   private Server server = null;
@@ -275,12 +276,13 @@ public class BeaconServer implements Runnable, AutoCloseable {
       if (animaTarget != null && animaTarget.getMyIdentityKeystore() != null
           && animaTarget.getMyIdentityKeystore().listCertificate() != null
           && animaTarget.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
-        logger.info("Certificate " + this.aliasBeaconServerInKeystore + " for Beacon server is present in keystore");
+        logger.info("Certificate with alias '" + this.aliasBeaconServerInKeystore
+            + "' for Beacon server is present in keystore");
       } else {
         throw new UnrecoverableKeyException(
             "key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + animaTarget + "]");
       }
-      writePemCa(anima.getMyAliasCertInKeystore(), animaTarget, this.certChainFile);
+      writePemCa(this.aliasBeaconServerInKeystore, animaTarget, this.certChainFile);
       writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
       writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFile);
       logger.info("Starting beacon server");
@@ -342,6 +344,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private void writePemCa(String alias, Anima animaTarget, String certChain) {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
+      // TODO recuperare la catena di authority nel keystore.
       if (caChainPem == null || caChainPem.isEmpty()) {
         String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(alias);
         writer.write("-----BEGIN CERTIFICATE-----\n");
@@ -357,12 +360,9 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   private String getPemCaStrForRegistrationReply(String aliasBeaconServer, Anima animaTarget) {
+    // TODO verificare se serve
     StringBuilder writer = new StringBuilder();
     String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-    String pemTxtCa = animaTarget.getMyIdentityKeystore().getCaPem(animaTarget.getMyAliasCertInKeystore());
-    writer.append("-----BEGIN CERTIFICATE-----\n");
-    writer.append(pemTxtCa);
-    writer.append("\n-----END CERTIFICATE-----\n");
     writer.append("-----BEGIN CERTIFICATE-----\n");
     writer.append(pemTxtBase);
     writer.append("\n-----END CERTIFICATE-----\n");
@@ -906,6 +906,39 @@ public class BeaconServer implements Runnable, AutoCloseable {
         + ", broadcastAddress=" + broadcastAddress + ", stringDiscovery=" + stringDiscovery + ", certChainFile="
         + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
         + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
+  }
+
+  public void clearOldData() {
+    List<BeaconAgent> toDelete = new ArrayList<>();
+    for (BeaconAgent a : agents) {
+      if (a.getLastCall().plus(TIMEOUT_AGENT_POOL).isBeforeNow()) {
+        try {
+          logger.info("agent " + a + " doesn't poll data since " + a.getLastCall().toDateTime());
+          toDelete.add(a);
+          clearTunnelForAgent(a);
+          a.close();
+        } catch (Exception e) {
+          logger.logException("deleting agent " + a, e);
+        }
+      }
+    }
+    for (BeaconAgent atd : toDelete) {
+      logger.info("agent will be removed ->\n" + atd);
+      agents.remove(atd);
+    }
+  }
+
+  private void clearTunnelForAgent(BeaconAgent a) {
+    List<TunnelRunnerBeaconServer> tunnelToDelete = new ArrayList<>();
+    for (TunnelRunnerBeaconServer t : tunnels) {
+      if (t.getClientAgent().equals(a) || t.getServerAgent().equals(a)) {
+        tunnelToDelete.add(t);
+      }
+    }
+    for (TunnelRunnerBeaconServer ttd : tunnelToDelete) {
+      logger.info("tunnel will be removed ->\n" + ttd);
+      tunnels.remove(ttd);
+    }
   }
 
 }

@@ -85,6 +85,8 @@ public class BeaconService implements Ar4kComponent {
         beaconServer.stop();
         beaconServer = null;
         init();
+      } else {
+        beaconServer.clearOldData();
       }
     }
     return ServiceStatus.RUNNING;

@@ -24,7 +24,7 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
   private final NetworkHub hub = new Ar4kNetworkHub();
   private Agent remoteAgent = null;
   private final Agent me;
-  private ResponseNetworkChannel responseNetworkChannel = null;
+  // private ResponseNetworkChannel responseNetworkChannel = null;
   private long targetId;
   private final TunnelServiceV1Stub asyncStubTunnel;
 
@@ -72,9 +72,8 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
   }
 
   public void setResponseNetworkChannel(ResponseNetworkChannel response) {
-    this.responseNetworkChannel = response;
+    // this.responseNetworkChannel = response;
     this.targetId = response.getTargeId();
-
   }
 
   public boolean isOwnerRequest() {
