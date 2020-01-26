@@ -149,7 +149,7 @@ subprojects {
   jar.doLast { task ->
     ant.checksum file: task.archivePath
   }
-
+//TODO: pubblicazione automatica su repository maven multipli
   uploadArchives {
     repositories {
       mavenDeployer { repository(url: "file://maven") }

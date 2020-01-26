@@ -1,6 +1,9 @@
 name: Gradle test and build maven archive
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   build:
@@ -15,11 +18,11 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew clean test buildAllBootJars ar4kPublishLocalMavenProjects --info
-    - uses: actions/upload-artifact@v1
-      with:
-        name: maven-repo
-        path: maven
-        expires: 86400
+      #    - uses: actions/upload-artifact@v1
+      #      with:
+      #        name: maven-repo
+      #        path: maven
+      #        expires: 86400
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2
       env:
