@@ -185,7 +185,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 
   @ShellMethod(value = "Clear address space", group = "Data Server Commands")
   @ManagedOperation
-  public void clearDataChannelsAddressSpace() {
+  public void clearDataChannelsInAddressSpace() {
     anima.getDataAddress().clearDataChannels();
   }
 
