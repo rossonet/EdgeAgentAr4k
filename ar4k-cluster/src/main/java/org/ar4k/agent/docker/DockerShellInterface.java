@@ -24,9 +24,7 @@ import java.util.List;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.Shell;
 import org.springframework.shell.standard.ShellCommandGroup;
