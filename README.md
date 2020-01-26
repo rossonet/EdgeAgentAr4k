@@ -1,6 +1,5 @@
 # Ar4k Edge Agent by Rossonet
 
-![Build QA jar](https://github.com/rossonet/EdgeAgentAr4k/workflows/Build%20QA%20jar/badge.svg)
 ![Gradle test and build maven archive](https://github.com/rossonet/EdgeAgentAr4k/workflows/Gradle%20test%20and%20build%20maven%20archive/badge.svg)
 
 ![alt text](https://www.rossonet.net/wp-content/uploads/2015/01/logoRossonet4.png "Rossonet")
