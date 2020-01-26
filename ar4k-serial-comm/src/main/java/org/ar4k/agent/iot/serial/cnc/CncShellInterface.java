@@ -17,7 +17,6 @@ package org.ar4k.agent.iot.serial.cnc;
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 //@ManagedResource(objectName = "bean:name=cncInterface", description = "Ar4k Agent CNC Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "cncInterface")
 @RestController
 @RequestMapping("/cncInterface")
-@ConditionalOnProperty(name = "ar4k.cnc", havingValue = "true")
 public class CncShellInterface extends AbstractShellHelper {
 
   @ShellMethod(value = "Add a CNC interface service to the selected configuration", group = "CNC Commands")
