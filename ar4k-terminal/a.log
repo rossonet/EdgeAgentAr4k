@@ -2040,3 +2040,82 @@ srcPort: 44847
 2020-01-27 01:42:46.374  INFO 30551 --- [nioEventLoopGroup-7-2] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : open Beacon channel for server ChannelHandlerContext(Ar4kNetworkHub$ServerTCPHandler#0, [id: 0xc9de7f52, L:/127.0.0.1:44847 - R:/127.0.0.1:40846]) with session -237849178494973715
 2020-01-27 01:42:46.383  INFO 30551 --- [grpc-default-executor-0] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : new session -237849178494973715 in tunnel -1009705652206285417
 2020-01-27 01:42:46.418  INFO 30551 --- [grpc-default-executor-0] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Client Netty session -237849178494973715 to 127.0.0.1:46759 with id_target -1009705652206285417/66453da6-2ddd-4fd6-9c07-7aab07ad4754 started successfully
+2020-01-27 02:03:59.693  INFO 18095 --- [pool-1-thread-2] o.s.boot.SpringApplication               : 
+     _    ____  _  _   _         _                    _   
+    / \  |  _ \| || | | | __    / \   __ _  ___ _ __ | |_ 
+   / _ \ | |_) | || |_| |/ /   / _ \ / _` |/ _ \ '_ \| __|
+  / ___ \|  _ <|__   _|   <   / ___ \ (_| |  __/ | | | |_ 
+ /_/   \_\_| \_\__|_| |_|\_\ /_/   \_\__, |\___|_| |_|\__|
+ | |__  _   _  |  _ \ ___  ___ ___  _|___/ __   ___| |_   
+ | '_ \| | | | | |_) / _ \/ __/ __|/ _ \| '_ \ / _ \ __|  
+ | |_) | |_| | |  _ < (_) \__ \__ \ (_) | | | |  __/ |_   
+ |_.__/ \__, | |_| \_\___/|___/___/\___/|_| |_|\___|\__|  
+        |___/                                             
+
+BUILD 
+based on Spring Boot Framework (v2.2.4.RELEASE)
+
+Type help to list the available commands
+
+You can use the TAB completation;
+the CTRL-R to invoke the reverse-i-search in the history and
+you can run a sequence of commands saved in a file.
+
+
+2020-01-27 02:04:00.246  INFO 18095 --- [pool-1-thread-2] o.s.boot.SpringApplication               : Starting application on ciospo.rossonet.net with PID 18095 (started by andrea in /home/andrea/privato/git/EdgeAgentAr4k/ar4k-terminal)
+2020-01-27 02:04:00.254  INFO 18095 --- [pool-1-thread-2] o.s.boot.SpringApplication               : No active profile set, falling back to default profiles: default
+2020-01-27 02:04:03.965  INFO 18095 --- [pool-1-thread-2] faultConfiguringBeanFactoryPostProcessor : No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+2020-01-27 02:04:03.986  INFO 18095 --- [pool-1-thread-2] faultConfiguringBeanFactoryPostProcessor : No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+2020-01-27 02:04:04.216  INFO 18095 --- [pool-1-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration' of type [org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration$$EnhancerBySpringCGLIB$$77eb73ef] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:04:04.243  INFO 18095 --- [pool-1-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:04:04.266  INFO 18095 --- [pool-1-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:04:04.281  INFO 18095 --- [pool-1-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:04:05.349  WARN 18095 --- [pool-1-thread-2] org.jline                                : Unable to create a system terminal, creating a dumb terminal (enable debug logging for more information)
+2020-01-27 02:04:06.957  INFO 18095 --- [pool-1-thread-2] o.s.i.endpoint.EventDrivenConsumer       : Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2020-01-27 02:04:06.961  INFO 18095 --- [pool-1-thread-2] o.s.i.channel.PublishSubscribeChannel    : Channel 'application.errorChannel' has 1 subscriber(s).
+2020-01-27 02:04:06.962  INFO 18095 --- [pool-1-thread-2] o.s.i.endpoint.EventDrivenConsumer       : started bean '_org.springframework.integration.errorLogger'
+2020-01-27 02:04:07.001  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : STARTING AGENT...
+2020-01-27 02:04:07.020  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to INIT
+2020-01-27 02:04:07.156  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : datastore on Anima started
+2020-01-27 02:04:07.462  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : use keystore file KeystoreConfig [creationDate=2020-01-27T01:04:07.158Z, lastUpdate=2020-01-27T01:04:07.158Z, uniqueId=338ac890-bd7b-43de-b552-41f56c4c06cc, filePathPre=/tmp/server.ks, keystorePassword=*********, label=master-keytool, caAlias=server]
+2020-01-27 02:04:07.754  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : Certificate for anima: C=IT, ST=BO, L=Imola, OU=Ar4k, O=Rossonet s.c.a r.l., CN=rossonet-dd199863-693c-400a-94e8-48cab5f2fdf1 - alias server
+2020-01-27 02:04:07.757  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : 0/3 searching config...
+2020-01-27 02:04:07.758  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : try base64Config
+2020-01-27 02:04:07.763  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : found base64Config
+2020-01-27 02:04:07.765  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel system of type class org.ar4k.agent.core.data.channels.INoDataChannel
+2020-01-27 02:04:07.773  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : system [local JVM system] started
+2020-01-27 02:04:07.782  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel logger of type class org.ar4k.agent.core.data.channels.IPublishSubscribeChannel
+2020-01-27 02:04:07.785  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child logger to system for scope ar4k-ai
+2020-01-27 02:04:07.790  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : logger [logger queue] started
+2020-01-27 02:04:07.792  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel health of type class org.ar4k.agent.core.data.channels.IPublishSubscribeChannel
+2020-01-27 02:04:07.795  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child health to system for scope ar4k-ai
+2020-01-27 02:04:07.796  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : health [local machine hardware and software stats] started
+2020-01-27 02:04:07.803  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel command of type class org.ar4k.agent.core.data.channels.IQueueChannel
+2020-01-27 02:04:07.809  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child command to system for scope ar4k-ai
+2020-01-27 02:04:07.809  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.data.DataAddress       : command [RPC interface] started
+2020-01-27 02:04:08.241  WARN 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : created user admin
+2020-01-27 02:04:08.245  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : TRY CONNECTION TO BEACON AT https://127.0.0.1:33666
+2020-01-27 02:04:08.515  INFO 18095 --- [pool-1-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Certificate with alias 'server' for Beacon client is present in keystore
+2020-01-27 02:04:08.896  INFO 18095 --- [pool-1-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : USE KEY FOR CLIENT: server target file -> /tmp/beacon-client-3b65d012-8005-4ba5-ab9c-1f5744457e43.key
+2020-01-27 02:04:11.393  WARN 18095 --- [pool-1-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Beacon server connection is UNAVAILABLE: io exception
+2020-01-27 02:04:11.397  INFO 18095 --- [pool-1-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   :  [M] finishConnect(..) failed: Connessione rifiutata: /127.0.0.1:33666 -> io.grpc.StatusRuntimeException: UNAVAILABLE: io exception
+	at io.grpc.stub.ClientCalls.toStatusRuntimeException(ClientCalls.java:240)
+	at io.grpc.stub.ClientCalls.getUnchecked(ClientCalls.java:221)
+	at io.grpc.stub.ClientCalls.blockingUnaryCall(ClientCalls.java:140)
+	at org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc$RpcServiceV1BlockingStub.register(RpcServiceV1Grpc.java:1056)
+	at org.ar4k.agent.tunnels.http.beacon.BeaconClient.registerToBeacon(BeaconClient.java:424)
+
+2020-01-27 02:04:11.398  INFO 18095 --- [pool-1-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Client Beacon started, connected state TRANSIENT_FAILURE
+2020-01-27 02:04:11.402  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : the Beacon endpoint https://127.0.0.1:33666 return TRANSIENT_FAILURE
+2020-01-27 02:04:11.403  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : Starting with config: Ar4kConfig [creationDate=2020-01-27T01:03:58.270Z, lastUpdate=2020-01-27T01:03:58.270Z, uniqueId=04aebb00-3919-4193-ae72-690bf55f9520, name=server-beacon, prompt=studio, promptColor=91, description=Template configurazione Agente Ar4k, beaconServer=null, autoRegisterBeaconServer=false, dataCenter=ALONE, version=0, subVersion=1, tagVersion=demo, author=Ar4k demo user, project=Ar4k Edge Agent Test Project 1, license=GNU AFFERO GENERAL PUBLIC LICENSE, tags=[], contexts=[], groups=[], targetRunLevel=RUNNING, preScript=null, postScript=null, initializeKeystore=true, sshdAuthorizedKeysPath=~/.ssh/authorized_keys, routerType=NONE, logoUrl=/static/img/ar4k.png, pots=[BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-2589335a-0b0a-4f13-9208-92cf006033cb-ca.pem, certFile=/tmp/beacon-server-c7f01dc2-ec9e-4723-8425-a31f7f7fc3db.pem, privateKeyFile=/tmp/beacon-server-b15244c8-4e14-4e90-a610-c7a444a12e85.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null]]]
+2020-01-27 02:04:11.403  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to STAMINAL
+2020-01-27 02:04:11.412  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to CONFIGURED
+2020-01-27 02:04:11.414  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : run BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-2589335a-0b0a-4f13-9208-92cf006033cb-ca.pem, certFile=/tmp/beacon-server-c7f01dc2-ec9e-4723-8425-a31f7f7fc3db.pem, privateKeyFile=/tmp/beacon-server-b15244c8-4e14-4e90-a610-c7a444a12e85.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null] as service
+2020-01-27 02:04:11.846  INFO 18095 --- [pool-5-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Certificate with alias 'server' for Beacon server is present in keystore
+2020-01-27 02:04:12.482  INFO 18095 --- [pool-5-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Starting beacon server
+2020-01-27 02:04:12.687  INFO 18095 --- [pool-5-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Server Beacon started, listening on 33666
+2020-01-27 02:04:12.690  INFO 18095 --- [pool-1-thread-2] c.ar4k.agent.core.AbstractAr4kService    : started service BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-2589335a-0b0a-4f13-9208-92cf006033cb-ca.pem, certFile=/tmp/beacon-server-c7f01dc2-ec9e-4723-8425-a31f7f7fc3db.pem, privateKeyFile=/tmp/beacon-server-b15244c8-4e14-4e90-a610-c7a444a12e85.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null]
+2020-01-27 02:04:12.691  INFO 18095 --- [pool-1-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to RUNNING
+2020-01-27 02:04:12.691  INFO 18095 --- [pool-1-thread-2] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@147c5e03
+2020-01-27 02:04:12.692  INFO 18095 --- [pool-1-thread-2] o.s.s.support.LifecycleObjectSupport     : started CONFIGURED STAMINAL RUNNING FAULTED INIT STASIS KILLED  / RUNNING / uuid=8c2a6691-7c36-4bed-bb50-a8b2ff96597e / id=null
+2020-01-27 02:04:12.704  INFO 18095 --- [pool-1-thread-2] o.s.boot.SpringApplication               : Started application in 13.924 seconds (JVM running for 19.443)
