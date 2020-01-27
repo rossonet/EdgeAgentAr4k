@@ -116,6 +116,10 @@ public class Anima
         mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
   }
 
+  public Class<Anima> getStaticClass() {
+    return Anima.class;
+  }
+
   public static final String DEFAULT_KS_PATH = "default-new.ks";
 
   public static String addressSpacePrefix = null;

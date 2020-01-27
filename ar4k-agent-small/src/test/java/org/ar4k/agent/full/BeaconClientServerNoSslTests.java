@@ -40,7 +40,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class BeaconClientServerTests {
+public class BeaconClientServerNoSslTests {
 
   private static final String CLIENT1_LABEL = "client1";
   private static final String CLIENT2_LABEL = "client2";
@@ -221,12 +221,12 @@ public class BeaconClientServerTests {
   }
 
   @Test
-  @Ignore
   public void oneServerAsClientSocketTestLeftNoSsl() throws Exception {
     oneServerAsClientSocketTestLeft(false);
   }
 
   @Test
+  @Ignore
   public void oneServerAsClientSocketTestLeftSsl() throws Exception {
     oneServerAsClientSocketTestLeft(true);
   }
@@ -396,7 +396,7 @@ public class BeaconClientServerTests {
 
   protected void updateClientCounter(int valueNew) {
     // System.out.println("counter: " + valueNew);
-    if (valueNew > 20) {
+    if (valueNew > 40) {
       completed = true;
       clientTCP.cancel(true);
       serverTCP.cancel(true);

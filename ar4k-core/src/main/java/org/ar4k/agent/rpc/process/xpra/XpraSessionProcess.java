@@ -33,6 +33,7 @@ public class XpraSessionProcess implements AgentProcess {
         "--daemon=no", "--html=on", "--start=" + this.command);
     try {
       xpraProcess = builder.start();
+      logger.warn("new Xpra session created on port " + tcpPort);
     } catch (IOException e) {
       logger.logException(e);
     }

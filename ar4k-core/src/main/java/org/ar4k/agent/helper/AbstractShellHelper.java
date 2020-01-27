@@ -105,7 +105,7 @@ public abstract class AbstractShellHelper {
     String os = System.getProperty("os.name").toLowerCase();
     return (os.contains("nix") || os.contains("nux") || os.contains("aix")) && getSessionId() != null
         ? Availability.available()
-        : Availability.unavailable("this command must run on unix system");
+        : Availability.unavailable("this command must run on unix system in a valid session (after login)");
   }
 
   protected Availability testSelectedConfigOk() {

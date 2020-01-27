@@ -648,19 +648,19 @@ public class ShellInterface extends AbstractShellHelper {
     System.out.println(anima.getEnvironmentVariablesAsString());
   }
 
-  @ShellMethod(value = "Run Xpra server on the enviroment in where the agent is running", group = "Remote Management Commands")
+  @ShellMethod(value = "Run Xpra server on the enviroment in where the agent is running", group = "Monitoring Commands")
   @ManagedOperation
   @ShellMethodAvailability("isUnixAndSessionOk")
-  public boolean runXpraServer(@ShellOption(help = "label to identify the xpra server") String executorLabel,
-      @ShellOption(help = "the tcp port for the HTML5 console", defaultValue = "0") int port,
+  public int runXpraServer(@ShellOption(help = "label to identify the xpra server") String executorLabel,
+      @ShellOption(help = "the tcp port for the HTML5 console", defaultValue = "0") String port,
       @ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd) {
     XpraSessionProcess p = new XpraSessionProcess();
     p.setLabel(executorLabel);
-    p.setTcpPort(port);
+    p.setTcpPort(Integer.valueOf(port));
     p.setCommand(cmd);
     p.eval(cmd);
     ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
-    return true;
+    return p.getTcpPort();
   }
 
   @ShellMethod(value = "Run a text script in JSR 223 engine", group = "Remote Management Commands")

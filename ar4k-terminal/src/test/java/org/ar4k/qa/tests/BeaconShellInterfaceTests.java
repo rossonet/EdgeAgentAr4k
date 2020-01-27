@@ -111,6 +111,9 @@ public class BeaconShellInterfaceTests {
     assertTrue(listCommands.containsKey("history"));
     assertTrue(listCommands.containsKey("quit"));
     assertTrue(listCommands.containsKey("script"));
+    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-by-browser"));
+    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-by-xpra"));
+    assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
   }
 
 }
