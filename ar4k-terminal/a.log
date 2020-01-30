@@ -2404,3 +2404,342 @@ Received Goaway
 2020-01-27 02:06:48.844  INFO 18095 --- [SpringContextShutdownHook] o.s.i.channel.PublishSubscribeChannel    : Channel 'application.errorChannel' has 0 subscriber(s).
 2020-01-27 02:06:48.844  INFO 18095 --- [SpringContextShutdownHook] o.s.i.endpoint.EventDrivenConsumer       : stopped bean '_org.springframework.integration.errorLogger'
 2020-01-27 02:06:48.850  INFO 18095 --- [SpringContextShutdownHook] o.s.s.support.LifecycleObjectSupport     : destroy called
+2020-01-27 02:46:33.209  INFO 13777 --- [pool-13-thread-2] o.s.boot.SpringApplication               : 
+     _    ____  _  _   _         _                    _   
+    / \  |  _ \| || | | | __    / \   __ _  ___ _ __ | |_ 
+   / _ \ | |_) | || |_| |/ /   / _ \ / _` |/ _ \ '_ \| __|
+  / ___ \|  _ <|__   _|   <   / ___ \ (_| |  __/ | | | |_ 
+ /_/   \_\_| \_\__|_| |_|\_\ /_/   \_\__, |\___|_| |_|\__|
+ | |__  _   _  |  _ \ ___  ___ ___  _|___/ __   ___| |_   
+ | '_ \| | | | | |_) / _ \/ __/ __|/ _ \| '_ \ / _ \ __|  
+ | |_) | |_| | |  _ < (_) \__ \__ \ (_) | | | |  __/ |_   
+ |_.__/ \__, | |_| \_\___/|___/___/\___/|_| |_|\___|\__|  
+        |___/                                             
+
+BUILD 
+based on Spring Boot Framework (v2.2.4.RELEASE)
+
+Type help to list the available commands
+
+You can use the TAB completation;
+the CTRL-R to invoke the reverse-i-search in the history and
+you can run a sequence of commands saved in a file.
+
+
+2020-01-27 02:46:33.455  INFO 13777 --- [pool-13-thread-2] o.s.boot.SpringApplication               : Starting application on ciospo.rossonet.net with PID 13777 (started by andrea in /home/andrea/privato/git/EdgeAgentAr4k/ar4k-terminal)
+2020-01-27 02:46:33.456  INFO 13777 --- [pool-13-thread-2] o.s.boot.SpringApplication               : No active profile set, falling back to default profiles: default
+2020-01-27 02:46:35.040  INFO 13777 --- [pool-13-thread-2] faultConfiguringBeanFactoryPostProcessor : No bean named 'errorChannel' has been explicitly defined. Therefore, a default PublishSubscribeChannel will be created.
+2020-01-27 02:46:35.059  INFO 13777 --- [pool-13-thread-2] faultConfiguringBeanFactoryPostProcessor : No bean named 'integrationHeaderChannelRegistry' has been explicitly defined. Therefore, a default DefaultHeaderChannelRegistry will be created.
+2020-01-27 02:46:35.169  INFO 13777 --- [pool-13-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration' of type [org.springframework.statemachine.config.configuration.StateMachineAnnotationPostProcessorConfiguration$$EnhancerBySpringCGLIB$$61b650f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:46:35.175  INFO 13777 --- [pool-13-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.integration.config.IntegrationManagementConfiguration' of type [org.springframework.integration.config.IntegrationManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:46:35.195  INFO 13777 --- [pool-13-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'integrationChannelResolver' of type [org.springframework.integration.support.channel.BeanFactoryChannelResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:46:35.197  INFO 13777 --- [pool-13-thread-2] trationDelegate$BeanPostProcessorChecker : Bean 'integrationDisposableAutoCreatedBeans' of type [org.springframework.integration.config.annotation.Disposables] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-27 02:46:35.486  WARN 13777 --- [pool-13-thread-2] org.jline                                : Unable to create a system terminal, creating a dumb terminal (enable debug logging for more information)
+2020-01-27 02:46:36.313  INFO 13777 --- [pool-13-thread-2] o.s.i.endpoint.EventDrivenConsumer       : Adding {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2020-01-27 02:46:36.314  INFO 13777 --- [pool-13-thread-2] o.s.i.channel.PublishSubscribeChannel    : Channel 'application.errorChannel' has 1 subscriber(s).
+2020-01-27 02:46:36.314  INFO 13777 --- [pool-13-thread-2] o.s.i.endpoint.EventDrivenConsumer       : started bean '_org.springframework.integration.errorLogger'
+2020-01-27 02:46:36.337  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : STARTING AGENT...
+2020-01-27 02:46:36.339  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to INIT
+2020-01-27 02:46:36.353  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : datastore on Anima started
+2020-01-27 02:46:36.709  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : use keystore file KeystoreConfig [creationDate=2020-01-27T01:46:36.354Z, lastUpdate=2020-01-27T01:46:36.354Z, uniqueId=66c63e20-7e07-4e50-8fe6-185f74df3270, filePathPre=/tmp/server.ks, keystorePassword=*********, label=master-keytool, caAlias=server]
+2020-01-27 02:46:36.993  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : Certificate for anima: C=IT, ST=BO, L=Imola, OU=Ar4k, O=Rossonet s.c.a r.l., CN=rossonet-e2353d03-b933-4951-95c1-3b9021b69e6f - alias server
+2020-01-27 02:46:36.994  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : 0/3 searching config...
+2020-01-27 02:46:36.994  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : try base64Config
+2020-01-27 02:46:36.998  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : found base64Config
+2020-01-27 02:46:36.999  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel system of type class org.ar4k.agent.core.data.channels.INoDataChannel
+2020-01-27 02:46:37.000  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : system [local JVM system] started
+2020-01-27 02:46:37.000  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel logger of type class org.ar4k.agent.core.data.channels.IPublishSubscribeChannel
+2020-01-27 02:46:37.000  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child logger to system for scope ar4k-ai
+2020-01-27 02:46:37.001  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : logger [logger queue] started
+2020-01-27 02:46:37.001  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel health of type class org.ar4k.agent.core.data.channels.IPublishSubscribeChannel
+2020-01-27 02:46:37.001  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child health to system for scope ar4k-ai
+2020-01-27 02:46:37.001  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : health [local machine hardware and software stats] started
+2020-01-27 02:46:37.002  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : create channel command of type class org.ar4k.agent.core.data.channels.IQueueChannel
+2020-01-27 02:46:37.002  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.AbstractChannel   : add child command to system for scope ar4k-ai
+2020-01-27 02:46:37.002  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.data.DataAddress       : command [RPC interface] started
+2020-01-27 02:46:37.164  WARN 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : created user admin
+2020-01-27 02:46:37.165  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : TRY CONNECTION TO BEACON AT https://127.0.0.1:33666
+2020-01-27 02:46:37.338  INFO 13777 --- [pool-13-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Certificate with alias 'server' for Beacon client is present in keystore
+2020-01-27 02:46:37.572  INFO 13777 --- [pool-13-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : USE KEY FOR CLIENT: server target file -> /tmp/beacon-client-007a9bce-fa25-46ce-80d8-7d6319ad2cab.key
+2020-01-27 02:46:38.901  WARN 13777 --- [pool-13-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Beacon server connection is UNAVAILABLE: io exception
+2020-01-27 02:46:38.902  INFO 13777 --- [pool-13-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   :  [M] finishConnect(..) failed: Connessione rifiutata: /127.0.0.1:33666 -> io.grpc.StatusRuntimeException: UNAVAILABLE: io exception
+	at io.grpc.stub.ClientCalls.toStatusRuntimeException(ClientCalls.java:240)
+	at io.grpc.stub.ClientCalls.getUnchecked(ClientCalls.java:221)
+	at io.grpc.stub.ClientCalls.blockingUnaryCall(ClientCalls.java:140)
+	at org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc$RpcServiceV1BlockingStub.register(RpcServiceV1Grpc.java:1056)
+	at org.ar4k.agent.tunnels.http.beacon.BeaconClient.registerToBeacon(BeaconClient.java:424)
+
+2020-01-27 02:46:38.903  INFO 13777 --- [pool-13-thread-2] c.a.a.tunnels.http.beacon.BeaconClient   : Client Beacon started, connected state TRANSIENT_FAILURE
+2020-01-27 02:46:38.904  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : the Beacon endpoint https://127.0.0.1:33666 return TRANSIENT_FAILURE
+2020-01-27 02:46:38.905  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : Starting with config: Ar4kConfig [creationDate=2020-01-27T01:46:32.641Z, lastUpdate=2020-01-27T01:46:32.641Z, uniqueId=202fede3-adf0-4f34-8ceb-59f639769b0f, name=server-beacon, prompt=studio, promptColor=91, description=Template configurazione Agente Ar4k, beaconServer=null, autoRegisterBeaconServer=false, dataCenter=ALONE, version=0, subVersion=1, tagVersion=demo, author=Ar4k demo user, project=Ar4k Edge Agent Test Project 1, license=GNU AFFERO GENERAL PUBLIC LICENSE, tags=[], contexts=[], groups=[], targetRunLevel=RUNNING, preScript=null, postScript=null, initializeKeystore=true, sshdAuthorizedKeysPath=~/.ssh/authorized_keys, routerType=NONE, logoUrl=/static/img/ar4k.png, pots=[BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-b660e436-e40f-4cb5-ac6b-ad06907237ad-ca.pem, certFile=/tmp/beacon-server-e4a465db-d3a8-4e61-bbba-9bcebb0c9306.pem, privateKeyFile=/tmp/beacon-server-65100a40-bab7-4550-8b4b-12d1b5721031.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null]]]
+2020-01-27 02:46:38.905  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to STAMINAL
+2020-01-27 02:46:38.907  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to CONFIGURED
+2020-01-27 02:46:38.909  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : run BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-b660e436-e40f-4cb5-ac6b-ad06907237ad-ca.pem, certFile=/tmp/beacon-server-e4a465db-d3a8-4e61-bbba-9bcebb0c9306.pem, privateKeyFile=/tmp/beacon-server-65100a40-bab7-4550-8b4b-12d1b5721031.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null] as service
+2020-01-27 02:46:39.274  INFO 13777 --- [pool-17-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Certificate with alias 'server' for Beacon server is present in keystore
+2020-01-27 02:46:39.741  INFO 13777 --- [pool-17-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Starting beacon server
+2020-01-27 02:46:39.847  INFO 13777 --- [pool-17-thread-1] c.a.a.tunnels.http.beacon.BeaconServer   : Server Beacon started, listening on 33666
+2020-01-27 02:46:39.849  INFO 13777 --- [pool-13-thread-2] c.ar4k.agent.core.AbstractAr4kService    : started service BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-b660e436-e40f-4cb5-ac6b-ad06907237ad-ca.pem, certFile=/tmp/beacon-server-e4a465db-d3a8-4e61-bbba-9bcebb0c9306.pem, privateKeyFile=/tmp/beacon-server-65100a40-bab7-4550-8b4b-12d1b5721031.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null]
+2020-01-27 02:46:39.850  INFO 13777 --- [pool-13-thread-2] class org.ar4k.agent.core.Anima          : State change in ANIMA to RUNNING
+2020-01-27 02:46:39.850  INFO 13777 --- [pool-13-thread-2] o.s.s.support.LifecycleObjectSupport     : started org.springframework.statemachine.support.DefaultStateMachineExecutor@5011b6d0
+2020-01-27 02:46:39.851  INFO 13777 --- [pool-13-thread-2] o.s.s.support.LifecycleObjectSupport     : started CONFIGURED FAULTED KILLED INIT STAMINAL RUNNING STASIS  / RUNNING / uuid=c57241a7-b956-4861-bb47-eb9d6f2b1c06 / id=null
+2020-01-27 02:46:39.852  INFO 13777 --- [pool-13-thread-2] o.s.boot.SpringApplication               : Started application in 7.158 seconds (JVM running for 99.437)
+2020-01-27 02:46:53.610  INFO 13777 --- [Thread-20] c.a.a.tunnels.http.beacon.BeaconClient   : connection to beacon ok . I'm ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66
+2020-01-27 02:46:59.985  INFO 13777 --- [grpc-default-executor-0] c.a.a.tunnels.http.beacon.BeaconServer   : Beacon client require tunnel -> agentSender {
+  agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+}
+agentDestination {
+  agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+}
+mode: BYTES_TO_CLIENT_TCP
+destIp: "127.0.0.1"
+destPort: 7777
+srcPort: 8888
+
+2020-01-27 02:46:59.986  INFO 13777 --- [grpc-default-executor-0] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : tunnel -6195481051155053212 created
+2020-01-27 02:47:00.313  INFO 13777 --- [Thread-20] c.a.a.tunnels.http.beacon.BeaconClient   : network port required from beacon -6195481051155053212
+2020-01-27 02:47:00.324  INFO 13777 --- [Thread-20] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Starting client to: 127.0.0.1:7777
+2020-01-27 02:47:00.769  INFO 13777 --- [Test worker] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Server Netty on port 8888 with id_target -6195481051155053212/a451e6ae-4b30-4ab1-b9dd-59068e8f687b started successfully
+2020-01-27 02:47:05.807  INFO 13777 --- [nioEventLoopGroup-4-1] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Server socket with session -7156929356213040413 to -6195481051155053212/a451e6ae-4b30-4ab1-b9dd-59068e8f687b created
+2020-01-27 02:47:05.839  INFO 13777 --- [nioEventLoopGroup-4-1] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : open Beacon channel for server ChannelHandlerContext(Ar4kNetworkHub$ServerTCPHandler#0, [id: 0x40111d33, L:/127.0.0.1:8888 - R:/127.0.0.1:41700]) with session -7156929356213040413
+2020-01-27 02:47:05.845  INFO 13777 --- [grpc-default-executor-1] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : new session -7156929356213040413 in tunnel -6195481051155053212
+2020-01-27 02:47:05.865  INFO 13777 --- [grpc-default-executor-1] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Client Netty session -7156929356213040413 to 127.0.0.1:7777 with id_target -6195481051155053212/fc26eb5c-8d67-4961-98d4-5cf269c0befa started successfully
+2020-01-27 02:47:06.971  WARN 13777 --- [Thread-20] c.a.a.r.process.xpra.XpraSessionProcess  : new Xpra session created on port 34831
+2020-01-27 02:47:06.999  INFO 13777 --- [Test worker] c.ar4k.agent.helper.AbstractShellHelper  : REMOTE XPRA reply: "34831\n"
+
+2020-01-27 02:47:07.608  INFO 13777 --- [Test worker] c.ar4k.agent.helper.AbstractShellHelper  : REMOTE XPRA LIST reply: "[test-xpra => http://172.17.0.1:34831, test-xpra => http://192.168.122.1:34831, test-xpra => http://192.168.0.163:34831, test-xpra => http://127.0.0.1:34831]\n"
+
+2020-01-27 02:47:07.616  INFO 13777 --- [grpc-default-executor-0] c.a.a.tunnels.http.beacon.BeaconServer   : Beacon client require tunnel -> agentSender {
+  agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+}
+agentDestination {
+  agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+}
+mode: BYTES_TO_CLIENT_TCP
+destIp: "127.0.0.1"
+destPort: 34831
+srcPort: 46655
+
+2020-01-27 02:47:07.617  INFO 13777 --- [grpc-default-executor-0] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : tunnel -6864975057807456971 created
+2020-01-27 02:47:08.188  INFO 13777 --- [Thread-20] c.a.a.tunnels.http.beacon.BeaconClient   : network port required from beacon -6864975057807456971
+2020-01-27 02:47:08.194  INFO 13777 --- [Thread-20] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Starting client to: 127.0.0.1:34831
+2020-01-27 02:47:08.227  INFO 13777 --- [Test worker] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Server Netty on port 46655 with id_target -6864975057807456971/435e94b2-f208-4ced-83e3-18c6e7a364a9 started successfully
+2020-01-27 02:47:19.189  INFO 13777 --- [nioEventLoopGroup-7-1] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Server socket with session -5822472814712303806 to -6864975057807456971/435e94b2-f208-4ced-83e3-18c6e7a364a9 created
+2020-01-27 02:47:19.274  INFO 13777 --- [nioEventLoopGroup-7-1] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : open Beacon channel for server ChannelHandlerContext(Ar4kNetworkHub$ServerTCPHandler#0, [id: 0xf8eeb3d8, L:/127.0.0.1:46655 - R:/127.0.0.1:43210]) with session -5822472814712303806
+2020-01-27 02:47:19.285  INFO 13777 --- [grpc-default-executor-1] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : new session -5822472814712303806 in tunnel -6864975057807456971
+2020-01-27 02:47:19.306  INFO 13777 --- [grpc-default-executor-0] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Client Netty session -5822472814712303806 to 127.0.0.1:34831 with id_target -6864975057807456971/e2363e35-ae6f-42ce-8a50-8bc52c7fbf82 started successfully
+2020-01-27 02:49:13.232  INFO 13777 --- [Test worker] c.ar4k.agent.core.AbstractAr4kService    : stopped service BeaconServiceConfig [port=33666, discoveryPort=33667, broadcastAddress=255.255.255.255, acceptAllCerts=true, stringDiscovery=TEST-REGISTER, certChainFile=/tmp/beacon-server-b660e436-e40f-4cb5-ac6b-ad06907237ad-ca.pem, certFile=/tmp/beacon-server-e4a465db-d3a8-4e61-bbba-9bcebb0c9306.pem, privateKeyFile=/tmp/beacon-server-65100a40-bab7-4550-8b4b-12d1b5721031.key, aliasBeaconServerInKeystore=server, aliasBeaconServerRequestCertInKeystore=null, caChainPem=null]
+2020-01-27 02:49:13.242  INFO 13777 --- [grpc-default-executor-0] c.a.a.tunnels.http.beacon.BeaconServer   : Error on BeaconServer TunnelRunnerBeaconServer [targeId=-6195481051155053212, active=true, serverAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, clientAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, sessions=1] ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.242  INFO 13777 --- [grpc-default-executor-0] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : Error on TunnelRunnerBeaconServer -6195481051155053212 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.252  INFO 13777 --- [grpc-default-executor-3] c.a.a.tunnels.http.beacon.BeaconServer   : Error on BeaconServer TunnelRunnerBeaconServer [targeId=-6195481051155053212, active=true, serverAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, clientAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, sessions=1] ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.253  INFO 13777 --- [grpc-default-executor-3] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : Error on TunnelRunnerBeaconServer -6195481051155053212 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.265  INFO 13777 --- [grpc-default-executor-0] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Error for tunnel write -6195481051155053212/fc26eb5c-8d67-4961-98d4-5cf269c0befa session:0 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: HTTP/2 error code: CANCEL
+Received Rst Stream
+	at io.grpc.Status.asRuntimeException(Status.java:533)
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:449)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusStatsModule$StatsClientInterceptor$1$1.onClose(CensusStatsModule.java:700)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusTracingModule$TracingClientInterceptor$1$1.onClose(CensusTracingModule.java:399)
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:521)
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:66)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:641)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$700(ClientCallImpl.java:529)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:703)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:692)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.267  INFO 13777 --- [grpc-default-executor-5] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Error for tunnel write -6195481051155053212/a451e6ae-4b30-4ab1-b9dd-59068e8f687b session:-7156929356213040413 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: HTTP/2 error code: CANCEL
+Received Rst Stream
+	at io.grpc.Status.asRuntimeException(Status.java:533)
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:449)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusStatsModule$StatsClientInterceptor$1$1.onClose(CensusStatsModule.java:700)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusTracingModule$TracingClientInterceptor$1$1.onClose(CensusTracingModule.java:399)
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:521)
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:66)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:641)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$700(ClientCallImpl.java:529)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:703)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:692)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.263  INFO 13777 --- [grpc-default-executor-3] c.a.a.tunnels.http.beacon.BeaconServer   : Error on BeaconServer TunnelRunnerBeaconServer [targeId=-6864975057807456971, active=true, serverAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, clientAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, sessions=1] ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.270  INFO 13777 --- [grpc-default-executor-5] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Error for tunnel write -6864975057807456971/435e94b2-f208-4ced-83e3-18c6e7a364a9 session:-5822472814712303806 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: HTTP/2 error code: CANCEL
+Received Rst Stream
+	at io.grpc.Status.asRuntimeException(Status.java:533)
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:449)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusStatsModule$StatsClientInterceptor$1$1.onClose(CensusStatsModule.java:700)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusTracingModule$TracingClientInterceptor$1$1.onClose(CensusTracingModule.java:399)
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:521)
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:66)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:641)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$700(ClientCallImpl.java:529)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:703)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:692)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.275  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : Try to remove dataChannel system
+2020-01-27 02:49:13.270  INFO 13777 --- [grpc-default-executor-3] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : Error on TunnelRunnerBeaconServer -6864975057807456971 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.275  INFO 13777 --- [grpc-default-executor-4] c.a.a.tunnels.http.beacon.BeaconServer   : Error on BeaconServer TunnelRunnerBeaconServer [targeId=-6864975057807456971, active=true, serverAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, clientAgent=agentUniqueName: "ciospo.rossonet.net_899e188e44454e1ebf5b89deed365e66"
+, sessions=1] ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.277  INFO 13777 --- [grpc-default-executor-6] c.a.a.t.h.beacon.socket.Ar4kNetworkHub   : Error for tunnel write -6864975057807456971/e2363e35-ae6f-42ce-8a50-8bc52c7fbf82 session:0 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: HTTP/2 error code: CANCEL
+Received Rst Stream
+	at io.grpc.Status.asRuntimeException(Status.java:533)
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:449)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusStatsModule$StatsClientInterceptor$1$1.onClose(CensusStatsModule.java:700)
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39)
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23)
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40)
+	at io.grpc.internal.CensusTracingModule$TracingClientInterceptor$1$1.onClose(CensusTracingModule.java:399)
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:521)
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:66)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.close(ClientCallImpl.java:641)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.access$700(ClientCallImpl.java:529)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:703)
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:692)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.278  INFO 13777 --- [grpc-default-executor-4] c.a.a.t.h.b.s.TunnelRunnerBeaconServer   : Error on TunnelRunnerBeaconServer -6864975057807456971 ->  [M] io.grpc.StatusRuntimeException: CANCELLED: cancelled before receiving half close
+	at io.grpc.Status.asRuntimeException(Status.java:524)
+	at io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onCancel(ServerCalls.java:275)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closedInternal(ServerCallImpl.java:353)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.closed(ServerCallImpl.java:341)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1Closed.runInContext(ServerImpl.java:867)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+2020-01-27 02:49:13.283  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : system [local JVM system] removed
+2020-01-27 02:49:13.283  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : Try to remove dataChannel logger
+2020-01-27 02:49:13.284  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : logger [logger queue] removed
+2020-01-27 02:49:13.284  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : Try to remove dataChannel health
+2020-01-27 02:49:13.284  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : health [local machine hardware and software stats] removed
+2020-01-27 02:49:13.284  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : Try to remove dataChannel command
+2020-01-27 02:49:13.284  INFO 13777 --- [Test worker] c.ar4k.agent.core.data.DataAddress       : command [RPC interface] removed
+2020-01-27 02:49:13.292  INFO 13777 --- [Test worker] class org.ar4k.agent.core.Anima          : State change in ANIMA to KILLED
+2020-01-27 02:49:13.296  INFO 13777 --- [Test worker] o.s.s.support.LifecycleObjectSupport     : stopped org.springframework.statemachine.support.DefaultStateMachineExecutor@5011b6d0
+2020-01-27 02:49:13.297  INFO 13777 --- [Test worker] o.s.s.support.LifecycleObjectSupport     : stopped CONFIGURED FAULTED KILLED INIT STAMINAL RUNNING STASIS  /  / uuid=c57241a7-b956-4861-bb47-eb9d6f2b1c06 / id=null
+2020-01-27 02:49:13.322  INFO 13777 --- [SpringContextShutdownHook] o.s.i.endpoint.EventDrivenConsumer       : Removing {logging-channel-adapter:_org.springframework.integration.errorLogger} as a subscriber to the 'errorChannel' channel
+2020-01-27 02:49:13.327  INFO 13777 --- [SpringContextShutdownHook] o.s.i.channel.PublishSubscribeChannel    : Channel 'application.errorChannel' has 0 subscriber(s).
+2020-01-27 02:49:13.328  INFO 13777 --- [SpringContextShutdownHook] o.s.i.endpoint.EventDrivenConsumer       : stopped bean '_org.springframework.integration.errorLogger'
+2020-01-27 02:49:13.344  INFO 13777 --- [SpringContextShutdownHook] o.s.s.support.LifecycleObjectSupport     : destroy called
