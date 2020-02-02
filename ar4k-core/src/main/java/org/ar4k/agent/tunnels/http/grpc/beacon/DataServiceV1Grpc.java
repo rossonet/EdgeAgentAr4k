@@ -123,6 +123,38 @@ public final class DataServiceV1Grpc {
      return getWriteMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteSubscriptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "WriteSubscription",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
+      org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteSubscriptionMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> getWriteSubscriptionMethod;
+    if ((getWriteSubscriptionMethod = DataServiceV1Grpc.getWriteSubscriptionMethod) == null) {
+      synchronized (DataServiceV1Grpc.class) {
+        if ((getWriteSubscriptionMethod = DataServiceV1Grpc.getWriteSubscriptionMethod) == null) {
+          DataServiceV1Grpc.getWriteSubscriptionMethod = getWriteSubscriptionMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite, org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.DataServiceV1", "WriteSubscription"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData.getDefaultInstance()))
+                  .setSchemaDescriptor(new DataServiceV1MethodDescriptorSupplier("WriteSubscription"))
+                  .build();
+          }
+        }
+     }
+     return getWriteSubscriptionMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace,
       org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSendAddressSpaceMethod;
 
@@ -237,6 +269,13 @@ public final class DataServiceV1Grpc {
 
     /**
      */
+    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite> writeSubscription(
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
+      return asyncUnimplementedStreamingCall(getWriteSubscriptionMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void sendAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> responseObserver) {
       asyncUnimplementedUnaryCall(getSendAddressSpaceMethod(), responseObserver);
@@ -272,6 +311,13 @@ public final class DataServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
                 org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>(
                   this, METHODID_WRITE)))
+          .addMethod(
+            getWriteSubscriptionMethod(),
+            asyncClientStreamingCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite,
+                org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>(
+                  this, METHODID_WRITE_SUBSCRIPTION)))
           .addMethod(
             getSendAddressSpaceMethod(),
             asyncUnaryCall(
@@ -330,6 +376,14 @@ public final class DataServiceV1Grpc {
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getWriteMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite> writeSubscription(
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData> responseObserver) {
+      return asyncClientStreamingCall(
+          getChannel().newCall(getWriteSubscriptionMethod(), getCallOptions()), responseObserver);
     }
 
     /**
@@ -460,6 +514,7 @@ public final class DataServiceV1Grpc {
   private static final int METHODID_WRITE = 2;
   private static final int METHODID_SEND_ADDRESS_SPACE = 3;
   private static final int METHODID_GET_REMOTE_ADDRESS_SPACE = 4;
+  private static final int METHODID_WRITE_SUBSCRIPTION = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -508,6 +563,9 @@ public final class DataServiceV1Grpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_WRITE_SUBSCRIPTION:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.writeSubscription(
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -562,6 +620,7 @@ public final class DataServiceV1Grpc {
               .addMethod(getPollingMethod())
               .addMethod(getSubscriptionMethod())
               .addMethod(getWriteMethod())
+              .addMethod(getWriteSubscriptionMethod())
               .addMethod(getSendAddressSpaceMethod())
               .addMethod(getGetRemoteAddressSpaceMethod())
               .build();

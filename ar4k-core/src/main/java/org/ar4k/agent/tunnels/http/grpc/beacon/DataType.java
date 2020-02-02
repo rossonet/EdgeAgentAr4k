@@ -52,6 +52,18 @@ public enum DataType
    * <code>UNKNOWN = 10;</code>
    */
   UNKNOWN(10),
+  /**
+   * <code>JSONDATA = 11;</code>
+   */
+  JSONDATA(11),
+  /**
+   * <code>BASE64DATA = 12;</code>
+   */
+  BASE64DATA(12),
+  /**
+   * <code>MEDIA = 13;</code>
+   */
+  MEDIA(13),
   UNRECOGNIZED(-1),
   ;
 
@@ -99,6 +111,18 @@ public enum DataType
    * <code>UNKNOWN = 10;</code>
    */
   public static final int UNKNOWN_VALUE = 10;
+  /**
+   * <code>JSONDATA = 11;</code>
+   */
+  public static final int JSONDATA_VALUE = 11;
+  /**
+   * <code>BASE64DATA = 12;</code>
+   */
+  public static final int BASE64DATA_VALUE = 12;
+  /**
+   * <code>MEDIA = 13;</code>
+   */
+  public static final int MEDIA_VALUE = 13;
 
 
   public final int getNumber() {
@@ -130,6 +154,9 @@ public enum DataType
       case 8: return TIMESTAMP;
       case 9: return OBJECT;
       case 10: return UNKNOWN;
+      case 11: return JSONDATA;
+      case 12: return BASE64DATA;
+      case 13: return MEDIA;
       default: return null;
     }
   }

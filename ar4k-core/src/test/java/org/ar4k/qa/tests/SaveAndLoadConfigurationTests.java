@@ -119,7 +119,7 @@ public class SaveAndLoadConfigurationTests {
     String checkText = ConfigHelper.toYaml(c);
     System.out.println("yaml config: " + checkText);
     ConfigSeed a = ConfigHelper.fromYaml(checkText);
-    System.out.println("Anima -> " + anima);
+    // System.out.println("Anima -> " + anima);
     assertTrue(check.equals(((Ar4kConfig) a).author));
     assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
   }
@@ -161,7 +161,7 @@ public class SaveAndLoadConfigurationTests {
     s2.note = check;
     c.pots.add(s1);
     c.pots.add(s2);
-    System.out.println("Anima -> " + anima);
+    // System.out.println("Anima -> " + anima);
     String baseCrypto = ConfigHelper.toBase64Crypto(c, "my-keystore-alias");
     System.out.println("CRYPTO " + baseCrypto);
     ConfigSeed a = ConfigHelper.fromBase64Crypto(baseCrypto, "my-keystore-alias");

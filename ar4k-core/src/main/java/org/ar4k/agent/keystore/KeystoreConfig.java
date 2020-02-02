@@ -25,9 +25,8 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,7 +65,7 @@ public class KeystoreConfig implements ConfigSeed {
   public String description = "";
 
   @Parameter(names = "--tags", description = "tags", variableArity = true)
-  public Collection<String> tags = new HashSet<>();
+  public List<String> tags = new ArrayList<>();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
   public String filePathPre = Anima.DEFAULT_KS_PATH;
@@ -336,7 +335,7 @@ public class KeystoreConfig implements ConfigSeed {
   }
 
   @Override
-  public Collection<String> getTags() {
+  public List<String> getTags() {
     return tags;
   }
 

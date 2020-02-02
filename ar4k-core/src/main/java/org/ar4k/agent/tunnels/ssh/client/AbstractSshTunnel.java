@@ -15,10 +15,16 @@
 package org.ar4k.agent.tunnels.ssh.client;
 
 import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
+import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
@@ -33,7 +39,11 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(AbstractSshTunnel.class.toString());
 
-  private AbstractSshConfig configuration = null;
+  protected AbstractSshConfig configuration = null;
+
+  protected DataAddress dataspace;
+
+  protected Anima anima;
 
   private JSch jsch = null;
 
@@ -54,6 +64,18 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
       logger.logException(e);
     }
     return session;
+  }
+
+  @Override
+  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+    if (session != null && session.isConnected()) {
+      return ServiceStatus.RUNNING;
+    } else {
+      session = null;
+      jsch = null;
+      this.init();
+      return ServiceStatus.STAMINAL;
+    }
   }
 
   @Override
@@ -85,6 +107,37 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
 
   public Session getSession() {
     return session;
+  }
+
+  @Override
+  public Anima getAnima() {
+    return anima;
+  }
+
+  @Override
+  public DataAddress getDataAddress() {
+    return dataspace;
+  }
+
+  @Override
+  public void setDataAddress(DataAddress dataAddress) {
+    dataspace = dataAddress;
+  }
+
+  @Override
+  public void setAnima(Anima anima) {
+    this.anima = anima;
+  }
+
+  @Override
+  public String toString() {
+    return "AbstractSshTunnel [configuration=" + configuration + "]";
+  }
+
+  @Override
+  public JSONObject getDescriptionJson() {
+    Gson gson = new GsonBuilder().create();
+    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

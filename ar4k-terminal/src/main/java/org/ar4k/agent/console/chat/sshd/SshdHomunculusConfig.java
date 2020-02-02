@@ -37,6 +37,7 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
   @Override
   public Ar4kComponent instantiate() {
     SshdHomunculusService ss = new SshdHomunculusService();
+    ss.setConfiguration(this);
     return ss;
   }
 

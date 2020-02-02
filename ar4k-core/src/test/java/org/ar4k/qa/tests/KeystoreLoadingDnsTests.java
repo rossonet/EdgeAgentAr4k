@@ -17,15 +17,21 @@ package org.ar4k.qa.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.cert.CertificateEncodingException;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.bouncycastle.cms.CMSException;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -94,5 +100,26 @@ public class KeystoreLoadingDnsTests {
     assertTrue("prova55H1ee".equals(anima.getRuntimeConfig().author));
     assertTrue("dnsconfig".equals(anima.getRuntimeConfig().name));
     assertTrue("AF56T".equals(anima.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345Fa".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345Fa".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+  }
+
+  @Test
+  public void createConfigDns() throws IOException, CertificateEncodingException, CMSException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.author = "prova55H1ee";
+    config.name = "dnsconfig";
+    config.tagVersion = "AF56T";
+    BeaconServiceConfig s0 = new BeaconServiceConfig();
+    s0.setNote("345Fa");
+    s0.name = "socket-0";
+    BeaconServiceConfig s1 = new BeaconServiceConfig();
+    s1.setNote("345Fa");
+    s1.name = "socket-1";
+    config.pots.add(s0);
+    config.pots.add(s1);
+    System.out.println(ConfigHelper.toBase64ForDnsCrypto("test-crypto-test-conf", config, "ca")); // bottegaio.net
   }
 }

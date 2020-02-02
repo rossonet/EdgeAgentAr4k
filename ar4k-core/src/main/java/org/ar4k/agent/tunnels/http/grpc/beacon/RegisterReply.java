@@ -171,10 +171,6 @@ private static final long serialVersionUID = 0L;
   public static final int CERT_FIELD_NUMBER = 3;
   private volatile java.lang.Object cert_;
   /**
-   * <pre>
-   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-   * </pre>
-   *
    * <code>string cert = 3;</code>
    */
   public java.lang.String getCert() {
@@ -190,10 +186,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-   * </pre>
-   *
    * <code>string cert = 3;</code>
    */
   public com.google.protobuf.ByteString
@@ -767,10 +759,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object cert_ = "";
     /**
-     * <pre>
-     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-     * </pre>
-     *
      * <code>string cert = 3;</code>
      */
     public java.lang.String getCert() {
@@ -786,10 +774,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-     * </pre>
-     *
      * <code>string cert = 3;</code>
      */
     public com.google.protobuf.ByteString
@@ -806,10 +790,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-     * </pre>
-     *
      * <code>string cert = 3;</code>
      */
     public Builder setCert(
@@ -823,10 +803,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-     * </pre>
-     *
      * <code>string cert = 3;</code>
      */
     public Builder clearCert() {
@@ -836,10 +812,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-     * </pre>
-     *
      * <code>string cert = 3;</code>
      */
     public Builder setCertBytes(

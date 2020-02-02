@@ -31,18 +31,10 @@ public interface RegisterReplyOrBuilder extends
   int getMonitoringFrequency();
 
   /**
-   * <pre>
-   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-   * </pre>
-   *
    * <code>string cert = 3;</code>
    */
   java.lang.String getCert();
   /**
-   * <pre>
-   * da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
-   * </pre>
-   *
    * <code>string cert = 3;</code>
    */
   com.google.protobuf.ByteString

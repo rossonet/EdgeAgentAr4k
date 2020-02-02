@@ -57,6 +57,7 @@ public class Ar4kStarterProperties {
   private String baseConfigOrder = "3";
   private String threadSleep = "800";
   private String consoleOnly = "false";
+  private String animaDatastoreFileName = "data_map";
   private String test = "true";
   private String logoUrl = "/static/img/ar4k.png";
 
@@ -289,6 +290,14 @@ public class Ar4kStarterProperties {
 
   public void setBeaconClearText(String beaconClearText) {
     this.beaconClearText = beaconClearText;
+  }
+
+  public String getAnimaDatastoreFileName() {
+    return animaDatastoreFileName;
+  }
+
+  public void setAnimaDatastoreFileName(String animaDatastore) {
+    this.animaDatastoreFileName = animaDatastore;
   }
 
 }

@@ -41,7 +41,6 @@ import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
@@ -78,7 +77,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -196,14 +194,18 @@ public class ShellInterface extends AbstractShellHelper {
     return SecurityContextHolder.getContext().getAuthentication();
   }
 
-  @ShellMethod(value = "Test method. Just return the string parameter", group = "Testing Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testOk")
-  @GetMapping("test")
-  public String test(@Size(min = 1, max = 40) @ShellOption(help = "example string for test method") String testString)
-      throws InterruptedException {
-    return runShellTest(testString);
-  }
+  /*
+   * @ShellMethod(value = "Test method. Just return the string parameter", group =
+   * "Testing Commands")
+   * 
+   * @ManagedOperation
+   * 
+   * @ShellMethodAvailability("testOk")
+   * 
+   * @GetMapping("test") public String test(@Size(min = 1, max =
+   * 40) @ShellOption(help = "example string for test method") String testString)
+   * throws InterruptedException { return runShellTest(testString); }
+   */
 
   @ShellMethod("View the selected configuration in base64 text")
   @ManagedOperation

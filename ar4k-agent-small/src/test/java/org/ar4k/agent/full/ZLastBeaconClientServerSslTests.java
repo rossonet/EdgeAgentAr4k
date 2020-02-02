@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.Ar4kAgent;
@@ -40,7 +41,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class BeaconClientServerSslTests {
+public class ZLastBeaconClientServerSslTests {
 
   private static final String CLIENT1_LABEL = "client1";
   private static final String CLIENT2_LABEL = "client2";
@@ -80,6 +81,10 @@ public class BeaconClientServerSslTests {
     Files.deleteIfExists(keyStoreServer.toPath());
     Files.deleteIfExists(keyStoreClient1.toPath());
     Files.deleteIfExists(keyStoreClient2.toPath());
+    if (executor != null) {
+      executor.shutdownNow();
+      executor.awaitTermination(1, TimeUnit.MINUTES);
+    }
   }
 
   @Test
@@ -112,7 +117,7 @@ public class BeaconClientServerSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
@@ -180,7 +185,7 @@ public class BeaconClientServerSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
@@ -233,8 +238,10 @@ public class BeaconClientServerSslTests {
 
   private void oneServerAsClientSocketTestLeft(boolean ssl) throws Exception {
     List<String> baseArgs = new ArrayList<>();
+    String certCaAsPem = "";
     if (ssl) {
       baseArgs.add("--ar4k.beaconClearText=false");
+      certCaAsPem = KeystoreLoader.getCertCaAsPem(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
     }
     baseArgs.add("--spring.shell.command.quit.enabled=false");
     baseArgs.add("--logging.level.root=INFO");
@@ -247,7 +254,7 @@ public class BeaconClientServerSslTests {
     baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
     // baseArgs.add("--ar4k.keystoreMainAlias=");
     baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
-    baseArgs.add("--ar4k.beaconCaChainPem= ");// not used
+    baseArgs.add("--ar4k.beaconCaChainPem=" + certCaAsPem);// not used
     baseArgs.add("--ar4k.adminPassword=password");
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
 //    addArgs.add("--ar4k.dnsRegistrationEndpoint=");
@@ -262,12 +269,16 @@ public class BeaconClientServerSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
+
+    System.out.println("CA SERVER\n" + certCaAsPem);
+    beaconServiceConfig.caChainPem = certCaAsPem;
+    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile
+                                                                       // cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
@@ -306,7 +317,7 @@ public class BeaconClientServerSslTests {
         PrintWriter w = new PrintWriter(socket.getOutputStream(), true);
         InputStreamReader reader = new InputStreamReader(socket.getInputStream());
         try {
-          while (true) {
+          while (!completed) {
             while (reader.ready()) {
               final int valueNew = reader.read();
               System.out.println("server test received from beacon client " + valueNew);
@@ -325,6 +336,9 @@ public class BeaconClientServerSslTests {
               System.out.println("server test sent to beacon client " + last);
             }
           }
+        } catch (InterruptedException f) {
+          serverSocket.close();
+          System.out.println("server closed");
         } catch (Exception a) {
           serverSocket.close();
           System.out.println("server closed");
@@ -352,7 +366,7 @@ public class BeaconClientServerSslTests {
         last = 1;
         System.out.println("client test sent to beacon server " + last);
         try {
-          while (true) {
+          while (!completed) {
             while (reader.ready()) {
               final int valueNew = reader.read();
               System.out.println("client test received from beacon server " + valueNew);
@@ -372,6 +386,9 @@ public class BeaconClientServerSslTests {
               System.out.println("client test sent to server beacon " + last);
             }
           }
+        } catch (InterruptedException f) {
+          socketClient.close();
+          System.out.println("client closed");
         } catch (Exception a) {
           socketClient.close();
           System.out.println("client closed");
@@ -440,7 +457,7 @@ public class BeaconClientServerSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;

@@ -17,15 +17,22 @@ package org.ar4k.qa.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.cert.CertificateEncodingException;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.bouncycastle.cms.CMSException;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -92,7 +99,29 @@ public class KeystoreLoadingWebTests {
         "C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
     assertEquals(anima.getState(), AnimaStates.RUNNING);
     assertTrue("pcryptoAA".equals(anima.getRuntimeConfig().author));
-    assertTrue("dnsconfig".equals(anima.getRuntimeConfig().name));
+    assertTrue("webconfig".equals(anima.getRuntimeConfig().name));
     assertTrue("AFYU8K".equals(anima.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+  }
+
+  @Test
+  public void createConfigWeb() throws IOException, CertificateEncodingException, CMSException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.author = "pcryptoAA";
+    config.name = "webconfig";
+    config.tagVersion = "AFYU8K";
+    BeaconServiceConfig s0 = new BeaconServiceConfig();
+    s0.setNote("345F");
+    s0.name = "socket-0";
+    BeaconServiceConfig s1 = new BeaconServiceConfig();
+    s1.setNote("345F");
+    s1.name = "socket-1";
+    config.pots.add(s0);
+    config.pots.add(s1);
+    Files.write(Paths.get("crypto.test-config.a.ar4k"), ConfigHelper.toBase64Crypto(config, "ca").getBytes(),
+        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
   }
 }

@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.console.Ar4kAgent;
@@ -40,7 +41,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class BeaconClientServerNoSslTests {
 
   private static final String CLIENT1_LABEL = "client1";
@@ -81,6 +81,10 @@ public class BeaconClientServerNoSslTests {
     Files.deleteIfExists(keyStoreServer.toPath());
     Files.deleteIfExists(keyStoreClient1.toPath());
     Files.deleteIfExists(keyStoreClient2.toPath());
+    if (executor != null) {
+      executor.shutdownNow();
+      executor.awaitTermination(1, TimeUnit.MINUTES);
+    }
   }
 
   @Test
@@ -113,7 +117,7 @@ public class BeaconClientServerNoSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
@@ -181,7 +185,7 @@ public class BeaconClientServerNoSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
@@ -263,7 +267,7 @@ public class BeaconClientServerNoSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
@@ -307,7 +311,7 @@ public class BeaconClientServerNoSslTests {
         PrintWriter w = new PrintWriter(socket.getOutputStream(), true);
         InputStreamReader reader = new InputStreamReader(socket.getInputStream());
         try {
-          while (true) {
+          while (!completed) {
             while (reader.ready()) {
               final int valueNew = reader.read();
               System.out.println("server test received from beacon client " + valueNew);
@@ -326,6 +330,9 @@ public class BeaconClientServerNoSslTests {
               System.out.println("server test sent to beacon client " + last);
             }
           }
+        } catch (InterruptedException f) {
+          serverSocket.close();
+          System.out.println("server closed");
         } catch (Exception a) {
           serverSocket.close();
           System.out.println("server closed");
@@ -353,7 +360,7 @@ public class BeaconClientServerNoSslTests {
         last = 1;
         System.out.println("client test sent to beacon server " + last);
         try {
-          while (true) {
+          while (!completed) {
             while (reader.ready()) {
               final int valueNew = reader.read();
               System.out.println("client test received from beacon server " + valueNew);
@@ -373,6 +380,9 @@ public class BeaconClientServerNoSslTests {
               System.out.println("client test sent to server beacon " + last);
             }
           }
+        } catch (InterruptedException f) {
+          socketClient.close();
+          System.out.println("client closed");
         } catch (Exception a) {
           socketClient.close();
           System.out.println("client closed");
@@ -441,7 +451,7 @@ public class BeaconClientServerNoSslTests {
     Ar4kConfig serverConfig = new Ar4kConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
-    serverConfig.autoRegisterBeaconServer = false;
+    serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;

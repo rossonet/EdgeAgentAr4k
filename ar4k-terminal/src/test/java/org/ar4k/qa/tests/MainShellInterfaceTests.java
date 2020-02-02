@@ -164,7 +164,6 @@ public class MainShellInterfaceTests {
     assertTrue(listCommands.containsKey("set-log-level"));
     assertTrue(listCommands.containsKey("set-selected-config-as-runtime"));
     assertTrue(listCommands.containsKey("stacktrace"));
-    assertTrue(listCommands.containsKey("test"));
     assertTrue(listCommands.containsKey("unset-selected-config"));
     // printCheckNow(listCommands);
   }

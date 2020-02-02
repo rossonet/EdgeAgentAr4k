@@ -246,8 +246,12 @@ public class Anima
     try {
       for (ServiceComponent<Ar4kComponent> targetService : components) {
         targetService.stop();
+        targetService.close();
       }
       components.clear();
+      if (beaconClient != null) {
+        beaconClient.close();
+      }
       if (timerScheduler != null) {
         timerScheduler.cancel();
         timerScheduler.purge();
@@ -462,8 +466,8 @@ public class Anima
     try {
       if (dataStore == null) {
         recMan = RecordManagerFactory
-            .createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
-                + "/anima_datastore_" + agentUniqueName);
+            .createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true) + "/"
+                + starterProperties.getAnimaDatastoreFileName());
         dataStore = recMan.treeMap(dbDataStoreName);
         logger.info("datastore on Anima started");
       }
@@ -503,8 +507,8 @@ public class Anima
             + ConfigHelper.resolveWorkingString(filterBeaconUrl(runtimeConfig.beaconServer), false));
         beaconClient = connectToBeaconService(
             ConfigHelper.resolveWorkingString(filterBeaconUrl(runtimeConfig.beaconServer), false),
-            starterProperties.getBeaconCaChainPem(), Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
-            starterProperties.getBeaconDiscoveryFilterString(), true);
+            runtimeConfig.beaconServerCertChain, Integer.valueOf(runtimeConfig.beaconDiscoveryPort),
+            runtimeConfig.beaconDiscoveryFilterString, true);
       } catch (Exception e) {
         logger.warn("Beacon connection in config not ok: " + e.getMessage());
         logger.info(Ar4kLogger.stackTraceToString(e, 40));
@@ -731,7 +735,7 @@ public class Anima
   }
 
   private Ar4kConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
-    String temporaryFile = UUID.randomUUID().toString() + ".ar4k.conf"
+    String temporaryFile = agentUniqueName + ".ar4k.conf"
         + ((cryptoAlias != null && !cryptoAlias.isEmpty()) ? ".crypto" : "");
     try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
         FileOutputStream fileOutputStream = new FileOutputStream(temporaryFile)) {
@@ -934,7 +938,7 @@ public class Anima
     SecurityContextHolder.getContext().setAuthentication(result);
     if (sessionId == null || sessionId.isEmpty()) {
       if (animaHomunculus.getAllSessions(result, false).isEmpty()) {
-        sessionId = UUID.randomUUID().toString();
+        sessionId = UUID.randomUUID().toString().replace("-", "");
         animaHomunculus.registerNewSession(sessionId, result);
       } else {
         sessionId = animaHomunculus.getAllSessions(result, false).get(0).getSessionId();

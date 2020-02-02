@@ -43,7 +43,7 @@ After=syslog.target
 
 [Service]
 User=ar4kAgent
-ExecStart=/var/ar4kAgent/ar4kAgent.jar
+ExecStart=/var/ar4kAgent/ar4kAgent.jar --spring.shell.interactive.enabled=false
 SuccessExitStatus=143
 
 [Install]

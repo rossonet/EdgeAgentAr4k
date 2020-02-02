@@ -58,7 +58,7 @@ message Timestamp {
 message RegisterReply {
   string registerCode = 1;  // unique code for the registration on the beacon server
   int32 monitoringFrequency = 2;
-  string cert = 3; // da questo momento la connessione dovrebbe passare in ssl con controllo reciproco dei certificati
+  string cert = 3; 
   bytes ca = 4;
   Status statusRegistration = 5;
   int64 timestampRegistration = 6;
@@ -139,6 +139,7 @@ enum CommandType {
   COMPLETE_COMMAND = 2;
   OPEN_PROXY_SOCKS = 3;
   EXPOSE_PORT = 4;
+  CONNECT_DATA_CHANNEL = 5;
 }
 
 message ChatMessage {
@@ -244,6 +245,7 @@ service DataServiceV1 {
   rpc Polling (PollingRequest) returns (FlowMessageData) {}
   rpc Subscription (SubscribeRequest) returns (stream FlowMessageData) {}
   rpc Write (RequestWrite) returns (FlowMessageData) {}
+  rpc WriteSubscription (stream RequestWrite) returns (FlowMessageData) {}
   rpc SendAddressSpace (AddressSpace) returns (AddressSpace) {}
   rpc GetRemoteAddressSpace (Agent) returns (AddressSpace) {}
 }
@@ -294,6 +296,7 @@ message NodeMetadata {
 message AddressSpace {
   int64 lastUpdate = 1;
   repeated NodeMetadata nodes = 2;
+  repeated AddressSpace subAddressSpace = 3;
 }
 
 message ParentScope {
@@ -313,6 +316,9 @@ enum DataType {
   TIMESTAMP = 8;
   OBJECT = 9;
   UNKNOWN = 10;
+  JSONDATA = 11;
+  BASE64DATA = 12;
+  MEDIA = 13;
 }
 
 service TunnelServiceV1 {

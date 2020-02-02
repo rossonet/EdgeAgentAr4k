@@ -28,6 +28,10 @@ public enum CommandType
    * <code>EXPOSE_PORT = 4;</code>
    */
   EXPOSE_PORT(4),
+  /**
+   * <code>CONNECT_DATA_CHANNEL = 5;</code>
+   */
+  CONNECT_DATA_CHANNEL(5),
   UNRECOGNIZED(-1),
   ;
 
@@ -51,6 +55,10 @@ public enum CommandType
    * <code>EXPOSE_PORT = 4;</code>
    */
   public static final int EXPOSE_PORT_VALUE = 4;
+  /**
+   * <code>CONNECT_DATA_CHANNEL = 5;</code>
+   */
+  public static final int CONNECT_DATA_CHANNEL_VALUE = 5;
 
 
   public final int getNumber() {
@@ -76,6 +84,7 @@ public enum CommandType
       case 2: return COMPLETE_COMMAND;
       case 3: return OPEN_PROXY_SOCKS;
       case 4: return EXPOSE_PORT;
+      case 5: return CONNECT_DATA_CHANNEL;
       default: return null;
     }
   }

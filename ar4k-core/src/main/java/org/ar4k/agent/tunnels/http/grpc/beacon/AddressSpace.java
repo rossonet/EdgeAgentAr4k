@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private AddressSpace() {
     nodes_ = java.util.Collections.emptyList();
+    subAddressSpace_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -57,6 +58,15 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.NodeMetadata.parser(), extensionRegistry));
             break;
           }
+          case 26: {
+            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+              subAddressSpace_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>();
+              mutable_bitField0_ |= 0x00000004;
+            }
+            subAddressSpace_.add(
+                input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -74,6 +84,9 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000002) != 0)) {
         nodes_ = java.util.Collections.unmodifiableList(nodes_);
+      }
+      if (((mutable_bitField0_ & 0x00000004) != 0)) {
+        subAddressSpace_ = java.util.Collections.unmodifiableList(subAddressSpace_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -137,6 +150,41 @@ private static final long serialVersionUID = 0L;
     return nodes_.get(index);
   }
 
+  public static final int SUBADDRESSSPACE_FIELD_NUMBER = 3;
+  private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> subAddressSpace_;
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSubAddressSpaceList() {
+    return subAddressSpace_;
+  }
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder> 
+      getSubAddressSpaceOrBuilderList() {
+    return subAddressSpace_;
+  }
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  public int getSubAddressSpaceCount() {
+    return subAddressSpace_.size();
+  }
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace getSubAddressSpace(int index) {
+    return subAddressSpace_.get(index);
+  }
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder getSubAddressSpaceOrBuilder(
+      int index) {
+    return subAddressSpace_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -157,6 +205,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < nodes_.size(); i++) {
       output.writeMessage(2, nodes_.get(i));
     }
+    for (int i = 0; i < subAddressSpace_.size(); i++) {
+      output.writeMessage(3, subAddressSpace_.get(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -173,6 +224,10 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < nodes_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, nodes_.get(i));
+    }
+    for (int i = 0; i < subAddressSpace_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, subAddressSpace_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -193,6 +248,8 @@ private static final long serialVersionUID = 0L;
         != other.getLastUpdate()) return false;
     if (!getNodesList()
         .equals(other.getNodesList())) return false;
+    if (!getSubAddressSpaceList()
+        .equals(other.getSubAddressSpaceList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -210,6 +267,10 @@ private static final long serialVersionUID = 0L;
     if (getNodesCount() > 0) {
       hash = (37 * hash) + NODES_FIELD_NUMBER;
       hash = (53 * hash) + getNodesList().hashCode();
+    }
+    if (getSubAddressSpaceCount() > 0) {
+      hash = (37 * hash) + SUBADDRESSSPACE_FIELD_NUMBER;
+      hash = (53 * hash) + getSubAddressSpaceList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -340,6 +401,7 @@ private static final long serialVersionUID = 0L;
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
         getNodesFieldBuilder();
+        getSubAddressSpaceFieldBuilder();
       }
     }
     @java.lang.Override
@@ -352,6 +414,12 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
       } else {
         nodesBuilder_.clear();
+      }
+      if (subAddressSpaceBuilder_ == null) {
+        subAddressSpace_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+      } else {
+        subAddressSpaceBuilder_.clear();
       }
       return this;
     }
@@ -390,6 +458,15 @@ private static final long serialVersionUID = 0L;
         result.nodes_ = nodes_;
       } else {
         result.nodes_ = nodesBuilder_.build();
+      }
+      if (subAddressSpaceBuilder_ == null) {
+        if (((bitField0_ & 0x00000004) != 0)) {
+          subAddressSpace_ = java.util.Collections.unmodifiableList(subAddressSpace_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.subAddressSpace_ = subAddressSpace_;
+      } else {
+        result.subAddressSpace_ = subAddressSpaceBuilder_.build();
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -466,6 +543,32 @@ private static final long serialVersionUID = 0L;
                  getNodesFieldBuilder() : null;
           } else {
             nodesBuilder_.addAllMessages(other.nodes_);
+          }
+        }
+      }
+      if (subAddressSpaceBuilder_ == null) {
+        if (!other.subAddressSpace_.isEmpty()) {
+          if (subAddressSpace_.isEmpty()) {
+            subAddressSpace_ = other.subAddressSpace_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureSubAddressSpaceIsMutable();
+            subAddressSpace_.addAll(other.subAddressSpace_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.subAddressSpace_.isEmpty()) {
+          if (subAddressSpaceBuilder_.isEmpty()) {
+            subAddressSpaceBuilder_.dispose();
+            subAddressSpaceBuilder_ = null;
+            subAddressSpace_ = other.subAddressSpace_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+            subAddressSpaceBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getSubAddressSpaceFieldBuilder() : null;
+          } else {
+            subAddressSpaceBuilder_.addAllMessages(other.subAddressSpace_);
           }
         }
       }
@@ -763,6 +866,246 @@ private static final long serialVersionUID = 0L;
         nodes_ = null;
       }
       return nodesBuilder_;
+    }
+
+    private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> subAddressSpace_ =
+      java.util.Collections.emptyList();
+    private void ensureSubAddressSpaceIsMutable() {
+      if (!((bitField0_ & 0x00000004) != 0)) {
+        subAddressSpace_ = new java.util.ArrayList<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace>(subAddressSpace_);
+        bitField0_ |= 0x00000004;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder> subAddressSpaceBuilder_;
+
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> getSubAddressSpaceList() {
+      if (subAddressSpaceBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(subAddressSpace_);
+      } else {
+        return subAddressSpaceBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public int getSubAddressSpaceCount() {
+      if (subAddressSpaceBuilder_ == null) {
+        return subAddressSpace_.size();
+      } else {
+        return subAddressSpaceBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace getSubAddressSpace(int index) {
+      if (subAddressSpaceBuilder_ == null) {
+        return subAddressSpace_.get(index);
+      } else {
+        return subAddressSpaceBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder setSubAddressSpace(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace value) {
+      if (subAddressSpaceBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.set(index, value);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder setSubAddressSpace(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder builderForValue) {
+      if (subAddressSpaceBuilder_ == null) {
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder addSubAddressSpace(org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace value) {
+      if (subAddressSpaceBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.add(value);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder addSubAddressSpace(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace value) {
+      if (subAddressSpaceBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.add(index, value);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder addSubAddressSpace(
+        org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder builderForValue) {
+      if (subAddressSpaceBuilder_ == null) {
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.add(builderForValue.build());
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder addSubAddressSpace(
+        int index, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder builderForValue) {
+      if (subAddressSpaceBuilder_ == null) {
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder addAllSubAddressSpace(
+        java.lang.Iterable<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> values) {
+      if (subAddressSpaceBuilder_ == null) {
+        ensureSubAddressSpaceIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, subAddressSpace_);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder clearSubAddressSpace() {
+      if (subAddressSpaceBuilder_ == null) {
+        subAddressSpace_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public Builder removeSubAddressSpace(int index) {
+      if (subAddressSpaceBuilder_ == null) {
+        ensureSubAddressSpaceIsMutable();
+        subAddressSpace_.remove(index);
+        onChanged();
+      } else {
+        subAddressSpaceBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder getSubAddressSpaceBuilder(
+        int index) {
+      return getSubAddressSpaceFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder getSubAddressSpaceOrBuilder(
+        int index) {
+      if (subAddressSpaceBuilder_ == null) {
+        return subAddressSpace_.get(index);  } else {
+        return subAddressSpaceBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder> 
+         getSubAddressSpaceOrBuilderList() {
+      if (subAddressSpaceBuilder_ != null) {
+        return subAddressSpaceBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(subAddressSpace_);
+      }
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder addSubAddressSpaceBuilder() {
+      return getSubAddressSpaceFieldBuilder().addBuilder(
+          org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder addSubAddressSpaceBuilder(
+        int index) {
+      return getSubAddressSpaceFieldBuilder().addBuilder(
+          index, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+     */
+    public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder> 
+         getSubAddressSpaceBuilderList() {
+      return getSubAddressSpaceFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder> 
+        getSubAddressSpaceFieldBuilder() {
+      if (subAddressSpaceBuilder_ == null) {
+        subAddressSpaceBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder>(
+                subAddressSpace_,
+                ((bitField0_ & 0x00000004) != 0),
+                getParentForChildren(),
+                isClean());
+        subAddressSpace_ = null;
+      }
+      return subAddressSpaceBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

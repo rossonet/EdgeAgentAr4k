@@ -40,7 +40,8 @@ import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
  *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *
+ * @see org.ar4k.agent.core.Ar4kComponent
+ * @see org.ar4k.agent.core.ServiceComponent
  */
 public abstract class AbstractAr4kService implements ServiceComponent<Ar4kComponent> {
 

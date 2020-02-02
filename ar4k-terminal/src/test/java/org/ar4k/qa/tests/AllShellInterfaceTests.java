@@ -109,7 +109,8 @@ public class AllShellInterfaceTests {
     assertTrue(listCommands.containsKey("add-data-rendezvous-channel"));
     assertTrue(listCommands.containsKey("add-keystore"));
     assertTrue(listCommands.containsKey("add-keystore-runtime"));
-    assertTrue(listCommands.containsKey("add-ssh-network-point"));
+    assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
+    assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
     assertTrue(listCommands.containsKey("check-keystore"));
     assertTrue(listCommands.containsKey("clear"));
     assertTrue(listCommands.containsKey("clear-data-channels-in-address-space"));
@@ -210,7 +211,6 @@ public class AllShellInterfaceTests {
     assertTrue(listCommands.containsKey("stop-beacon-client"));
     assertTrue(listCommands.containsKey("stop-beacon-server"));
     assertTrue(listCommands.containsKey("subscribe-data-channel"));
-    assertTrue(listCommands.containsKey("test"));
     assertTrue(listCommands.containsKey("unset-selected-config"));
     assertTrue(listCommands.containsKey("unsubscribe-data-channel"));
     assertTrue(listCommands.containsKey("view-key-in-keystore"));

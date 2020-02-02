@@ -95,7 +95,8 @@ public class SshShellInterfaceTests {
     assertEquals(anima.getState(), AnimaStates.STAMINAL);
     Map<String, MethodTarget> listCommands = shell.listCommands();
     System.out.println("commands: " + listCommands);
-    assertTrue(listCommands.containsKey("add-ssh-network-point"));
+    assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
+    assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
     assertTrue(listCommands.containsKey("clear"));
     assertTrue(listCommands.containsKey("exit"));
     assertTrue(listCommands.containsKey("help"));

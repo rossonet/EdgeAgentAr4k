@@ -19,12 +19,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -83,13 +86,33 @@ public class ConfigLoadingBase {
   };
 
   @Test
-  public void checkConfigDns() throws InterruptedException, IOException {
+  public void checkConfigBase() throws InterruptedException, IOException {
     Thread.sleep(10000);
     assertEquals(anima.getState(), AnimaStates.RUNNING);
     assertTrue("prova56H1".equals(anima.getRuntimeConfig().author));
-    assertTrue("dnsconfig".equals(anima.getRuntimeConfig().name));
+    assertTrue("base-config".equals(anima.getRuntimeConfig().name));
     assertTrue("EF56T".equals(anima.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+  }
 
+  @Test
+  public void createConfigBase64() throws IOException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.author = "prova56H1";
+    config.name = "base-config";
+    config.tagVersion = "EF56T";
+    BeaconServiceConfig s0 = new BeaconServiceConfig();
+    s0.setNote("345F");
+    s0.name = "socket-0";
+    BeaconServiceConfig s1 = new BeaconServiceConfig();
+    s1.setNote("345F");
+    s1.name = "socket-1";
+    config.pots.add(s0);
+    config.pots.add(s1);
+    System.out.println(ConfigHelper.toBase64(config));
   }
 
 }

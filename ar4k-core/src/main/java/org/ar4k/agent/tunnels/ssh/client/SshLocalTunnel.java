@@ -14,15 +14,8 @@
     */
 package org.ar4k.agent.tunnels.ssh.client;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -35,16 +28,10 @@ public class SshLocalTunnel extends AbstractSshTunnel {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SshLocalTunnel.class.toString());
 
-  private SshLocalConfig configuration = null;
-
-  private DataAddress dataspace;
-
-  private Anima anima;
-
   private void startTunnel() {
     try {
-      connect().setPortForwardingL(configuration.bindHost, configuration.bindPort, configuration.redirectServer,
-          configuration.redirectPort);
+      connect().setPortForwardingL(((SshLocalConfig) configuration).bindHost, ((SshLocalConfig) configuration).bindPort,
+          ((SshLocalConfig) configuration).redirectServer, ((SshLocalConfig) configuration).redirectPort);
     } catch (Exception e) {
       logger.logException(e);
     }
@@ -53,38 +40,6 @@ public class SshLocalTunnel extends AbstractSshTunnel {
   @Override
   public void init() {
     startTunnel();
-  }
-
-  @Override
-  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO updateAndGetStatus di SshLocalTunnel
-    return null;
-  }
-
-  @Override
-  public Anima getAnima() {
-    return anima;
-  }
-
-  @Override
-  public DataAddress getDataAddress() {
-    return dataspace;
-  }
-
-  @Override
-  public void setDataAddress(DataAddress dataAddress) {
-    dataspace = dataAddress;
-  }
-
-  @Override
-  public void setAnima(Anima anima) {
-    this.anima = anima;
-  }
-
-  @Override
-  public JSONObject getDescriptionJson() {
-    Gson gson = new GsonBuilder().create();
-    return new JSONObject(gson.toJsonTree(configuration).getAsString());
   }
 
 }

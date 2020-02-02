@@ -162,6 +162,7 @@ public class AnimaHomunculus implements Homunculus, SessionRegistry, Application
   public void close() throws Exception {
     sessionIds.clear();
     rpcIds.clear();
+    principals.clear();
   }
 
   @Override

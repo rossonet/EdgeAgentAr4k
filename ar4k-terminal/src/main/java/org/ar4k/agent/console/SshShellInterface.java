@@ -14,10 +14,18 @@
     */
 package org.ar4k.agent.console;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.tunnels.ssh.client.AbstractSshTunnel;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
+import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;
+import org.ar4k.agent.tunnels.ssh.client.SshRemoteTunnel;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -41,11 +49,59 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sshInterface")
 public class SshShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "Add a ssh endpoint to the selected configuration", group = "Tunnel Commands")
+  private Map<String, AbstractSshTunnel> tunnels = new HashMap<>();
+
+  @ShellMethod(value = "Add a ssh endpoint to the selected configuration that transports a local port to a remote one", group = "Tunnel Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSshNetworkPoint(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
+  public void addSshTunnelLocalPortToRemote(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
     getWorkingConfig().pots.add(service);
+  }
+
+  @ShellMethod(value = "Add a ssh endpoint to the selected configuration that trasport a remote port to a local one", group = "Tunnel Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addSshTunnelRemotePortToLocale(@ShellOption(optOut = true) @Valid SshRemoteConfig service) {
+    getWorkingConfig().pots.add(service);
+  }
+
+  @ShellMethod(value = "Add a ssh endpoint to the selected configuration that trasport a remote port to a local one", group = "Tunnel Commands")
+  @ManagedOperation
+  public void runSshTunnelToLocalSsh(@ShellOption(help = "remote ssh server") String hostTarget,
+      @ShellOption(help = "remote ssh port") String portTarget,
+      @ShellOption(help = "remote ssh user") String userAccount,
+      @ShellOption(help = "remote ssh password") String password,
+      @ShellOption(help = "remote port to bind on the server for the ssh connection") String portBindRemote) {
+    SshRemoteConfig config = new SshRemoteConfig();
+    config.redirectServer = "127.0.0.1";
+    config.redirectPort = 22;
+    config.bindHost = "0.0.0.0";
+    config.bindPort = Integer.valueOf(portBindRemote);
+    config.host = hostTarget;
+    config.port = Integer.valueOf(portTarget);
+    config.username = userAccount;
+    config.password = password;
+    SshRemoteTunnel tunnelSsh = config.instantiate();
+    tunnelSsh.setAnima(anima);
+    tunnelSsh.init();
+    tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
+  }
+
+  @ShellMethod(value = "List ssh tunnels", group = "Tunnel Commands")
+  @ManagedOperation
+  public String listSshTunnels() {
+    StringBuilder sb = new StringBuilder();
+    for (Entry<String, AbstractSshTunnel> a : tunnels.entrySet()) {
+      sb.append(a.getKey() + " -> " + a.getValue().toString());
+    }
+    return sb.toString();
+  }
+
+  @ShellMethod(value = "Kill a tunnel", group = "Tunnel Commands")
+  @ManagedOperation
+  public void removeSshTunnels(@ShellOption(help = "tunnelId") String tunnelId) {
+    tunnels.get(tunnelId).kill();
+    tunnels.remove(tunnelId);
   }
 
 }

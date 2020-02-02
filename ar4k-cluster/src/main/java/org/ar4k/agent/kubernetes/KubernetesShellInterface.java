@@ -34,9 +34,7 @@ import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.shell.Availability;
 import org.springframework.shell.Shell;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -77,7 +75,8 @@ import io.kubernetes.client.util.Yaml;
 @RestController
 @RequestMapping("/kubernetesInterface")
 //TODO finire implementazione console per gestire il deploy in cluster
-//TODO implementare un gestore di cluster come servizio che utilizza i canali per mettere a disposizione servizi
+//TODO implementare un gestore di cluster come servizio che utilizza i canali per mettere a disposizione servizi (tramite i servizi esterni)
+//TODO implementare servizio dati per la gestione k8s. Di fatto delle lambda su k8s.
 public class KubernetesShellInterface extends AbstractShellHelper {
   @Autowired
   Shell shell;

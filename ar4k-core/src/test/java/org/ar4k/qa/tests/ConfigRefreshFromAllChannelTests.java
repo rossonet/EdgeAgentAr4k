@@ -136,4 +136,21 @@ public class ConfigRefreshFromAllChannelTests {
     assertTrue(check.equals(anima.getRuntimeConfig().author));
   }
 
+  @Test
+  public void createConfigWeb() throws IOException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.name = "dnsToFile";
+    config.nextConfigFile = fileNameSecond;
+    Files.write(Paths.get("config-to-file.ar4k"), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING);
+  }
+
+  @Test
+  public void createConfigDns() throws IOException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.name = "DnsToWeb";
+    config.nextConfigWeb = webConfig;
+    System.out.println(ConfigHelper.toBase64ForDns("config-to-web", config)); // bottegaio.net
+  }
+
 }

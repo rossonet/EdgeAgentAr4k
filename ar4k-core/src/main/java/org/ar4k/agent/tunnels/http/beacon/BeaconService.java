@@ -97,8 +97,10 @@ public class BeaconService implements Ar4kComponent {
 
   @Override
   public void kill() {
-    beaconServer.stop();
-    beaconServer = null;
+    if (beaconServer != null) {
+      beaconServer.stop();
+      beaconServer = null;
+    }
   }
 
   @Override

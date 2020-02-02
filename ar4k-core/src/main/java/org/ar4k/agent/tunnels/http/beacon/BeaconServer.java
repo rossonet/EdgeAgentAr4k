@@ -26,9 +26,11 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.IBeaconServer;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.beacon.socket.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ApproveAgentRequestRequest;
@@ -42,19 +44,23 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Empty;
 import org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage;
+import org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessageData;
 import org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage;
+import org.ar4k.agent.tunnels.http.grpc.beacon.RequestWrite;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
+import org.ar4k.agent.tunnels.http.grpc.beacon.SubscribeRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc;
@@ -75,9 +81,10 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.stub.StreamObserver;
 
-public class BeaconServer implements Runnable, AutoCloseable {
+public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
-  private static final String TMP_BEACON_PATH_DEFAULT = "/tmp/beacon-server-" + UUID.randomUUID().toString();
+  // private static final String TMP_BEACON_PATH_DEFAULT = "/tmp/beacon-server-" +
+  // UUID.randomUUID().toString();
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconServer.class.toString());
   private static final long defaultTimeOut = 10000L;
@@ -88,7 +95,6 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private Server server = null;
   private int defaultPollTime = 6000;
   private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
-  // TODO timeout nodi in lista non più connessi
   private final List<BeaconAgent> agents = new ArrayList<>(); // elenco agenti connessi
   private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di autorizzazione
   private boolean running = true;
@@ -105,10 +111,10 @@ public class BeaconServer implements Runnable, AutoCloseable {
   private final Map<String, CommandReplyRequest> repliesQueue = new ConcurrentHashMap<>();
   private int discoveryPort = 0;
   private String broadcastAddress = "255.255.255.255";
-  private String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString() + ":";
-  private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
-  private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
-  private String privateKeyFile = TMP_BEACON_PATH_DEFAULT + ".key";
+  private String stringDiscovery = "AR4K";
+  private String certChainFileLastPart = "beacon-ca.pem";
+  private String certFileLastPart = "beacon-cert.pem";
+  private String privateKeyFileLastPart = "beacon.key";
   private String aliasBeaconServerInKeystore = "beacon-server";
   private String caChainPem = null;
 
@@ -250,11 +256,11 @@ public class BeaconServer implements Runnable, AutoCloseable {
     if (port > 0)
       this.port = port;
     if (certChainFile != null)
-      this.certChainFile = certChainFile;
+      this.certChainFileLastPart = certChainFile;
     if (certFile != null)
-      this.certFile = certFile;
+      this.certFileLastPart = certFile;
     if (privateKeyFile != null)
-      this.privateKeyFile = privateKeyFile;
+      this.privateKeyFileLastPart = privateKeyFile;
     if (caChainPem != null)
       this.caChainPem = caChainPem;
     this.acceptAllCerts = acceptCerts;
@@ -282,14 +288,14 @@ public class BeaconServer implements Runnable, AutoCloseable {
         throw new UnrecoverableKeyException(
             "key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + animaTarget + "]");
       }
-      writePemCa(this.aliasBeaconServerInKeystore, animaTarget, this.certChainFile);
-      writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFile);
-      writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFile);
+      writePemCa(this.certChainFileLastPart);
+      writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFileLastPart);
+      writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFileLastPart);
       logger.info("Starting beacon server");
       try {
-        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
-            .sslContext(GrpcSslContexts.forServer(new File(this.certFile), new File(this.privateKeyFile))
-                .trustManager(new File(this.certChainFile)).clientAuth(ClientAuth.OPTIONAL).build());
+        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port).sslContext(
+            GrpcSslContexts.forServer(new File(this.certFileLastPart), new File(this.privateKeyFileLastPart))
+                .trustManager(new File(this.certChainFileLastPart)).clientAuth(ClientAuth.OPTIONAL).build());
         server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
             .addService(new DataService()).build();
         server = serverBuilder.addService(new RpcService()).addService(new DataService())
@@ -341,18 +347,12 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   }
 
-  private void writePemCa(String alias, Anima animaTarget, String certChain) {
+  private void writePemCa(String certChain) {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
-      // TODO recuperare la catena di authority nel keystore.
-      if (caChainPem == null || caChainPem.isEmpty()) {
-        String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(alias);
-        writer.write("-----BEGIN CERTIFICATE-----\n");
-        writer.write(pemTxtBase);
-        writer.write("\n-----END CERTIFICATE-----\n");
-      } else {
-        writer.write(caChainPem);
-      }
+      writer.append("-----BEGIN CERTIFICATE-----\n");
+      writer.write(caChainPem);
+      writer.append("\n-----END CERTIFICATE-----\n");
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -381,6 +381,12 @@ public class BeaconServer implements Runnable, AutoCloseable {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#start()
+   */
+  @Override
   public void start() throws IOException {
     server.start();
     logger.info("Server Beacon started, listening on " + port);
@@ -388,7 +394,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
-        System.err.println("*** shutting down Beacon server since JVM is shutting down");
+        logger.info("*** shutting down Beacon server since JVM is shutting down");
         BeaconServer.this.stop();
       }
     });
@@ -398,19 +404,54 @@ public class BeaconServer implements Runnable, AutoCloseable {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#stop()
+   */
+  @Override
   public void stop() {
+    running = false;
+    if (tunnels != null && !tunnels.isEmpty()) {
+      for (TunnelRunnerBeaconServer t : tunnels) {
+        try {
+          t.close();
+        } catch (Exception e) {
+          logger.logException(e);
+        }
+      }
+      tunnels.clear();
+    }
+    if (agents != null && !agents.isEmpty()) {
+      for (BeaconAgent a : agents) {
+        try {
+          a.close();
+        } catch (Exception e) {
+          logger.logException(e);
+        }
+      }
+      agents.clear();
+    }
     if (server != null) {
       server.shutdown();
       server.shutdownNow();
       server = null;
     }
-    running = false;
     if (socketFlashBeacon != null) {
       socketFlashBeacon.close();
       socketFlashBeacon = null;
     }
+    if (process != null) {
+      process = null;
+    }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#blockUntilShutdown()
+   */
+  @Override
   public void blockUntilShutdown() throws InterruptedException {
     if (server != null) {
       server.awaitTermination();
@@ -418,7 +459,42 @@ public class BeaconServer implements Runnable, AutoCloseable {
   }
 
   private class DataService extends DataServiceV1Grpc.DataServiceV1ImplBase {
-//TODO DATASERVICE
+
+    @Override
+    public StreamObserver<RequestWrite> writeSubscription(StreamObserver<FlowMessageData> responseObserver) {
+      // TODO Auto-generated method stub
+      return super.writeSubscription(responseObserver);
+    }
+
+    @Override
+    public void polling(PollingRequest request, StreamObserver<FlowMessageData> responseObserver) {
+      // TODO DATASERVICE Auto-generated method stub
+      super.polling(request, responseObserver);
+    }
+
+    @Override
+    public void subscription(SubscribeRequest request, StreamObserver<FlowMessageData> responseObserver) {
+      // TODO DATASERVICE Auto-generated method stub
+      super.subscription(request, responseObserver);
+    }
+
+    @Override
+    public void write(RequestWrite request, StreamObserver<FlowMessageData> responseObserver) {
+      // TODO DATASERVICE Auto-generated method stub
+      super.write(request, responseObserver);
+    }
+
+    @Override
+    public void sendAddressSpace(AddressSpace request, StreamObserver<AddressSpace> responseObserver) {
+      // TODO DATASERVICE Auto-generated method stub
+      super.sendAddressSpace(request, responseObserver);
+    }
+
+    @Override
+    public void getRemoteAddressSpace(Agent request, StreamObserver<AddressSpace> responseObserver) {
+      // TODO DATASERVICE Auto-generated method stub
+      super.getRemoteAddressSpace(request, responseObserver);
+    }
   }
 
   private class TunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplBase {
@@ -726,14 +802,34 @@ public class BeaconServer implements Runnable, AutoCloseable {
 
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getStatus()
+   */
+  @Override
   public String getStatus() {
     return server != null ? ("running on " + server.getPort()) : null;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getTunnels()
+   */
+  @Override
   public List<TunnelRunnerBeaconServer> getTunnels() {
     return tunnels;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#waitReply(java.lang.String,
+   * long)
+   */
+  @Override
   public CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException {
     long start = new Date().getTime();
     CommandReplyRequest ret = null;
@@ -751,22 +847,54 @@ public class BeaconServer implements Runnable, AutoCloseable {
     return ret;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#isStopped()
+   */
+  @Override
   public boolean isStopped() {
     return server != null ? (server.isShutdown() || server.isTerminated()) : true;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getPort()
+   */
+  @Override
   public int getPort() {
     return port;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getDefaultPollTime()
+   */
+  @Override
   public int getDefaultPollTime() {
     return defaultPollTime;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setDefaultPollTime(int)
+   */
+  @Override
   public void setDefaultPollTime(int defaultPollTime) {
     this.defaultPollTime = defaultPollTime;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getAgentLabelRegisterReplies
+   * ()
+   */
+  @Override
   public List<BeaconAgent> getAgentLabelRegisterReplies() {
     return agents;
   }
@@ -787,8 +915,15 @@ public class BeaconServer implements Runnable, AutoCloseable {
         logger.logException(e);
       }
     }
+    logger.info("in Beacon server loop terminated ");
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#sendFlashUdp()
+   */
+  @Override
   public void sendFlashUdp() {
     try {
       if (socketFlashBeacon == null) {
@@ -833,34 +968,88 @@ public class BeaconServer implements Runnable, AutoCloseable {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#
+   * getDefaultBeaconFlashMoltiplicator()
+   */
+  @Override
   public int getDefaultBeaconFlashMoltiplicator() {
     return defaultBeaconFlashMoltiplicator;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#
+   * setDefaultBeaconFlashMoltiplicator(int)
+   */
+  @Override
   public void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator) {
     this.defaultBeaconFlashMoltiplicator = defaultBeaconFlashMoltiplicator;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getDiscoveryPort()
+   */
+  @Override
   public int getDiscoveryPort() {
     return discoveryPort;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setDiscoveryPort(int)
+   */
+  @Override
   public void setDiscoveryPort(int discoveryPort) {
     this.discoveryPort = discoveryPort;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getBroadcastAddress()
+   */
+  @Override
   public String getBroadcastAddress() {
     return broadcastAddress;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setBroadcastAddress(java.
+   * lang.String)
+   */
+  @Override
   public void setBroadcastAddress(String broadcastAddress) {
     this.broadcastAddress = broadcastAddress;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getStringDiscovery()
+   */
+  @Override
   public String getStringDiscovery() {
     return stringDiscovery;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setStringDiscovery(java.lang
+   * .String)
+   */
+  @Override
   public void setStringDiscovery(String stringDiscovery) {
     this.stringDiscovery = stringDiscovery;
   }
@@ -873,23 +1062,49 @@ public class BeaconServer implements Runnable, AutoCloseable {
     return waitReplyLoopWaitTime;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#isAcceptAllCerts()
+   */
+  @Override
   public boolean isAcceptAllCerts() {
     return acceptAllCerts;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getCertChainFile()
+   */
+  @Override
   public String getCertChainFile() {
-    return certFile;
+    return certFileLastPart;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getPrivateKeyFile()
+   */
+  @Override
   public String getPrivateKeyFile() {
-    return privateKeyFile;
+    return privateKeyFileLastPart;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#close()
+   */
   @Override
   public void close() {
     stop();
     if (agents != null) {
       agents.clear();
+    }
+    if (tunnels != null) {
+      tunnels.clear();
     }
     if (listAgentRequest != null) {
       listAgentRequest.clear();
@@ -903,10 +1118,16 @@ public class BeaconServer implements Runnable, AutoCloseable {
         + ", defaultBeaconFlashMoltiplicator=" + defaultBeaconFlashMoltiplicator + ", agentLabelRegisterReplies="
         + agents + ", acceptAllCerts=" + acceptAllCerts + ", running=" + running + ", discoveryPort=" + discoveryPort
         + ", broadcastAddress=" + broadcastAddress + ", stringDiscovery=" + stringDiscovery + ", certChainFile="
-        + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
+        + certChainFileLastPart + ", certFile=" + certFileLastPart + ", privateKeyFile=" + privateKeyFileLastPart
         + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#clearOldData()
+   */
+  @Override
   public void clearOldData() {
     List<BeaconAgent> toDelete = new ArrayList<>();
     for (BeaconAgent a : agents) {
@@ -914,7 +1135,7 @@ public class BeaconServer implements Runnable, AutoCloseable {
         try {
           logger.info("agent " + a + " doesn't poll data since " + a.getLastCall().toDateTime());
           toDelete.add(a);
-          clearTunnelForAgent(a);
+          clearTunnelForAgent(a.getAgentUniqueName());
           a.close();
         } catch (Exception e) {
           logger.logException("deleting agent " + a, e);
@@ -927,10 +1148,11 @@ public class BeaconServer implements Runnable, AutoCloseable {
     }
   }
 
-  private void clearTunnelForAgent(BeaconAgent a) {
+  private void clearTunnelForAgent(String agentUniqueId) {
     List<TunnelRunnerBeaconServer> tunnelToDelete = new ArrayList<>();
     for (TunnelRunnerBeaconServer t : tunnels) {
-      if (t.getClientAgent().equals(a) || t.getServerAgent().equals(a)) {
+      if (t.getClientAgent().getAgentUniqueName().equals(agentUniqueId)
+          || t.getServerAgent().getAgentUniqueName().equals(agentUniqueId)) {
         tunnelToDelete.add(t);
       }
     }

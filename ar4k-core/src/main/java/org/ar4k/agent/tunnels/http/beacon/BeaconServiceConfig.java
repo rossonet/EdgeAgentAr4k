@@ -29,27 +29,27 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = -8036646566388899515L;
 
-  @Parameter(names = "--port", description = "the port for run the Beacon endpoint", required = true)
+  @Parameter(names = "--port", description = "the port for run the Beacon endpoint")
   public int port = 6599;
-  @Parameter(names = "--discoveryPort", description = "the port for the UDP flash -discovery-. if 0 then then flash will be stopped", required = true)
+  @Parameter(names = "--discoveryPort", description = "the port for the UDP flash -discovery-. if 0 then then flash will be stopped")
   public int discoveryPort = 33666;
-  @Parameter(names = "--broadcastAddress", description = "the broadcast address for the flash", required = true)
+  @Parameter(names = "--broadcastAddress", description = "the broadcast address for the flash")
   public String broadcastAddress = "255.255.255.255";
-  @Parameter(names = "--acceptAllCerts", description = "in registration phase accept all cetificates or use the auth flow", required = true)
+  @Parameter(names = "--acceptAllCerts", description = "in registration phase accept all cetificates or use the auth flow")
   public boolean acceptAllCerts = true;
-  @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash", required = true)
+  @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash")
   public String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString();
-  @Parameter(names = "--certChainFile", description = "file for storing the ca for the server", required = true)
+  @Parameter(names = "--certChainFile", description = "file for storing the ca for the server")
   public String certChainFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
-  @Parameter(names = "--certFile", description = "file for storing the cert for the server", required = true)
+  @Parameter(names = "--certFile", description = "file for storing the cert for the server")
   public String certFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".pem";
-  @Parameter(names = "--privateKeyFile", description = "file for storing the key for the server", required = true)
+  @Parameter(names = "--privateKeyFile", description = "file for storing the key for the server")
   public String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
-  @Parameter(names = "--aliasBeaconServerInKeystore", description = "the alias in anima keystore for the cert/key", required = true)
+  @Parameter(names = "--aliasBeaconServerInKeystore", description = "the alias in anima keystore for the cert/key")
   public String aliasBeaconServerInKeystore = "beacon-server";
-  @Parameter(names = "--aliasBeaconServerRequestCertInKeystore", description = "the alias in anima keystore for the csr request", required = true)
+  @Parameter(names = "--aliasBeaconServerRequestCertInKeystore", description = "the alias in anima keystore for the csr request")
   public String aliasBeaconServerRequestCertInKeystore = "beacon-server-csr";
-  @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format", required = false)
+  @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format")
   public String caChainPem = null;
 
   @Override

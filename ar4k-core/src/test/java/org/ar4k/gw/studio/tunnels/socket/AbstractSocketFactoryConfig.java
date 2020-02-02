@@ -14,7 +14,7 @@
     */
 package org.ar4k.gw.studio.tunnels.socket;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
@@ -42,7 +42,7 @@ public abstract class AbstractSocketFactoryConfig extends AbstractServiceConfig 
   public String description;
 
   @Parameter(names = "--tags", description = "tunnel tags (multi selection)", variableArity = true, required = false)
-  public Collection<String> tags;
+  public List<String> tags;
 
   @Parameter(names = "--priority", description = "priority for the tunnel low values are before, high values are after", required = true)
   public int priority = 0;
@@ -97,7 +97,7 @@ public abstract class AbstractSocketFactoryConfig extends AbstractServiceConfig 
   }
 
   @Override
-  public Collection<String> getTags() {
+  public List<String> getTags() {
     return tags;
   }
 }

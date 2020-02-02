@@ -1,17 +1,26 @@
 package org.ar4k.agent.config;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 import org.joda.time.Instant;
 
+/**
+ * interfaccia da implementare per una configurazione nel sistema
+ *
+ * @see org.ar4k.agent.config.Ar4kConfig
+ * @see org.ar4k.agent.config.ServiceConfig
+ *
+ * @author andrea
+ *
+ */
 public interface ConfigSeed extends Serializable, Cloneable {
 
   String getName();
 
   String getDescription();
 
-  Collection<String> getTags();
+  List<String> getTags();
 
   Instant getCreationDate();
 

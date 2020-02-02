@@ -6,6 +6,12 @@ import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
 
+/**
+ * interfaccia da implementare per un servizio gestito
+ * 
+ * @author andrea
+ *
+ */
 public interface Ar4kComponent extends AutoCloseable {
 
   public static enum ServiceStatus {

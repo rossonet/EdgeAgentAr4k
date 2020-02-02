@@ -7,16 +7,22 @@ import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
 
+/**
+ * interfaccia da implementare per scrivere un componente RPC
+ * 
+ * @author andrea
+ *
+ */
 public interface RpcExecutor extends AutoCloseable {
 
-  public String elaborateMessage(String message);
+  String elaborateMessage(String message);
 
-  public RpcMessage<? extends String> elaborateMessage(RpcMessage<? extends String> message);
+  RpcMessage<? extends String> elaborateMessage(RpcMessage<? extends String> message);
 
-  public Map<String, MethodTarget> listCommands();
+  Map<String, MethodTarget> listCommands();
 
-  public List<CompletionProposal> complete(CompletionContext context);
+  List<CompletionProposal> complete(CompletionContext context);
 
-  public void setHomunculus(Homunculus homunculus);
+  void setHomunculus(Homunculus homunculus);
 
 }

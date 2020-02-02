@@ -14,10 +14,19 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 @SuppressWarnings("rawtypes")
+/**
+ * adattatore utilizzato da Gson per la conversione delle classi implementate
+ * nei pots della configurazione di Anima
+ *
+ * @see org.ar4k.agent.config.Ar4kConfig
+ *
+ * @author andrea
+ *
+ */
 public class PotInterfaceAdapter implements JsonSerializer, JsonDeserializer {
 
-  private static final String CLASSNAME = "CLASSNAME";
-  private static final String DATA = "DATA";
+  private static final String CLASSNAME = "class-name";
+  private static final String DATA = "data";
 
   @Override
   public ServiceConfig deserialize(JsonElement jsonElement, Type type,

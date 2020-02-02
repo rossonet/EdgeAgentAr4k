@@ -63,7 +63,7 @@ public class UsbCameraConfig extends AbstractServiceConfig {
   public Ar4kComponent instantiate() {
     UsbCameraService ss = new UsbCameraService();
     ss.setConfiguration(this);
-    return (Ar4kComponent) ss;
+    return ss;
   }
 
   @Override

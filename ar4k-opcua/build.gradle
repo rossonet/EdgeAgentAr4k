@@ -1,0 +1,13 @@
+description = "IoT components OPCUA Eclipse Milo lib"
+
+//TODO esposizione tutti i tag o sottoalbero come server, aggancio di variabili come client
+
+dependencies {
+  compile project(':ar4k-core')
+  // OPCUA
+  compile('org.eclipse.milo:sdk-client:0.3.7')
+  compile('org.eclipse.milo:stack-client:0.3.7')
+  compile('org.eclipse.milo:sdk-server:0.3.7')
+  compile('org.eclipse.milo:stack-server:0.3.7')
+  compile('org.eclipse.milo:stack-core:0.3.7')
+}

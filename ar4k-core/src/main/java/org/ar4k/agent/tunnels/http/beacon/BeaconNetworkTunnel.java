@@ -60,7 +60,8 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
   public void kill() {
     logger.debug("stopping BeaconNetworkTunnel");
     try {
-      hub.close();
+      if (hub != null)
+        hub.close();
     } catch (Exception e) {
       logger.logException(e);
     }

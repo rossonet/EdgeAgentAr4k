@@ -18,14 +18,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
+import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
-import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
+import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -61,6 +66,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class ConfigLoadingWeb {
 
+  private final String checkString = "f5463152-cd79-4e3d-915e-1e9a3b15633a";
+
   @Autowired
   Anima anima;
 
@@ -87,11 +94,29 @@ public class ConfigLoadingWeb {
   public void checkConfigWeb() throws InterruptedException, IOException {
     Thread.sleep(10000);
     assertEquals(anima.getState(), AnimaStates.RUNNING);
-    String checkString = "f5463152-cd79-4e3d-915e-1e9a3b15633a";
-    System.out.println("CODE -> " + anima.getRuntimeConfig().author);
+    System.out.println("CONFIG -> " + ConfigHelper.toYaml(anima.getRuntimeConfig()));
     assertTrue(checkString.equals(anima.getRuntimeConfig().author));
-    assertTrue(checkString.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
-    assertTrue(checkString.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue(checkString.equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue(checkString.equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+  }
+
+  @Test
+  public void createConfigWeb() throws IOException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.author = checkString;
+    config.name = "config-web-test";
+    BeaconServiceConfig s0 = new BeaconServiceConfig();
+    s0.setNote(checkString);
+    s0.name = "socket-0";
+    BeaconServiceConfig s1 = new BeaconServiceConfig();
+    s1.setNote(checkString);
+    s1.name = "socket-1";
+    config.pots.add(s0);
+    config.pots.add(s1);
+    Files.write(Paths.get("test-config.ar4k"), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING);
   }
 
 }

@@ -23,6 +23,12 @@ import com.beust.jcommander.Parameter;
  */
 public class SshRemoteConfig extends AbstractSshConfig {
 
+  @Override
+  public String toString() {
+    return "SshRemoteConfig [redirectServer=" + redirectServer + ", redirectPort=" + redirectPort + ", bindHost="
+        + bindHost + ", bindPort=" + bindPort + "]";
+  }
+
   private static final long serialVersionUID = 6322932417278452420L;
 
   @Parameter(names = "--redirectServer", description = "server to forward the connection")
@@ -38,8 +44,9 @@ public class SshRemoteConfig extends AbstractSshConfig {
   public int bindPort = 2200;
 
   @Override
-  public SshLocalTunnel instantiate() {
-    SshLocalTunnel ss = new SshLocalTunnel();
+  public SshRemoteTunnel instantiate() {
+    SshRemoteTunnel ss = new SshRemoteTunnel();
+    ss.setConfiguration(this);
     return ss;
   }
 

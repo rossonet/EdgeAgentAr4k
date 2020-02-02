@@ -66,6 +66,7 @@ import com.google.gson.GsonBuilder;
  *         Interfaccia gestione docker.
  */
 
+// TODO implementare servizio dati per la gestione docker. In pratica delle labda su docker
 @ShellCommandGroup("Docker Commands")
 @ShellComponent
 //@EnableMBeanExport

@@ -1,4 +1,4 @@
-description = "Core componets of Ar4k Semantic Router"
+description = "Cluster manager (k8s,docker, openshift) con funzioni di esecuzione lambda chiamate via dati"
 
 apply plugin: 'com.google.protobuf'
 

@@ -25,7 +25,12 @@ import org.springframework.shell.Shell;
 
 import com.beust.jcommander.ParameterException;
 
-// una singola conversazione via RPC
+/**
+ * singola conversazione via protocollo RPC perme
+ *
+ * @author andrea
+ *
+ */
 public class RpcConversation implements RpcExecutor {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -145,6 +150,24 @@ public class RpcConversation implements RpcExecutor {
 
   @Override
   public void close() throws Exception {
+    if (scriptSessions != null && !scriptSessions.isEmpty()) {
+      for (AgentProcess p : scriptSessions.values()) {
+        p.close();
+      }
+      scriptSessions.clear();
+    }
+    if (configurations != null && !configurations.isEmpty()) {
+      configurations.clear();
+    }
+    if (keyStores != null && !keyStores.isEmpty()) {
+      keyStores.clear();
+    }
+    if (components != null && !components.isEmpty()) {
+      components.clear();
+    }
+    if (homunculus != null) {
+      homunculus.close();
+    }
     logger.debug("rpc coversation closed");
   }
 

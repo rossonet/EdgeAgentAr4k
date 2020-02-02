@@ -90,8 +90,11 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
 
   @Override
   public void close() throws Exception {
-    remoteHomunculus = null;
-    Agent me = null;
+    if (remoteHomunculus != null) {
+      remoteHomunculus.close();
+      remoteHomunculus = null;
+    }
+    me = null;
     blockingStub = null;
   }
 

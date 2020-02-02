@@ -1,6 +1,6 @@
 package org.ar4k.agent.tunnels.http.beacon;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.exception.ServiceInitException;
@@ -21,7 +21,7 @@ public class BeaconNetworkConfig implements NetworkConfig {
   private final String uniqueId;
   private final Instant lastUpdateData;
   private final Instant creationDate;
-  private final Collection<String> tags;
+  private final List<String> tags;
   private final String description;
   private final String name;
 
@@ -88,7 +88,7 @@ public class BeaconNetworkConfig implements NetworkConfig {
   }
 
   @Override
-  public Collection<String> getTags() {
+  public List<String> getTags() {
     return tags;
   }
 

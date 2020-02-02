@@ -64,7 +64,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
-import org.springframework.shell.Shell;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -116,6 +115,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
   private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
   private List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
+  private String certChain = null;
 
   public static class Builder {
     private Anima anima = null;
@@ -129,7 +129,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
     private String certFile = null;
     private String privateFile = null;
     private String aliasBeaconClientInKeystore = null;
-    @SuppressWarnings("unused")
     private String beaconCaChainPem = null;
 
     public Anima getAnima() {
@@ -238,24 +237,27 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
     public BeaconClient build() throws UnrecoverableKeyException {
       return new BeaconClient(anima, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
-          certChainFile, certFile, privateFile, aliasBeaconClientInKeystore);
+          certChainFile, certFile, privateFile, aliasBeaconClientInKeystore, beaconCaChainPem);
     }
 
   }
 
   private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
       String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-      String aliasBeaconClientInKeystore) throws UnrecoverableKeyException {
+      String aliasBeaconClientInKeystore, String certChain) throws UnrecoverableKeyException {
     this.localExecutor = rpcConversation;
     this.discoveryPort = discoveryPort;
     this.discoveryFilter = discoveryFilter;
     this.anima = anima;
-    this.localExecutor = new RpcConversation(Anima.getApplicationContext().getBean(Shell.class));
+    // this.localExecutor = new
+    // RpcConversation(Anima.getApplicationContext().getBean(Shell.class));
     this.hostTarget = host;
     this.port = port;
     if (aliasBeaconClientInKeystore != null) {
       this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
     }
+    if (certChain != null && !certChain.isEmpty())
+      this.certChain = certChain;
     if (certChainFile != null)
       this.certChainFile = certChainFile;
     if (certFile != null)
@@ -315,14 +317,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private void generateCaFile() {
     try {
       FileWriter writer = new FileWriter(new File(certChainFile));
-      // TODO meccanismo per trovare la catena in automatico
-      String pemTxtClient = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClientInKeystore);
       writer.write("-----BEGIN CERTIFICATE-----\n");
-      writer.write(pemTxtClient);
+      writer.write(certChain);
       writer.write("\n-----END CERTIFICATE-----\n");
-      /*
-       * } else { writer.write(getCaServer()); }
-       */
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -420,7 +417,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
           .setDisplayKey(displayKey).setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest))
           .build();
-      logger.debug("try registration, channel status " + channel.getState(true));
+      logger.debug("try registration, channel status " + (channel != null ? channel.getState(true) : "null channel"));
       RegisterReply reply = blockingStub.register(request);
       me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
       logger.info("connection to beacon ok . I'm " + me.getAgentUniqueName());
@@ -465,6 +462,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         logger.logException("in Beacon client loop", e);
       }
     }
+    logger.info("Beacon client terminated");
   }
 
   public void lookOut()
@@ -829,10 +827,42 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
   @Override
   public void close() {
+    running = false;
+    if (remoteExecutors != null && remoteExecutors.isEmpty()) {
+      for (RemoteBeaconRpcExecutor e : remoteExecutors) {
+        try {
+          e.close();
+        } catch (Exception e1) {
+          logger.logException(e1);
+        }
+      }
+      remoteExecutors.clear();
+    }
+    if (localExecutor != null) {
+      try {
+        localExecutor.close();
+      } catch (Exception e) {
+        logger.logException(e);
+      }
+    }
+    if (tunnels != null && !tunnels.isEmpty()) {
+      for (BeaconNetworkTunnel t : tunnels) {
+        try {
+          t.close();
+        } catch (Exception e) {
+          logger.logException(e);
+        }
+      }
+      tunnels.clear();
+    }
     asyncStub = null;
+    asyncStubTunnel = null;
+    blockingStubTunnel = null;
     blockingStub = null;
-    channel.shutdownNow();
-    channel = null;
+    if (channel != null) {
+      channel.shutdownNow();
+      channel = null;
+    }
     logger.info("Client Beacon closed");
   }
 

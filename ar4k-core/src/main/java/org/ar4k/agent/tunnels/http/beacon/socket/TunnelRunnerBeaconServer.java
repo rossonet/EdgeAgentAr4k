@@ -11,7 +11,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 
 import io.grpc.stub.StreamObserver;
 
-public class TunnelRunnerBeaconServer {
+public class TunnelRunnerBeaconServer implements AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(TunnelRunnerBeaconServer.class.toString());
@@ -149,6 +149,16 @@ public class TunnelRunnerBeaconServer {
 
   public Set<Long> getServerObserver() {
     return serverObserver.keySet();
+  }
+
+  @Override
+  public void close() throws Exception {
+    if (serverObserver != null && !serverObserver.isEmpty()) {
+      for (StreamObserver<TunnelMessage> observer : serverObserver.values()) {
+        observer.onCompleted();
+      }
+      serverObserver.clear();
+    }
   }
 
 }

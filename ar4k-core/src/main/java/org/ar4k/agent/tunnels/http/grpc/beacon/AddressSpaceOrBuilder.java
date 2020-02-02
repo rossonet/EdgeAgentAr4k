@@ -35,4 +35,28 @@ public interface AddressSpaceOrBuilder extends
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.NodeMetadataOrBuilder getNodesOrBuilder(
       int index);
+
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace> 
+      getSubAddressSpaceList();
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpace getSubAddressSpace(int index);
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  int getSubAddressSpaceCount();
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder> 
+      getSubAddressSpaceOrBuilderList();
+  /**
+   * <code>repeated .beacon.AddressSpace subAddressSpace = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.AddressSpaceOrBuilder getSubAddressSpaceOrBuilder(
+      int index);
 }

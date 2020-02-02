@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 //@ManagedResource(objectName = "bean:name=openshiftInterface", description = "Ar4k Agent OpenShift Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "openshiftInterface")
 @RestController
 @RequestMapping("/openshiftInterface")
-//TODO implementare OpenShiftShellInterface
+//TODO implementare OpenShiftShellInterface e servizi come per docker e k8s
 public class OpenShiftShellInterface extends AbstractShellHelper {
 
   @Autowired

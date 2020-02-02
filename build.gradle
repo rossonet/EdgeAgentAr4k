@@ -1,5 +1,5 @@
 group = 'org.ar4k.agent'
-version = '0.8.64'
+version = '0.8.66'
 
 ext{
   sourceCompatibility = 1.8

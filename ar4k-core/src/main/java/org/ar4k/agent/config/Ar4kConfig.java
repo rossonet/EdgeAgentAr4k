@@ -14,8 +14,10 @@
     */
 package org.ar4k.agent.config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.validator.AnsiColorValidator;
@@ -70,8 +72,14 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--beaconServer", description = "Beacon server for remote management")
   public String beaconServer = null;
 
-  @Parameter(names = "--autoRegisterBeaconServer", description = "if the Beacon server is not present or is non reacheable, use the Beacon discovery protocol to find a end point")
-  public boolean autoRegisterBeaconServer = true;
+  @Parameter(names = "--beaconServerCertChain", description = "Beacon client cert chain")
+  public String beaconServerCertChain = null;
+
+  @Parameter(names = "--beaconDiscoveryPort", description = "Beacon auto discovery port. 0 => disabled")
+  public int beaconDiscoveryPort = 0;
+
+  @Parameter(names = "--beaconDiscoveryFilterString", description = "Beacon discovery filter string")
+  public String beaconDiscoveryFilterString = "AR4K";
 
   @Parameter(names = "--dataCenter", description = "datacenter in where the agent run")
   public String dataCenter = "ALONE";
@@ -95,13 +103,13 @@ public class Ar4kConfig implements ConfigSeed {
   public String license = "GNU AFFERO GENERAL PUBLIC LICENSE";
 
   @Parameter(names = "--tags", description = "tags", variableArity = true)
-  public Collection<String> tags = new HashSet<>();
+  public List<String> tags = new ArrayList<>();
 
   @Parameter(names = "--contexts", description = "contexts", variableArity = true)
-  public Collection<String> contexts = new HashSet<>();
+  public List<String> contexts = new ArrayList<>();
 
   @Parameter(names = "--groups", description = "groups", variableArity = true)
-  public Collection<String> groups = new HashSet<>();
+  public List<String> groups = new ArrayList<>();
 
   @Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
   public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
@@ -158,23 +166,27 @@ public class Ar4kConfig implements ConfigSeed {
   }
 
   @Override
-  public Collection<String> getTags() {
+  public List<String> getTags() {
     return tags;
+  }
+
+  public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
+    return lastUpdate.isAfter(runtimeConfig.lastUpdate);
   }
 
   @Override
   public String toString() {
     return "Ar4kConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
-        + ", name=" + name + ", prompt=" + prompt + ", promptColor=" + promptColor + ", description=" + description
-        + ", beaconServer=" + beaconServer + ", autoRegisterBeaconServer=" + autoRegisterBeaconServer + ", dataCenter="
-        + dataCenter + ", version=" + version + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion
-        + ", author=" + author + ", project=" + project + ", license=" + license + ", tags=" + tags + ", contexts="
-        + contexts + ", groups=" + groups + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript
-        + ", postScript=" + postScript + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath="
-        + sshdAuthorizedKeysPath + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
-  }
-
-  public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
-    return lastUpdate.isAfter(runtimeConfig.lastUpdate);
+        + ", name=" + name + ", nextConfigDns=" + nextConfigDns + ", nextConfigWeb=" + nextConfigWeb
+        + ", nextConfigFile=" + nextConfigFile + ", nextConfigReload=" + nextConfigReload + ", configCheckPeriod="
+        + configCheckPeriod + ", prompt=" + prompt + ", promptColor=" + promptColor + ", description=" + description
+        + ", beaconServer=" + beaconServer + ", beaconServerCertChain=" + beaconServerCertChain
+        + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", dataCenter=" + dataCenter + ", version=" + version
+        + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion + ", author=" + author + ", project=" + project
+        + ", license=" + license + ", tags=" + tags + ", contexts=" + contexts + ", groups=" + groups
+        + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript + ", postScript=" + postScript
+        + ", preScriptLanguage=" + preScriptLanguage + ", postScriptLanguage=" + postScriptLanguage
+        + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath=" + sshdAuthorizedKeysPath
+        + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots + "]";
   }
 }

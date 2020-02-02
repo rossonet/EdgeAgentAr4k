@@ -54,4 +54,10 @@ public abstract class AbstractSshConfig extends AbstractServiceConfig {
   @Parameter(names = "--reuseAddress", description = "enable/disable the SO_REUSEADDR socket option")
   public Boolean reuseAddress = null;
 
+  @Override
+  public String toString() {
+    return "AbstractSshConfig [host=" + host + ", port=" + port + ", username=" + username + ", password=" + password
+        + ", authkey=" + authkey + ", soTimeout=" + soTimeout + ", tcpNoDelay=" + tcpNoDelay + ", keepAlive="
+        + keepAlive + ", receiveBufferSize=" + receiveBufferSize + ", reuseAddress=" + reuseAddress + "]";
+  }
 }

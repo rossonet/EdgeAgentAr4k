@@ -193,6 +193,12 @@ public class Ar4kNetworkHub implements NetworkHub {
     @Override
     public void onCompleted() {
       logger.debug("Complete for tunnel write " + tunnelId + "/" + uniqueBeaconNetwork + " session:" + serverSessionId);
+      if (serverSocketChannel != null) {
+        serverSocketChannel.close();
+      }
+      if (clientChannelHandler != null && !clientChannelHandler.isEmpty()) {
+        clientChannelHandler.clear();
+      }
     }
   }
 
@@ -277,6 +283,7 @@ public class Ar4kNetworkHub implements NetworkHub {
 
     @Override
     public void close() throws Exception {
+
       if (serverSocketChannel != null) {
         serverSocketChannel.close();
       }
