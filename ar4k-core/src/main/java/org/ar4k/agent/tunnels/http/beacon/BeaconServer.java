@@ -131,7 +131,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     private String certFile = null;
     private String privateKeyFile = null;
     private String aliasBeaconServerInKeystore = null;
-    private String aliasBeaconServerRequestCertInKeystore = null;
     private String caChainPem = null;
 
     public Anima getAnima() {
@@ -221,15 +220,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
     public Builder setAliasBeaconServerInKeystore(String aliasBeaconServerInKeystore) {
       this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
-      return this;
-    }
-
-    public String getAliasBeaconServerRequestCertInKeystore() {
-      return aliasBeaconServerRequestCertInKeystore;
-    }
-
-    public Builder setAliasBeaconServerRequestCertInKeystore(String aliasBeaconServerRequestCertInKeystore) {
-      this.aliasBeaconServerRequestCertInKeystore = aliasBeaconServerRequestCertInKeystore;
       return this;
     }
 
@@ -327,7 +317,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
         for (Certificate i : sslSession.getPeerCertificates()) {
           logger.trace(" - " + i.toString());
         }
-        logger.trace("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
+        logger.info("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
       } catch (SSLPeerUnverifiedException e) {
         logger.info("SSL CERT NOT VERIFIED: " + e.getMessage());
         logger.info("SSL Cipher: " + serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION).getCipherSuite());
@@ -401,7 +391,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
-        logger.info("*** shutting down Beacon server since JVM is shutting down");
+        logger.info("Shutting down Beacon server since JVM is shutting down");
         BeaconServer.this.stop();
       }
     });

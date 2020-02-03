@@ -24,6 +24,7 @@ public class MultiContextTests {
     System.err.println("\n\nEND TESTS\n\n");
     for (Anima a : testAnimas) {
       a.close();
+      a = null;
     }
   }
 

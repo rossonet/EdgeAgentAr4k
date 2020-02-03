@@ -98,6 +98,7 @@ public class RemoteControlOverBeaconAndSsh {
 
   @Before
   public void before() throws Exception {
+    Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
         passwordKs, true);
@@ -447,8 +448,6 @@ public class RemoteControlOverBeaconAndSsh {
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.aliasBeaconServerInKeystore = signServerAliasInKeystore;
     beaconServiceConfig.caChainPem = certCaAsPem;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile
-                                                                       // cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 

@@ -126,7 +126,6 @@ public class BeaconClientXpraTests {
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.caChainPem = certCaAsPem;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 

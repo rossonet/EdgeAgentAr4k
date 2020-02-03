@@ -47,8 +47,6 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   public String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
   @Parameter(names = "--aliasBeaconServerInKeystore", description = "the alias in anima keystore for the cert/key")
   public String aliasBeaconServerInKeystore = "beacon-server";
-  @Parameter(names = "--aliasBeaconServerRequestCertInKeystore", description = "the alias in anima keystore for the csr request")
-  public String aliasBeaconServerRequestCertInKeystore = "beacon-server-csr";
   @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format")
   public String caChainPem = null;
 
@@ -64,8 +62,7 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
     return "BeaconServiceConfig [port=" + port + ", discoveryPort=" + discoveryPort + ", broadcastAddress="
         + broadcastAddress + ", acceptAllCerts=" + acceptAllCerts + ", stringDiscovery=" + stringDiscovery
         + ", certChainFile=" + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
-        + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", aliasBeaconServerRequestCertInKeystore="
-        + aliasBeaconServerRequestCertInKeystore + ", caChainPem=" + caChainPem + "]";
+        + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
   }
 
   @Override

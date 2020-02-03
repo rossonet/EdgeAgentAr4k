@@ -122,7 +122,6 @@ public class ZLastBeaconClientServerSslTests {
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
     Ar4kConfig config2 = null; // TODO
@@ -190,7 +189,6 @@ public class ZLastBeaconClientServerSslTests {
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
@@ -277,8 +275,6 @@ public class ZLastBeaconClientServerSslTests {
 
     System.out.println("CA SERVER\n" + certCaAsPem);
     beaconServiceConfig.caChainPem = certCaAsPem;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile
-                                                                       // cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
@@ -462,7 +458,6 @@ public class ZLastBeaconClientServerSslTests {
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 33666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
-    beaconServiceConfig.aliasBeaconServerRequestCertInKeystore = null; // probabile cancellare
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 

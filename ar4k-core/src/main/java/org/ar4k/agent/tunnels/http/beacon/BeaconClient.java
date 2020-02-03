@@ -273,7 +273,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
         logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
             + "' for Beacon client is present in keystore");
       } else {
-        throw new UnrecoverableKeyException("key " + this.aliasBeaconClientInKeystore + " not found in keystore");
+        logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
+            + "' for Beacon client is not present in keystore, use " + anima.getMyAliasCertInKeystore());
       }
     }
     if (this.port > 0) {
@@ -287,8 +288,13 @@ public class BeaconClient implements Runnable, AutoCloseable {
       runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext());
     } else {
       generateCaFile();
-      generateCertFile();
-      writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
+      if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+        generateCertFile(this.aliasBeaconClientInKeystore);
+        writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
+      } else {
+        generateCertFile(anima.getMyAliasCertInKeystore());
+        writePrivateKey(anima.getMyAliasCertInKeystore(), anima, privateFile);
+      }
       try {
         logger.debug("Starting Beacon client");
         SslContextBuilder sslBuilder = GrpcSslContexts.forClient().keyManager(new File(certFile), new File(privateFile))
@@ -331,10 +337,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
   }
 
-  private void generateCertFile() {
+  private void generateCertFile(String aliasBeaconClient) {
     try {
       FileWriter writer = new FileWriter(new File(certFile));
-      String pemTxt = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClientInKeystore);
+      String pemTxt = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxt);
       writer.write("\n-----END CERTIFICATE-----\n");
@@ -357,7 +363,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     if (lastRegisterTime == 0 || (lastRegisterTime + INTERVAL_REGISTRATION_TRY) < (new Date()).getTime()) {
       lastRegisterTime = new Date().getTime();
       try {
-        logger.debug("try registration to beacon server.\n-status registration: " + registerStatus
+        logger.info("try registration to beacon server.\n-status registration: " + registerStatus
             + "\n-status connection: " + getStateConnection());
         registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
       } catch (Exception e) {

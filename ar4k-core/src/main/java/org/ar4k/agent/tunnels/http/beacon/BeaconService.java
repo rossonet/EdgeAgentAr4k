@@ -65,7 +65,6 @@ public class BeaconService implements Ar4kComponent {
       if (beaconServer == null) {
         beaconServer = new BeaconServer.Builder().setAnima(anima).setPort(configuration.port)
             .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
-            .setAliasBeaconServerRequestCertInKeystore(configuration.aliasBeaconServerRequestCertInKeystore)
             .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
             .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
             .setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
