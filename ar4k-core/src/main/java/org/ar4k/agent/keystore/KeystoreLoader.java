@@ -40,6 +40,7 @@ import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -48,8 +49,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.ar4k.agent.exception.Ar4kException;
 import org.ar4k.agent.helper.ConfigHelper;
@@ -89,6 +88,13 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 
 public final class KeystoreLoader {
 
+  private static final String KEY_FACTORY = "RSA";
+
+  private static final String KEYSTORE_TYPE = "PKCS12";
+
+  static final String CIPHER = "SHA256withRSA";
+  // static final String CIPHER = "SHA512withRSA";
+
   private KeystoreLoader() {
     throw new UnsupportedOperationException("Just for static usage");
   }
@@ -101,7 +107,7 @@ public final class KeystoreLoader {
 
   public static void create(String alias, String keystorePath, String keystorePassword) throws Exception {
     KeystoreLoader.create("rossonet-" + UUID.randomUUID().toString(), "Rossonet s.c.a r.l.", "Ar4k", "Imola", "BO",
-        "IT", "urn:org.ar4k.agent:ca_rossonet-key-agent", "ca.test.ar4k.net", "127.0.0.1", alias, keystorePath,
+        "IT", "urn:org.ar4k.agent:ca_rossonet-key-agent", "*.ar4k.net", "127.0.0.1", alias, keystorePath,
         keystorePassword, false);
   }
 
@@ -109,15 +115,8 @@ public final class KeystoreLoader {
       String country, String uri, String dns, String ip, String alias, String keyStorePath, String password,
       boolean isCa) throws Exception {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    if (!serverKeyStore.exists()) {
-      logger.debug("create keystore " + keyStorePath);
-      keyStore.load(null, passwordChar);
-    } else {
-      logger.debug("load keystore " + keyStorePath);
-      keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
-    }
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
     SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
         .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
@@ -132,27 +131,39 @@ public final class KeystoreLoader {
     }
     X509Certificate certificate = builder.build();
     keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
+    File serverKeyStore = new File(keyStorePath);
     keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
     serverKeyStore = null;
     return true;
 
   }
 
+  private static void loadKeystore(String keyStorePath, char[] passwordChar, KeyStore keyStore)
+      throws IOException, NoSuchAlgorithmException, CertificateException, FileNotFoundException {
+    File fileKeyStore = new File(keyStorePath);
+    if (!fileKeyStore.exists()) {
+      logger.debug("create keystore " + keyStorePath);
+      keyStore.load(null, passwordChar);
+    } else {
+      logger.debug("load keystore " + keyStorePath);
+      keyStore.load(new FileInputStream(fileKeyStore), passwordChar);
+    }
+  }
+
   public static boolean setCA(String crt, String alias, String keyStorePath, String password) {
     char[] passwordChar = password.toCharArray();
     boolean ritorno = false;
     try {
-      KeyStore keyStore = KeyStore.getInstance("PKCS12");
-      File serverKeyStore = new File(keyStorePath);
-      serverKeyStore.deleteOnExit();
-      keyStore.load(null, passwordChar);
+      KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+      loadKeystore(keyStorePath, passwordChar, keyStore);
       String crtContent = crt;
       byte[] decodedCrt = Base64.getDecoder().decode(crtContent);
       X509Certificate caCertificate = (X509Certificate) CertificateFactory.getInstance("X.509")
           .generateCertificate(new ByteArrayInputStream(decodedCrt));
-      logger.info("CertCA to store: " + crt);
-      logger.info("CertCA: " + caCertificate.toString());
+      logger.debug("CertCA to store: " + crt);
+      logger.debug("CertCA: " + caCertificate.toString());
       keyStore.setCertificateEntry(alias, caCertificate);
+      File serverKeyStore = new File(keyStorePath);
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       ritorno = true;
       serverKeyStore = null;
@@ -167,13 +178,11 @@ public final class KeystoreLoader {
     char[] passwordChar = password.toCharArray();
     boolean ritorno = false;
     try {
-      KeyStore keyStore = KeyStore.getInstance("PKCS12");
-      File serverKeyStore = new File(keyStorePath);
-      serverKeyStore.deleteOnExit();
-      keyStore.load(null, passwordChar);
+      KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+      loadKeystore(keyStorePath, passwordChar, keyStore);
       String privateKeyContent = key;
       String crtContent = crt;
-      KeyFactory kf = KeyFactory.getInstance("RSA");
+      KeyFactory kf = KeyFactory.getInstance(KEY_FACTORY);
       byte[] decodedCrt = Base64.getDecoder().decode(crtContent);
       X509Certificate clientCertificate = (X509Certificate) CertificateFactory.getInstance("X.509")
           .generateCertificate(new ByteArrayInputStream(decodedCrt));
@@ -185,6 +194,7 @@ public final class KeystoreLoader {
       // PrivateKey privateKey = privKey;
       keyStore.setKeyEntry(alias, clientKeyPair.getPrivate(), passwordChar,
           new X509Certificate[] { clientCertificate });
+      File serverKeyStore = new File(keyStorePath);
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       ritorno = true;
       serverKeyStore = null;
@@ -200,13 +210,8 @@ public final class KeystoreLoader {
       String password, boolean isCaCert) {
     try {
       char[] passwordChar = password.toCharArray();
-      KeyStore keyStore = KeyStore.getInstance("PKCS12");
-      File serverKeyStore = new File(keyStorePath);
-      if (serverKeyStore.exists()) {
-        keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
-      } else {
-        keyStore.load(null, passwordChar);
-      }
+      KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+      loadKeystore(keyStorePath, passwordChar, keyStore);
       KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
       SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
           .setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
@@ -222,6 +227,7 @@ public final class KeystoreLoader {
       X509Certificate certificate = builder.build();
       logger.debug("created certificate " + certificate.toString());
       keyStore.setKeyEntry(alias, keyPair.getPrivate(), passwordChar, new X509Certificate[] { certificate });
+      File serverKeyStore = new File(keyStorePath);
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       serverKeyStore = null;
       return true;
@@ -233,22 +239,19 @@ public final class KeystoreLoader {
 
   public static boolean createSelfSignedCert(String alias, String keyStorePath, String password) throws Exception {
     return createSelfSignedCert("agent-" + UUID.randomUUID().toString(), "Rossonet scarl", "Ar4kAgent", "Imola", "BO",
-        "IT", "urn:org.ar4k.agent:client-test1", "agent.test.ar4k.net", "127.0.0.1", alias, keyStorePath, password,
-        false);
+        "IT", "urn:org.ar4k.agent:client-test1", "*.ar4k.net", "127.0.0.1", alias, keyStorePath, password, false);
   }
 
   public static PrivateKey getPrivateKey(String alias, String keyStorePath, String password) throws KeyStoreException,
       UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     Key serverPrivateKey = keyStore.getKey(alias, passwordChar);
     PrivateKey privateKey = null;
     if (serverPrivateKey instanceof PrivateKey) {
       privateKey = (PrivateKey) serverPrivateKey;
     }
-    serverKeyStore = null;
     return privateKey;
   }
 
@@ -282,9 +285,8 @@ public final class KeystoreLoader {
   public static KeyStore getKeyStoreAfterLoad(String keyStorePath, String password)
       throws NoSuchAlgorithmException, KeyStoreException, CertificateException, FileNotFoundException, IOException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     return keyStore;
   }
 
@@ -292,9 +294,8 @@ public final class KeystoreLoader {
       throws NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, KeyStoreException,
       UnrecoverableKeyException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     Key serverPrivateKey = keyStore.getKey(alias, passwordChar);
     // PrivateKey privateKey = null;
     KeyPair clientKeyPair = null;
@@ -303,7 +304,6 @@ public final class KeystoreLoader {
       PublicKey serverPublicKey = clientCertificate.getPublicKey();
       clientKeyPair = new KeyPair(serverPublicKey, (PrivateKey) serverPrivateKey);
     }
-    serverKeyStore = null;
     return clientKeyPair;
   }
 
@@ -311,15 +311,13 @@ public final class KeystoreLoader {
       throws NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, KeyStoreException,
       UnrecoverableKeyException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     Key serverPrivateKey = keyStore.getKey(alias, passwordChar);
     X509Certificate clientCertificate = null;
     if (serverPrivateKey instanceof PrivateKey) {
       clientCertificate = (X509Certificate) keyStore.getCertificate(alias);
     }
-    serverKeyStore = null;
     return clientCertificate;
   }
 
@@ -327,15 +325,13 @@ public final class KeystoreLoader {
       throws NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, KeyStoreException,
       UnrecoverableKeyException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     Certificate caCert = keyStore.getCertificate(alias);
     String clientCertificate = null;
     if (caCert instanceof Certificate) {
       clientCertificate = Base64.getEncoder().encodeToString(caCert.getEncoded());
     }
-    serverKeyStore = null;
     return clientCertificate;
   }
 
@@ -345,9 +341,8 @@ public final class KeystoreLoader {
     KeyPair k = getClientKeyPair(alias, keyStorePath, password);
     X509Certificate c = getClientCertificate(alias, keyStorePath, password);
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     X500Name x500 = new JcaX509CertificateHolder(c).getSubject();
     byte[] encoded = k.getPublic().getEncoded();
     SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(ASN1Sequence.getInstance(encoded));
@@ -356,7 +351,11 @@ public final class KeystoreLoader {
       p10Builder.addAttribute(Extension.subjectAlternativeName, new GeneralNames(new GeneralName(
           new X500Name("CN=" + hostname + ",O=" + ConfigHelper.organization + ",OU=" + ConfigHelper.unit))));
     }
-    JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
+    // p10Builder.addAttribute(Extension.subjectAlternativeName, new
+    // GeneralNames(new GeneralName(
+    // new X500Name("CN=*.ar4k.net" + ",O=" + ConfigHelper.organization + ",OU=" +
+    // ConfigHelper.unit))));
+    JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder(CIPHER);
     ContentSigner signer = csBuilder.build(k.getPrivate());
     PKCS10CertificationRequest csr = p10Builder.build(signer);
     return csr;
@@ -406,26 +405,25 @@ public final class KeystoreLoader {
       for (Attribute attribute : csr.getAttributes()) {
         attributes.append(attribute.getAttrValues().toString());
       }
-      logger.info("signing CSR:\n" + csr.getSubject().toString() + "\n" + attributes.toString() + "\n");
-      AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
+      logger.debug("signing CSR:\n" + csr.getSubject().toString() + "\n" + attributes.toString() + "\n");
+      AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find(CIPHER);
       AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
       PrivateKey cakey = getPrivateKey(caAlias, keyStorePath, password);
-      logger.info("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + caAlias + " ->");
+      X509Certificate caCrt = getClientCertificate(caAlias, keyStorePath, password);
+      logger.debug("-- SIGN WITH PUBLIC KEY --\n" + keyStorePath + ", " + caAlias + " ->");
       if (getClientKeyPair(caAlias, keyStorePath, password) == null
           || getClientKeyPair(caAlias, keyStorePath, password).getPublic() == null) {
         logger.info("NO PUBLIC KEY FOR SIGN THE CERTIFICATE" + "\n");
       } else {
-        logger.info(getClientCertificate(caAlias, keyStorePath, password).getSubjectDN() + "\n");
+        logger.debug(getClientCertificate(caAlias, keyStorePath, password).getSubjectDN() + "\n");
       }
       X509v3CertificateBuilder certificateGenerator = new X509v3CertificateBuilder(
-          new X500Name(getClientCertificate(caAlias, keyStorePath, password).getSubjectX500Principal()
-              .getName(X500Principal.RFC2253)),
-          new BigInteger(64, new SecureRandom()), Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
+          new X509CertificateHolder(caCrt.getEncoded()).getSubject(), new BigInteger(64, new SecureRandom()),
+          Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS)),
           Date.from(LocalDateTime.now().plusDays(validity).toInstant(ZoneOffset.UTC)), csr.getSubject(),
-          SubjectPublicKeyInfo.getInstance(
-              ASN1Sequence.getInstance(getClientKeyPair(caAlias, keyStorePath, password).getPublic().getEncoded())));
+          SubjectPublicKeyInfo.getInstance(csr.getSubjectPublicKeyInfo()));
 
-      ASN1Encodable[] asn1Encodable = new ASN1Encodable[NetworkHelper.getHostnames("0.0.0.0").size()];
+      ASN1Encodable[] asn1Encodable = new ASN1Encodable[NetworkHelper.getHostnames("0.0.0.0").size()];// + 1];
       int counter = 0;
       for (String hostname : NetworkHelper.getHostnames("0.0.0.0")) {
         if (IP_ADDR_PATTERN.matcher(hostname).matches()) {
@@ -435,6 +433,7 @@ public final class KeystoreLoader {
         }
         counter++;
       }
+      // asn1Encodable[counter] = new GeneralName(GeneralName.dNSName, "*.ar4k.net");
       DERSequence subjectAlternativeNames = new DERSequence(asn1Encodable);
       certificateGenerator.addExtension(Extension.subjectAlternativeName, false, subjectAlternativeNames);
       ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId)
@@ -444,9 +443,8 @@ public final class KeystoreLoader {
       X509Certificate certificate = (X509Certificate) certificateFactory
           .generateCertificate(new ByteArrayInputStream(holder.toASN1Structure().getEncoded()));
       char[] passwordChar = password.toCharArray();
-      KeyStore keyStore = KeyStore.getInstance("PKCS12");
-      File serverKeyStore = new File(keyStorePath);
-      keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+      KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+      loadKeystore(keyStorePath, passwordChar, keyStore);
       StringBuilder kstorePresents = new StringBuilder();
       Enumeration<String> listAliases = keyStore.aliases();
       boolean primo = true;
@@ -468,10 +466,11 @@ public final class KeystoreLoader {
       } else {
         keyStore.setCertificateEntry(targetAlias, certificate);
       }
+      File serverKeyStore = new File(keyStorePath);
       keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
       serverKeyStore = null;
       X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(targetAlias);
-      logger.info("CERT\n" + clientCertificate.toString());
+      logger.debug("CERT\n" + clientCertificate.toString());
       return clientCertificate;
     } catch (Ar4kException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
         | OperatorCreationException | UnrecoverableKeyException a) {
@@ -496,9 +495,8 @@ public final class KeystoreLoader {
   public static List<String> listCertificate(String keyStorePath, String password)
       throws NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, KeyStoreException {
     char[] passwordChar = password.toCharArray();
-    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    File serverKeyStore = new File(keyStorePath);
-    keyStore.load(new FileInputStream(serverKeyStore), passwordChar);
+    KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+    loadKeystore(keyStorePath, passwordChar, keyStore);
     List<String> ritorno = new ArrayList<>();
     Enumeration<String> enu = keyStore.aliases();
     while (enu.hasMoreElements()) {

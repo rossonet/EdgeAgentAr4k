@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /*
- * 
+ *
  * @author Andrea Ambrosini
- * 
+ *
  *         Classe builder per la generazione di keystore self signed.
  *
  */
@@ -43,19 +43,19 @@ public class SelfSignedCertificateBuilder {
    * <p>
    * SHA1 was broken in 2017 and this algorithm should not be used.
    */
-  public static final String SA_SHA1_RSA = "SHA1withRSA";
+  // public static final String SA_SHA1_RSA = "SHA1withRSA";
 
   /**
    * Signature Algorithm for SHA256 with RSA.
    */
-  public static final String SA_SHA256_RSA = "SHA256withRSA";
+  // public static final String SA_SHA256_RSA = "SHA256withRSA";
 
   /**
    * Signature Algorithm for SHA256 with ECDSA.
    * <p>
    * May only be uses with EC-based KeyPairs and security profiles.
    */
-  public static final String SA_SHA256_ECDSA = "SHA256withECDSA";
+//  public static final String SA_SHA256_ECDSA = "SHA256withECDSA";
 
   private Period validityPeriod = Period.ofYears(3);
 
@@ -69,7 +69,7 @@ public class SelfSignedCertificateBuilder {
   private String applicationUri = "";
   private List<String> dnsNames = new ArrayList<>();
   private List<String> ipAddresses = new ArrayList<>();
-  private String signatureAlgorithm = SA_SHA256_RSA;
+  private String signatureAlgorithm = KeystoreLoader.CIPHER;
 
   private final KeyPair keyPair;
   private final SelfSignedCertificateGenerator generator;
@@ -87,7 +87,7 @@ public class SelfSignedCertificateBuilder {
     PublicKey publicKey = keyPair.getPublic();
 
     if (publicKey instanceof RSAPublicKey) {
-      signatureAlgorithm = SA_SHA256_RSA;
+      signatureAlgorithm = KeystoreLoader.CIPHER;
 
       int bitLength = ((RSAPublicKey) keyPair.getPublic()).getModulus().bitLength();
 
@@ -96,7 +96,7 @@ public class SelfSignedCertificateBuilder {
         logger.warn("Using legacy key size: {}", bitLength);
       }
     } else if (keyPair.getPublic() instanceof ECPublicKey) {
-      signatureAlgorithm = SA_SHA256_ECDSA;
+      signatureAlgorithm = KeystoreLoader.CIPHER;
     }
   }
 

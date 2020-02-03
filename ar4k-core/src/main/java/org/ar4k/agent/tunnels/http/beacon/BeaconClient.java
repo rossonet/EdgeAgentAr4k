@@ -20,8 +20,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLException;
-
 import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
@@ -73,6 +71,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 
 public class BeaconClient implements Runnable, AutoCloseable {
 
@@ -290,9 +290,12 @@ public class BeaconClient implements Runnable, AutoCloseable {
       generateCertFile();
       writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
       try {
-        runConnection(NettyChannelBuilder.forAddress(host, port).sslContext(GrpcSslContexts.forClient()
-            .keyManager(new File(certFile), new File(privateFile)).trustManager(new File(this.certChainFile)).build()));
-      } catch (SSLException e) {
+        logger.debug("Starting Beacon client");
+        SslContextBuilder sslBuilder = GrpcSslContexts.forClient().keyManager(new File(certFile), new File(privateFile))
+            .trustManager(new File(this.certChainFile));
+        runConnection(NettyChannelBuilder.forAddress(host, port)
+            .sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()));
+      } catch (Exception e) {
         logger.logException(e);
       }
     }
@@ -317,10 +320,12 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private void generateCaFile() {
     try {
       FileWriter writer = new FileWriter(new File(certChainFile));
-      writer.write("-----BEGIN CERTIFICATE-----\n");
-      writer.write(certChain);
-      writer.write("\n-----END CERTIFICATE-----\n");
-      writer.close();
+      for (String cert : certChain.split(",")) {
+        writer.write("-----BEGIN CERTIFICATE-----\n");
+        writer.write(cert);
+        writer.write("\n-----END CERTIFICATE-----\n");
+        writer.close();
+      }
     } catch (IOException e) {
       logger.logException(e);
     }
@@ -442,13 +447,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
         if (getStateConnection().equals(ConnectivityState.READY) && !registerStatus.equals(StatusValue.GOOD)) {
           actionRegister();
         }
-        // se sono registrato
-        if (me != null && getStateConnection().equals(ConnectivityState.READY)
-            && registerStatus.equals(StatusValue.GOOD)) {
-          checkPollChannel();
-          sendHardwareInfo();
-          Thread.sleep(getPollingFreq());
-        }
         // se non c'è connessione e discoveryPort è attivo
         if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
           lookOut();
@@ -457,6 +455,13 @@ public class BeaconClient implements Runnable, AutoCloseable {
         if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
             && !hostTarget.isEmpty()) {
           startConnection(this.hostTarget, this.port);
+        }
+        // se sono registrato
+        if (me != null && getStateConnection().equals(ConnectivityState.READY)
+            && registerStatus.equals(StatusValue.GOOD)) {
+          checkPollChannel();
+          sendHardwareInfo();
+          Thread.sleep(getPollingFreq());
         }
       } catch (Exception e) {
         logger.logException("in Beacon client loop", e);

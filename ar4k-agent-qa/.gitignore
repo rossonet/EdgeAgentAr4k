@@ -7,7 +7,13 @@ src/main/resources/static
 *.log.*.gz
 training-data/*
 *.ks
-
+tmp
+tmp2
+tmp1
+tmp3
+a.*.tmp
+*.crt
+*.key
 
 ### OUTPUT ###
 spring-shell.log

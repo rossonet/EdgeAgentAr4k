@@ -10,6 +10,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.nio.charset.Charset;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -23,7 +24,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
-import javax.security.cert.X509Certificate;
 
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.IBeaconServer;
@@ -79,6 +79,8 @@ import io.grpc.ServerInterceptor;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 import io.grpc.stub.StreamObserver;
 
 public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
@@ -291,15 +293,15 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       writePemCa(this.certChainFileLastPart);
       writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFileLastPart);
       writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFileLastPart);
-      logger.info("Starting beacon server");
       try {
-        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port).sslContext(
-            GrpcSslContexts.forServer(new File(this.certFileLastPart), new File(this.privateKeyFileLastPart))
-                .trustManager(new File(this.certChainFileLastPart)).clientAuth(ClientAuth.OPTIONAL).build());
+        logger.info("Starting Beacon server");
+        SslContextBuilder sslContextBuild = GrpcSslContexts
+            .forServer(new File(this.certFileLastPart), new File(this.privateKeyFileLastPart))
+            .trustManager(new File(this.certChainFileLastPart)).clientAuth(ClientAuth.OPTIONAL);
+        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
+            .sslContext(GrpcSslContexts.configure(sslContextBuild, SslProvider.OPENSSL).build());
         server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
-            .addService(new DataService()).build();
-        server = serverBuilder.addService(new RpcService()).addService(new DataService())
-            .addService(new TunnelService()).build();
+            .addService(new DataService()).addService(new TunnelService()).build();
       } catch (Exception e) {
         logger.logException(e);
       }
@@ -312,21 +314,25 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     public <ReqT, RespT> Listener<ReqT> interceptCall(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata,
         final ServerCallHandler<ReqT, RespT> serverCallHandler) {
       SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
+      logger.trace("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
+      logger.trace("SSL DATA PROTOCOL: " + sslSession.getProtocol());
+      if (sslSession.getSessionContext() != null) {
+        logger.trace("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
+      }
+      logger.trace("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
+      logger.trace("METADATA: " + metadata.toString());
       try {
-        logger.trace("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
         logger.trace("SSL DATA PEER HOST: " + sslSession.getPeerHost());
-        logger.trace("SSL DATA PROTOCOL: " + sslSession.getProtocol());
-        if (sslSession.getSessionContext() != null) {
-          logger.trace("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
-        }
-        logger.trace("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
         logger.trace("SSL DATA CERTIFICATE CHAIN:");
-        for (X509Certificate i : sslSession.getPeerCertificateChain()) {
+        for (Certificate i : sslSession.getPeerCertificates()) {
           logger.trace(" - " + i.toString());
         }
         logger.trace("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
       } catch (SSLPeerUnverifiedException e) {
-        logger.info("SSL CERT NOT VERIFIED");
+        logger.info("SSL CERT NOT VERIFIED: " + e.getMessage());
+        logger.info("SSL Cipher: " + serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION).getCipherSuite());
+        logger.info(
+            "SSL SOCKET NOT VERIFIED: " + serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR).toString());
       }
       return serverCallHandler.startCall(serverCall, metadata);
     }
@@ -344,15 +350,16 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     } catch (IOException e) {
       logger.logException(e);
     }
-
   }
 
   private void writePemCa(String certChain) {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
-      writer.append("-----BEGIN CERTIFICATE-----\n");
-      writer.write(caChainPem);
-      writer.append("\n-----END CERTIFICATE-----\n");
+      for (String cert : caChainPem.split(",")) {
+        writer.write("-----BEGIN CERTIFICATE-----\n");
+        writer.write(cert);
+        writer.write("\n-----END CERTIFICATE-----\n");
+      }
       writer.close();
     } catch (IOException e) {
       logger.logException(e);
@@ -368,7 +375,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     return writer.toString();
   }
 
-  private static void writePemCert(String aliasBeaconServer, Anima animaTarget, String certChain) {
+  private void writePemCert(String aliasBeaconServer, Anima animaTarget, String certChain) {
     try {
       FileWriter writer = new FileWriter(new File(certChain));
       String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);

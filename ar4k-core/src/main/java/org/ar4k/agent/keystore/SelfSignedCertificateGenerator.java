@@ -109,11 +109,11 @@ public class SelfSignedCertificateGenerator {
 
     certificateBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(isCa));
 
-    @SuppressWarnings("unused")
-    BasicConstraints basicConstraints = new BasicConstraints(true);
+    // @SuppressWarnings("unused")
+    // BasicConstraints basicConstraints = new BasicConstraints(true);
 
     // Authority Key Identifier
-    addAuthorityKeyIdentifier(certificateBuilder, keyPair);
+    // addAuthorityKeyIdentifier(certificateBuilder, keyPair);
 
     // Basic Constraints
     // addBasicConstraints(certificateBuilder, basicConstraints);
@@ -122,7 +122,7 @@ public class SelfSignedCertificateGenerator {
     addKeyUsage(certificateBuilder);
 
     // Extended Key Usage
-    addExtendedKeyUsage(certificateBuilder);
+    // addExtendedKeyUsage(certificateBuilder);
 
     // Subject Alternative Name
     addSubjectAlternativeNames(certificateBuilder, keyPair, applicationUri, dnsNames, ipAddresses);
@@ -162,13 +162,12 @@ public class SelfSignedCertificateGenerator {
 
   protected void addKeyUsage(X509v3CertificateBuilder certificateBuilder) throws CertIOException {
     certificateBuilder.addExtension(Extension.keyUsage, false,
-        new KeyUsage(KeyUsage.dataEncipherment | KeyUsage.digitalSignature | KeyUsage.keyAgreement
+        new KeyUsage(KeyUsage.cRLSign | KeyUsage.dataEncipherment | KeyUsage.digitalSignature | KeyUsage.keyAgreement
             | KeyUsage.keyCertSign | KeyUsage.keyEncipherment | KeyUsage.nonRepudiation));
   }
 
   protected void addBasicConstraints(X509v3CertificateBuilder certificateBuilder, BasicConstraints basicConstraints)
       throws CertIOException {
-
     certificateBuilder.addExtension(Extension.basicConstraints, false, basicConstraints);
   }
 
