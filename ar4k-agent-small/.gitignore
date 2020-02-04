@@ -9,6 +9,8 @@ training-data/*
 *.ks
 tmp/
 *.tmp
+*.key
+*.pem
 
 ### OUTPUT ###
 spring-shell.log
