@@ -8,10 +8,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.nio.charset.Charset;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -65,6 +65,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import com.google.protobuf.ByteString;
 
@@ -303,26 +304,29 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata,
         final ServerCallHandler<ReqT, RespT> serverCallHandler) {
-      SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
-      logger.trace("SSL DATA LOCAL: " + sslSession.getLocalPrincipal().getName());
-      logger.trace("SSL DATA PROTOCOL: " + sslSession.getProtocol());
-      if (sslSession.getSessionContext() != null) {
-        logger.trace("SSL DATA SSL SESSION ID: " + sslSession.getSessionContext().getIds());
-      }
-      logger.trace("SSL DATA SSL CIPHER: " + sslSession.getCipherSuite());
-      logger.trace("METADATA: " + metadata.toString());
       try {
-        logger.trace("SSL DATA PEER HOST: " + sslSession.getPeerHost());
-        logger.trace("SSL DATA CERTIFICATE CHAIN:");
+        SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
         for (Certificate i : sslSession.getPeerCertificates()) {
           logger.trace(" - " + i.toString());
         }
-        logger.info("SSL DATA PEER NAME: " + sslSession.getPeerPrincipal());
+        if (sslSession.isValid()) {
+          logger.trace("session ok");
+        } else {
+          if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
+            logger.debug("session not ok but register call");
+          } else {
+            logger.info("session not ok ");
+            io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
+            serverCall.close(status, metadata);
+          }
+        }
       } catch (SSLPeerUnverifiedException e) {
-        logger.info("SSL CERT NOT VERIFIED: " + e.getMessage());
-        logger.info("SSL Cipher: " + serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION).getCipherSuite());
-        logger.info(
-            "SSL SOCKET NOT VERIFIED: " + serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR).toString());
+        if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
+          logger.info("session not ok, but to " + serverCall.getMethodDescriptor().getFullMethodName());
+        } else {
+          io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
+          serverCall.close(status, metadata);
+        }
       }
       return serverCallHandler.startCall(serverCall, metadata);
     }
@@ -354,15 +358,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     } catch (IOException e) {
       logger.logException(e);
     }
-  }
-
-  private String getPemCaStrForRegistrationReply(String aliasBeaconServer, Anima animaTarget) {
-    StringBuilder writer = new StringBuilder();
-    String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-    writer.append("-----BEGIN CERTIFICATE-----\n");
-    writer.append(pemTxtBase);
-    writer.append("\n-----END CERTIFICATE-----\n");
-    return writer.toString();
   }
 
   private void writePemCert(String aliasBeaconServer, Anima animaTarget, String certChain) {
@@ -593,6 +588,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
   private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 
+    private static final int SIGN_TIME = 3650;
+
     @Override
     public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
       try {
@@ -615,21 +612,45 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     }
 
     @Override
-    // TODO inserire il meccanismo per la coda autorizzativa
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
       try {
         String uniqueClientNameForBeacon = request.getName();
         org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder()
-            .setCa(ByteString.copyFrom(getPemCaStrForRegistrationReply(aliasBeaconServerInKeystore, anima)
-                .getBytes(Charset.forName("UTF-8"))));
-        RegisterReply reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
-            .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+            .setCa(ByteString.copyFromUtf8(caChainPem));
+        RegisterReply reply = null;
+        if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText()) && request.getRequestCsr() != null
+            && !request.getRequestCsr().isEmpty()) {
+          if (acceptAllCerts) {
+            reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
+                .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
+                .setCert(getFirmedCert(request.getRequestCsr())).build();
+          } else {
+            // TODO inserire il meccanismo per la coda autorizzativa
+            RegistrationRequest newRequest = new RegistrationRequest(request);
+            listAgentRequest.add(newRequest);
+            reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.WAIT_HUMAN))
+                .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+          }
+        } else {
+          reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
+              .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+        }
         agents.add(new BeaconAgent(request, reply));
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
       } catch (Exception a) {
         logger.logException(a);
       }
+    }
+
+    private String getFirmedCert(String requestCsr) throws IOException {
+      logger.debug("SIGN CSR BASE64 " + requestCsr);
+      String requestAlias = "beacon-" + UUID.randomUUID().toString().replace("-", "");
+      byte[] data = Base64.getDecoder().decode(requestCsr);
+      PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
+      logger.debug("SIGN CSR " + csrDecoded.getSubject());
+      return anima.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, SIGN_TIME,
+          anima.getMyAliasCertInKeystore());
     }
 
     @Override

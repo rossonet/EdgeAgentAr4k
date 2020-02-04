@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -79,11 +80,13 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
   private static final int INTERVAL_REGISTRATION_TRY = 15000;
-  private static final String TMP_BEACON_PATH_DEFAULT = "/tmp/beacon-client-" + UUID.randomUUID().toString();
+  private static final int INTERVAL_HEALTH = 60000;
+  private static final String TMP_BEACON_PATH_DEFAULT = "beacon-client-" + UUID.randomUUID().toString();
   public static final CharSequence COMPLETION_CHAR = "?";
   public static final int discoveryPacketMaxSize = 1024;
 
   private transient long lastRegisterTime = 0;
+  private transient long lastHealthTime = 0;
 
   private ManagedChannel channel = null;
   private RpcServiceV1BlockingStub blockingStub = null;
@@ -106,7 +109,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private transient DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
   private StatusValue registerStatus = StatusValue.BAD;
-  private final int pollingFrequency = 500;
+  private final int pollingFrequency = 1500;
 
   private String aliasBeaconClientInKeystore = "beacon-client";
   private String hostTarget = null;
@@ -116,6 +119,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
   private List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
   private String certChain = null;
+  private String csrRequest = null;
 
   public static class Builder {
     private Anima anima = null;
@@ -273,19 +277,21 @@ public class BeaconClient implements Runnable, AutoCloseable {
         logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
             + "' for Beacon client is present in keystore");
       } else {
+        csrRequest = anima.getMyIdentityKeystore()
+            .getPKCS10CertificationRequestBase64(anima.getMyAliasCertInKeystore());
         logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
             + "' for Beacon client is not present in keystore, use " + anima.getMyAliasCertInKeystore());
       }
     }
     if (this.port > 0) {
-      startConnection(this.hostTarget, this.port);
+      startConnection(this.hostTarget, this.port, true);
     }
     runInstance();
   }
 
-  private void startConnection(String host, int port) {
+  private void startConnection(String host, int port, boolean register) {
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
-      runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext());
+      runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext(), register);
     } else {
       generateCaFile();
       if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
@@ -300,7 +306,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         SslContextBuilder sslBuilder = GrpcSslContexts.forClient().keyManager(new File(certFile), new File(privateFile))
             .trustManager(new File(this.certChainFile));
         runConnection(NettyChannelBuilder.forAddress(host, port)
-            .sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()));
+            .sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()), register);
       } catch (Exception e) {
         logger.logException(e);
       }
@@ -330,8 +336,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
         writer.write("-----BEGIN CERTIFICATE-----\n");
         writer.write(cert);
         writer.write("\n-----END CERTIFICATE-----\n");
-        writer.close();
       }
+      writer.close();
     } catch (IOException e) {
       logger.logException(e);
     }
@@ -350,22 +356,25 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
   }
 
-  public void runConnection(ManagedChannelBuilder<?> channelBuilder) {
+  public void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
+    if (channel != null) {
+      channel.shutdown();
+    }
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
     asyncStub = RpcServiceV1Grpc.newStub(channel);
     asyncStubTunnel = TunnelServiceV1Grpc.newStub(channel);
-    actionRegister();
+    if (register)
+      actionRegister();
   }
 
   private void actionRegister() {
     if (lastRegisterTime == 0 || (lastRegisterTime + INTERVAL_REGISTRATION_TRY) < (new Date()).getTime()) {
       lastRegisterTime = new Date().getTime();
       try {
-        logger.info("try registration to beacon server.\n-status registration: " + registerStatus
-            + "\n-status connection: " + getStateConnection());
-        registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
+        logger.info("Try registration to beacon server. BEFORE[" + registerStatus + "/" + getStateConnection() + "]");
+        registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), csrRequest);
       } catch (Exception e) {
         logger.logException(e);
       }
@@ -425,15 +434,33 @@ public class BeaconClient implements Runnable, AutoCloseable {
     StatusValue result = StatusValue.BAD;
     try {
       long timeRequest = new Date().getTime();
-      request = RegisterRequest.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo()))
-          .setDisplayKey(displayKey).setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest))
-          .build();
+      org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest.Builder requestBuilder = RegisterRequest.newBuilder()
+          .setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo())).setDisplayKey(displayKey).setName(uniqueName)
+          .setTime(Timestamp.newBuilder().setSeconds(timeRequest));
+      if (csrRequest != null && !csrRequest.isEmpty()) {
+        requestBuilder.setRequestCsr(csrRequest);
+        logger.debug("SENDING CSR: " + csrRequest);
+      }
+      request = requestBuilder.build();
       logger.debug("try registration, channel status " + (channel != null ? channel.getState(true) : "null channel"));
       RegisterReply reply = blockingStub.register(request);
       me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
       logger.info("connection to beacon ok . I'm " + me.getAgentUniqueName());
       result = reply.getStatusRegistration().getStatus();
+      if (result.equals(StatusValue.GOOD)
+          && !anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
+          && reply.getCert() != null && !reply.getCert().isEmpty()) {
+        try {
+          anima.getMyIdentityKeystore().setClientKeyPair(
+              anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), reply.getCert(),
+              this.aliasBeaconClientInKeystore);
+          startConnection(this.hostTarget, this.port, false);
+        } catch (NoSuchAlgorithmException e) {
+          logger.logException(e);
+        }
+      }
     } catch (io.grpc.StatusRuntimeException e) {
+      result = StatusValue.FAULT;
       logger.warn("Beacon server connection is " + e.getMessage());
       logger.info(Ar4kLogger.stackTraceToString(e, 6));
       logger.logExceptionDebug(e);
@@ -450,7 +477,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
     while (running) {
       try {
         // se la registrazione è in attesa di approvazione
-        if (getStateConnection().equals(ConnectivityState.READY) && !registerStatus.equals(StatusValue.GOOD)) {
+        if (getStateConnection().equals(ConnectivityState.READY) && (registerStatus.equals(StatusValue.WAIT_HUMAN)
+            || registerStatus.equals(StatusValue.BAD) || registerStatus.equals(StatusValue.FAULT))) {
           actionRegister();
         }
         // se non c'è connessione e discoveryPort è attivo
@@ -460,7 +488,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         // se non c'è connessione e port (server) è attivo
         if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
             && !hostTarget.isEmpty()) {
-          startConnection(this.hostTarget, this.port);
+          startConnection(this.hostTarget, this.port, true);
         }
         // se sono registrato
         if (me != null && getStateConnection().equals(ConnectivityState.READY)
@@ -493,7 +521,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
           int portBeacon = Integer.valueOf(message.split(":")[1]);
           logger
               .info("-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
-          startConnection(this.hostTarget, this.port);
+          startConnection(this.hostTarget, this.port, true);
         }
       }
     }
@@ -609,13 +637,16 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private void sendHardwareInfo() {
-    try {
-      HealthRequest hr = HealthRequest.newBuilder().setAgentSender(me)
-          .setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
-      blockingStub.sendHealth(hr);
-    } catch (Exception e) {
-      logger.warn("error sendHardwareInfo -> " + e.getMessage());
-      logger.logException(e);
+    if (lastHealthTime == 0 || (lastHealthTime + INTERVAL_HEALTH) < (new Date()).getTime()) {
+      lastHealthTime = new Date().getTime();
+      try {
+        HealthRequest hr = HealthRequest.newBuilder().setAgentSender(me)
+            .setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
+        blockingStub.sendHealth(hr);
+      } catch (Exception e) {
+        logger.warn("error sendHardwareInfo -> " + e.getMessage());
+        logger.logException(e);
+      }
     }
   }
 

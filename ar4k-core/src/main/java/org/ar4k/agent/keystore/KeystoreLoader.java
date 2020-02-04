@@ -458,8 +458,8 @@ public final class KeystoreLoader {
       }
       logger
           .info("saving in keystore alias " + targetAlias + " present in keystore are : " + kstorePresents.toString());
-      logger.info("IssuerDN\n" + certificate.getIssuerDN().getName());
-      logger.info("SubjectDN\n" + certificate.getSubjectDN().getName());
+      logger.debug("IssuerDN\n" + certificate.getIssuerDN().getName());
+      logger.debug("SubjectDN\n" + certificate.getSubjectDN().getName());
       keyStore.setCertificateEntry(targetAlias, certificate);
       if (privateKey != null) {
         keyStore.setKeyEntry(targetAlias, privateKey, passwordChar, new X509Certificate[] { certificate });

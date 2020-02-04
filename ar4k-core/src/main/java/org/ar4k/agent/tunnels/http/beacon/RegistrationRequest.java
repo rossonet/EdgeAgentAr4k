@@ -22,6 +22,10 @@ public class RegistrationRequest {
   public String pemApproved = null;
   public String note = null;
 
+  public RegistrationRequest(RegisterRequest request) {
+    // TODO Auto-generated constructor stub
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
