@@ -615,21 +615,21 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     public void register(RegisterRequest request, StreamObserver<RegisterReply> responseObserver) {
       try {
         String uniqueClientNameForBeacon = request.getName();
-        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder()
-            .setCa(ByteString.copyFromUtf8(caChainPem));
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply.newBuilder();
         RegisterReply reply = null;
         if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText()) && request.getRequestCsr() != null
             && !request.getRequestCsr().isEmpty()) {
           if (acceptAllCerts) {
             reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
                 .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
-                .setCert(getFirmedCert(request.getRequestCsr())).build();
+                .setCert(getFirmedCert(request.getRequestCsr())).setCa(ByteString.copyFromUtf8(caChainPem)).build();
           } else {
             // TODO inserire il meccanismo per la coda autorizzativa
             RegistrationRequest newRequest = new RegistrationRequest(request);
             listAgentRequest.add(newRequest);
             reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.WAIT_HUMAN))
-                .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+                .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
+                .setCa(ByteString.copyFromUtf8(caChainPem)).build();
           }
         } else {
           reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
