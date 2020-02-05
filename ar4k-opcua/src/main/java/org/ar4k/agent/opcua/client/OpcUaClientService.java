@@ -22,67 +22,67 @@ public class OpcUaClientService implements Ar4kComponent {
 
   @Override
   public void close() throws Exception {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 
   @Override
   public void init() throws ServiceInitException {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public void kill() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public Anima getAnima() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 
   @Override
   public DataAddress getDataAddress() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public void setAnima(Anima anima) {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public ServiceConfig getConfiguration() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 
   @Override
   public void setConfiguration(ServiceConfig configuration) {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
 
   }
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 

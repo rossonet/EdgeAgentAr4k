@@ -139,8 +139,8 @@ public class ZLastBeaconClientServerSslTests {
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
-    Ar4kConfig config2 = null; // TODO
-    Ar4kConfig config1 = null; // TODO
+    Ar4kConfig config2 = null;
+    Ar4kConfig config1 = null;
 
     testAnimas.put(SERVER_LABEL,
         executor

@@ -129,6 +129,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
   private String certChain = null;
   private String csrRequest = null;
+  private boolean needRestart = false;
 
   public static class Builder {
     private Anima anima = null;
@@ -299,17 +300,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private synchronized void startConnection(String host, int port, boolean register) {
+    generateFilesCert();
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext(), register);
     } else {
-      generateCaFile();
-      if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-        generateCertFile(this.aliasBeaconClientInKeystore);
-        writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
-      } else {
-        generateCertFile(anima.getMyAliasCertInKeystore());
-        writePrivateKey(anima.getMyAliasCertInKeystore(), anima, privateFile);
-      }
       try {
         logger.debug("Starting Beacon client");
         SslContextBuilder sslBuilder = GrpcSslContexts.forClient().keyManager(new File(certFile), new File(privateFile))
@@ -319,6 +313,17 @@ public class BeaconClient implements Runnable, AutoCloseable {
       } catch (Exception e) {
         logger.logException(e);
       }
+    }
+  }
+
+  private void generateFilesCert() {
+    generateCaFile();
+    if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+      generateCertFile(this.aliasBeaconClientInKeystore);
+      writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
+    } else {
+      generateCertFile(anima.getMyAliasCertInKeystore());
+      writePrivateKey(anima.getMyAliasCertInKeystore(), anima, privateFile);
     }
   }
 
@@ -366,13 +371,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
-    if (channel != null) {
-      channel.shutdown();
-      blockingStub = null;
-      blockingStubTunnel = null;
-      asyncStub = null;
-      asyncStubTunnel = null;
-    }
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
@@ -467,9 +465,11 @@ public class BeaconClient implements Runnable, AutoCloseable {
           anima.getMyIdentityKeystore().setClientKeyPair(
               anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), reply.getCert(),
               this.aliasBeaconClientInKeystore);
-          startConnection(this.hostTarget, this.port, false);
+          needRestart = true;
+          result = StatusValue.BAD;
         } catch (NoSuchAlgorithmException e) {
           logger.logException(e);
+          result = StatusValue.FAULT;
         }
       }
     } catch (io.grpc.StatusRuntimeException e) {
@@ -516,11 +516,21 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
   }
 
-  private void checkProcedure()
+  private synchronized void checkProcedure()
       throws SocketException, UnknownHostException, IOException, InterruptedException, ParseException {
     // se la registrazione è in attesa di approvazione
-    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE)
-        || getStateConnection().equals(ConnectivityState.CONNECTING))
+    if (needRestart) {
+      needRestart = false;
+      registerStatus = StatusValue.BAD;
+      if (channel != null) {
+        channel.shutdown();
+        blockingStub = null;
+        blockingStubTunnel = null;
+        asyncStub = null;
+        asyncStubTunnel = null;
+      }
+    }
+    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE))
         && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
             || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
       actionRegister();

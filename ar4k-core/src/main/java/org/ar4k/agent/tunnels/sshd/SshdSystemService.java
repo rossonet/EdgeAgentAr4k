@@ -59,6 +59,7 @@ import com.google.gson.GsonBuilder;
  *         Gestore servizio per connessioni ssh.
  *
  */
+//TODO verificare tunnel R
 public class SshdSystemService implements Ar4kComponent, SshFutureListener<CloseFuture>, SessionListener,
     ChannelListener, PortForwardingEventListener {
 

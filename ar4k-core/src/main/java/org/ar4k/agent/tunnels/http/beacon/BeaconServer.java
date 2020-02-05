@@ -458,7 +458,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
     @Override
     public StreamObserver<RequestWrite> writeSubscription(StreamObserver<FlowMessageData> responseObserver) {
-      // TODO Auto-generated method stub
+      // TODO DATASERVICE Auto-generated method stub
       return super.writeSubscription(responseObserver);
     }
 

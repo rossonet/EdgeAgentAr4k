@@ -60,7 +60,7 @@ public class OpcUaServerService implements Ar4kComponent {
 
   @Override
   public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 
@@ -99,7 +99,7 @@ public class OpcUaServerService implements Ar4kComponent {
 
   @Override
   public JSONObject getDescriptionJson() {
-    // TODO Auto-generated method stub
+    // TODO OPCUA Auto-generated method stub
     return null;
   }
 

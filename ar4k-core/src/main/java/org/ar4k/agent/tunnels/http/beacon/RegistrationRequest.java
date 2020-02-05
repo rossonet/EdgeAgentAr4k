@@ -23,7 +23,8 @@ public class RegistrationRequest {
   public String note = null;
 
   public RegistrationRequest(RegisterRequest request) {
-    // TODO Auto-generated constructor stub
+    // TODO controllare come viene wrappata la risposta alla chiamata di
+    // registrazione beacon client
   }
 
   @Override

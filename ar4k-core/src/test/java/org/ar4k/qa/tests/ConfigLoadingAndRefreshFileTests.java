@@ -66,6 +66,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+//TODO verifica scrittura file configurazione Anima quando apposito flag è vero.
 public class ConfigLoadingAndRefreshFileTests {
 
   @Autowired
