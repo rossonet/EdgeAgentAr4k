@@ -109,7 +109,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private transient DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
   private StatusValue registerStatus = StatusValue.BAD;
-  private final int pollingFrequency = 1500;
+  private final int pollingFrequency = 800;
 
   private String aliasBeaconClientInKeystore = "beacon-client";
   private String hostTarget = null;
@@ -359,6 +359,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
   public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
     if (channel != null) {
       channel.shutdown();
+      blockingStub = null;
+      blockingStubTunnel = null;
+      asyncStub = null;
+      asyncStubTunnel = null;
     }
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
@@ -480,7 +484,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         if ((getStateConnection().equals(ConnectivityState.READY)
             || getStateConnection().equals(ConnectivityState.IDLE))
             && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
-                || registerStatus.equals(StatusValue.FAULT))) {
+                || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
           actionRegister();
         }
         // se non c'è connessione e discoveryPort è attivo
@@ -490,7 +494,11 @@ public class BeaconClient implements Runnable, AutoCloseable {
         // se non c'è connessione e port (server) è attivo
         if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
             && !hostTarget.isEmpty()) {
-          startConnection(this.hostTarget, this.port, true);
+          startConnection(this.hostTarget, this.port, false);
+        }
+        if (getStateConnection().equals(ConnectivityState.TRANSIENT_FAILURE) && port != 0 && hostTarget != null
+            && !hostTarget.isEmpty()) {
+          startConnection(this.hostTarget, this.port, false);
         }
         // se sono registrato
         if (me != null && getStateConnection().equals(ConnectivityState.READY)
