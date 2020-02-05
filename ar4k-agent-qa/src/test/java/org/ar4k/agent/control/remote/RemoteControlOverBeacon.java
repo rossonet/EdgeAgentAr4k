@@ -449,7 +449,7 @@ public class RemoteControlOverBeacon {
     clientTwoConfig.beaconServerCertChain = certCaAsPem;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
-    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.port = 31226;
     beaconServiceConfig.aliasBeaconServerInKeystore = signServerAliasInKeystore;
     beaconServiceConfig.caChainPem = certCaAsPem;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
@@ -457,16 +457,16 @@ public class RemoteControlOverBeacon {
 
     testAnimas.put(SERVER_LABEL,
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, serverAliasInKeystore, signServerAliasInKeystore, "https://localhost:33666"))
+            1124, baseArgs, serverConfig, serverAliasInKeystore, signServerAliasInKeystore, "https://localhost:31226"))
             .get());
     testAnimas.put(CLIENT2_LABEL,
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
             1125, baseArgsClientTwo, clientTwoConfig, client2AliasInKeystore, signClient2AliasInKeystore,
-            "https://localhost:33666")).get());
+            "https://localhost:31226")).get());
     testAnimas.put(CLIENT1_LABEL,
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
             1126, baseArgsClientOne, clientOneConfig, client1AliasInKeystore, signClient1AliasInKeystore,
-            "https://localhost:33666")).get());
+            "https://localhost:31226")).get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
       // String animaName = a.getRuntimeConfig() != null ?

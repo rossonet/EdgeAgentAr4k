@@ -120,7 +120,7 @@ public class ZLastBeaconClientServerSslTests {
     serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
-    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.port = 43666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
@@ -130,17 +130,17 @@ public class ZLastBeaconClientServerSslTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     testAnimas.put(CLIENT2_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
-                1125, baseArgs, config2, client2AliasInKeystore, client2AliasInKeystore, "https://127.0.0.1:33666"))
+                1125, baseArgs, config2, client2AliasInKeystore, client2AliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     testAnimas.put(CLIENT1_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
-                1126, baseArgs, config1, client1AliasInKeystore, client1AliasInKeystore, "https://127.0.0.1:33666"))
+                1126, baseArgs, config1, client1AliasInKeystore, client1AliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
@@ -187,7 +187,7 @@ public class ZLastBeaconClientServerSslTests {
     serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
-    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.port = 43666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
@@ -195,7 +195,7 @@ public class ZLastBeaconClientServerSslTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     Thread.sleep(20000);
     for (Anima a : testAnimas.values()) {
@@ -270,7 +270,7 @@ public class ZLastBeaconClientServerSslTests {
     serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
-    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.port = 43666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
 
     System.out.println("CA SERVER\n" + certCaAsPem);
@@ -281,7 +281,7 @@ public class ZLastBeaconClientServerSslTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {
@@ -456,7 +456,7 @@ public class ZLastBeaconClientServerSslTests {
     serverConfig.beaconDiscoveryPort = 0;
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
-    beaconServiceConfig.port = 33666;
+    beaconServiceConfig.port = 43666;
     beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
@@ -464,7 +464,7 @@ public class ZLastBeaconClientServerSslTests {
     testAnimas.put(SERVER_LABEL,
         executor
             .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:33666"))
+                1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:43666"))
             .get());
     Thread.sleep(15000);
     for (Anima a : testAnimas.values()) {

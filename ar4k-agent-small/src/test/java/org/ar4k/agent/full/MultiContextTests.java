@@ -48,7 +48,7 @@ public class MultiContextTests {
 //    addArgs.add("--ar4k.webRegistrationEndpoint=");
 //    addArgs.add("--ar4k.dnsRegistrationEndpoint=");
     addArgs.add("--ar4k.beaconDiscoveryFilterString=AR4K");
-    addArgs.add("--ar4k.beaconDiscoveryPort=33666");
+    addArgs.add("--ar4k.beaconDiscoveryPort=38696");
     addArgs.add("--ar4k.fileConfigOrder=1");
     addArgs.add("--ar4k.webConfigOrder=2");
     addArgs.add("--ar4k.dnsConfigOrder=0");
