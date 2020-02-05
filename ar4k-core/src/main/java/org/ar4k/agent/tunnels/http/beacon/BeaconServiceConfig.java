@@ -40,11 +40,11 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash")
   public String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString();
   @Parameter(names = "--certChainFile", description = "file for storing the ca for the server")
-  public String certChainFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
+  public String certChainFile = "./tmp/beacon-server-" + UUID.randomUUID().toString() + "-ca.pem";
   @Parameter(names = "--certFile", description = "file for storing the cert for the server")
-  public String certFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".pem";
+  public String certFile = "./tmp/beacon-server-" + UUID.randomUUID().toString() + ".pem";
   @Parameter(names = "--privateKeyFile", description = "file for storing the key for the server")
-  public String privateKeyFile = "/tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
+  public String privateKeyFile = "./tmp/beacon-server-" + UUID.randomUUID().toString() + ".key";
   @Parameter(names = "--aliasBeaconServerInKeystore", description = "the alias in anima keystore for the cert/key")
   public String aliasBeaconServerInKeystore = "beacon-server";
   @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format")

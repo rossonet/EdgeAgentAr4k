@@ -19,7 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.core.Anima;
@@ -81,7 +87,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
       .getLogger(BeaconClient.class.toString());
   private static final int INTERVAL_REGISTRATION_TRY = 15000;
   private static final int INTERVAL_HEALTH = 60000;
-  private static final String TMP_BEACON_PATH_DEFAULT = "beacon-client-" + UUID.randomUUID().toString();
+  private final String TMP_BEACON_PATH_DEFAULT = Anima.getApplicationContext().getBean(Anima.class)
+      .getStarterProperties().getConfPath() + "/beacon-client-" + UUID.randomUUID().toString();
   public static final CharSequence COMPLETION_CHAR = "?";
   public static final int discoveryPacketMaxSize = 1024;
 
@@ -104,6 +111,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private transient RpcConversation localExecutor;
   private final transient Anima anima;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
+  private transient final ExecutorService executor = Executors.newSingleThreadExecutor();
+  private final static int watchDogTimeout = 60000;
   private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
   private String discoveryFilter = "AR4K";
   private transient DatagramSocket socketDiscovery = null;
@@ -480,38 +489,61 @@ public class BeaconClient implements Runnable, AutoCloseable {
   public void run() {
     while (running) {
       try {
-        // se la registrazione è in attesa di approvazione
-        if ((getStateConnection().equals(ConnectivityState.READY)
-            || getStateConnection().equals(ConnectivityState.IDLE))
-            && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
-                || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
-          actionRegister();
-        }
-        // se non c'è connessione e discoveryPort è attivo
-        if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
-          lookOut();
-        }
-        // se non c'è connessione e port (server) è attivo
-        if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
-            && !hostTarget.isEmpty()) {
-          startConnection(this.hostTarget, this.port, false);
-        }
-        if (getStateConnection().equals(ConnectivityState.TRANSIENT_FAILURE) && port != 0 && hostTarget != null
-            && !hostTarget.isEmpty()) {
-          startConnection(this.hostTarget, this.port, false);
-        }
-        // se sono registrato
-        if (me != null && getStateConnection().equals(ConnectivityState.READY)
-            && registerStatus.equals(StatusValue.GOOD)) {
-          checkPollChannel();
-          sendHardwareInfo();
-        }
-        Thread.sleep(getPollingFreq());
+        runUpdateCheck();
       } catch (Exception e) {
         logger.logException("in Beacon client loop", e);
       }
     }
     logger.info("Beacon client terminated");
+  }
+
+  private void runUpdateCheck() {
+    final Future<Void> callFuture = executor.submit(new Callable<Void>() {
+      @Override
+      public Void call() {
+        try {
+          checkProcedure();
+        } catch (Exception e) {
+          logger.logException("in beacon client " + this.toString() + " update", e);
+        }
+        return null;
+      }
+    });
+    try {
+      callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException | ExecutionException | TimeoutException e) {
+      logger.logException("beacon client " + this.toString() + " timeout during update", e);
+    }
+  }
+
+  private void checkProcedure()
+      throws SocketException, UnknownHostException, IOException, InterruptedException, ParseException {
+    // se la registrazione è in attesa di approvazione
+    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE)
+        || getStateConnection().equals(ConnectivityState.CONNECTING))
+        && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
+            || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
+      actionRegister();
+    }
+    // se non c'è connessione e discoveryPort è attivo
+    if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
+      lookOut();
+    }
+    // se non c'è connessione e port (server) è attivo
+    if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
+        && !hostTarget.isEmpty()) {
+      startConnection(this.hostTarget, this.port, false);
+    }
+    if (getStateConnection().equals(ConnectivityState.TRANSIENT_FAILURE) && port != 0 && hostTarget != null
+        && !hostTarget.isEmpty()) {
+      startConnection(this.hostTarget, this.port, false);
+    }
+    // se sono registrato
+    if (me != null && getStateConnection().equals(ConnectivityState.READY) && registerStatus.equals(StatusValue.GOOD)) {
+      checkPollChannel();
+      sendHardwareInfo();
+    }
+    Thread.sleep(getPollingFreq());
   }
 
   public void lookOut()
