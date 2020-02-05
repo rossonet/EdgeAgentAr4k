@@ -92,6 +92,9 @@ public class RemoteControlOverBeaconRegistration {
   @Before
   public void before() throws Exception {
     deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
     Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
@@ -437,7 +440,7 @@ public class RemoteControlOverBeaconRegistration {
         NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
     networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
     System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
-    Thread.sleep(5000);
+    Thread.sleep(10000);
     System.out.println("try to send package");
     clientTCP = executor.submit(clientRunner);
     Thread.sleep(60000);

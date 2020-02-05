@@ -76,8 +76,22 @@ public class RemoteControlOverSsh {
   private Future<Boolean> clientTCP = null;
   private boolean completed = false;
 
+  private void deleteDir(File dir) {
+    File[] files = dir.listFiles();
+    if (files != null) {
+      for (final File file : files) {
+        deleteDir(file);
+      }
+    }
+    dir.delete();
+  }
+
   @Before
   public void before() throws Exception {
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
     Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
