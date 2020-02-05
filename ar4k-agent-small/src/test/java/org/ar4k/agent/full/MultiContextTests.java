@@ -1,5 +1,6 @@
 package org.ar4k.agent.full;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,12 +20,27 @@ public class MultiContextTests {
   private ExecutorService executor = Executors.newCachedThreadPool();
   private Set<Anima> testAnimas = new HashSet<>();
 
+  private void deleteDir(File dir) {
+    File[] files = dir.listFiles();
+    if (files != null) {
+      for (final File file : files) {
+        deleteDir(file);
+      }
+    }
+    dir.delete();
+  }
+
   @After
   public void tearDown() throws Exception {
     System.err.println("\n\nEND TESTS\n\n");
     for (Anima a : testAnimas) {
       a.close();
     }
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
   }
 
   @Test

@@ -17,6 +17,7 @@ package org.ar4k.qa.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -83,11 +84,22 @@ public class ConfigRefreshFromAllChannelTests {
     System.out.println(anima.getState());
   }
 
+  private void deleteDir(File dir) {
+    File[] files = dir.listFiles();
+    if (files != null) {
+      for (final File file : files) {
+        deleteDir(file);
+      }
+    }
+    dir.delete();
+  }
+
   @After
   public void tearDownAfterClass() throws Exception {
     Files.deleteIfExists(Paths.get(fileName));
     Files.deleteIfExists(Paths.get(fileNameSecond));
     Files.deleteIfExists(Paths.get(fileNameEnd));
+    deleteDir(new File("./tmp"));
   }
 
   @Rule

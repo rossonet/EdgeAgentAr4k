@@ -289,7 +289,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     runInstance();
   }
 
-  private void startConnection(String host, int port, boolean register) {
+  private synchronized void startConnection(String host, int port, boolean register) {
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext(), register);
     } else {
@@ -356,7 +356,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     }
   }
 
-  public void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
+  public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
     if (channel != null) {
       channel.shutdown();
     }
@@ -369,7 +369,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       actionRegister();
   }
 
-  private void actionRegister() {
+  private synchronized void actionRegister() {
     if (lastRegisterTime == 0 || (lastRegisterTime + INTERVAL_REGISTRATION_TRY) < (new Date()).getTime()) {
       lastRegisterTime = new Date().getTime();
       try {
@@ -428,7 +428,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     return channel != null ? channel.getState(true) : ConnectivityState.TRANSIENT_FAILURE;
   }
 
-  private StatusValue registerToBeacon(String uniqueName, String displayKey, String csr)
+  private synchronized StatusValue registerToBeacon(String uniqueName, String displayKey, String csr)
       throws IOException, InterruptedException, ParseException {
     RegisterRequest request;
     StatusValue result = StatusValue.BAD;
@@ -477,8 +477,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
     while (running) {
       try {
         // se la registrazione è in attesa di approvazione
-        if (getStateConnection().equals(ConnectivityState.READY) && (registerStatus.equals(StatusValue.WAIT_HUMAN)
-            || registerStatus.equals(StatusValue.BAD) || registerStatus.equals(StatusValue.FAULT))) {
+        if ((getStateConnection().equals(ConnectivityState.READY)
+            || getStateConnection().equals(ConnectivityState.IDLE))
+            && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
+                || registerStatus.equals(StatusValue.FAULT))) {
           actionRegister();
         }
         // se non c'è connessione e discoveryPort è attivo
@@ -495,8 +497,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
             && registerStatus.equals(StatusValue.GOOD)) {
           checkPollChannel();
           sendHardwareInfo();
-          Thread.sleep(getPollingFreq());
         }
+        Thread.sleep(getPollingFreq());
       } catch (Exception e) {
         logger.logException("in Beacon client loop", e);
       }

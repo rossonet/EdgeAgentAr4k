@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
@@ -271,7 +272,7 @@ public class Anima
         try {
           recMan.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          logger.info("IOException closing file data map of anima");
         }
         recMan = null;
       }
@@ -770,11 +771,36 @@ public class Anima
     if (stateTarget == null && runtimeConfig != null) {
       stateTarget = runtimeConfig.targetRunLevel;
     }
+    if (runtimeConfig != null && runtimeConfig.updateFileConfig == true) {
+      updateFileConfig(runtimeConfig);
+    }
     if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING)) {
       timerScheduler = new Timer();
       animaStateMachine.sendEvent(AnimaEvents.START);
     } else {
       logger.warn("stateTarget is null in runtime config");
+    }
+  }
+
+  private void updateFileConfig(Ar4kConfig config) {
+    String fileTarget = ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true);
+    if (starterProperties.getKeystoreConfigAlias() != null && !starterProperties.getKeystoreConfigAlias().isEmpty()) {
+      try {
+        Files.write(Paths.get(fileTarget),
+            ConfigHelper.toBase64Crypto(config, starterProperties.getKeystoreConfigAlias()).getBytes(),
+            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        logger.info("crypto configuration in " + fileTarget + " updated with runtime config");
+      } catch (Exception e) {
+        logger.logException("error saving crypto configuration in runtime to " + fileTarget, e);
+      }
+    } else {
+      try {
+        Files.write(Paths.get(fileTarget), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING);
+        logger.info("configuration in " + fileTarget + " updated with runtime config");
+      } catch (Exception e) {
+        logger.logException("error saving configuration in runtime to " + fileTarget, e);
+      }
     }
   }
 

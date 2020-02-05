@@ -56,6 +56,16 @@ public class ZLastBeaconClientServerSslTests {
   private final String client1AliasInKeystore = "client1";
   private final String passwordKs = "password";
 
+  private void deleteDir(File dir) {
+    File[] files = dir.listFiles();
+    if (files != null) {
+      for (final File file : files) {
+        deleteDir(file);
+      }
+    }
+    dir.delete();
+  }
+
   @Before
   public void before() throws Exception {
     KeystoreLoader.create(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
@@ -85,6 +95,11 @@ public class ZLastBeaconClientServerSslTests {
       executor.shutdownNow();
       executor.awaitTermination(1, TimeUnit.MINUTES);
     }
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
   }
 
   @Test

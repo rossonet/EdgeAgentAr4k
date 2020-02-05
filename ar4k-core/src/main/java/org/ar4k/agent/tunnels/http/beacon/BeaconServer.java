@@ -262,6 +262,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       this.broadcastAddress = broadcastAddress;
     if (stringDiscovery != null)
       this.stringDiscovery = stringDiscovery;
+    getBeaconServer(animaTarget, port);
+  }
+
+  public synchronized void getBeaconServer(Anima animaTarget, int port) throws UnrecoverableKeyException {
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       logger.info("Starting beacon server txt mode");
       try {

@@ -98,10 +98,6 @@ public class RemoteControlOverBeacon {
 
   @Before
   public void before() throws Exception {
-    deleteDir(new File("./tmp"));
-    deleteDir(new File("./tmp1"));
-    deleteDir(new File("./tmp2"));
-    deleteDir(new File("./tmp3"));
     Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
@@ -182,6 +178,11 @@ public class RemoteControlOverBeacon {
       executor.shutdownNow();
       executor.awaitTermination(1, TimeUnit.MINUTES);
     }
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
   }
 
   @Test

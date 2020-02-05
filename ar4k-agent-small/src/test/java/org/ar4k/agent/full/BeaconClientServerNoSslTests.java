@@ -71,6 +71,16 @@ public class BeaconClientServerNoSslTests {
      */
   }
 
+  private void deleteDir(File dir) {
+    File[] files = dir.listFiles();
+    if (files != null) {
+      for (final File file : files) {
+        deleteDir(file);
+      }
+    }
+    dir.delete();
+  }
+
   @After
   public void tearDown() throws Exception {
     System.err.println("\n\nEND TESTS\n\n");
@@ -85,6 +95,11 @@ public class BeaconClientServerNoSslTests {
       executor.shutdownNow();
       executor.awaitTermination(1, TimeUnit.MINUTES);
     }
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
   }
 
   @Test

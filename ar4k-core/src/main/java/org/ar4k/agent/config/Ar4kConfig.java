@@ -54,7 +54,7 @@ public class Ar4kConfig implements ConfigSeed {
   @Parameter(names = "--nextConfigFile", description = "if set the configuration is monitored and replaced in runtine when change")
   public String nextConfigFile = null;
 
-  @Parameter(names = "--nextConfigReload", description = "if set to true the agent will be reload after the configuration change else it will be just restarted")
+  @Parameter(names = "--nextConfigReload", description = "if set to true the agent will be reload after the configuration change else, if false, it will be just restarted")
   public Boolean nextConfigReload = false;
 
   @Parameter(names = "--configCheckPeriod", description = "the between every check for the config changes (ms)")
@@ -134,6 +134,9 @@ public class Ar4kConfig implements ConfigSeed {
 
   @Parameter(names = "--routerType", description = "routerType", validateWith = RouterTypeValidator.class)
   public AnimaRouterType routerType = AnimaRouterType.NONE;
+
+  @Parameter(names = "--updateFileConfig", description = "if true, this configuration will update the original one on file", validateWith = RouterTypeValidator.class)
+  public boolean updateFileConfig = false;
 
   @Parameter(names = "--logoUrl", description = "default log url")
   public String logoUrl = "/static/img/ar4k.png";
