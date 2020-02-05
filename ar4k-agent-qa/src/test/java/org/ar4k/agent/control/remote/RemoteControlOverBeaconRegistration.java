@@ -331,7 +331,7 @@ public class RemoteControlOverBeaconRegistration {
       // a.getRuntimeConfig().getName() : "no-config";
       Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
     }
-    Thread.sleep(25000);
+    Thread.sleep(60000);
     List<Agent> agents = testAnimas.get(CLIENT2_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {
