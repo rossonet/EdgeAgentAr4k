@@ -1,4 +1,4 @@
-package org.ar4k.agent.console.chat.sshd;
+package org.ar4k.agent.tunnels.sshd;
 
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.shell.ShellFactory;

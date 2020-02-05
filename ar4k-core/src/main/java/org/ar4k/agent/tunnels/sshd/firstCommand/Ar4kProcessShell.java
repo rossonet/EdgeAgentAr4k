@@ -1,4 +1,4 @@
-package org.ar4k.agent.console.chat.sshd.firstCommand;
+package org.ar4k.agent.tunnels.sshd.firstCommand;
 
 import java.io.IOException;
 import java.util.List;

@@ -28,19 +28,28 @@ public class SshRemoteTunnel extends AbstractSshTunnel {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SshRemoteTunnel.class.toString());
 
+  private boolean tunnelReturn = true;
+
   private void startTunnel() {
     try {
       connect().setPortForwardingR(((SshRemoteConfig) configuration).bindHost,
           ((SshRemoteConfig) configuration).bindPort, ((SshRemoteConfig) configuration).redirectServer,
           ((SshRemoteConfig) configuration).redirectPort);
+      tunnelReturn = true;
     } catch (Exception e) {
-      logger.logException(e);
+      logger.logException("ssh tunnel", e);
+      tunnelReturn = false;
     }
   }
 
   @Override
   public void init() {
     startTunnel();
+  }
+
+  @Override
+  protected boolean isTunnelOk() {
+    return tunnelReturn;
   }
 
 }

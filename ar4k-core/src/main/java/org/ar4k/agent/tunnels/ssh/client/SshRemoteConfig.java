@@ -40,8 +40,8 @@ public class SshRemoteConfig extends AbstractSshConfig {
   @Parameter(names = "--bindHost", description = "If bindHost is an empty string or \"*\", the port should be available from all interfaces. If bind_address is \"localhost\" or null, the listening port will be bound for local use only.")
   public String bindHost = null;
 
-  @Parameter(names = "--bindPort", description = "local port to bind for the connection")
-  public int bindPort = 2200;
+  @Parameter(names = "--bindPort", description = "local port to bind for the connection, should be 0 for auto discovery")
+  public int bindPort = 0;
 
   @Override
   public SshRemoteTunnel instantiate() {

@@ -54,6 +54,7 @@ import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
@@ -171,6 +172,12 @@ public class ShellInterface extends AbstractShellHelper {
     return anima.getAgentUniqueName();
   }
 
+  @ShellMethod(value = "Get a free port on host", group = "Monitoring Commands")
+  @ManagedOperation
+  public int getFreePort() {
+    return NetworkHelper.findAvailablePort(0);
+  }
+
   @ShellMethod(value = "Logout from the agent", group = "Authentication Commands")
   @ManagedOperation
   @ShellMethodAvailability("sessionOk")
@@ -197,11 +204,11 @@ public class ShellInterface extends AbstractShellHelper {
   /*
    * @ShellMethod(value = "Test method. Just return the string parameter", group =
    * "Testing Commands")
-   * 
+   *
    * @ManagedOperation
-   * 
+   *
    * @ShellMethodAvailability("testOk")
-   * 
+   *
    * @GetMapping("test") public String test(@Size(min = 1, max =
    * 40) @ShellOption(help = "example string for test method") String testString)
    * throws InterruptedException { return runShellTest(testString); }

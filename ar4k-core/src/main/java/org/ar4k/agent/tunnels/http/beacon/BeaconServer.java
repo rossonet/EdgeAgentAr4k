@@ -673,16 +673,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     @Override
     public void listAgentsRequestComplete(Empty request, StreamObserver<ListAgentsRequestReply> responseObserver) {
       try {
-        List<AgentRequest> values = new ArrayList<>();
-        for (RegistrationRequest r : listAgentRequest) {
-          org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder a = AgentRequest.newBuilder()
-              .setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
-          if (r.approved && r.approvedDate != null)
-            a.setApproved(r.approvedDate);
-          if (r.completed != null)
-            a.setRegistrationCompleted(r.completed);
-          values.add(a.build());
-        }
+        List<AgentRequest> values = listAgentRequests();
         ListAgentsRequestReply reply = ListAgentsRequestReply.newBuilder().addAllRequests(values)
             .setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
         responseObserver.onNext(reply);
@@ -1178,6 +1169,20 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       logger.info("tunnel will be removed ->\n" + ttd);
       tunnels.remove(ttd);
     }
+  }
+
+  public List<AgentRequest> listAgentRequests() {
+    List<AgentRequest> values = new ArrayList<>();
+    for (RegistrationRequest r : listAgentRequest) {
+      org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest.Builder a = AgentRequest.newBuilder()
+          .setIdRequest(r.idRequest).setRequest(r.getRegisterRequest());
+      if (r.approved && r.approvedDate != null)
+        a.setApproved(r.approvedDate);
+      if (r.completed != null)
+        a.setRegistrationCompleted(r.completed);
+      values.add(a.build());
+    }
+    return values;
   }
 
 }

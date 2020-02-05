@@ -47,11 +47,13 @@ public class ContextCreationHelper implements Callable<Anima>, ApplicationListen
       int serverPort, List<String> additionalArgs) {
     this.startClass = startClass;
     this.executor = executor;
-    args.add("--logging.file=" + logger);
+    if (logger != null && !logger.isEmpty())
+      args.add("--logging.file=" + logger);
     args.add("--server.port=" + String.valueOf(serverPort));
     args.add("--spring.shell.interactive.enabled=false");
     args.add("--spring.jmx.enabled=false");
-    args.add("--ar4k.fileKeystore=" + keyStore);
+    if (keyStore != null && !keyStore.isEmpty())
+      args.add("--ar4k.fileKeystore=" + keyStore);
     if (additionalArgs != null) {
       args.addAll(additionalArgs);
     }
@@ -61,9 +63,12 @@ public class ContextCreationHelper implements Callable<Anima>, ApplicationListen
       int serverPort, List<String> additionalArgs, Ar4kConfig config, String mainAliasInKeystore,
       String keystoreBeaconAlias, String webRegistrationEndpoint) {
     this(startClass, executor, logger, keyStore, serverPort, additionalArgs);
-    args.add("--ar4k.keystoreMainAlias=" + mainAliasInKeystore);
-    args.add("--ar4k.keystoreBeaconAlias=" + keystoreBeaconAlias);
-    args.add("--ar4k.webRegistrationEndpoint=" + webRegistrationEndpoint);
+    if (mainAliasInKeystore != null && !mainAliasInKeystore.isEmpty())
+      args.add("--ar4k.keystoreMainAlias=" + mainAliasInKeystore);
+    if (keystoreBeaconAlias != null && !keystoreBeaconAlias.isEmpty())
+      args.add("--ar4k.keystoreBeaconAlias=" + keystoreBeaconAlias);
+    if (webRegistrationEndpoint != null && !webRegistrationEndpoint.isEmpty())
+      args.add("--ar4k.webRegistrationEndpoint=" + webRegistrationEndpoint);
     try {
       args.add("--ar4k.baseConfig=" + ConfigHelper.toBase64(config));
     } catch (IOException e) {

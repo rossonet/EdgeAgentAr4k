@@ -32,6 +32,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Ar4kStarterProperties {
 
   public static final String AR4K_PREFIX = "ar4k";
+  private String uniqueName = null;
+  private String uniqueNameFile = null;
   private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
   private String fileConfig = ConfigHelper.USER_HOME + "/.ar4k/defaultBoot.config.base64.ar4k";
   private String webConfig = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k";
@@ -298,6 +300,22 @@ public class Ar4kStarterProperties {
 
   public void setAnimaDatastoreFileName(String animaDatastore) {
     this.animaDatastoreFileName = animaDatastore;
+  }
+
+  public String getUniqueName() {
+    return uniqueName;
+  }
+
+  public void setUniqueName(String uniqueName) {
+    this.uniqueName = uniqueName;
+  }
+
+  public String getUniqueNameFile() {
+    return uniqueNameFile;
+  }
+
+  public void setUniqueNameFile(String uniqueNameFile) {
+    this.uniqueNameFile = uniqueNameFile;
   }
 
 }

@@ -34,7 +34,6 @@ import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
-import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
@@ -43,6 +42,7 @@ import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
@@ -153,6 +153,13 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     return tmpServer.getTunnels();
   }
 
+  @ShellMethod(value = "List registration request on beacon server", group = "Beacon Server Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconServerRunning")
+  public List<AgentRequest> listBeaconRegistrations() {
+    return tmpServer.listAgentRequests();
+  }
+
   // comandi client
 
   @ShellMethod(value = "Connect to a Beacon service as an agent", group = "Beacon Client Commands")
@@ -248,7 +255,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     int localPort = NetworkHelper.findAvailablePort(14500);
     NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-xpra-" + remoteXpraPort, "tunnel xpra",
         NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
-    NetworkTunnel networkTunnel = resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
+    resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
     Thread.sleep(5000L);
     ProcessBuilder builder = new ProcessBuilder("xpra", "attach", "tcp://127.0.0.1:" + localPort + "/");
     Process processXpra = builder.start();
@@ -311,7 +318,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     int localPort = NetworkHelper.findAvailablePort(14500);
     NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-ssh-22", "tunnel xpra", NetworkMode.CLIENT,
         NetworkProtocol.TCP, "127.0.0.1", Integer.valueOf(sshPort), localPort);
-    NetworkTunnel networkTunnel = resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
+    resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
     Thread.sleep(5000L);
     ProcessBuilder builder = new ProcessBuilder("xterm", "-e", "ssh", sshUser + "@127.0.0.1", "-p",
         String.valueOf(localPort));

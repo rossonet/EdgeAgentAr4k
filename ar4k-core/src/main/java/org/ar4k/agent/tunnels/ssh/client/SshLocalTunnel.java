@@ -28,18 +28,27 @@ public class SshLocalTunnel extends AbstractSshTunnel {
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(SshLocalTunnel.class.toString());
 
+  private boolean tunnelReturn = true;
+
   private void startTunnel() {
     try {
       connect().setPortForwardingL(((SshLocalConfig) configuration).bindHost, ((SshLocalConfig) configuration).bindPort,
           ((SshLocalConfig) configuration).redirectServer, ((SshLocalConfig) configuration).redirectPort);
+      tunnelReturn = true;
     } catch (Exception e) {
       logger.logException(e);
+      tunnelReturn = false;
     }
   }
 
   @Override
   public void init() {
     startTunnel();
+  }
+
+  @Override
+  protected boolean isTunnelOk() {
+    return tunnelReturn;
   }
 
 }

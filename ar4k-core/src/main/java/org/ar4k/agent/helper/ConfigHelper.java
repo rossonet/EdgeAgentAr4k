@@ -2,12 +2,14 @@ package org.ar4k.agent.helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.CertificateEncodingException;
@@ -128,15 +130,31 @@ public class ConfigHelper {
     return val.toString();
   }
 
-  public static String generateNewUniqueName() {
+  public static String generateNewUniqueName(String nameInParameters, String fileNameInParameters) {
     String result = null;
-    try {
-      result = InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      logger.info("no hostname found...");
-      result = "";
+    if (fileNameInParameters != null && !fileNameInParameters.isEmpty()) {
+      File fileUniqueName = new File(ConfigHelper.resolveWorkingString(fileNameInParameters, true));
+      if (fileUniqueName.exists() && fileUniqueName.canRead()) {
+        try {
+          result = Files.readAllLines(fileUniqueName.toPath()).get(0);
+        } catch (IOException e) {
+          logger.logException("uniqueName file " + fileUniqueName + " exception", e);
+        }
+      } else {
+        logger.info("uniqueName file " + fileUniqueName + " not exists or is not readable");
+      }
+    } else {
+      if (nameInParameters != null && !nameInParameters.isEmpty()) {
+        result = ConfigHelper.resolveWorkingString(nameInParameters, false);
+      } else {
+        try {
+          result = InetAddress.getLocalHost().getHostName() + "_" + UUID.randomUUID().toString().replaceAll("-", "");
+        } catch (UnknownHostException e) {
+          logger.info("no hostname found...");
+          result = "agent_" + UUID.randomUUID().toString().replaceAll("-", "");
+        }
+      }
     }
-    result = result + "_" + UUID.randomUUID().toString().replaceAll("-", "");
     return result;
   }
 

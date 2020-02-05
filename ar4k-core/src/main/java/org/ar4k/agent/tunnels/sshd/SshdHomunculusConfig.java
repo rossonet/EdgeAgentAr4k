@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console.chat.sshd;
+package org.ar4k.agent.tunnels.sshd;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Ar4kComponent;
@@ -27,10 +27,12 @@ import com.beust.jcommander.Parameter;
  */
 public class SshdHomunculusConfig extends AbstractServiceConfig {
 
-  @Parameter(names = "--port", description = "the port for the SSHD service", required = true)
+  @Parameter(names = "--port", description = "the port for the SSHD service")
   public int port = 6661;
-  @Parameter(names = "--bindHost", description = "bind which interface. All = 0.0.0.0", required = true)
+  @Parameter(names = "--bindHost", description = "bind which interface. All = 0.0.0.0")
   public String broadcastAddress = "0.0.0.0";
+  @Parameter(names = "--authorizedKeys", description = "authorized keys file for ssh")
+  public String authorizedKeys = "~/.ssh/authorized_keys";
 
   private static final long serialVersionUID = 6301077946480730173L;
 
@@ -49,5 +51,10 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
   @Override
   public boolean isSpringBean() {
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return "SshdHomunculusConfig [port=" + port + ", broadcastAddress=" + broadcastAddress + "]";
   }
 }

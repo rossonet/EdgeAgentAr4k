@@ -131,7 +131,7 @@ public class Anima
   // assegnato da Spring tramite setter al boot
   private static ApplicationContext applicationContext;
 
-  private final String agentUniqueName = ConfigHelper.generateNewUniqueName();
+  private String agentUniqueName = null;
 
   private final String dbDataStoreName = "datastore";
 
@@ -425,7 +425,7 @@ public class Anima
           logger.logException("error deleting wrong keystore", e);
         }
         logger.warn("new keystore: " + ks.toString());
-        ks.createSelfSignedCert(agentUniqueName + "-master", ConfigHelper.organization, ConfigHelper.unit,
+        ks.createSelfSignedCert(getAgentUniqueName() + "-master", ConfigHelper.organization, ConfigHelper.unit,
             ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri, ConfigHelper.dns,
             ConfigHelper.ip, ks.keyStoreAlias, true);
       }
@@ -870,6 +870,10 @@ public class Anima
   private synchronized void checkDualStart() {
     if (onApplicationEventFlag && afterSpringInitFlag && !firstStateFired) {
       firstStateFired = true;
+      if (starterProperties != null) {
+        agentUniqueName = ConfigHelper.generateNewUniqueName(starterProperties.getUniqueName(),
+            starterProperties.getUniqueNameFile());
+      }
       logger.info("STARTING AGENT...");
       animaStateMachine.start();
     }
@@ -1160,6 +1164,10 @@ public class Anima
 
   public Ar4kStarterProperties getStarterProperties() {
     return starterProperties;
+  }
+
+  public AuthenticationManager getAuthenticationManager() {
+    return authenticationManager;
   }
 
 }

@@ -43,6 +43,9 @@ public abstract class AbstractSshConfig extends AbstractServiceConfig {
   @Parameter(names = "--authkey", description = "private auth key for the connection")
   public String authkey = null;
 
+  @Parameter(names = "--trustAllCert", description = "enable/disable trust check of ssh server key")
+  public boolean trustAllCert = true;
+
   @Parameter(names = "--soTimeout", description = "enable/disable SO_TIMEOUT with the specified timeout, in milliseconds")
   public Integer soTimeout = null;
   @Parameter(names = "--tcpNoDelay", description = "enable/disable TCP_NODELAY (disable/enable Nagle's algorithm)")

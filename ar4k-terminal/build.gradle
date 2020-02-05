@@ -4,7 +4,4 @@ dependencies {
   compile project(':ar4k-core')
   compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
   compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-  compile group: 'org.apache.sshd', name: 'sshd-core', version: '2.2.0'
-  compile group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.2.0'
-  compile group: 'org.apache.sshd', name: 'sshd-scp', version: '2.2.0'
 }

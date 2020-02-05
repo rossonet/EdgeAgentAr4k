@@ -41,7 +41,7 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
 
   protected AbstractSshConfig configuration = null;
 
-  protected DataAddress dataspace;
+  protected DataAddress dataSpace;
 
   protected Anima anima;
 
@@ -49,7 +49,7 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
 
   private Session session = null;
 
-  protected Session connect() {
+  protected synchronized Session connect() {
     try {
       jsch = new JSch();
       if (configuration.authkey != null)
@@ -58,7 +58,9 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
       SSHUserInfo ui = new SSHUserInfo();
       if (configuration.password != null)
         ui.setPassword(configuration.password);
+      ui.setTrust(configuration.trustAllCert);
       session.setUserInfo(ui);
+      session.setDaemonThread(true);
       session.connect();
     } catch (Exception e) {
       logger.logException(e);
@@ -67,16 +69,23 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
   }
 
   @Override
-  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    if (session != null && session.isConnected()) {
+  public synchronized ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+    if (isTunnelOk() && session != null && session.isConnected()) {
       return ServiceStatus.RUNNING;
     } else {
-      session = null;
-      jsch = null;
+      if (session != null) {
+        session.disconnect();
+        session = null;
+      }
+      if (jsch != null) {
+        jsch = null;
+      }
       this.init();
-      return ServiceStatus.STAMINAL;
+      return ServiceStatus.STARTING;
     }
   }
+
+  protected abstract boolean isTunnelOk();
 
   @Override
   public AbstractSshConfig getConfiguration() {
@@ -116,12 +125,12 @@ public abstract class AbstractSshTunnel implements Ar4kComponent {
 
   @Override
   public DataAddress getDataAddress() {
-    return dataspace;
+    return dataSpace;
   }
 
   @Override
   public void setDataAddress(DataAddress dataAddress) {
-    dataspace = dataAddress;
+    dataSpace = dataAddress;
   }
 
   @Override

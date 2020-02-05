@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.console.chat.sshd;
+package org.ar4k.agent.console;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,9 +23,12 @@ import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-import org.ar4k.agent.console.chat.sshd.firstCommand.Ar4kProcessShellFactory;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.tunnels.sshd.Ar4kAnimaShellFactory;
+import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
+import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
+import org.ar4k.agent.tunnels.sshd.firstCommand.Ar4kProcessShellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
@@ -67,10 +70,17 @@ public class SshdShellInterface extends AbstractShellHelper {
     return server != null ? Availability.available() : Availability.unavailable("the sshd server is not running");
   }
 
-  @ShellMethod(value = "Add a sshd remote management server to the selected configuration", group = "Ssh Server Commands")
+  @ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the agent RPC", group = "Ssh Server Commands")
   @ManagedOperation
   @ShellMethodAvailability("testSelectedConfigOk")
   public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
+    getWorkingConfig().pots.add(service);
+  }
+
+  @ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the system shell", group = "Ssh Server Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public void addSshdManagerSystemToSelectedConfig(@ShellOption(optOut = true) @Valid SshdSystemConfig service) {
     getWorkingConfig().pots.add(service);
   }
 
