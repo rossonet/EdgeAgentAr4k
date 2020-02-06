@@ -168,6 +168,8 @@ public class RemoteControlOverBeaconRegistration {
         .println("\n\nLIST SERVER " + KeystoreLoader.listCertificate(keyStoreServer.getAbsolutePath(), passwordKs));
     System.out
         .println("\n\nLIST CLIENT 1 " + KeystoreLoader.listCertificate(keyStoreClient1.getAbsolutePath(), passwordKs));
+    System.out
+        .println("\n\nLIST CLIENT 2 " + KeystoreLoader.listCertificate(keyStoreClient2.getAbsolutePath(), passwordKs));
   }
 
   @After
@@ -335,7 +337,7 @@ public class RemoteControlOverBeaconRegistration {
       // a.getRuntimeConfig().getName() : "no-config";
       Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
     }
-    Thread.sleep(60000);
+    Thread.sleep(120000);
     List<Agent> agents = testAnimas.get(CLIENT1_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {
@@ -454,7 +456,7 @@ public class RemoteControlOverBeaconRegistration {
 
   protected void updateClientCounter(int valueNew) {
     // System.out.println("counter: " + valueNew);
-    if (valueNew > 42) {
+    if (valueNew > 56) {
       completed = true;
       clientTCP.cancel(true);
       serverTCP.cancel(true);
