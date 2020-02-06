@@ -526,12 +526,11 @@ public class BeaconClient implements Runnable, AutoCloseable {
       cleanChannel();
     }
     // se non c'è connessione e port (server) è attivo
-    if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()
-        && !getStateConnection().equals(ConnectivityState.READY)) {
-      startConnection(this.hostTarget, this.port, false);
+    if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()) {
+      startConnection(this.hostTarget, this.port, true);
     }
     // se non c'è connessione e discoveryPort è attivo
-    if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
+    if (channel == null && discoveryPort != 0) {
       lookOut();
     }
     // se la registrazione è in attesa di approvazione
