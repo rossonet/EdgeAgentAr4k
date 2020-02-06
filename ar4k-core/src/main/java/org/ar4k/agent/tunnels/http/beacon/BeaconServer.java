@@ -627,6 +627,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
             reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
                 .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
                 .setCert(getFirmedCert(request.getRequestCsr())).setCa(ByteString.copyFromUtf8(caChainPem)).build();
+            agents.add(new BeaconAgent(request, reply));
           } else {
             // TODO inserire il meccanismo per la coda autorizzativa
             RegistrationRequest newRequest = new RegistrationRequest(request);
@@ -638,8 +639,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
         } else {
           reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
               .setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime).build();
+          agents.add(new BeaconAgent(request, reply));
         }
-        agents.add(new BeaconAgent(request, reply));
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
       } catch (Exception a) {
