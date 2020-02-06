@@ -83,7 +83,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
-  private static final int INTERVAL_REGISTRATION_TRY = 5000;
+  private static final int INTERVAL_REGISTRATION_TRY = 2000;
   private static final int INTERVAL_HEALTH = 60000;
   public static final CharSequence COMPLETION_CHAR = "?";
   public static final int discoveryPacketMaxSize = 1024;
