@@ -63,7 +63,7 @@ import com.google.gson.GsonBuilder;
 public class KeystoreTests {
 
   private static final String passwordKeystore = "passw!ord";
-  private static final String fileKeystore = "/tmp/testks";
+  private static final String fileKeystore = "./tmp/testks";
 
   @Before
   public void setUp() throws Exception {

@@ -78,10 +78,10 @@ public class RemoteControlOverBeacon {
   private static final String SERVER_LABEL = "server";
   private final ExecutorService executor = Executors.newCachedThreadPool();
   private final Map<String, Anima> testAnimas = new HashMap<>();
-  private final File keyStoreMaster = new File("/tmp/master.ks");
-  private final File keyStoreServer = new File("/tmp/server.ks");
-  private final File keyStoreClient1 = new File("/tmp/client1.ks");
-  private final File keyStoreClient2 = new File("/tmp/client2.ks");
+  private final File keyStoreMaster = new File("./tmp/master.ks");
+  private final File keyStoreServer = new File("./tmp/server.ks");
+  private final File keyStoreClient1 = new File("./tmp/client1.ks");
+  private final File keyStoreClient2 = new File("./tmp/client2.ks");
   private final String masterAliasInKeystore = "master";
   private final String serverAliasInKeystore = "server";
   private final String client2AliasInKeystore = "client2";
@@ -98,6 +98,11 @@ public class RemoteControlOverBeacon {
 
   @Before
   public void before() throws Exception {
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
     Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),

@@ -48,9 +48,9 @@ public class ZLastBeaconClientServerSslTests {
   private static final String SERVER_LABEL = "server";
   private final ExecutorService executor = Executors.newCachedThreadPool();
   private final Map<String, Anima> testAnimas = new HashMap<>();
-  private final File keyStoreServer = new File("/tmp/server.ks");
-  private final File keyStoreClient1 = new File("/tmp/client1.ks");
-  private final File keyStoreClient2 = new File("/tmp/client1.ks");
+  private final File keyStoreServer = new File("./tmp/server.ks");
+  private final File keyStoreClient1 = new File("./tmp/client1.ks");
+  private final File keyStoreClient2 = new File("./tmp/client2.ks");
   private final String serverAliasInKeystore = "server";
   private final String client2AliasInKeystore = "client2";
   private final String client1AliasInKeystore = "client1";
@@ -68,6 +68,7 @@ public class ZLastBeaconClientServerSslTests {
 
   @Before
   public void before() throws Exception {
+    Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.create(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
     KeystoreLoader.create(client2AliasInKeystore, keyStoreClient1.getAbsolutePath(), passwordKs);
     KeystoreLoader.create(client1AliasInKeystore, keyStoreClient2.getAbsolutePath(), passwordKs);

@@ -91,6 +91,11 @@ public class RemoteControlOverBeaconRegistration {
 
   @Before
   public void before() throws Exception {
+    deleteDir(new File("./tmp"));
+    deleteDir(new File("./tmp1"));
+    deleteDir(new File("./tmp2"));
+    deleteDir(new File("./tmp3"));
+    deleteDir(new File("~/.ar4k"));
     Files.createDirectories(Paths.get("./tmp"));
     KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
         "urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
@@ -325,17 +330,16 @@ public class RemoteControlOverBeaconRegistration {
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", keyStoreClient1.getAbsolutePath(),
             1126, baseArgsClientOne, clientOneConfig, client1AliasInKeystore, signClient1AliasInKeystore,
             "https://localhost:32676")).get());
-    Thread.sleep(35000);
     for (Anima a : testAnimas.values()) {
       // String animaName = a.getRuntimeConfig() != null ?
       // a.getRuntimeConfig().getName() : "no-config";
       Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
     }
     Thread.sleep(60000);
-    List<Agent> agents = testAnimas.get(CLIENT2_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
+    List<Agent> agents = testAnimas.get(CLIENT1_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {
-      if (testAnimas.get(CLIENT1_LABEL).getAgentUniqueName().equals(a.getAgentUniqueName())) {
+      if (testAnimas.get(CLIENT2_LABEL).getAgentUniqueName().equals(a.getAgentUniqueName())) {
         agentToQuery = a.getAgentUniqueName();
         System.out.println("agent client 1 found -> " + a.getAgentUniqueName());
       }
@@ -440,11 +444,11 @@ public class RemoteControlOverBeaconRegistration {
     NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test", NetworkMode.CLIENT,
         NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
     networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
-    System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
     Thread.sleep(10000);
+    System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
     System.out.println("try to send package");
     clientTCP = executor.submit(clientRunner);
-    Thread.sleep(90000);
+    Thread.sleep(60000);
     assertTrue(completed);
   }
 

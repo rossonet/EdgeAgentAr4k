@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
@@ -85,31 +83,34 @@ public class BeaconClient implements Runnable, AutoCloseable {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
-  private static final int INTERVAL_REGISTRATION_TRY = 15000;
+  private static final int INTERVAL_REGISTRATION_TRY = 5000;
   private static final int INTERVAL_HEALTH = 60000;
-  private final String TMP_BEACON_PATH_DEFAULT = Anima.getApplicationContext().getBean(Anima.class)
-      .getStarterProperties().getConfPath() + "/beacon-client-" + UUID.randomUUID().toString();
   public static final CharSequence COMPLETION_CHAR = "?";
   public static final int discoveryPacketMaxSize = 1024;
 
+  private final String TMP_BEACON_PATH_DEFAULT = Anima.getApplicationContext().getBean(Anima.class)
+      .getStarterProperties().getConfPath() + "/beacon-client-" + UUID.randomUUID().toString();
+  private transient final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+  private final transient Anima anima;
+
   private transient long lastRegisterTime = 0;
   private transient long lastHealthTime = 0;
+  private transient long lastDiscovery;
 
   private ManagedChannel channel = null;
   private RpcServiceV1BlockingStub blockingStub = null;
   private TunnelServiceV1BlockingStub blockingStubTunnel;
   private RpcServiceV1Stub asyncStub = null;
   private TunnelServiceV1Stub asyncStubTunnel = null;
-  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  private boolean running = false;
+  private transient boolean running = false;
 
-  private Thread process = null;
+  private transient Thread process = null;
 
   private Agent me = null;
 
   private transient RpcConversation localExecutor;
-  private final transient Anima anima;
   private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
   private transient final ExecutorService executor = Executors.newSingleThreadExecutor();
   private final static int watchDogTimeout = 60000;
@@ -118,7 +119,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private transient DatagramSocket socketDiscovery = null;
   private String reservedUniqueName = null;
   private StatusValue registerStatus = StatusValue.BAD;
-  private final int pollingFrequency = 800;
+  private final int pollingFrequency = 1000;
 
   private String aliasBeaconClientInKeystore = "beacon-client";
   private String hostTarget = null;
@@ -126,10 +127,10 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
   private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
   private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
-  private List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
+  private transient List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
   private String certChain = null;
-  private String csrRequest = null;
-  private boolean needRestart = false;
+  private transient String csrRequest = null;
+  private transient boolean needRestart = false;
 
   public static class Builder {
     private Anima anima = null;
@@ -371,6 +372,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
+    cleanChannel();
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
@@ -387,7 +389,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
         logger.info("Try registration to beacon server. BEFORE[" + registerStatus + "/" + getStateConnection() + "]");
         registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), csrRequest);
       } catch (Exception e) {
-        logger.logException(e);
+        logger.logException("in beacon registration", e);
       }
     }
   }
@@ -436,7 +438,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public ConnectivityState getStateConnection() {
-    return channel != null ? channel.getState(true) : ConnectivityState.TRANSIENT_FAILURE;
+    return channel != null ? channel.getState(true) : ConnectivityState.SHUTDOWN;
   }
 
   private synchronized StatusValue registerToBeacon(String uniqueName, String displayKey, String csr)
@@ -505,6 +507,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
           checkProcedure();
         } catch (Exception e) {
           logger.logException("in beacon client " + this.toString() + " update", e);
+          cleanChannel();
         }
         return null;
       }
@@ -513,68 +516,82 @@ public class BeaconClient implements Runnable, AutoCloseable {
       callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       logger.logException("beacon client " + this.toString() + " timeout during update", e);
+      cleanChannel();
     }
   }
 
-  private synchronized void checkProcedure()
-      throws SocketException, UnknownHostException, IOException, InterruptedException, ParseException {
-    // se la registrazione è in attesa di approvazione
-    if (needRestart) {
-      needRestart = false;
-      registerStatus = StatusValue.BAD;
-      if (channel != null) {
-        channel.shutdown();
-        blockingStub = null;
-        blockingStubTunnel = null;
-        asyncStub = null;
-        asyncStubTunnel = null;
-      }
+  private synchronized void checkProcedure() throws InterruptedException {
+    // se la connessione è permanentemente ferma o è richiesto il riavvio
+    if (needRestart || (channel != null && getStateConnection().equals(ConnectivityState.SHUTDOWN))) {
+      cleanChannel();
     }
-    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE))
-        && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
-            || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
-      actionRegister();
+    // se non c'è connessione e port (server) è attivo
+    if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()
+        && !getStateConnection().equals(ConnectivityState.READY)) {
+      startConnection(this.hostTarget, this.port, false);
     }
     // se non c'è connessione e discoveryPort è attivo
     if (channel == null && discoveryPort != 0 && !getStateConnection().equals(ConnectivityState.READY)) {
       lookOut();
     }
-    // se non c'è connessione e port (server) è attivo
-    if (!getStateConnection().equals(ConnectivityState.READY) && channel == null && port != 0 && hostTarget != null
-        && !hostTarget.isEmpty()) {
-      startConnection(this.hostTarget, this.port, false);
-    }
-    if (getStateConnection().equals(ConnectivityState.TRANSIENT_FAILURE) && port != 0 && hostTarget != null
-        && !hostTarget.isEmpty()) {
-      startConnection(this.hostTarget, this.port, false);
+    // se la registrazione è in attesa di approvazione
+    if ((getStateConnection().equals(ConnectivityState.READY))
+        && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
+            || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
+      actionRegister();
     }
     // se sono registrato
-    if (me != null && getStateConnection().equals(ConnectivityState.READY) && registerStatus.equals(StatusValue.GOOD)) {
+    if (isConnectionReady()) {
       checkPollChannel();
       sendHardwareInfo();
     }
     Thread.sleep(getPollingFreq());
   }
 
-  public void lookOut()
-      throws SocketException, UnknownHostException, IOException, InterruptedException, ParseException {
-    if (socketDiscovery == null) {
-      socketDiscovery = new DatagramSocket(discoveryPort, InetAddress.getByName("0.0.0.0"));
-      socketDiscovery.setBroadcast(true);
-    } else {
-      byte[] recvBuf = new byte[discoveryPacketMaxSize];
-      DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-      socketDiscovery.receive(packet);
-      if (packet.getData().length > 0) {
-        String message = new String(packet.getData()).trim();
-        logger.info("DISCOVERY FLASH: " + message);
-        if (discoveryFilter == null || message.contains(discoveryFilter)) {
-          String hostBeacon = packet.getAddress().getHostAddress();
-          int portBeacon = Integer.valueOf(message.split(":")[1]);
-          logger
-              .info("-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
-          startConnection(this.hostTarget, this.port, true);
+  private boolean isConnectionReady() {
+    return me != null && getStateConnection().equals(ConnectivityState.READY)
+        && registerStatus.equals(StatusValue.GOOD);
+  }
+
+  private void cleanChannel() {
+    needRestart = false;
+    registerStatus = StatusValue.BAD;
+    me = null;
+    blockingStub = null;
+    blockingStubTunnel = null;
+    asyncStub = null;
+    asyncStubTunnel = null;
+    if (channel != null) {
+      channel.shutdownNow();
+      channel = null;
+    }
+  }
+
+  public void lookOut() {
+    if (lastDiscovery == 0 || (lastDiscovery + INTERVAL_REGISTRATION_TRY) < (new Date()).getTime()) {
+      try {
+        lastDiscovery = new Date().getTime();
+        if (socketDiscovery == null) {
+          socketDiscovery = new DatagramSocket(discoveryPort, InetAddress.getByName("0.0.0.0"));
+          socketDiscovery.setBroadcast(true);
+        } else {
+          byte[] recvBuf = new byte[discoveryPacketMaxSize];
+          DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+          socketDiscovery.receive(packet);
+          if (packet.getData().length > 0) {
+            String message = new String(packet.getData()).trim();
+            logger.info("DISCOVERY FLASH: " + message);
+            if (discoveryFilter == null || message.contains(discoveryFilter)) {
+              String hostBeacon = packet.getAddress().getHostAddress();
+              int portBeacon = Integer.valueOf(message.split(":")[1]);
+              logger.info(
+                  "-- Beacon server found on host " + hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
+              startConnection(this.hostTarget, this.port, true);
+            }
+          }
         }
+      } catch (Exception e) {
+        logger.logException("in beacon discovery", e);
       }
     }
   }
@@ -582,9 +599,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private void checkPollChannel() {
     try {
       elaborateRequestFromBus(blockingStub.pollingCmdQueue(me));
-    } catch (io.grpc.StatusRuntimeException e) {
-      logger.debug("GRPC POLL FAILED " + e.getMessage());
-      logger.logException(e);
+    } catch (Exception e) {
+      logger.logException("GRPC POLL FAILED ", e);
     }
   }
 
@@ -696,8 +712,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
             .setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
         blockingStub.sendHealth(hr);
       } catch (Exception e) {
-        logger.warn("error sendHardwareInfo -> " + e.getMessage());
-        logger.logException(e);
+        logger.logException("error sendHardwareInfo", e);
       }
     }
   }
@@ -949,14 +964,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       }
       tunnels.clear();
     }
-    asyncStub = null;
-    asyncStubTunnel = null;
-    blockingStubTunnel = null;
-    blockingStub = null;
-    if (channel != null) {
-      channel.shutdownNow();
-      channel = null;
-    }
+    cleanChannel();
     logger.info("Client Beacon closed");
   }
 
