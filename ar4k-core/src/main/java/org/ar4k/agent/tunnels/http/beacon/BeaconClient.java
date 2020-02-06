@@ -372,7 +372,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
-    cleanChannel();
+    cleanChannel("before new connection");
     channel = channelBuilder.build();
     blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
     blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
@@ -507,7 +507,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
           checkProcedure();
         } catch (Exception e) {
           logger.logException("in beacon client " + this.toString() + " update", e);
-          cleanChannel();
+          cleanChannel("beacon client " + this.toString() + " exception");
         }
         return null;
       }
@@ -516,14 +516,14 @@ public class BeaconClient implements Runnable, AutoCloseable {
       callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       logger.logException("beacon client " + this.toString() + " timeout during update", e);
-      cleanChannel();
+      cleanChannel("beacon client " + this.toString() + " timeout during update");
     }
   }
 
   private synchronized void checkProcedure() throws InterruptedException {
     // se la connessione è permanentemente ferma o è richiesto il riavvio
     if (needRestart || (channel != null && getStateConnection().equals(ConnectivityState.SHUTDOWN))) {
-      cleanChannel();
+      cleanChannel("restart is need");
     }
     // se non c'è connessione e port (server) è attivo
     if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()) {
@@ -552,7 +552,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
         && registerStatus.equals(StatusValue.GOOD);
   }
 
-  private void cleanChannel() {
+  private void cleanChannel(String description) {
+    logger.info("Reset beacon client beacause " + description);
     needRestart = false;
     registerStatus = StatusValue.BAD;
     me = null;
