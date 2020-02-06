@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -130,7 +129,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
   private transient List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
   private String certChain = null;
   private transient String csrRequest = null;
-  private transient boolean needRestart = false;
 
   public static class Builder {
     private Anima anima = null;
@@ -283,6 +281,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       this.reservedUniqueName = uniqueName;
     else
       this.reservedUniqueName = UUID.randomUUID().toString();
+    // solo ssl
     if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
         logger.info("Certificate with alias '" + this.aliasBeaconClientInKeystore
@@ -301,12 +300,12 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private synchronized void startConnection(String host, int port, boolean register) {
-    generateFilesCert();
+    logger.debug("Starting Beacon client");
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext(), register);
     } else {
       try {
-        logger.debug("Starting Beacon client");
+        generateFilesCert();
         SslContextBuilder sslBuilder = GrpcSslContexts.forClient().keyManager(new File(certFile), new File(privateFile))
             .trustManager(new File(this.certChainFile));
         runConnection(NettyChannelBuilder.forAddress(host, port)
@@ -456,9 +455,13 @@ public class BeaconClient implements Runnable, AutoCloseable {
       request = requestBuilder.build();
       logger.debug("try registration, channel status " + (channel != null ? channel.getState(true) : "null channel"));
       RegisterReply reply = blockingStub.register(request);
-      me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
-      logger.info("connection to beacon ok . I'm " + me.getAgentUniqueName());
       result = reply.getStatusRegistration().getStatus();
+      // se funziona
+      if (result.equals(StatusValue.GOOD) && reply.getCert() != null && !reply.getCert().isEmpty()) {
+        me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
+        logger.info("connection to beacon ok . I'm " + me.getAgentUniqueName());
+      }
+      // se nuovo certificato
       if (result.equals(StatusValue.GOOD)
           && !anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
           && reply.getCert() != null && !reply.getCert().isEmpty()) {
@@ -466,9 +469,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
           anima.getMyIdentityKeystore().setClientKeyPair(
               anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), reply.getCert(),
               this.aliasBeaconClientInKeystore);
-          needRestart = true;
-          result = StatusValue.BAD;
-        } catch (NoSuchAlgorithmException e) {
+          cleanChannel("installed new certificate");
+        } catch (Exception e) {
           logger.logException(e);
           result = StatusValue.FAULT;
         }
@@ -523,10 +525,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private synchronized void checkProcedure() throws InterruptedException {
-    // se la connessione è permanentemente ferma o è richiesto il riavvio
-    if (needRestart || (channel != null && getStateConnection().equals(ConnectivityState.SHUTDOWN))) {
-      cleanChannel("restart is need");
-    }
     // se non c'è connessione e port (server) è attivo
     if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()) {
       startConnection(this.hostTarget, this.port, true);
@@ -536,7 +534,8 @@ public class BeaconClient implements Runnable, AutoCloseable {
       lookOut();
     }
     // se la registrazione è in attesa di approvazione
-    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE))
+    if (channel != null
+        && (getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE))
         && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
             || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
       actionRegister();
@@ -555,8 +554,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   private synchronized void cleanChannel(String description) {
-    logger.info("Reset beacon client beacause " + description);
-    needRestart = false;
+    logger.info("Reset beacon client because " + description);
     registerStatus = StatusValue.BAD;
     if (channel != null) {
       channel.shutdownNow();
