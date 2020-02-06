@@ -433,7 +433,6 @@ public class BeaconClient implements Runnable, AutoCloseable {
   }
 
   public void shutdown() throws InterruptedException {
-    running = false;
     channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
   }
 
@@ -499,7 +498,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
     logger.info("Beacon client terminated");
   }
 
-  private void runUpdateCheck() {
+  private synchronized void runUpdateCheck() {
     final Future<Void> callFuture = executor.submit(new Callable<Void>() {
       @Override
       public Void call() {
@@ -516,6 +515,9 @@ public class BeaconClient implements Runnable, AutoCloseable {
       callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
     } catch (InterruptedException | ExecutionException | TimeoutException e) {
       logger.logException("beacon client " + this.toString() + " timeout during update", e);
+      if (callFuture != null) {
+        callFuture.cancel(true);
+      }
       cleanChannel("beacon client " + this.toString() + " timeout during update");
     }
   }
@@ -552,22 +554,22 @@ public class BeaconClient implements Runnable, AutoCloseable {
         && registerStatus.equals(StatusValue.GOOD);
   }
 
-  private void cleanChannel(String description) {
+  private synchronized void cleanChannel(String description) {
     logger.info("Reset beacon client beacause " + description);
     needRestart = false;
     registerStatus = StatusValue.BAD;
+    if (channel != null) {
+      channel.shutdownNow();
+      channel = null;
+    }
     me = null;
     blockingStub = null;
     blockingStubTunnel = null;
     asyncStub = null;
     asyncStubTunnel = null;
-    if (channel != null) {
-      channel.shutdownNow();
-      channel = null;
-    }
   }
 
-  public void lookOut() {
+  public synchronized void lookOut() {
     if (lastDiscovery == 0 || (lastDiscovery + INTERVAL_REGISTRATION_TRY) < (new Date()).getTime()) {
       try {
         lastDiscovery = new Date().getTime();
