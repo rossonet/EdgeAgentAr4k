@@ -964,7 +964,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       }
       tunnels.clear();
     }
-    cleanChannel();
+    cleanChannel("close request");
     logger.info("Client Beacon closed");
   }
 
