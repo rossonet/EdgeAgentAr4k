@@ -20,8 +20,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.UUID;
 
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.core.Anima;
@@ -32,7 +30,6 @@ import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
-import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -63,10 +60,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
     FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
     Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
-@TestPropertySource(locations = "classpath:application-file.properties")
+@TestPropertySource(locations = "classpath:application-file-write.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ConfigLoadingAndRefreshFileTests {
+public class ConfigLoadingAndWriteToFileTests {
 
   @Autowired
   Anima anima;
@@ -94,29 +91,28 @@ public class ConfigLoadingAndRefreshFileTests {
 
   @Test
   public void checkConfigFileWithReload() throws InterruptedException, IOException {
-    Ar4kConfig c = new Ar4kConfig();
-    String check = UUID.randomUUID().toString();
-    c.name = "test salvataggio";
-    c.author = check;
-    SocketFactorySslConfig s1 = new SocketFactorySslConfig();
-    s1.name = "ssh config";
-    s1.note = check;
-    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
-    s2.name = "stunnel config";
-    s2.note = check;
-    c.pots.add(s1);
-    c.pots.add(s2);
-    Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING);
-    assertEquals(anima.getState(), AnimaStates.STAMINAL);
-    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
-    Thread.sleep(3000);
-    System.out.println(anima.getState());
     Thread.sleep(3000);
     assertEquals(anima.getState(), AnimaStates.RUNNING);
-    assertTrue(check.equals(anima.getRuntimeConfig().author));
-    assertTrue(check.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
-    assertTrue(check.equals(((SocketFactorySslConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+    Files.deleteIfExists(Paths.get(fileName));
+    assertTrue(!Files.exists(Paths.get(fileName)));
+    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+    Thread.sleep(30000);
+    assertTrue(Files.exists(Paths.get(fileName)));
+    System.out.println(anima.getState());
+    assertEquals(anima.getState(), AnimaStates.RUNNING);
+    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+    Thread.sleep(10000);
+  }
+
+  @Test
+  public void createConfigBase64() throws IOException {
+    Ar4kConfig config = new Ar4kConfig();
+    config.author = "andrea";
+    config.name = "base-config-with-write";
+    config.tagVersion = "tat345";
+    config.nextConfigFile = fileName;
+    config.updateFileConfig = true;
+    System.out.println(ConfigHelper.toBase64(config));
   }
 
 }

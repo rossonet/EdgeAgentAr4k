@@ -535,7 +535,7 @@ public class BeaconClient implements Runnable, AutoCloseable {
       lookOut();
     }
     // se la registrazione è in attesa di approvazione
-    if ((getStateConnection().equals(ConnectivityState.READY))
+    if ((getStateConnection().equals(ConnectivityState.READY) || getStateConnection().equals(ConnectivityState.IDLE))
         && (registerStatus.equals(StatusValue.WAIT_HUMAN) || registerStatus.equals(StatusValue.BAD)
             || registerStatus.equals(StatusValue.UNRECOGNIZED) || registerStatus.equals(StatusValue.FAULT))) {
       actionRegister();
