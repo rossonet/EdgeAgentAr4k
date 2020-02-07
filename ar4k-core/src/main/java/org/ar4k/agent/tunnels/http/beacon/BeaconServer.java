@@ -21,6 +21,7 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
@@ -65,6 +66,10 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelType;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import com.google.protobuf.ByteString;
@@ -120,6 +125,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
   private String privateKeyFileLastPart = "beacon.key";
   private String aliasBeaconServerInKeystore = "beacon-server";
   private String caChainPem = null;
+  private String filterActiveCommand = null;
+  private String filterBlackListCertRegister = null;
+  private Pattern filterBlackListCertRegisterPattern = null;
+  private Pattern filterActiveCommandPattern = null;
 
   public static class Builder {
     private Anima anima = null;
@@ -133,6 +142,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     private String privateKeyFile = null;
     private String aliasBeaconServerInKeystore = null;
     private String caChainPem = null;
+    private String filterActiveCommand = null;
+    private String filterBlackListCertRegister = null;
 
     public Anima getAnima() {
       return anima;
@@ -233,35 +244,58 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       return this;
     }
 
+    public String getFilterActiveCommand() {
+      return filterActiveCommand;
+    }
+
+    public Builder setFilterActiveCommand(String filterActiveCommand) {
+      this.filterActiveCommand = filterActiveCommand;
+      return this;
+    }
+
+    public String getFilterBlackListCertRegister() {
+      return filterBlackListCertRegister;
+    }
+
+    public Builder setFilterBlackListCertRegister(String filterBlackListCertRegister) {
+      this.filterBlackListCertRegister = filterBlackListCertRegister;
+      return this;
+    }
+
     public BeaconServer build() throws UnrecoverableKeyException {
       return new BeaconServer(anima, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery, certChainFile,
-          certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem);
+          certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem, filterActiveCommand,
+          filterBlackListCertRegister);
     }
 
   }
 
   private BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
       String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
-      String aliasBeaconServerInKeystore, String caChainPem) throws UnrecoverableKeyException {
+      String aliasBeaconServerInKeystore, String caChainPem, String filterActiveCommand,
+      String filterBlackListCertRegister) throws UnrecoverableKeyException {
     this.anima = animaTarget;
-    if (aliasBeaconServerInKeystore != null)
+    if (aliasBeaconServerInKeystore != null && !aliasBeaconServerInKeystore.isEmpty())
       this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
-    if (port > 0)
-      this.port = port;
-    if (certChainFile != null)
+    this.port = port;
+    if (certChainFile != null && !certChainFile.isEmpty())
       this.certChainFileLastPart = certChainFile;
-    if (certFile != null)
+    if (certFile != null && !certFile.isEmpty())
       this.certFileLastPart = certFile;
-    if (privateKeyFile != null)
+    if (privateKeyFile != null && !privateKeyFile.isEmpty())
       this.privateKeyFileLastPart = privateKeyFile;
-    if (caChainPem != null)
+    if (caChainPem != null && !caChainPem.isEmpty())
       this.caChainPem = caChainPem;
     this.acceptAllCerts = acceptCerts;
     this.discoveryPort = discoveryPort;
-    if (broadcastAddress != null)
+    if (broadcastAddress != null && !broadcastAddress.isEmpty())
       this.broadcastAddress = broadcastAddress;
-    if (stringDiscovery != null)
+    if (stringDiscovery != null && !stringDiscovery.isEmpty())
       this.stringDiscovery = stringDiscovery;
+    if (filterActiveCommand != null && !filterActiveCommand.isEmpty())
+      this.filterActiveCommand = filterActiveCommand;
+    if (filterBlackListCertRegister != null && !filterBlackListCertRegister.isEmpty())
+      this.filterBlackListCertRegister = filterBlackListCertRegister;
     getBeaconServer(animaTarget, port);
   }
 
@@ -314,25 +348,53 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
           logger.trace(" - " + i.toString());
         }
         if (sslSession.isValid()) {
-          logger.trace("session ok");
+          authSslOk(serverCall, metadata);
         } else {
-          if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
-            logger.debug("session not ok but register call");
+          authSslNotFound(serverCall, metadata);
+        }
+      } catch (SSLPeerUnverifiedException e) {
+        authSslNotFound(serverCall, metadata);
+      }
+      return serverCallHandler.startCall(serverCall, metadata);
+    }
+
+    private <ReqT, RespT> void authSslOk(ServerCall<ReqT, RespT> serverCall, Metadata metadata) {
+      if (filterActiveCommand != null && !filterActiveCommand.isEmpty()) {
+        if (filterActiveCommandPattern == null) {
+          filterActiveCommandPattern = Pattern.compile(filterActiveCommand);
+        }
+        String metodo = serverCall.getMethodDescriptor().getFullMethodName();
+        String name = "";
+        try {
+          name = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION).getPeerPrincipal().getName();
+        } catch (SSLPeerUnverifiedException e) {
+          logger.logException(e);
+        }
+        if (metodo.equals("beacon.RpcServiceV1/ListCommands") || metodo.equals("beacon.RpcServiceV1/CompleteCommand")
+            || metodo.equals("beacon.RpcServiceV1/ElaborateMessage") || metodo.equals("beacon.RpcServiceV1/KickAgent")
+            || metodo.equals("beacon.RpcServiceV1/ApproveAgentRequest")
+            || metodo.equals("beacon.RpcServiceV1/ListAgents")
+            || metodo.equals("beacon.RpcServiceV1/ListAgentsRequestComplete")
+            || metodo.equals("beacon.RpcServiceV1/ListAgentsRequestToDo")) {
+          if (filterActiveCommandPattern.matcher(name).matches()) {
+            logger.trace("session ok");
           } else {
-            logger.info("session not ok ");
+            logger.info("client not authorized." + name + " not matches the regex filter " + filterActiveCommand);
             io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
             serverCall.close(status, metadata);
           }
         }
-      } catch (SSLPeerUnverifiedException e) {
-        if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
-          logger.info("session not ok, but to " + serverCall.getMethodDescriptor().getFullMethodName());
-        } else {
-          io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
-          serverCall.close(status, metadata);
-        }
       }
-      return serverCallHandler.startCall(serverCall, metadata);
+    }
+
+    private <ReqT, RespT> void authSslNotFound(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata) {
+      if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
+        logger.debug("session not ok but register call");
+      } else {
+        logger.info("session not ok");
+        io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
+        serverCall.close(status, metadata);
+      }
     }
   }
 
@@ -653,9 +715,26 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       String requestAlias = "beacon-" + UUID.randomUUID().toString().replace("-", "");
       byte[] data = Base64.getDecoder().decode(requestCsr);
       PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
-      logger.debug("SIGN CSR " + csrDecoded.getSubject());
-      return anima.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, SIGN_TIME,
-          anima.getMyAliasCertInKeystore());
+      if (!checkRegexOnX509(csrDecoded.getSubject())) {
+        logger.debug("SIGN CSR " + csrDecoded.getSubject());
+        return anima.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, SIGN_TIME,
+            anima.getMyAliasCertInKeystore());
+      } else
+        logger.warn("\nNOT SIGN CERT\n" + csrDecoded.getSubject() + "\nbeacause it matches the blacklist ["
+            + filterBlackListCertRegister + "]");
+      return null;
+    }
+
+    private boolean checkRegexOnX509(X500Name subject) {
+      if (filterBlackListCertRegister != null && !filterBlackListCertRegister.isEmpty()) {
+        if (filterBlackListCertRegisterPattern == null) {
+          filterBlackListCertRegisterPattern = Pattern.compile(filterBlackListCertRegister);
+        }
+        RDN cn = subject.getRDNs(BCStyle.CN)[0];
+        return filterBlackListCertRegisterPattern.matcher(IETFUtils.valueToString(cn.getFirst().getValue())).matches();
+      } else {
+        return false;
+      }
     }
 
     @Override

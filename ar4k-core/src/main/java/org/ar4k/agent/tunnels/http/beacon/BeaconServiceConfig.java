@@ -37,6 +37,8 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   public String broadcastAddress = "255.255.255.255";
   @Parameter(names = "--acceptAllCerts", description = "in registration phase accept all cetificates or use the auth flow")
   public boolean acceptAllCerts = true;
+  @Parameter(names = "--filterBlackListCertRegister", description = "regex to filter the CN of client. If it matches, the cert sign is disabled", required = false)
+  public String filterBlackListCertRegister = null;
   @Parameter(names = "--stringDiscovery", description = "the message in the discovery flash")
   public String stringDiscovery = "AR4K-BEACON-" + UUID.randomUUID().toString();
   @Parameter(names = "--certChainFile", description = "file for storing the ca for the server")
@@ -49,6 +51,8 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   public String aliasBeaconServerInKeystore = "beacon-server";
   @Parameter(names = "--caChainPem", description = "the ca chain for the server in pem format")
   public String caChainPem = null;
+  @Parameter(names = "--filterActiveCommand", description = "regex to filter the CN of client. If it matches, the action are enabled", required = false)
+  public String filterActiveCommand = ".*";
 
   @Override
   public BeaconService instantiate() {
@@ -60,9 +64,11 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
   @Override
   public String toString() {
     return "BeaconServiceConfig [port=" + port + ", discoveryPort=" + discoveryPort + ", broadcastAddress="
-        + broadcastAddress + ", acceptAllCerts=" + acceptAllCerts + ", stringDiscovery=" + stringDiscovery
-        + ", certChainFile=" + certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
-        + ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
+        + broadcastAddress + ", acceptAllCerts=" + acceptAllCerts + ", filterBlackListCertRegister="
+        + filterBlackListCertRegister + ", stringDiscovery=" + stringDiscovery + ", certChainFile=" + certChainFile
+        + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile + ", aliasBeaconServerInKeystore="
+        + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + ", filterActiveCommand=" + filterActiveCommand
+        + "]";
   }
 
   @Override

@@ -74,7 +74,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
   public List<String> groups = new ArrayList<>();
 
   /**
-   * eventuali porte riservate per il servizion
+   * eventuali porte riservate per il servizio
    */
   @Parameter(names = "--ports", description = "service tcp port reserved for this host (multi selection)", variableArity = true, required = false)
   public List<Integer> ports = new ArrayList<>();

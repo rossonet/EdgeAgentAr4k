@@ -463,7 +463,7 @@ public class RemoteControlOverSsh {
     Thread.sleep(2000);
     System.out.println("try to send package");
     clientTCP = executor.submit(clientRunner);
-    Thread.sleep(60000);
+    Thread.sleep(120000);
     assertTrue(completed);
   }
 

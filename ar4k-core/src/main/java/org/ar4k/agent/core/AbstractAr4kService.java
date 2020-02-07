@@ -191,22 +191,22 @@ public abstract class AbstractAr4kService implements ServiceComponent<Ar4kCompon
   }
 
   private ServiceStatus getUpdateFromPot() {
-    final Future<ServiceStatus> callFuture = executor.submit(new Callable<ServiceStatus>() {
+    final Future<ServiceStatus> callFuture = (executor != null) ? (executor.submit(new Callable<ServiceStatus>() {
       @Override
       public ServiceStatus call() {
         try {
           return pot.updateAndGetStatus();
         } catch (Exception e) {
-          logger.logException("in service " + pot.getConfiguration() + " update", e);
+          logger.info("in service " + pot.getConfiguration() + " update\n" + Ar4kLogger.stackTraceToString(e, 6));
           notifyException();
           return ServiceStatus.FAULT;
         }
       }
-    });
+    })) : null;
     try {
       return callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException | ExecutionException | TimeoutException e) {
-      logger.logException("service " + pot.getConfiguration() + " timeout during update", e);
+    } catch (Exception e) {
+      logger.info("service " + pot.getConfiguration() + " during update\n" + Ar4kLogger.stackTraceToString(e, 6));
       notifyException();
       return ServiceStatus.FAULT;
     }
