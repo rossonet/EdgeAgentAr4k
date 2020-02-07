@@ -42,4 +42,14 @@ public interface ElaborateMessageRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getCommandMessageBytes();
+
+  /**
+   * <code>string otp = 4;</code>
+   */
+  java.lang.String getOtp();
+  /**
+   * <code>string otp = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getOtpBytes();
 }

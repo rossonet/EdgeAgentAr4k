@@ -17,6 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private Agent() {
     agentUniqueName_ = "";
+    shortDescription_ = "";
+    jsonHardwareInfo_ = "";
   }
 
   @java.lang.Override
@@ -47,6 +49,31 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             agentUniqueName_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            shortDescription_ = s;
+            break;
+          }
+          case 26: {
+            org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder subBuilder = null;
+            if (registerData_ != null) {
+              subBuilder = registerData_.toBuilder();
+            }
+            registerData_ = input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(registerData_);
+              registerData_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            jsonHardwareInfo_ = s;
             break;
           }
           default: {
@@ -115,6 +142,95 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SHORTDESCRIPTION_FIELD_NUMBER = 2;
+  private volatile java.lang.Object shortDescription_;
+  /**
+   * <code>string shortDescription = 2;</code>
+   */
+  public java.lang.String getShortDescription() {
+    java.lang.Object ref = shortDescription_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      shortDescription_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string shortDescription = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getShortDescriptionBytes() {
+    java.lang.Object ref = shortDescription_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      shortDescription_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int REGISTERDATA_FIELD_NUMBER = 3;
+  private org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply registerData_;
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  public boolean hasRegisterData() {
+    return registerData_ != null;
+  }
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply getRegisterData() {
+    return registerData_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance() : registerData_;
+  }
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder getRegisterDataOrBuilder() {
+    return getRegisterData();
+  }
+
+  public static final int JSONHARDWAREINFO_FIELD_NUMBER = 4;
+  private volatile java.lang.Object jsonHardwareInfo_;
+  /**
+   * <code>string jsonHardwareInfo = 4;</code>
+   */
+  public java.lang.String getJsonHardwareInfo() {
+    java.lang.Object ref = jsonHardwareInfo_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      jsonHardwareInfo_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string jsonHardwareInfo = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getJsonHardwareInfoBytes() {
+    java.lang.Object ref = jsonHardwareInfo_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      jsonHardwareInfo_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -132,6 +248,15 @@ private static final long serialVersionUID = 0L;
     if (!getAgentUniqueNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, agentUniqueName_);
     }
+    if (!getShortDescriptionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, shortDescription_);
+    }
+    if (registerData_ != null) {
+      output.writeMessage(3, getRegisterData());
+    }
+    if (!getJsonHardwareInfoBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, jsonHardwareInfo_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -143,6 +268,16 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getAgentUniqueNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, agentUniqueName_);
+    }
+    if (!getShortDescriptionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, shortDescription_);
+    }
+    if (registerData_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getRegisterData());
+    }
+    if (!getJsonHardwareInfoBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, jsonHardwareInfo_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -161,6 +296,15 @@ private static final long serialVersionUID = 0L;
 
     if (!getAgentUniqueName()
         .equals(other.getAgentUniqueName())) return false;
+    if (!getShortDescription()
+        .equals(other.getShortDescription())) return false;
+    if (hasRegisterData() != other.hasRegisterData()) return false;
+    if (hasRegisterData()) {
+      if (!getRegisterData()
+          .equals(other.getRegisterData())) return false;
+    }
+    if (!getJsonHardwareInfo()
+        .equals(other.getJsonHardwareInfo())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -174,6 +318,14 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + AGENTUNIQUENAME_FIELD_NUMBER;
     hash = (53 * hash) + getAgentUniqueName().hashCode();
+    hash = (37 * hash) + SHORTDESCRIPTION_FIELD_NUMBER;
+    hash = (53 * hash) + getShortDescription().hashCode();
+    if (hasRegisterData()) {
+      hash = (37 * hash) + REGISTERDATA_FIELD_NUMBER;
+      hash = (53 * hash) + getRegisterData().hashCode();
+    }
+    hash = (37 * hash) + JSONHARDWAREINFO_FIELD_NUMBER;
+    hash = (53 * hash) + getJsonHardwareInfo().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -309,6 +461,16 @@ private static final long serialVersionUID = 0L;
       super.clear();
       agentUniqueName_ = "";
 
+      shortDescription_ = "";
+
+      if (registerDataBuilder_ == null) {
+        registerData_ = null;
+      } else {
+        registerData_ = null;
+        registerDataBuilder_ = null;
+      }
+      jsonHardwareInfo_ = "";
+
       return this;
     }
 
@@ -336,6 +498,13 @@ private static final long serialVersionUID = 0L;
     public org.ar4k.agent.tunnels.http.grpc.beacon.Agent buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.Agent result = new org.ar4k.agent.tunnels.http.grpc.beacon.Agent(this);
       result.agentUniqueName_ = agentUniqueName_;
+      result.shortDescription_ = shortDescription_;
+      if (registerDataBuilder_ == null) {
+        result.registerData_ = registerData_;
+      } else {
+        result.registerData_ = registerDataBuilder_.build();
+      }
+      result.jsonHardwareInfo_ = jsonHardwareInfo_;
       onBuilt();
       return result;
     }
@@ -386,6 +555,17 @@ private static final long serialVersionUID = 0L;
       if (other == org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()) return this;
       if (!other.getAgentUniqueName().isEmpty()) {
         agentUniqueName_ = other.agentUniqueName_;
+        onChanged();
+      }
+      if (!other.getShortDescription().isEmpty()) {
+        shortDescription_ = other.shortDescription_;
+        onChanged();
+      }
+      if (other.hasRegisterData()) {
+        mergeRegisterData(other.getRegisterData());
+      }
+      if (!other.getJsonHardwareInfo().isEmpty()) {
+        jsonHardwareInfo_ = other.jsonHardwareInfo_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -482,6 +662,261 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       agentUniqueName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object shortDescription_ = "";
+    /**
+     * <code>string shortDescription = 2;</code>
+     */
+    public java.lang.String getShortDescription() {
+      java.lang.Object ref = shortDescription_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        shortDescription_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string shortDescription = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getShortDescriptionBytes() {
+      java.lang.Object ref = shortDescription_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        shortDescription_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string shortDescription = 2;</code>
+     */
+    public Builder setShortDescription(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      shortDescription_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string shortDescription = 2;</code>
+     */
+    public Builder clearShortDescription() {
+      
+      shortDescription_ = getDefaultInstance().getShortDescription();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string shortDescription = 2;</code>
+     */
+    public Builder setShortDescriptionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      shortDescription_ = value;
+      onChanged();
+      return this;
+    }
+
+    private org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply registerData_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder> registerDataBuilder_;
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public boolean hasRegisterData() {
+      return registerDataBuilder_ != null || registerData_ != null;
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply getRegisterData() {
+      if (registerDataBuilder_ == null) {
+        return registerData_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance() : registerData_;
+      } else {
+        return registerDataBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public Builder setRegisterData(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply value) {
+      if (registerDataBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        registerData_ = value;
+        onChanged();
+      } else {
+        registerDataBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public Builder setRegisterData(
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder builderForValue) {
+      if (registerDataBuilder_ == null) {
+        registerData_ = builderForValue.build();
+        onChanged();
+      } else {
+        registerDataBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public Builder mergeRegisterData(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply value) {
+      if (registerDataBuilder_ == null) {
+        if (registerData_ != null) {
+          registerData_ =
+            org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.newBuilder(registerData_).mergeFrom(value).buildPartial();
+        } else {
+          registerData_ = value;
+        }
+        onChanged();
+      } else {
+        registerDataBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public Builder clearRegisterData() {
+      if (registerDataBuilder_ == null) {
+        registerData_ = null;
+        onChanged();
+      } else {
+        registerData_ = null;
+        registerDataBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder getRegisterDataBuilder() {
+      
+      onChanged();
+      return getRegisterDataFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder getRegisterDataOrBuilder() {
+      if (registerDataBuilder_ != null) {
+        return registerDataBuilder_.getMessageOrBuilder();
+      } else {
+        return registerData_ == null ?
+            org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.getDefaultInstance() : registerData_;
+      }
+    }
+    /**
+     * <code>.beacon.RegisterReply registerData = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder> 
+        getRegisterDataFieldBuilder() {
+      if (registerDataBuilder_ == null) {
+        registerDataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder>(
+                getRegisterData(),
+                getParentForChildren(),
+                isClean());
+        registerData_ = null;
+      }
+      return registerDataBuilder_;
+    }
+
+    private java.lang.Object jsonHardwareInfo_ = "";
+    /**
+     * <code>string jsonHardwareInfo = 4;</code>
+     */
+    public java.lang.String getJsonHardwareInfo() {
+      java.lang.Object ref = jsonHardwareInfo_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        jsonHardwareInfo_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string jsonHardwareInfo = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getJsonHardwareInfoBytes() {
+      java.lang.Object ref = jsonHardwareInfo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        jsonHardwareInfo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string jsonHardwareInfo = 4;</code>
+     */
+    public Builder setJsonHardwareInfo(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      jsonHardwareInfo_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string jsonHardwareInfo = 4;</code>
+     */
+    public Builder clearJsonHardwareInfo() {
+      
+      jsonHardwareInfo_ = getDefaultInstance().getJsonHardwareInfo();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string jsonHardwareInfo = 4;</code>
+     */
+    public Builder setJsonHardwareInfoBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      jsonHardwareInfo_ = value;
       onChanged();
       return this;
     }

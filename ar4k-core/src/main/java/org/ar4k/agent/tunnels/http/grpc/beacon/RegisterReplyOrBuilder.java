@@ -62,4 +62,14 @@ public interface RegisterReplyOrBuilder extends
    * <code>int64 timestampRegistration = 6;</code>
    */
   long getTimestampRegistration();
+
+  /**
+   * <code>string otpSeed = 7;</code>
+   */
+  java.lang.String getOtpSeed();
+  /**
+   * <code>string otpSeed = 7;</code>
+   */
+  com.google.protobuf.ByteString
+      getOtpSeedBytes();
 }

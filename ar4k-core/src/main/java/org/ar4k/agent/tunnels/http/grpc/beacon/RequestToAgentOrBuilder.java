@@ -90,4 +90,14 @@ public interface RequestToAgentOrBuilder extends
    * <code>.beacon.RequestTunnelMessage tunnelRequest = 8;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessageOrBuilder getTunnelRequestOrBuilder();
+
+  /**
+   * <code>string otpToken = 9;</code>
+   */
+  java.lang.String getOtpToken();
+  /**
+   * <code>string otpToken = 9;</code>
+   */
+  com.google.protobuf.ByteString
+      getOtpTokenBytes();
 }

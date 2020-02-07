@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private ElaborateMessageRequest() {
     commandMessage_ = "";
+    otp_ = "";
   }
 
   @java.lang.Override
@@ -73,6 +74,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             commandMessage_ = s;
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            otp_ = s;
             break;
           }
           default: {
@@ -183,6 +190,40 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int OTP_FIELD_NUMBER = 4;
+  private volatile java.lang.Object otp_;
+  /**
+   * <code>string otp = 4;</code>
+   */
+  public java.lang.String getOtp() {
+    java.lang.Object ref = otp_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      otp_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string otp = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getOtpBytes() {
+    java.lang.Object ref = otp_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      otp_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -206,6 +247,9 @@ private static final long serialVersionUID = 0L;
     if (!getCommandMessageBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, commandMessage_);
     }
+    if (!getOtpBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, otp_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -225,6 +269,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getCommandMessageBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, commandMessage_);
+    }
+    if (!getOtpBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, otp_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -253,6 +300,8 @@ private static final long serialVersionUID = 0L;
     }
     if (!getCommandMessage()
         .equals(other.getCommandMessage())) return false;
+    if (!getOtp()
+        .equals(other.getOtp())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -274,6 +323,8 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + COMMANDMESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getCommandMessage().hashCode();
+    hash = (37 * hash) + OTP_FIELD_NUMBER;
+    hash = (53 * hash) + getOtp().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -421,6 +472,8 @@ private static final long serialVersionUID = 0L;
       }
       commandMessage_ = "";
 
+      otp_ = "";
+
       return this;
     }
 
@@ -458,6 +511,7 @@ private static final long serialVersionUID = 0L;
         result.agentSender_ = agentSenderBuilder_.build();
       }
       result.commandMessage_ = commandMessage_;
+      result.otp_ = otp_;
       onBuilt();
       return result;
     }
@@ -514,6 +568,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getCommandMessage().isEmpty()) {
         commandMessage_ = other.commandMessage_;
+        onChanged();
+      }
+      if (!other.getOtp().isEmpty()) {
+        otp_ = other.otp_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -844,6 +902,75 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       commandMessage_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object otp_ = "";
+    /**
+     * <code>string otp = 4;</code>
+     */
+    public java.lang.String getOtp() {
+      java.lang.Object ref = otp_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        otp_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string otp = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOtpBytes() {
+      java.lang.Object ref = otp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        otp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string otp = 4;</code>
+     */
+    public Builder setOtp(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      otp_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string otp = 4;</code>
+     */
+    public Builder clearOtp() {
+      
+      otp_ = getDefaultInstance().getOtp();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string otp = 4;</code>
+     */
+    public Builder setOtpBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      otp_ = value;
       onChanged();
       return this;
     }

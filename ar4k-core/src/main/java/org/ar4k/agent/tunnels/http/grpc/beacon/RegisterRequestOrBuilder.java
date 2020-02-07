@@ -75,4 +75,14 @@ public interface RegisterRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getJsonHealthBytes();
+
+  /**
+   * <code>string shortDescription = 6;</code>
+   */
+  java.lang.String getShortDescription();
+  /**
+   * <code>string shortDescription = 6;</code>
+   */
+  com.google.protobuf.ByteString
+      getShortDescriptionBytes();
 }

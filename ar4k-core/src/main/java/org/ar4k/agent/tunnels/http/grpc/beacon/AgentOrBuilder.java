@@ -16,4 +16,37 @@ public interface AgentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getAgentUniqueNameBytes();
+
+  /**
+   * <code>string shortDescription = 2;</code>
+   */
+  java.lang.String getShortDescription();
+  /**
+   * <code>string shortDescription = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getShortDescriptionBytes();
+
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  boolean hasRegisterData();
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply getRegisterData();
+  /**
+   * <code>.beacon.RegisterReply registerData = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReplyOrBuilder getRegisterDataOrBuilder();
+
+  /**
+   * <code>string jsonHardwareInfo = 4;</code>
+   */
+  java.lang.String getJsonHardwareInfo();
+  /**
+   * <code>string jsonHardwareInfo = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getJsonHardwareInfoBytes();
 }

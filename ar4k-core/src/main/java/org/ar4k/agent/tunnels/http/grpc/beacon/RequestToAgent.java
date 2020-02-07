@@ -20,6 +20,7 @@ private static final long serialVersionUID = 0L;
     uniqueIdRequest_ = "";
     requestCommand_ = "";
     words_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    otpToken_ = "";
   }
 
   @java.lang.Override
@@ -107,6 +108,12 @@ private static final long serialVersionUID = 0L;
               tunnelRequest_ = subBuilder.buildPartial();
             }
 
+            break;
+          }
+          case 74: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            otpToken_ = s;
             break;
           }
           default: {
@@ -319,6 +326,40 @@ private static final long serialVersionUID = 0L;
     return getTunnelRequest();
   }
 
+  public static final int OTPTOKEN_FIELD_NUMBER = 9;
+  private volatile java.lang.Object otpToken_;
+  /**
+   * <code>string otpToken = 9;</code>
+   */
+  public java.lang.String getOtpToken() {
+    java.lang.Object ref = otpToken_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      otpToken_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string otpToken = 9;</code>
+   */
+  public com.google.protobuf.ByteString
+      getOtpTokenBytes() {
+    java.lang.Object ref = otpToken_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      otpToken_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -356,6 +397,9 @@ private static final long serialVersionUID = 0L;
     }
     if (tunnelRequest_ != null) {
       output.writeMessage(8, getTunnelRequest());
+    }
+    if (!getOtpTokenBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, otpToken_);
     }
     unknownFields.writeTo(output);
   }
@@ -400,6 +444,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(8, getTunnelRequest());
     }
+    if (!getOtpTokenBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, otpToken_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -436,6 +483,8 @@ private static final long serialVersionUID = 0L;
       if (!getTunnelRequest()
           .equals(other.getTunnelRequest())) return false;
     }
+    if (!getOtpToken()
+        .equals(other.getOtpToken())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -469,6 +518,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + TUNNELREQUEST_FIELD_NUMBER;
       hash = (53 * hash) + getTunnelRequest().hashCode();
     }
+    hash = (37 * hash) + OTPTOKEN_FIELD_NUMBER;
+    hash = (53 * hash) + getOtpToken().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -626,6 +677,8 @@ private static final long serialVersionUID = 0L;
         tunnelRequest_ = null;
         tunnelRequestBuilder_ = null;
       }
+      otpToken_ = "";
+
       return this;
     }
 
@@ -674,6 +727,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.tunnelRequest_ = tunnelRequestBuilder_.build();
       }
+      result.otpToken_ = otpToken_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -755,6 +809,10 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasTunnelRequest()) {
         mergeTunnelRequest(other.getTunnelRequest());
+      }
+      if (!other.getOtpToken().isEmpty()) {
+        otpToken_ = other.otpToken_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1347,6 +1405,75 @@ private static final long serialVersionUID = 0L;
         tunnelRequest_ = null;
       }
       return tunnelRequestBuilder_;
+    }
+
+    private java.lang.Object otpToken_ = "";
+    /**
+     * <code>string otpToken = 9;</code>
+     */
+    public java.lang.String getOtpToken() {
+      java.lang.Object ref = otpToken_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        otpToken_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string otpToken = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOtpTokenBytes() {
+      java.lang.Object ref = otpToken_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        otpToken_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string otpToken = 9;</code>
+     */
+    public Builder setOtpToken(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      otpToken_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string otpToken = 9;</code>
+     */
+    public Builder clearOtpToken() {
+      
+      otpToken_ = getDefaultInstance().getOtpToken();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string otpToken = 9;</code>
+     */
+    public Builder setOtpTokenBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      otpToken_ = value;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

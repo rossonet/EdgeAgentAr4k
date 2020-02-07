@@ -41,6 +41,7 @@ message RegisterRequest {
   string displayKey = 3;  // password key show in the output of Jar agent
   Timestamp time = 4;
   string jsonHealth = 5;
+  string shortDescription = 6;
 }
 
 message Timestamp {
@@ -62,6 +63,7 @@ message RegisterReply {
   bytes ca = 4;
   Status statusRegistration = 5;
   int64 timestampRegistration = 6;
+  string otpSeed = 7;
 }
 
 message ListAgentsRequestReply {
@@ -105,6 +107,9 @@ enum AnimaStates {
  
 message Agent {
   string agentUniqueName = 1;
+  string shortDescription = 2;
+  RegisterReply registerData = 3;
+  string jsonHardwareInfo = 4;
 }
  
 message ConfigReply {
@@ -131,6 +136,7 @@ message RequestToAgent {
   int32 wordIndex = 6;
   int32 position = 7;
   RequestTunnelMessage tunnelRequest = 8;
+  string otpToken = 9;
 }
 
 enum CommandType {
@@ -207,6 +213,7 @@ message ElaborateMessageRequest {
   Agent agentTarget = 1;
   Agent agentSender = 2;
   string commandMessage = 3;
+  string otp = 4;
 }
 
 message ElaborateMessageReply {

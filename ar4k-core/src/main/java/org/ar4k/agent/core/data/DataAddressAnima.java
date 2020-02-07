@@ -34,7 +34,7 @@ public class DataAddressAnima extends DataAddress {
   private long delay = 35000L;
   private long period = 15000L;
 
-  private transient Timer timer = new Timer("TimerHealth");
+  private transient Timer timer = new Timer("TimerHealthDataAddress");
 
   private transient Set<DataAddress> slaves = new HashSet<>();
 

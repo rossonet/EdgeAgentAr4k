@@ -20,6 +20,7 @@ private static final long serialVersionUID = 0L;
     requestCsr_ = "";
     displayKey_ = "";
     jsonHealth_ = "";
+    shortDescription_ = "";
   }
 
   @java.lang.Override
@@ -81,6 +82,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             jsonHealth_ = s;
+            break;
+          }
+          case 50: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            shortDescription_ = s;
             break;
           }
           default: {
@@ -288,6 +295,40 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SHORTDESCRIPTION_FIELD_NUMBER = 6;
+  private volatile java.lang.Object shortDescription_;
+  /**
+   * <code>string shortDescription = 6;</code>
+   */
+  public java.lang.String getShortDescription() {
+    java.lang.Object ref = shortDescription_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      shortDescription_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string shortDescription = 6;</code>
+   */
+  public com.google.protobuf.ByteString
+      getShortDescriptionBytes() {
+    java.lang.Object ref = shortDescription_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      shortDescription_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -317,6 +358,9 @@ private static final long serialVersionUID = 0L;
     if (!getJsonHealthBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, jsonHealth_);
     }
+    if (!getShortDescriptionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, shortDescription_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -341,6 +385,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHealthBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, jsonHealth_);
+    }
+    if (!getShortDescriptionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, shortDescription_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -370,6 +417,8 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHealth()
         .equals(other.getJsonHealth())) return false;
+    if (!getShortDescription()
+        .equals(other.getShortDescription())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -393,6 +442,8 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + JSONHEALTH_FIELD_NUMBER;
     hash = (53 * hash) + getJsonHealth().hashCode();
+    hash = (37 * hash) + SHORTDESCRIPTION_FIELD_NUMBER;
+    hash = (53 * hash) + getShortDescription().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -540,6 +591,8 @@ private static final long serialVersionUID = 0L;
       }
       jsonHealth_ = "";
 
+      shortDescription_ = "";
+
       return this;
     }
 
@@ -575,6 +628,7 @@ private static final long serialVersionUID = 0L;
         result.time_ = timeBuilder_.build();
       }
       result.jsonHealth_ = jsonHealth_;
+      result.shortDescription_ = shortDescription_;
       onBuilt();
       return result;
     }
@@ -640,6 +694,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getJsonHealth().isEmpty()) {
         jsonHealth_ = other.jsonHealth_;
+        onChanged();
+      }
+      if (!other.getShortDescription().isEmpty()) {
+        shortDescription_ = other.shortDescription_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -1100,6 +1158,75 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       jsonHealth_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object shortDescription_ = "";
+    /**
+     * <code>string shortDescription = 6;</code>
+     */
+    public java.lang.String getShortDescription() {
+      java.lang.Object ref = shortDescription_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        shortDescription_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string shortDescription = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getShortDescriptionBytes() {
+      java.lang.Object ref = shortDescription_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        shortDescription_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string shortDescription = 6;</code>
+     */
+    public Builder setShortDescription(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      shortDescription_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string shortDescription = 6;</code>
+     */
+    public Builder clearShortDescription() {
+      
+      shortDescription_ = getDefaultInstance().getShortDescription();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string shortDescription = 6;</code>
+     */
+    public Builder setShortDescriptionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      shortDescription_ = value;
       onChanged();
       return this;
     }
