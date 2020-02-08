@@ -8,7 +8,7 @@ src/main/resources/static
 *.ar4k.conf
 tmp
 *.log
-a.log.*.gz
+log.*.gz
 
 ### OUTPUT ###
 spring-shell.log

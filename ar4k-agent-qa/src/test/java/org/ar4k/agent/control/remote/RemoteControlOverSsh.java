@@ -469,7 +469,7 @@ public class RemoteControlOverSsh {
 
   protected void updateClientCounter(int valueNew) {
     // System.out.println("counter: " + valueNew);
-    if (valueNew > 42) {
+    if (valueNew > 52) {
       completed = true;
       clientTCP.cancel(true);
       serverTCP.cancel(true);

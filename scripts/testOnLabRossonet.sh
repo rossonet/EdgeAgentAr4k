@@ -9,11 +9,11 @@ clear;clear
 #./gradlew :core:test --tests "org.ar4k.gw.studio.OpenNlp.testConjugationOfIrregularVerb" -info
 #./gradlew :core:test --tests "org.ar4k.gw.studio.OpenNlp.printItalianModel" -info
 #./gradlew :core:test --tests "org.ar4k.gw.studio.OpenNlp.testTokenizer" -info
-#./gradlew :core:test --tests "org.ar4k.gw.studio.OrientDb.testStartStopDb" -info
+./gradlew :core:test --tests "org.ar4k.agent.video.VideoTest" -debug
 #./gradlew :core:test -info
 #./gradlew :cortex:test -info
 #./gradlew :iot:test -info
 #./gradlew :terminal:test -info
 #./gradlew :reactor-web:test -info
 #./gradlew :agent:test -info
-./gradlew clean test -info #--stacktrace
+#./gradlew clean test -info #--stacktrace
