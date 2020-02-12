@@ -1090,7 +1090,7 @@ public class Anima
       @Override
       public void run() {
         Ar4kConfig newTargetConfig = webConfigDownload(nextConfigWeb, starterProperties.getKeystoreConfigAlias());
-        checkPolledConfig(newTargetConfig);
+        elaborateNewConfig(newTargetConfig);
       }
     };
   }
@@ -1100,7 +1100,7 @@ public class Anima
       @Override
       public void run() {
         Ar4kConfig newTargetConfig = dnsConfigDownload(nextConfigDns, starterProperties.getKeystoreConfigAlias());
-        checkPolledConfig(newTargetConfig);
+        elaborateNewConfig(newTargetConfig);
       }
     };
   }
@@ -1110,12 +1110,12 @@ public class Anima
       @Override
       public void run() {
         Ar4kConfig newTargetConfig = loadConfigFromFile(nextConfigFile, starterProperties.getKeystoreConfigAlias());
-        checkPolledConfig(newTargetConfig);
+        elaborateNewConfig(newTargetConfig);
       }
     };
   }
 
-  private final void checkPolledConfig(Ar4kConfig newTargetConfig) {
+  public final void elaborateNewConfig(Ar4kConfig newTargetConfig) {
     if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
       logger.warn("Found new config " + newTargetConfig.toString());
       reloadConfig = newTargetConfig;

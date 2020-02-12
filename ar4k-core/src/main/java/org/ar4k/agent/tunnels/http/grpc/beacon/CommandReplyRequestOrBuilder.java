@@ -93,4 +93,19 @@ public interface CommandReplyRequestOrBuilder extends
    * <code>.beacon.ResponseNetworkChannel tunnelReply = 6;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannelOrBuilder getTunnelReplyOrBuilder();
+
+  /**
+   * <code>string base64Config = 7;</code>
+   */
+  java.lang.String getBase64Config();
+  /**
+   * <code>string base64Config = 7;</code>
+   */
+  com.google.protobuf.ByteString
+      getBase64ConfigBytes();
+
+  /**
+   * <code>int64 restartAt = 8;</code>
+   */
+  long getRestartAt();
 }

@@ -19,6 +19,7 @@ private static final long serialVersionUID = 0L;
     uniqueIdRequest_ = "";
     replies_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    base64Config_ = "";
   }
 
   @java.lang.Override
@@ -106,6 +107,17 @@ private static final long serialVersionUID = 0L;
               tunnelReply_ = subBuilder.buildPartial();
             }
 
+            break;
+          }
+          case 58: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            base64Config_ = s;
+            break;
+          }
+          case 64: {
+
+            restartAt_ = input.readInt64();
             break;
           }
           default: {
@@ -302,6 +314,49 @@ private static final long serialVersionUID = 0L;
     return getTunnelReply();
   }
 
+  public static final int BASE64CONFIG_FIELD_NUMBER = 7;
+  private volatile java.lang.Object base64Config_;
+  /**
+   * <code>string base64Config = 7;</code>
+   */
+  public java.lang.String getBase64Config() {
+    java.lang.Object ref = base64Config_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      base64Config_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string base64Config = 7;</code>
+   */
+  public com.google.protobuf.ByteString
+      getBase64ConfigBytes() {
+    java.lang.Object ref = base64Config_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      base64Config_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int RESTARTAT_FIELD_NUMBER = 8;
+  private long restartAt_;
+  /**
+   * <code>int64 restartAt = 8;</code>
+   */
+  public long getRestartAt() {
+    return restartAt_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -333,6 +388,12 @@ private static final long serialVersionUID = 0L;
     }
     if (tunnelReply_ != null) {
       output.writeMessage(6, getTunnelReply());
+    }
+    if (!getBase64ConfigBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, base64Config_);
+    }
+    if (restartAt_ != 0L) {
+      output.writeInt64(8, restartAt_);
     }
     unknownFields.writeTo(output);
   }
@@ -374,6 +435,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, getTunnelReply());
     }
+    if (!getBase64ConfigBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, base64Config_);
+    }
+    if (restartAt_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(8, restartAt_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -410,6 +478,10 @@ private static final long serialVersionUID = 0L;
       if (!getTunnelReply()
           .equals(other.getTunnelReply())) return false;
     }
+    if (!getBase64Config()
+        .equals(other.getBase64Config())) return false;
+    if (getRestartAt()
+        != other.getRestartAt()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -443,6 +515,11 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + TUNNELREPLY_FIELD_NUMBER;
       hash = (53 * hash) + getTunnelReply().hashCode();
     }
+    hash = (37 * hash) + BASE64CONFIG_FIELD_NUMBER;
+    hash = (53 * hash) + getBase64Config().hashCode();
+    hash = (37 * hash) + RESTARTAT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getRestartAt());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -600,6 +677,10 @@ private static final long serialVersionUID = 0L;
         tunnelReply_ = null;
         tunnelReplyBuilder_ = null;
       }
+      base64Config_ = "";
+
+      restartAt_ = 0L;
+
       return this;
     }
 
@@ -654,6 +735,8 @@ private static final long serialVersionUID = 0L;
       } else {
         result.tunnelReply_ = tunnelReplyBuilder_.build();
       }
+      result.base64Config_ = base64Config_;
+      result.restartAt_ = restartAt_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -735,6 +818,13 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasTunnelReply()) {
         mergeTunnelReply(other.getTunnelReply());
+      }
+      if (!other.getBase64Config().isEmpty()) {
+        base64Config_ = other.base64Config_;
+        onChanged();
+      }
+      if (other.getRestartAt() != 0L) {
+        setRestartAt(other.getRestartAt());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1372,6 +1462,101 @@ private static final long serialVersionUID = 0L;
         tunnelReply_ = null;
       }
       return tunnelReplyBuilder_;
+    }
+
+    private java.lang.Object base64Config_ = "";
+    /**
+     * <code>string base64Config = 7;</code>
+     */
+    public java.lang.String getBase64Config() {
+      java.lang.Object ref = base64Config_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        base64Config_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string base64Config = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getBase64ConfigBytes() {
+      java.lang.Object ref = base64Config_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        base64Config_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string base64Config = 7;</code>
+     */
+    public Builder setBase64Config(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      base64Config_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string base64Config = 7;</code>
+     */
+    public Builder clearBase64Config() {
+      
+      base64Config_ = getDefaultInstance().getBase64Config();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string base64Config = 7;</code>
+     */
+    public Builder setBase64ConfigBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      base64Config_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long restartAt_ ;
+    /**
+     * <code>int64 restartAt = 8;</code>
+     */
+    public long getRestartAt() {
+      return restartAt_;
+    }
+    /**
+     * <code>int64 restartAt = 8;</code>
+     */
+    public Builder setRestartAt(long value) {
+      
+      restartAt_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 restartAt = 8;</code>
+     */
+    public Builder clearRestartAt() {
+      
+      restartAt_ = 0L;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

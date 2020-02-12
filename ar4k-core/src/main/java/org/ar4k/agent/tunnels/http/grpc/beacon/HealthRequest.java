@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private HealthRequest() {
     jsonHardwareInfo_ = "";
+    status_ = 0;
   }
 
   @java.lang.Override
@@ -60,6 +61,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             jsonHardwareInfo_ = s;
+            break;
+          }
+          case 24: {
+            int rawValue = input.readEnum();
+
+            status_ = rawValue;
             break;
           }
           default: {
@@ -149,6 +156,23 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int STATUS_FIELD_NUMBER = 3;
+  private int status_;
+  /**
+   * <code>.beacon.AnimaStates status = 3;</code>
+   */
+  public int getStatusValue() {
+    return status_;
+  }
+  /**
+   * <code>.beacon.AnimaStates status = 3;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus() {
+    @SuppressWarnings("deprecation")
+    org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates result = org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.valueOf(status_);
+    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.UNRECOGNIZED : result;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -169,6 +193,9 @@ private static final long serialVersionUID = 0L;
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, jsonHardwareInfo_);
     }
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
+      output.writeEnum(3, status_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -184,6 +211,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, jsonHardwareInfo_);
+    }
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(3, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -207,6 +238,7 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHardwareInfo()
         .equals(other.getJsonHardwareInfo())) return false;
+    if (status_ != other.status_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -224,6 +256,8 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + JSONHARDWAREINFO_FIELD_NUMBER;
     hash = (53 * hash) + getJsonHardwareInfo().hashCode();
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + status_;
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -365,6 +399,8 @@ private static final long serialVersionUID = 0L;
       }
       jsonHardwareInfo_ = "";
 
+      status_ = 0;
+
       return this;
     }
 
@@ -397,6 +433,7 @@ private static final long serialVersionUID = 0L;
         result.agentSender_ = agentSenderBuilder_.build();
       }
       result.jsonHardwareInfo_ = jsonHardwareInfo_;
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -451,6 +488,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getJsonHardwareInfo().isEmpty()) {
         jsonHardwareInfo_ = other.jsonHardwareInfo_;
         onChanged();
+      }
+      if (other.status_ != 0) {
+        setStatusValue(other.getStatusValue());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -663,6 +703,51 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       jsonHardwareInfo_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int status_ = 0;
+    /**
+     * <code>.beacon.AnimaStates status = 3;</code>
+     */
+    public int getStatusValue() {
+      return status_;
+    }
+    /**
+     * <code>.beacon.AnimaStates status = 3;</code>
+     */
+    public Builder setStatusValue(int value) {
+      status_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.beacon.AnimaStates status = 3;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus() {
+      @SuppressWarnings("deprecation")
+      org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates result = org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.valueOf(status_);
+      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.beacon.AnimaStates status = 3;</code>
+     */
+    public Builder setStatus(org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      status_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.beacon.AnimaStates status = 3;</code>
+     */
+    public Builder clearStatus() {
+      
+      status_ = 0;
       onChanged();
       return this;
     }

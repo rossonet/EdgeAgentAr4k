@@ -29,4 +29,13 @@ public interface HealthRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getJsonHardwareInfoBytes();
+
+  /**
+   * <code>.beacon.AnimaStates status = 3;</code>
+   */
+  int getStatusValue();
+  /**
+   * <code>.beacon.AnimaStates status = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus();
 }

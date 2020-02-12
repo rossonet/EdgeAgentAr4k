@@ -231,155 +231,158 @@ public final class BeaconMirrorService {
       "\201\001\n\005Agent\022\027\n\017agentUniqueName\030\001 \001(\t\022\030\n\020sh" +
       "ortDescription\030\002 \001(\t\022+\n\014registerData\030\003 \001" +
       "(\0132\025.beacon.RegisterReply\022\030\n\020jsonHardwar" +
-      "eInfo\030\004 \001(\t\"6\n\013ConfigReply\022\024\n\014base64Conf" +
-      "ig\030\001 \001(\t\022\021\n\trestartAt\030\002 \001(\003\"V\n\014ConfigRep" +
-      "ort\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\024\n\014bas" +
-      "e64Config\030\002 \001(\t\022\022\n\njsonConfig\030\003 \001(\t\"7\n\013F" +
-      "lowMessage\022(\n\010toDoList\030\001 \003(\0132\026.beacon.Re" +
-      "questToAgent\"\376\001\n\016RequestToAgent\022!\n\004type\030" +
-      "\001 \001(\0162\023.beacon.CommandType\022\035\n\006caller\030\002 \001" +
-      "(\0132\r.beacon.Agent\022\027\n\017uniqueIdRequest\030\003 \001" +
-      "(\t\022\026\n\016requestCommand\030\004 \001(\t\022\r\n\005words\030\005 \003(" +
-      "\t\022\021\n\twordIndex\030\006 \001(\005\022\020\n\010position\030\007 \001(\005\0223" +
-      "\n\rtunnelRequest\030\010 \001(\0132\034.beacon.RequestTu" +
-      "nnelMessage\022\020\n\010otpToken\030\t \001(\t\"n\n\013ChatMes" +
-      "sage\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent" +
-      "\022\'\n\020agentDestination\030\002 \001(\0132\r.beacon.Agen" +
-      "t\022\022\n\nmessageTxt\030\003 \001(\t\"\321\001\n\023CommandReplyRe" +
-      "quest\022\027\n\017uniqueIdRequest\030\001 \001(\t\022\"\n\013agentS" +
-      "ender\030\002 \001(\0132\r.beacon.Agent\022\'\n\020agentDesti" +
-      "nation\030\003 \001(\0132\r.beacon.Agent\022\017\n\007replies\030\004" +
-      " \003(\t\022\016\n\006errors\030\005 \003(\t\0223\n\013tunnelReply\030\006 \001(" +
-      "\0132\036.beacon.ResponseNetworkChannel\"M\n\rHea" +
-      "lthRequest\022\"\n\013agentSender\030\001 \001(\0132\r.beacon" +
-      ".Agent\022\030\n\020jsonHardwareInfo\030\002 \001(\t\"h\n\nLogR" +
-      "equest\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Age" +
-      "nt\022%\n\010severity\030\002 \001(\0162\023.beacon.LogSeverit" +
-      "y\022\017\n\007logLine\030\003 \001(\t\"m\n\020ExceptionRequest\022\"" +
-      "\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022\030\n\020me" +
-      "ssageException\030\002 \001(\t\022\033\n\023stackTraceExcept" +
-      "ion\030\003 \001(\t\"\007\n\005Empty\"P\n\017ListAgentsReply\022\036\n" +
-      "\006result\030\001 \001(\0132\016.beacon.Status\022\035\n\006agents\030" +
-      "\002 \003(\0132\r.beacon.Agent\"\206\001\n\027ElaborateMessag" +
-      "eRequest\022\"\n\013agentTarget\030\001 \001(\0132\r.beacon.A" +
-      "gent\022\"\n\013agentSender\030\002 \001(\0132\r.beacon.Agent" +
-      "\022\026\n\016commandMessage\030\003 \001(\t\022\013\n\003otp\030\004 \001(\t\"6\n" +
-      "\025ElaborateMessageReply\022\r\n\005reply\030\001 \001(\t\022\016\n" +
-      "\006errors\030\002 \003(\t\"]\n\023ListCommandsRequest\022\"\n\013" +
-      "agentTarget\030\001 \001(\0132\r.beacon.Agent\022\"\n\013agen" +
-      "tSender\030\002 \001(\0132\r.beacon.Agent\"6\n\021ListComm" +
-      "andsReply\022!\n\010commands\030\001 \003(\0132\017.beacon.Com" +
-      "mand\">\n\007Command\022\"\n\013agentSender\030\001 \001(\0132\r.b" +
-      "eacon.Agent\022\017\n\007command\030\002 \001(\t\"\224\001\n\026Complet" +
-      "eCommandRequest\022\"\n\013agentTarget\030\001 \001(\0132\r.b" +
-      "eacon.Agent\022\"\n\013agentSender\030\002 \001(\0132\r.beaco" +
-      "n.Agent\022\r\n\005words\030\003 \003(\t\022\021\n\twordIndex\030\004 \001(" +
-      "\005\022\020\n\010position\030\005 \001(\005\"7\n\024CompleteCommandRe" +
-      "ply\022\017\n\007replies\030\001 \003(\t\022\016\n\006errors\030\002 \003(\t\"S\n\016" +
-      "PollingRequest\022\034\n\005agent\030\001 \001(\0132\r.beacon.A" +
-      "gent\022#\n\tdataNodes\030\002 \003(\0132\020.beacon.DataNod" +
-      "e\"k\n\020SubscribeRequest\022\034\n\005agent\030\001 \001(\0132\r.b" +
-      "eacon.Agent\022#\n\tdataNodes\030\002 \003(\0132\020.beacon." +
-      "DataNode\022\024\n\014samplingRate\030\003 \001(\005\"N\n\017FlowMe" +
-      "ssageData\022 \n\006values\030\001 \003(\0132\020.beacon.DataN" +
-      "ode\022\031\n\021hiSpeedRoutingTag\030\002 \001(\005\"U\n\014Reques" +
-      "tWrite\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\'\n\r" +
-      "valuesToWrite\030\002 \003(\0132\020.beacon.DataNode\"\230\002" +
-      "\n\010DataNode\022!\n\nagentOwner\030\001 \001(\0132\r.beacon." +
-      "Agent\022\016\n\006nodeId\030\002 \001(\t\022\021\n\tjsonValue\030\003 \001(\t" +
-      "\022\023\n\013stringValue\030\004 \001(\t\022\021\n\tbyteValue\030\005 \001(\014" +
-      "\022\037\n\007quality\030\006 \001(\0132\016.beacon.Status\022$\n\ttim" +
-      "estamp\030\007 \001(\0132\021.beacon.Timestamp\022\036\n\004type\030" +
-      "\010 \001(\0162\020.beacon.DataType\022\016\n\006errors\030\t \003(\t\022" +
-      "\'\n\014timeToExpire\030\n \001(\0132\021.beacon.Timestamp" +
-      "\"\241\001\n\014NodeMetadata\022\"\n\010dataNode\030\001 \001(\0132\020.be" +
-      "acon.DataNode\022\021\n\tnamespace\030\002 \001(\t\022\020\n\010doma" +
-      "inId\030\003 \001(\t\022\014\n\004tags\030\004 \003(\t\022,\n\017fatherForSco" +
-      "pes\030\005 \003(\0132\023.beacon.ParentScope\022\014\n\004logs\030\006" +
-      " \003(\t\"v\n\014AddressSpace\022\022\n\nlastUpdate\030\001 \001(\003" +
-      "\022#\n\005nodes\030\002 \003(\0132\024.beacon.NodeMetadata\022-\n" +
-      "\017subAddressSpace\030\003 \003(\0132\024.beacon.AddressS" +
-      "pace\"B\n\013ParentScope\022\r\n\005scope\030\001 \001(\t\022$\n\006pa" +
-      "rent\030\002 \001(\0132\024.beacon.NodeMetadata\"\204\001\n\rTun" +
-      "nelMessage\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent" +
-      "\022\017\n\007targeId\030\002 \001(\003\022\017\n\007payload\030\003 \001(\014\022\016\n\006er" +
-      "rors\030\004 \003(\t\022\020\n\010uniqueId\030\005 \001(\t\022\021\n\tsessionI" +
-      "d\030\006 \001(\003\"B\n\026ResponseNetworkChannel\022\027\n\017uni" +
-      "queIdRequest\030\001 \001(\t\022\017\n\007targeId\030\002 \001(\003\"\211\003\n\024" +
-      "RequestTunnelMessage\022\027\n\017uniqueIdRequest\030" +
-      "\001 \001(\t\022\"\n\013agentSender\030\002 \001(\0132\r.beacon.Agen" +
-      "t\022\'\n\020agentDestination\030\003 \001(\0132\r.beacon.Age" +
-      "nt\022 \n\004mode\030\004 \001(\0162\022.beacon.TunnelType\022\016\n\006" +
-      "destIp\030\005 \001(\t\022\020\n\010destPort\030\006 \001(\005\022\017\n\007srcPor" +
-      "t\030\007 \001(\005\022\027\n\017socketSoTimeout\030\010 \001(\005\022\030\n\020sock" +
-      "etTcpNoDelay\030\t \001(\010\022\027\n\017socketKeepAlive\030\n " +
-      "\001(\010\022\037\n\027socketReceiveBufferSize\030\013 \001(\005\022\032\n\022" +
-      "socketReuseAddress\030\014 \001(\010\022\032\n\022socketTraffi" +
-      "cClass\030\r \001(\005\022\021\n\tsocketQos\030\016 \001(\005*;\n\013Statu" +
-      "sValue\022\010\n\004GOOD\020\000\022\007\n\003BAD\020\001\022\t\n\005FAULT\020\002\022\016\n\n" +
-      "WAIT_HUMAN\020\003*g\n\013AnimaStates\022\010\n\004INIT\020\000\022\014\n" +
-      "\010STAMINAL\020\001\022\016\n\nCONFIGURED\020\002\022\013\n\007RUNNING\020\003" +
-      "\022\n\n\006KILLED\020\004\022\013\n\007FAULTED\020\005\022\n\n\006STASIS\020\006*\226\001" +
-      "\n\013CommandType\022\035\n\031ELABORATE_MESSAGE_COMMA" +
-      "ND\020\000\022\021\n\rLIST_COMMANDS\020\001\022\024\n\020COMPLETE_COMM" +
-      "AND\020\002\022\024\n\020OPEN_PROXY_SOCKS\020\003\022\017\n\013EXPOSE_PO" +
-      "RT\020\004\022\030\n\024CONNECT_DATA_CHANNEL\020\005*\202\001\n\013LogSe" +
-      "verity\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n\004INFO\020\310" +
-      "\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005ERROR\020\364\003" +
-      "\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEMERGENCY" +
-      "\020\240\006*\266\001\n\010DataType\022\n\n\006STRING\020\000\022\010\n\004CHAR\020\001\022\t" +
-      "\n\005BYTES\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005FLOAT" +
-      "\020\005\022\n\n\006DOUBLE\020\006\022\013\n\007BOOLEAN\020\007\022\r\n\tTIMESTAMP" +
-      "\020\010\022\n\n\006OBJECT\020\t\022\013\n\007UNKNOWN\020\n\022\014\n\010JSONDATA\020" +
-      "\013\022\016\n\nBASE64DATA\020\014\022\t\n\005MEDIA\020\r*p\n\nTunnelTy" +
-      "pe\022\027\n\023SERVER_TO_BYTES_TCP\020\000\022\027\n\023BYTES_TO_" +
-      "CLIENT_TCP\020\001\022\027\n\023SERVER_TO_BYTES_UDP\020\002\022\027\n" +
-      "\023BYTES_TO_CLIENT_UDP\020\0032\347\010\n\014RpcServiceV1\022" +
-      "<\n\010Register\022\027.beacon.RegisterRequest\032\025.b" +
-      "eacon.RegisterReply\"\000\0227\n\017PollingCmdQueue" +
-      "\022\r.beacon.Agent\032\023.beacon.FlowMessage\"\000\022>" +
-      "\n\024SubscriptionCmdQueue\022\r.beacon.Agent\032\023." +
-      "beacon.FlowMessage\"\0000\001\0228\n\017SendChatMessag" +
-      "e\022\023.beacon.ChatMessage\032\016.beacon.Status\"\000" +
-      "\022A\n\020SendCommandReply\022\033.beacon.CommandRep" +
-      "lyRequest\032\016.beacon.Status\"\000\0225\n\nSendHealt" +
-      "h\022\025.beacon.HealthRequest\032\016.beacon.Status" +
-      "\"\000\022/\n\007SendLog\022\022.beacon.LogRequest\032\016.beac" +
-      "on.Status\"\000\022;\n\rSendException\022\030.beacon.Ex" +
-      "ceptionRequest\032\016.beacon.Status\"\000\022@\n\021Send" +
-      "ConfigRuntime\022\024.beacon.ConfigReport\032\023.be" +
-      "acon.ConfigReply\"\000\0226\n\nListAgents\022\r.beaco" +
-      "n.Empty\032\027.beacon.ListAgentsReply\"\000\022L\n\031Li" +
-      "stAgentsRequestComplete\022\r.beacon.Empty\032\036" +
-      ".beacon.ListAgentsRequestReply\"\000\022H\n\025List" +
-      "AgentsRequestToDo\022\r.beacon.Empty\032\036.beaco" +
-      "n.ListAgentsRequestReply\"\000\022K\n\023ApproveAge" +
-      "ntRequest\022\".beacon.ApproveAgentRequestRe" +
-      "quest\032\016.beacon.Status\"\000\022,\n\tKickAgent\022\r.b" +
-      "eacon.Agent\032\016.beacon.Status\"\000\022T\n\020Elabora" +
-      "teMessage\022\037.beacon.ElaborateMessageReque" +
-      "st\032\035.beacon.ElaborateMessageReply\"\000\022H\n\014L" +
-      "istCommands\022\033.beacon.ListCommandsRequest" +
-      "\032\031.beacon.ListCommandsReply\"\000\022Q\n\017Complet" +
-      "eCommand\022\036.beacon.CompleteCommandRequest" +
-      "\032\034.beacon.CompleteCommandReply\"\0002\230\003\n\rDat" +
-      "aServiceV1\022<\n\007Polling\022\026.beacon.PollingRe" +
-      "quest\032\027.beacon.FlowMessageData\"\000\022E\n\014Subs" +
-      "cription\022\030.beacon.SubscribeRequest\032\027.bea" +
-      "con.FlowMessageData\"\0000\001\0228\n\005Write\022\024.beaco" +
-      "n.RequestWrite\032\027.beacon.FlowMessageData\"" +
-      "\000\022F\n\021WriteSubscription\022\024.beacon.RequestW" +
-      "rite\032\027.beacon.FlowMessageData\"\000(\001\022@\n\020Sen" +
-      "dAddressSpace\022\024.beacon.AddressSpace\032\024.be" +
-      "acon.AddressSpace\"\000\022>\n\025GetRemoteAddressS" +
-      "pace\022\r.beacon.Agent\032\024.beacon.AddressSpac" +
-      "e\"\0002\254\001\n\017TunnelServiceV1\022H\n\022openNetworkCh" +
-      "annel\022\025.beacon.TunnelMessage\032\025.beacon.Tu" +
-      "nnelMessage\"\000(\0010\001\022O\n\rRequestTunnel\022\034.bea" +
-      "con.RequestTunnelMessage\032\036.beacon.Respon" +
-      "seNetworkChannel\"\000BG\n\'org.ar4k.agent.tun" +
-      "nels.http.grpc.beaconB\023BeaconMirrorServi" +
-      "ceP\001\242\002\004AR4Kb\006proto3"
+      "eInfo\030\004 \001(\t\"[\n\013ConfigReply\022\024\n\014base64Conf" +
+      "ig\030\001 \001(\t\022\021\n\trestartAt\030\002 \001(\003\022#\n\006status\030\003 " +
+      "\001(\0162\023.beacon.StatusValue\"V\n\014ConfigReport" +
+      "\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\024\n\014base64" +
+      "Config\030\002 \001(\t\022\022\n\njsonConfig\030\003 \001(\t\"7\n\013Flow" +
+      "Message\022(\n\010toDoList\030\001 \003(\0132\026.beacon.Reque" +
+      "stToAgent\"\376\001\n\016RequestToAgent\022!\n\004type\030\001 \001" +
+      "(\0162\023.beacon.CommandType\022\035\n\006caller\030\002 \001(\0132" +
+      "\r.beacon.Agent\022\027\n\017uniqueIdRequest\030\003 \001(\t\022" +
+      "\026\n\016requestCommand\030\004 \001(\t\022\r\n\005words\030\005 \003(\t\022\021" +
+      "\n\twordIndex\030\006 \001(\005\022\020\n\010position\030\007 \001(\005\0223\n\rt" +
+      "unnelRequest\030\010 \001(\0132\034.beacon.RequestTunne" +
+      "lMessage\022\020\n\010otpToken\030\t \001(\t\"n\n\013ChatMessag" +
+      "e\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022\'\n" +
+      "\020agentDestination\030\002 \001(\0132\r.beacon.Agent\022\022" +
+      "\n\nmessageTxt\030\003 \001(\t\"\372\001\n\023CommandReplyReque" +
+      "st\022\027\n\017uniqueIdRequest\030\001 \001(\t\022\"\n\013agentSend" +
+      "er\030\002 \001(\0132\r.beacon.Agent\022\'\n\020agentDestinat" +
+      "ion\030\003 \001(\0132\r.beacon.Agent\022\017\n\007replies\030\004 \003(" +
+      "\t\022\016\n\006errors\030\005 \003(\t\0223\n\013tunnelReply\030\006 \001(\0132\036" +
+      ".beacon.ResponseNetworkChannel\022\024\n\014base64" +
+      "Config\030\007 \001(\t\022\021\n\trestartAt\030\010 \001(\003\"r\n\rHealt" +
+      "hRequest\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.A" +
+      "gent\022\030\n\020jsonHardwareInfo\030\002 \001(\t\022#\n\006status" +
+      "\030\003 \001(\0162\023.beacon.AnimaStates\"h\n\nLogReques" +
+      "t\022\"\n\013agentSender\030\001 \001(\0132\r.beacon.Agent\022%\n" +
+      "\010severity\030\002 \001(\0162\023.beacon.LogSeverity\022\017\n\007" +
+      "logLine\030\003 \001(\t\"m\n\020ExceptionRequest\022\"\n\013age" +
+      "ntSender\030\001 \001(\0132\r.beacon.Agent\022\030\n\020message" +
+      "Exception\030\002 \001(\t\022\033\n\023stackTraceException\030\003" +
+      " \001(\t\"\007\n\005Empty\"P\n\017ListAgentsReply\022\036\n\006resu" +
+      "lt\030\001 \001(\0132\016.beacon.Status\022\035\n\006agents\030\002 \003(\013" +
+      "2\r.beacon.Agent\"\206\001\n\027ElaborateMessageRequ" +
+      "est\022\"\n\013agentTarget\030\001 \001(\0132\r.beacon.Agent\022" +
+      "\"\n\013agentSender\030\002 \001(\0132\r.beacon.Agent\022\026\n\016c" +
+      "ommandMessage\030\003 \001(\t\022\013\n\003otp\030\004 \001(\t\"6\n\025Elab" +
+      "orateMessageReply\022\r\n\005reply\030\001 \001(\t\022\016\n\006erro" +
+      "rs\030\002 \003(\t\"]\n\023ListCommandsRequest\022\"\n\013agent" +
+      "Target\030\001 \001(\0132\r.beacon.Agent\022\"\n\013agentSend" +
+      "er\030\002 \001(\0132\r.beacon.Agent\"6\n\021ListCommandsR" +
+      "eply\022!\n\010commands\030\001 \003(\0132\017.beacon.Command\"" +
+      ">\n\007Command\022\"\n\013agentSender\030\001 \001(\0132\r.beacon" +
+      ".Agent\022\017\n\007command\030\002 \001(\t\"\224\001\n\026CompleteComm" +
+      "andRequest\022\"\n\013agentTarget\030\001 \001(\0132\r.beacon" +
+      ".Agent\022\"\n\013agentSender\030\002 \001(\0132\r.beacon.Age" +
+      "nt\022\r\n\005words\030\003 \003(\t\022\021\n\twordIndex\030\004 \001(\005\022\020\n\010" +
+      "position\030\005 \001(\005\"7\n\024CompleteCommandReply\022\017" +
+      "\n\007replies\030\001 \003(\t\022\016\n\006errors\030\002 \003(\t\"S\n\016Polli" +
+      "ngRequest\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022" +
+      "#\n\tdataNodes\030\002 \003(\0132\020.beacon.DataNode\"k\n\020" +
+      "SubscribeRequest\022\034\n\005agent\030\001 \001(\0132\r.beacon" +
+      ".Agent\022#\n\tdataNodes\030\002 \003(\0132\020.beacon.DataN" +
+      "ode\022\024\n\014samplingRate\030\003 \001(\005\"N\n\017FlowMessage" +
+      "Data\022 \n\006values\030\001 \003(\0132\020.beacon.DataNode\022\031" +
+      "\n\021hiSpeedRoutingTag\030\002 \001(\005\"U\n\014RequestWrit" +
+      "e\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\'\n\rvalue" +
+      "sToWrite\030\002 \003(\0132\020.beacon.DataNode\"\230\002\n\010Dat" +
+      "aNode\022!\n\nagentOwner\030\001 \001(\0132\r.beacon.Agent" +
+      "\022\016\n\006nodeId\030\002 \001(\t\022\021\n\tjsonValue\030\003 \001(\t\022\023\n\013s" +
+      "tringValue\030\004 \001(\t\022\021\n\tbyteValue\030\005 \001(\014\022\037\n\007q" +
+      "uality\030\006 \001(\0132\016.beacon.Status\022$\n\ttimestam" +
+      "p\030\007 \001(\0132\021.beacon.Timestamp\022\036\n\004type\030\010 \001(\016" +
+      "2\020.beacon.DataType\022\016\n\006errors\030\t \003(\t\022\'\n\014ti" +
+      "meToExpire\030\n \001(\0132\021.beacon.Timestamp\"\241\001\n\014" +
+      "NodeMetadata\022\"\n\010dataNode\030\001 \001(\0132\020.beacon." +
+      "DataNode\022\021\n\tnamespace\030\002 \001(\t\022\020\n\010domainId\030" +
+      "\003 \001(\t\022\014\n\004tags\030\004 \003(\t\022,\n\017fatherForScopes\030\005" +
+      " \003(\0132\023.beacon.ParentScope\022\014\n\004logs\030\006 \003(\t\"" +
+      "v\n\014AddressSpace\022\022\n\nlastUpdate\030\001 \001(\003\022#\n\005n" +
+      "odes\030\002 \003(\0132\024.beacon.NodeMetadata\022-\n\017subA" +
+      "ddressSpace\030\003 \003(\0132\024.beacon.AddressSpace\"" +
+      "B\n\013ParentScope\022\r\n\005scope\030\001 \001(\t\022$\n\006parent\030" +
+      "\002 \001(\0132\024.beacon.NodeMetadata\"\204\001\n\rTunnelMe" +
+      "ssage\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\017\n\007t" +
+      "argeId\030\002 \001(\003\022\017\n\007payload\030\003 \001(\014\022\016\n\006errors\030" +
+      "\004 \003(\t\022\020\n\010uniqueId\030\005 \001(\t\022\021\n\tsessionId\030\006 \001" +
+      "(\003\"B\n\026ResponseNetworkChannel\022\027\n\017uniqueId" +
+      "Request\030\001 \001(\t\022\017\n\007targeId\030\002 \001(\003\"\211\003\n\024Reque" +
+      "stTunnelMessage\022\027\n\017uniqueIdRequest\030\001 \001(\t" +
+      "\022\"\n\013agentSender\030\002 \001(\0132\r.beacon.Agent\022\'\n\020" +
+      "agentDestination\030\003 \001(\0132\r.beacon.Agent\022 \n" +
+      "\004mode\030\004 \001(\0162\022.beacon.TunnelType\022\016\n\006destI" +
+      "p\030\005 \001(\t\022\020\n\010destPort\030\006 \001(\005\022\017\n\007srcPort\030\007 \001" +
+      "(\005\022\027\n\017socketSoTimeout\030\010 \001(\005\022\030\n\020socketTcp" +
+      "NoDelay\030\t \001(\010\022\027\n\017socketKeepAlive\030\n \001(\010\022\037" +
+      "\n\027socketReceiveBufferSize\030\013 \001(\005\022\032\n\022socke" +
+      "tReuseAddress\030\014 \001(\010\022\032\n\022socketTrafficClas" +
+      "s\030\r \001(\005\022\021\n\tsocketQos\030\016 \001(\005*;\n\013StatusValu" +
+      "e\022\010\n\004GOOD\020\000\022\007\n\003BAD\020\001\022\t\n\005FAULT\020\002\022\016\n\nWAIT_" +
+      "HUMAN\020\003*g\n\013AnimaStates\022\010\n\004INIT\020\000\022\014\n\010STAM" +
+      "INAL\020\001\022\016\n\nCONFIGURED\020\002\022\013\n\007RUNNING\020\003\022\n\n\006K" +
+      "ILLED\020\004\022\013\n\007FAULTED\020\005\022\n\n\006STASIS\020\006*\255\001\n\013Com" +
+      "mandType\022\035\n\031ELABORATE_MESSAGE_COMMAND\020\000\022" +
+      "\021\n\rLIST_COMMANDS\020\001\022\024\n\020COMPLETE_COMMAND\020\002" +
+      "\022\024\n\020OPEN_PROXY_SOCKS\020\003\022\017\n\013EXPOSE_PORT\020\004\022" +
+      "\030\n\024CONNECT_DATA_CHANNEL\020\005\022\025\n\021SET_CONFIGU" +
+      "RATION\020\006*\202\001\n\013LogSeverity\022\013\n\007DEFAULT\020\000\022\t\n" +
+      "\005DEBUG\020d\022\t\n\004INFO\020\310\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARN" +
+      "ING\020\220\003\022\n\n\005ERROR\020\364\003\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALE" +
+      "RT\020\274\005\022\016\n\tEMERGENCY\020\240\006*\266\001\n\010DataType\022\n\n\006ST" +
+      "RING\020\000\022\010\n\004CHAR\020\001\022\t\n\005BYTES\020\002\022\t\n\005INT32\020\003\022\t" +
+      "\n\005INT64\020\004\022\t\n\005FLOAT\020\005\022\n\n\006DOUBLE\020\006\022\013\n\007BOOL" +
+      "EAN\020\007\022\r\n\tTIMESTAMP\020\010\022\n\n\006OBJECT\020\t\022\013\n\007UNKN" +
+      "OWN\020\n\022\014\n\010JSONDATA\020\013\022\016\n\nBASE64DATA\020\014\022\t\n\005M" +
+      "EDIA\020\r*p\n\nTunnelType\022\027\n\023SERVER_TO_BYTES_" +
+      "TCP\020\000\022\027\n\023BYTES_TO_CLIENT_TCP\020\001\022\027\n\023SERVER" +
+      "_TO_BYTES_UDP\020\002\022\027\n\023BYTES_TO_CLIENT_UDP\020\003" +
+      "2\347\010\n\014RpcServiceV1\022<\n\010Register\022\027.beacon.R" +
+      "egisterRequest\032\025.beacon.RegisterReply\"\000\022" +
+      "7\n\017PollingCmdQueue\022\r.beacon.Agent\032\023.beac" +
+      "on.FlowMessage\"\000\022>\n\024SubscriptionCmdQueue" +
+      "\022\r.beacon.Agent\032\023.beacon.FlowMessage\"\0000\001" +
+      "\0228\n\017SendChatMessage\022\023.beacon.ChatMessage" +
+      "\032\016.beacon.Status\"\000\022A\n\020SendCommandReply\022\033" +
+      ".beacon.CommandReplyRequest\032\016.beacon.Sta" +
+      "tus\"\000\0225\n\nSendHealth\022\025.beacon.HealthReque" +
+      "st\032\016.beacon.Status\"\000\022/\n\007SendLog\022\022.beacon" +
+      ".LogRequest\032\016.beacon.Status\"\000\022;\n\rSendExc" +
+      "eption\022\030.beacon.ExceptionRequest\032\016.beaco" +
+      "n.Status\"\000\022@\n\021SendConfigRuntime\022\024.beacon" +
+      ".ConfigReport\032\023.beacon.ConfigReply\"\000\0226\n\n" +
+      "ListAgents\022\r.beacon.Empty\032\027.beacon.ListA" +
+      "gentsReply\"\000\022L\n\031ListAgentsRequestComplet" +
+      "e\022\r.beacon.Empty\032\036.beacon.ListAgentsRequ" +
+      "estReply\"\000\022H\n\025ListAgentsRequestToDo\022\r.be" +
+      "acon.Empty\032\036.beacon.ListAgentsRequestRep" +
+      "ly\"\000\022K\n\023ApproveAgentRequest\022\".beacon.App" +
+      "roveAgentRequestRequest\032\016.beacon.Status\"" +
+      "\000\022,\n\tKickAgent\022\r.beacon.Agent\032\016.beacon.S" +
+      "tatus\"\000\022T\n\020ElaborateMessage\022\037.beacon.Ela" +
+      "borateMessageRequest\032\035.beacon.ElaborateM" +
+      "essageReply\"\000\022H\n\014ListCommands\022\033.beacon.L" +
+      "istCommandsRequest\032\031.beacon.ListCommands" +
+      "Reply\"\000\022Q\n\017CompleteCommand\022\036.beacon.Comp" +
+      "leteCommandRequest\032\034.beacon.CompleteComm" +
+      "andReply\"\0002\230\003\n\rDataServiceV1\022<\n\007Polling\022" +
+      "\026.beacon.PollingRequest\032\027.beacon.FlowMes" +
+      "sageData\"\000\022E\n\014Subscription\022\030.beacon.Subs" +
+      "cribeRequest\032\027.beacon.FlowMessageData\"\0000" +
+      "\001\0228\n\005Write\022\024.beacon.RequestWrite\032\027.beaco" +
+      "n.FlowMessageData\"\000\022F\n\021WriteSubscription" +
+      "\022\024.beacon.RequestWrite\032\027.beacon.FlowMess" +
+      "ageData\"\000(\001\022@\n\020SendAddressSpace\022\024.beacon" +
+      ".AddressSpace\032\024.beacon.AddressSpace\"\000\022>\n" +
+      "\025GetRemoteAddressSpace\022\r.beacon.Agent\032\024." +
+      "beacon.AddressSpace\"\0002\254\001\n\017TunnelServiceV" +
+      "1\022H\n\022openNetworkChannel\022\025.beacon.TunnelM" +
+      "essage\032\025.beacon.TunnelMessage\"\000(\0010\001\022O\n\rR" +
+      "equestTunnel\022\034.beacon.RequestTunnelMessa" +
+      "ge\032\036.beacon.ResponseNetworkChannel\"\000BG\n\'" +
+      "org.ar4k.agent.tunnels.http.grpc.beaconB" +
+      "\023BeaconMirrorServiceP\001\242\002\004AR4Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -446,7 +449,7 @@ public final class BeaconMirrorService {
     internal_static_beacon_ConfigReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_ConfigReply_descriptor,
-        new java.lang.String[] { "Base64Config", "RestartAt", });
+        new java.lang.String[] { "Base64Config", "RestartAt", "Status", });
     internal_static_beacon_ConfigReport_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_beacon_ConfigReport_fieldAccessorTable = new
@@ -476,13 +479,13 @@ public final class BeaconMirrorService {
     internal_static_beacon_CommandReplyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_CommandReplyRequest_descriptor,
-        new java.lang.String[] { "UniqueIdRequest", "AgentSender", "AgentDestination", "Replies", "Errors", "TunnelReply", });
+        new java.lang.String[] { "UniqueIdRequest", "AgentSender", "AgentDestination", "Replies", "Errors", "TunnelReply", "Base64Config", "RestartAt", });
     internal_static_beacon_HealthRequest_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_beacon_HealthRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_HealthRequest_descriptor,
-        new java.lang.String[] { "AgentSender", "JsonHardwareInfo", });
+        new java.lang.String[] { "AgentSender", "JsonHardwareInfo", "Status", });
     internal_static_beacon_LogRequest_descriptor =
       getDescriptor().getMessageTypes().get(15);
     internal_static_beacon_LogRequest_fieldAccessorTable = new

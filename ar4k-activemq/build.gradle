@@ -1,0 +1,7 @@
+description = "ActiveMQ integration component"
+
+dependencies {
+  compile project(':ar4k-core')
+  compile group: 'org.apache.activemq', name: 'artemis-server', version: '2.11.0'
+  compile group: 'org.apache.activemq', name: 'artemis-mqtt-protocol', version: '2.11.0'
+}

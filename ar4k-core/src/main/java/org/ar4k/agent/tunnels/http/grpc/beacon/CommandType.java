@@ -32,6 +32,10 @@ public enum CommandType
    * <code>CONNECT_DATA_CHANNEL = 5;</code>
    */
   CONNECT_DATA_CHANNEL(5),
+  /**
+   * <code>SET_CONFIGURATION = 6;</code>
+   */
+  SET_CONFIGURATION(6),
   UNRECOGNIZED(-1),
   ;
 
@@ -59,6 +63,10 @@ public enum CommandType
    * <code>CONNECT_DATA_CHANNEL = 5;</code>
    */
   public static final int CONNECT_DATA_CHANNEL_VALUE = 5;
+  /**
+   * <code>SET_CONFIGURATION = 6;</code>
+   */
+  public static final int SET_CONFIGURATION_VALUE = 6;
 
 
   public final int getNumber() {
@@ -85,6 +93,7 @@ public enum CommandType
       case 3: return OPEN_PROXY_SOCKS;
       case 4: return EXPOSE_PORT;
       case 5: return CONNECT_DATA_CHANNEL;
+      case 6: return SET_CONFIGURATION;
       default: return null;
     }
   }

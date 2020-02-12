@@ -12,7 +12,6 @@ package beacon;
 service RpcServiceV1 {
   // for agent registration
   rpc Register (RegisterRequest) returns (RegisterReply) {}
-  //rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
   rpc PollingCmdQueue (Agent) returns (FlowMessage) {}
   rpc SubscriptionCmdQueue (Agent) returns (stream FlowMessage) {}
   rpc SendChatMessage (ChatMessage) returns (Status) {}
@@ -115,6 +114,7 @@ message Agent {
 message ConfigReply {
   string base64Config = 1;
   int64 restartAt = 2;
+  StatusValue status = 3;
 }
 
 message ConfigReport {
@@ -146,6 +146,7 @@ enum CommandType {
   OPEN_PROXY_SOCKS = 3;
   EXPOSE_PORT = 4;
   CONNECT_DATA_CHANNEL = 5;
+  SET_CONFIGURATION = 6;
 }
 
 message ChatMessage {
@@ -161,11 +162,14 @@ message CommandReplyRequest {
   repeated string replies = 4;
   repeated string errors = 5;
   ResponseNetworkChannel tunnelReply = 6;
+  string base64Config = 7;
+  int64 restartAt = 8;
 }
 
 message HealthRequest {
   Agent agentSender = 1;
   string jsonHardwareInfo = 2;
+  AnimaStates status = 3;
 }
 
 message LogRequest {

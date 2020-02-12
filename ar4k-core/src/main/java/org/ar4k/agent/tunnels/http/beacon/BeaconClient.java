@@ -21,8 +21,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
+import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.Ar4kLogger;
 import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
@@ -34,6 +37,8 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Empty;
@@ -602,6 +607,9 @@ public class BeaconClient implements AutoCloseable {
       case OPEN_PROXY_SOCKS:
         notImplemented(m);
         break;
+      case SET_CONFIGURATION:
+        setConfiguration(m);
+        break;
       case UNRECOGNIZED:
         notImplemented(m);
         break;
@@ -609,6 +617,19 @@ public class BeaconClient implements AutoCloseable {
         notImplemented(m);
         break;
       }
+    }
+  }
+
+  private void setConfiguration(RequestToAgent m) {
+    try {
+      logger.warn("received config from beacon client. RequestId:" + m.getUniqueIdRequest());
+      ConfigSeed newConfig = ConfigHelper.fromBase64(m.getRequestCommand());
+      CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
+          .setUniqueIdRequest(m.getUniqueIdRequest()).setBase64Config(m.getRequestCommand()).build();
+      blockingStub.sendCommandReply(reply);
+      anima.elaborateNewConfig((Ar4kConfig) newConfig);
+    } catch (Exception a) {
+      logger.logException(a);
     }
   }
 
@@ -773,6 +794,18 @@ public class BeaconClient implements AutoCloseable {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
       ListCommandsRequest lcr = ListCommandsRequest.newBuilder().setAgentTarget(a).setAgentSender(me).build();
       return blockingStub.listCommands(lcr);
+    } catch (Exception a) {
+      logger.logException(a);
+      return null;
+    }
+  }
+
+  public ConfigReply sendConfigToAgent(String agentId, Ar4kConfig newConfig) {
+    try {
+      Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
+      ConfigReport req = ConfigReport.newBuilder().setAgent(a).setBase64Config(ConfigHelper.toBase64(newConfig))
+          .build();
+      return blockingStub.sendConfigRuntime(req);
     } catch (Exception a) {
       logger.logException(a);
       return null;

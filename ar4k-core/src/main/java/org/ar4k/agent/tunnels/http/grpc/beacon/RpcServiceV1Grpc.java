@@ -609,9 +609,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
-     * </pre>
      */
     public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
@@ -888,9 +885,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
-     * </pre>
      */
     public void pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> responseObserver) {
@@ -1058,9 +1052,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
-     * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage pollingCmdQueue(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingUnaryCall(
@@ -1214,9 +1205,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     *rpc GetConfigTarget (Agent) returns (ConfigReply) {} // implementare la gestione del cambio configurazione e la gestione delle configurazioni su beacon server
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.FlowMessage> pollingCmdQueue(
         org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {

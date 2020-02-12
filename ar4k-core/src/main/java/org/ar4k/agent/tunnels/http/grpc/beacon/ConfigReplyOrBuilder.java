@@ -21,4 +21,13 @@ public interface ConfigReplyOrBuilder extends
    * <code>int64 restartAt = 2;</code>
    */
   long getRestartAt();
+
+  /**
+   * <code>.beacon.StatusValue status = 3;</code>
+   */
+  int getStatusValue();
+  /**
+   * <code>.beacon.StatusValue status = 3;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus();
 }

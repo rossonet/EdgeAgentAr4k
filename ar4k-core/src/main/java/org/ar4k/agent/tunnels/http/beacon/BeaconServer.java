@@ -10,6 +10,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -40,6 +41,8 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandType;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport;
 import org.ar4k.agent.tunnels.http.grpc.beacon.DataServiceV1Grpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest;
@@ -653,6 +656,31 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
   }
 
   private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
+
+    @Override
+    public void sendConfigRuntime(ConfigReport request, StreamObserver<ConfigReply> responseObserver) {
+      try {
+        String idRequest = UUID.randomUUID().toString();
+        for (BeaconAgent at : agents) {
+          if (at.getAgentUniqueName().equals(request.getAgent().getAgentUniqueName())) {
+            RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgent()).setUniqueIdRequest(idRequest)
+                .setType(CommandType.SET_CONFIGURATION).setRequestCommand(request.getBase64Config()).build();
+            at.addRequestForAgent(rta);
+            break;
+          }
+        }
+        CommandReplyRequest agentReply = null;
+        agentReply = waitReply(idRequest, defaultTimeOut);
+        if (agentReply != null) {
+          ConfigReply finalReply = ConfigReply.newBuilder().setBase64Config(agentReply.getBase64Config())
+              .setRestartAt(Instant.now().getEpochSecond()).build();
+          responseObserver.onNext(finalReply);
+        }
+        responseObserver.onCompleted();
+      } catch (Exception e) {
+        logger.logException(e);
+      }
+    }
 
     private static final int SIGN_TIME = 3650;
 
