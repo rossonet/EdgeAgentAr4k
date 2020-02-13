@@ -384,6 +384,8 @@ public class BeaconClient implements AutoCloseable {
     try {
       FileWriter writer = new FileWriter(new File(certFile));
       String pemTxt = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
+      logger.info("SubjectDN\n"
+          + anima.getMyIdentityKeystore().getClientCertificate(aliasBeaconClient).getSubjectDN().getName());
       writer.write("-----BEGIN CERTIFICATE-----\n");
       writer.write(pemTxt);
       writer.write("\n-----END CERTIFICATE-----\n");
@@ -506,9 +508,11 @@ public class BeaconClient implements AutoCloseable {
           && !anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
           && reply.getCert() != null && !reply.getCert().isEmpty()) {
         try {
+          logger.info("received signed cert and ca chain");
           anima.getMyIdentityKeystore().setClientKeyPair(
               anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()), reply.getCert(),
               this.aliasBeaconClientInKeystore);
+          certChain = reply.getCa().toStringUtf8();
           status = StatusBeaconClient.IDLE;
           startConnection(this.hostTarget, this.port, false);
           registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);

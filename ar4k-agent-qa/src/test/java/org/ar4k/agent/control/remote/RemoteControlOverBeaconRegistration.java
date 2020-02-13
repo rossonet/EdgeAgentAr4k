@@ -219,11 +219,12 @@ public class RemoteControlOverBeaconRegistration {
       baseArgs.add("--ar4k.beaconClearText=false");
       baseArgsClientOne.add("--ar4k.beaconClearText=false");
       baseArgsClientTwo.add("--ar4k.beaconClearText=false");
-      certCaAsPem = KeystoreLoader.getCertCaAsPem(masterAliasInKeystore, keyStoreMaster.getAbsolutePath(), passwordKs);
+      certCaAsPem = KeystoreLoader.getCertCaAsPem(signServerAliasInKeystore, keyStoreServer.getAbsolutePath(),
+          passwordKs);
       byte[] decodedCrt = Base64.getDecoder().decode(certCaAsPem);
       X509Certificate clientCertificate = (X509Certificate) CertificateFactory.getInstance("X.509")
           .generateCertificate(new ByteArrayInputStream(decodedCrt));
-      certCaAsPem = KeystoreLoader.getCertCaAsPem(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs)
+      certCaAsPem = KeystoreLoader.getCertCaAsPem(masterAliasInKeystore, keyStoreMaster.getAbsolutePath(), passwordKs)
           + "," + certCaAsPem;
       System.out.println("\n\nCA Master\n" + certCaAsPem);
       System.out.println(clientCertificate);
@@ -315,14 +316,17 @@ public class RemoteControlOverBeaconRegistration {
     BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
     beaconServiceConfig.discoveryPort = 33667;
     beaconServiceConfig.port = 32676;
-    beaconServiceConfig.aliasBeaconServerInKeystore = signServerAliasInKeystore;
+    beaconServiceConfig.aliasBeaconServerInKeystore = masterAliasInKeystore;
     beaconServiceConfig.caChainPem = certCaAsPem;
     beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
     serverConfig.pots.add(beaconServiceConfig);
 
+    // TODO provare con firma intermedia, ovvero firmando non con master ma con un
+    // certifico firmato da master
     testAnimas.put(SERVER_LABEL,
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
-            1124, baseArgs, serverConfig, serverAliasInKeystore, signServerAliasInKeystore, "https://localhost:32676"))
+        executor
+            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreMaster.getAbsolutePath(),
+                1124, baseArgs, serverConfig, masterAliasInKeystore, masterAliasInKeystore, "https://localhost:32676"))
             .get());
     testAnimas.put(CLIENT2_LABEL,
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", keyStoreClient2.getAbsolutePath(),
@@ -337,7 +341,7 @@ public class RemoteControlOverBeaconRegistration {
       // a.getRuntimeConfig().getName() : "no-config";
       Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
     }
-    Thread.sleep(120000);
+    Thread.sleep(40000);
     List<Agent> agents = testAnimas.get(CLIENT1_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
     String agentToQuery = null;
     for (Agent a : agents) {
@@ -446,7 +450,7 @@ public class RemoteControlOverBeaconRegistration {
     NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test", NetworkMode.CLIENT,
         NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
     networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
-    Thread.sleep(10000);
+    Thread.sleep(20000);
     System.out.println("network tunnel status -> " + networkTunnel.getHub().getStatus());
     System.out.println("try to send package");
     clientTCP = executor.submit(clientRunner);

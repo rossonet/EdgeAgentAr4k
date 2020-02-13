@@ -343,6 +343,14 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     return anima.getBeaconClient().runCommadsOnAgent(agentName, "restart").getReply();
   }
 
+  @ShellMethod(value = "send selected config to remote node", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testSelectedConfigOk")
+  public String setSelectedConfigOnRemoteNode(@ShellOption(help = "target agent") String agentName) {
+    anima.getBeaconClient().sendConfigToAgent(agentName, getWorkingConfig());
+    return "sent";
+  }
+
   private BeaconClient resolveBeaconClient() {
     return tmpClient != null ? tmpClient : anima.getBeaconClient();
   }

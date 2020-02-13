@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -31,6 +32,8 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -191,18 +194,34 @@ public final class KeystoreLoader {
       PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
       PrivateKey privKey = kf.generatePrivate(keySpec);
       KeyPair clientKeyPair = new KeyPair(pubKey, privKey);
-      // PrivateKey privateKey = privKey;
-      keyStore.setKeyEntry(alias, clientKeyPair.getPrivate(), passwordChar,
-          new X509Certificate[] { clientCertificate });
-      File serverKeyStore = new File(keyStorePath);
-      keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
-      ritorno = true;
-      serverKeyStore = null;
+      if (checkSignatureWithPayload(pubKey, privKey)) {
+        // PrivateKey privateKey = privKey;//TODO
+        keyStore.setKeyEntry(alias, clientKeyPair.getPrivate(), passwordChar,
+            new X509Certificate[] { clientCertificate });
+        File serverKeyStore = new File(keyStorePath);
+        keyStore.store(new FileOutputStream(serverKeyStore), passwordChar);
+        ritorno = true;
+        serverKeyStore = null;
+      } else {
+        logger.warn("private and pubblic key not match");
+      }
     } catch (Exception df) {
       ritorno = false;
       logger.logException(df);
     }
     return ritorno;
+  }
+
+  public static boolean checkSignatureWithPayload(PublicKey pubKey, PrivateKey privKey)
+      throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    Signature sig = Signature.getInstance("SHA256withRSA");
+    sig.initSign(privKey);
+    byte[] bytesCheck = "1234567890".getBytes();
+    sig.update(bytesCheck);
+    byte[] signature = sig.sign();
+    sig.initVerify(pubKey);
+    sig.update(bytesCheck);
+    return sig.verify(signature);
   }
 
   public static boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
@@ -458,8 +477,8 @@ public final class KeystoreLoader {
       }
       logger
           .info("saving in keystore alias " + targetAlias + " present in keystore are : " + kstorePresents.toString());
-      logger.debug("IssuerDN\n" + certificate.getIssuerDN().getName());
-      logger.debug("SubjectDN\n" + certificate.getSubjectDN().getName());
+      logger.info("IssuerDN\n" + certificate.getIssuerDN().getName());
+      logger.info("SubjectDN\n" + certificate.getSubjectDN().getName());
       keyStore.setCertificateEntry(targetAlias, certificate);
       if (privateKey != null) {
         keyStore.setKeyEntry(targetAlias, privateKey, passwordChar, new X509Certificate[] { certificate });
