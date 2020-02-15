@@ -10,7 +10,6 @@ option objc_class_prefix = "AR4K";
 package beacon;
 
 service RpcServiceV1 {
-  // for agent registration
   rpc Register (RegisterRequest) returns (RegisterReply) {}
   rpc PollingCmdQueue (Agent) returns (FlowMessage) {}
   rpc SubscriptionCmdQueue (Agent) returns (stream FlowMessage) {}
@@ -20,43 +19,35 @@ service RpcServiceV1 {
   rpc SendLog (LogRequest) returns (Status) {}
   rpc SendException (ExceptionRequest) returns (Status) {}
   rpc SendConfigRuntime (ConfigReport) returns (ConfigReply) {}
-  // for console
-  // list agents connected 
+
   rpc ListAgents (Empty) returns (ListAgentsReply) {}
   rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequestReply) {}
   rpc ListAgentsRequestToDo (Empty) returns (ListAgentsRequestReply) {}
   rpc ApproveAgentRequest (ApproveAgentRequestRequest) returns (Status) {}
-   // gestione kick agent con Beacon
+
   rpc KickAgent (Agent) returns (Status) {}
-  // RPC on agent
+
   rpc ElaborateMessage(ElaborateMessageRequest) returns (ElaborateMessageReply) {}
   rpc ListCommands(ListCommandsRequest) returns (ListCommandsReply) {}
   rpc CompleteCommand(CompleteCommandRequest) returns (CompleteCommandReply) {}
 }
 
 message RegisterRequest {
-  string name = 1; // unique name of the agent
+  string name = 1;
   string requestCsr = 2;
-  string displayKey = 3;  // password key show in the output of Jar agent
+  string displayKey = 3;
   Timestamp time = 4;
   string jsonHealth = 5;
   string shortDescription = 6;
 }
 
 message Timestamp {
-  // Represents seconds of UTC time since Unix epoch
-  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-  // 9999-12-31T23:59:59Z inclusive.
   int64 seconds = 1;
-  // Non-negative fractions of a second at nanosecond resolution. Negative
-  // second values with fractions must still have non-negative nanos values
-  // that count forward in time. Must be from 0 to 999,999,999
-  // inclusive.
   int32 nanos = 2;
 }
 
 message RegisterReply {
-  string registerCode = 1;  // unique code for the registration on the beacon server
+  string registerCode = 1;  
   int32 monitoringFrequency = 2;
   string cert = 3; 
   bytes ca = 4;
@@ -79,7 +70,7 @@ message AgentRequest {
 
 message ApproveAgentRequestRequest {
   string idRequest = 1;
-  string cert = 2;    // da utilizzare se il certificato viene firmato esternamente
+  string cert = 2;
   string note = 3;
 }
 
@@ -180,24 +171,14 @@ message LogRequest {
 }
 
 enum LogSeverity {
-  // (0) The log entry has no assigned severity level.
   DEFAULT = 0;
-  // (100) Debug or trace information.
   DEBUG = 100;
-  // (200) Routine information, such as ongoing status or performance.
   INFO = 200;
-  // (300) Normal but significant events, such as start up, shut down, or
-  // a configuration change.
   NOTICE = 300;
-  // (400) Warning events might cause problems.
   WARNING = 400;
-  // (500) Error events are likely to cause problems.
   ERROR = 500;
-  // (600) Critical events cause more severe problems or outages.
   CRITICAL = 600;
-  // (700) A person must take an action immediately.
   ALERT = 700;
-  // (800) One or more systems are unusable.
   EMERGENCY = 800;
 }
 
@@ -264,18 +245,18 @@ service DataServiceV1 {
 
 message PollingRequest {
   Agent agent = 1;
-  repeated DataNode dataNodes = 2; // elenco nodi ricercati
+  repeated DataNode dataNodes = 2; 
 }
 
 message SubscribeRequest {
   Agent agent = 1;
-  repeated DataNode dataNodes = 2; // elenco nodi ricercati
+  repeated DataNode dataNodes = 2; 
   int32 samplingRate = 3;
 }
 
 message FlowMessageData {
   repeated DataNode values = 1;
-  int32 hiSpeedRoutingTag = 2; // sperimentale per indirizzare rapidamente il routing nei grossi volumi
+  int32 hiSpeedRoutingTag = 2; 
 }
 
 message RequestWrite {
@@ -284,7 +265,7 @@ message RequestWrite {
 }
 
 message DataNode {
-  Agent agentOwner = 1; // chiedo al beacon di un nodo relativo ad un agent
+  Agent agentOwner = 1;
   string nodeId = 2;
   string jsonValue = 3;
   string stringValue = 4;

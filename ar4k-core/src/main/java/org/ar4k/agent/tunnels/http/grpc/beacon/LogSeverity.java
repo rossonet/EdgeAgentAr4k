@@ -9,75 +9,38 @@ package org.ar4k.agent.tunnels.http.grpc.beacon;
 public enum LogSeverity
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
-   * <pre>
-   * (0) The log entry has no assigned severity level.
-   * </pre>
-   *
    * <code>DEFAULT = 0;</code>
    */
   DEFAULT(0),
   /**
-   * <pre>
-   * (100) Debug or trace information.
-   * </pre>
-   *
    * <code>DEBUG = 100;</code>
    */
   DEBUG(100),
   /**
-   * <pre>
-   * (200) Routine information, such as ongoing status or performance.
-   * </pre>
-   *
    * <code>INFO = 200;</code>
    */
   INFO(200),
   /**
-   * <pre>
-   * (300) Normal but significant events, such as start up, shut down, or
-   * a configuration change.
-   * </pre>
-   *
    * <code>NOTICE = 300;</code>
    */
   NOTICE(300),
   /**
-   * <pre>
-   * (400) Warning events might cause problems.
-   * </pre>
-   *
    * <code>WARNING = 400;</code>
    */
   WARNING(400),
   /**
-   * <pre>
-   * (500) Error events are likely to cause problems.
-   * </pre>
-   *
    * <code>ERROR = 500;</code>
    */
   ERROR(500),
   /**
-   * <pre>
-   * (600) Critical events cause more severe problems or outages.
-   * </pre>
-   *
    * <code>CRITICAL = 600;</code>
    */
   CRITICAL(600),
   /**
-   * <pre>
-   * (700) A person must take an action immediately.
-   * </pre>
-   *
    * <code>ALERT = 700;</code>
    */
   ALERT(700),
   /**
-   * <pre>
-   * (800) One or more systems are unusable.
-   * </pre>
-   *
    * <code>EMERGENCY = 800;</code>
    */
   EMERGENCY(800),
@@ -85,75 +48,38 @@ public enum LogSeverity
   ;
 
   /**
-   * <pre>
-   * (0) The log entry has no assigned severity level.
-   * </pre>
-   *
    * <code>DEFAULT = 0;</code>
    */
   public static final int DEFAULT_VALUE = 0;
   /**
-   * <pre>
-   * (100) Debug or trace information.
-   * </pre>
-   *
    * <code>DEBUG = 100;</code>
    */
   public static final int DEBUG_VALUE = 100;
   /**
-   * <pre>
-   * (200) Routine information, such as ongoing status or performance.
-   * </pre>
-   *
    * <code>INFO = 200;</code>
    */
   public static final int INFO_VALUE = 200;
   /**
-   * <pre>
-   * (300) Normal but significant events, such as start up, shut down, or
-   * a configuration change.
-   * </pre>
-   *
    * <code>NOTICE = 300;</code>
    */
   public static final int NOTICE_VALUE = 300;
   /**
-   * <pre>
-   * (400) Warning events might cause problems.
-   * </pre>
-   *
    * <code>WARNING = 400;</code>
    */
   public static final int WARNING_VALUE = 400;
   /**
-   * <pre>
-   * (500) Error events are likely to cause problems.
-   * </pre>
-   *
    * <code>ERROR = 500;</code>
    */
   public static final int ERROR_VALUE = 500;
   /**
-   * <pre>
-   * (600) Critical events cause more severe problems or outages.
-   * </pre>
-   *
    * <code>CRITICAL = 600;</code>
    */
   public static final int CRITICAL_VALUE = 600;
   /**
-   * <pre>
-   * (700) A person must take an action immediately.
-   * </pre>
-   *
    * <code>ALERT = 700;</code>
    */
   public static final int ALERT_VALUE = 700;
   /**
-   * <pre>
-   * (800) One or more systems are unusable.
-   * </pre>
-   *
    * <code>EMERGENCY = 800;</code>
    */
   public static final int EMERGENCY_VALUE = 800;

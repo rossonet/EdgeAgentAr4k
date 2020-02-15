@@ -131,10 +131,6 @@ private static final long serialVersionUID = 0L;
   public static final int HISPEEDROUTINGTAG_FIELD_NUMBER = 2;
   private int hiSpeedRoutingTag_;
   /**
-   * <pre>
-   * sperimentale per indirizzare rapidamente il routing nei grossi volumi
-   * </pre>
-   *
    * <code>int32 hiSpeedRoutingTag = 2;</code>
    */
   public int getHiSpeedRoutingTag() {
@@ -744,20 +740,12 @@ private static final long serialVersionUID = 0L;
 
     private int hiSpeedRoutingTag_ ;
     /**
-     * <pre>
-     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
-     * </pre>
-     *
      * <code>int32 hiSpeedRoutingTag = 2;</code>
      */
     public int getHiSpeedRoutingTag() {
       return hiSpeedRoutingTag_;
     }
     /**
-     * <pre>
-     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
-     * </pre>
-     *
      * <code>int32 hiSpeedRoutingTag = 2;</code>
      */
     public Builder setHiSpeedRoutingTag(int value) {
@@ -767,10 +755,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * sperimentale per indirizzare rapidamente il routing nei grossi volumi
-     * </pre>
-     *
      * <code>int32 hiSpeedRoutingTag = 2;</code>
      */
     public Builder clearHiSpeedRoutingTag() {

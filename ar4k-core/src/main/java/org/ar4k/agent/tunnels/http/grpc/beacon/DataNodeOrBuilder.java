@@ -8,26 +8,14 @@ public interface DataNodeOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   boolean hasAgentOwner();
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.Agent getAgentOwner();
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentOwnerOrBuilder();

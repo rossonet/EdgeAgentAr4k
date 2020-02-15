@@ -87,12 +87,6 @@ private static final long serialVersionUID = 0L;
   public static final int SECONDS_FIELD_NUMBER = 1;
   private long seconds_;
   /**
-   * <pre>
-   * Represents seconds of UTC time since Unix epoch
-   * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-   * 9999-12-31T23:59:59Z inclusive.
-   * </pre>
-   *
    * <code>int64 seconds = 1;</code>
    */
   public long getSeconds() {
@@ -102,13 +96,6 @@ private static final long serialVersionUID = 0L;
   public static final int NANOS_FIELD_NUMBER = 2;
   private int nanos_;
   /**
-   * <pre>
-   * Non-negative fractions of a second at nanosecond resolution. Negative
-   * second values with fractions must still have non-negative nanos values
-   * that count forward in time. Must be from 0 to 999,999,999
-   * inclusive.
-   * </pre>
-   *
    * <code>int32 nanos = 2;</code>
    */
   public int getNanos() {
@@ -437,24 +424,12 @@ private static final long serialVersionUID = 0L;
 
     private long seconds_ ;
     /**
-     * <pre>
-     * Represents seconds of UTC time since Unix epoch
-     * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-     * 9999-12-31T23:59:59Z inclusive.
-     * </pre>
-     *
      * <code>int64 seconds = 1;</code>
      */
     public long getSeconds() {
       return seconds_;
     }
     /**
-     * <pre>
-     * Represents seconds of UTC time since Unix epoch
-     * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-     * 9999-12-31T23:59:59Z inclusive.
-     * </pre>
-     *
      * <code>int64 seconds = 1;</code>
      */
     public Builder setSeconds(long value) {
@@ -464,12 +439,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Represents seconds of UTC time since Unix epoch
-     * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-     * 9999-12-31T23:59:59Z inclusive.
-     * </pre>
-     *
      * <code>int64 seconds = 1;</code>
      */
     public Builder clearSeconds() {
@@ -481,26 +450,12 @@ private static final long serialVersionUID = 0L;
 
     private int nanos_ ;
     /**
-     * <pre>
-     * Non-negative fractions of a second at nanosecond resolution. Negative
-     * second values with fractions must still have non-negative nanos values
-     * that count forward in time. Must be from 0 to 999,999,999
-     * inclusive.
-     * </pre>
-     *
      * <code>int32 nanos = 2;</code>
      */
     public int getNanos() {
       return nanos_;
     }
     /**
-     * <pre>
-     * Non-negative fractions of a second at nanosecond resolution. Negative
-     * second values with fractions must still have non-negative nanos values
-     * that count forward in time. Must be from 0 to 999,999,999
-     * inclusive.
-     * </pre>
-     *
      * <code>int32 nanos = 2;</code>
      */
     public Builder setNanos(int value) {
@@ -510,13 +465,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Non-negative fractions of a second at nanosecond resolution. Negative
-     * second values with fractions must still have non-negative nanos values
-     * that count forward in time. Must be from 0 to 999,999,999
-     * inclusive.
-     * </pre>
-     *
      * <code>int32 nanos = 2;</code>
      */
     public Builder clearNanos() {

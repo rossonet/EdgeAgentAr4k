@@ -15,6 +15,8 @@
 package org.ar4k.qa.tests;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +69,7 @@ public class KeystoreTests {
 
   @Before
   public void setUp() throws Exception {
+    Files.createDirectories(Paths.get("./tmp"));
     File serverKeyStore = new File(fileKeystore);
     if (!serverKeyStore.exists()) {
       serverKeyStore.delete();

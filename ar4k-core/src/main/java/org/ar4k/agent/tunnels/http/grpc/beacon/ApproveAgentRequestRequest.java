@@ -132,10 +132,6 @@ private static final long serialVersionUID = 0L;
   public static final int CERT_FIELD_NUMBER = 2;
   private volatile java.lang.Object cert_;
   /**
-   * <pre>
-   * da utilizzare se il certificato viene firmato esternamente
-   * </pre>
-   *
    * <code>string cert = 2;</code>
    */
   public java.lang.String getCert() {
@@ -151,10 +147,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * da utilizzare se il certificato viene firmato esternamente
-   * </pre>
-   *
    * <code>string cert = 2;</code>
    */
   public com.google.protobuf.ByteString
@@ -612,10 +604,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object cert_ = "";
     /**
-     * <pre>
-     * da utilizzare se il certificato viene firmato esternamente
-     * </pre>
-     *
      * <code>string cert = 2;</code>
      */
     public java.lang.String getCert() {
@@ -631,10 +619,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * da utilizzare se il certificato viene firmato esternamente
-     * </pre>
-     *
      * <code>string cert = 2;</code>
      */
     public com.google.protobuf.ByteString
@@ -651,10 +635,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * da utilizzare se il certificato viene firmato esternamente
-     * </pre>
-     *
      * <code>string cert = 2;</code>
      */
     public Builder setCert(
@@ -668,10 +648,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * da utilizzare se il certificato viene firmato esternamente
-     * </pre>
-     *
      * <code>string cert = 2;</code>
      */
     public Builder clearCert() {
@@ -681,10 +657,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * da utilizzare se il certificato viene firmato esternamente
-     * </pre>
-     *
      * <code>string cert = 2;</code>
      */
     public Builder setCertBytes(

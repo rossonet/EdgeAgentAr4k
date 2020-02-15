@@ -599,9 +599,6 @@ public final class RpcServiceV1Grpc {
   public static abstract class RpcServiceV1ImplBase implements io.grpc.BindableService {
 
     /**
-     * <pre>
-     * for agent registration
-     * </pre>
      */
     public void register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
@@ -665,10 +662,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for console
-     * list agents connected 
-     * </pre>
      */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
@@ -697,9 +690,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * gestione kick agent con Beacon
-     * </pre>
      */
     public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
@@ -707,9 +697,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * RPC on agent
-     * </pre>
      */
     public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> responseObserver) {
@@ -874,9 +861,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for agent registration
-     * </pre>
      */
     public void register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> responseObserver) {
@@ -949,10 +933,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for console
-     * list agents connected 
-     * </pre>
      */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
@@ -985,9 +965,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * gestione kick agent con Beacon
-     * </pre>
      */
     public void kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.Status> responseObserver) {
@@ -996,9 +973,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * RPC on agent
-     * </pre>
      */
     public void elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> responseObserver) {
@@ -1042,9 +1016,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for agent registration
-     * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply register(org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
       return blockingUnaryCall(
@@ -1109,10 +1080,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for console
-     * list agents connected 
-     * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
@@ -1141,9 +1108,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * gestione kick agent con Beacon
-     * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Status kickAgent(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
       return blockingUnaryCall(
@@ -1151,9 +1115,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * RPC on agent
-     * </pre>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply elaborateMessage(org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request) {
       return blockingUnaryCall(
@@ -1194,9 +1155,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for agent registration
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply> register(
         org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest request) {
@@ -1261,10 +1219,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * for console
-     * list agents connected 
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> listAgents(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
@@ -1297,9 +1251,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * gestione kick agent con Beacon
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.Status> kickAgent(
         org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
@@ -1308,9 +1259,6 @@ public final class RpcServiceV1Grpc {
     }
 
     /**
-     * <pre>
-     * RPC on agent
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply> elaborateMessage(
         org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageRequest request) {

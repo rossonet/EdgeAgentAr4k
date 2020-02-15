@@ -127,10 +127,6 @@ private static final long serialVersionUID = 0L;
   public static final int REGISTERCODE_FIELD_NUMBER = 1;
   private volatile java.lang.Object registerCode_;
   /**
-   * <pre>
-   * unique code for the registration on the beacon server
-   * </pre>
-   *
    * <code>string registerCode = 1;</code>
    */
   public java.lang.String getRegisterCode() {
@@ -146,10 +142,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * unique code for the registration on the beacon server
-   * </pre>
-   *
    * <code>string registerCode = 1;</code>
    */
   public com.google.protobuf.ByteString
@@ -702,10 +694,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object registerCode_ = "";
     /**
-     * <pre>
-     * unique code for the registration on the beacon server
-     * </pre>
-     *
      * <code>string registerCode = 1;</code>
      */
     public java.lang.String getRegisterCode() {
@@ -721,10 +709,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * unique code for the registration on the beacon server
-     * </pre>
-     *
      * <code>string registerCode = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -741,10 +725,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * unique code for the registration on the beacon server
-     * </pre>
-     *
      * <code>string registerCode = 1;</code>
      */
     public Builder setRegisterCode(
@@ -758,10 +738,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * unique code for the registration on the beacon server
-     * </pre>
-     *
      * <code>string registerCode = 1;</code>
      */
     public Builder clearRegisterCode() {
@@ -771,10 +747,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * unique code for the registration on the beacon server
-     * </pre>
-     *
      * <code>string registerCode = 1;</code>
      */
     public Builder setRegisterCodeBytes(

@@ -130,20 +130,12 @@ private static final long serialVersionUID = 0L;
   public static final int DATANODES_FIELD_NUMBER = 2;
   private java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> dataNodes_;
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> getDataNodesList() {
     return dataNodes_;
   }
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
@@ -151,30 +143,18 @@ private static final long serialVersionUID = 0L;
     return dataNodes_;
   }
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   public int getDataNodesCount() {
     return dataNodes_.size();
   }
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getDataNodes(int index) {
     return dataNodes_.get(index);
   }
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getDataNodesOrBuilder(
@@ -712,10 +692,6 @@ private static final long serialVersionUID = 0L;
         org.ar4k.agent.tunnels.http.grpc.beacon.DataNode, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> dataNodesBuilder_;
 
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> getDataNodesList() {
@@ -726,10 +702,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public int getDataNodesCount() {
@@ -740,10 +712,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getDataNodes(int index) {
@@ -754,10 +722,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder setDataNodes(
@@ -775,10 +739,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder setDataNodes(
@@ -793,10 +753,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder addDataNodes(org.ar4k.agent.tunnels.http.grpc.beacon.DataNode value) {
@@ -813,10 +769,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder addDataNodes(
@@ -834,10 +786,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder addDataNodes(
@@ -852,10 +800,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder addDataNodes(
@@ -870,10 +814,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder addAllDataNodes(
@@ -889,10 +829,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder clearDataNodes() {
@@ -906,10 +842,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public Builder removeDataNodes(int index) {
@@ -923,10 +855,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder getDataNodesBuilder(
@@ -934,10 +862,6 @@ private static final long serialVersionUID = 0L;
       return getDataNodesFieldBuilder().getBuilder(index);
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getDataNodesOrBuilder(
@@ -948,10 +872,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
@@ -963,10 +883,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder addDataNodesBuilder() {
@@ -974,10 +890,6 @@ private static final long serialVersionUID = 0L;
           org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.getDefaultInstance());
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder addDataNodesBuilder(
@@ -986,10 +898,6 @@ private static final long serialVersionUID = 0L;
           index, org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.getDefaultInstance());
     }
     /**
-     * <pre>
-     * elenco nodi ricercati
-     * </pre>
-     *
      * <code>repeated .beacon.DataNode dataNodes = 2;</code>
      */
     public java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode.Builder> 

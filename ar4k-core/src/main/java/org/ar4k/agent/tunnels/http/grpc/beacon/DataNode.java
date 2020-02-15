@@ -177,30 +177,18 @@ private static final long serialVersionUID = 0L;
   public static final int AGENTOWNER_FIELD_NUMBER = 1;
   private org.ar4k.agent.tunnels.http.grpc.beacon.Agent agentOwner_;
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   public boolean hasAgentOwner() {
     return agentOwner_ != null;
   }
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.Agent getAgentOwner() {
     return agentOwner_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance() : agentOwner_;
   }
   /**
-   * <pre>
-   * chiedo al beacon di un nodo relativo ad un agent
-   * </pre>
-   *
    * <code>.beacon.Agent agentOwner = 1;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentOwnerOrBuilder() {
@@ -958,20 +946,12 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.Agent.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder> agentOwnerBuilder_;
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public boolean hasAgentOwner() {
       return agentOwnerBuilder_ != null || agentOwner_ != null;
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Agent getAgentOwner() {
@@ -982,10 +962,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public Builder setAgentOwner(org.ar4k.agent.tunnels.http.grpc.beacon.Agent value) {
@@ -1002,10 +978,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public Builder setAgentOwner(
@@ -1020,10 +992,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public Builder mergeAgentOwner(org.ar4k.agent.tunnels.http.grpc.beacon.Agent value) {
@@ -1042,10 +1010,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public Builder clearAgentOwner() {
@@ -1060,10 +1024,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.Agent.Builder getAgentOwnerBuilder() {
@@ -1072,10 +1032,6 @@ private static final long serialVersionUID = 0L;
       return getAgentOwnerFieldBuilder().getBuilder();
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentOwnerOrBuilder() {
@@ -1087,10 +1043,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * chiedo al beacon di un nodo relativo ad un agent
-     * </pre>
-     *
      * <code>.beacon.Agent agentOwner = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<

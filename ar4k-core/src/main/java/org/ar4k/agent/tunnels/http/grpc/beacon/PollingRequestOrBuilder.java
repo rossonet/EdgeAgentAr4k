@@ -21,44 +21,24 @@ public interface PollingRequestOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentOrBuilder();
 
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   java.util.List<org.ar4k.agent.tunnels.http.grpc.beacon.DataNode> 
       getDataNodesList();
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.DataNode getDataNodes(int index);
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   int getDataNodesCount();
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   java.util.List<? extends org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder> 
       getDataNodesOrBuilderList();
   /**
-   * <pre>
-   * elenco nodi ricercati
-   * </pre>
-   *
    * <code>repeated .beacon.DataNode dataNodes = 2;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.DataNodeOrBuilder getDataNodesOrBuilder(

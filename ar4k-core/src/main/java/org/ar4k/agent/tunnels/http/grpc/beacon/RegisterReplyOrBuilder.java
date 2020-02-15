@@ -8,18 +8,10 @@ public interface RegisterReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * unique code for the registration on the beacon server
-   * </pre>
-   *
    * <code>string registerCode = 1;</code>
    */
   java.lang.String getRegisterCode();
   /**
-   * <pre>
-   * unique code for the registration on the beacon server
-   * </pre>
-   *
    * <code>string registerCode = 1;</code>
    */
   com.google.protobuf.ByteString

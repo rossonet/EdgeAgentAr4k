@@ -18,18 +18,10 @@ public interface ApproveAgentRequestRequestOrBuilder extends
       getIdRequestBytes();
 
   /**
-   * <pre>
-   * da utilizzare se il certificato viene firmato esternamente
-   * </pre>
-   *
    * <code>string cert = 2;</code>
    */
   java.lang.String getCert();
   /**
-   * <pre>
-   * da utilizzare se il certificato viene firmato esternamente
-   * </pre>
-   *
    * <code>string cert = 2;</code>
    */
   com.google.protobuf.ByteString

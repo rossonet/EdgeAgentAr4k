@@ -8,18 +8,10 @@ public interface RegisterRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * unique name of the agent
-   * </pre>
-   *
    * <code>string name = 1;</code>
    */
   java.lang.String getName();
   /**
-   * <pre>
-   * unique name of the agent
-   * </pre>
-   *
    * <code>string name = 1;</code>
    */
   com.google.protobuf.ByteString
@@ -36,18 +28,10 @@ public interface RegisterRequestOrBuilder extends
       getRequestCsrBytes();
 
   /**
-   * <pre>
-   * password key show in the output of Jar agent
-   * </pre>
-   *
    * <code>string displayKey = 3;</code>
    */
   java.lang.String getDisplayKey();
   /**
-   * <pre>
-   * password key show in the output of Jar agent
-   * </pre>
-   *
    * <code>string displayKey = 3;</code>
    */
   com.google.protobuf.ByteString

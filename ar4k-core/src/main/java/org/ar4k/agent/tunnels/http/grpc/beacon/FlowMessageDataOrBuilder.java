@@ -32,10 +32,6 @@ public interface FlowMessageDataOrBuilder extends
       int index);
 
   /**
-   * <pre>
-   * sperimentale per indirizzare rapidamente il routing nei grossi volumi
-   * </pre>
-   *
    * <code>int32 hiSpeedRoutingTag = 2;</code>
    */
   int getHiSpeedRoutingTag();
