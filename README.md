@@ -1,6 +1,8 @@
 # Ar4k Edge Agent by Rossonet
 
-![Gradle test and build maven archive](https://github.com/rossonet/EdgeAgentAr4k/workflows/Gradle%20test%20and%20build%20maven%20archive/badge.svg)
+![Test on master branch](https://github.com/rossonet/EdgeAgentAr4k/workflows/Test%20on%20master%20branch/badge.svg)
+
+![Test release branch and publish on GitHub Packages](https://github.com/rossonet/EdgeAgentAr4k/workflows/Test%20release%20branch%20and%20publish%20on%20GitHub%20Packages/badge.svg)
 
 ![alt text](https://www.rossonet.net/wp-content/uploads/2015/01/logoRossonet4.png "Rossonet")
 
