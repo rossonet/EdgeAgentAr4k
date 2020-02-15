@@ -20,4 +20,4 @@ jobs:
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         USERNAME: ${ GITHUB_ACTOR }
-      run: ./gradlew clean test buildAllBootJars publish --info
+      run: ./gradlew publish --info
