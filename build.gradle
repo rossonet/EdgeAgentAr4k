@@ -162,8 +162,8 @@ subprojects {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/rossonet/EdgeAgentAr4k")
             credentials {
-                    username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                    password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("PASSWORD")
             }
         }
     }
