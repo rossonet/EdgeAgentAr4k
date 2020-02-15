@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.ar4k.agent.logger.Ar4kLogger;
+import org.ar4k.agent.logger.Ar4kStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
@@ -12,6 +14,9 @@ import org.joda.time.Instant;
 import org.json.JSONObject;
 
 public class BeaconAgent implements AutoCloseable {
+
+  private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
+      .getLogger(BeaconAgent.class.toString());
 
   private static final int queueSize = 50;
 
@@ -21,9 +26,16 @@ public class BeaconAgent implements AutoCloseable {
   private final RegisterReply registerReply;
   private final Queue<RequestToAgent> cmdCalls = new ArrayBlockingQueue<>(queueSize);
 
+  private JSONObject hardwareInfo;
+
   public BeaconAgent(RegisterRequest registerRequest, RegisterReply registerReply) {
     this.registerRequest = registerRequest;
     this.registerReply = registerReply;
+    try {
+      this.hardwareInfo = new JSONObject(registerRequest.getJsonHealth());
+    } catch (Exception a) {
+      logger.logException(a);
+    }
   }
 
   public RegisterRequest getRegisterRequest() {
@@ -39,7 +51,7 @@ public class BeaconAgent implements AutoCloseable {
   }
 
   public JSONObject getHardwareInfoAsJson() {
-    return new JSONObject(registerRequest.getJsonHealth());
+    return hardwareInfo;
   }
 
   public List<RequestToAgent> getCommandsToBeExecute() {
@@ -64,19 +76,26 @@ public class BeaconAgent implements AutoCloseable {
   }
 
   @Override
-  public String toString() {
-    return "BeaconAgent [getAgentUniqueName()=" + getAgentUniqueName() + ", getHardwareInfoAsJson()="
-        + getHardwareInfoAsJson().toString(2) + ", getPollingFrequency()=" + getPollingFrequency()
-        + ", getTimestampRegistration()=" + getTimestampRegistration() + "]";
-  }
-
-  @Override
   public void close() throws Exception {
     cmdCalls.clear();
   }
 
   public Instant getLastCall() {
     return lastCall;
+  }
+
+  public void setHardwareInfo(JSONObject hardwareInfo) {
+    this.hardwareInfo = hardwareInfo;
+  }
+
+  @Override
+  public String toString() {
+    return "BeaconAgent [lastCall=" + lastCall + ", registerRequest=" + registerRequest + ", registerReply="
+        + registerReply + "]";
+  }
+
+  public String getShortDescription() {
+    return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: " + cmdCalls.size();
   }
 
 }

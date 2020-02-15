@@ -498,6 +498,7 @@ public class RemoteControlOverBeacon {
       public Boolean call() throws Exception {
         @SuppressWarnings("resource")
         ServerSocket serverSocket = new ServerSocket(destinationPort);
+        serverSocket.setReuseAddress(true);
         Socket socket = serverSocket.accept();
         PrintWriter w = new PrintWriter(socket.getOutputStream(), true);
         InputStreamReader reader = new InputStreamReader(socket.getInputStream());

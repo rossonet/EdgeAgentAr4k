@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.IBeaconClient;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -79,7 +80,7 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 
-public class BeaconClient implements AutoCloseable {
+public class BeaconClient implements AutoCloseable, IBeaconClient {
 
   private static final Ar4kLogger logger = (Ar4kLogger) Ar4kStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(BeaconClient.class.toString());
@@ -448,6 +449,10 @@ public class BeaconClient implements AutoCloseable {
 
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getRemoteExecutor(org.ar4k.agent.tunnels.http.grpc.beacon.Agent)
+   */
+  @Override
   public RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent) {
     RemoteBeaconRpcExecutor result = null;
     for (RemoteBeaconRpcExecutor f : remoteExecutors) {
@@ -465,16 +470,28 @@ public class BeaconClient implements AutoCloseable {
     return result;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#listAgentsConnectedToBeacon()
+   */
+  @Override
   public List<Agent> listAgentsConnectedToBeacon() {
     Empty empty = Empty.newBuilder().build();
     ListAgentsReply reply = blockingStub.listAgents(empty);
     return reply.getAgentsList();
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#shutdown()
+   */
+  @Override
   public void shutdown() throws InterruptedException {
     channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getStateConnection()
+   */
+  @Override
   public ConnectivityState getStateConnection() {
     return channel != null ? channel.getState(true) : ConnectivityState.SHUTDOWN;
   }
@@ -531,6 +548,10 @@ public class BeaconClient implements AutoCloseable {
     return result;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getPollingFreq()
+   */
+  @Override
   public int getPollingFreq() {
     return pollingFrequency;
   }
@@ -721,6 +742,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#sendLoggerLine(java.lang.String, java.lang.String)
+   */
+  @Override
   public void sendLoggerLine(String message, String level) {
     if (status == StatusBeaconClient.REGISTERED) {
       try {
@@ -765,6 +790,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#sendException(java.lang.Exception)
+   */
+  @Override
   public void sendException(Exception message) {
     if (status == StatusBeaconClient.REGISTERED) {
       try {
@@ -781,18 +810,34 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getAgentUniqueName()
+   */
+  @Override
   public String getAgentUniqueName() {
     return me != null ? me.getAgentUniqueName() : null;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getAsyncStub()
+   */
+  @Override
   public RpcServiceV1Stub getAsyncStub() {
     return asyncStub;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getBlockingStub()
+   */
+  @Override
   public RpcServiceV1BlockingStub getBlockingStub() {
     return blockingStub;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#listCommadsOnAgent(java.lang.String)
+   */
+  @Override
   public ListCommandsReply listCommadsOnAgent(String agentId) {
     try {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
@@ -804,6 +849,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#sendConfigToAgent(java.lang.String, org.ar4k.agent.config.Ar4kConfig)
+   */
+  @Override
   public ConfigReply sendConfigToAgent(String agentId, Ar4kConfig newConfig) {
     try {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
@@ -816,10 +865,18 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getTunnels()
+   */
+  @Override
   public List<BeaconNetworkTunnel> getTunnels() {
     return tunnels;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#removeTunnel(org.ar4k.agent.tunnels.http.beacon.BeaconNetworkTunnel)
+   */
+  @Override
   public void removeTunnel(BeaconNetworkTunnel toRemove) {
     tunnels.remove(toRemove);
     try {
@@ -829,6 +886,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getNetworkTunnel(java.lang.String, org.ar4k.agent.network.NetworkConfig)
+   */
+  @Override
   public NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config) {
     BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, true, asyncStubTunnel, "0");
     try {
@@ -864,6 +925,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#runCommadsOnAgent(java.lang.String, java.lang.String)
+   */
+  @Override
   public ElaborateMessageReply runCommadsOnAgent(String agentId, String command) {
     try {
       Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
@@ -888,6 +953,10 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#runCompletitionOnAgent(java.lang.String, java.lang.String)
+   */
+  @Override
   public CompleteCommandReply runCompletitionOnAgent(String agentUniqueName, String command) {
     try {
       List<String> m = Arrays.asList(StringUtils.split(command));
@@ -918,38 +987,74 @@ public class BeaconClient implements AutoCloseable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getRemoteExecutors()
+   */
+  @Override
   public List<RemoteBeaconRpcExecutor> getRemoteExecutors() {
     return remoteExecutors;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#setRemoteExecutors(java.util.List)
+   */
+  @Override
   public void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors) {
     this.remoteExecutors = remoteExecutors;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getDiscoveryPort()
+   */
+  @Override
   public int getDiscoveryPort() {
     return discoveryPort;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#setDiscoveryPort(int)
+   */
+  @Override
   public void setDiscoveryPort(int discoveryPort) {
     this.discoveryPort = discoveryPort;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getDiscoveryFilter()
+   */
+  @Override
   public String getDiscoveryFilter() {
     return discoveryFilter;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#setDiscoveryFilter(java.lang.String)
+   */
+  @Override
   public void setDiscoveryFilter(String discoveryFilter) {
     this.discoveryFilter = discoveryFilter;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getReservedUniqueName()
+   */
+  @Override
   public String getReservedUniqueName() {
     return reservedUniqueName;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#setReservedUniqueName(java.lang.String)
+   */
+  @Override
   public void setReservedUniqueName(String reservedUniqueName) {
     this.reservedUniqueName = reservedUniqueName;
   }
 
+  /* (non-Javadoc)
+   * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getRegistrationStatus()
+   */
+  @Override
   public StatusValue getRegistrationStatus() {
     return registerStatus;
   }

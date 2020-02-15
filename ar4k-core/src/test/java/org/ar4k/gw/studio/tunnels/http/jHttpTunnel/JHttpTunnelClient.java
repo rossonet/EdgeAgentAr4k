@@ -8,8 +8,8 @@ modification, are permitted provided that the following conditions are met:
   1. Redistributions of source code must retain the above copyright notice,
      this list of conditions and the following disclaimer.
 
-  2. Redistributions in binary form must reproduce the above copyright 
-     notice, this list of conditions and the following disclaimer in 
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the distribution.
 
   3. The names of the authors may not be used to endorse or promote products
@@ -236,7 +236,7 @@ public class JHttpTunnelClient {
         case JHttpTunnel.TUNNEL_ERROR:
           byte[] error = new byte[len];
           ib.receiveData(error, 0, len);
-//	  System.out.println(new String(error, 0, len)); 
+//	  System.out.println(new String(error, 0, len));
           throw new IOException("JHttpTunnel: " + new String(error, 0, len));
         case JHttpTunnel.TUNNEL_PAD1:
           continue;
@@ -270,15 +270,18 @@ public class JHttpTunnelClient {
     in = new InputStream() {
       byte[] tmp = new byte[1];
 
+      @Override
       public int read() throws IOException {
         int i = JHttpTunnelClient.this.read(tmp, 0, 1);
         return (i == -1 ? -1 : tmp[0]);
       }
 
+      @Override
       public int read(byte[] foo) throws IOException {
         return JHttpTunnelClient.this.read(foo, 0, foo.length);
       }
 
+      @Override
       public int read(byte[] foo, int s, int l) throws IOException {
         return JHttpTunnelClient.this.read(foo, s, l);
       }
@@ -294,15 +297,18 @@ public class JHttpTunnelClient {
     out = new OutputStream() {
       final byte[] tmp = new byte[1];
 
+      @Override
       public void write(int foo) throws IOException {
         tmp[0] = (byte) foo;
         JHttpTunnelClient.this.write(tmp, 0, 1);
       }
 
+      @Override
       public void write(byte[] foo) throws IOException {
         JHttpTunnelClient.this.write(foo, 0, foo.length);
       }
 
+      @Override
       public void write(byte[] foo, int s, int l) throws IOException {
         JHttpTunnelClient.this.write(foo, s, l);
       }
@@ -337,46 +343,46 @@ public class JHttpTunnelClient {
 
   /*
    * public static void main(String[] arg){ try{
-   * 
+   *
    * if(arg.length==0){ System.err.println("Enter hostname[:port]");
    * System.exit(1); }
-   * 
+   *
    * String host=arg[0]; int hport=8888; if(host.indexOf(':')!=-1){
    * hport=Integer.parseInt(host.substring(host.lastIndexOf(':') + 1));
    * host=host.substring(0, host.lastIndexOf(':')); }
-   * 
+   *
    * int port=2323; String _port=System.getProperty("F"); if(_port!=null){
    * port=Integer.parseInt(_port); }
-   * 
+   *
    * String proxy_host=System.getProperty("P"); int proxy_port=8080;
    * if(proxy_host!=null && proxy_host.indexOf(':')!=-1){
    * proxy_port=Integer.parseInt(proxy_host.substring(proxy_host.lastIndexOf(':')
    * + 1)); proxy_host=proxy_host.substring(0, proxy_host.lastIndexOf(':')); }
-   * 
+   *
    * ServerSocket ss=new ServerSocket(port); while(true){ final Socket
-   * socket=ss.accept(); socket.setTcpNoDelay(true);
-   * 
+   * ss.setReuseAddress(true); socket=ss.accept(); socket.setTcpNoDelay(true);
+   *
    * //System.out.println("accept: "+socket);
-   * 
+   *
    * final InputStream sin=socket.getInputStream(); final OutputStream
    * sout=socket.getOutputStream();
-   * 
+   *
    * final JHttpTunnelClient jhtc=new JHttpTunnelClient(host, hport);
    * if(proxy_host!=null){ jhtc.setProxy(proxy_host, proxy_port); }
-   * 
+   *
    * // jhtc.setInBound(new InBoundURL()); // jhtc.setOutBound(new OutBoundURL());
-   * 
+   *
    * jhtc.setInBound(new InBoundSocket()); jhtc.setOutBound(new OutBoundSocket());
-   * 
+   *
    * jhtc.connect(); final InputStream jin=jhtc.getInputStream(); final
    * OutputStream jout=jhtc.getOutputStream();
-   * 
+   *
    * Runnable runnable=new Runnable(){ public void run(){ byte[] tmp=new
    * byte[1024]; try{ while(true){ int i=jin.read(tmp); if(i>0){ sout.write(tmp,
    * 0, i); continue; } break; } } catch(Exception e){ } try{ sout.close();
    * sin.close(); socket.close(); jin.close(); jhtc.close(); } catch(Exception e){
    * } } }; (new Thread(runnable)).start();
-   * 
+   *
    * byte[] tmp=new byte[1024]; try{ while(true){ int i=sin.read(tmp); if(i>0){
    * jout.write(tmp, 0, i); continue; } break; } } catch(Exception e){ } try{
    * socket.close(); jin.close(); jhtc.close(); } catch(Exception e){ } } }

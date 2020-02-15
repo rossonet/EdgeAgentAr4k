@@ -276,7 +276,7 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
 
   @Override
   public int getChildrenCountOfScope(String scope) {
-    return scopeChildren.get(scope).size();
+    return scopeChildren.get(scope) != null ? scopeChildren.get(scope).size() : 0;
   }
 
   private void removeChildrenOfScope(String scope) {
@@ -322,4 +322,18 @@ public abstract class AbstractChannel implements Ar4kChannel, Closeable, Pollabl
     this.dataAddress = dataAddress;
   }
 
+  @Override
+  public DataTree<Ar4kChannel> getScopeTreeChildren(String scope, int maxLoop) {
+    if (maxLoop > 0) {
+      DataTree<Ar4kChannel> tree = new DataTree<>(this);
+      if (getChildrenCountOfScope(scope) > 0) {
+        for (Ar4kChannel node : getChildrenOfScope(scope)) {
+          tree.addTree(node.getScopeTreeChildren(scope, maxLoop - 1));
+        }
+      }
+      return tree;
+    } else {
+      return null;
+    }
+  }
 }

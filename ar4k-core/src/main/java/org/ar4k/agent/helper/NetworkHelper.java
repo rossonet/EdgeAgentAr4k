@@ -108,6 +108,7 @@ public class NetworkHelper {
     ServerSocket socket = null;
     try {
       socket = new ServerSocket(port);
+      socket.setReuseAddress(true);
     } catch (IOException e) {
       logger.logException(e);
       portTaken = true;

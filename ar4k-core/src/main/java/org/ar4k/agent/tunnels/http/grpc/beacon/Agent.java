@@ -76,6 +76,19 @@ private static final long serialVersionUID = 0L;
             jsonHardwareInfo_ = s;
             break;
           }
+          case 42: {
+            org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder subBuilder = null;
+            if (lastContact_ != null) {
+              subBuilder = lastContact_.toBuilder();
+            }
+            lastContact_ = input.readMessage(org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(lastContact_);
+              lastContact_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -231,6 +244,27 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int LASTCONTACT_FIELD_NUMBER = 5;
+  private org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp lastContact_;
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  public boolean hasLastContact() {
+    return lastContact_ != null;
+  }
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getLastContact() {
+    return lastContact_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.getDefaultInstance() : lastContact_;
+  }
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  public org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getLastContactOrBuilder() {
+    return getLastContact();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -257,6 +291,9 @@ private static final long serialVersionUID = 0L;
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, jsonHardwareInfo_);
     }
+    if (lastContact_ != null) {
+      output.writeMessage(5, getLastContact());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -278,6 +315,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, jsonHardwareInfo_);
+    }
+    if (lastContact_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, getLastContact());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -305,6 +346,11 @@ private static final long serialVersionUID = 0L;
     }
     if (!getJsonHardwareInfo()
         .equals(other.getJsonHardwareInfo())) return false;
+    if (hasLastContact() != other.hasLastContact()) return false;
+    if (hasLastContact()) {
+      if (!getLastContact()
+          .equals(other.getLastContact())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -326,6 +372,10 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + JSONHARDWAREINFO_FIELD_NUMBER;
     hash = (53 * hash) + getJsonHardwareInfo().hashCode();
+    if (hasLastContact()) {
+      hash = (37 * hash) + LASTCONTACT_FIELD_NUMBER;
+      hash = (53 * hash) + getLastContact().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -471,6 +521,12 @@ private static final long serialVersionUID = 0L;
       }
       jsonHardwareInfo_ = "";
 
+      if (lastContactBuilder_ == null) {
+        lastContact_ = null;
+      } else {
+        lastContact_ = null;
+        lastContactBuilder_ = null;
+      }
       return this;
     }
 
@@ -505,6 +561,11 @@ private static final long serialVersionUID = 0L;
         result.registerData_ = registerDataBuilder_.build();
       }
       result.jsonHardwareInfo_ = jsonHardwareInfo_;
+      if (lastContactBuilder_ == null) {
+        result.lastContact_ = lastContact_;
+      } else {
+        result.lastContact_ = lastContactBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -567,6 +628,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getJsonHardwareInfo().isEmpty()) {
         jsonHardwareInfo_ = other.jsonHardwareInfo_;
         onChanged();
+      }
+      if (other.hasLastContact()) {
+        mergeLastContact(other.getLastContact());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -919,6 +983,123 @@ private static final long serialVersionUID = 0L;
       jsonHardwareInfo_ = value;
       onChanged();
       return this;
+    }
+
+    private org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp lastContact_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp, org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder> lastContactBuilder_;
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public boolean hasLastContact() {
+      return lastContactBuilder_ != null || lastContact_ != null;
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getLastContact() {
+      if (lastContactBuilder_ == null) {
+        return lastContact_ == null ? org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.getDefaultInstance() : lastContact_;
+      } else {
+        return lastContactBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public Builder setLastContact(org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp value) {
+      if (lastContactBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        lastContact_ = value;
+        onChanged();
+      } else {
+        lastContactBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public Builder setLastContact(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder builderForValue) {
+      if (lastContactBuilder_ == null) {
+        lastContact_ = builderForValue.build();
+        onChanged();
+      } else {
+        lastContactBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public Builder mergeLastContact(org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp value) {
+      if (lastContactBuilder_ == null) {
+        if (lastContact_ != null) {
+          lastContact_ =
+            org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.newBuilder(lastContact_).mergeFrom(value).buildPartial();
+        } else {
+          lastContact_ = value;
+        }
+        onChanged();
+      } else {
+        lastContactBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public Builder clearLastContact() {
+      if (lastContactBuilder_ == null) {
+        lastContact_ = null;
+        onChanged();
+      } else {
+        lastContact_ = null;
+        lastContactBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder getLastContactBuilder() {
+      
+      onChanged();
+      return getLastContactFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getLastContactOrBuilder() {
+      if (lastContactBuilder_ != null) {
+        return lastContactBuilder_.getMessageOrBuilder();
+      } else {
+        return lastContact_ == null ?
+            org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.getDefaultInstance() : lastContact_;
+      }
+    }
+    /**
+     * <code>.beacon.Timestamp lastContact = 5;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp, org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder> 
+        getLastContactFieldBuilder() {
+      if (lastContactBuilder_ == null) {
+        lastContactBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp, org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.Builder, org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder>(
+                getLastContact(),
+                getParentForChildren(),
+                isClean());
+        lastContact_ = null;
+      }
+      return lastContactBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

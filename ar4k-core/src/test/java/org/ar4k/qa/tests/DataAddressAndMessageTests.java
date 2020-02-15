@@ -14,17 +14,16 @@
     */
 package org.ar4k.qa.tests;
 
-import java.util.UUID;
+import java.io.IOException;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -55,7 +54,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@Ignore
 public class DataAddressAndMessageTests {
 
   @Autowired
@@ -76,30 +74,59 @@ public class DataAddressAndMessageTests {
   };
 
   @Test
-  public void putInDataStore() throws InterruptedException {
+  public void checkTreeTest() throws InterruptedException, IOException {
     Thread.sleep(2000L);
-    while (anima == null || !anima.getState().toString().equals("STAMINAL") || !anima.dataStoreExists()) {
-      if (anima != null && anima.getState().toString().equals("INIT")) {
-        anima.sendEvent(AnimaEvents.BOOTSTRAP);
-      }
-      try {
-        System.out.println("STATE A: " + anima.getState());
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      Thread.sleep(2000L);
-    }
-    String stringa = UUID.randomUUID().toString();
-    boolean primo = true;
-    for (int i = 0; i < 10000; i++) {
-      if (primo) {
-        anima.setContextData(stringa, UUID.randomUUID().toString());
-        primo = false;
-      } else {
-        anima.setContextData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-      }
-    }
-    System.out.println("STATE B: " + anima.getContextData(stringa));
+    String scope = "test-scope";
+    INoDataChannel root = new INoDataChannel();
+    root.setNodeId("root");
+    INoDataChannel a = new INoDataChannel();
+    a.setNodeId("a");
+    INoDataChannel b = new INoDataChannel();
+    b.setNodeId("b");
+    INoDataChannel c = new INoDataChannel();
+    c.setNodeId("c");
+    INoDataChannel a1 = new INoDataChannel();
+    a1.setNodeId("a1");
+    INoDataChannel a2 = new INoDataChannel();
+    a2.setNodeId("a2");
+    INoDataChannel a3 = new INoDataChannel();
+    a3.setNodeId("a3");
+    INoDataChannel b1 = new INoDataChannel();
+    b1.setNodeId("b1");
+    INoDataChannel b2 = new INoDataChannel();
+    b2.setNodeId("b2");
+    INoDataChannel b2a = new INoDataChannel();
+    b2a.setNodeId("b2a");
+    INoDataChannel b2b = new INoDataChannel();
+    b2b.setNodeId("b2b");
+    INoDataChannel b2c = new INoDataChannel();
+    b2c.setNodeId("b2c");
+    b2c.setFatherOfScope(scope, b2);
+    b2b.setFatherOfScope(scope, b2);
+    b2a.setFatherOfScope(scope, b2);
+    b1.setFatherOfScope(scope, b);
+    b2.setFatherOfScope(scope, b);
+    a1.setFatherOfScope(scope, a);
+    a2.setFatherOfScope(scope, a);
+    a3.setFatherOfScope(scope, a);
+    a.setFatherOfScope(scope, root);
+    b.setFatherOfScope(scope, root);
+    c.setFatherOfScope(scope, root);
+    System.out.println("\n\nPrint string:");
+    System.out.println(root.getScopeTreeChildren(scope, 10).toString());
+    System.out.println("\n\nPrint json:");
+    System.out.println(root.getScopeTreeChildren(scope, 10).toJson().toString(2));
+    root.close();
+    a.close();
+    b.close();
+    c.close();
+    a1.close();
+    a2.close();
+    a3.close();
+    b1.close();
+    b2.close();
+    b2a.close();
+    b2b.close();
+    b2c.close();
   }
-
 }

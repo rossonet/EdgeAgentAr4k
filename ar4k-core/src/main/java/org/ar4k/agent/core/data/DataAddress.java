@@ -26,7 +26,7 @@ public class DataAddress implements AutoCloseable {
     this.dataNamePrefix = dataNamePrefix;
   }
 
-  protected Collection<Ar4kChannel> dataChannels = new HashSet<>();
+  protected final Collection<Ar4kChannel> dataChannels = new HashSet<>();
 
   protected String defaultScope = "ar4k-ai";
   protected String levelSeparator = "/";

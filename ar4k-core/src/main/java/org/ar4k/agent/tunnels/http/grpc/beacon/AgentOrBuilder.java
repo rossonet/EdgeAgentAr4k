@@ -49,4 +49,17 @@ public interface AgentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getJsonHardwareInfoBytes();
+
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  boolean hasLastContact();
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp getLastContact();
+  /**
+   * <code>.beacon.Timestamp lastContact = 5;</code>
+   */
+  org.ar4k.agent.tunnels.http.grpc.beacon.TimestampOrBuilder getLastContactOrBuilder();
 }

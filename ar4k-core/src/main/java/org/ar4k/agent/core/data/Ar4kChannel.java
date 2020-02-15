@@ -86,4 +86,6 @@ public interface Ar4kChannel extends AutoCloseable {
 
   void addTag(String tag);
 
+  DataTree<Ar4kChannel> getScopeTreeChildren(String scope, int maxLoop);
+
 }

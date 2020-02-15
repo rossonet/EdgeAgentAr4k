@@ -109,6 +109,7 @@ message Agent {
   string shortDescription = 2;
   RegisterReply registerData = 3;
   string jsonHardwareInfo = 4;
+  Timestamp lastContact = 5;
 }
  
 message ConfigReply {

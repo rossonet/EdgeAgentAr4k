@@ -15,14 +15,14 @@
 package org.ar4k.qa.tests;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.IBeaconClient;
 import org.ar4k.agent.core.IBeaconServer;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 
 public class GrpcBeaconDataTests {
 
   IBeaconServer server = null;
-  BeaconClient client = null;
+  IBeaconClient client = null;
   RpcConversation rpcConversation = null;
   int port = 2569;
   Anima anima = new Anima();

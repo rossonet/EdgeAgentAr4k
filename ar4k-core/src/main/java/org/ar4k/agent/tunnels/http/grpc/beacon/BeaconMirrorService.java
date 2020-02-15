@@ -228,10 +228,11 @@ public final class BeaconMirrorService {
       "pproveAgentRequestRequest\022\021\n\tidRequest\030\001" +
       " \001(\t\022\014\n\004cert\030\002 \001(\t\022\014\n\004note\030\003 \001(\t\"-\n\006Stat" +
       "us\022#\n\006status\030\001 \001(\0162\023.beacon.StatusValue\"" +
-      "\201\001\n\005Agent\022\027\n\017agentUniqueName\030\001 \001(\t\022\030\n\020sh" +
+      "\251\001\n\005Agent\022\027\n\017agentUniqueName\030\001 \001(\t\022\030\n\020sh" +
       "ortDescription\030\002 \001(\t\022+\n\014registerData\030\003 \001" +
       "(\0132\025.beacon.RegisterReply\022\030\n\020jsonHardwar" +
-      "eInfo\030\004 \001(\t\"[\n\013ConfigReply\022\024\n\014base64Conf" +
+      "eInfo\030\004 \001(\t\022&\n\013lastContact\030\005 \001(\0132\021.beaco" +
+      "n.Timestamp\"[\n\013ConfigReply\022\024\n\014base64Conf" +
       "ig\030\001 \001(\t\022\021\n\trestartAt\030\002 \001(\003\022#\n\006status\030\003 " +
       "\001(\0162\023.beacon.StatusValue\"V\n\014ConfigReport" +
       "\022\034\n\005agent\030\001 \001(\0132\r.beacon.Agent\022\024\n\014base64" +
@@ -443,7 +444,7 @@ public final class BeaconMirrorService {
     internal_static_beacon_Agent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_Agent_descriptor,
-        new java.lang.String[] { "AgentUniqueName", "ShortDescription", "RegisterData", "JsonHardwareInfo", });
+        new java.lang.String[] { "AgentUniqueName", "ShortDescription", "RegisterData", "JsonHardwareInfo", "LastContact", });
     internal_static_beacon_ConfigReply_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_beacon_ConfigReply_fieldAccessorTable = new

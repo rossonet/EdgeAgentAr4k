@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.IBeaconClient;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
@@ -47,6 +49,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
@@ -180,6 +183,26 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     return resolveBeaconClient().listAgentsConnectedToBeacon();
   }
 
+  @ShellMethod(value = "List Agents connected to the Beacon server with health in JSON", group = "Beacon Client Commands")
+  @ManagedOperation
+  @ShellMethodAvailability("testBeaconClientRunning")
+  public List<String> listBeaconAgentsHumanReadable() {
+    List<String> resultAgents = new ArrayList<>();
+    for (Agent a : resolveBeaconClient().listAgentsConnectedToBeacon()) {
+      StringBuilder agentTxt = new StringBuilder();
+      agentTxt.append("agent id: " + a.getAgentUniqueName() + "\n");
+      agentTxt.append("description: " + a.getShortDescription() + "\n");
+      agentTxt.append("last contact: " + (new Date(a.getLastContact().getSeconds())).toString() + "\n");
+      try {
+        agentTxt.append("health json: " + new JSONObject(a.getJsonHardwareInfo()).toString(2) + "\n");
+      } catch (Exception aa) {
+        logger.logException(aa);
+      }
+      resultAgents.add(agentTxt.toString());
+    }
+    return resultAgents;
+  }
+
   @ShellMethod(value = "Create TCP tunnel over Beacon protocol", group = "Beacon Client Commands")
   @ManagedOperation
   @ShellMethodAvailability("testBeaconClientRunning")
@@ -195,8 +218,6 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
         destinationIpPort, sourceServerPort);
     resolveBeaconClient().getNetworkTunnel(agentTarget, config);
   }
-
-  // TODO CRUD channels Beacon
 
   @ShellMethod(value = "List commands on a remote agent connected by Beacon", group = "Beacon Client Commands")
   @ManagedOperation
@@ -351,7 +372,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
     return "sent";
   }
 
-  private BeaconClient resolveBeaconClient() {
+  private IBeaconClient resolveBeaconClient() {
     return tmpClient != null ? tmpClient : anima.getBeaconClient();
   }
 

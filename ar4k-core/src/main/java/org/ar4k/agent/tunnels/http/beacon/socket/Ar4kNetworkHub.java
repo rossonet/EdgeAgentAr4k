@@ -409,7 +409,8 @@ public class Ar4kNetworkHub implements NetworkHub {
     try {
       ServerTcpInitHandler serverInitHandler = new ServerTcpInitHandler();
       ServerBootstrap b = new ServerBootstrap().group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-          .childHandler(serverInitHandler).childOption(ChannelOption.SO_KEEPALIVE, true);
+          .childHandler(serverInitHandler).childOption(ChannelOption.SO_KEEPALIVE, true)
+          .childOption(ChannelOption.SO_REUSEADDR, true);
       ChannelFuture genericServerClientChannel = b.bind(config.getServerPort()).sync();
       if (genericServerClientChannel.isSuccess()) {
         logger.info("Server Netty on port " + config.getServerPort() + " with id_target " + tunnelId + "/"

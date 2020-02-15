@@ -521,7 +521,7 @@ public class Anima
         try {
           if (starterProperties.getWebRegistrationEndpoint() == null
               || starterProperties.getWebRegistrationEndpoint().isEmpty()) {
-            throw new UnknownHostException();
+            logger.warn("Beacon connection is not configured");
           }
           logger.info("TRY CONNECTION TO BEACON AT "
               + ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
@@ -1184,7 +1184,7 @@ public class Anima
     }
   }
 
-  public BeaconClient getBeaconClient() {
+  public IBeaconClient getBeaconClient() {
     return beaconClient;
   }
 

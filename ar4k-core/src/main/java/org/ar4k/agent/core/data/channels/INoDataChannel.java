@@ -1,7 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
-import org.ar4k.agent.core.data.Ar4kChannel;
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.Ar4kChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 

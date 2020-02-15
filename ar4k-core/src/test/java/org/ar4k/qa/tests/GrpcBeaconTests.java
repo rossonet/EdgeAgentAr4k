@@ -28,6 +28,7 @@ import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.IBeaconClient;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.Ar4kAuthenticationManager;
 import org.ar4k.agent.spring.Ar4kuserDetailsService;
@@ -74,7 +75,7 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 public class GrpcBeaconTests {
 
   BeaconServer server = null;
-  BeaconClient client = null;
+  IBeaconClient client = null;
   RpcConversation rpcConversation = null;
   int port = 2569;
 

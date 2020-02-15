@@ -74,6 +74,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.json.JSONObject;
 
 import com.google.protobuf.ByteString;
 
@@ -87,6 +88,7 @@ import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
@@ -306,7 +308,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
       logger.info("Starting beacon server txt mode");
       try {
-        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port);
+        ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port).withChildOption(ChannelOption.SO_REUSEADDR,
+            true);
         server = serverBuilder.addService(new RpcService()).addService(new TunnelService())
             .addService(new DataService()).build();
       } catch (Exception e) {
@@ -331,6 +334,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
             .forServer(new File(this.certFileLastPart), new File(this.privateKeyFileLastPart))
             .trustManager(new File(this.certChainFileLastPart)).clientAuth(ClientAuth.OPTIONAL);
         ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
+            .withChildOption(ChannelOption.SO_REUSEADDR, true)
             .sslContext(GrpcSslContexts.configure(sslContextBuild, SslProvider.OPENSSL).build());
         server = serverBuilder.intercept(new AuthorizationInterceptor()).addService(new RpcService())
             .addService(new DataService()).addService(new TunnelService()).build();
@@ -687,8 +691,18 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
     @Override
     public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
       try {
-        responseObserver.onNext(Status.newBuilder().setStatusValue(StatusValue.GOOD.getNumber()).build());
-        responseObserver.onCompleted();
+        try {
+          for (BeaconAgent at : agents) {
+            if (at.getAgentUniqueName().equals(request.getAgentSender().getAgentUniqueName())) {
+              at.setHardwareInfo(new JSONObject(request.getJsonHardwareInfo()));
+              break;
+            }
+          }
+          responseObserver.onNext(Status.newBuilder().setStatusValue(StatusValue.GOOD.getNumber()).build());
+          responseObserver.onCompleted();
+        } catch (Exception e) {
+          logger.logException(e);
+        }
       } catch (Exception a) {
         logger.logException(a);
       }
@@ -770,7 +784,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
       try {
         List<Agent> values = new ArrayList<>();
         for (BeaconAgent r : agents) {
-          Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName()).build();
+          Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName())
+              .setShortDescription(r.getShortDescription()).setRegisterData(r.getRegisterReply())
+              .setJsonHardwareInfo(r.getHardwareInfoAsJson().toString(2))
+              .setLastContact(Timestamp.newBuilder().setSeconds(r.getLastCall().getMillis() / 1000)).build();
           values.add(a);
         }
         ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
