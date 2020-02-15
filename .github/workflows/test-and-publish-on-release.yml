@@ -1,9 +1,9 @@
-name: Gradle test and build maven archive
+name: Test release branch and publish on GitHub Packages
 
 on:
   push:
     branches:
-    - master
+    - release
 
 jobs:
   build:
@@ -24,4 +24,4 @@ jobs:
     - name: Build with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      run: ./gradlew publish
+      run: ./gradlew clean test publish
