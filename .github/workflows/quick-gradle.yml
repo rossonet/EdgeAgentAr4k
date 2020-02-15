@@ -20,10 +20,10 @@ jobs:
     - name: Print env
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        USERNAME: ${ GITHUB_ACTOR }
+        USERNAME: ${{ GITHUB_ACTOR }}
       run: echo $USERNAME $PASSWORD
     - name: Build with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        USERNAME: ${ GITHUB_ACTOR }
+        USERNAME: ${{ GITHUB_ACTOR }}
       run: ./gradlew publish --info
