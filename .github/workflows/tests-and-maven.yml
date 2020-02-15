@@ -17,9 +17,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
+      env:
+        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        USERNAME: ${ GITHUB_ACTOR }
       run: ./gradlew clean test buildAllBootJars publish --info
-      #    - uses: actions/upload-artifact@v1
-      #      with:
-      #        name: maven-repo
-      #        path: maven
-      #        expires: 86400
