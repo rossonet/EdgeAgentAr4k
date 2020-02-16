@@ -66,8 +66,10 @@ public class SshdSystemService implements Ar4kComponent, SshFutureListener<Close
   @Override
   public void establishingExplicitTunnel(Session session, SshdSocketAddress local, SshdSocketAddress remote,
       boolean localForwarding) throws IOException {
-    logger.info("new ssh tunnel from " + local.getHostName() + ":" + local.getPort() + " to " + remote.getHostName()
-        + ":" + remote.getPort());
+    if (local != null && remote != null) {
+      logger.info("new ssh tunnel from " + local.getHostName() + ":" + local.getPort() + " to " + remote.getHostName()
+          + ":" + remote.getPort());
+    }
     PortForwardingEventListener.super.establishingExplicitTunnel(session, local, remote, localForwarding);
   }
 
