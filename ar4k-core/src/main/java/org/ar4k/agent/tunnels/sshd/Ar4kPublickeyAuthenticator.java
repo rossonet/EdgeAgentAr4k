@@ -20,7 +20,7 @@ public class Ar4kPublickeyAuthenticator extends AuthorizedKeysAuthenticator {
 
   @Override
   public boolean authenticate(String username, PublicKey key, ServerSession session) throws AsyncAuthException {
-    if (key.getFormat().equals("X.509")) {
+    if (key != null && key.getFormat().equals("X.509")) {
       logger.info("ssh auth key for sshd access:\n" + key);
     }
     return super.authenticate(username, key, session);
