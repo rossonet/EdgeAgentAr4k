@@ -39,6 +39,7 @@ import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
+import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemService;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
@@ -319,7 +320,7 @@ public class RemoteControlOverSsh {
     sshdConfig.port = 10000;
     serverConfig.pots.add(sshdConfig);
 
-    SshLocalConfig sshRight = new SshLocalConfig();
+    SshRemoteConfig sshRight = new SshRemoteConfig();
     sshRight.setName("ssh client 2");
     sshRight.redirectServer = destinationIp;
     sshRight.redirectPort = destinationPort;
