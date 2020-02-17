@@ -21,10 +21,12 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sshd.common.channel.ChannelListener;
+import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.forward.DefaultForwarderFactory;
 import org.apache.sshd.common.forward.PortForwardingEventListener;
 import org.apache.sshd.common.future.CloseFuture;
@@ -39,6 +41,7 @@ import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.forward.AcceptAllForwardingFilter;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Ar4kComponent;
@@ -110,6 +113,7 @@ public class SshdSystemService implements Ar4kComponent, SshFutureListener<Close
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     ProcessShellFactory shellFactory = new Ar4kProcessShellFactory(configuration.cmd.split("\\s+"));
     server.setShellFactory(shellFactory);
+    server.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
     server.addCloseFutureListener(this);
     server.addSessionListener(this);
     server.addChannelListener(this);
@@ -117,6 +121,7 @@ public class SshdSystemService implements Ar4kComponent, SshFutureListener<Close
     // ForwardingFilterFactory forwarderFactory = new Ar4kForwardingFilterFactory();
     server.setForwarderFactory(DefaultForwarderFactory.INSTANCE);
     server.addPortForwardingEventListener(this);
+    server.setFileSystemFactory(new VirtualFileSystemFactory());
     try {
       server.start();
       serviceStatus = ServiceStatus.RUNNING;
