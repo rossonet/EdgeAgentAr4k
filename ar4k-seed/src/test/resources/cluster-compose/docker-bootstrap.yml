@@ -1,0 +1,75 @@
+version: '3.1'
+
+networks:
+  default:
+    internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
+
+services:
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    hostname: manager
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    dns:
+      - 172.20.0.20
+    dns_search: ecss.italy1.newdigital.enterprises
+    networks:
+      default:
+        ipv4_address: 172.20.0.254
+
+  ejabberd:
+    depends_on:
+      - ddns
+    build:
+      context: .
+      dockerfile: Dockerfile.build_ejabberd
+    #image: ar4kecss_ejabberd1
+    restart: always
+    ports:
+      - "5222:5222"
+      - "5269:5269"
+      - "5280:5280"
+      - "4560:4560"
+      - "5443:5443"
+    environment:
+      - XMPP_DOMAIN=ecss.italy1.newdigital.enterprises
+      - ERLANG_NODE=ejabberd
+      - EJABBERD_ADMINS=admin@ecss.italy1.newdigital.enterprises
+      - EJABBERD_USERS=admin@ecss.italy1.newdigital.enterprises:pass123 test-user@ecss.italy1.newdigital.enterprises
+      - ERLANG_COOKIE=ecssCluster
+      - SKIP_MODULES_UPDATE=true
+      - EJABBERD_CLUSTER=true
+      - USE_DNS=true
+    dns:
+      - 172.20.0.20
+    dns_search: ecss.italy1.newdigital.enterprises
+    tty: true
+    networks:
+      - default
+
+  ddns:
+    #image: ar4kecss_ddns
+    build:
+      context: .
+      dockerfile: Dockerfile.build_ddns
+    restart: always
+    environment:
+      RECORD_TTL: 60
+      ZONE: ecss.italy1.newdigital.enterprises
+      SHARED_SECRET: ls6JdtLsPr
+    ports:
+      - "53:53"
+      - "53:53/udp"
+      - "8080:8080"
+    networks:
+      default:
+        ipv4_address: 172.20.0.20
+

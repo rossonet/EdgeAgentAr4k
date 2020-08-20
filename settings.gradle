@@ -1,0 +1,30 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == 'io.quarkus') {
+                useModule("io.quarkus:quarkus-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+}
+rootProject.name = 'ar4k-agent'
+include 'ar4k-core'
+include 'ar4k-seed'
+include 'ar4k-hazelcast'
+include 'ar4k-activemq'
+include 'ar4k-terminal'
+include 'ar4k-serial-comm'
+include 'ar4k-video'
+include 'ar4k-pcap'
+include 'ar4k-agent-small'
+include 'ar4k-agent-qa'
+include 'ar4k-agent-druido'
+include 'ar4k-agent-web'
+include 'ar4k-siddhi'
+include 'ar4k-iec61499'
+include 'ar4k-ai'
+include 'ar4k-vaadin'

@@ -1,0 +1,16 @@
+description = "IoT components Siddhi"
+ 
+
+dependencies {
+  compile project(':ar4k-core')
+  compile group: 'org.wso2.siddhi', name: 'siddhi-core', version: '4.5.11'
+  compile group: 'org.wso2.siddhi', name: 'siddhi-query-api', version: '4.5.11'
+  compile group: 'org.wso2.siddhi', name: 'siddhi-query-compiler', version: '4.5.11'
+  compile group: 'org.wso2.siddhi', name: 'siddhi-annotations', version: '4.5.11'
+  
+}
+
+bootJar {
+   enabled = false
+}
+

@@ -1,0 +1,359 @@
+group = 'org.ar4k.agent'
+version = '0.8.95'
+
+ext {
+	sourceCompatibility = 1.8
+	springStatemachineVersion = '2.2.0.RELEASE'
+	springBootVersion = '2.3.2.RELEASE'
+}
+
+buildscript {
+	ext {
+		springBootVersion = '2.3.2.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+		classpath "com.diffplug.gradle:goomph:3.18.1"
+	}
+}
+
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'maven'
+apply plugin: "com.gorylenko.gradle-git-properties"
+apply plugin: 'com.diffplug.gradle.oomph.ide'
+apply plugin: 'jacoco'
+apply plugin: 'base' 
+
+oomphIde {
+	repoEclipseLatest()
+	jdt {}
+	eclipseIni {
+		vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
+	}
+	style {
+		classicTheme()  // oldschool cool
+		niceText()      // with nice fonts and visible whitespace
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url "https://dl.bintray.com/ethereum/maven/" }
+}
+
+
+subprojects {
+	version = rootProject.version
+	group = rootProject.group
+	sourceCompatibility = rootProject.ext.sourceCompatibility
+
+	ext {
+		springStatemachineVersion = rootProject.ext.springStatemachineVersion
+		springBootVersion = rootProject.ext.springBootVersion
+	}
+
+	buildscript {
+		ext {
+			springStatemachineVersion = rootProject.ext.springStatemachineVersion
+			springBootVersion = rootProject.ext.springBootVersion
+		}
+		repositories {
+			mavenCentral()
+			jcenter()
+			maven { url "https://plugins.gradle.org/m2/" }
+		}
+		dependencies {
+			classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
+			classpath('se.transmode.gradle:gradle-docker:1.2')
+			classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+			classpath 'de.undercouch:gradle-download-task:3.1.1'
+			classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+		}
+	}
+
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'maven'
+	apply plugin: "com.gorylenko.gradle-git-properties"
+	apply plugin: "maven-publish"
+	apply plugin: 'base' 
+
+	test {
+		useJUnit()
+		maxHeapSize = "1024m"
+  		minHeapSize = "1024m"
+		failFast = true
+		//jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+		testLogging {
+			showStandardStreams = true
+			events = ["standard_out", "standard_error"]
+		}
+		finalizedBy jacocoTestReport
+	}
+/*
+	jacocoTestReport {
+		dependsOn test
+	}
+*/
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/milestone" }
+		maven { url "https://dl.bintray.com/ethereum/maven/" }
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+		maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
+		maven { url "https://nexus.bedatadriven.com/content/groups/public" }
+	}
+
+	task eclipseClosedDependencies {}
+	
+	task eclipseClosedDependencies_ {}
+
+	task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
+
+	configurations.all {
+		//exclude group:"org.springframework.boot", module: "spring-boot-starter-logging"
+		exclude group:"org.slf4j", module: "slf4j-log4j12"
+		exclude group:"com.vaadin.external.google", module: "android-json"
+		//  exclude group: 'org.codehaus.groovy', module: 'groovy-jsr223', version: '2.5.3'
+	}
+
+	dependencies {
+		// per annotazioni console
+		compile group: 'com.beust', name: 'jcommander', version: '1.48'
+		compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
+		compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+		compile 'io.netty:netty-all:4.1.42.Final'
+		compile("org.springframework.boot:spring-boot-configuration-processor")
+		testCompile('org.springframework.boot:spring-boot-starter-test')
+	}
+
+	jar { enabled = true }
+
+	jar.doLast { task ->
+		ant.checksum file: task.archivePath
+	}
+
+	uploadArchives {
+		repositories {
+			mavenDeployer { repository(url: "file://maven") }
+		}
+	}
+
+	gitProperties {
+		failOnNoGitDirectory = false
+		customProperty 'ar4kComponent', "${project.name}"
+		customProperty 'ar4kVersion', "${version}"
+		dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+		dateFormatTimeZone = 'GMT'
+	}
+
+	task endBootJar {
+		doLast{ println ("You can find the fat jar of ${project.name} in ${jar.archivePath}") }
+	}
+
+	javadoc{
+		destinationDir = file("${rootProject.buildDir}/docs/javadoc/${project.name}/")
+		failOnError=false
+	}
+
+	publishing {
+		repositories {
+			maven {
+				name = "GitHubPackages"
+				url = uri("https://maven.pkg.github.com/rossonet/EdgeAgentAr4k")
+				credentials {
+					username = System.getenv("GITHUB_ACTOR")
+					password = System.getenv("PASSWORD")
+				}
+			}
+		}
+		publications {
+			gpr(MavenPublication) {
+				from(components.java)
+			}
+		}
+	}
+
+	clean {
+		println("starting clean in ${projectDir}")
+		delete ('logs')
+		delete ('build')
+		delete ('bin')
+		delete ('tmp')
+		delete fileTree(projectDir) { include 'camel-test' }
+		delete fileTree(projectDir) { include 'spring-shell.log' }
+		delete fileTree(projectDir) { include 'Ar4kAgent' }
+		delete fileTree(projectDir) { include 'ar4kAgent' }
+		delete fileTree(projectDir) { include '*.ar4k' }
+		delete fileTree(projectDir) { include '*.keystore' }
+		delete fileTree(projectDir) { include '*.tmp' }
+		delete fileTree(projectDir) { include 'ar4k-agent.log' }
+		delete fileTree(projectDir) { include '*.keystore' }
+		delete fileTree(projectDir) { include '*.ks' }
+		delete fileTree(projectDir) { include '*.log' }
+		delete fileTree(projectDir) { include '*.log.*.gz' }
+		delete fileTree(projectDir) { include 'beacon-client-*-ca.pem' }
+		delete fileTree(projectDir) { include 'beacon-client-*.key' }
+		delete fileTree(projectDir) { include 'beacon-client-*.pem' }
+		delete fileTree(projectDir) { include 'beacon-client-*.tmp' }
+		delete fileTree(projectDir) { include '*.ar4k.conf' }
+		delete fileTree(projectDir) { include '*.ar4k.conf.crypto' }
+	}
+}
+
+
+task eclipseClosedDependencies {}
+
+task ar4kRegenerateProtoBuf {
+	group "Ar4k Semantic Router Build"
+	description 'Rebuild the GRPC classes from the proto file in core project.'
+	ar4kRegenerateProtoBuf.dependsOn(":ar4k-core:generateProto")
+}
+
+task cleanGradleCache {
+	group "Ar4k Semantic Router Build"
+	description 'Remove the ar4k artifacts from local Gradle cache'
+	delete "~/.gradle/caches/*/*/org.ar4k.agent"
+	delete "~/.gradle/caches/*/*/descriptors/org.ar4k.agent"
+	delete "~/.gradle/caches/*/*/ar4k-agent"
+	delete "~/.gradle/caches/*/*/descriptors/ar4k-agent"
+}
+
+task theiaIdeBackend(type: Exec) {
+	group "Theia IDE on Docker Container"
+	workingDir "./"
+	commandLine 'docker', 'run', '--init', '-p', '3000:3000', '-d', '-v', "${projectDir}:/home/project:cached", 'rossonet/theia-ide:latest'
+}
+
+task theiaIdeBackendNoCached(type: Exec) {
+	group "Theia IDE on Docker Container"
+	workingDir "./"
+	commandLine 'docker', 'run', '--init', '-p', '3000:3000', '-d', '-v', "${projectDir}:/home/project", 'rossonet/theia-ide:latest'
+}
+
+task printTheiaIdeBackendDockerCommand(type: Exec) {
+	group "Theia IDE on Docker Container"
+	workingDir "./"
+	commandLine 'echo','docker', 'run', '--init', '-p', '3000:3000', '-d', '-v', "${projectDir}:/home/project:cached", 'rossonet/theia-ide:latest'
+}
+
+task theiaIdeLocalBrowser(type: Exec) {
+	group "Theia IDE on Docker Container"
+	workingDir "./"
+	commandLine 'xdg-open', 'http://localhost:3000'
+}
+
+task ar4kListProjects {
+	group "Ar4k Semantic Router Build"
+	description 'List all the components of Ar4k Semantic Router.'
+	subprojects { pr ->
+		ar4kListProjects.dependsOn("${pr.path}:view")
+	}
+}
+
+task ar4kPublishLocalMavenProjects {
+	group "Ar4k Semantic Router repository MVN"
+	description 'Publish to local directory ./maven all the artifacts and the pom files of Ar4k Semantic Router.'
+	subprojects { pr ->
+		ar4kPublishLocalMavenProjects.dependsOn("${pr.path}:uploadArchives")
+	}
+}
+
+task ar4kAllJavaDoc(type: Javadoc) {
+	group "Ar4k Semantic Router Build"
+	description 'Generate Java Doc for all the apis.'
+	subprojects { pr ->
+		ar4kAllJavaDoc.dependsOn("${pr.path}:javadoc")
+	}
+}
+
+task ar4kBootJarSmall {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the small version.'
+	ar4kBootJarSmall.dependsOn(":ar4k-agent-small:bootJar")
+	ar4kBootJarSmall.dependsOn(":ar4k-agent-small:endBootJar")
+}
+
+task ar4kDockerContainerSmall {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is for the small version.'
+	ar4kDockerContainerSmall.dependsOn(":ar4k-agent-small:buildDocker")
+}
+
+task ar4kBootJarQa {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the quality assurance version for testing.'
+	ar4kBootJarQa.dependsOn(":ar4k-agent-qa:bootJar")
+	ar4kBootJarQa.dependsOn(":ar4k-agent-qa:endBootJar")
+}
+
+task ar4kBootJarWeb {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the web Scada version for testing.'
+	ar4kBootJarWeb.dependsOn(":ar4k-agent-web:bootJar")
+	ar4kBootJarWeb.dependsOn(":ar4k-agent-web:endBootJar")
+}
+
+task ar4kDockerContainerQa {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
+	ar4kDockerContainerQa.dependsOn(":ar4k-agent-qa:buildDocker")
+}
+
+task ar4kBootJarDruido {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the Druido robot version'
+	ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:bootJar")
+	ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:endBootJar")
+}
+
+task ar4kDockerContainerDruido {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is the Druido robot version'
+	ar4kDockerContainerDruido.dependsOn(":ar4k-agent-druido:buildDocker")
+}
+
+task buildAllDockerContainers {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This builds all the containers: standard, small, qa and full.'
+	buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
+	buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
+	buildAllDockerContainers.dependsOn(":ar4k-agent-druido:buildDocker")
+}
+
+task buildAllBootJars {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This builds all the jars: standard, small, qa and full.'
+	buildAllBootJars.dependsOn("ar4kBootJarSmall")
+	buildAllBootJars.dependsOn("ar4kBootJarQa")
+	buildAllBootJars.dependsOn("ar4kBootJarWeb")
+}
+
+
+test {
+	useJUnit()
+	maxHeapSize = "1024m"
+  	minHeapSize = "1024m"
+	failFast = true
+	jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+	testLogging {
+		showStandardStreams = true
+		events = ["standard_out", "standard_error"]
+	}
+	finalizedBy jacocoTestReport
+}
+
+tasks.eclipse.dependsOn(cleanEclipse)

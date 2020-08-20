@@ -1,0 +1,8 @@
+site_name: IoT Gateway Ar4k by Rossonet
+theme: readthedocs
+pages:
+    - GUIDA RAPIDA: index.md
+    - Readme progetto: README.md
+    - Implementazioni future: TODO.md
+    - Licenza: LICENSE.md
+    - Doc classi: classi.md

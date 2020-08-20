@@ -1,0 +1,388 @@
+// Andrea Ambrosini - Rossonet s.c.a r.l.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.ar4k.agent.tunnels.http.grpc.beacon";
+option java_outer_classname = "BeaconMirrorService";
+option objc_class_prefix = "AR4K";
+
+package beacon;
+
+service RpcServiceV1 {
+  rpc Register (RegisterRequest) returns (RegisterReply) {}
+  rpc PollingCmdQueue (Agent) returns (FlowMessage) {}
+  rpc SubscriptionCmdQueue (Agent) returns (stream FlowMessage) {}
+  rpc SendChatMessage (ChatMessage) returns (Status) {}
+  rpc SendCommandReply (CommandReplyRequest) returns (Status) {}
+  rpc SendHealth (HealthRequest) returns (Status) {}
+  rpc SendLog (LogRequest) returns (Status) {}
+  rpc SendException (ExceptionRequest) returns (Status) {}
+  rpc SendConfigRuntime (ConfigReport) returns (ConfigReply) {}
+
+  rpc ListAgents (Empty) returns (ListAgentsReply) {}
+  rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequestReply) {}
+  rpc ListAgentsRequestToDo (Empty) returns (ListAgentsRequestReply) {}
+  rpc ApproveAgentRequest (ApproveAgentRequestRequest) returns (Status) {}
+
+  rpc KickAgent (Agent) returns (Status) {}
+
+  rpc ElaborateMessage(ElaborateMessageRequest) returns (ElaborateMessageReply) {}
+  rpc ListCommands(ListCommandsRequest) returns (ListCommandsReply) {}
+  rpc CompleteCommand(CompleteCommandRequest) returns (CompleteCommandReply) {}
+}
+
+message RegisterRequest {
+  string name = 1;
+  string requestCsr = 2;
+  string displayKey = 3;
+  Timestamp time = 4;
+  string jsonHealth = 5;
+  string shortDescription = 6;
+}
+
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
+
+message RegisterReply {
+  string registerCode = 1;  
+  int32 monitoringFrequency = 2;
+  string cert = 3; 
+  string ca = 4;
+  Status statusRegistration = 5;
+  int64 timestampRegistration = 6;
+  string otpSeed = 7;
+}
+
+message ListAgentsRequestReply {
+  Status result = 1;
+  repeated AgentRequest requests = 2;
+}
+
+message AgentRequest {
+  RegisterRequest request = 1;
+  string idRequest = 2;
+  Timestamp approved = 3;
+  Timestamp registrationCompleted = 4;
+}
+
+message ApproveAgentRequestRequest {
+  string idRequest = 1;
+  string cert = 2;
+  string note = 3;
+}
+
+message Status {
+  StatusValue status = 1;
+}
+
+enum StatusValue {
+  GOOD = 0;
+  BAD = 1;
+  FAULT = 2;
+  WAIT_HUMAN = 3;
+}
+
+enum AnimaStates {
+    INIT = 0;
+    STAMINAL = 1;
+    CONFIGURED = 2;
+    RUNNING = 3;
+    KILLED = 4;
+    FAULTED = 5;
+    STASIS = 6;
+ }
+ 
+message Agent {
+  string agentUniqueName = 1;
+  string shortDescription = 2;
+  RegisterReply registerData = 3;
+  string jsonHardwareInfo = 4;
+  Timestamp lastContact = 5;
+}
+ 
+message ConfigReply {
+  string base64Config = 1;
+  int64 restartAt = 2;
+  StatusValue status = 3;
+}
+
+message ConfigReport {
+  Agent agent = 1;
+  string base64Config = 2;
+  string jsonConfig = 3;
+}
+
+message FlowMessage {
+  repeated RequestToAgent toDoList = 1;
+}
+
+message RequestToAgent {
+  CommandType type = 1;
+  Agent caller = 2;
+  string uniqueIdRequest = 3;
+  string requestCommand = 4;
+  repeated string words = 5;
+  int32 wordIndex = 6;
+  int32 position = 7;
+  RequestTunnelMessage tunnelRequest = 8;
+  string otpToken = 9;
+}
+
+enum CommandType {
+  ELABORATE_MESSAGE_COMMAND = 0;
+  LIST_COMMANDS = 1;
+  COMPLETE_COMMAND = 2;
+  OPEN_PROXY_SOCKS = 3;
+  EXPOSE_PORT = 4;
+  CLOSE_PORT = 5;
+  CONNECT_DATA_CHANNEL = 6;
+  SET_CONFIGURATION = 7;
+}
+
+message ChatMessage {
+  Agent agentSender = 1;
+  Agent agentDestination = 2;
+  string messageTxt = 3;
+}
+
+message CommandReplyRequest {
+  string uniqueIdRequest = 1;
+  Agent agentSender = 2;
+  Agent agentDestination = 3;
+  repeated string replies = 4;
+  repeated string errors = 5;
+  ResponseNetworkChannel tunnelReply = 6;
+  string base64Config = 7;
+  int64 restartAt = 8;
+}
+
+message HealthRequest {
+  Agent agentSender = 1;
+  string jsonHardwareInfo = 2;
+  AnimaStates status = 3;
+}
+
+message LogRequest {
+  Agent agentSender = 1;
+  LogSeverity severity = 2;
+  string logLine = 3;
+}
+
+enum LogSeverity {
+  DEFAULT = 0;
+  DEBUG = 100;
+  INFO = 200;
+  NOTICE = 300;
+  WARNING = 400;
+  ERROR = 500;
+  CRITICAL = 600;
+  ALERT = 700;
+  EMERGENCY = 800;
+}
+
+message ExceptionRequest {
+  Agent agentSender = 1;
+  string messageException = 2;
+  string stackTraceException = 3;
+}
+message Empty {
+}
+
+message ListAgentsReply {
+  Status result = 1;
+  repeated Agent agents = 2;
+}
+
+message ElaborateMessageRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  string commandMessage = 3;
+  string otp = 4;
+}
+
+message ElaborateMessageReply {
+  string reply = 1;
+  repeated string errors = 2;
+}
+
+message ListCommandsRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+}
+
+message ListCommandsReply {
+  repeated Command commands = 1;
+}
+
+message Command {
+  Agent agentSender = 1;
+  string command = 2 ;
+}
+
+message CompleteCommandRequest {
+  Agent agentTarget = 1;
+  Agent agentSender = 2;
+  repeated string words = 3;
+  int32 wordIndex = 4;
+  int32 position = 5;
+}
+
+message CompleteCommandReply {
+  repeated string replies = 1;
+  repeated string errors = 2;
+}
+
+service DataServiceV1 {
+  rpc Polling (PollingRequest) returns (FlowMessageData) {}
+  rpc Subscription (SubscribeRequest) returns (stream FlowMessageData) {}
+  rpc Write (RequestWrite) returns (FlowMessageData) {}
+  rpc WriteSubscription (stream RequestWrite) returns (FlowMessageData) {}
+  rpc SendAddressSpace (AddressSpace) returns (AddressSpace) {}
+  rpc GetRemoteAddressSpace (Agent) returns (AddressSpace) {}
+}
+
+message PollingRequest {
+  Agent agent = 1;
+  repeated DataNode dataNodes = 2; 
+}
+
+message SubscribeRequest {
+  Agent agent = 1;
+  repeated DataNode dataNodes = 2; 
+  int32 samplingRate = 3;
+}
+
+message FlowMessageData {
+  repeated DataNode values = 1;
+  int32 hiSpeedRoutingTag = 2; 
+}
+
+message RequestWrite {
+ Agent agent = 1;
+ repeated DataNode valuesToWrite = 2;
+}
+
+message DataNode {
+  Agent agentOwner = 1;
+  string nodeId = 2;
+  string jsonValue = 3;
+  string stringValue = 4;
+  string base64Value = 5;
+  Status quality = 6;
+  Timestamp timestamp = 7;
+  DataType type = 8;
+  repeated string errors = 9;
+  Timestamp timeToExpire = 10;
+}
+
+message NodeMetadata {
+  DataNode dataNode = 1;
+  string namespace = 2;
+  string domainId = 3;
+  repeated string tags = 4;
+  repeated ParentScope fatherForScopes = 5;
+  repeated string logs = 6;
+}
+
+message AddressSpace {
+  int64 lastUpdate = 1;
+  repeated NodeMetadata nodes = 2;
+  repeated AddressSpace subAddressSpace = 3;
+}
+
+message ParentScope {
+  string scope = 1;
+  NodeMetadata parent = 2;
+}
+
+enum DataType {
+  STRING = 0;
+  CHAR = 1;
+  BYTES = 2;
+  INT32 = 3;
+  INT64 = 4;
+  FLOAT = 5;
+  DOUBLE = 6;
+  BOOLEAN = 7;
+  TIMESTAMP = 8;
+  OBJECT = 9;
+  UNKNOWN = 10;
+  JSONDATA = 11;
+  BASE64DATA = 12;
+  MEDIA = 13;
+}
+
+service TunnelServiceV1 {
+  rpc openNetworkChannel(stream TunnelMessage) returns (stream TunnelMessage) {}
+  rpc RequestTunnel(RequestTunnelMessage) returns (ResponseNetworkChannel) {}
+}
+
+enum MessageType {
+  FROM_CLIENT = 0;
+  FROM_SERVER = 1;
+}
+
+enum MessageStatus {
+  channelActive = 0;
+  channelInactive = 1;
+  channelReadComplete = 2;
+  channelRegistered = 3;
+  channelUnregistered = 4;
+  channelWritabilityChanged = 5;
+  exceptionCaught = 6;
+  userEventTriggered = 7;
+  channelTransmission = 8;
+  beaconChannelRequest = 9;
+  beaconMessageAck = 10;
+  channelTransmissionCompressed = 11;
+  closeRequestServer = 12;
+  closeRequestClient = 13;
+}
+
+message TunnelMessage {
+  Agent agentSource = 1;
+  Agent agentDestination = 2;
+  int64 targeId = 3;
+  int64 sessionId = 4;
+  int64 uuid = 5;
+  MessageType messageType = 6;
+  MessageStatus messageStatus = 7;
+  int32 chunk = 8;
+  int32 totalChunks = 9;
+  int64 messageUuid = 10;
+  string payload = 11;
+  int32 originalSize = 12;
+}
+
+message ResponseNetworkChannel {
+  int64 targeId = 1;
+}
+
+message RequestTunnelMessage {
+  int64 targeId = 1;
+  Agent agentSource = 2;
+  Agent agentDestination = 3;
+  TunnelType mode = 4;
+  string destIp = 5;
+  int32 destPort = 6;
+  int32 srcPort = 7;
+  int32 socketSoTimeout = 8;
+  bool socketTcpNoDelay = 9;
+  bool socketKeepAlive = 10;
+  int32 socketReceiveBufferSize = 11;
+  bool socketReuseAddress = 12;
+  int32 socketTrafficClass = 13;
+  int32 socketQos = 14;
+}
+
+enum TunnelType {
+  SERVER_TO_BYTES_TCP = 0;
+  BYTES_TO_CLIENT_TCP = 1;
+  SERVER_TO_BYTES_UDP = 2;
+  BYTES_TO_CLIENT_UDP = 3;
+  SHUTDOWN = 4;
+}
+

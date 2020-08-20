@@ -1,0 +1,13 @@
+description = "PCAP client library"
+
+dependencies {
+  compile project(':ar4k-core')
+  compile 'org.pcap4j:pcap4j-core:1.+'
+  compile 'org.pcap4j:pcap4j-packetfactory-static:1.+'
+  compile group: 'commons-codec', name: 'commons-codec', version: '1.12'
+}
+
+bootJar {
+   enabled = false
+}
+
