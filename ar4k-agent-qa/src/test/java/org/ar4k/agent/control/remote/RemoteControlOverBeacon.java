@@ -1,17 +1,8 @@
 package org.ar4k.agent.control.remote;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyStoreException;
@@ -19,31 +10,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.network.NetworkConfig;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
-import org.ar4k.agent.network.NetworkTunnel;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
@@ -53,7 +28,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,9 +47,6 @@ import io.grpc.stub.StreamObserver;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RemoteControlOverBeacon {
 
-	private static final String CLIENT1_LABEL = "client1";
-	private static final String CLIENT2_LABEL = "client2";
-	private static final String SERVER_LABEL = "server";
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final Map<String, Anima> testAnimas = new HashMap<>();
 	private final File keyStoreMaster = new File("./tmp/master.ks");
@@ -90,11 +61,6 @@ public class RemoteControlOverBeacon {
 	private final String signClient2AliasInKeystore = "client2-sign";
 	private final String signClient1AliasInKeystore = "client1-sign";
 	private final String passwordKs = "password";
-
-	private NetworkTunnel networkTunnel = null;
-	private Future<Boolean> serverTCP = null;
-	private Future<Boolean> clientTCP = null;
-	private boolean completed = false;
 
 	@Before
 	public void before() throws Exception {
@@ -350,273 +316,6 @@ public class RemoteControlOverBeacon {
 				KeystoreLoader.getCertCaAsPem(masterAliasInKeystore, keyStoreMaster.getAbsolutePath(), passwordKs));
 		writer.write("\n-----END CERTIFICATE-----\n");
 		writer.close();
-	}
-
-	@Test
-	public void allNodeSimulatedWithTunnelSsl() throws Exception {
-		allNodeSimulatedWithTunnel(true);
-	}
-
-	private void allNodeSimulatedWithTunnel(boolean ssl) throws Exception {
-		final List<String> baseArgs = new ArrayList<>();
-		final List<String> baseArgsClientOne = new ArrayList<>();
-		final List<String> baseArgsClientTwo = new ArrayList<>();
-		String certCaAsPem = "";
-		if (ssl) {
-			baseArgs.add("--ar4k.beaconClearText=false");
-			baseArgsClientOne.add("--ar4k.beaconClearText=false");
-			baseArgsClientTwo.add("--ar4k.beaconClearText=false");
-			certCaAsPem = KeystoreLoader.getCertCaAsPem(masterAliasInKeystore, keyStoreMaster.getAbsolutePath(),
-					passwordKs);
-			final byte[] decodedCrt = Base64.getDecoder().decode(certCaAsPem);
-			final X509Certificate clientCertificate = (X509Certificate) CertificateFactory.getInstance("X.509")
-					.generateCertificate(new ByteArrayInputStream(decodedCrt));
-			System.out.println("\n\nCA Master\n" + certCaAsPem);
-			System.out.println(clientCertificate);
-		}
-
-		baseArgs.add("--ar4k.consoleOnly=false");
-		baseArgs.add("--spring.shell.command.quit.enabled=false");
-		baseArgs.add("--logging.level.root=INFO");
-		baseArgs.add("--ar4k.confPath=./tmp1");
-		baseArgs.add("--ar4k.fileConfig=./tmp1/test-server.config.base64.ar4k");
-		baseArgs.add("--ar4k.webConfig=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgs.add("--ar4k.dnsConfig=demo1.rossonet.name");
-
-		baseArgsClientOne.add("--ar4k.consoleOnly=false");
-		baseArgsClientOne.add("--spring.shell.command.quit.enabled=false");
-		baseArgsClientOne.add("--logging.level.root=INFO");
-		baseArgsClientOne.add("--ar4k.confPath=./tmp2");
-		baseArgsClientOne.add("--ar4k.fileConfig=./tmp2/test-client1.config.base64.ar4k");
-		baseArgsClientOne
-				.add("--ar4k.webConfig=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgsClientOne.add("--ar4k.dnsConfig=demo1.rossonet.name");
-
-		baseArgsClientTwo.add("--ar4k.consoleOnly=false");
-		baseArgsClientTwo.add("--spring.shell.command.quit.enabled=false");
-		baseArgsClientTwo.add("--logging.level.root=INFO");
-		baseArgsClientTwo.add("--ar4k.confPath=./tmp3");
-		baseArgsClientTwo.add("--ar4k.fileConfig=./tmp3/test-client2.config.base64.ar4k");
-		baseArgsClientTwo
-				.add("--ar4k.webConfig=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgsClientTwo.add("--ar4k.dnsConfig=demo1.rossonet.name");
-//    addArgs.add("--ar4k.baseConfig=");
-		baseArgs.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgs.add("--ar4k.dnsKeystore=ks1.rossonet.name");
-
-		baseArgsClientOne
-				.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgsClientOne.add("--ar4k.dnsKeystore=ks1.rossonet.name");
-
-		baseArgsClientTwo
-				.add("--ar4k.webKeystore=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
-		baseArgsClientTwo.add("--ar4k.dnsKeystore=ks1.rossonet.name");
-
-		// baseArgs.add("--ar4k.keystoreMainAlias=");
-		baseArgs.add("--ar4k.keystorePassword=" + passwordKs);
-		baseArgs.add("--ar4k.beaconCaChainPem=" + certCaAsPem);
-		baseArgs.add("--ar4k.adminPassword=password");
-
-		baseArgsClientOne.add("--ar4k.keystorePassword=" + passwordKs);
-		baseArgsClientOne.add("--ar4k.beaconCaChainPem=" + certCaAsPem);
-		baseArgsClientOne.add("--ar4k.adminPassword=password");
-
-		baseArgsClientTwo.add("--ar4k.keystorePassword=" + passwordKs);
-		baseArgsClientTwo.add("--ar4k.beaconCaChainPem=" + certCaAsPem);
-		baseArgsClientTwo.add("--ar4k.adminPassword=password");
-//    addArgs.add("--ar4k.webRegistrationEndpoint=");
-//    addArgs.add("--ar4k.dnsRegistrationEndpoint=");
-		baseArgs.add("--ar4k.beaconDiscoveryFilterString=TEST-REGISTER");
-		baseArgs.add("--ar4k.beaconDiscoveryPort=33667");
-		baseArgs.add("--ar4k.fileConfigOrder=1");
-		baseArgs.add("--ar4k.webConfigOrder=2");
-		baseArgs.add("--ar4k.dnsConfigOrder=3");
-		baseArgs.add("--ar4k.baseConfigOrder=0");
-		baseArgs.add("--ar4k.threadSleep=1000");
-		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-
-		baseArgsClientOne.add("--ar4k.beaconDiscoveryFilterString=TEST-REGISTER");
-		baseArgsClientOne.add("--ar4k.beaconDiscoveryPort=33667");
-		baseArgsClientOne.add("--ar4k.fileConfigOrder=1");
-		baseArgsClientOne.add("--ar4k.webConfigOrder=2");
-		baseArgsClientOne.add("--ar4k.dnsConfigOrder=3");
-		baseArgsClientOne.add("--ar4k.baseConfigOrder=0");
-		baseArgsClientOne.add("--ar4k.threadSleep=1000");
-		baseArgsClientOne.add("--ar4k.logoUrl=/static/img/ar4k.png");
-
-		baseArgsClientTwo.add("--ar4k.beaconDiscoveryFilterString=TEST-REGISTER");
-		baseArgsClientTwo.add("--ar4k.beaconDiscoveryPort=33667");
-		baseArgsClientTwo.add("--ar4k.fileConfigOrder=1");
-		baseArgsClientTwo.add("--ar4k.webConfigOrder=2");
-		baseArgsClientTwo.add("--ar4k.dnsConfigOrder=3");
-		baseArgsClientTwo.add("--ar4k.baseConfigOrder=0");
-		baseArgsClientTwo.add("--ar4k.threadSleep=1000");
-		baseArgsClientTwo.add("--ar4k.logoUrl=/static/img/ar4k.png");
-
-		final EdgeConfig clientOneConfig = new EdgeConfig();
-		final EdgeConfig clientTwoConfig = new EdgeConfig();
-		final EdgeConfig serverConfig = new EdgeConfig();
-		serverConfig.name = "server-beacon";
-		// serverConfig.beaconServer = null;
-		serverConfig.beaconDiscoveryPort = 0;
-		serverConfig.beaconServerCertChain = certCaAsPem;
-		clientOneConfig.beaconServerCertChain = certCaAsPem;
-		clientTwoConfig.beaconServerCertChain = certCaAsPem;
-		final BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
-		beaconServiceConfig.discoveryPort = 33667;
-		beaconServiceConfig.port = 31226;
-		beaconServiceConfig.aliasBeaconServerInKeystore = signServerAliasInKeystore;
-		beaconServiceConfig.caChainPem = certCaAsPem;
-		beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
-		serverConfig.pots.add(beaconServiceConfig);
-
-		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
-						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
-						signServerAliasInKeystore, "https://localhost:31226")).get());
-		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
-						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClientTwo, clientTwoConfig,
-						client2AliasInKeystore, signClient2AliasInKeystore, "https://localhost:31226")).get());
-		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
-						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
-						client1AliasInKeystore, signClient1AliasInKeystore, "https://localhost:31226")).get());
-		Thread.sleep(15000);
-		for (final Anima a : testAnimas.values()) {
-			// String animaName = a.getRuntimeConfig() != null ?
-			// a.getRuntimeConfig().getName() : "no-config";
-			Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
-		}
-		Thread.sleep(25000);
-		final List<Agent> agents = testAnimas.get(CLIENT2_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
-		String agentToQuery = null;
-		for (final Agent a : agents) {
-			if (testAnimas.get(CLIENT1_LABEL).getAgentUniqueName().equals(a.getAgentUniqueName())) {
-				agentToQuery = a.getAgentUniqueName();
-				System.out.println("agent client 1 found -> " + a.getAgentUniqueName());
-			}
-		}
-		final String destinationIp = "localhost";
-		final int destinationPort = 7777;
-		final int srcPort = 8888;
-		final Callable<Boolean> runner = new Callable<Boolean>() {
-			private int last = 0;
-
-			@Override
-			public Boolean call() throws Exception {
-				@SuppressWarnings("resource")
-				final ServerSocket serverSocket = new ServerSocket(destinationPort);
-				serverSocket.setReuseAddress(true);
-				final Socket socket = serverSocket.accept();
-				final PrintWriter w = new PrintWriter(socket.getOutputStream(), true);
-				final InputStreamReader reader = new InputStreamReader(socket.getInputStream());
-				try {
-					while (!completed) {
-						while (reader.ready()) {
-							final int valueNew = reader.read();
-							System.out.println("server test received from beacon client " + valueNew);
-							if (last == 0)
-								last = valueNew + 1;
-							else {
-								if (last + 1 != valueNew) {
-									throw new Exception(
-											"error in server test last cached:" + last + ",new:" + valueNew);
-								} else {
-									last = valueNew + 1;
-								}
-							}
-							Thread.sleep(1000);
-							w.write(last);
-							w.flush();
-							System.out.println("server test sent to beacon client " + last);
-						}
-					}
-				} catch (final InterruptedException f) {
-					serverSocket.close();
-					System.out.println("server closed");
-				} catch (final Exception a) {
-					serverSocket.close();
-					System.out.println("server closed");
-					a.printStackTrace();
-				}
-				serverSocket.close();
-				return true;
-			}
-		};
-
-		final Callable<Boolean> clientRunner = new Callable<Boolean>() {
-			private int last = 0;
-
-			@Override
-			public Boolean call() throws Exception {
-				final SocketAddress endpoint = new InetSocketAddress(destinationIp, srcPort);
-				@SuppressWarnings("resource")
-				final Socket socketClient = new Socket();
-				socketClient.connect(endpoint, 60000);
-				socketClient.setKeepAlive(true);
-				final InputStreamReader reader = new InputStreamReader(socketClient.getInputStream());
-				final PrintWriter w = new PrintWriter(socketClient.getOutputStream(), true);
-				w.write(1);
-				w.flush();
-				last = 1;
-				System.out.println("client test sent to beacon server " + last);
-				try {
-					while (!completed) {
-						while (reader.ready()) {
-							final int valueNew = reader.read();
-							System.out.println("client test received from beacon server " + valueNew);
-							updateClientCounter(valueNew);
-							if (last == 0)
-								last = valueNew + 1;
-							else {
-								if (last + 1 != valueNew) {
-									throw new Exception(
-											"error in client test last cached:" + last + ",new:" + valueNew);
-								} else {
-									last = valueNew + 1;
-								}
-							}
-							Thread.sleep(1000);
-							w.write(last);
-							w.flush();
-							System.out.println("client test sent to server beacon " + last);
-						}
-					}
-				} catch (final InterruptedException f) {
-					socketClient.close();
-					System.out.println("client closed");
-				} catch (final Exception a) {
-					socketClient.close();
-					System.out.println("client closed");
-					a.printStackTrace();
-				}
-				socketClient.close();
-				return true;
-			}
-		};
-		// codice
-		serverTCP = executor.submit(runner);
-		final NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test",
-				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
-		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
-		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
-		Thread.sleep(5000);
-		System.out.println("try to send package");
-		clientTCP = executor.submit(clientRunner);
-		Thread.sleep(10000);
-		assertTrue(completed);
-	}
-
-	protected void updateClientCounter(int valueNew) {
-		// System.out.println("counter: " + valueNew);
-		if (valueNew > 42) {
-			completed = true;
-			clientTCP.cancel(true);
-			serverTCP.cancel(true);
-			System.out.println("package counter [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-					+ networkTunnel.getNetworkReceiver().getPacketSend());
-		}
 	}
 
 	private void deleteDir(File dir) {
