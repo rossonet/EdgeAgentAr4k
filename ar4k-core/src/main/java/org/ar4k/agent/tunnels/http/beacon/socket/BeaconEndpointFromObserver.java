@@ -107,8 +107,9 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 									getBeaconNetworkTunnel().nextAction(null);
 								} else {
 									if (getNetworkReceiver().getOutputCachedMessages().containsKey(messageUuid)) {
-										logger.warn("- message - " + getNetworkReceiver().getOutputCachedMessages()
-												.get(messageUuid).toString());
+										if (trace)
+											logger.info("- message - " + getNetworkReceiver().getOutputCachedMessages()
+													.get(messageUuid).toString());
 									}
 									if (trace)
 										logger.info("onNext handler for " + getNetworkReceiver().getMyRoleMode()
