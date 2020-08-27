@@ -25,6 +25,7 @@ import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ import com.github.sarxos.webcam.WebcamPanel;
 @TestPropertySource(locations = "classpath:application-base.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-//@Ignore
+@Ignore
 public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 
 	@Autowired
