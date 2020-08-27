@@ -65,13 +65,13 @@ public class BeaconClientToClientNetworkAndXpra {
 	private final String passwordKs = "password";
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void xpraMultinodeViaBeaconTest() throws Exception {
 		nodesTestEnviroment(false, true, false);
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void sshTunnelMultinodeViaBeaconTest() throws Exception {
 		nodesTestEnviroment(false, false, true);
 	}
