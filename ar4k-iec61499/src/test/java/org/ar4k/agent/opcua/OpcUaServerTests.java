@@ -38,6 +38,7 @@ import org.assertj.core.util.Lists;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -101,6 +102,7 @@ public class OpcUaServerTests {
 	};
 
 	@Test
+	@Ignore
 	public void startOpcServerTest() throws IOException, InterruptedException {
 		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
