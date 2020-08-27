@@ -15,9 +15,9 @@ import org.apache.sshd.server.shell.ProcessShell;
  *
  */
 
-public class Ar4kProcessShell extends ProcessShell {
+public class AnimaProcessShell extends ProcessShell {
 
-	public Ar4kProcessShell(List<String> resolveEffectiveCommand) {
+	public AnimaProcessShell(List<String> resolveEffectiveCommand) {
 		super(resolveEffectiveCommand);
 	}
 

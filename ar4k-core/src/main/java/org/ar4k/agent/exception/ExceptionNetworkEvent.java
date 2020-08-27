@@ -6,6 +6,10 @@ public class ExceptionNetworkEvent extends BeaconTunnelException {
 		super(cause);
 	}
 
+	public ExceptionNetworkEvent(Exception cause) {
+		super(cause);
+	}
+
 	private static final long serialVersionUID = 6433787125090619247L;
 
 }

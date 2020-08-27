@@ -22,7 +22,7 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent.ServiceStatus;
+import org.ar4k.agent.core.EdgeComponent.ServiceStatus;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -33,8 +33,8 @@ import com.beust.jcommander.Parameter;
  *
  *         Configurazione astratta servizio con parametri generici
  *
- * @see org.ar4k.agent.config.Ar4kConfig
- * @see org.ar4k.agent.core.AbstractAr4kService
+ * @see org.ar4k.agent.config.EdgeConfig
+ * @see org.ar4k.agent.core.AbstractEdgeService
  * @see org.ar4k.agent.config.ServiceConfig
  *
  */

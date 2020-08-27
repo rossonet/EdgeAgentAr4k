@@ -23,7 +23,7 @@ import org.springframework.messaging.MessageChannel;
 
 import com.beust.jcommander.Parameter;
 
-public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Closeable {
+public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Closeable {
 
 	protected static transient final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton()
 			.getLoggerFactory().getLogger(AbstractChannel.class.toString());
@@ -72,8 +72,8 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 
 	private Status status = Status.INIT;
 
-	private Map<String, List<Ar4kChannel>> scopeChildren = new HashMap<>();
-	private Map<String, Ar4kChannel> scopeFather = new HashMap<>();
+	private Map<String, List<EdgeChannel>> scopeChildren = new HashMap<>();
+	private Map<String, EdgeChannel> scopeFather = new HashMap<>();
 
 	@Override
 	public String getBrowseName() {
@@ -262,7 +262,7 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public void setFatherOfScope(String scope, Ar4kChannel father) {
+	public void setFatherOfScope(String scope, EdgeChannel father) {
 		scopeFather.put(scope, father);
 		((AbstractChannel) father).addChildOfScope(scope, this);
 		if (dataAddress != null) {
@@ -270,7 +270,7 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 		}
 	}
 
-	private void addChildOfScope(String scope, Ar4kChannel child) {
+	private void addChildOfScope(String scope, EdgeChannel child) {
 		logger.info("add child " + child.getBrowseName() + " to " + getBrowseName() + " for scope " + scope);
 		if (!scopeChildren.containsKey(scope)) {
 			scopeChildren.put(scope, new ArrayList<>());
@@ -282,7 +282,7 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public List<Ar4kChannel> getChildrenOfScope(String scope) {
+	public List<EdgeChannel> getChildrenOfScope(String scope) {
 		return scopeChildren.get(scope);
 	}
 
@@ -307,7 +307,7 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public Ar4kChannel getFatherOfScope(String scope) {
+	public EdgeChannel getFatherOfScope(String scope) {
 		return scopeFather.get(scope);
 	}
 
@@ -336,11 +336,11 @@ public abstract class AbstractChannel implements Ar4kChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public DataTree<Ar4kChannel> getScopeTreeChildren(String scope, int maxLoop) {
+	public DataTree<EdgeChannel> getScopeTreeChildren(String scope, int maxLoop) {
 		if (maxLoop > 0) {
-			final DataTree<Ar4kChannel> tree = new DataTree<>(this);
+			final DataTree<EdgeChannel> tree = new DataTree<>(this);
 			if (getChildrenCountOfScope(scope) > 0) {
-				for (final Ar4kChannel node : getChildrenOfScope(scope)) {
+				for (final EdgeChannel node : getChildrenOfScope(scope)) {
 					tree.addTree(node.getScopeTreeChildren(scope, maxLoop - 1));
 				}
 			}

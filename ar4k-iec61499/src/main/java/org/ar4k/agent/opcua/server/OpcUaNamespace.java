@@ -7,7 +7,7 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.core.data.Ar4kManagedNamespace;
+import org.ar4k.agent.core.data.EdgeManagedNamespace;
 import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
 import org.eclipse.milo.opcua.sdk.server.api.DataItem;
@@ -28,7 +28,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OpcUaNamespace extends ManagedNamespace implements Ar4kManagedNamespace {
+public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNamespace {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 
 import com.beust.jcommander.Parameter;
@@ -63,7 +63,7 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 
 	public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
 		if (cacheChannel == null) {
-			final Ar4kChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
+			final EdgeChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
 					.createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null,
 							null, anima.getTags());
 			cacheChannel = (IPublishSubscribeChannel) Anima.getApplicationContext().getBean(Anima.class)

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class Ar4kHealthIndicator extends AbstractHealthIndicator {
+public class EdgeHealthIndicator extends AbstractHealthIndicator {
 
   @Override
   protected void doHealthCheck(Health.Builder builder) throws Exception {

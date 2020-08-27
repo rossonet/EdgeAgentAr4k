@@ -22,7 +22,7 @@ import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.helper.ConfigHelper;
@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
  *         Gestore servizio per connessioni sshd.
  *
  */
-public class SshdHomunculusService implements Ar4kComponent, SshFutureListener<CloseFuture>, SessionListener,
+public class SshdHomunculusService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
 		ChannelListener, PortForwardingEventListener {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -70,16 +70,16 @@ public class SshdHomunculusService implements Ar4kComponent, SshFutureListener<C
 	@Override
 	public void init() {
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new Ar4kPasswordAuthenticator(anima);
+		final PasswordAuthenticator passwordAuthenticator = new AnimaPasswordAuthenticator(anima);
 		server.setPasswordAuthenticator(passwordAuthenticator);
-		final PublickeyAuthenticator publickeyAuthenticator = new Ar4kPublickeyAuthenticator(
+		final PublickeyAuthenticator publickeyAuthenticator = new AnimaPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
 		server.setPublickeyAuthenticator(publickeyAuthenticator);
 		server.setHost(configuration.broadcastAddress);
 		server.setPort(configuration.port);
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
 		logger.warn("keys for sshd server generated");
-		final Ar4kAnimaShellFactory shellFactory = new Ar4kAnimaShellFactory(
+		final AnimaShellFactory shellFactory = new AnimaShellFactory(
 				Anima.getApplicationContext().getBean(Anima.class), Anima.getApplicationContext().getBean(Shell.class));
 		server.setShellFactory(shellFactory);
 		server.addCloseFutureListener(this);

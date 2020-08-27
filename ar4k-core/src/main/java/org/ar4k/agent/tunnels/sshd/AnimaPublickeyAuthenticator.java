@@ -19,14 +19,14 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  * @author andrea
  *
  */
-public class Ar4kPublickeyAuthenticator extends AuthorizedKeysAuthenticator {
+public class AnimaPublickeyAuthenticator extends AuthorizedKeysAuthenticator {
 
-	public Ar4kPublickeyAuthenticator(Path file) {
+	public AnimaPublickeyAuthenticator(Path file) {
 		super(file);
 	}
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Ar4kPublickeyAuthenticator.class.toString());
+			.getLogger(AnimaPublickeyAuthenticator.class.toString());
 
 	@Override
 	public boolean authenticate(String username, PublicKey key, ServerSession session) throws AsyncAuthException {

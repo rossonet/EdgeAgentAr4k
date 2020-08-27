@@ -20,16 +20,16 @@ import org.apache.sshd.server.shell.InvertedShellWrapper;
  * @author andrea
  *
  */
-public class Ar4kInvertedShellWrapper extends InvertedShellWrapper {
+public class AnimaInvertedShellWrapper extends InvertedShellWrapper {
 
 	private InvertedShell shellMark = null;
 
-	public Ar4kInvertedShellWrapper(InvertedShell shell, Executor executor, boolean shutdownExecutor, int bufferSize) {
+	public AnimaInvertedShellWrapper(InvertedShell shell, Executor executor, boolean shutdownExecutor, int bufferSize) {
 		super(shell, executor, shutdownExecutor, bufferSize);
 		this.shellMark = shell;
 	}
 
-	public Ar4kInvertedShellWrapper(InvertedShell createInvertedShell) {
+	public AnimaInvertedShellWrapper(InvertedShell createInvertedShell) {
 		super(createInvertedShell);
 		this.shellMark = createInvertedShell;
 	}

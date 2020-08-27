@@ -28,13 +28,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.DataBag;
 import org.ar4k.agent.core.data.DataChannelFilter;
 import org.ar4k.agent.core.data.DataChannelFilter.Label;
@@ -54,8 +54,8 @@ import org.ar4k.agent.core.data.messages.JSONMessage;
 import org.ar4k.agent.core.data.messages.LongMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.helper.ConfigHelper;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.assertj.core.util.Lists;
 import org.jline.builtins.Commands;
 import org.json.JSONObject;
@@ -89,8 +89,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-		Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-data-simulator.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -129,7 +129,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorLong() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -172,7 +172,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorBoolean() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -221,7 +221,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorString() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -272,7 +272,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorJsonNumeric() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -318,7 +318,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorJsonString() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -372,7 +372,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorInteger() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -415,7 +415,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorDataBag() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;
@@ -473,15 +473,15 @@ public class DataSimulatorTests implements MessageHandler {
 		final DataChannelFilter dataChannelFilter = new DataChannelFilter(filters);
 		assertEquals(anima.getState(), AnimaStates.RUNNING);
 		assertTrue(check.equals(anima.getRuntimeConfig().author));
-		final Collection<Ar4kChannel> allChannels = anima.getDataAddress().getDataChannels(dataChannelFilter);
-		for (final Ar4kChannel channel : allChannels) {
+		final Collection<EdgeChannel> allChannels = anima.getDataAddress().getDataChannels(dataChannelFilter);
+		for (final EdgeChannel channel : allChannels) {
 			System.out.println("found -> " + channel);
 		}
 		assertEquals(1, allChannels.size());
 		final DataBag db = new DataBag(new File(dataBagFile), allChannels, 500, 1000);
 		Thread.sleep(20000);
 		db.close();
-		final Ar4kConfig c3 = new Ar4kConfig();
+		final EdgeConfig c3 = new EdgeConfig();
 		final String check3 = UUID.randomUUID().toString();
 		c3.name = "test salvataggio conf";
 		c3.author = check3;
@@ -532,7 +532,7 @@ public class DataSimulatorTests implements MessageHandler {
 
 	@Test
 	public void checkOnePointSimulatorFloat() throws InterruptedException, IOException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test salvataggio conf";
 		c.author = check;

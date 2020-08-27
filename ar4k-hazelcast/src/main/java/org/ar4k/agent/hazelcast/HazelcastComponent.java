@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -27,7 +27,7 @@ import com.hazelcast.core.IQueue;
 import com.hazelcast.core.ITopic;
 import com.hazelcast.cp.lock.FencedLock;
 
-public class HazelcastComponent implements Ar4kComponent {
+public class HazelcastComponent implements EdgeComponent {
 
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

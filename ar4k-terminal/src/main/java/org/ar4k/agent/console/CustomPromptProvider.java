@@ -14,7 +14,7 @@
     */
 package org.ar4k.agent.console;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.RpcConversation;
@@ -45,7 +45,7 @@ public class CustomPromptProvider implements PromptProvider {
 
   @Override
   public AttributedString getPrompt() {
-    Ar4kConfig wc = null;
+    EdgeConfig wc = null;
     Authentication a = SecurityContextHolder.getContext().getAuthentication();
     if (a != null) {
       SessionInformation session = animaHomunculus.getAllSessions(a, false).get(0);

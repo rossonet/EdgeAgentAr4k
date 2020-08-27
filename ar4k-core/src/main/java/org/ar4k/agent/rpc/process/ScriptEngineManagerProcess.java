@@ -15,7 +15,7 @@ import javax.script.ScriptException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
-@Ar4kRpcProcess
+@EdgeRpcProcess
 public class ScriptEngineManagerProcess implements AgentProcess {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

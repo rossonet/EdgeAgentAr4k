@@ -24,14 +24,14 @@ import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.bouncycastle.cms.CMSException;
@@ -63,8 +63,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-    Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -91,7 +91,7 @@ public class SaveAndLoadConfigurationTests {
 
   @Test
   public void saveAndRestoreToFromJson() throws InterruptedException, IOException, ClassNotFoundException {
-    Ar4kConfig c = new Ar4kConfig();
+    EdgeConfig c = new EdgeConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
     c.author = check;
@@ -101,14 +101,14 @@ public class SaveAndLoadConfigurationTests {
     c.pots.add(s1);
     String jsonConfig = ConfigHelper.toJson(c);
     System.out.println("CONFIG:\n" + jsonConfig);
-    ConfigSeed a = ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class);
-    assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    ConfigSeed a = ConfigHelper.fromJson(jsonConfig, EdgeConfig.class);
+    assertTrue(check.equals(((EdgeConfig) a).author));
+    assertTrue(check.equals(((SshLocalConfig) ((EdgeConfig) a).pots.toArray()[0]).note));
   }
 
   @Test
   public void saveAndRestoreToFromYaml() throws InterruptedException, ClassNotFoundException, IOException {
-    Ar4kConfig c = new Ar4kConfig();
+    EdgeConfig c = new EdgeConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio yaml";
     c.author = check;
@@ -120,13 +120,13 @@ public class SaveAndLoadConfigurationTests {
     System.out.println("yaml config: " + checkText);
     ConfigSeed a = ConfigHelper.fromYaml(checkText);
     // System.out.println("Anima -> " + anima);
-    assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((EdgeConfig) a).author));
+    assertTrue(check.equals(((SshLocalConfig) ((EdgeConfig) a).pots.toArray()[0]).note));
   }
 
   @Test
   public void saveAndRestoreToFromBase64() throws InterruptedException, ClassNotFoundException, IOException {
-    Ar4kConfig c = new Ar4kConfig();
+    EdgeConfig c = new EdgeConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
     c.author = check;
@@ -141,15 +141,15 @@ public class SaveAndLoadConfigurationTests {
     String checkText = ConfigHelper.toBase64(c);
     System.out.println("base64 config: " + checkText);
     ConfigSeed a = ConfigHelper.fromBase64(checkText);
-    assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
-    assertTrue(check.equals(((SocketFactorySslConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
+    assertTrue(check.equals(((EdgeConfig) a).author));
+    assertTrue(check.equals(((SocketFactorySslConfig) ((EdgeConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((SocketFactorySslConfig) ((EdgeConfig) a).pots.toArray()[1]).note));
   }
 
   @Test
   public void saveAndRestoreToFromBase64Crypto() throws CertificateEncodingException, ClassNotFoundException,
       NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IOException, CMSException {
-    Ar4kConfig c = new Ar4kConfig();
+    EdgeConfig c = new EdgeConfig();
     String check = UUID.randomUUID().toString();
     c.name = "test salvataggio json";
     c.author = check;
@@ -165,9 +165,9 @@ public class SaveAndLoadConfigurationTests {
     String baseCrypto = ConfigHelper.toBase64Crypto(c, "my-keystore-alias");
     System.out.println("CRYPTO " + baseCrypto);
     ConfigSeed a = ConfigHelper.fromBase64Crypto(baseCrypto, "my-keystore-alias");
-    assertTrue(check.equals(((Ar4kConfig) a).author));
-    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[0]).note));
-    assertTrue(check.equals(((SshLocalConfig) ((Ar4kConfig) a).pots.toArray()[1]).note));
+    assertTrue(check.equals(((EdgeConfig) a).author));
+    assertTrue(check.equals(((SshLocalConfig) ((EdgeConfig) a).pots.toArray()[0]).note));
+    assertTrue(check.equals(((SshLocalConfig) ((EdgeConfig) a).pots.toArray()[1]).note));
   }
 
 }

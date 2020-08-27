@@ -1,2 +1,2 @@
 org.springframework.context.ApplicationListener=org.ar4k.agent.core.Anima
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.ar4k.agent.spring.autoconfig.Ar4kAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.ar4k.agent.spring.autoconfig.EdgeAutoConfiguration

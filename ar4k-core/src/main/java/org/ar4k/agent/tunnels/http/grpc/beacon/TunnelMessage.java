@@ -124,6 +124,11 @@ private static final long serialVersionUID = 0L;
             originalSize_ = input.readInt32();
             break;
           }
+          case 104: {
+
+            messageHashCode_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -329,6 +334,15 @@ private static final long serialVersionUID = 0L;
     return originalSize_;
   }
 
+  public static final int MESSAGEHASHCODE_FIELD_NUMBER = 13;
+  private int messageHashCode_;
+  /**
+   * <code>int32 messageHashCode = 13;</code>
+   */
+  public int getMessageHashCode() {
+    return messageHashCode_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -378,6 +392,9 @@ private static final long serialVersionUID = 0L;
     }
     if (originalSize_ != 0) {
       output.writeInt32(12, originalSize_);
+    }
+    if (messageHashCode_ != 0) {
+      output.writeInt32(13, messageHashCode_);
     }
     unknownFields.writeTo(output);
   }
@@ -435,6 +452,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(12, originalSize_);
     }
+    if (messageHashCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(13, messageHashCode_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -478,6 +499,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getPayload())) return false;
     if (getOriginalSize()
         != other.getOriginalSize()) return false;
+    if (getMessageHashCode()
+        != other.getMessageHashCode()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -521,6 +544,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getPayload().hashCode();
     hash = (37 * hash) + ORIGINALSIZE_FIELD_NUMBER;
     hash = (53 * hash) + getOriginalSize();
+    hash = (37 * hash) + MESSAGEHASHCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getMessageHashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -686,6 +711,8 @@ private static final long serialVersionUID = 0L;
 
       originalSize_ = 0;
 
+      messageHashCode_ = 0;
+
       return this;
     }
 
@@ -732,6 +759,7 @@ private static final long serialVersionUID = 0L;
       result.messageUuid_ = messageUuid_;
       result.payload_ = payload_;
       result.originalSize_ = originalSize_;
+      result.messageHashCode_ = messageHashCode_;
       onBuilt();
       return result;
     }
@@ -816,6 +844,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getOriginalSize() != 0) {
         setOriginalSize(other.getOriginalSize());
+      }
+      if (other.getMessageHashCode() != 0) {
+        setMessageHashCode(other.getMessageHashCode());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1417,6 +1448,32 @@ private static final long serialVersionUID = 0L;
     public Builder clearOriginalSize() {
       
       originalSize_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int messageHashCode_ ;
+    /**
+     * <code>int32 messageHashCode = 13;</code>
+     */
+    public int getMessageHashCode() {
+      return messageHashCode_;
+    }
+    /**
+     * <code>int32 messageHashCode = 13;</code>
+     */
+    public Builder setMessageHashCode(int value) {
+      
+      messageHashCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 messageHashCode = 13;</code>
+     */
+    public Builder clearMessageHashCode() {
+      
+      messageHashCode_ = 0;
       onChanged();
       return this;
     }

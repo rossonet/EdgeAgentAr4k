@@ -13,20 +13,20 @@ import org.apache.sshd.server.shell.ProcessShellFactory;
  * @author andrea
  *
  */
-public class Ar4kProcessShellFactory extends ProcessShellFactory {
+public class AnimaProcessShellFactory extends ProcessShellFactory {
 
-	public Ar4kProcessShellFactory(String[] strings) {
+	public AnimaProcessShellFactory(String[] strings) {
 		super(strings);
 	}
 
 	@Override
 	public Command create() {
-		return new Ar4kInvertedShellWrapper(createInvertedShell());
+		return new AnimaInvertedShellWrapper(createInvertedShell());
 	}
 
 	@Override
 	protected InvertedShell createInvertedShell() {
-		return new Ar4kProcessShell(resolveEffectiveCommand(getCommand()));
+		return new AnimaProcessShell(resolveEffectiveCommand(getCommand()));
 	}
 
 }

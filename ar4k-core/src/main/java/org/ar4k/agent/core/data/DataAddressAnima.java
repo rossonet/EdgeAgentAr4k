@@ -23,6 +23,8 @@ import com.google.gson.GsonBuilder;
 
 public class DataAddressAnima extends DataAddress {
 
+	private static final String TIMER_HEALTH_DATA_ADDRESS = "TimerHealthDataAddress";
+
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(DataAddressAnima.class.toString());
 
@@ -37,7 +39,7 @@ public class DataAddressAnima extends DataAddress {
 	private static final String COMMAND_TAG = "command-rpc";
 
 	public DataAddressAnima(Anima anima) {
-		super(anima );
+		super(anima);
 	}
 
 	// task per health
@@ -46,13 +48,15 @@ public class DataAddressAnima extends DataAddress {
 	private long delay = 35000L;
 	private long period = 15000L;
 
-	private transient Timer timer = new Timer("TimerHealthDataAddress");
+	private Timer timer = new Timer(TIMER_HEALTH_DATA_ADDRESS);
 
-	private transient Set<DataAddress> slaves = new HashSet<>();
+	private boolean active = true;
+
+	private Set<DataAddress> slaves = new HashSet<>();
 
 	@Override
-	public Collection<Ar4kChannel> getDataChannels() {
-		final Collection<Ar4kChannel> myData = super.getDataChannels();
+	public Collection<EdgeChannel> getDataChannels() {
+		final Collection<EdgeChannel> myData = super.getDataChannels();
 		for (final DataAddress slave : slaves) {
 			myData.addAll(slave.getDataChannels());
 		}
@@ -60,7 +64,7 @@ public class DataAddressAnima extends DataAddress {
 	}
 
 	@Override
-	public void callAddressSpaceRefresh(Ar4kChannel nodeUpdated) {
+	public void callAddressSpaceRefresh(EdgeChannel nodeUpdated) {
 		super.callAddressSpaceRefresh(nodeUpdated);
 		for (final DataAddress slave : slaves) {
 			slave.callAddressSpaceRefresh(nodeUpdated);
@@ -86,6 +90,8 @@ public class DataAddressAnima extends DataAddress {
 
 	@Override
 	public void close() throws Exception {
+		active = false;
+		timer.cancel();
 		for (final DataAddress slave : slaves) {
 			slave.close();
 		}
@@ -97,7 +103,7 @@ public class DataAddressAnima extends DataAddress {
 		tagList.add(SYSTEM_TAG);
 		tagList.add(DIRECTORY_TAG);
 		tagList.addAll(anima.getTags());
-		final Ar4kChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
+		final EdgeChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
 				(String) null, null, tagList);
 		tagList.add(LOGGER_TAG);
 		createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel,
@@ -123,9 +129,9 @@ public class DataAddressAnima extends DataAddress {
 		slaves.remove(a);
 	}
 
-	private class HealthTimer extends TimerTask {
+	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-		private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private class HealthTimer extends TimerTask {
 
 		private transient Anima anima = null;
 
@@ -135,11 +141,12 @@ public class DataAddressAnima extends DataAddress {
 
 		@Override
 		public void run() {
-			try {
-				sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
-			} catch (final Exception e) {
-				logger.logException(e);
-			}
+			if (active)
+				try {
+					sendEvent(HardwareHelper.getSystemInfo().getHealthIndicator());
+				} catch (final Exception e) {
+					logger.logException(e);
+				}
 		}
 
 		private void sendEvent(Map<String, Object> healthMessage) {

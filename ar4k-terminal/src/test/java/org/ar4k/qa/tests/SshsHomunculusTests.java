@@ -17,8 +17,8 @@ package org.ar4k.qa.tests;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusService;
 import org.jline.builtins.Commands;
@@ -50,8 +50,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-    Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

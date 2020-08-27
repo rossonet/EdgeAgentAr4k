@@ -15,8 +15,8 @@
 package org.ar4k.agent.spring.autoconfig;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kHealthIndicator;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgeHealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
@@ -32,18 +32,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author Andrea Ambrosini
  */
-public class Ar4kAutoConfiguration {
+public class EdgeAutoConfiguration {
 
   @Bean
   @ConditionalOnBean(Anima.class)
-  Ar4kHealthIndicator ar4kHealthIndicator() {
-    return new Ar4kHealthIndicator();
+  EdgeHealthIndicator edgeHealthIndicator() {
+    return new EdgeHealthIndicator();
   }
 
   @Bean
   @ConditionalOnBean(Anima.class)
-  AuthenticationManager ar4kAuthenticationManager() {
-    return new Ar4kAuthenticationManager();
+  AuthenticationManager edgeAuthenticationManager() {
+    return new EdgeAuthenticationManager();
   }
 
   @Bean

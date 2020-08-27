@@ -10,9 +10,9 @@ import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.rpc.process.AgentProcess;
-import org.ar4k.agent.rpc.process.Ar4kRpcProcess;
+import org.ar4k.agent.rpc.process.EdgeRpcProcess;
 
-@Ar4kRpcProcess
+@EdgeRpcProcess
 public class XpraSessionProcess implements AgentProcess {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

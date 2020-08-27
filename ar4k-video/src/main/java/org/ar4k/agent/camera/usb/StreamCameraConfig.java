@@ -15,7 +15,7 @@
 package org.ar4k.agent.camera.usb;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -60,7 +60,7 @@ public class StreamCameraConfig extends AbstractServiceConfig {
   private String scopeOfChannels = null;
 
   @Override
-  public Ar4kComponent instantiate() {
+  public EdgeComponent instantiate() {
     StreamCameraService ss = new StreamCameraService();
     ss.setConfiguration(this);
     return ss;

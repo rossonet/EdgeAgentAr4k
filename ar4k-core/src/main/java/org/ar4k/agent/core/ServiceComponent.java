@@ -6,10 +6,10 @@ package org.ar4k.agent.core;
  * @author andrea
  *
  * @param <S> tipo pot
- * @see org.ar4k.agent.core.Ar4kComponent
+ * @see org.ar4k.agent.core.EdgeComponent
  *
  */
-public interface ServiceComponent<S extends Ar4kComponent> extends AutoCloseable {
+public interface ServiceComponent<S extends EdgeComponent> extends AutoCloseable {
 
   S getPot();
 

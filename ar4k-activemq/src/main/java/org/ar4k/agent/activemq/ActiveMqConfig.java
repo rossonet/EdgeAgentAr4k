@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -89,7 +89,7 @@ public class ActiveMqConfig extends AbstractServiceConfig {
 	public List<String> clusterStaticHosts = new ArrayList<>();
 
 	@Override
-	public Ar4kComponent instantiate() {
+	public EdgeComponent instantiate() {
 		final ActiveMqService ss = new ActiveMqService();
 		ss.setConfiguration(this);
 		return ss;

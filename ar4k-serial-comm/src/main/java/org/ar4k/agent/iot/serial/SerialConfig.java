@@ -1,7 +1,7 @@
 package org.ar4k.agent.iot.serial;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.iot.serial.SerialService.BaudRate;
 import org.ar4k.agent.iot.serial.SerialService.ConventionalNotation;
 
@@ -41,10 +41,10 @@ public class SerialConfig extends AbstractServiceConfig {
   private String endpointWriteByte = null;
 
   @Override
-  public Ar4kComponent instantiate() {
+  public EdgeComponent instantiate() {
     SerialService ss = new SerialService();
     ss.setConfiguration(this);
-    return (Ar4kComponent) ss;
+    return (EdgeComponent) ss;
   }
 
   @Override

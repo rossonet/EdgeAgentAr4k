@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.ContextCreationHelper;
@@ -427,9 +427,9 @@ public class RemoteControlOverBeaconRpcConfig {
     baseArgsClientTwo.add("--ar4k.threadSleep=1000");
     baseArgsClientTwo.add("--ar4k.logoUrl=/static/img/ar4k.png");
 
-    Ar4kConfig clientOneConfig = new Ar4kConfig();
-    Ar4kConfig clientTwoConfig = new Ar4kConfig();
-    Ar4kConfig serverConfig = new Ar4kConfig();
+    EdgeConfig clientOneConfig = new EdgeConfig();
+    EdgeConfig clientTwoConfig = new EdgeConfig();
+    EdgeConfig serverConfig = new EdgeConfig();
     serverConfig.name = "server-beacon";
     // serverConfig.beaconServer = null;
     serverConfig.beaconDiscoveryPort = 0;
@@ -473,7 +473,7 @@ public class RemoteControlOverBeaconRpcConfig {
     }
 
     // codice
-    Ar4kConfig assertConfig = new Ar4kConfig();
+    EdgeConfig assertConfig = new EdgeConfig();
     assertConfig.name = "test-send-config";
     String testValue = UUID.randomUUID().toString();
     assertConfig.description = testValue;

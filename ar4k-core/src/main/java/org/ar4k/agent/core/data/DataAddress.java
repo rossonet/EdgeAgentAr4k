@@ -26,39 +26,39 @@ public class DataAddress implements AutoCloseable {
 		this.anima = anima;
 	}
 
-	protected final Collection<Ar4kChannel> dataChannels = new HashSet<>();
+	protected final Collection<EdgeChannel> dataChannels = new HashSet<>();
 
 	protected String defaultScope = "ar4k-ai";
 	protected String levelSeparator = "/";
 
 	protected transient Set<DataAddressChange> callbacks = new HashSet<>();
 
-	protected transient Set<Ar4kManagedNamespace> managedNameSpace = new HashSet<>();
+	protected transient Set<EdgeManagedNamespace> managedNameSpace = new HashSet<>();
 
-	public Collection<Ar4kChannel> getDataChannels() {
+	public Collection<EdgeChannel> getDataChannels() {
 		return dataChannels;
 	}
 
 	public Collection<String> getKnowTags() {
 		final Set<String> result = new HashSet<>();
-		for (final Ar4kChannel c : getDataChannels()) {
+		for (final EdgeChannel c : getDataChannels()) {
 			result.addAll(c.getTags());
 		}
 		return result;
 	}
 
-	private void initializeExternalNameSpace(Ar4kManagedNamespace nameSpace) {
+	private void initializeExternalNameSpace(EdgeManagedNamespace nameSpace) {
 		// TODO chiamate per configurare i managed name spaces
 	}
 
-	private void updateExternalNameSpace(Ar4kManagedNamespace nameSpace) {
+	private void updateExternalNameSpace(EdgeManagedNamespace nameSpace) {
 		// TODO chiamate per configurare i managed name spaces
 
 	}
 
-	public Collection<Ar4kChannel> getDataChannels(DataChannelFilter filter) {
-		final List<Ar4kChannel> result = new ArrayList<>();
-		for (final Ar4kChannel singleChannel : getDataChannels()) {
+	public Collection<EdgeChannel> getDataChannels(DataChannelFilter filter) {
+		final List<EdgeChannel> result = new ArrayList<>();
+		for (final EdgeChannel singleChannel : getDataChannels()) {
 			if (filter.filtersMatch(singleChannel)) {
 				result.add(singleChannel);
 			}
@@ -66,9 +66,9 @@ public class DataAddress implements AutoCloseable {
 		return result;
 	}
 
-	public Ar4kChannel getChannel(String channelId) {
-		Ar4kChannel r = null;
-		for (final Ar4kChannel c : getDataChannels()) {
+	public EdgeChannel getChannel(String channelId) {
+		EdgeChannel r = null;
+		for (final EdgeChannel c : getDataChannels()) {
 			if (c.getBrowseName() != null && c.getBrowseName().equals(channelId)) {
 				r = c;
 				break;
@@ -77,11 +77,11 @@ public class DataAddress implements AutoCloseable {
 		return r;
 	}
 
-	public void callAddressSpaceRefresh(Ar4kChannel nodeUpdated) {
+	public void callAddressSpaceRefresh(EdgeChannel nodeUpdated) {
 		for (final DataAddressChange target : callbacks) {
 			target.onDataAddressUpdate(nodeUpdated);
 		}
-		for (final Ar4kManagedNamespace nameSpace : managedNameSpace) {
+		for (final EdgeManagedNamespace nameSpace : managedNameSpace) {
 			updateExternalNameSpace(nameSpace);
 		}
 	}
@@ -94,23 +94,23 @@ public class DataAddress implements AutoCloseable {
 		callbacks.remove(callback);
 	}
 
-	public void addManagedNamespace(Ar4kManagedNamespace managedObject) {
+	public void addManagedNamespace(EdgeManagedNamespace managedObject) {
 		managedNameSpace.add(managedObject);
 		initializeExternalNameSpace(managedObject);
 	}
 
-	public void removeManagedNamespace(Ar4kManagedNamespace managedObject) {
+	public void removeManagedNamespace(EdgeManagedNamespace managedObject) {
 		managedNameSpace.remove(managedObject);
 	}
 
-	public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType,
+	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,
 			String description, String father, String scope, Collection<String> tags) {
 		return createOrGetDataChannel(nodeId, channelType, description, getChannel(father), scope, tags);
 	}
 
-	public Ar4kChannel createOrGetDataChannel(String nodeId, Class<? extends Ar4kChannel> channelType,
-			String description, Ar4kChannel father, String scope, Collection<String> tags) {
-		Ar4kChannel returnChannel = null;
+	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,
+			String description, EdgeChannel father, String scope, Collection<String> tags) {
+		EdgeChannel returnChannel = null;
 		if (getChannel(nodeId) != null) {
 			returnChannel = getChannel(nodeId);
 			this.dataChannels.add(returnChannel);
@@ -126,7 +126,7 @@ public class DataAddress implements AutoCloseable {
 				}
 				final Constructor<?> ctor = channelType.getConstructor();
 				logger.info("create channel " + nodeId + " of type " + channelType);
-				returnChannel = (Ar4kChannel) ctor.newInstance();
+				returnChannel = (EdgeChannel) ctor.newInstance();
 				returnChannel.setBrowseName(nodeId);
 				returnChannel.setDescription(description);
 				this.dataChannels.add(returnChannel);
@@ -150,7 +150,7 @@ public class DataAddress implements AutoCloseable {
 		return returnChannel;
 	}
 
-	public void removeDataChannel(Ar4kChannel dataChannel, boolean clearList) {
+	public void removeDataChannel(EdgeChannel dataChannel, boolean clearList) {
 		try {
 			logger.info("Try to remove dataChannel " + dataChannel.getBrowseName());
 			dataChannel.close();
@@ -171,7 +171,7 @@ public class DataAddress implements AutoCloseable {
 	}
 
 	public void clearDataChannels() {
-		for (final Ar4kChannel target : this.dataChannels) {
+		for (final EdgeChannel target : this.dataChannels) {
 			removeDataChannel(target, false);
 		}
 		this.dataChannels.clear();
@@ -179,7 +179,7 @@ public class DataAddress implements AutoCloseable {
 
 	public Collection<String> listChannels() {
 		final Collection<String> result = new ArrayList<>();
-		for (final Ar4kChannel c : getDataChannels()) {
+		for (final EdgeChannel c : getDataChannels()) {
 			result.add(c.getBrowseName() + " [" + c.getDescription() + "] "
 					+ (c.getChannel() != null ? c.getChannel().getBeanName() : c.getStatus())
 					+ (c.getChannel() != null ? " -> " + c.getChannel().getFullChannelName() : ""));

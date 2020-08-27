@@ -3,8 +3,11 @@ package org.ar4k.agent.tunnels.http.beacon.socket;
 import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.trace;
 
 import java.util.Date;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -14,12 +17,6 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 
 import io.grpc.stub.StreamObserver;
 
-/**
- * gestione tunnel lato server
- *
- * @author andrea
- *
- */
 public class TunnelRunnerBeaconServer implements AutoCloseable {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -30,9 +27,33 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 	private final Agent clientAgent;
 	private StreamObserver<TunnelMessage> serverObserver = null;
 	private StreamObserver<TunnelMessage> clientObserver = null;
+	private AtomicLong serverObserverLastTime = new AtomicLong(0);
+	private AtomicLong clientObserverLastTime = new AtomicLong(0);
 	private long serverUuid = 0;
 	private long clientUuid = 0;
 	private final ExecutorService executor = Executors.newCachedThreadPool();
+	private Future<Void> pingWorker = null;
+
+	private boolean closed = false;
+
+	final class ObserverAndLastData {
+		private final StreamObserver<TunnelMessage> observer;
+		private final AtomicLong counter;
+
+		ObserverAndLastData(StreamObserver<TunnelMessage> observer, AtomicLong counter) {
+			this.observer = observer;
+			this.counter = counter;
+		}
+
+		StreamObserver<TunnelMessage> getObserver() {
+			return observer;
+		}
+
+		AtomicLong getCounter() {
+			return counter;
+		}
+
+	}
 
 	public TunnelRunnerBeaconServer(long tunnelId, Agent server, Agent client) {
 		this.serverAgent = server;
@@ -40,6 +61,33 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		if (trace)
 			logger.info("tunnel id " + tunnelId + " created");
 		this.tunnelId = tunnelId;
+		createPingChecker();
+	}
+
+	private void createPingChecker() {
+		pingWorker = executor.submit(new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				while (pingWorker != null) {
+					Thread.sleep(BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT);
+					final TunnelMessage message = TunnelMessage.newBuilder()
+							.setMessageStatus(MessageStatus.beaconLocalPing).build();
+					if (serverObserver != null && serverObserverLastTime.get() != 0 && (serverObserverLastTime.get()
+							+ BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date().getTime())) {
+						onNextSynchro(message, serverObserver);
+						serverObserverLastTime.set(new Date().getTime());
+					}
+					if (clientObserver != null && clientObserverLastTime.get() != 0 && (clientObserverLastTime.get()
+							+ BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date().getTime())) {
+						onNextSynchro(message, clientObserver);
+						clientObserverLastTime.set(new Date().getTime());
+					}
+				}
+				return null;
+			}
+
+		});
 	}
 
 	public long getTunnelId() {
@@ -51,35 +99,36 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 	}
 
 	public void onNext(TunnelMessage value, StreamObserver<TunnelMessage> responseObserver) {
-		try {
-			cleanFromMessage(value, responseObserver);
-			reportDetails();
-			executor.submit(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						deliveryMessage(value, responseObserver);
-					} catch (final Exception e) {
-						logger.logException("IN DELIVERY MESSAGE", e);
-					}
+		if (!closed)
+			try {
+				cleanFromMessage(value, responseObserver);
+				reportDetails();
+				executor.submit(new Runnable() {
 
-				}
-			});
-		} catch (final Exception sr) {
-			logger.logException("ERROR ON NEXT BEACON HUB", sr);
-		}
+					@Override
+					public void run() {
+						Thread.currentThread().setName("t-" + value.getMessageUuid());
+						try {
+							deliveryMessage(value, responseObserver);
+						} catch (final Exception e) {
+							logger.logException("IN DELIVERY MESSAGE", e);
+						}
+
+					}
+				});
+			} catch (final Exception sr) {
+				logger.logException("ERROR ON NEXT BEACON HUB", sr);
+			}
 	}
 
 	private void deliveryMessage(TunnelMessage value, StreamObserver<TunnelMessage> responseObserver)
 			throws InterruptedException {
-		final StreamObserver<TunnelMessage> nextAgent = waitNextAgentObserver(value, responseObserver);
+		final ObserverAndLastData nextAgent = waitNextAgentObserver(value, responseObserver);
 		if (nextAgent != null) {
-			if (trace) {
-				logger.info("Stream observer found");
-			}
-			nextAgent.onNext(value);
+			onNextSynchro(value, nextAgent.getObserver());
+			nextAgent.getCounter().set(new Date().getTime());
 			if (trace)
-				logger.info("DONE ON NEXT\nPAYLOAD: " + value);
+				logger.info("DONE ON NEXT - PAYLOAD:\n" + value);
 
 		} else {
 			if (trace)
@@ -87,49 +136,51 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		}
 	}
 
-	private StreamObserver<TunnelMessage> waitNextAgentObserver(TunnelMessage value,
+	private synchronized void onNextSynchro(TunnelMessage value, final StreamObserver<TunnelMessage> nextAgent) {
+		nextAgent.onNext(value);
+	}
+
+	private ObserverAndLastData waitNextAgentObserver(TunnelMessage value,
 			StreamObserver<TunnelMessage> responseObserver) throws InterruptedException {
 		final long startCheck = new Date().getTime();
-		StreamObserver<TunnelMessage> nextAgent = getNextAgentObserver(value, responseObserver);
-		while (nextAgent == null && (startCheck + BeaconNetworkTunnel.SYNC_TIME_OUT) > new Date().getTime()) {
-			Thread.sleep(BeaconNetworkTunnel.WAIT_WHILE_DELAY);
-			logger.info("waiting on server hub");
+		ObserverAndLastData nextAgent = getNextAgentObserver(value, responseObserver);
+		boolean firstLoop = true;
+		while (!closed && nextAgent == null
+				&& (startCheck + BeaconNetworkTunnel.SYNC_TIME_OUT) > new Date().getTime()) {
+			if (!firstLoop) {
+				Thread.sleep(BeaconNetworkTunnel.WAIT_WHILE_DELAY);
+				if (trace)
+					logger.info("waiting on server hub");
+			}
 			nextAgent = getNextAgentObserver(value, responseObserver);
+			firstLoop = false;
 		}
 		return nextAgent;
 	}
 
 	private void cleanFromMessage(TunnelMessage value, StreamObserver<TunnelMessage> responseObserver) {
-		if (value.getMessageStatus().equals(MessageStatus.closeRequestClient)
-				&& clientObserver.equals(responseObserver)) {
+		if (value.getMessageStatus().equals(MessageStatus.closeRequestClient) && clientObserver != null) {
 			cleanClient();
 		}
-		if (value.getMessageStatus().equals(MessageStatus.closeRequestServer)
-				&& serverObserver.equals(responseObserver)) {
+		if (value.getMessageStatus().equals(MessageStatus.closeRequestServer) && serverObserver != null) {
 			cleanServer();
 		}
 	}
 
-	private synchronized StreamObserver<TunnelMessage> getNextAgentObserver(TunnelMessage value,
+	private synchronized ObserverAndLastData getNextAgentObserver(TunnelMessage value,
 			StreamObserver<TunnelMessage> responseObserver) {
 		reportDetails();
-		StreamObserver<TunnelMessage> nextAgentObserver = null;
+		ObserverAndLastData nextAgentObserver = null;
 		if (!serverAgent.equals(clientAgent)) {
 			if (trace)
 				logger.info("client and service host are different");
 			if (value.getAgentSource().equals(serverAgent)) {
-				if (trace)
-					logger.info("request from server by Agent [s:" + value.getAgentSource() + " d:"
-							+ value.getAgentDestination() + "]");
 				saveServerIfNull(value, responseObserver);
-				nextAgentObserver = assignClientToNext(value, nextAgentObserver);
+				nextAgentObserver = assignClientToNext();
 			}
 			if (value.getAgentSource().equals(clientAgent)) {
-				if (trace)
-					logger.info("request from client by Agent [s:" + value.getAgentSource() + " d:"
-							+ value.getAgentDestination() + "]");
 				saveClientIfNull(value, responseObserver);
-				nextAgentObserver = assignServerToNext(nextAgentObserver);
+				nextAgentObserver = assignServerToNext();
 			}
 		}
 		if (nextAgentObserver == null && serverAgent.equals(clientAgent)) {
@@ -143,7 +194,7 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 					logger.info("UUID Message " + value.getUuid());
 				}
 				saveClientIfNull(value, responseObserver);
-				nextAgentObserver = assignServerToNext(nextAgentObserver);
+				nextAgentObserver = assignServerToNext();
 				break;
 			case FROM_SERVER:
 				if (trace) {
@@ -151,7 +202,7 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 					logger.info("UUID Message " + value.getUuid());
 				}
 				saveServerIfNull(value, responseObserver);
-				nextAgentObserver = assignClientToNext(value, nextAgentObserver);
+				nextAgentObserver = assignClientToNext();
 				break;
 			case UNRECOGNIZED:
 				logger.warn(value.getMessageType() + " is unrecognized");
@@ -166,9 +217,10 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		return nextAgentObserver;
 	}
 
-	private StreamObserver<TunnelMessage> assignServerToNext(StreamObserver<TunnelMessage> nextAgentObserver) {
+	private ObserverAndLastData assignServerToNext() {
+		ObserverAndLastData nextAgentObserver = null;
 		if (serverObserver != null) {
-			nextAgentObserver = serverObserver;
+			nextAgentObserver = new ObserverAndLastData(serverObserver, serverObserverLastTime);
 		} else {
 			if (trace)
 				logger.info("serverObserver not found in agent\nserverAgent -> " + serverAgent.toString()
@@ -186,14 +238,14 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		}
 	}
 
-	private StreamObserver<TunnelMessage> assignClientToNext(TunnelMessage value,
-			StreamObserver<TunnelMessage> nextAgentObserver) {
+	private ObserverAndLastData assignClientToNext() {
+		ObserverAndLastData nextAgentObserver = null;
 		if (clientObserver != null) {
-			nextAgentObserver = clientObserver;
+			nextAgentObserver = new ObserverAndLastData(clientObserver, clientObserverLastTime);
 		} else {
 			if (trace)
-				logger.info(
-						"assign null client on sessionId:" + value.getSessionId() + ",tunneltId:" + value.getTargeId());
+				logger.info("clientObserver not found in agent\nserverAgent -> " + serverAgent.toString()
+						+ "\nclientAgent -> " + clientAgent.toString());
 		}
 		return nextAgentObserver;
 	}
@@ -207,46 +259,35 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		}
 	}
 
-	private void reportDetails() {
-		if (trace) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append("\n--------------------\nDETAILS TunnelRunnerBeaconServer\n");
-			sb.append("CLIENT uuid: " + clientUuid + " -> "
-					+ (clientObserver != null ? clientObserver.hashCode() + " -> " + clientObserver.toString() : "NaN")
-					+ "\n");
-			sb.append("SERVER uuid: " + serverUuid + " -> "
-					+ (serverObserver != null ? serverObserver.hashCode() + " -> " + serverObserver.toString() : "NaN")
-					+ "\n");
-			sb.append("\n--------------------\n");
-			logger.info(sb.toString());
-		}
-	}
-
 	public Agent getClientAgent() {
 		return clientAgent;
 	}
 
 	public void onError(Throwable t, StreamObserver<TunnelMessage> responseObserver) {
-		logger.logException("Error on TunnelRunnerBeaconServer id " + responseObserver.hashCode() + " -> " + tunnelId,
-				t);
 		if (responseObserver.equals(serverObserver)) {
 			cleanServer();
 		}
 		if (responseObserver.equals(clientObserver)) {
 			cleanClient();
 		}
-
+		logger.logException("Error on TunnelRunnerBeaconServer id " + responseObserver.hashCode() + " -> " + tunnelId,
+				t);
 	}
 
 	public void onCompleted(StreamObserver<TunnelMessage> responseObserver) {
-		if (trace)
-			logger.info("Complete on TunnelRunnerBeaconServer id " + responseObserver.hashCode() + " -> " + tunnelId);
 		closeChannelAction();
+		if (trace)
+			logger.info("Completed on TunnelRunnerBeaconServer id " + responseObserver.hashCode() + " -> " + tunnelId);
 	}
 
 	@Override
 	public void close() throws Exception {
+		closed = true;
 		closeChannelAction();
+		if (pingWorker != null) {
+			pingWorker.cancel(false);
+			pingWorker = null;
+		}
 		executor.shutdownNow();
 		if (trace)
 			logger.info("TunnelRunnerBeaconServer id " + tunnelId + " closed");
@@ -259,17 +300,17 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 
 	private void cleanClient() {
 		if (clientObserver != null) {
-			if (trace)
-				logger.info("############### TunnelRunnerBeaconServer id " + tunnelId + " remove client");
 			clientObserver = null;
+			if (trace)
+				logger.info("############### TunnelRunnerBeaconServer id " + tunnelId + " removed client");
 		}
 	}
 
 	private void cleanServer() {
 		if (serverObserver != null) {
-			if (trace)
-				logger.info("############### TunnelRunnerBeaconServer id " + tunnelId + " remove server");
 			serverObserver = null;
+			if (trace)
+				logger.info("############### TunnelRunnerBeaconServer id " + tunnelId + " removed server");
 		}
 	}
 
@@ -287,5 +328,22 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 			builder.append("clientObserver=").append(clientObserver).append(", ");
 		builder.append("serverUuid=").append(serverUuid).append(", clientUuid=").append(clientUuid).append("]");
 		return builder.toString();
+	}
+
+	private void reportDetails() {
+		if (trace) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("\n--------------------\n");
+			sb.append(toString());
+			sb.append("\nDETAILS OBSERVERS\n");
+			sb.append("CLIENT uuid: " + clientUuid + " -> "
+					+ (clientObserver != null ? clientObserver.hashCode() + " -> " + clientObserver.toString() : "NaN")
+					+ "\n");
+			sb.append("SERVER uuid: " + serverUuid + " -> "
+					+ (serverObserver != null ? serverObserver.hashCode() + " -> " + serverObserver.toString() : "NaN")
+					+ "\n");
+			sb.append("\n--------------------\n");
+			logger.info(sb.toString());
+		}
 	}
 }

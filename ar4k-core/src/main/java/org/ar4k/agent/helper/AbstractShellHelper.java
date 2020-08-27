@@ -28,13 +28,13 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ReflectionException;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.spring.EdgeUserDetails;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,15 +134,15 @@ public abstract class AbstractShellHelper {
     return ok ? Availability.available() : Availability.unavailable(message);
   }
 
-  protected Ar4kConfig getWorkingConfig() {
+  protected EdgeConfig getWorkingConfig() {
     if (getSessionId() != null) {
       return ((RpcConversation) anima.getRpc(getSessionId())).getWorkingConfig();
     } else
       return null;
   }
 
-  protected void setWorkingConfig(Ar4kConfig config) {
-    Map<String, Ar4kConfig> actualConfig = ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
+  protected void setWorkingConfig(EdgeConfig config) {
+    Map<String, EdgeConfig> actualConfig = ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
     if (config != null && actualConfig != null && !actualConfig.containsValue(config))
       addConfig(config);
     if (config != null)
@@ -166,11 +166,11 @@ public abstract class AbstractShellHelper {
     return result;
   }
 
-  protected Map<String, Ar4kConfig> getConfigs() {
+  protected Map<String, EdgeConfig> getConfigs() {
     return ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
   }
 
-  protected void addConfig(Ar4kConfig config) {
+  protected void addConfig(EdgeConfig config) {
     ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);
   }
 
@@ -179,7 +179,7 @@ public abstract class AbstractShellHelper {
   }
 
   protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {
-    Ar4kUserDetails u = new Ar4kUserDetails();
+    EdgeUserDetails u = new EdgeUserDetails();
     u.setUsername(username);
     u.setPassword(passwordEncoder.encode(password));
     List<SimpleGrantedAuthority> a = new ArrayList<>();
@@ -194,8 +194,8 @@ public abstract class AbstractShellHelper {
 
   protected boolean removeUser(String username) {
     boolean result = false;
-    Ar4kUserDetails t = null;
-    for (Ar4kUserDetails u : anima.getLocalUsers()) {
+    EdgeUserDetails t = null;
+    for (EdgeUserDetails u : anima.getLocalUsers()) {
       if (u.getUsername().equals(username)) {
         t = u;
         break;
@@ -209,7 +209,7 @@ public abstract class AbstractShellHelper {
     return result;
   }
 
-  protected static Ar4kConfig cloneConfigHelper(String newName, String newPrompt, Ar4kConfig target)
+  protected static EdgeConfig cloneConfigHelper(String newName, String newPrompt, EdgeConfig target)
       throws IOException, ClassNotFoundException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -217,7 +217,7 @@ public abstract class AbstractShellHelper {
     oos.close();
     byte[] data = Base64.getDecoder().decode(Base64.getEncoder().encodeToString(baos.toByteArray()));
     ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-    Ar4kConfig newTarget = (Ar4kConfig) ois.readObject();
+    EdgeConfig newTarget = (EdgeConfig) ois.readObject();
     ois.close();
     newTarget.uniqueId = UUID.randomUUID().toString();
     newTarget.name = newName;

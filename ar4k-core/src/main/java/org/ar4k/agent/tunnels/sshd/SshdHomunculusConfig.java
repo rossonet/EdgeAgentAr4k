@@ -1,7 +1,7 @@
 package org.ar4k.agent.tunnels.sshd;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -23,7 +23,7 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
 	private static final long serialVersionUID = 6301077946480730173L;
 
 	@Override
-	public Ar4kComponent instantiate() {
+	public EdgeComponent instantiate() {
 		final SshdHomunculusService ss = new SshdHomunculusService();
 		ss.setConfiguration(this);
 		return ss;

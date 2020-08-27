@@ -2,7 +2,7 @@ package org.ar4k.agent.pcap;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
  *
  */
 // TODO implementare servizio di sniffing PCAP verso dataspace
-public class PcapSnifferService implements Ar4kComponent {
+public class PcapSnifferService implements EdgeComponent {
 
 	private ServiceConfig configuration;
 	private Anima anima;

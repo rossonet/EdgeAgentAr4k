@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent.ServiceStatus;
+import org.ar4k.agent.core.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -40,15 +40,15 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- * @see org.ar4k.agent.core.Ar4kComponent
+ * @see org.ar4k.agent.core.EdgeComponent
  * @see org.ar4k.agent.core.ServiceComponent
  */
-public abstract class AbstractAr4kService implements ServiceComponent<Ar4kComponent> {
+public abstract class AbstractEdgeService implements ServiceComponent<EdgeComponent> {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(AbstractAr4kService.class.toString());
+      .getLogger(AbstractEdgeService.class.toString());
 
-  protected Ar4kComponent pot;
+  protected EdgeComponent pot;
   protected final Timer timerScheduler;
   protected ExecutorService executor = Executors.newScheduledThreadPool(6);
   protected int maxFaults;
@@ -60,12 +60,12 @@ public abstract class AbstractAr4kService implements ServiceComponent<Ar4kCompon
   protected int watchDogTimeout = 120000;
   private TimerTask watchDogTask = null;
 
-  public AbstractAr4kService(Anima anima, ServiceConfig serviceConfig, Timer timerScheduler) {
+  public AbstractEdgeService(Anima anima, ServiceConfig serviceConfig, Timer timerScheduler) {
     this.timerScheduler = timerScheduler;
     this.maxFaults = serviceConfig.getMaxRestartRetries();
     try {
       Method method = serviceConfig.getClass().getMethod("instantiate");
-      pot = (Ar4kComponent) method.invoke(serviceConfig);
+      pot = (EdgeComponent) method.invoke(serviceConfig);
       pot.setConfiguration(serviceConfig);
       pot.setAnima(anima);
       pot.setDataAddress(new DataAddress(anima));
@@ -130,7 +130,7 @@ public abstract class AbstractAr4kService implements ServiceComponent<Ar4kCompon
   }
 
   @Override
-  public Ar4kComponent getPot() {
+  public EdgeComponent getPot() {
     return pot;
   }
 

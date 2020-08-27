@@ -19,7 +19,7 @@ import java.security.UnrecoverableKeyException;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -35,7 +35,7 @@ import com.google.gson.GsonBuilder;
  *         Servizio Beacon per telemetria
  *
  */
-public class BeaconService implements Ar4kComponent {
+public class BeaconService implements EdgeComponent {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(Anima.class.toString());

@@ -8,7 +8,7 @@ import org.joda.time.Instant;
 /**
  * interfaccia da implementare per una configurazione nel sistema
  *
- * @see org.ar4k.agent.config.Ar4kConfig
+ * @see org.ar4k.agent.config.EdgeConfig
  * @see org.ar4k.agent.config.ServiceConfig
  *
  * @author andrea

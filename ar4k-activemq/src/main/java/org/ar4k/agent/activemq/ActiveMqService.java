@@ -6,7 +6,7 @@ import org.apache.activemq.artemis.api.core.client.ClientSessionFactory;
 import org.apache.activemq.artemis.api.core.client.ServerLocator;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -20,7 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  *         Servizio di broker MQTT ActiveMQ
  */
-public class ActiveMqService implements Ar4kComponent {
+public class ActiveMqService implements EdgeComponent {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(ActiveMqService.class.toString());

@@ -14,11 +14,11 @@ import org.springframework.security.core.Authentication;
  * @author andrea
  *
  */
-public class Ar4kPasswordAuthenticator implements PasswordAuthenticator {
+public class AnimaPasswordAuthenticator implements PasswordAuthenticator {
 
 	private final Anima anima;
 
-	public Ar4kPasswordAuthenticator(Anima anima) {
+	public AnimaPasswordAuthenticator(Anima anima) {
 		this.anima = anima;
 	}
 

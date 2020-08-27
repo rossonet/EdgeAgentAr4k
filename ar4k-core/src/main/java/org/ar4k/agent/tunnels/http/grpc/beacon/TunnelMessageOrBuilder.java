@@ -95,4 +95,9 @@ public interface TunnelMessageOrBuilder extends
    * <code>int32 originalSize = 12;</code>
    */
   int getOriginalSize();
+
+  /**
+   * <code>int32 messageHashCode = 13;</code>
+   */
+  int getMessageHashCode();
 }

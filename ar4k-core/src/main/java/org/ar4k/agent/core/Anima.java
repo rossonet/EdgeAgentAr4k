@@ -51,7 +51,7 @@ import javax.annotation.PostConstruct;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.io.FileUtils;
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.DataAddressAnima;
 import org.ar4k.agent.exception.EdgeException;
@@ -63,8 +63,8 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
-import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.spring.autoconfig.Ar4kStarterProperties;
+import org.ar4k.agent.spring.EdgeUserDetails;
+import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
@@ -107,14 +107,14 @@ import jdbm.RecordManagerFactory;
 //@EnableMBeanExport
 @Scope("singleton")
 @EnableJms
-@EnableConfigurationProperties(Ar4kStarterProperties.class)
+@EnableConfigurationProperties(EdgeStarterProperties.class)
 public class Anima
 		implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
 	public static final String THREAD_ID = "a-" + String.valueOf(Math.round((new Random().nextDouble() * 9999)));
 
 	public static ContextCreationHelper getNewAnimaInNewContext(Class<?> springMasterClass, ExecutorService executor,
-			String loggerFile, String keyStore, int webPort, List<String> args, Ar4kConfig animaConfig,
+			String loggerFile, String keyStore, int webPort, List<String> args, EdgeConfig animaConfig,
 			String mainAliasInKeystore, String keystoreBeaconAlias, String webRegistrationEndpoint) {
 		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args, animaConfig,
 				mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
@@ -152,25 +152,25 @@ public class Anima
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private Ar4kStarterProperties starterProperties;
+	private EdgeStarterProperties starterProperties;
 
 	// gestione configurazioni
 	// attuale configurazione in runtime
-	private Ar4kConfig runtimeConfig = null;
+	private EdgeConfig runtimeConfig = null;
 	// configurazione obbiettivo durante le transizioni
-	private Ar4kConfig targetConfig = null;
+	private EdgeConfig targetConfig = null;
 	// configurazione iniziale di bootStrap derivata dalle variabili Spring
-	private Ar4kConfig bootstrapConfig = null;
+	private EdgeConfig bootstrapConfig = null;
 	// configurazione per il reload
-	private transient Ar4kConfig reloadConfig = null;
+	private transient EdgeConfig reloadConfig = null;
 	private AnimaStates stateTarget = AnimaStates.RUNNING;
 	private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
-	private Set<ServiceComponent<Ar4kComponent>> components = new HashSet<>();
+	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
 
 	private Map<String, Object> dataStore = null;
 
-	private Collection<Ar4kUserDetails> localUsers = new HashSet<>();
+	private Collection<EdgeUserDetails> localUsers = new HashSet<>();
 
 	private transient RecordManager recMan = null;
 
@@ -221,7 +221,7 @@ public class Anima
 
 	@Override
 	public void close() {
-		resetAgent();
+		finalizeAgent();
 		if (animaStateMachine != null) {
 			animaStateMachine.sendEvent(AnimaEvents.STOP);
 			animaStateMachine.stop();
@@ -247,7 +247,15 @@ public class Anima
 	// @OnStateChanged(target = "KILLED")
 	synchronized void finalizeAgent() {
 		try {
-			for (final ServiceComponent<Ar4kComponent> targetService : components) {
+			if (recMan != null) {
+				try {
+					recMan.close();
+				} catch (final IOException e) {
+					logger.info("IOException closing file data map of anima");
+				}
+				recMan = null;
+			}
+			for (final ServiceComponent<EdgeComponent> targetService : components) {
 				targetService.stop();
 				targetService.close();
 			}
@@ -260,6 +268,9 @@ public class Anima
 				timerScheduler.purge();
 				timerScheduler = null;
 			}
+			if (dataAddress != null) {
+				dataAddress.close();
+			}
 		} catch (final Exception aa) {
 			logger.logException("error during finalize phase", aa);
 		}
@@ -270,20 +281,9 @@ public class Anima
 	synchronized void resetAgent() {
 		finalizeAgent();
 		try {
-			if (recMan != null) {
-				try {
-					recMan.close();
-				} catch (final IOException e) {
-					logger.info("IOException closing file data map of anima");
-				}
-				recMan = null;
-			}
 			bootstrapConfig = null;
 			targetConfig = null;
 			runtimeConfig = null;
-			if (dataAddress != null) {
-				dataAddress.close();
-			}
 			dataAddress = new DataAddressAnima(this);
 		} catch (final Exception aa) {
 			logger.logException("error during reloading phase", aa);
@@ -294,7 +294,7 @@ public class Anima
 	void setInitialAuth() {
 		if (starterProperties.getAdminPassword() != null && !starterProperties.getAdminPassword().isEmpty()) {
 			// logger.warn("create admin user with config password");
-			final Ar4kUserDetails admin = new Ar4kUserDetails();
+			final EdgeUserDetails admin = new EdgeUserDetails();
 			admin.setUsername("admin");
 			admin.setPassword(passwordEncoder.encode(starterProperties.getAdminPassword()));
 			final GrantedAuthority grantedAuthorityAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
@@ -302,7 +302,7 @@ public class Anima
 			((Set<GrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityAdmin);
 			((Set<GrantedAuthority>) admin.getAuthorities()).add(grantedAuthorityUser);
 			boolean free = true;
-			for (final Ar4kUserDetails q : localUsers) {
+			for (final EdgeUserDetails q : localUsers) {
 				if (q.getUsername().equals("admin")) {
 					free = false;
 					break;
@@ -532,14 +532,22 @@ public class Anima
 					&& !starterProperties.getWebRegistrationEndpoint().isEmpty())
 					|| Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
 				try {
+					indexBeaconClient++;
+					if (indexBeaconClient > (ConfigHelper.countWorkingStringSplittedByComma(
+							filterBeaconUrl(filterBeaconUrl(starterProperties.getWebRegistrationEndpoint())), false)
+							- 1)) {
+						indexBeaconClient = 0;
+					}
 					if (starterProperties.getWebRegistrationEndpoint() == null
 							|| starterProperties.getWebRegistrationEndpoint().isEmpty()) {
 						logger.warn("Beacon connection is not configured");
 					}
-					logger.info("TRY CONNECTION TO BEACON AT "
-							+ ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false));
+					logger.info("TRY CONNECTION TO BEACON AT " + ConfigHelper.resolveWorkingStringSplittedByComma(
+							filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false, indexBeaconClient));
 					beaconClient = connectToBeaconService(
-							ConfigHelper.resolveWorkingString(starterProperties.getWebRegistrationEndpoint(), false),
+							ConfigHelper.resolveWorkingStringSplittedByComma(
+									filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false,
+									indexBeaconClient),
 							starterProperties.getBeaconCaChainPem(),
 							Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
 							starterProperties.getBeaconDiscoveryFilterString(), false);
@@ -594,8 +602,8 @@ public class Anima
 
 	// trova la configurazione appropriata per il bootstrap in funzione dei
 	// parametri di configurazione
-	private Ar4kConfig resolveBootstrapConfig() {
-		Ar4kConfig targetConfig = null;
+	private EdgeConfig resolveBootstrapConfig() {
+		EdgeConfig targetConfig = null;
 		if (reloadConfig == null) {
 			int maxConfig = 0;
 			try {
@@ -671,7 +679,7 @@ public class Anima
 						&& starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
 					try {
 						logger.info("try base64Config");
-						targetConfig = (Ar4kConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
+						targetConfig = (EdgeConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
 						if (targetConfig != null) {
 							logger.info("found base64Config");
 							break;
@@ -703,18 +711,18 @@ public class Anima
 		return targetConfig;
 	}
 
-	private Ar4kConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
+	private EdgeConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
 		final String hostPart = dnsTarget.split("\\.")[0];
 		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
 		try {
 			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
 			try {
 				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
-					return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
+					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
 							? ConfigHelper.fromBase64Crypto(payloadString.toString(), cryptoAlias)
 							: null);
 				} else {
-					return (Ar4kConfig) ((payloadString != null && payloadString.length() > 0)
+					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
 							? ConfigHelper.fromBase64(payloadString.toString())
 							: null);
 				}
@@ -731,8 +739,8 @@ public class Anima
 		}
 	}
 
-	private Ar4kConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
-		Ar4kConfig resultConfig = null;
+	private EdgeConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
+		EdgeConfig resultConfig = null;
 		try {
 			String config = "";
 			final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
@@ -743,9 +751,9 @@ public class Anima
 			}
 			bufferedReader.close();
 			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
-				resultConfig = (Ar4kConfig) ConfigHelper.fromBase64Crypto(config, cryptoAlias);
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config, cryptoAlias);
 			} else {
-				resultConfig = (Ar4kConfig) ConfigHelper.fromBase64(config);
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config);
 			}
 			return resultConfig;
 		} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -759,7 +767,7 @@ public class Anima
 		}
 	}
 
-	private Ar4kConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
+	private EdgeConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
 		final String temporaryFile = agentUniqueName + ".ar4k.conf"
 				+ ((cryptoAlias != null && !cryptoAlias.isEmpty()) ? ".crypto" : "");
 		try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
@@ -807,7 +815,7 @@ public class Anima
 		}
 	}
 
-	private void updateFileConfig(Ar4kConfig config) {
+	private void updateFileConfig(EdgeConfig config) {
 		final String fileTarget = ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true);
 		if (starterProperties.getKeystoreConfigAlias() != null
 				&& !starterProperties.getKeystoreConfigAlias().isEmpty()) {
@@ -907,7 +915,7 @@ public class Anima
 		return applicationContext;
 	}
 
-	public Set<ServiceComponent<Ar4kComponent>> getComponents() {
+	public Set<ServiceComponent<EdgeComponent>> getComponents() {
 		return components;
 	}
 
@@ -945,7 +953,7 @@ public class Anima
 		return logo;
 	}
 
-	public void setTargetConfig(Ar4kConfig config) {
+	public void setTargetConfig(EdgeConfig config) {
 		targetConfig = config;
 	}
 
@@ -953,7 +961,7 @@ public class Anima
 		return stateTarget;
 	}
 
-	public Ar4kConfig getRuntimeConfig() {
+	public EdgeConfig getRuntimeConfig() {
 		return runtimeConfig;
 	}
 
@@ -987,7 +995,7 @@ public class Anima
 		beanName = name;
 	}
 
-	public Collection<Ar4kUserDetails> getLocalUsers() {
+	public Collection<EdgeUserDetails> getLocalUsers() {
 		return localUsers;
 	}
 
@@ -1118,7 +1126,7 @@ public class Anima
 		return new TimerTask() {
 			@Override
 			public void run() {
-				final Ar4kConfig newTargetConfig = webConfigDownload(nextConfigWeb,
+				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
 			}
@@ -1129,7 +1137,7 @@ public class Anima
 		return new TimerTask() {
 			@Override
 			public void run() {
-				final Ar4kConfig newTargetConfig = dnsConfigDownload(nextConfigDns,
+				final EdgeConfig newTargetConfig = dnsConfigDownload(nextConfigDns,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
 			}
@@ -1140,14 +1148,14 @@ public class Anima
 		return new TimerTask() {
 			@Override
 			public void run() {
-				final Ar4kConfig newTargetConfig = loadConfigFromFile(nextConfigFile,
+				final EdgeConfig newTargetConfig = loadConfigFromFile(nextConfigFile,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
 			}
 		};
 	}
 
-	public final void elaborateNewConfig(Ar4kConfig newTargetConfig) {
+	public final void elaborateNewConfig(EdgeConfig newTargetConfig) {
 		if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
 			logger.warn("Found new config " + newTargetConfig.toString());
 			reloadConfig = newTargetConfig;
@@ -1221,7 +1229,7 @@ public class Anima
 		return beaconClient;
 	}
 
-	public Ar4kStarterProperties getStarterProperties() {
+	public EdgeStarterProperties getStarterProperties() {
 		return starterProperties;
 	}
 

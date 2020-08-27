@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.validator.AnsiColorValidator;
-import org.ar4k.agent.config.validator.Ar4kStatusValidator;
+import org.ar4k.agent.config.validator.EdgeStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaRouterType;
@@ -34,7 +34,7 @@ import com.beust.jcommander.Parameter;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
-public class Ar4kConfig implements ConfigSeed {
+public class EdgeConfig implements ConfigSeed {
 
 	private static final long serialVersionUID = 7447810727276010241L;
 
@@ -111,7 +111,7 @@ public class Ar4kConfig implements ConfigSeed {
 	@Parameter(names = "--groups", description = "groups", variableArity = true)
 	public List<String> groups = new ArrayList<>();
 
-	@Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = Ar4kStatusValidator.class)
+	@Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = EdgeStatusValidator.class)
 	public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
 
 	@Parameter(names = "--preScript", description = "pre script")
@@ -173,7 +173,7 @@ public class Ar4kConfig implements ConfigSeed {
 		return tags;
 	}
 
-	public boolean isMoreUpToDateThan(Ar4kConfig runtimeConfig) {
+	public boolean isMoreUpToDateThan(EdgeConfig runtimeConfig) {
 		return lastUpdate.isAfter(runtimeConfig.lastUpdate);
 	}
 

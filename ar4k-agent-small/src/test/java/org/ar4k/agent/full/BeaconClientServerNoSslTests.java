@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -33,10 +32,12 @@ import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.ContextCreationHelper;
+import org.ar4k.agent.helper.NetworkHelper;
+import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
@@ -44,6 +45,7 @@ import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
+import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -88,7 +90,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BeaconClientServerNoSslTests {
-	private static final int TEST_SIZE = 300;
 	private static final String CLIENT1_LABEL = "client1";
 	private static final String CLIENT2_LABEL = "client2";
 	private static final String SERVER_LABEL = "server";
@@ -123,35 +124,81 @@ public class BeaconClientServerNoSslTests {
 	private Future<Boolean> clientTCP17 = null;
 	private List<String> completed = new ArrayList<>();
 	private String basePayload = null;
+	private int actualTestSize = 0;
 
-	@Test(timeout = 640000)
-	public void a_serverAndClientTestMonoThread() throws Exception {
-		serverAndClientTest(false, true, 0, false);
+	@Test(timeout = 320000)
+	public void ante_a_serverAndClientTestMonoThread() throws Exception {
+		serverAndClientTest(false, true, 0, false, 10, false);
+	}
+
+	@Test(timeout = 320000)
+	public void ante_b_serverAndClientTestMonoThreadAndPayload() throws Exception {
+		serverAndClientTest(false, true, 250, false, 10, false);
+	}
+
+	@Test(timeout = 320000)
+	public void ante_c_serverAndClientTestWithFork() throws Exception {
+		serverAndClientTest(false, false, 0, false, 10, false);
+	}
+
+	@Test(timeout = 320000)
+	public void ante_d_serverAndClientTestWithForkAndPayload() throws Exception {
+		serverAndClientTest(false, false, 250, false, 10, false);
+	}
+
+	@Test(timeout = 320000)
+	public void ante_e_serverAndClientTestWithSshPayload() throws Exception {
+		serverAndClientTest(false, false, 0, true, 10, false);
 	}
 
 	@Test(timeout = 640000)
-	public void b_serverAndClientTestMonoThreadAndPayload() throws Exception {
-		serverAndClientTest(false, true, 250, false);
+	public void short_a_serverAndClientTestMonoThread() throws Exception {
+		serverAndClientTest(false, true, 0, false, 250, false);
 	}
 
 	@Test(timeout = 640000)
-	public void c_serverAndClientTestWithFork() throws Exception {
-		serverAndClientTest(false, false, 0, false);
+	public void short_b_serverAndClientTestMonoThreadAndPayload() throws Exception {
+		serverAndClientTest(false, true, 250, false, 250, false);
 	}
 
 	@Test(timeout = 640000)
-	public void d_serverAndClientTestWithForkAndPayload() throws Exception {
-		serverAndClientTest(false, false, 250, false);
+	public void short_c_serverAndClientTestWithFork() throws Exception {
+		serverAndClientTest(false, false, 0, false, 250, false);
 	}
 
 	@Test(timeout = 640000)
-	public void e_serverAndClientTestWithSshPayload() throws Exception {
-		serverAndClientTest(false, false, 0, true);
+	public void short_d_serverAndClientTestWithForkAndPayload() throws Exception {
+		serverAndClientTest(false, false, 250, false, 250, false);
 	}
 
 	@Test(timeout = 640000)
-	public void serverAndClientTestWithForkAndBigPayload() throws Exception {
-		serverAndClientTest(false, false, 1000, false);
+	public void short_e_serverAndClientTestWithSshPayload() throws Exception {
+		serverAndClientTest(false, false, 0, true, 250, false);
+	}
+
+	@Test(timeout = 2560000)
+	public void verybig_a_serverAndClientTestMonoThread() throws Exception {
+		serverAndClientTest(false, true, 0, false, 900, false);
+	}
+
+	@Test(timeout = 2560000)
+	public void verybig_b_serverAndClientTestMonoThreadAndPayload() throws Exception {
+		serverAndClientTest(false, true, 250, false, 900, false);
+	}
+
+	@Test(timeout = 2560000)
+	public void verybig_c_serverAndClientTestWithFork() throws Exception {
+		serverAndClientTest(false, false, 0, false, 900, false);
+	}
+
+	@Test(timeout = 2560000)
+	public void verybig_d_serverAndClientTestWithForkAndPayload() throws Exception {
+		serverAndClientTest(false, false, 250, false, 900, false);
+	}
+
+	@Test(timeout = 2560000)
+	public void verybig_e_serverAndClientTestWithSshPayload() throws Exception {
+		serverAndClientTest(false, false, 0, true, 900, false);
 	}
 
 	@Ignore
@@ -173,16 +220,21 @@ public class BeaconClientServerNoSslTests {
 
 	@Before
 	public void before() throws Exception {
+		BeaconNetworkTunnel.trace = true;
+		actualTestSize = 0;
+		deleteTmpDirectories();
+		Files.createDirectories(Paths.get("./tmp"));
+		KeystoreLoader.create(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
+		KeystoreLoader.create(client2AliasInKeystore, keyStoreClient1.getAbsolutePath(), passwordKs);
+		KeystoreLoader.create(client1AliasInKeystore, keyStoreClient2.getAbsolutePath(), passwordKs);
+	}
+
+	private void deleteTmpDirectories() {
 		deleteDir(new File("./tmp"));
 		deleteDir(new File("./tmp1"));
 		deleteDir(new File("./tmp2"));
 		deleteDir(new File("./tmp3"));
 		deleteDir(new File("~/.ar4k"));
-
-		Files.createDirectories(Paths.get("./tmp"));
-		KeystoreLoader.create(serverAliasInKeystore, keyStoreServer.getAbsolutePath(), passwordKs);
-		KeystoreLoader.create(client2AliasInKeystore, keyStoreClient1.getAbsolutePath(), passwordKs);
-		KeystoreLoader.create(client1AliasInKeystore, keyStoreClient2.getAbsolutePath(), passwordKs);
 	}
 
 	private void deleteDir(File dir) {
@@ -260,7 +312,6 @@ public class BeaconClientServerNoSslTests {
 			networkTunnel.close();
 			networkTunnel = null;
 		}
-
 		Files.deleteIfExists(Paths.get("./tmp/test.config.base64.ar4k"));
 		Files.deleteIfExists(keyStoreServer.toPath());
 		Files.deleteIfExists(keyStoreClient1.toPath());
@@ -269,14 +320,17 @@ public class BeaconClientServerNoSslTests {
 			executor.shutdownNow();
 			executor.awaitTermination(3, TimeUnit.MINUTES);
 		}
-		deleteDir(new File("./tmp"));
-		deleteDir(new File("./tmp1"));
-		deleteDir(new File("./tmp2"));
-		deleteDir(new File("./tmp3"));
-		deleteDir(new File("~/.ar4k"));
+		deleteTmpDirectories();
+		System.err.println("\n\n\n\n\n\n\n\n\n\n");
+		System.err.println("--------------------------------------------------------------");
+		System.err.println("THRED STATUS AFTER A");
+		System.err.println(ReflectionUtils.logThreadInfo());
+		System.err.println("\n\n--------------------------------------------------------------");
 	}
 
-	private void serverAndClientTest(boolean ssl, boolean singleThread, int payloadSize, boolean ssh) throws Exception {
+	private void serverAndClientTest(boolean ssl, boolean singleThread, int payloadSize, boolean ssh, int testElements,
+			boolean disconnectServer) throws Exception {
+		actualTestSize = testElements;
 		final List<String> baseArgs = new ArrayList<>();
 		basePayload = getAlphaNumericString(payloadSize);
 		if (ssl) {
@@ -284,8 +338,8 @@ public class BeaconClientServerNoSslTests {
 		}
 		baseArgs.add("--spring.shell.command.quit.enabled=false");
 		baseArgs.add("--logging.level.root=INFO");
-		baseArgs.add("--ar4k.confPath=./tmp");
-		baseArgs.add("--ar4k.fileConfig=./tmp/test.config.base64.ar4k");
+		// baseArgs.add("--ar4k.confPath=./tmp");
+		// baseArgs.add("--ar4k.fileConfig=./tmp/test.config.base64.ar4k");
 		baseArgs.add("--ar4k.webConfig=https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k");
 		baseArgs.add("--ar4k.dnsConfig=demo1.rossonet.name");
 //    addArgs.add("--ar4k.baseConfig=");
@@ -305,7 +359,17 @@ public class BeaconClientServerNoSslTests {
 		baseArgs.add("--ar4k.baseConfigOrder=0");
 		baseArgs.add("--ar4k.threadSleep=1000");
 		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-		final Ar4kConfig serverConfig = new Ar4kConfig();
+		final List<String> baseArgsServer = new ArrayList<String>(baseArgs);
+		baseArgsServer.add("--ar4k.confPath=./tmp1");
+		baseArgsServer.add("--ar4k.fileConfig=./tmp1/test.config.base64.ar4k");
+		final List<String> baseArgsClient1 = new ArrayList<String>(baseArgs);
+		baseArgsClient1.add("--ar4k.confPath=./tmp2");
+		baseArgsClient1.add("--ar4k.fileConfig=./tmp2/test.config.base64.ar4k");
+		final List<String> baseArgsClient2 = new ArrayList<String>(baseArgs);
+		baseArgsClient2.add("--ar4k.confPath=./tmp3");
+		baseArgsClient2.add("--ar4k.fileConfig=./tmp3/test.config.base64.ar4k");
+		baseArgs.clear();
+		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
 		serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
@@ -315,20 +379,20 @@ public class BeaconClientServerNoSslTests {
 		beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
 		beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
 		serverConfig.pots.add(beaconServiceConfig);
-		final Ar4kConfig config2 = null;
-		final Ar4kConfig config1 = null;
+		final EdgeConfig config2 = null;
+		final EdgeConfig config1 = null;
 
 		testAnimas.put(SERVER_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
-						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
+						keyStoreServer.getAbsolutePath(), 1124, baseArgsServer, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT2_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
-						keyStoreClient2.getAbsolutePath(), 1125, baseArgs, config2, client2AliasInKeystore,
+						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClient2, config2, client2AliasInKeystore,
 						client2AliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT1_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
-						keyStoreClient1.getAbsolutePath(), 1126, baseArgs, config1, client1AliasInKeystore,
+						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClient1, config1, client1AliasInKeystore,
 						client1AliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(5000);
 		for (final Anima a : testAnimas.values()) {
@@ -341,8 +405,8 @@ public class BeaconClientServerNoSslTests {
 		}
 		Thread.sleep(3000);
 		final String destinationIp = "127.0.0.1";
-		final int destinationPort = 7777;
-		final int srcPort = 8888;
+		final int destinationPort = NetworkHelper.findAvailablePort(7777);
+		final int srcPort = NetworkHelper.findAvailablePort(8888);
 		Callable<Boolean> runner = null;
 		if (ssh) {
 			runner = getNewSshdServer(destinationPort);
@@ -360,7 +424,7 @@ public class BeaconClientServerNoSslTests {
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
 		networkTunnel = testAnimas.get(CLIENT1_LABEL).getBeaconClient()
 				.getNetworkTunnel(testAnimas.get(CLIENT2_LABEL).getAgentUniqueName(), config);
-		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getStatus());
+		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		Thread.sleep(5000);
 		System.err.println("\n\n\n\n\n\n\n\n\n\n");
 		System.err.println("--------------------------------------------------------------");
@@ -376,7 +440,7 @@ public class BeaconClientServerNoSslTests {
 				Thread.sleep(1800);
 				final Callable<Boolean> clientRunner2 = createClientRunnerTcp(destinationIp, srcPort, "B");
 				clientTCP2 = executor.submit(clientRunner2);
-				Thread.sleep(900);
+				Thread.sleep(2000);
 				final Callable<Boolean> clientRunner3 = createClientRunnerTcp(destinationIp, srcPort, "C");
 				clientTCP3 = executor.submit(clientRunner3);
 				Thread.sleep(2200);
@@ -388,7 +452,7 @@ public class BeaconClientServerNoSslTests {
 				Thread.sleep(1800);
 				final Callable<Boolean> clientRunner6 = createClientRunnerTcp(destinationIp, srcPort, "F");
 				clientTCP6 = executor.submit(clientRunner6);
-				Thread.sleep(900);
+				Thread.sleep(1900);
 				final Callable<Boolean> clientRunner7 = createClientRunnerTcp(destinationIp, srcPort, "G");
 				clientTCP7 = executor.submit(clientRunner7);
 				Thread.sleep(2200);
@@ -400,7 +464,7 @@ public class BeaconClientServerNoSslTests {
 				Thread.sleep(1800);
 				final Callable<Boolean> clientRunner10 = createClientRunnerTcp(destinationIp, srcPort, "L");
 				clientTCP10 = executor.submit(clientRunner10);
-				Thread.sleep(900);
+				Thread.sleep(1300);
 				final Callable<Boolean> clientRunner11 = createClientRunnerTcp(destinationIp, srcPort, "M");
 				clientTCP11 = executor.submit(clientRunner11);
 				Thread.sleep(2200);
@@ -418,12 +482,21 @@ public class BeaconClientServerNoSslTests {
 				Thread.sleep(2200);
 				final Callable<Boolean> clientRunner16 = createClientRunnerTcp(destinationIp, srcPort, "R");
 				clientTCP16 = executor.submit(clientRunner16);
-				Thread.sleep(1200);
+				Thread.sleep(4000);
 				final Callable<Boolean> clientRunner17 = createClientRunnerTcp(destinationIp, srcPort, "S");
 				clientTCP17 = executor.submit(clientRunner17);
 			}
 		}
-		Thread.sleep(1000);
+		if (disconnectServer) {
+			Thread.sleep(10000);
+			testAnimas.get(SERVER_LABEL).close();
+			testAnimas.remove(SERVER_LABEL);
+			Thread.sleep(5000);
+			testAnimas.put(SERVER_LABEL,
+					executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+							keyStoreServer.getAbsolutePath(), 1124, baseArgsServer, serverConfig, serverAliasInKeystore,
+							serverAliasInKeystore, "https://127.0.0.1:22116")).get());
+		}
 		while (!completed.contains("A") || ((!ssh && !singleThread) && (!completed.contains("B")
 				|| !completed.contains("C") || !completed.contains("D") || !completed.contains("E")
 				|| !completed.contains("F") || !completed.contains("G") || !completed.contains("H")
@@ -521,7 +594,8 @@ public class BeaconClientServerNoSslTests {
 					final ServerTcpInitHandler serverInitHandler = new ServerTcpInitHandler();
 					final ServerBootstrap b = new ServerBootstrap().group(bossGroup, workerGroup)
 							.channel(NioServerSocketChannel.class).childHandler(serverInitHandler)
-							.childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.TCP_NODELAY, true)
+							.childOption(ChannelOption.SO_KEEPALIVE, true)// .childOption(ChannelOption.TCP_NODELAY,
+																			// true)
 							.childOption(ChannelOption.SO_REUSEADDR, true);
 					// .childOption(ChannelOption.AUTO_READ, false);
 					final ChannelFuture serverHandler = b.bind(destinationPort).await();
@@ -555,24 +629,24 @@ public class BeaconClientServerNoSslTests {
 				try {
 					while (!completed.contains("A")) {
 						if (reader.ready()) {
+							final StringBuilder sb = new StringBuilder();
+							while (reader.ready()) {
+								sb.append((char) reader.read());
+							}
+							final String nextLine = sb.toString();
+							System.out.println("*********** string received\n" + nextLine);
 							int valueNew = 0;
 							if (basePayload != null) {
-								final StringBuilder sb = new StringBuilder();
-								while (reader.ready()) {
-									sb.append((char) reader.read());
-								}
-								final String nextLine = sb.toString();
-								System.out.println("*********** string received\n" + nextLine);
 								valueNew = Integer.valueOf(nextLine.replace(basePayload, ""));
 							} else {
-								valueNew = reader.read();
+								valueNew = Integer.valueOf(nextLine);
 							}
 							System.out.println("--------------------------------------------------------------");
 							System.out.println("server test received from beacon client " + valueNew);
 							System.out.println("--------------------------------------------------------------");
 							Thread.sleep(1000);
 							final int reply = valueNew + 1;
-							if (reply > (TEST_SIZE + 2)) {
+							if (reply > (actualTestSize + 2)) {
 								socket.close();
 								System.out.println("--------------------------------------------------------------");
 								System.out.println("server test close on " + reply);
@@ -583,7 +657,7 @@ public class BeaconClientServerNoSslTests {
 									w.write(string);
 									System.out.println("*********** string sent\n" + string);
 								} else {
-									w.write(reply);
+									w.write(String.valueOf(reply));
 								}
 								w.flush();
 								System.out.println("--------------------------------------------------------------");
@@ -681,7 +755,7 @@ public class BeaconClientServerNoSslTests {
 					System.out.println("*********** string sent\n" + string);
 					w.write(string);
 				} else {
-					w.write(last);
+					w.write(String.valueOf(last));
 				}
 				w.flush();
 				System.out.println("--------------------------------------------------------------");
@@ -690,17 +764,17 @@ public class BeaconClientServerNoSslTests {
 				try {
 					while (!completed.contains(tag)) {
 						if (reader.ready()) {
+							final StringBuilder sb = new StringBuilder();
+							while (reader.ready()) {
+								sb.append((char) reader.read());
+							}
+							final String nextLine = sb.toString();
+							System.out.println("*********** string received\n" + nextLine);
 							int valueNew = 0;
 							if (basePayload != null) {
-								final StringBuilder sb = new StringBuilder();
-								while (reader.ready()) {
-									sb.append((char) reader.read());
-								}
-								final String nextLine = sb.toString();
-								System.out.println("*********** string received\n" + nextLine);
 								valueNew = Integer.valueOf(nextLine.replace(basePayload, ""));
 							} else {
-								valueNew = reader.read();
+								valueNew = Integer.valueOf(nextLine);
 							}
 							System.out.println("--------------------------------------------------------------");
 							System.out.println("client test " + tag + " received from beacon server " + valueNew);
@@ -717,13 +791,13 @@ public class BeaconClientServerNoSslTests {
 										last = valueNew + 1;
 									}
 								}
-								Thread.sleep(500);
+								Thread.sleep(1000);
 								if (basePayload != null) {
 									final String string = basePayload + String.valueOf(last);
 									System.out.println("*********** string sent\n" + string);
 									w.write(string);
 								} else {
-									w.write(last);
+									w.write(String.valueOf(last));
 								}
 								w.flush();
 							} else {
@@ -759,7 +833,7 @@ public class BeaconClientServerNoSslTests {
 		} catch (final Exception a) {
 			// fallisce nei test preparatori
 		}
-		if (valueNew > TEST_SIZE) {
+		if (valueNew > actualTestSize) {
 			completed.add(tag);
 			switch (tag) {
 			case "A":
@@ -839,32 +913,31 @@ public class BeaconClientServerNoSslTests {
 
 		@Override
 		protected void channelRead0(ChannelHandlerContext ctx, ByteBuf s) throws Exception {
+			final String nextLine = new String(ByteBufUtil.getBytes(s));
+			System.out.println("*********** string received\n" + nextLine);
 			int valueNew = 0;
 			if (basePayload != null) {
-				final String string = new String(ByteBufUtil.getBytes(s));
-				System.out.println("*********** string received\n" + string);
-				valueNew = Integer.valueOf(string.replace(basePayload, ""));
+				valueNew = Integer.valueOf(nextLine.replace(basePayload, ""));
 			} else {
-
-				valueNew = new BigInteger(ByteBufUtil.getBytes(s)).intValue();
+				valueNew = Integer.valueOf(nextLine);
 			}
 			System.out.println("--------------------------------------------------------------");
 			System.out.println("server test received from beacon client " + ctx.name() + " -> " + valueNew);
 			System.out.println("--------------------------------------------------------------");
 			Thread.sleep(1000);
 			final int reply = valueNew + 1;
-			if (reply > (TEST_SIZE + 2)) {
+			if (reply > (actualTestSize + 2)) {
 				ctx.close();
 				System.out.println("--------------------------------------------------------------");
 				System.out.println("server test " + ctx.name() + " close on " + reply);
 				System.out.println("--------------------------------------------------------------");
 			} else {
 				if (basePayload != null) {
-					final String string = basePayload + String.valueOf(reply);
-					System.out.println("*********** string sent\n" + string);
-					ctx.writeAndFlush(Unpooled.wrappedBuffer(string.getBytes()));
+					final String stringOut = basePayload + String.valueOf(reply);
+					System.out.println("*********** string sent\n" + stringOut);
+					ctx.writeAndFlush(Unpooled.wrappedBuffer(stringOut.getBytes()));
 				} else {
-					ctx.writeAndFlush(Unpooled.wrappedBuffer(BigInteger.valueOf(reply).toByteArray()));
+					ctx.writeAndFlush(Unpooled.wrappedBuffer(String.valueOf(reply).getBytes()));
 				}
 				System.out.println("--------------------------------------------------------------");
 				System.out.println("server test sent to beacon client " + ctx.name() + " -> " + reply);

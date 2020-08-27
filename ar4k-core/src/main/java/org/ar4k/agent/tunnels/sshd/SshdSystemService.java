@@ -30,13 +30,13 @@ import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.sshd.firstCommand.Ar4kProcessShellFactory;
+import org.ar4k.agent.tunnels.sshd.firstCommand.AnimaProcessShellFactory;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -48,7 +48,7 @@ import com.google.gson.GsonBuilder;
  *         Gestore servizio per connessioni sshd
  *
  **/
-public class SshdSystemService implements Ar4kComponent, SshFutureListener<CloseFuture>, SessionListener,
+public class SshdSystemService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
 		ChannelListener, PortForwardingEventListener {
 
 	@Override
@@ -88,15 +88,15 @@ public class SshdSystemService implements Ar4kComponent, SshFutureListener<Close
 	@Override
 	public synchronized void init() {
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new Ar4kPasswordAuthenticator(anima);
+		final PasswordAuthenticator passwordAuthenticator = new AnimaPasswordAuthenticator(anima);
 		server.setPasswordAuthenticator(passwordAuthenticator);
-		final PublickeyAuthenticator publickeyAuthenticator = new Ar4kPublickeyAuthenticator(
+		final PublickeyAuthenticator publickeyAuthenticator = new AnimaPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
 		server.setPublickeyAuthenticator(publickeyAuthenticator);
 		server.setHost(configuration.bindHost);
 		server.setPort(configuration.port);
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-		final ProcessShellFactory shellFactory = new Ar4kProcessShellFactory(configuration.cmd.split("\\s+"));
+		final ProcessShellFactory shellFactory = new AnimaProcessShellFactory(configuration.cmd.split("\\s+"));
 		server.setShellFactory(shellFactory);
 		server.setCommandFactory(new ScpCommandFactory());
 		server.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class DataTree<T extends Ar4kChannel> {
+public class DataTree<T extends EdgeChannel> {
 
 	private static final int indent = 2;
 

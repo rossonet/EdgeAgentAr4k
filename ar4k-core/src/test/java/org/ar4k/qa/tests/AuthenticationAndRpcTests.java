@@ -26,9 +26,9 @@ import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kUserDetails;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgeUserDetails;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.Before;
 import org.junit.Rule;
@@ -61,8 +61,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-    Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -103,8 +103,8 @@ public class AuthenticationAndRpcTests {
     if (SecurityContextHolder.getContext() != null) {
       if (SecurityContextHolder.getContext().getAuthentication() != null) {
         Object principalAnon = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principalAnon instanceof Ar4kUserDetails) {
-          username = ((Ar4kUserDetails) principalAnon).getUsername();
+        if (principalAnon instanceof EdgeUserDetails) {
+          username = ((EdgeUserDetails) principalAnon).getUsername();
         } else {
           username = principalAnon.toString();
         }

@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ar4k.agent.rpc.Homunculus;
+import org.ar4k.agent.rpc.IHomunculus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class AnimaHomunculus implements Homunculus, SessionRegistry, ApplicationListener<SessionDestroyedEvent> {
+public class AnimaHomunculus implements IHomunculus, SessionRegistry, ApplicationListener<SessionDestroyedEvent> {
 
   @Autowired
   private Anima anima;

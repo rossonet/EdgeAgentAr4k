@@ -1,12 +1,5 @@
 package org.ar4k.agent.network;
 
-/*
-import io.grpc.netty.shaded.io.netty.channel.ChannelFuture;
-import io.grpc.netty.shaded.io.netty.channel.socket.SocketChannel;
-*/
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.socket.SocketChannel;
-
 public interface NetworkReceiver extends AutoCloseable {
 
 	public static enum NetworkStatus {
@@ -15,13 +8,15 @@ public interface NetworkReceiver extends AutoCloseable {
 
 	long getTunnelId();
 
-	NetworkStatus getStatus();
+	NetworkStatus getNetworkStatus();
 
 	long getPacketSend();
 
 	long getPacketReceived();
 
 	long getPacketError();
+
+	long getPacketControl();
 
 	int getWaitingPackagesCount();
 
@@ -31,16 +26,10 @@ public interface NetworkReceiver extends AutoCloseable {
 
 	void incrementPacketError();
 
-	void confirmPacketReceived(long messageUuid);
+	void incrementPacketControl();
 
 	void exceptionPacketReceived(long messageUuid);
 
-	ChannelFuture getOrCreateClientHandler(long sessionId);
-
-	SocketChannel getOrCreateServerSocketChannel(long sessionId);
-
-	void deleteClientHandler(long sessionId);
-
-	void deleteServerSocketChannel(long sessionId);
+	void confirmPacketReceived(long messageUuid, long lastReceived);
 
 }

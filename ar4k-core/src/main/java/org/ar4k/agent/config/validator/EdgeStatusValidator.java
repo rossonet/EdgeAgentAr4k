@@ -26,7 +26,7 @@ import com.beust.jcommander.ParameterException;
  *
  *         Validatore stati Anima.
  */
-public class Ar4kStatusValidator implements IParameterValidator {
+public class EdgeStatusValidator implements IParameterValidator {
 
   @Override
   public void validate(String name, String value) throws ParameterException {

@@ -1,7 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.AbstractChannel;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.support.management.SubscribableChannelManagement;
 import org.springframework.messaging.Message;
@@ -42,7 +42,7 @@ public class IPublishSubscribeChannel extends AbstractChannel
 	}
 
 	@Override
-	public Class<? extends Ar4kChannel> getChannelClass() {
+	public Class<? extends EdgeChannel> getChannelClass() {
 		return this.getClass();
 	}
 

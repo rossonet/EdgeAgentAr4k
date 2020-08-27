@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.helper.ContextCreationHelper;
@@ -122,7 +122,7 @@ public class BeaconClientServerComandTests {
     baseArgs.add("--ar4k.baseConfigOrder=0");
     baseArgs.add("--ar4k.threadSleep=1000");
     baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-    Ar4kConfig serverConfig = new Ar4kConfig();
+    EdgeConfig serverConfig = new EdgeConfig();
     serverConfig.name = "server-beacon";
     serverConfig.beaconServer = null;
     serverConfig.beaconDiscoveryPort = 0;

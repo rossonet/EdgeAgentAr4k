@@ -21,8 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ar4k.agent.config.Ar4kConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.IBeaconClient;
 import org.ar4k.agent.core.RpcConversation;
@@ -36,6 +36,7 @@ import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
+//import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
@@ -129,7 +130,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
 	private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
 	private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
-	private transient List<BeaconNetworkTunnel> tunnels = new LinkedList<>();
+	private transient List<NetworkTunnel> tunnels = new LinkedList<>();
 	private String certChain = null;
 	private transient String csrRequest = null;
 
@@ -162,8 +163,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void refreshBeaconClientTunnels() {
 		if (!tunnels.isEmpty()) {
-			for (final BeaconNetworkTunnel tunnel : tunnels) {
-				tunnel.selfCheck();
+			for (final NetworkTunnel tunnel : tunnels) {
+				tunnel.selfCheckIfNeeded();
 			}
 		}
 	}
@@ -692,8 +693,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			if (trace)
 				logger.info(anima.getAgentUniqueName() + " network port close call from beacon "
 						+ m.getTunnelRequest().getTargeId());
-			BeaconNetworkTunnel tunnelTarget = null;
-			for (final BeaconNetworkTunnel tunnel : tunnels) {
+			NetworkTunnel tunnelTarget = null;
+			for (final NetworkTunnel tunnel : tunnels) {
 				if (tunnel.getTunnelId() == m.getTunnelRequest().getTargeId()) {
 					tunnel.close();
 					tunnelTarget = tunnel;
@@ -736,7 +737,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			final CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
 					.setUniqueIdRequest(m.getUniqueIdRequest()).setBase64Config(m.getRequestCommand()).build();
 			blockingStub.sendCommandReply(reply);
-			anima.elaborateNewConfig((Ar4kConfig) newConfig);
+			anima.elaborateNewConfig((EdgeConfig) newConfig);
 		} catch (final Exception a) {
 			logger.logException(anima.getAgentUniqueName(), a);
 		}
@@ -947,7 +948,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	 * String, org.ar4k.agent.config.Ar4kConfig)
 	 */
 	@Override
-	public ConfigReply sendConfigToAgent(String agentId, Ar4kConfig newConfig) {
+	public ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig) {
 		try {
 			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
 			final ConfigReport req = ConfigReport.newBuilder().setAgent(a)
@@ -965,7 +966,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconClient#getTunnels()
 	 */
 	@Override
-	public List<BeaconNetworkTunnel> getTunnels() {
+	public List<NetworkTunnel> getTunnels() {
 		return tunnels;
 	}
 
@@ -977,7 +978,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	 * tunnels.http.beacon.BeaconNetworkTunnel)
 	 */
 	@Override
-	public void removeTunnel(BeaconNetworkTunnel toRemove) {
+	public void removeTunnel(NetworkTunnel toRemove) {
 		tunnels.remove(toRemove);
 		try {
 			toRemove.close();
@@ -1225,7 +1226,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			}
 		}
 		if (tunnels != null && !tunnels.isEmpty()) {
-			for (final BeaconNetworkTunnel t : tunnels) {
+			for (final NetworkTunnel t : tunnels) {
 				try {
 					t.close();
 				} catch (final Exception e) {
@@ -1256,8 +1257,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	@Override
 	public void closeNetworkTunnel(long targetId) {
-		BeaconNetworkTunnel tunnelTarget = null;
-		for (final BeaconNetworkTunnel tunnel : tunnels) {
+		NetworkTunnel tunnelTarget = null;
+		for (final NetworkTunnel tunnel : tunnels) {
 			if (tunnel.getTunnelId() == targetId) {
 				tunnelTarget = tunnel;
 			}

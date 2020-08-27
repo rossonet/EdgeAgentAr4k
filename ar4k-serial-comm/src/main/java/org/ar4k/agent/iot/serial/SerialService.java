@@ -22,8 +22,8 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -41,7 +41,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  *
  *         Servizio di connessione seriale.
  */
-public class SerialService implements Ar4kComponent, SerialPortDataListener {
+public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(SerialService.class.toString());
@@ -62,7 +62,7 @@ public class SerialService implements Ar4kComponent, SerialPortDataListener {
 		_8N1, _7E1
 	}
 
-	private Ar4kChannel channelRoot = null;
+	private EdgeChannel channelRoot = null;
 
 	private IPublishSubscribeChannel readChannelBytes = null;
 

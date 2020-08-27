@@ -504,7 +504,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		if (server != null) {
 			server.shutdown();
 			server.shutdownNow();
-			server = null;
 		}
 		if (socketFlashBeacon != null) {
 			socketFlashBeacon.close();
@@ -512,6 +511,12 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 		if (process != null) {
 			process = null;
+		}
+		try {
+			blockUntilShutdown();
+			server = null;
+		} catch (final InterruptedException e) {
+			logger.logException(e);
 		}
 	}
 

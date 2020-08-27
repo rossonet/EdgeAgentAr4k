@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * @author andrea
  *
  */
-public interface Ar4kComponent extends AutoCloseable {
+public interface EdgeComponent extends AutoCloseable {
 
   public static enum ServiceStatus {
     INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT

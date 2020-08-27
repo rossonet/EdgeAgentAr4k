@@ -31,7 +31,7 @@ public class DataBag implements AutoCloseable, MessageHandler {
 			.getLoggerFactory().getLogger(DataBag.class.toString());
 
 	private final File file;
-	private final Collection<Ar4kChannel> channels;
+	private final Collection<EdgeChannel> channels;
 	private final long limit;
 	private transient Timer timer = null;
 	private transient BufferedWriter output;
@@ -42,11 +42,11 @@ public class DataBag implements AutoCloseable, MessageHandler {
 	private transient Queue<BagMessage> lastMessages = new LinkedBlockingQueue<>();
 	private transient long packData = 0;
 
-	public DataBag(File file, Collection<Ar4kChannel> channels, long limit, long pollingTime) {
+	public DataBag(File file, Collection<EdgeChannel> channels, long limit, long pollingTime) {
 		this.file = file;
 		this.channels = channels;
 		this.limit = limit;
-		for (final Ar4kChannel sac : channels) {
+		for (final EdgeChannel sac : channels) {
 			if (sac instanceof SubscribableChannel) {
 				((SubscribableChannel) sac).subscribe(this);
 			} else if (sac instanceof PollableChannel) {
@@ -129,7 +129,7 @@ public class DataBag implements AutoCloseable, MessageHandler {
 		return file;
 	}
 
-	public Collection<Ar4kChannel> getChannels() {
+	public Collection<EdgeChannel> getChannels() {
 		return channels;
 	}
 

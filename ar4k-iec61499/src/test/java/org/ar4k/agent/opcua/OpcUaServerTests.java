@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.AnimaHomunculus;
@@ -32,8 +32,8 @@ import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.DataGen
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.DataType;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.assertj.core.util.Lists;
 import org.jline.builtins.Commands;
 import org.junit.After;
@@ -64,8 +64,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-		Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class, OpcUaShellInterface.class })
+		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, OpcUaShellInterface.class })
 @TestPropertySource(locations = "classpath:application-opc-ua.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -102,7 +102,7 @@ public class OpcUaServerTests {
 
 	@Test
 	public void startOpcServerTest() throws IOException, InterruptedException {
-		final Ar4kConfig c = new Ar4kConfig();
+		final EdgeConfig c = new EdgeConfig();
 		final String check = UUID.randomUUID().toString();
 		c.name = "test opc server";
 		c.author = check;

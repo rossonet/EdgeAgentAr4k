@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.spring.EdgeUserDetails;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,7 +43,7 @@ public class Ar4kAgent {
 		final SpringApplication app = new SpringApplication(Ar4kAgent.class);
 		// app.setWebApplicationType(WebApplicationType.SERVLET);
 		app.run(fullArgs);
-		final Ar4kUserDetails u = new Ar4kUserDetails();
+		final EdgeUserDetails u = new EdgeUserDetails();
 		u.setUsername("admin");
 		u.setPassword(Anima.getApplicationContext().getBean(PasswordEncoder.class).encode("admin"));
 		final List<SimpleGrantedAuthority> a = new ArrayList<>();

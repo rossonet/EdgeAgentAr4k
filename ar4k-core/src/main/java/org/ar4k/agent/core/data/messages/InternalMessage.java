@@ -2,7 +2,7 @@ package org.ar4k.agent.core.data.messages;
 
 import org.springframework.messaging.MessageHeaders;
 
-public abstract class InternalMessage<T> implements Ar4kMessage<T> {
+public abstract class InternalMessage<T> implements EdgeMessage<T> {
 
 	private static final long serialVersionUID = 8423795771428874000L;
 

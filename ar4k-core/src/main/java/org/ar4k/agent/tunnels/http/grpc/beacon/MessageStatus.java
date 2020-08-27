@@ -64,6 +64,14 @@ public enum MessageStatus
    * <code>closeRequestClient = 13;</code>
    */
   closeRequestClient(13),
+  /**
+   * <code>beaconMessageControl = 14;</code>
+   */
+  beaconMessageControl(14),
+  /**
+   * <code>beaconLocalPing = 15;</code>
+   */
+  beaconLocalPing(15),
   UNRECOGNIZED(-1),
   ;
 
@@ -123,6 +131,14 @@ public enum MessageStatus
    * <code>closeRequestClient = 13;</code>
    */
   public static final int closeRequestClient_VALUE = 13;
+  /**
+   * <code>beaconMessageControl = 14;</code>
+   */
+  public static final int beaconMessageControl_VALUE = 14;
+  /**
+   * <code>beaconLocalPing = 15;</code>
+   */
+  public static final int beaconLocalPing_VALUE = 15;
 
 
   public final int getNumber() {
@@ -157,6 +173,8 @@ public enum MessageStatus
       case 11: return channelTransmissionCompressed;
       case 12: return closeRequestServer;
       case 13: return closeRequestClient;
+      case 14: return beaconMessageControl;
+      case 15: return beaconLocalPing;
       default: return null;
     }
   }

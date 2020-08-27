@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.data.DataAddressAnima;
@@ -134,7 +134,7 @@ public class BeaconClientDataTests {
 		baseArgs.add("--ar4k.baseConfigOrder=0");
 		baseArgs.add("--ar4k.threadSleep=1000");
 		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-		final Ar4kConfig serverConfig = new Ar4kConfig();
+		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
 		serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
@@ -144,8 +144,8 @@ public class BeaconClientDataTests {
 		beaconServiceConfig.aliasBeaconServerInKeystore = serverAliasInKeystore;
 		beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
 		serverConfig.pots.add(beaconServiceConfig);
-		final Ar4kConfig config2 = null;
-		final Ar4kConfig config1 = null;
+		final EdgeConfig config2 = null;
+		final EdgeConfig config1 = null;
 
 		testAnimas.put(SERVER_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
@@ -198,7 +198,7 @@ public class BeaconClientDataTests {
 		baseArgs.add("--ar4k.baseConfigOrder=0");
 		baseArgs.add("--ar4k.threadSleep=1000");
 		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-		final Ar4kConfig serverConfig = new Ar4kConfig();
+		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
 		serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
@@ -279,7 +279,7 @@ public class BeaconClientDataTests {
 		baseArgs.add("--ar4k.baseConfigOrder=0");
 		baseArgs.add("--ar4k.threadSleep=1000");
 		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-		final Ar4kConfig serverConfig = new Ar4kConfig();
+		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
 		serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
@@ -415,7 +415,7 @@ public class BeaconClientDataTests {
 		baseArgs.add("--ar4k.baseConfigOrder=0");
 		baseArgs.add("--ar4k.threadSleep=1000");
 		baseArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
-		final Ar4kConfig serverConfig = new Ar4kConfig();
+		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
 		serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
@@ -453,7 +453,7 @@ public class BeaconClientDataTests {
 		final NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
 		networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
-		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getStatus());
+		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("Try to connect to:\nssh localhost -p " + srcPort);
 		Thread.sleep(120000);
 		System.out.println("package counter [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"

@@ -3,7 +3,7 @@ package org.ar4k.agent.core.data.generator.dataType;
 import java.util.Date;
 
 import org.ar4k.agent.core.data.generator.FormatGenerator;
-import org.ar4k.agent.core.data.messages.Ar4kMessage;
+import org.ar4k.agent.core.data.messages.EdgeMessage;
 import org.ar4k.agent.core.data.messages.JSONMessage;
 import org.json.JSONObject;
 
@@ -21,7 +21,7 @@ public class JsonStringSimulator implements FormatGenerator {
 	}
 
 	@Override
-	public Ar4kMessage<?> format(Object actual) {
+	public EdgeMessage<?> format(Object actual) {
 		final JSONMessage message = new JSONMessage();
 		final String elaborateString = patternJson.replace(nodePlaceholder, nodeId)
 				.replace(timePlaceholder, String.valueOf(new Date().getTime()))

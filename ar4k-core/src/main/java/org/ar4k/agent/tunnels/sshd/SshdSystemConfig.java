@@ -1,7 +1,7 @@
 package org.ar4k.agent.tunnels.sshd;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -25,7 +25,7 @@ public class SshdSystemConfig extends AbstractServiceConfig {
 	public String authorizedKeys = "~/.ssh/authorized_keys";
 
 	@Override
-	public Ar4kComponent instantiate() {
+	public EdgeComponent instantiate() {
 		final SshdSystemService ss = new SshdSystemService();
 		ss.setConfiguration(this);
 		return ss;

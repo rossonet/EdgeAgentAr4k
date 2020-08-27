@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -60,7 +60,7 @@ public class ContextCreationHelper implements Callable<Anima>, ApplicationListen
   }
 
   public ContextCreationHelper(Class<?> startClass, ExecutorService executor, String logger, String keyStore,
-      int serverPort, List<String> additionalArgs, Ar4kConfig config, String mainAliasInKeystore,
+      int serverPort, List<String> additionalArgs, EdgeConfig config, String mainAliasInKeystore,
       String keystoreBeaconAlias, String webRegistrationEndpoint) {
     this(startClass, executor, logger, keyStore, serverPort, additionalArgs);
     if (mainAliasInKeystore != null && !mainAliasInKeystore.isEmpty())

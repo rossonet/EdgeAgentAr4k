@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import javax.crypto.NoSuchPaddingException;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
@@ -266,12 +266,12 @@ public class ConfigHelper {
 		return fromBase64(new String(decryptData(Base64.getDecoder().decode(base64RsaConfig), key)));
 	}
 
-	public static Ar4kConfig fromYaml(String yamlConfig) {
+	public static EdgeConfig fromYaml(String yamlConfig) {
 		final Yaml yaml = new Yaml();
 		return yaml.load(yamlConfig);
 	}
 
-	public static String toYaml(Ar4kConfig workingConfig) {
+	public static String toYaml(EdgeConfig workingConfig) {
 		final Yaml yaml = new Yaml();
 		return yaml.dump(workingConfig);
 	}

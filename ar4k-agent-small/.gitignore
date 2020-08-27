@@ -8,6 +8,9 @@ src/main/resources/static
 training-data/*
 *.ks
 tmp/
+tmp1/
+tmp2/
+tmp3/
 *.tmp
 *.key
 *.pem

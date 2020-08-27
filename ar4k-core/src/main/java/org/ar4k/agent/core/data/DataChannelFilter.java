@@ -23,7 +23,7 @@ public class DataChannelFilter {
 		return filters;
 	}
 
-	public boolean filtersMatch(Ar4kChannel channel) {
+	public boolean filtersMatch(EdgeChannel channel) {
 		boolean ok = true;
 		for (final FilterLine line : filters) {
 			final List<String> comparedValues = new ArrayList<>();

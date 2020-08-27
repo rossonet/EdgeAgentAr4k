@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.cortex.drools.DroolsService.DroolsServiceUpdateAction;
 
 import com.beust.jcommander.Parameter;
@@ -53,7 +53,7 @@ public class DroolsConfig extends AbstractServiceConfig {
 	private final DroolsServiceUpdateAction droolsServiceUpdateAction = DroolsServiceUpdateAction.FIRE_UNTIL_HALT;
 
 	@Override
-	public Ar4kComponent instantiate() {
+	public EdgeComponent instantiate() {
 		final DroolsService ss = new DroolsService();
 		ss.setConfiguration(this);
 		return ss;

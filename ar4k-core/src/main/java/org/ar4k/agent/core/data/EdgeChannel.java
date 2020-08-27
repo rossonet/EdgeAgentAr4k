@@ -6,7 +6,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
 import org.joda.time.Instant;
 import org.springframework.integration.channel.AbstractMessageChannel;
 
-public interface Ar4kChannel extends AutoCloseable {
+public interface EdgeChannel extends AutoCloseable {
 
 	public static enum Type {
 		PUBLISH_SUBSCRIBE, QUEUE, PRIORITY, RENDEZVOUS, DIRECT, EXECUTOR
@@ -22,7 +22,7 @@ public interface Ar4kChannel extends AutoCloseable {
 
 	String getScopeAbsoluteNameByScope(String scope);
 
-	Class<? extends Ar4kChannel> getChannelClass();
+	Class<? extends EdgeChannel> getChannelClass();
 
 	void setBrowseName(String nodeId);
 
@@ -72,15 +72,15 @@ public interface Ar4kChannel extends AutoCloseable {
 
 	void setNameSpace(String nameSpace);
 
-	void setFatherOfScope(String scope, Ar4kChannel father);
+	void setFatherOfScope(String scope, EdgeChannel father);
 
 	void removeFatherOfScope(String scope);
 
-	List<Ar4kChannel> getChildrenOfScope(String scope);
+	List<EdgeChannel> getChildrenOfScope(String scope);
 
 	int getChildrenCountOfScope(String scope);
 
-	Ar4kChannel getFatherOfScope(String scope);
+	EdgeChannel getFatherOfScope(String scope);
 
 	DataAddress getDataAddress();
 
@@ -88,7 +88,7 @@ public interface Ar4kChannel extends AutoCloseable {
 
 	void addTag(String tag);
 
-	DataTree<Ar4kChannel> getScopeTreeChildren(String scope, int maxLoop);
+	DataTree<EdgeChannel> getScopeTreeChildren(String scope, int maxLoop);
 
 	String getDocumentation();
 

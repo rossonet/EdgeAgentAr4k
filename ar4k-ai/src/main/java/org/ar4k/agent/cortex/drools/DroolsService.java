@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.cortex.annotation.Ar4kDroolsContext;
 import org.ar4k.agent.cortex.annotation.DroolsGlobalClass;
@@ -44,7 +44,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  *
  *         AI Drools
  */
-public class DroolsService implements Ar4kComponent {
+public class DroolsService implements EdgeComponent {
 
 	// TODO aggiungere global data anima se flag true
 

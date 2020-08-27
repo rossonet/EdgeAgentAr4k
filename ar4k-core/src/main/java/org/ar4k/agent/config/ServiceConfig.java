@@ -1,6 +1,6 @@
 package org.ar4k.agent.config;
 
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 /**
  * interfaccia da implementare per una configurazione di servizio valida
@@ -12,7 +12,7 @@ import org.ar4k.agent.core.Ar4kComponent;
  */
 public interface ServiceConfig extends ConfigSeed {
 
-  Ar4kComponent instantiate();
+  EdgeComponent instantiate();
 
   boolean isSpringBean();
 

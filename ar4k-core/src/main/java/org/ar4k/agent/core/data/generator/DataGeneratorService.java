@@ -9,8 +9,8 @@ import java.util.TimerTask;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
@@ -47,7 +47,7 @@ import org.springframework.messaging.SubscribableChannel;
  *         Generatore dati casuali e player per databag
  *
  */
-public class DataGeneratorService implements Ar4kComponent {
+public class DataGeneratorService implements EdgeComponent {
 
 	public class PoolDataTask extends TimerTask {
 
@@ -78,10 +78,10 @@ public class DataGeneratorService implements Ar4kComponent {
 
 	public class FireSimulationTask extends TimerTask {
 
-		private final Ar4kChannel dataChannel;
+		private final EdgeChannel dataChannel;
 		private final NextGenerator dataNodeSimulator;
 
-		public FireSimulationTask(Ar4kChannel dataChannel, NextGenerator dataNodeSimulator) {
+		public FireSimulationTask(EdgeChannel dataChannel, NextGenerator dataNodeSimulator) {
 			this.dataChannel = dataChannel;
 			this.dataNodeSimulator = dataNodeSimulator;
 		}
@@ -132,7 +132,7 @@ public class DataGeneratorService implements Ar4kComponent {
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
-	private Map<Ar4kChannel, NextGenerator> simulatedDatas = new HashMap<>();
+	private Map<EdgeChannel, NextGenerator> simulatedDatas = new HashMap<>();
 
 	@Override
 	public DataGeneratorConfig getConfiguration() {
@@ -152,7 +152,7 @@ public class DataGeneratorService implements Ar4kComponent {
 	}
 
 	private void addNodeSimulated(SingleDataGeneratorPointConfig single) {
-		Class<? extends Ar4kChannel> typeChannel = null;
+		Class<? extends EdgeChannel> typeChannel = null;
 		switch (single.typeChannel) {
 		case DirectChannel:
 			typeChannel = IDirectChannel.class;
@@ -237,7 +237,7 @@ public class DataGeneratorService implements Ar4kComponent {
 			break;
 
 		}
-		final Ar4kChannel dataChannel = anima.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
+		final EdgeChannel dataChannel = anima.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
 				single.description, (String) null, (String) null, single.tags);
 		dataChannel.setDomainId(single.domainId);
 		dataChannel.setNameSpace(single.namespace);

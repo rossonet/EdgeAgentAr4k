@@ -2,7 +2,7 @@ package org.ar4k.agent.opcua.server;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.opcua.CryptoModeValidator;
 import org.ar4k.agent.opcua.Enumerator.CryptoMode;
 import org.ar4k.agent.opcua.Enumerator.SecurityMode;
@@ -57,7 +57,7 @@ public class OpcUaServerConfig extends AbstractServiceConfig {
 	public String baseFolderName = Anima.getApplicationContext().getBean(Anima.class).getAgentUniqueName();
 
 	@Override
-	public Ar4kComponent instantiate() {
+	public EdgeComponent instantiate() {
 		final OpcUaServerService ss = new OpcUaServerService();
 		ss.setConfiguration(this);
 		return ss;

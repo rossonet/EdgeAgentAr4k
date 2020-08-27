@@ -24,15 +24,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.Anima.AnimaStates;
 import org.ar4k.agent.core.AnimaHomunculus;
 import org.ar4k.agent.core.AnimaStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
-import org.ar4k.agent.spring.Ar4kAuthenticationManager;
-import org.ar4k.agent.spring.Ar4kuserDetailsService;
+import org.ar4k.agent.spring.EdgeAuthenticationManager;
+import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
 import org.joda.time.Instant;
 import org.junit.After;
@@ -62,8 +62,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, Ar4kuserDetailsService.class,
-		Ar4kAuthenticationManager.class, BCryptPasswordEncoder.class })
+		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -113,7 +113,7 @@ public class ConfigRefreshFromAllChannelTests {
 	@Test
 	public void checkConfigNextInAllChannelWithReloadAndRestart() throws InterruptedException, IOException {
 		Thread.sleep(3000);
-		Ar4kConfig c1 = new Ar4kConfig();
+		EdgeConfig c1 = new EdgeConfig();
 		String check = UUID.randomUUID().toString();
 		c1.name = "test aggiornamento configurazione";
 		c1.creationDate = Instant.ofEpochMilli(1452797215000L);
@@ -127,7 +127,7 @@ public class ConfigRefreshFromAllChannelTests {
 		assertEquals(anima.getState(), AnimaStates.RUNNING);
 		assertTrue("dnsToFile".equals(anima.getRuntimeConfig().name));
 		assertTrue(fileNameSecond.equals(anima.getRuntimeConfig().nextConfigFile));
-		Ar4kConfig c2 = new Ar4kConfig();
+		EdgeConfig c2 = new EdgeConfig();
 		c2.name = "test aggiornamento configurazione";
 		c2.tagVersion = check;
 		c2.nextConfigFile = fileNameEnd;
@@ -136,7 +136,7 @@ public class ConfigRefreshFromAllChannelTests {
 		Thread.sleep(30000);
 		assertEquals(anima.getState(), AnimaStates.RUNNING);
 		assertTrue(check.equals(anima.getRuntimeConfig().tagVersion));
-		Ar4kConfig c3 = new Ar4kConfig();
+		EdgeConfig c3 = new EdgeConfig();
 		c3.name = "ultima configurazione";
 		c3.author = check;
 		c3.nextConfigReload = true;
@@ -150,7 +150,7 @@ public class ConfigRefreshFromAllChannelTests {
 
 	@Test
 	public void createConfigWeb() throws IOException {
-		Ar4kConfig config = new Ar4kConfig();
+		EdgeConfig config = new EdgeConfig();
 		config.name = "dnsToFile";
 		config.nextConfigFile = fileNameSecond;
 		Files.write(Paths.get("config-to-file.ar4k"), ConfigHelper.toBase64(config).getBytes(),
@@ -159,7 +159,7 @@ public class ConfigRefreshFromAllChannelTests {
 
 	@Test
 	public void createConfigDns() throws IOException {
-		Ar4kConfig config = new Ar4kConfig();
+		EdgeConfig config = new EdgeConfig();
 		config.name = "DnsToWeb";
 		config.nextConfigWeb = webConfig;
 		System.out.println(ConfigHelper.toBase64ForDns("config-to-web", config)); // bottegaio.net

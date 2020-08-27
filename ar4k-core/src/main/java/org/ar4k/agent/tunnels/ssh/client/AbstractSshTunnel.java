@@ -3,7 +3,7 @@ package org.ar4k.agent.tunnels.ssh.client;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -21,7 +21,7 @@ import com.jcraft.jsch.Session;
  *         Servizio tunnel SSH astratto.
  *
  */
-public abstract class AbstractSshTunnel implements Ar4kComponent {
+public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(AbstractSshTunnel.class.toString());

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.iot.serial.SerialConfig;
 import org.ar4k.agent.iot.serial.SerialService;
@@ -28,7 +28,7 @@ public class SerialJsonService extends SerialService {
 
 	private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
 
-	private Ar4kChannel channelRoot = null;
+	private EdgeChannel channelRoot = null;
 	private IPublishSubscribeChannel exceptionChannel = null;
 	private IPublishSubscribeChannel elseChannel = null;
 	private SerialJsonConfig configuration = null;

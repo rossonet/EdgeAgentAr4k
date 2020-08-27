@@ -2,7 +2,7 @@ package org.ar4k.agent.opcua.client;
 
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
  *
  *         Servizio di connessione client OPCUA with Eclipse Milo.
  */
-public class OpcUaClientService implements Ar4kComponent {
+public class OpcUaClientService implements EdgeComponent {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(OpcUaClientService.class.toString());

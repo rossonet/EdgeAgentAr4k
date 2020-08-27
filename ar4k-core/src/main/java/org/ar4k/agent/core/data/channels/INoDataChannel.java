@@ -1,13 +1,13 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.AbstractChannel;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.springframework.messaging.Message;
 
 public class INoDataChannel extends AbstractChannel {
 
 	@Override
-	public Class<? extends Ar4kChannel> getChannelClass() {
+	public Class<? extends EdgeChannel> getChannelClass() {
 		return this.getClass();
 	}
 

@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Ar4kAuthenticationManager implements AuthenticationManager {
+public class EdgeAuthenticationManager implements AuthenticationManager {
 
   @Autowired
   ReactiveUserDetailsService userDetailsService;

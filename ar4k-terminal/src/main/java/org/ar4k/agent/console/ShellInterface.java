@@ -42,11 +42,11 @@ import javax.management.IntrospectionException;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
@@ -61,7 +61,7 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
-import org.ar4k.agent.spring.Ar4kUserDetails;
+import org.ar4k.agent.spring.EdgeUserDetails;
 import org.bouncycastle.cms.CMSException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
@@ -143,7 +143,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Get local users list", group = "Authentication Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
-	public Collection<Ar4kUserDetails> getUsersList() {
+	public Collection<EdgeUserDetails> getUsersList() {
 		return anima.getLocalUsers();
 	}
 
@@ -158,7 +158,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	public Collection<GrantedAuthority> getRolesAuthority() {
 		final Set<GrantedAuthority> roles = new HashSet<>();
-		for (final Ar4kUserDetails u : anima.getLocalUsers()) {
+		for (final EdgeUserDetails u : anima.getLocalUsers()) {
 			for (final GrantedAuthority a : u.getAuthorities()) {
 				roles.add(a);
 			}
@@ -256,7 +256,7 @@ public class ShellInterface extends AbstractShellHelper {
 	public void importSelectedConfigBase64(
 			@ShellOption(help = "configuration exported by export-selected-config-base64") String base64Config)
 			throws IOException, ClassNotFoundException {
-		setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64(base64Config));
+		setWorkingConfig((EdgeConfig) ConfigHelper.fromBase64(base64Config));
 	}
 
 	@ShellMethod("Load selected configuration from a base64 text file")
@@ -298,7 +298,7 @@ public class ShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "configuration exported by export-selected-config-base64-crypted") String base64ConfigCrypto,
 			@ShellOption(help = "alias key in Anima repository") String aliasKey)
 			throws ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, IOException, CMSException {
-		setWorkingConfig((Ar4kConfig) ConfigHelper.fromBase64Crypto(base64ConfigCrypto, aliasKey));
+		setWorkingConfig((EdgeConfig) ConfigHelper.fromBase64Crypto(base64ConfigCrypto, aliasKey));
 	}
 
 	@ShellMethod("Load selected configuration from a base64 text file crypted")
@@ -367,7 +367,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public void importSelectedConfigJson(
 			@ShellOption(help = "configuration exported by export-selected-config-json") String jsonConfig) {
-		setWorkingConfig((Ar4kConfig) ConfigHelper.fromJson(jsonConfig, Ar4kConfig.class));
+		setWorkingConfig((EdgeConfig) ConfigHelper.fromJson(jsonConfig, EdgeConfig.class));
 	}
 
 	@ShellMethod("Import the selected configuration from yaml text")
@@ -401,7 +401,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod("Create new configuration as selected configuration")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
-	public void createSelectedConfig(@ShellOption() @Valid Ar4kConfig confCreated) {
+	public void createSelectedConfig(@ShellOption() @Valid EdgeConfig confCreated) {
 		setWorkingConfig(confCreated);
 	}
 
@@ -425,7 +425,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testListConfigOk")
 	public String listConfig() {
 		String risposta = "";
-		for (final Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+		for (final Entry<String, EdgeConfig> configurazione : getConfigs().entrySet()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, configurazione.getValue().uniqueId.toString(),
 					AnsiColor.DEFAULT, " - ", configurazione.getValue().name, " [",
 					configurazione.getValue().promptColor, configurazione.getValue().prompt, AnsiColor.DEFAULT, "]\n");
@@ -455,8 +455,8 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("testListConfigOk")
 	public void selectConfig(@ShellOption(help = "the id of the config to select") String idConfig) {
-		Ar4kConfig target = null;
-		for (final Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+		EdgeConfig target = null;
+		for (final Entry<String, EdgeConfig> configurazione : getConfigs().entrySet()) {
 			if (configurazione.getValue().uniqueId.toString().equals(idConfig)) {
 				target = configurazione.getValue();
 				break;
@@ -472,14 +472,14 @@ public class ShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "the name of the new config") String newName,
 			@ShellOption(help = "the promp for the new config") String newPrompt)
 			throws IOException, ClassNotFoundException {
-		Ar4kConfig target = null;
-		for (final Entry<String, Ar4kConfig> configurazione : getConfigs().entrySet()) {
+		EdgeConfig target = null;
+		for (final Entry<String, EdgeConfig> configurazione : getConfigs().entrySet()) {
 			if (configurazione.getValue().uniqueId.toString().equals(idConfig)) {
 				target = configurazione.getValue();
 				break;
 			}
 		}
-		final Ar4kConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
+		final EdgeConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
 		getConfigs().put(newTarget.getName(), newTarget);
 		return "cloned";
 	}
@@ -554,7 +554,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testIsRunningOk")
 	public String listService() {
 		String risposta = "";
-		for (final ServiceComponent<Ar4kComponent> servizio : anima.getComponents()) {
+		for (final ServiceComponent<EdgeComponent> servizio : anima.getComponents()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN,
 					servizio.getPot().getConfiguration().getUniqueId().toString(), AnsiColor.DEFAULT, " - ",
 					servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED, servizio.getPot(),
@@ -569,8 +569,8 @@ public class ShellInterface extends AbstractShellHelper {
 	public void cloneRuntimeConfig(@ShellOption(help = "the name of the new config") String newName,
 			@ShellOption(help = "the promp for the new config") String newPrompt)
 			throws IOException, ClassNotFoundException {
-		final Ar4kConfig target = anima.getRuntimeConfig();
-		final Ar4kConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
+		final EdgeConfig target = anima.getRuntimeConfig();
+		final EdgeConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
 		addConfig(newTarget);
 	}
 

@@ -14,14 +14,14 @@
     */
 package org.ar4k.agent.spring.autoconfig;
 
-import static org.ar4k.agent.spring.autoconfig.Ar4kStarterProperties.AR4K_PREFIX;
+import static org.ar4k.agent.spring.autoconfig.EdgeStarterProperties.AR4K_PREFIX;
 
 import org.ar4k.agent.helper.ConfigHelper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Proprità per bootstrap agente. Questa classe è utilizzata da
- * Ar4kAutoConfiguration.
+ * EdgeAutoConfiguration.
  *
  * @author Andrea Ambrosini
  *
@@ -29,7 +29,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 
 @ConfigurationProperties(prefix = AR4K_PREFIX)
-public class Ar4kStarterProperties {
+public class EdgeStarterProperties {
 
   public static final String AR4K_PREFIX = "ar4k";
   private String uniqueName = null;

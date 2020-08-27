@@ -6,14 +6,14 @@ import java.util.Map;
 
 import javax.validation.ConstraintViolation;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.rpc.Homunculus;
+import org.ar4k.agent.rpc.IHomunculus;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.springframework.shell.CompletionContext;
@@ -36,11 +36,11 @@ public class RpcConversation implements RpcExecutor {
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
       .getLogger(RpcConversation.class.toString());
 
-  private Map<String, Ar4kConfig> configurations = new HashMap<>();
+  private Map<String, EdgeConfig> configurations = new HashMap<>();
   private Map<String, KeystoreConfig> keyStores = new HashMap<>();
   private Map<String, ServiceConfig> components = new HashMap<>();
   private Map<String, AgentProcess> scriptSessions = new HashMap<>();
-  private Homunculus homunculus = null;
+  private IHomunculus homunculus = null;
   private String workingConfig = null;
 
   private final Shell shell;
@@ -96,15 +96,15 @@ public class RpcConversation implements RpcExecutor {
   }
 
   @Override
-  public void setHomunculus(Homunculus homunculus) {
+  public void setHomunculus(IHomunculus homunculus) {
     this.homunculus = homunculus;
   }
 
-  public Map<String, Ar4kConfig> getConfigurations() {
+  public Map<String, EdgeConfig> getConfigurations() {
     return configurations;
   }
 
-  public void setConfigurations(Map<String, Ar4kConfig> configurations) {
+  public void setConfigurations(Map<String, EdgeConfig> configurations) {
     this.configurations = configurations;
   }
 
@@ -124,11 +124,11 @@ public class RpcConversation implements RpcExecutor {
     this.components = components;
   }
 
-  protected Homunculus getHomunculus() {
+  protected IHomunculus getHomunculus() {
     return homunculus;
   }
 
-  public Ar4kConfig getWorkingConfig() {
+  public EdgeConfig getWorkingConfig() {
     return workingConfig != null ? configurations.get(workingConfig) : null;
   }
 

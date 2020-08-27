@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 import org.ar4k.agent.opcua.CryptoModeValidator;
 import org.ar4k.agent.opcua.Enumerator.CryptoMode;
 import org.ar4k.agent.opcua.Enumerator.SecurityMode;
@@ -60,7 +60,7 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
   Collection<OpcUaClientNode> subscriptions = new HashSet<>();
 
   @Override
-  public Ar4kComponent instantiate() {
+  public EdgeComponent instantiate() {
     OpcUaClientService ss = new OpcUaClientService();
     ss.setConfiguration(this);
     return ss;

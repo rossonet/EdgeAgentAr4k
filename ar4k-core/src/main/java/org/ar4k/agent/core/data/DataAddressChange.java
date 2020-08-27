@@ -2,9 +2,9 @@ package org.ar4k.agent.core.data;
 
 public interface DataAddressChange {
 
-  void onDataAddressUpdate(Ar4kChannel updatedChannel);
+  void onDataAddressUpdate(EdgeChannel updatedChannel);
 
-  void onDataAddressCreate(Ar4kChannel createdChannel);
+  void onDataAddressCreate(EdgeChannel createdChannel);
 
   void onDataAddressDelete(String deletedChannel);
 

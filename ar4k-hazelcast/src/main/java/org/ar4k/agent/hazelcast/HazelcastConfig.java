@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Ar4kComponent;
+import org.ar4k.agent.core.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -36,7 +36,7 @@ public class HazelcastConfig extends AbstractServiceConfig {
   }
 
   @Override
-  public Ar4kComponent instantiate() {
+  public EdgeComponent instantiate() {
     return new HazelcastComponent(this);
   }
 

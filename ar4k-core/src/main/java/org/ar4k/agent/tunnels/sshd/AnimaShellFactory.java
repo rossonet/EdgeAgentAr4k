@@ -7,15 +7,15 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.shell.Shell;
 
-public class Ar4kAnimaShellFactory implements ShellFactory {
+public class AnimaShellFactory implements ShellFactory {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Ar4kAnimaShellFactory.class.toString());
+      .getLogger(AnimaShellFactory.class.toString());
 
   private final Anima anima;
   private final Shell shell;
 
-  public Ar4kAnimaShellFactory(Anima anima, Shell shell) {
+  public AnimaShellFactory(Anima anima, Shell shell) {
     this.anima = anima;
     this.shell = shell;
     logger.warn("Remote connection from SSH to the agent");

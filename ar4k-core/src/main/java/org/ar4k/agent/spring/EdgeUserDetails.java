@@ -6,7 +6,7 @@ import java.util.HashSet;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class Ar4kUserDetails implements UserDetails {
+public class EdgeUserDetails implements UserDetails {
 
   private static final long serialVersionUID = 5455723607754444964L;
   private Collection<? extends GrantedAuthority> authorities = new HashSet<>();

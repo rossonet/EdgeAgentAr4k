@@ -9,54 +9,52 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.CommandReplyRequest;
 
 public interface IBeaconServer {
 
-  void start() throws IOException;
+	void start() throws IOException;
 
-  void stop();
+	void stop();
 
-  void blockUntilShutdown() throws InterruptedException;
+	void blockUntilShutdown() throws InterruptedException;
 
-  String getStatus();
+	String getStatus();
 
-  List<TunnelRunnerBeaconServer> getTunnels();
+	List<TunnelRunnerBeaconServer> getTunnels();
 
-  CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException;
+	CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException;
 
-  boolean isStopped();
+	boolean isStopped();
 
-  int getPort();
+	int getPort();
 
-  int getDefaultPollTime();
+	int getDefaultPollTime();
 
-  void setDefaultPollTime(int defaultPollTime);
+	void setDefaultPollTime(int defaultPollTime);
 
-  List<BeaconAgent> getAgentLabelRegisterReplies();
+	List<BeaconAgent> getAgentLabelRegisterReplies();
 
-  void sendFlashUdp();
+	void sendFlashUdp();
 
-  int getDefaultBeaconFlashMoltiplicator();
+	int getDefaultBeaconFlashMoltiplicator();
 
-  void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator);
+	void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator);
 
-  int getDiscoveryPort();
+	int getDiscoveryPort();
 
-  void setDiscoveryPort(int discoveryPort);
+	void setDiscoveryPort(int discoveryPort);
 
-  String getBroadcastAddress();
+	String getBroadcastAddress();
 
-  void setBroadcastAddress(String broadcastAddress);
+	void setBroadcastAddress(String broadcastAddress);
 
-  String getStringDiscovery();
+	String getStringDiscovery();
 
-  void setStringDiscovery(String stringDiscovery);
+	void setStringDiscovery(String stringDiscovery);
 
-  boolean isAcceptAllCerts();
+	boolean isAcceptAllCerts();
 
-  String getCertChainFile();
+	String getCertChainFile();
 
-  String getPrivateKeyFile();
+	String getPrivateKeyFile();
 
-  void close();
-
-  void clearOldData();
+	void clearOldData();
 
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class Ar4kuserDetailsService implements ReactiveUserDetailsService {
+public class EdgekuserDetailsService implements ReactiveUserDetailsService {
 
   @Autowired
   Anima anima;
@@ -17,7 +17,7 @@ public class Ar4kuserDetailsService implements ReactiveUserDetailsService {
   @Override
   public Mono<UserDetails> findByUsername(String username) {
     UserDetails result = null; // anonymous for spring
-    for (Ar4kUserDetails q : anima.getLocalUsers()) {
+    for (EdgeUserDetails q : anima.getLocalUsers()) {
       if (q.getUsername().equals(username)) {
         result = q;
         break;

@@ -22,8 +22,8 @@ import javax.imageio.ImageIO;
 import org.ar4k.agent.camera.messages.VideoMessage;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Ar4kComponent;
-import org.ar4k.agent.core.data.Ar4kChannel;
+import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.data.EdgeChannel;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -50,7 +50,7 @@ import uk.co.caprica.vlcj.medialist.MediaListItem;
  *
  *         Servizio di connessione seriale.
  */
-public class StreamCameraService implements Ar4kComponent {
+public class StreamCameraService implements EdgeComponent {
 
 	public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
@@ -65,7 +65,7 @@ public class StreamCameraService implements Ar4kComponent {
 
 	private Webcam webcam = null;
 
-	private Ar4kChannel channelRoot = null;
+	private EdgeChannel channelRoot = null;
 
 	private IPublishSubscribeChannel globalImageQueue = null;
 

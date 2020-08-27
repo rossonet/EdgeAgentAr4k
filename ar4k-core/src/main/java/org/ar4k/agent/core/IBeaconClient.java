@@ -2,11 +2,10 @@ package org.ar4k.agent.core;
 
 import java.util.List;
 
-import org.ar4k.agent.config.Ar4kConfig;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.beacon.RemoteBeaconRpcExecutor;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply;
@@ -42,11 +41,11 @@ public interface IBeaconClient {
 
 	ListCommandsReply listCommadsOnAgent(String agentId);
 
-	ConfigReply sendConfigToAgent(String agentId, Ar4kConfig newConfig);
+	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
 
-	List<BeaconNetworkTunnel> getTunnels();
+	List<NetworkTunnel> getTunnels();
 
-	void removeTunnel(BeaconNetworkTunnel toRemove);
+	void removeTunnel(NetworkTunnel toRemove);
 
 	NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config);
 
