@@ -18,7 +18,7 @@ dependencies {
 	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
 	// per serie dati a disposizione di drools
 	compile group: 'org.rrd4j', name: 'rrd4j', version: '3.6'
-	
+
 }
 
 task createModelsDir {
@@ -103,6 +103,6 @@ clean {
 }
 
 bootJar {
-   enabled = false
+	enabled = false
 }
 

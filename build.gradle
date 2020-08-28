@@ -32,7 +32,7 @@ apply plugin: 'maven'
 apply plugin: "com.gorylenko.gradle-git-properties"
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 apply plugin: 'jacoco'
-apply plugin: 'base' 
+apply plugin: 'base'
 
 oomphIde {
 	repoEclipseLatest()
@@ -90,25 +90,28 @@ subprojects {
 	apply plugin: 'maven'
 	apply plugin: "com.gorylenko.gradle-git-properties"
 	apply plugin: "maven-publish"
-	apply plugin: 'base' 
+	apply plugin: 'base'
 
 	test {
 		useJUnit()
 		maxHeapSize = "1024m"
-  		minHeapSize = "1024m"
+		minHeapSize = "1024m"
 		failFast = true
 		//jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
 		testLogging {
 			showStandardStreams = true
-			events = ["standard_out", "standard_error"]
+			events = [
+				"standard_out",
+				"standard_error"
+			]
 		}
 		finalizedBy jacocoTestReport
 	}
-/*
-	jacocoTestReport {
-		dependsOn test
-	}
-*/
+	/*
+	 jacocoTestReport {
+	 dependsOn test
+	 }
+	 */
 	repositories {
 		mavenCentral()
 		maven { url "https://repo.spring.io/milestone" }
@@ -119,7 +122,7 @@ subprojects {
 	}
 
 	task eclipseClosedDependencies {}
-	
+
 	task eclipseClosedDependencies_ {}
 
 	task view { doLast { println "Working on project ${project.name} [ ${project.description} ]" } }
@@ -347,12 +350,15 @@ task buildAllBootJars {
 test {
 	useJUnit()
 	maxHeapSize = "1024m"
-  	minHeapSize = "1024m"
+	minHeapSize = "1024m"
 	failFast = true
 	jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
 	testLogging {
 		showStandardStreams = true
-		events = ["standard_out", "standard_error"]
+		events = [
+			"standard_out",
+			"standard_error"
+		]
 	}
 	finalizedBy jacocoTestReport
 }
