@@ -72,7 +72,6 @@ subprojects {
 			mavenCentral()
 			jcenter()
 			maven { url "https://plugins.gradle.org/m2/" }
-			maven { url "http://dist.wso2.org/maven2/" }
 		}
 		dependencies {
 			classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
@@ -114,11 +113,13 @@ subprojects {
 	 */
 	repositories {
 		mavenCentral()
+		jcenter()
 		maven { url "https://repo.spring.io/milestone" }
 		maven { url "https://dl.bintray.com/ethereum/maven/" }
 		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 		maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
 		maven { url "https://nexus.bedatadriven.com/content/groups/public" }
+		maven { url "http://dist.wso2.org/maven2/" }
 	}
 
 	task eclipseClosedDependencies {}
