@@ -179,7 +179,7 @@ public class EdgeConfig implements ConfigSeed {
 
 	@Override
 	public String toString() {
-		return "Ar4kConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
+		return "EdgeConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
 				+ ", name=" + name + ", nextConfigDns=" + nextConfigDns + ", nextConfigWeb=" + nextConfigWeb
 				+ ", nextConfigFile=" + nextConfigFile + ", nextConfigReload=" + nextConfigReload
 				+ ", configCheckPeriod=" + configCheckPeriod + ", prompt=" + prompt + ", promptColor=" + promptColor
