@@ -1,26 +1,20 @@
 description = "IoT components Siddhi"
- 
+
 
 dependencies {
-  compile project(':ar4k-core')
-  compile group: 'org.wso2.siddhi', name: 'siddhi-core', version: '4.5.11'
-  compile group: 'org.wso2.siddhi', name: 'siddhi-query-api', version: '4.5.11'
-  compile group: 'org.wso2.siddhi', name: 'siddhi-query-compiler', version: '4.5.11'
-  compile group: 'org.wso2.siddhi', name: 'siddhi-annotations', version: '4.5.11'
-  
-  // https://mvnrepository.com/artifact/org.apache.log4j.wso2/log4j
-  compile group: 'org.apache.log4j.wso2', name: 'log4j', version: '1.2.17.wso2v1'
-  // https://mvnrepository.com/artifact/com.lmax/disruptor
-  compile group: 'com.lmax', name: 'disruptor', version: '3.3.2'
-  // https://mvnrepository.com/artifact/org.quartz-scheduler.wso2/quartz
-  compile group: 'org.quartz-scheduler.wso2', name: 'quartz', version: '2.1.1.wso2v1'
-  // https://mvnrepository.com/artifact/org.eclipse.osgi/org.eclipse.osgi.services
-  compile group: 'org.eclipse.osgi', name: 'org.eclipse.osgi.services', version: '3.2.100.v20100503'
-  
-  
+	compile project(':ar4k-core')
+	compile group: 'org.wso2.siddhi', name: 'siddhi-core', version: '4.5.11'
+	compile group: 'org.wso2.siddhi', name: 'siddhi-query-api', version: '4.5.11'
+	compile group: 'org.wso2.siddhi', name: 'siddhi-query-compiler', version: '4.5.11'
+	compile group: 'org.wso2.siddhi', name: 'siddhi-annotations', version: '4.5.11'
+
+	compile group: 'org.apache.log4j.wso2', name: 'log4j', version: '1.2.17.wso2v1'
+	compile group: 'com.lmax', name: 'disruptor', version: '3.3.2'
+	compile group: 'org.quartz-scheduler.wso2', name: 'quartz', version: '2.1.1.wso2v1'
+	compile group: 'org.eclipse.osgi', name: 'org.eclipse.osgi.services', version: '3.2.100.v20100503'
 }
 
 bootJar {
-   enabled = false
+	enabled = false
 }
 
