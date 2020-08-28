@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
@@ -85,7 +86,7 @@ public class ConfigRefreshFromAllChannelTests {
 	}
 
 	private void deleteDir(File dir) {
-		File[] files = dir.listFiles();
+		final File[] files = dir.listFiles();
 		if (files != null) {
 			for (final File file : files) {
 				deleteDir(file);
@@ -113,30 +114,30 @@ public class ConfigRefreshFromAllChannelTests {
 	@Test
 	public void checkConfigNextInAllChannelWithReloadAndRestart() throws InterruptedException, IOException {
 		Thread.sleep(3000);
-		EdgeConfig c1 = new EdgeConfig();
-		String check = UUID.randomUUID().toString();
+		final EdgeConfig c1 = new EdgeConfig();
+		final String check = UUID.randomUUID().toString();
 		c1.name = "test aggiornamento configurazione";
 		c1.creationDate = Instant.ofEpochMilli(1452797215000L);
 		c1.lastUpdate = Instant.ofEpochMilli(1452797215000L);
 		c1.nextConfigDns = dnsConfig;
-		assertEquals(anima.getState(), AnimaStates.STAMINAL);
+		assertEquals(AnimaStates.STAMINAL, anima.getState());
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c1).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
-		Thread.sleep(60000);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue("dnsToFile".equals(anima.getRuntimeConfig().name));
-		assertTrue(fileNameSecond.equals(anima.getRuntimeConfig().nextConfigFile));
-		EdgeConfig c2 = new EdgeConfig();
+		Thread.sleep(80000);
+		assertEquals(AnimaStates.RUNNING, anima.getState());
+		assertEquals("dnsToFile", anima.getRuntimeConfig().name);
+		assertEquals(fileNameSecond, anima.getRuntimeConfig().nextConfigFile);
+		final EdgeConfig c2 = new EdgeConfig();
 		c2.name = "test aggiornamento configurazione";
 		c2.tagVersion = check;
 		c2.nextConfigFile = fileNameEnd;
 		Files.write(Paths.get(fileNameSecond), ConfigHelper.toBase64(c2).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 		Thread.sleep(30000);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().tagVersion));
-		EdgeConfig c3 = new EdgeConfig();
+		assertEquals(AnimaStates.RUNNING, anima.getState());
+		assertEquals(anima.getRuntimeConfig().tagVersion, check);
+		final EdgeConfig c3 = new EdgeConfig();
 		c3.name = "ultima configurazione";
 		c3.author = check;
 		c3.nextConfigReload = true;
@@ -145,24 +146,28 @@ public class ConfigRefreshFromAllChannelTests {
 				StandardOpenOption.TRUNCATE_EXISTING);
 		Thread.sleep(60000);
 		assertEquals(AnimaStates.RUNNING, anima.getState());
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		assertEquals(check, anima.getRuntimeConfig().author);
 	}
 
 	@Test
 	public void createConfigWeb() throws IOException {
-		EdgeConfig config = new EdgeConfig();
+		final EdgeConfig config = new EdgeConfig();
 		config.name = "dnsToFile";
 		config.nextConfigFile = fileNameSecond;
-		Files.write(Paths.get("config-to-file.ar4k"), ConfigHelper.toBase64(config).getBytes(),
-				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		final Path path = Paths.get("config-to-file.ar4k");
+		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
+		assertTrue(Files.exists(path));
 	}
 
 	@Test
 	public void createConfigDns() throws IOException {
-		EdgeConfig config = new EdgeConfig();
+		final EdgeConfig config = new EdgeConfig();
 		config.name = "DnsToWeb";
 		config.nextConfigWeb = webConfig;
-		System.out.println(ConfigHelper.toBase64ForDns("config-to-web", config)); // bottegaio.net
+		final String base64ForDns = ConfigHelper.toBase64ForDns("config-to-web", config);
+		System.out.println(base64ForDns); // bottegaio.net
+		assertTrue(base64ForDns.length() > 20);
 	}
 
 }

@@ -18,11 +18,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -54,7 +54,6 @@ import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.DataAddressAnima;
-import org.ar4k.agent.exception.EdgeException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -68,7 +67,6 @@ import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -111,11 +109,12 @@ import jdbm.RecordManagerFactory;
 public class Anima
 		implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
-	public static final String THREAD_ID = "a-" + String.valueOf(Math.round((new Random().nextDouble() * 9999)));
+	public static final String THREAD_ID = "a-" + (Math.round((new Random().nextDouble() * 9999)));
 
-	public static ContextCreationHelper getNewAnimaInNewContext(Class<?> springMasterClass, ExecutorService executor,
-			String loggerFile, String keyStore, int webPort, List<String> args, EdgeConfig animaConfig,
-			String mainAliasInKeystore, String keystoreBeaconAlias, String webRegistrationEndpoint) {
+	public static final ContextCreationHelper getNewAnimaInNewContext(Class<?> springMasterClass,
+			ExecutorService executor, String loggerFile, String keyStore, int webPort, List<String> args,
+			EdgeConfig animaConfig, String mainAliasInKeystore, String keystoreBeaconAlias,
+			String webRegistrationEndpoint) {
 		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args, animaConfig,
 				mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
 	}
@@ -129,13 +128,13 @@ public class Anima
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(Anima.class.toString());
 
-	private static transient final String registrationPin = ConfigHelper.createRandomRegistryId();
+	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
 	// assegnato da Spring tramite setter al boot
 	private static ApplicationContext applicationContext;
 
 	private String agentUniqueName = null;
 
-	private final String dbDataStoreName = "datastore";
+	private static final String DB_DATASTORE_NAME = "datastore";
 
 	private Timer timerScheduler = null;
 
@@ -162,7 +161,7 @@ public class Anima
 	// configurazione iniziale di bootStrap derivata dalle variabili Spring
 	private EdgeConfig bootstrapConfig = null;
 	// configurazione per il reload
-	private transient EdgeConfig reloadConfig = null;
+	private EdgeConfig reloadConfig = null;
 	private AnimaStates stateTarget = AnimaStates.RUNNING;
 	private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
 
@@ -172,7 +171,7 @@ public class Anima
 
 	private Collection<EdgeUserDetails> localUsers = new HashSet<>();
 
-	private transient RecordManager recMan = null;
+	private RecordManager recMan = null;
 
 	private String beanName = "anima";
 
@@ -183,23 +182,23 @@ public class Anima
 	private KeystoreConfig myIdentityKeystore = null;
 	private String myAliasCertInKeystore = "agent";
 
-	private transient boolean onApplicationEventFlag = false;
+	private boolean onApplicationEventFlag = false;
 
-	private transient boolean afterSpringInitFlag = false;
+	private boolean afterSpringInitFlag = false;
 
-	private transient boolean firstStateFired = false;
+	private boolean firstStateFired = false;
 
-	public static enum AnimaStates {
+	public enum AnimaStates {
 		INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
 	}
 
 	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
 	// agenti, per la definizione della policy security sul routing public
-	public static enum AnimaRouterType {
+	public enum AnimaRouterType {
 		NONE, PRODUCTION, DEVELOP, ROAD
 	}
 
-	public static enum AnimaEvents {
+	public enum AnimaEvents {
 		BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
 	}
 
@@ -248,11 +247,7 @@ public class Anima
 	synchronized void finalizeAgent() {
 		try {
 			if (recMan != null) {
-				try {
-					recMan.close();
-				} catch (final IOException e) {
-					logger.info("IOException closing file data map of anima");
-				}
+				closeDataMap();
 				recMan = null;
 			}
 			for (final ServiceComponent<EdgeComponent> targetService : components) {
@@ -276,6 +271,14 @@ public class Anima
 		}
 	}
 
+	private void closeDataMap() {
+		try {
+			recMan.close();
+		} catch (final IOException e) {
+			logger.info("IOException closing file data map of anima");
+		}
+	}
+
 	// workaround Spring State Machine
 	// @OnStateChanged(target = "KILLED")
 	synchronized void resetAgent() {
@@ -293,7 +296,6 @@ public class Anima
 	@SuppressWarnings("unchecked")
 	void setInitialAuth() {
 		if (starterProperties.getAdminPassword() != null && !starterProperties.getAdminPassword().isEmpty()) {
-			// logger.warn("create admin user with config password");
 			final EdgeUserDetails admin = new EdgeUserDetails();
 			admin.setUsername("admin");
 			admin.setPassword(passwordEncoder.encode(starterProperties.getAdminPassword()));
@@ -308,7 +310,7 @@ public class Anima
 					break;
 				}
 			}
-			if (free == true) {
+			if (free) {
 				localUsers.add(admin);
 				logger.warn("created user " + admin.getUsername());
 			}
@@ -336,43 +338,38 @@ public class Anima
 					if (new File(ks.filePathPre).exists()) {
 						if (ks.check()) {
 							foundFile = true;
-							logger.info("use keystore file " + ks.toString());
+							logger.info("use keystore file {}", ks);
 						} else {
 							logger.info("keystore not works");
 						}
 					} else {
-						logger.warn("keystore file not found (" + ks.toString() + ")");
+						logger.warn("keystore file not found ( {} )", ks);
 					}
 				} catch (final Exception a) {
-					logger.warn("keystore error -> " + a.getMessage());
+					logger.warn("keystore error -> {}", a.getMessage());
 				}
 			} else {
-				logger.info("value of fileKeystore is null, use: " + ks.toString());
+				logger.info("value of fileKeystore is null, use: {}", ks);
 			}
+			final String errorDeletingKeyStoreLabel = "error deleting wrong keystore";
 			if (!foundFile) {
 				try {
 					Files.deleteIfExists(Paths.get(ks.filePathPre));
 				} catch (final IOException e) {
-					logger.logException("error deleting wrong keystore", e);
+					logger.logException(errorDeletingKeyStoreLabel, e);
 				}
 				if (starterProperties.getWebKeystore() != null && !starterProperties.getWebKeystore().isEmpty()) {
 					try {
-						logger.info("try keystore from web url: "
-								+ ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
-						HardwareHelper.downloadFileFromUrl(ks.filePathPre,
-								ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+						logger.info("try keystore from web url: {}", webKeystoreResolvedString());
+						HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystoreResolvedString());
 					} catch (final Exception e) {
 						foundWeb = false;
-						logger.warn("webKeystore "
-								+ ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false)
-								+ " not found");
-						// logger.logExceptionDebug(e);
+						logger.warn("webKeystore " + webKeystoreResolvedString() + " not found");
 					}
 					try {
 						if (new File(ks.filePathPre).exists() && ks.check()) {
 							foundWeb = true;
-							logger.info("found web keystore "
-									+ ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false));
+							logger.info("found web keystore {}", webKeystoreResolvedString());
 						} else {
 							logger.info("web keystore not works");
 						}
@@ -385,17 +382,13 @@ public class Anima
 					try {
 						Files.deleteIfExists(Paths.get(ks.filePathPre));
 					} catch (final IOException e) {
-						logger.logException("error deleting wrong keystore", e);
+						logger.logException(errorDeletingKeyStoreLabel, e);
 					}
 					if (starterProperties.getDnsKeystore() != null && !starterProperties.getDnsKeystore().isEmpty()) {
 						try {
-							logger.info("try keystore from dns: "
-									+ ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false));
-							final String hostPart = ConfigHelper
-									.resolveWorkingString(starterProperties.getDnsKeystore(), false).split("\\.")[0];
-							final String domainPart = ConfigHelper
-									.resolveWorkingString(starterProperties.getDnsKeystore(), false)
-									.replaceAll("^" + hostPart, "");
+							logger.info("try keystore from dns: {}", dnsKeystoreResolvedString());
+							final String hostPart = dnsKeystoreResolvedString().split("\\.")[0];
+							final String domainPart = dnsKeystoreResolvedString().replaceAll("^" + hostPart, "");
 							final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
 							final byte[] data = Base64.getDecoder().decode(payloadString);
 							final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
@@ -407,8 +400,7 @@ public class Anima
 							try {
 								if (new File(ks.filePathPre).exists() && ks.check()) {
 									foundDns = true;
-									logger.info("found dns keystore " + ConfigHelper
-											.resolveWorkingString(starterProperties.getDnsKeystore(), false));
+									logger.info("found dns keystore {}", dnsKeystoreResolvedString());
 								} else {
 									logger.info("dns keystore not works");
 								}
@@ -416,10 +408,7 @@ public class Anima
 								logger.info("keystore error -> " + a.getMessage());
 							}
 						} catch (final Exception e) {
-							logger.warn("dnsKeystore "
-									+ ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false)
-									+ " not found");
-							// logger.logExceptionDebug(e);
+							logger.warn("dnsKeystore " + dnsKeystoreResolvedString() + " not found");
 						}
 					}
 				}
@@ -429,14 +418,13 @@ public class Anima
 				try {
 					Files.deleteIfExists(Paths.get(ks.filePathPre));
 				} catch (final IOException e) {
-					logger.logException("error deleting wrong keystore", e);
+					logger.logException(errorDeletingKeyStoreLabel, e);
 				}
-				logger.warn("new keystore: " + ks.toString());
+				logger.warn("new keystore: {}", ks);
 				ks.createSelfSignedCert(getAgentUniqueName() + "-master", ConfigHelper.organization, ConfigHelper.unit,
 						ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
 						ConfigHelper.dns, ConfigHelper.ip, ks.keyStoreAlias, true);
 			}
-			// addKeyStores(ks);
 			setMyIdentityKeystore(ks);
 			setMyAliasCertInKeystore(ks.keyStoreAlias);
 			logger.info("Certificate for anima: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
@@ -444,6 +432,14 @@ public class Anima
 		} else {
 			logger.info("Use keystore " + myIdentityKeystore.toString());
 		}
+	}
+
+	private String dnsKeystoreResolvedString() {
+		return ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false);
+	}
+
+	private String webKeystoreResolvedString() {
+		return ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false);
 	}
 
 	@PostConstruct
@@ -462,7 +458,7 @@ public class Anima
 			logger.warn("console only true, run just the command line");
 		}
 		System.out.println("__________________________________________________");
-		System.out.println("       REGISTRATION CODE: " + registrationPin);
+		System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
 		System.out.println("__________________________________________________\n");
 	}
 
@@ -475,7 +471,7 @@ public class Anima
 				recMan = RecordManagerFactory
 						.createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
 								+ "/" + starterProperties.getAnimaDatastoreFileName());
-				dataStore = recMan.treeMap(dbDataStoreName);
+				dataStore = recMan.treeMap(DB_DATASTORE_NAME);
 				logger.info("datastore on Anima started");
 			}
 		} catch (final IOException e) {
@@ -696,8 +692,8 @@ public class Anima
 								ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
 								starterProperties.getKeystoreConfigAlias());
 						if (targetConfig != null) {
-							logger.info("found fileConfig "
-									+ ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true));
+							logger.info("found fileConfig {}",
+									ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true));
 							break;
 						}
 					} catch (final Exception e) {
@@ -719,11 +715,11 @@ public class Anima
 			try {
 				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
 					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
-							? ConfigHelper.fromBase64Crypto(payloadString.toString(), cryptoAlias)
+							? ConfigHelper.fromBase64Crypto(payloadString, cryptoAlias)
 							: null);
 				} else {
 					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
-							? ConfigHelper.fromBase64(payloadString.toString())
+							? ConfigHelper.fromBase64(payloadString)
 							: null);
 				}
 			} catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -742,27 +738,27 @@ public class Anima
 	private EdgeConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
 		EdgeConfig resultConfig = null;
 		try {
-			String config = "";
+			final StringBuilder config = new StringBuilder();
 			final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
 			final BufferedReader bufferedReader = new BufferedReader(fileReader);
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
-				config = config + line;
+				config.append(line);
 			}
 			bufferedReader.close();
 			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
-				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config, cryptoAlias);
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config.toString(), cryptoAlias);
 			} else {
-				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config);
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config.toString());
 			}
 			return resultConfig;
+
+		} catch (final FileNotFoundException ff) {
+			logger.debug("config file not found " + pathConfig);
+			return null;
 		} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
 				| CMSException e) {
-			if (e instanceof java.io.FileNotFoundException) {
-				logger.debug("config file not found " + pathConfig);
-			} else if (logger != null) {
-				logger.warn("error in config file -> " + EdgeLogger.stackTraceToString(e, 4));
-			}
+			logger.warn("error in config file -> " + EdgeLogger.stackTraceToString(e, 4));
 			return null;
 		}
 	}
@@ -786,8 +782,7 @@ public class Anima
 			return null;
 		} catch (final Exception e) {
 			logger.warn("url for web config failed: " + webConfigTarget);
-			if (logger != null)
-				logger.warn("Error downloading web config -> " + EdgeLogger.stackTraceToString(e, 4));
+			logger.warn("Error downloading web config -> " + EdgeLogger.stackTraceToString(e, 4));
 			return null;
 		}
 
@@ -807,8 +802,7 @@ public class Anima
 			updateFileConfig(runtimeConfig);
 		}
 		if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING)) {
-			timerScheduler = new Timer(
-					"t-" + String.valueOf(Math.round((new Random().nextDouble() * 99))) + "-" + THREAD_ID);
+			timerScheduler = new Timer("t-" + (Math.round((new Random().nextDouble() * 99))) + "-" + THREAD_ID);
 			animaStateMachine.sendEvent(AnimaEvents.START);
 		} else {
 			logger.warn("stateTarget is null in runtime config");
@@ -823,7 +817,7 @@ public class Anima
 				Files.write(Paths.get(fileTarget),
 						ConfigHelper.toBase64Crypto(config, starterProperties.getKeystoreConfigAlias()).getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-				logger.info("crypto configuration in " + fileTarget + " updated with runtime config");
+				logger.info("crypto configuration in {} updated with runtime config", fileTarget);
 			} catch (final Exception e) {
 				logger.logException("error saving crypto configuration in runtime to " + fileTarget, e);
 			}
@@ -831,7 +825,7 @@ public class Anima
 			try {
 				Files.write(Paths.get(fileTarget), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
 						StandardOpenOption.TRUNCATE_EXISTING);
-				logger.info("configuration in " + fileTarget + " updated with runtime config");
+				logger.info("configuration in {} updated with runtime config", fileTarget);
 			} catch (final Exception e) {
 				logger.logException("error saving configuration in runtime to " + fileTarget, e);
 			}
@@ -855,19 +849,13 @@ public class Anima
 		Collections.sort(sortedList, comparatorOrderPots);
 		for (final ServiceConfig confServizio : sortedList) {
 			if (confServizio instanceof ServiceConfig) {
-				logger.info("run " + confServizio + " as service");
-				try {
-					runSeedService(confServizio);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-						| NoSuchMethodException | SecurityException e) {
-					throw new EdgeException("problem trying to run service " + confServizio.getName(), e.getCause());
-				}
+				logger.info("run {} as service", confServizio);
+				runSeedService(confServizio);
 			}
 		}
 	}
 
-	private void runSeedService(ServiceConfig confServizio)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	private void runSeedService(ServiceConfig confServizio) {
 		final AnimaService service = new AnimaService(this, confServizio, timerScheduler);
 		components.add(service);
 		service.start();
@@ -907,11 +895,15 @@ public class Anima
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		updateApplicationContext(applicationContext);
+	}
+
+	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
 		Anima.applicationContext = applicationContext;
 	}
 
-	public static ApplicationContext getApplicationContext() throws BeansException {
+	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 
@@ -921,7 +913,7 @@ public class Anima
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
-		logger.debug(" event: " + event.toString());
+		logger.debug(" event: {}", event);
 		if (event instanceof ContextRefreshedEvent) {
 			// avvio a contesto spring caricato
 			onApplicationEventFlag = true;
@@ -1057,7 +1049,7 @@ public class Anima
 	}
 
 	public String getDbDataStoreName() {
-		return dbDataStoreName;
+		return DB_DATASTORE_NAME;
 	}
 
 	public KeystoreConfig getMyIdentityKeystore() {
@@ -1077,7 +1069,7 @@ public class Anima
 	}
 
 	public static String getRegistrationPin() {
-		return registrationPin;
+		return REGISTRATION_PIN;
 	}
 
 	void prepareAgentStasis() {
@@ -1104,20 +1096,20 @@ public class Anima
 			if (runtimeConfig.nextConfigFile != null) {
 				timerScheduler.schedule(checkFileConfigUpdate(runtimeConfig.nextConfigFile),
 						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on file " + runtimeConfig.nextConfigFile
-						+ " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+				logger.warn("scheduled periodically configuration checking on file {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
 			}
 			if (runtimeConfig.nextConfigDns != null) {
 				timerScheduler.schedule(checkDnsConfigUpdate(runtimeConfig.nextConfigDns),
 						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on dns " + runtimeConfig.nextConfigDns
-						+ " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+				logger.warn("scheduled periodically configuration checking on dns {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
 			}
 			if (runtimeConfig.nextConfigWeb != null) {
 				timerScheduler.schedule(checkWebConfigUpdate(runtimeConfig.nextConfigWeb),
 						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on url " + runtimeConfig.nextConfigWeb
-						+ " with rate time of " + runtimeConfig.configCheckPeriod + " ms");
+				logger.warn("scheduled periodically configuration checking on url {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
 			}
 		}
 	}
@@ -1126,6 +1118,7 @@ public class Anima
 		return new TimerTask() {
 			@Override
 			public void run() {
+				logger.info("try to find new config in {}", nextConfigWeb);
 				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
@@ -1157,10 +1150,10 @@ public class Anima
 
 	public final void elaborateNewConfig(EdgeConfig newTargetConfig) {
 		if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
-			logger.warn("Found new config " + newTargetConfig.toString());
+			logger.warn("Found new config {}", newTargetConfig);
 			reloadConfig = newTargetConfig;
 			runtimeConfig = newTargetConfig;
-			if (newTargetConfig.nextConfigReload == null || newTargetConfig.nextConfigReload == false) {
+			if (newTargetConfig.nextConfigReload == null || !newTargetConfig.nextConfigReload) {
 				sendEvent(AnimaEvents.RESTART);
 			} else {
 				sendEvent(AnimaEvents.COMPLETE_RELOAD);
@@ -1172,18 +1165,6 @@ public class Anima
 		return animaStateMachine;
 	}
 
-	@Override
-	public String toString() {
-		return "Anima [agentUniqueName=" + agentUniqueName + ", dbDataStoreName=" + dbDataStoreName
-				+ ", animaStateMachine=" + animaStateMachine + ", animaHomunculus=" + animaHomunculus
-				+ ", starterProperties=" + starterProperties + ", runtimeConfig=" + runtimeConfig + ", targetConfig="
-				+ targetConfig + ", bootstrapConfig=" + bootstrapConfig + ", stateTarget=" + stateTarget
-				+ ", statesBefore=" + statesBefore + ", components=" + components + ", dataStore=" + dataStore
-				+ ", localUsers=" + localUsers + ", beanName=" + beanName + ", beaconClient=" + beaconClient
-				+ ", dataAddress=" + dataAddress + ", myIdentityKeystore=" + myIdentityKeystore
-				+ ", myAliasCertInKeystore=" + myAliasCertInKeystore + "]";
-	}
-
 	public String getFileKeystore() {
 		return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
 	}
@@ -1191,7 +1172,7 @@ public class Anima
 	void runPreScript() {
 		if (runtimeConfig.preScript != null && runtimeConfig.preScriptLanguage != null
 				&& !runtimeConfig.preScript.isEmpty() && !runtimeConfig.preScriptLanguage.isEmpty()) {
-			logger.info("run pre script in language " + runtimeConfig.preScriptLanguage);
+			logger.info("run pre script in language {}", runtimeConfig.preScriptLanguage);
 			final String scriptLabel = "prescript";
 			try {
 				scriptRunner(scriptLabel, runtimeConfig.preScriptLanguage, runtimeConfig.preScript);
@@ -1215,7 +1196,7 @@ public class Anima
 	void runPostScript() {
 		if (runtimeConfig.postScript != null && runtimeConfig.postScriptLanguage != null
 				&& !runtimeConfig.postScript.isEmpty() && !runtimeConfig.postScriptLanguage.isEmpty()) {
-			logger.info("run post script in language " + runtimeConfig.postScriptLanguage);
+			logger.info("run post script in language {}", runtimeConfig.postScriptLanguage);
 			final String scriptLabel = "postscript";
 			try {
 				scriptRunner(scriptLabel, runtimeConfig.postScriptLanguage, runtimeConfig.postScript);
@@ -1249,6 +1230,50 @@ public class Anima
 		}
 		result.add(getAgentUniqueName());
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Anima [");
+		if (agentUniqueName != null)
+			builder.append("agentUniqueName=").append(agentUniqueName).append(", ");
+		if (animaStateMachine != null)
+			builder.append("animaStateMachine=").append(animaStateMachine).append(", ");
+		if (animaHomunculus != null)
+			builder.append("animaHomunculus=").append(animaHomunculus).append(", ");
+		if (starterProperties != null)
+			builder.append("starterProperties=").append(starterProperties).append(", ");
+		if (runtimeConfig != null)
+			builder.append("runtimeConfig=").append(runtimeConfig).append(", ");
+		if (targetConfig != null)
+			builder.append("targetConfig=").append(targetConfig).append(", ");
+		if (bootstrapConfig != null)
+			builder.append("bootstrapConfig=").append(bootstrapConfig).append(", ");
+		if (reloadConfig != null)
+			builder.append("reloadConfig=").append(reloadConfig).append(", ");
+		if (stateTarget != null)
+			builder.append("stateTarget=").append(stateTarget).append(", ");
+		if (statesBefore != null)
+			builder.append("statesBefore=").append(statesBefore).append(", ");
+		if (components != null)
+			builder.append("components=").append(components).append(", ");
+		if (dataStore != null)
+			builder.append("dataStore=").append(dataStore).append(", ");
+		if (localUsers != null)
+			builder.append("localUsers=").append(localUsers).append(", ");
+		if (beanName != null)
+			builder.append("beanName=").append(beanName).append(", ");
+		if (beaconClient != null)
+			builder.append("beaconClient=").append(beaconClient).append(", ");
+		if (dataAddress != null)
+			builder.append("dataAddress=").append(dataAddress).append(", ");
+		if (myIdentityKeystore != null)
+			builder.append("myIdentityKeystore=").append(myIdentityKeystore).append(", ");
+		if (myAliasCertInKeystore != null)
+			builder.append("myAliasCertInKeystore=").append(myAliasCertInKeystore).append(", ");
+		builder.append("firstStateFired=").append(firstStateFired).append("]");
+		return builder.toString();
 	}
 
 }
