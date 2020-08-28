@@ -708,6 +708,7 @@ public class Anima
 	}
 
 	private EdgeConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
+		logger.debug("try dns config {}", dnsTarget);
 		final String hostPart = dnsTarget.split("\\.")[0];
 		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
 		try {
@@ -736,21 +737,22 @@ public class Anima
 	}
 
 	private EdgeConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
+		logger.debug("try file config {}", pathConfig);
 		EdgeConfig resultConfig = null;
-		try {
+		try (final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
+				final BufferedReader bufferedReader = new BufferedReader(fileReader);) {
 			final StringBuilder config = new StringBuilder();
-			final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
-			final BufferedReader bufferedReader = new BufferedReader(fileReader);
+
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
 				config.append(line);
 			}
-			bufferedReader.close();
 			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
 				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config.toString(), cryptoAlias);
 			} else {
 				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config.toString());
 			}
+			logger.trace("resultConfig\n{}", resultConfig);
 			return resultConfig;
 
 		} catch (final FileNotFoundException ff) {
@@ -764,6 +766,7 @@ public class Anima
 	}
 
 	private EdgeConfig webConfigDownload(String webConfigTarget, String cryptoAlias) {
+		logger.info("try web config {}", webConfigTarget);
 		final String temporaryFile = agentUniqueName + ".ar4k.conf"
 				+ ((cryptoAlias != null && !cryptoAlias.isEmpty()) ? ".crypto" : "");
 		try (BufferedInputStream in = new BufferedInputStream(new URL(webConfigTarget).openStream());
@@ -1118,7 +1121,6 @@ public class Anima
 		return new TimerTask() {
 			@Override
 			public void run() {
-				logger.info("try to find new config in {}", nextConfigWeb);
 				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
