@@ -153,52 +153,52 @@ public class BeaconClientServerNoSslTests {
 
 	@Test(timeout = 640000)
 	public void short_a_serverAndClientTestMonoThread() throws Exception {
-		serverAndClientTest(false, true, 0, false, 250, false);
+		serverAndClientTest(false, true, 0, false, 80, false);
 	}
 
 	@Test(timeout = 640000)
 	public void short_b_serverAndClientTestMonoThreadAndPayload() throws Exception {
-		serverAndClientTest(false, true, 250, false, 250, false);
+		serverAndClientTest(false, true, 250, false, 80, false);
 	}
 
 	@Test(timeout = 640000)
 	public void short_c_serverAndClientTestWithFork() throws Exception {
-		serverAndClientTest(false, false, 0, false, 250, false);
+		serverAndClientTest(false, false, 0, false, 80, false);
 	}
 
 	@Test(timeout = 640000)
 	public void short_d_serverAndClientTestWithForkAndPayload() throws Exception {
-		serverAndClientTest(false, false, 250, false, 250, false);
+		serverAndClientTest(false, false, 250, false, 80, false);
 	}
 
 	@Test(timeout = 640000)
 	public void short_e_serverAndClientTestWithSshPayload() throws Exception {
-		serverAndClientTest(false, false, 0, true, 250, false);
+		serverAndClientTest(false, false, 0, true, 80, false);
 	}
 
 	@Test(timeout = 2560000)
 	public void verybig_a_serverAndClientTestMonoThread() throws Exception {
-		serverAndClientTest(false, true, 0, false, 900, false);
+		serverAndClientTest(false, true, 0, false, 100, false);
 	}
 
 	@Test(timeout = 2560000)
 	public void verybig_b_serverAndClientTestMonoThreadAndPayload() throws Exception {
-		serverAndClientTest(false, true, 250, false, 900, false);
+		serverAndClientTest(false, true, 250, false, 100, false);
 	}
 
 	@Test(timeout = 2560000)
 	public void verybig_c_serverAndClientTestWithFork() throws Exception {
-		serverAndClientTest(false, false, 0, false, 900, false);
+		serverAndClientTest(false, false, 0, false, 100, false);
 	}
 
 	@Test(timeout = 2560000)
 	public void verybig_d_serverAndClientTestWithForkAndPayload() throws Exception {
-		serverAndClientTest(false, false, 250, false, 900, false);
+		serverAndClientTest(false, false, 250, false, 100, false);
 	}
 
 	@Test(timeout = 2560000)
 	public void verybig_e_serverAndClientTestWithSshPayload() throws Exception {
-		serverAndClientTest(false, false, 0, true, 900, false);
+		serverAndClientTest(false, false, 0, true, 100, false);
 	}
 
 	@Ignore
