@@ -66,418 +66,425 @@ import oshi.software.os.OperatingSystem;
  */
 public class HardwareHelper {
 
-  private HardwareHelper() {
-    throw new UnsupportedOperationException("Just for static usage");
-  }
+	private HardwareHelper() {
+		throw new UnsupportedOperationException("Just for static usage");
+	}
 
-  private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(HardwareHelper.class.toString());
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(HardwareHelper.class.toString());
 
-  public static final boolean debugFreezeHal = false;
-  private static final int BUFFER_SIZE = 512;
+	public static final boolean debugFreezeHal = false;
+	private static final int BUFFER_SIZE = 512;
 
-  public static HardwareInfoData getSystemInfo() throws IOException, InterruptedException, ParseException {
-    final HardwareInfoData dato = new HardwareInfoData();
-    oshi.SystemInfo si = new oshi.SystemInfo();
-    Runtime runtime = Runtime.getRuntime();
-    OperatingSystemMXBean mbean = ManagementFactory.getOperatingSystemMXBean();
-    dato.setSystemLoadAverage(mbean.getSystemLoadAverage());
-    dato.setHardwareRuntimetotalmemory(runtime.totalMemory());
-    dato.setHardwareRuntimefreememory(runtime.freeMemory());
-    List<RootFileSystem> fileSystem = new ArrayList<>();
-    for (File root : File.listRoots()) {
-      RootFileSystem rootFs = new RootFileSystem();
-      rootFs.setAbsolutePath(root.getAbsoluteFile());
-      rootFs.setFreeSpace(root.getFreeSpace());
-      rootFs.setTotalSpace(root.getTotalSpace());
-      List<RootFileSystem> childs = new ArrayList<>();
-      if (root != null && root.listFiles() != null)
-        for (File figlio : root.listFiles()) {
-          RootFileSystem figlioFs = new RootFileSystem();
-          figlioFs.setAbsolutePath(figlio.getAbsoluteFile());
-          figlioFs.setFreeSpace(figlio.getFreeSpace());
-          figlioFs.setTotalSpace(figlio.getTotalSpace());
-          childs.add(figlioFs);
-        }
-      rootFs.setChilds(childs);
-      fileSystem.add(rootFs);
-    }
-    // System.out.println("check1");
-    dato.setHardwareFilelistroots(fileSystem);
-    HardwareAbstractionLayer hal = si.getHardware();
-    if (debugFreezeHal) {
-      // System.out.println("check1.1");
-      try {
-        dato.setHardwareComputersystem(hal.getComputerSystem());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.2");
-      try {
-        dato.setHardwareDisk(hal.getDiskStores());
-      } catch (Exception re) {
-      }
-      ;
-      // System.out.println("check1.3");
-      try {
-        dato.setHardwareDislay(hal.getDisplays());
-      } catch (Exception re) {
-      }
-      ;
-      // System.out.println("check1.4");
-      try {
-        dato.setHardwareMemorytotal(hal.getMemory().getTotal());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.5");
-      try {
-        dato.setHardwareMemoryavailable(hal.getMemory().getAvailable());
-      } catch (Exception re) {
-      }
-      try {
-        dato.setHardwareSwaptotal(hal.getMemory().getSwapTotal());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.6");
-      try {
-        dato.setHardwareSwapused(hal.getMemory().getSwapUsed());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.7");
-      try {
-        dato.setHardwareNetwork(hal.getNetworkIFs());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.8");
-      try {
-        dato.setHardwarePower(hal.getPowerSources());
-      } catch (Exception re) {
-      }
-      // System.out.println("check1.9");
-      try {
-        dato.setHardwareProcessor(hal.getProcessor());
-      } catch (Exception re) {
-      }
-      try {
-        dato.setHardwareSensor(hal.getSensors());
-      } catch (Exception re) {
-      }
-      try {
-        dato.setHardwareUsb(hal.getUsbDevices(true));
-      } catch (Exception re) {
-      }
-    }
-    try {
-      OperatingSystem os = si.getOperatingSystem();
-      dato.setOperatingSystem(os);
-    } catch (Exception ex) {
-    }
-    // System.out.println("check2");
-    // X RaspBerry
-    /*
-     * try { dato.setPiPlatformName(PlatformManager.getPlatform().getLabel()); }
-     * catch (Exception ex) { }
-     */
-    try {
-      dato.setPiPlatformID(PlatformManager.getPlatform().getId());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiSerialNumber(SystemInfo.getSerial());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPURevision(SystemInfo.getCpuRevision());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPUArchitecture(SystemInfo.getCpuArchitecture());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPUPart(SystemInfo.getCpuPart());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPUTemperature(SystemInfo.getCpuTemperature());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPUCoreVoltage(SystemInfo.getCpuVoltage());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCPUModelName(SystemInfo.getModelName());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiProcessor(SystemInfo.getProcessor());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiHardware(SystemInfo.getHardware());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiHardwareRevision(SystemInfo.getRevision());
-    } catch (Exception ex) {
-    }
-    // in windows da errore
-    /*
-     * try { dato.put("piIsHardFloatABI", SystemInfo.isHardFloatAbi()); } catch
-     * (Exception ex) { }
-     */
-    try {
-      dato.setPiBoardType(SystemInfo.getBoardType().name());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiTotalMemory(SystemInfo.getMemoryTotal());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiUsedMemory(SystemInfo.getMemoryUsed());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiFreeMemory(SystemInfo.getMemoryFree());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiSharedMemory(SystemInfo.getMemoryShared());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiMemoryBuffers(SystemInfo.getMemoryBuffers());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCachedMemory(SystemInfo.getMemoryCached());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiSDRAM_CVoltage(SystemInfo.getMemoryVoltageSDRam_C());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiSDRAM_IVoltage(SystemInfo.getMemoryVoltageSDRam_I());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiSDRAM_PVoltage(SystemInfo.getMemoryVoltageSDRam_P());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiOSName(SystemInfo.getOsName());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiOSVersion(SystemInfo.getOsVersion());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setoSArchitecture(SystemInfo.getOsArch());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiOSFirmwareBuild(SystemInfo.getOsFirmwareBuild());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiOSFirmwareDate(SystemInfo.getOsFirmwareDate());
-    } catch (Exception ex) {
-    }
-    // System.out.println("check3");
-    try {
-      dato.setPiJavaVendor(SystemInfo.getJavaVendor());
-      dato.setPiJavaVendorURL(SystemInfo.getJavaVendorUrl());
-      dato.setPiJavaVersion(SystemInfo.getJavaVersion());
-      dato.setPiJavaVM(SystemInfo.getJavaVirtualMachine());
-      dato.setPiJavaRuntime(SystemInfo.getJavaRuntime());
-      dato.setPiHostname(NetworkInfo.getHostname());
-      int a = 0;
-      int b = 0;
-      int c = 0;
-      for (String ipAddress : NetworkInfo.getIPAddresses()) {
-        dato.setPiIPAddresses(a, ipAddress);
-        a++;
-      }
-      for (String fqdn : NetworkInfo.getFQDNs()) {
-        dato.setPiFQDN(b, fqdn);
-        b++;
-      }
-      for (String nameserver : NetworkInfo.getNameservers()) {
-        dato.setPiNameserver(c, nameserver);
-        c++;
-      }
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiH264CodecEnabled(SystemInfo.getCodecH264Enabled());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiMPG2CodecEnabled(SystemInfo.getCodecMPG2Enabled());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiWVC1CodecEnabled(SystemInfo.getCodecWVC1Enabled());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiARMFrequency(SystemInfo.getClockFrequencyArm());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiCOREFrequency(SystemInfo.getClockFrequencyCore());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiH264Frequency(SystemInfo.getClockFrequencyH264());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiISPFrequency(SystemInfo.getClockFrequencyISP());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiV3DFrequency(SystemInfo.getClockFrequencyV3D());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiUARTFrequency(SystemInfo.getClockFrequencyUART());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiPWMFrequency(SystemInfo.getClockFrequencyPWM());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiEMMCFrequency(SystemInfo.getClockFrequencyEMMC());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiPixelFrequency(SystemInfo.getClockFrequencyPixel());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiVECFrequency(SystemInfo.getClockFrequencyVEC());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiHDMIFrequency(SystemInfo.getClockFrequencyHDMI());
-    } catch (Exception ex) {
-    }
-    try {
-      dato.setPiDPIFrequency(SystemInfo.getClockFrequencyDPI());
-    } catch (Exception ex) {
-    }
-    return dato;
-  }
+	public static HardwareInfoData getSystemInfo() throws IOException, InterruptedException, ParseException {
+		final HardwareInfoData dato = new HardwareInfoData();
+		final oshi.SystemInfo si = new oshi.SystemInfo();
+		final Runtime runtime = Runtime.getRuntime();
+		final OperatingSystemMXBean mbean = ManagementFactory.getOperatingSystemMXBean();
+		dato.setSystemLoadAverage(mbean.getSystemLoadAverage());
+		dato.setHardwareRuntimetotalmemory(runtime.totalMemory());
+		dato.setHardwareRuntimefreememory(runtime.freeMemory());
+		final List<RootFileSystem> fileSystem = new ArrayList<>();
+		for (final File root : File.listRoots()) {
+			final RootFileSystem rootFs = new RootFileSystem();
+			rootFs.setAbsolutePath(root.getAbsoluteFile());
+			rootFs.setFreeSpace(root.getFreeSpace());
+			rootFs.setTotalSpace(root.getTotalSpace());
+			final List<RootFileSystem> childs = new ArrayList<>();
+			if (root != null && root.listFiles() != null)
+				for (final File figlio : root.listFiles()) {
+					final RootFileSystem figlioFs = new RootFileSystem();
+					figlioFs.setAbsolutePath(figlio.getAbsoluteFile());
+					figlioFs.setFreeSpace(figlio.getFreeSpace());
+					figlioFs.setTotalSpace(figlio.getTotalSpace());
+					childs.add(figlioFs);
+				}
+			rootFs.setChilds(childs);
+			fileSystem.add(rootFs);
+		}
+		// System.out.println("check1");
+		dato.setHardwareFilelistroots(fileSystem);
+		final HardwareAbstractionLayer hal = si.getHardware();
+		if (debugFreezeHal) {
+			// System.out.println("check1.1");
+			try {
+				dato.setHardwareComputersystem(hal.getComputerSystem());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.2");
+			try {
+				dato.setHardwareDisk(hal.getDiskStores());
+			} catch (final Exception re) {
+			}
+			;
+			// System.out.println("check1.3");
+			try {
+				dato.setHardwareDislay(hal.getDisplays());
+			} catch (final Exception re) {
+			}
+			;
+			// System.out.println("check1.4");
+			try {
+				dato.setHardwareMemorytotal(hal.getMemory().getTotal());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.5");
+			try {
+				dato.setHardwareMemoryavailable(hal.getMemory().getAvailable());
+			} catch (final Exception re) {
+			}
+			try {
+				dato.setHardwareSwaptotal(hal.getMemory().getSwapTotal());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.6");
+			try {
+				dato.setHardwareSwapused(hal.getMemory().getSwapUsed());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.7");
+			try {
+				dato.setHardwareNetwork(hal.getNetworkIFs());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.8");
+			try {
+				dato.setHardwarePower(hal.getPowerSources());
+			} catch (final Exception re) {
+			}
+			// System.out.println("check1.9");
+			try {
+				dato.setHardwareProcessor(hal.getProcessor());
+			} catch (final Exception re) {
+			}
+			try {
+				dato.setHardwareSensor(hal.getSensors());
+			} catch (final Exception re) {
+			}
+			try {
+				dato.setHardwareUsb(hal.getUsbDevices(true));
+			} catch (final Exception re) {
+			}
+		}
+		try {
+			final OperatingSystem os = si.getOperatingSystem();
+			dato.setOperatingSystem(os);
+		} catch (final Exception ex) {
+		}
+		// System.out.println("check2");
+		// X RaspBerry
+		/*
+		 * try { dato.setPiPlatformName(PlatformManager.getPlatform().getLabel()); }
+		 * catch (Exception ex) { }
+		 */
+		try {
+			dato.setPiPlatformID(PlatformManager.getPlatform().getId());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiSerialNumber(SystemInfo.getSerial());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPURevision(SystemInfo.getCpuRevision());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPUArchitecture(SystemInfo.getCpuArchitecture());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPUPart(SystemInfo.getCpuPart());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPUTemperature(SystemInfo.getCpuTemperature());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPUCoreVoltage(SystemInfo.getCpuVoltage());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCPUModelName(SystemInfo.getModelName());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiProcessor(SystemInfo.getProcessor());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiHardware(SystemInfo.getHardware());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiHardwareRevision(SystemInfo.getRevision());
+		} catch (final Exception ex) {
+		}
+		// in windows da errore
+		/*
+		 * try { dato.put("piIsHardFloatABI", SystemInfo.isHardFloatAbi()); } catch
+		 * (Exception ex) { }
+		 */
+		try {
+			dato.setPiBoardType(SystemInfo.getBoardType().name());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiTotalMemory(SystemInfo.getMemoryTotal());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiUsedMemory(SystemInfo.getMemoryUsed());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiFreeMemory(SystemInfo.getMemoryFree());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiSharedMemory(SystemInfo.getMemoryShared());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiMemoryBuffers(SystemInfo.getMemoryBuffers());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCachedMemory(SystemInfo.getMemoryCached());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiSDRAM_CVoltage(SystemInfo.getMemoryVoltageSDRam_C());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiSDRAM_IVoltage(SystemInfo.getMemoryVoltageSDRam_I());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiSDRAM_PVoltage(SystemInfo.getMemoryVoltageSDRam_P());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiOSName(SystemInfo.getOsName());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiOSVersion(SystemInfo.getOsVersion());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setoSArchitecture(SystemInfo.getOsArch());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiOSFirmwareBuild(SystemInfo.getOsFirmwareBuild());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiOSFirmwareDate(SystemInfo.getOsFirmwareDate());
+		} catch (final Exception ex) {
+		}
+		// System.out.println("check3");
+		try {
+			dato.setPiJavaVendor(SystemInfo.getJavaVendor());
+			dato.setPiJavaVendorURL(SystemInfo.getJavaVendorUrl());
+			dato.setPiJavaVersion(SystemInfo.getJavaVersion());
+			dato.setPiJavaVM(SystemInfo.getJavaVirtualMachine());
+			dato.setPiJavaRuntime(SystemInfo.getJavaRuntime());
+			dato.setPiHostname(NetworkInfo.getHostname());
+			int a = 0;
+			int b = 0;
+			int c = 0;
+			for (final String ipAddress : NetworkInfo.getIPAddresses()) {
+				dato.setPiIPAddresses(a, ipAddress);
+				a++;
+			}
+			for (final String fqdn : NetworkInfo.getFQDNs()) {
+				dato.setPiFQDN(b, fqdn);
+				b++;
+			}
+			for (final String nameserver : NetworkInfo.getNameservers()) {
+				dato.setPiNameserver(c, nameserver);
+				c++;
+			}
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiH264CodecEnabled(SystemInfo.getCodecH264Enabled());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiMPG2CodecEnabled(SystemInfo.getCodecMPG2Enabled());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiWVC1CodecEnabled(SystemInfo.getCodecWVC1Enabled());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiARMFrequency(SystemInfo.getClockFrequencyArm());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiCOREFrequency(SystemInfo.getClockFrequencyCore());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiH264Frequency(SystemInfo.getClockFrequencyH264());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiISPFrequency(SystemInfo.getClockFrequencyISP());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiV3DFrequency(SystemInfo.getClockFrequencyV3D());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiUARTFrequency(SystemInfo.getClockFrequencyUART());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiPWMFrequency(SystemInfo.getClockFrequencyPWM());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiEMMCFrequency(SystemInfo.getClockFrequencyEMMC());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiPixelFrequency(SystemInfo.getClockFrequencyPixel());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiVECFrequency(SystemInfo.getClockFrequencyVEC());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiHDMIFrequency(SystemInfo.getClockFrequencyHDMI());
+		} catch (final Exception ex) {
+		}
+		try {
+			dato.setPiDPIFrequency(SystemInfo.getClockFrequencyDPI());
+		} catch (final Exception ex) {
+		}
+		return dato;
+	}
 
-  public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-    JSONObject json = new JSONObject(readTxtFromUrl(url));
-    return json;
-  }
+	public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+		final JSONObject json = new JSONObject(readTxtFromUrl(url));
+		return json;
+	}
 
-  public static String readTxtFromUrl(String url) throws IOException, JSONException {
-    InputStream is = new URL(url).openStream();
-    try {
-      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-      String text = readAll(rd);
-      return text;
-    } finally {
-      is.close();
-    }
-  }
+	public static String readTxtFromUrl(String url) throws IOException, JSONException {
+		final InputStream is = new URL(url).openStream();
+		try {
+			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			final String text = readAll(rd);
+			return text;
+		} finally {
+			is.close();
+		}
+	}
 
-  private static String readAll(Reader rd) throws IOException {
-    StringBuilder sb = new StringBuilder();
-    int cp;
-    while ((cp = rd.read()) != -1) {
-      sb.append((char) cp);
-    }
-    return sb.toString();
-  }
+	private static String readAll(Reader rd) throws IOException {
+		final StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
+		}
+		return sb.toString();
+	}
 
-  public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
-    long result = 0L;
-    FileOutputStream fileOutputStream = null;
-    ReadableByteChannel readableByteChannel = null;
-    FileChannel fileChannel = null;
-    try {
-      readableByteChannel = Channels.newChannel(new URL(url).openStream());
-      fileOutputStream = new FileOutputStream(filename);
-      fileChannel = fileOutputStream.getChannel();
-      fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-      fileOutputStream.flush();
-    } finally {
-      if (fileChannel != null)
-        fileChannel.close();
-      if (fileOutputStream != null)
-        fileOutputStream.close();
-    }
-    return result;
-  }
+	public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
+		final long result = 0L;
+		FileOutputStream fileOutputStream = null;
+		ReadableByteChannel readableByteChannel = null;
+		FileChannel fileChannel = null;
+		try {
+			readableByteChannel = Channels.newChannel(new URL(url).openStream());
+			fileOutputStream = new FileOutputStream(filename);
+			fileChannel = fileOutputStream.getChannel();
+			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+			fileOutputStream.flush();
+		} finally {
+			if (fileChannel != null)
+				fileChannel.close();
+			if (fileOutputStream != null)
+				fileOutputStream.close();
+		}
+		return result;
+	}
 
-  public static String resolveFileFromDns(String hostPart, String domainPart)
-      throws TextParseException, UnknownHostException {
-    StringBuilder resultString = new StringBuilder();
-    Set<String> errors = new HashSet<>();
-    Lookup l = new Lookup(hostPart + "-max" + domainPart, Type.TXT, DClass.IN);
-    l.setResolver(new SimpleResolver());
-    l.run();
-    if (l.getResult() == Lookup.SUCCESSFUL) {
-      int chunkSize = Integer.valueOf(l.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
-      if (chunkSize > 0) {
-        for (int c = 0; c < chunkSize; c++) {
-          Lookup cl = new Lookup(hostPart + "-" + String.valueOf(c) + domainPart, Type.TXT, DClass.IN);
-          cl.setResolver(new SimpleResolver());
-          cl.run();
-          if (cl.getResult() == Lookup.SUCCESSFUL) {
-            resultString.append(cl.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
-          } else {
-            errors.add(
-                "error in chunk " + hostPart + "-" + String.valueOf(c) + domainPart + " -> " + cl.getErrorString());
-          }
-        }
-      } else {
-        errors.add("error, size of data is " + l.getAnswers()[0].rdataToString());
-      }
-    } else {
-      errors.add("no " + hostPart + "-max" + domainPart + " record found -> " + l.getErrorString());
-    }
-    if (!errors.isEmpty()) {
-      logger.error(errors.toString());
-      return null;
-    } else {
-      return resultString.toString();
-    }
-  }
+	public static String resolveFileFromDns(final String hostPart, final String domainPart, final int retry)
+			throws TextParseException, UnknownHostException {
+		final StringBuilder resultString = new StringBuilder();
+		final Set<String> errors = new HashSet<>();
+		final Lookup l = new Lookup(hostPart + "-max" + domainPart, Type.TXT, DClass.IN);
+		l.setResolver(new SimpleResolver());
+		l.run();
+		if (l.getResult() == Lookup.SUCCESSFUL) {
+			final int chunkSize = Integer
+					.parseInt(l.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+			if (chunkSize > 0) {
+				for (int c = 0; c < chunkSize; c++) {
+					final Lookup cl = new Lookup(hostPart + "-" + String.valueOf(c) + domainPart, Type.TXT, DClass.IN);
+					cl.setResolver(new SimpleResolver());
+					cl.run();
+					if (cl.getResult() == Lookup.SUCCESSFUL) {
+						resultString
+								.append(cl.getAnswers()[0].rdataToString().replaceAll("^\"", "").replaceAll("\"$", ""));
+					} else {
+						errors.add("error in chunk " + hostPart + "-" + String.valueOf(c) + domainPart + " -> "
+								+ cl.getErrorString());
+					}
+				}
+			} else {
+				errors.add("error, size of data is " + l.getAnswers()[0].rdataToString());
+			}
+		} else {
+			errors.add("no " + hostPart + "-max" + domainPart + " record found -> " + l.getErrorString());
+			if (retry > 0) {
+				return resolveFileFromDns(hostPart, domainPart, retry - 1);
+			} else {
+				return null;
+			}
+		}
+		if (!errors.isEmpty()) {
+			logger.error(errors.toString());
+			return null;
+		} else {
+			return resultString.toString();
+		}
+	}
 
-  public static void extractTarGz(String path, InputStream in) throws IOException {
-    GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
-    try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
-      TarArchiveEntry entry = null;
-      while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
-        /** If the entry is a directory, create the directory. **/
-        if (entry.isDirectory()) {
-          File f = new File(path + "/" + entry.getName());
-          boolean created = f.mkdirs();
-          if (!created) {
-            throw new EdgeException(
-                "Unable to create directory " + f.getAbsolutePath() + ", during extraction of archive contents.");
-          }
-        } else {
-          int count;
-          byte data[] = new byte[BUFFER_SIZE];
-          FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
-          try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
-            while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-              dest.write(data, 0, count);
-            }
-          }
-        }
-      }
-    }
-  }
+	public static void extractTarGz(String path, InputStream in) throws IOException {
+		final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
+		try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+			TarArchiveEntry entry = null;
+			while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+				/** If the entry is a directory, create the directory. **/
+				if (entry.isDirectory()) {
+					final File f = new File(path + "/" + entry.getName());
+					final boolean created = f.mkdirs();
+					if (!created) {
+						throw new EdgeException("Unable to create directory " + f.getAbsolutePath()
+								+ ", during extraction of archive contents.");
+					}
+				} else {
+					int count;
+					final byte data[] = new byte[BUFFER_SIZE];
+					final FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
+					try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
+						while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+							dest.write(data, 0, count);
+						}
+					}
+				}
+			}
+		}
+	}
 }

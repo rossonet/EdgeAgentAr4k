@@ -248,6 +248,8 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 				logger.info("STATUS: userEventTriggered " + messageUuid + " ( " + getNetworkReceiver().getMyRoleMode()
 						+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
+		default:
+			break;
 		}
 	}
 

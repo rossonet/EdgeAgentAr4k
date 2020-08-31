@@ -389,7 +389,7 @@ public class Anima
 							logger.info("try keystore from dns: {}", dnsKeystoreResolvedString());
 							final String hostPart = dnsKeystoreResolvedString().split("\\.")[0];
 							final String domainPart = dnsKeystoreResolvedString().replaceAll("^" + hostPart, "");
-							final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+							final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 5);
 							final byte[] data = Base64.getDecoder().decode(payloadString);
 							final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 							final byte[] returnData = (byte[]) ois.readObject();
@@ -712,7 +712,7 @@ public class Anima
 		final String hostPart = dnsTarget.split("\\.")[0];
 		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
 		try {
-			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart);
+			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 3);
 			try {
 				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
 					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
