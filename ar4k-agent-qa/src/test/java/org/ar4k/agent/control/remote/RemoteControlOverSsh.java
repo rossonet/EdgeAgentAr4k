@@ -41,7 +41,6 @@ import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
-import org.ar4k.agent.tunnels.sshd.SshdSystemService;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
@@ -181,18 +180,6 @@ public class RemoteControlOverSsh {
 		deleteDir(new File("~/.ar4k"));
 	}
 
-	@Test
-	public void simpleSShServerWithSystemShell() throws InterruptedException {
-		final SshdSystemConfig testServerConfig = new SshdSystemConfig();
-		final SshdSystemService server = (SshdSystemService) testServerConfig.instantiate();
-		server.init();
-		for (int i = 0; i < 20; i++) {
-			System.out.println(server.getDescriptionJson());
-			Thread.sleep(5000);
-		}
-		server.kill();
-	}
-
 	private void writeCSr(String path, String cert) throws UnrecoverableKeyException, NoSuchAlgorithmException,
 			CertificateException, KeyStoreException, IOException {
 		final FileWriter writer = new FileWriter(new File(path));
@@ -318,21 +305,21 @@ public class RemoteControlOverSsh {
 		clientOneConfig.beaconServerCertChain = certCaAsPem;
 		clientTwoConfig.beaconServerCertChain = certCaAsPem;
 		final String destinationIp = "127.0.0.1";
-		final int destinationPort = 7777;
-		final int srcPort = 8888;
+		final int destinationPort = 9994;
+		final int srcPort = 9999;
 		final SshdSystemConfig sshdConfig = new SshdSystemConfig();
 		sshdConfig.setName("sshd mina server");
-		sshdConfig.port = 10000;
+		sshdConfig.port = 9997;
 		serverConfig.pots.add(sshdConfig);
 
 		final SshRemoteConfig sshRight = new SshRemoteConfig();
 		sshRight.setName("ssh client 2");
 		sshRight.redirectServer = destinationIp;
 		sshRight.redirectPort = destinationPort;
-		sshRight.bindPort = 10018;
+		sshRight.bindPort = 10008;
 		sshRight.bindHost = "0.0.0.0";
 		sshRight.host = destinationIp;
-		sshRight.port = 10000;
+		sshRight.port = 9997;
 		// sshRight.authkey = "~/.ssh/id_rsa";
 		sshRight.username = "admin";
 		sshRight.password = "password";
@@ -341,11 +328,11 @@ public class RemoteControlOverSsh {
 		final SshLocalConfig sshLeft = new SshLocalConfig();
 		sshLeft.setName("ssh client 1");
 		sshLeft.redirectServer = destinationIp;
-		sshLeft.redirectPort = 10018;
+		sshLeft.redirectPort = 10008;
 		sshLeft.bindPort = srcPort;
 		sshLeft.bindHost = "0.0.0.0";
 		sshLeft.host = destinationIp;
-		sshLeft.port = 10000;
+		sshLeft.port = 9997;
 		// sshLeft.authkey = "~/.ssh/id_rsa";
 		sshLeft.username = "admin";
 		sshLeft.password = "password";
