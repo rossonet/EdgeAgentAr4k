@@ -329,7 +329,7 @@ public class RemoteControlOverSsh {
 		sshRight.setName("ssh client 2");
 		sshRight.redirectServer = destinationIp;
 		sshRight.redirectPort = destinationPort;
-		sshRight.bindPort = 10008;
+		sshRight.bindPort = 10018;
 		sshRight.bindHost = "0.0.0.0";
 		sshRight.host = destinationIp;
 		sshRight.port = 10000;
@@ -341,7 +341,7 @@ public class RemoteControlOverSsh {
 		final SshLocalConfig sshLeft = new SshLocalConfig();
 		sshLeft.setName("ssh client 1");
 		sshLeft.redirectServer = destinationIp;
-		sshLeft.redirectPort = 10008;
+		sshLeft.redirectPort = 10018;
 		sshLeft.bindPort = srcPort;
 		sshLeft.bindHost = "0.0.0.0";
 		sshLeft.host = destinationIp;
