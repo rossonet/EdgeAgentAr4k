@@ -71,7 +71,7 @@ public class BeaconClientToClientNetworkAndXpra {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void sshTunnelMultinodeViaBeaconTest() throws Exception {
 		nodesTestEnviroment(false, false, true);
 	}

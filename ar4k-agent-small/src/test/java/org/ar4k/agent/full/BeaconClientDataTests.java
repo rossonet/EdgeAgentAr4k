@@ -378,8 +378,8 @@ public class BeaconClientDataTests {
 			completed = true;
 			clientTCP.cancel(true);
 			serverTCP.cancel(true);
-			System.out.println("package counter [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-					+ networkTunnel.getNetworkReceiver().getPacketSend());
+			System.out.println("package counter [R]:" + networkTunnel.getPacketReceived() + " [S]:"
+					+ networkTunnel.getPacketSend());
 		}
 	}
 
@@ -456,7 +456,7 @@ public class BeaconClientDataTests {
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("Try to connect to:\nssh localhost -p " + srcPort);
 		Thread.sleep(120000);
-		System.out.println("package counter [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-				+ networkTunnel.getNetworkReceiver().getPacketSend());
+		System.out.println(
+				"package counter [R]:" + networkTunnel.getPacketReceived() + " [S]:" + networkTunnel.getPacketSend());
 	}
 }

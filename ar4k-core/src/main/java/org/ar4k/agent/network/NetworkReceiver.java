@@ -2,7 +2,7 @@ package org.ar4k.agent.network;
 
 public interface NetworkReceiver extends AutoCloseable {
 
-	public static enum NetworkStatus {
+	public enum NetworkStatus {
 		INIT, ACTIVE, INACTIVE, FAULT
 	}
 
@@ -10,26 +10,8 @@ public interface NetworkReceiver extends AutoCloseable {
 
 	NetworkStatus getNetworkStatus();
 
-	long getPacketSend();
+	void exceptionPacketReceived(long sessionId, long messageUuid);
 
-	long getPacketReceived();
-
-	long getPacketError();
-
-	long getPacketControl();
-
-	int getWaitingPackagesCount();
-
-	void incrementPacketSend();
-
-	void incrementPacketReceived();
-
-	void incrementPacketError();
-
-	void incrementPacketControl();
-
-	void exceptionPacketReceived(long messageUuid);
-
-	void confirmPacketReceived(long messageUuid, long lastReceived);
+	void confirmPacketReceived(long sessionId, long ackMessageId, long lastReceivedAckMessageId);
 
 }

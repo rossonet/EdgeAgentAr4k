@@ -470,8 +470,8 @@ public class RemoteControlOverBeaconRegistration {
 			completed = true;
 			clientTCP.cancel(true);
 			serverTCP.cancel(true);
-			System.out.println("package counter [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-					+ networkTunnel.getNetworkReceiver().getPacketSend());
+			System.out.println("package counter [R]:" + networkTunnel.getPacketReceived() + " [S]:"
+					+ networkTunnel.getPacketSend());
 		}
 	}
 

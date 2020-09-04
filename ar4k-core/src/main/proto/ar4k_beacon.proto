@@ -347,17 +347,19 @@ enum MessageStatus {
 message TunnelMessage {
   Agent agentSource = 1;
   Agent agentDestination = 2;
-  int64 targeId = 3;
+  int64 tunnelId = 3;
   int64 sessionId = 4;
-  int64 uuid = 5;
+  int64 classUuid = 5;
   MessageType messageType = 6;
   MessageStatus messageStatus = 7;
   int32 chunk = 8;
   int32 totalChunks = 9;
-  int64 messageUuid = 10;
-  string payload = 11;
-  int32 originalSize = 12;
-  int32 messageHashCode = 13;
+  int64 messageId = 10;
+  int64 messageAckId = 11;
+  int64 messageAckReceivedId = 12;
+  string payload = 13;
+  int32 originalSize = 14;
+  int32 messageHashCode = 15;
 }
 
 message ResponseNetworkChannel {

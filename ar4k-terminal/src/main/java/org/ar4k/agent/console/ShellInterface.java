@@ -42,8 +42,8 @@ import javax.management.IntrospectionException;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.ConfigSeed;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Anima;
 import org.ar4k.agent.core.Anima.AnimaEvents;
 import org.ar4k.agent.core.EdgeComponent;
@@ -200,19 +200,6 @@ public class ShellInterface extends AbstractShellHelper {
 	public Authentication me() {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
-
-	/*
-	 * @ShellMethod(value = "Test method. Just return the string parameter", group =
-	 * "Testing Commands")
-	 *
-	 * @ManagedOperation
-	 *
-	 * @ShellMethodAvailability("testOk")
-	 *
-	 * @GetMapping("test") public String test(@Size(min = 1, max =
-	 * 40) @ShellOption(help = "example string for test method") String testString)
-	 * throws InterruptedException { return runShellTest(testString); }
-	 */
 
 	@ShellMethod("View the selected configuration in base64 text")
 	@ManagedOperation
@@ -579,9 +566,9 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public String setLogLevel(
 			@ShellOption(help = "the new log level to set", defaultValue = "INFO", valueProvider = LogLevelValuesProvider.class) String newLogLevel) {
-		EdgeLogger.level = EdgeLogger.LogLevel.valueOf(newLogLevel);
-		changeLogLevel(EdgeLogger.level.name());
-		return EdgeLogger.level.name();
+		EdgeLogger.setLevel(EdgeLogger.LogLevel.valueOf(newLogLevel));
+		changeLogLevel(EdgeLogger.getLevel().name());
+		return EdgeLogger.getLevel().name();
 	}
 
 	@ShellMethod(value = "List JMX endpoints", group = "Monitoring Commands")
@@ -594,7 +581,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Get the log filter for the console", group = "Monitoring Commands")
 	@ManagedOperation
 	public String getLogLevel() {
-		return EdgeLogger.level.name();
+		return EdgeLogger.getLevel().name();
 	}
 
 	@ShellMethod(value = "Send message to log as a INFO", group = "Monitoring Commands")

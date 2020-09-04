@@ -45,7 +45,6 @@ import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -220,7 +219,6 @@ public class BeaconClientServerNoSslTests {
 
 	@Before
 	public void before() throws Exception {
-		BeaconNetworkTunnel.trace = true;
 		actualTestSize = 0;
 		deleteTmpDirectories();
 		Files.createDirectories(Paths.get("./tmp"));
@@ -506,10 +504,8 @@ public class BeaconClientServerNoSslTests {
 			System.out.println("waiting...");
 			System.out.println("A -> " + completed.contains("A"));
 			if ((!ssh && !singleThread)) {
-				System.out.println(" [R]:" + networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-						+ networkTunnel.getNetworkReceiver().getPacketSend() + " [E]:"
-						+ networkTunnel.getNetworkReceiver().getPacketError() + " [W]:"
-						+ networkTunnel.getNetworkReceiver().getWaitingPackagesCount());
+				System.out.println(" [R]:" + networkTunnel.getPacketReceived() + " [S]:" + networkTunnel.getPacketSend()
+						+ " [E]:" + networkTunnel.getPacketError() + " [W]:" + networkTunnel.getWaitingPackagesCount());
 				System.out.println("B -> " + completed.contains("B"));
 				System.out.println("C -> " + completed.contains("C"));
 				System.out.println("D -> " + completed.contains("D"));
@@ -826,10 +822,8 @@ public class BeaconClientServerNoSslTests {
 	protected boolean updateClientCounter(String tag, int valueNew) {
 		try {
 			System.out.println("package counter " + tag + " -> " + String.valueOf(valueNew) + " [R]:"
-					+ networkTunnel.getNetworkReceiver().getPacketReceived() + " [S]:"
-					+ networkTunnel.getNetworkReceiver().getPacketSend() + " [E]:"
-					+ networkTunnel.getNetworkReceiver().getPacketError() + " [W]:"
-					+ networkTunnel.getNetworkReceiver().getWaitingPackagesCount());
+					+ networkTunnel.getPacketReceived() + " [S]:" + networkTunnel.getPacketSend() + " [E]:"
+					+ networkTunnel.getPacketError() + " [W]:" + networkTunnel.getWaitingPackagesCount());
 		} catch (final Exception a) {
 			// fallisce nei test preparatori
 		}

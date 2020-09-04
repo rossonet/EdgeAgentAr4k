@@ -1,6 +1,6 @@
 package org.ar4k.agent.tunnels.http.beacon.socket;
 
-import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.trace;
+import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRACE_LOG_IN_INFO;
 
 import java.util.Date;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 	private boolean active = false;
 	private long lastMessageReceivedFromServerBeacon = new Date().getTime();
 
-	public BeaconEndpointFromObserver(BeaconConnection beaconConnection) {
+	BeaconEndpointFromObserver(BeaconConnection beaconConnection) {
 		this.beaconConnection = beaconConnection;
 		active = true;
 	}
@@ -32,12 +32,12 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 	@Override
 	public void close() throws Exception {
 		active = false;
-		if (trace) {
+		if (TRACE_LOG_IN_INFO) {
 			logger.info("close endpoint observer");
 		}
 	}
 
-	public final boolean isOnline() {
+	final boolean isOnline() {
 		return active;
 	}
 
@@ -55,10 +55,10 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 
 	@Override
 	public void onNext(final TunnelMessage value) {
-		if (trace) {
-			logger.info("*********** onNext ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
-					+ getBeaconNetworkTunnel().getTunnelId() + " )\nMESSAGE\n" + value + "\nSTATUS CACHE\n"
-					+ getNetworkReceiver().reportDetails());
+		if (TRACE_LOG_IN_INFO) {
+			final String reportDetails = getBeaconNetworkTunnel().reportDetails();
+			logger.info("*********** onNext ( {} tunnel id {} )\nMESSAGE\n{}\nSTATUS CACHE{}\n",
+					getNetworkReceiver().getMyRoleMode(), getBeaconNetworkTunnel().getTunnelId(), value, reportDetails);
 		}
 		if (value.getMessageStatus().equals(MessageStatus.beaconLocalPing)) {
 			lastMessageReceivedFromServerBeacon = new Date().getTime();
@@ -68,14 +68,15 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 			} catch (final Exception a) {
 				logger.logException(a);
 			}
-			final long messageUuid = value.getMessageUuid();
+			final long messageUuid = value.getMessageId();
 			if (active) {
 				try {
 					final long sessionId = value.getSessionId();
-					if (trace)
-						logger.info("onNext start working trasmission for " + getNetworkReceiver().getMyRoleMode()
-								+ " TunnelMessage->[target:" + value.getTargeId() + ", session:" + sessionId
-								+ ", payload:" + value.getPayload().length() + "]");
+					if (TRACE_LOG_IN_INFO)
+						logger.info(
+								"onNext start working trasmission for {} TunnelMessage->[tunnelId: {}, sessionId: {}, payload: {} ]",
+								getNetworkReceiver().getMyRoleMode(), value.getTunnelId(), sessionId,
+								value.getPayload().length());
 					if ((value.getMessageStatus().equals(MessageStatus.channelTransmission)
 							|| value.getMessageStatus().equals(MessageStatus.channelTransmissionCompressed))
 							&& value.getPayload() != null) {
@@ -89,29 +90,29 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 							if (!value.getPayload().isEmpty()) {
 								final String stringData = value.getPayload();
 								final int totalChunks = value.getTotalChunks();
-								if (trace)
+								if (TRACE_LOG_IN_INFO)
 									logger.info("chunk progress: " + value.getChunk() + "/" + totalChunks + " id:"
 											+ messageUuid);
-								appendBytesToCache(sessionId, value, stringData);
+								appendBytesToCache(value, stringData);
 								if (getOutputCachedDataBase64ByMessageId().containsKey(messageUuid)
 										&& getOutputCachedDataBase64ByMessageId().get(messageUuid).isComplete()
-										&& getNetworkReceiver().getLastAckSent() < messageUuid
-										&& !getNetworkReceiver().getOutputCachedMessages().containsKey(messageUuid)) {
-									getNetworkReceiver().getOutputCachedMessages().put(messageUuid,
+										&& getNetworkReceiver().getLastAckSent(sessionId) < messageUuid
+										&& !containsOutputCachedMessage(messageUuid, sessionId)) {
+									getBeaconNetworkTunnel().addOutputCachedMessages(sessionId, messageUuid,
 											new MessageCached(MessageCached.MessageCachedType.TO_NETWORK,
 													getNetworkReceiver(), getBeaconNetworkTunnel(), null,
 													getNetworkReceiver().getMyRoleMode(), sessionId, messageUuid, null,
 													getOutputCachedDataBase64ByMessageId().get(messageUuid)
 															.getCompleteData(),
 													totalChunks, value.getOriginalSize(), value.getMessageStatus()));
-									getBeaconNetworkTunnel().nextAction(null);
+									getBeaconNetworkTunnel().nextActionAllSessions();
 								} else {
-									if (getNetworkReceiver().getOutputCachedMessages().containsKey(messageUuid)) {
-										if (trace)
-											logger.info("- message - " + getNetworkReceiver().getOutputCachedMessages()
-													.get(messageUuid).toString());
+									if (containsOutputCachedMessage(messageUuid, sessionId)) {
+										if (TRACE_LOG_IN_INFO)
+											logger.info("- message - " + getBeaconNetworkTunnel()
+													.getOutputCachedMessages(sessionId).get(messageUuid).toString());
 									}
-									if (trace)
+									if (TRACE_LOG_IN_INFO)
 										logger.info("onNext handler for " + getNetworkReceiver().getMyRoleMode()
 												+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/"
 												+ sessionId + "\nis not able to cache message " + messageUuid
@@ -120,10 +121,9 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 												+ "\ngetOutputCachedDataBase64ByMessageId().get(messageUuid).isComplete() "
 												+ getOutputCachedDataBase64ByMessageId().get(messageUuid).isComplete()
 												+ "\ngetLastAckSent() < messageUuid "
-												+ (getNetworkReceiver().getLastAckSent() < messageUuid)
+												+ (getNetworkReceiver().getLastAckSent(sessionId) < messageUuid)
 												+ "\n!getOutputCachedMessages().containsKey(messageUuid) "
-												+ !getNetworkReceiver().getOutputCachedMessages()
-														.containsKey(messageUuid));
+												+ !containsOutputCachedMessage(messageUuid, sessionId));
 								}
 							} else {
 								logger.warn("onNext handler for " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
@@ -138,60 +138,66 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 									+ value.getPayload());
 						}
 					} else {
-						if (trace)
-							logger.info("message with no data of type " + value.getMessageStatus());
+						if (TRACE_LOG_IN_INFO)
+							logger.info("message with no data of type {}", value.getMessageStatus());
 					}
 				} catch (final Exception clientEx) {
 					logger.warn("onNext handler for " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 							+ getBeaconNetworkTunnel().getTunnelId() + " exception on message " + messageUuid + "\n"
 							+ EdgeLogger.stackTraceToString(clientEx));
 					getNetworkReceiver().sendExceptionMessage(value.getSessionId(),
-							getBeaconNetworkTunnel().getTunnelId(), value.getMessageUuid(), clientEx);
+							getBeaconNetworkTunnel().getTunnelId(), value.getMessageId(), clientEx);
 				}
 			} else {
-				logger.warn("--------- received message on closed observer. Message: " + value);
+				logger.warn("--------- received message on closed observer. Message: {}", value);
+
 			}
 		}
 	}
 
-	@SuppressWarnings("incomplete-switch")
-	private void elaborateStatusMessageActions(TunnelMessage value, final long sessionId) {
+	private boolean containsOutputCachedMessage(final long messageUuid, final long sessionId) {
+		return getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).containsKey(messageUuid);
+	}
+
+	private void elaborateStatusMessageActions(final TunnelMessage value, final long sessionId)
+			throws InterruptedException {
 		lastMessageReceivedFromServerBeacon = new Date().getTime();
-		final String messageUuid = value.getPayload();
 		switch (value.getMessageStatus()) {
 		case UNRECOGNIZED:
 			logger.warn("STATUS: UNRECOGNIZED ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 					+ getBeaconNetworkTunnel().getTunnelId() + " sessionId " + sessionId + " )");
 			break;
 		case beaconChannelRequest:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("REQUEST: beaconChannelRequest ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + " sessionId " + sessionId + " )");
 			break;
 		case beaconMessageAck:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: beaconMessageAck ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + " sessionId " + sessionId + " )");
-			if (messageUuid != null && getBeaconNetworkTunnel() != null && getNetworkReceiver() != null) {
-				getNetworkReceiver().confirmPacketReceived(Long.valueOf(messageUuid), value.getMessageUuid());
+			if (value.getMessageAckId() != 0 && getBeaconNetworkTunnel() != null && getNetworkReceiver() != null) {
+				getNetworkReceiver().confirmPacketReceived(sessionId, value.getMessageAckId(),
+						value.getMessageAckReceivedId());
 			} else {
 				logger.warn("ack message with null payload or closed network");
 			}
 			break;
 		case beaconMessageControl:
-			if (messageUuid != null) {
-				getNetworkReceiver().confirmPacketReceived(Long.valueOf(messageUuid), value.getMessageUuid());
+			if (value.getMessageAckId() != 0) {
+				getNetworkReceiver().confirmPacketReceived(sessionId, value.getMessageAckId(),
+						value.getMessageAckReceivedId());
 			} else {
 				logger.warn("control message with null payload!");
 			}
 			break;
 		case channelActive:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelActive ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
 		case channelInactive:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelInactive ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			if (getNetworkReceiver().getMyRoleMode().equals(NetworkMode.CLIENT)) {
@@ -211,12 +217,12 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 			}
 			break;
 		case channelReadComplete:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelReadComplete ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
 		case channelRegistered:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelRegistered ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
@@ -225,53 +231,53 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 		case channelTransmissionCompressed:
 			break;
 		case channelUnregistered:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelUnregistered ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
 		case channelWritabilityChanged:
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelWritabilityChanged ( " + getNetworkReceiver().getMyRoleMode()
 						+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
 			break;
 		case exceptionCaught:
-			logger.warn("STATUS: exceptionCaught " + messageUuid + " ( " + getNetworkReceiver().getMyRoleMode()
-					+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
-			if (messageUuid != null) {
-				getNetworkReceiver().exceptionPacketReceived(Long.valueOf(messageUuid));
+			logger.warn(
+					"STATUS: exceptionCaught " + value.getMessageAckId() + " ( " + getNetworkReceiver().getMyRoleMode()
+							+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
+			if (value.getMessageAckId() != 0) {
+				getNetworkReceiver().exceptionPacketReceived(sessionId, value.getMessageAckId());
 			} else {
 				logger.warn("exception message with null payload!");
 			}
 			break;
 		case userEventTriggered:
-			if (trace)
-				logger.info("STATUS: userEventTriggered " + messageUuid + " ( " + getNetworkReceiver().getMyRoleMode()
-						+ " tunnel id " + getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
+			if (TRACE_LOG_IN_INFO)
+				logger.info("STATUS: userEventTriggered " + value.getMessageAckId() + " ( "
+						+ getNetworkReceiver().getMyRoleMode() + " tunnel id " + getBeaconNetworkTunnel().getTunnelId()
+						+ "/" + sessionId + " )");
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void appendBytesToCache(long sessionId, TunnelMessage tunnel, String data) {
-		if (getOutputCachedDataBase64ByMessageId().containsKey(tunnel.getMessageUuid())
-				&& getOutputCachedDataBase64ByMessageId().get(tunnel.getMessageUuid()) != null) {
-			getOutputCachedDataBase64ByMessageId().get(tunnel.getMessageUuid()).addData(tunnel.getChunk(), data);
+	private void appendBytesToCache(final TunnelMessage tunnel, final String data) {
+		if (getOutputCachedDataBase64ByMessageId().containsKey(tunnel.getMessageId())
+				&& getOutputCachedDataBase64ByMessageId().get(tunnel.getMessageId()) != null) {
+			getOutputCachedDataBase64ByMessageId().get(tunnel.getMessageId()).addData(tunnel.getChunk(), data);
 		} else {
-			getOutputCachedDataBase64ByMessageId().put(tunnel.getMessageUuid(),
+			getOutputCachedDataBase64ByMessageId().put(tunnel.getMessageId(),
 					new CachedChunk(tunnel.getChunk(), tunnel.getTotalChunks(), data));
 		}
 	}
 
 	@Override
 	public void onError(Throwable t) {
-		active = false;
-		if (trace) {
-			logger.info("onError in BeaconEndpointObserver for message error " + t.getMessage());
+		if (TRACE_LOG_IN_INFO) {
+			logger.info("onError in BeaconEndpointObserver for message error ", t.getMessage());
 		}
 		if (active) {
-			logger.warn("error for tunnel id " + String.valueOf(getBeaconNetworkTunnel().getTunnelId()) + " "
-					+ t.getMessage());
+			logger.warn("error for tunnel id {} message\n{}", getBeaconNetworkTunnel().getTunnelId(), t.getMessage());
 			beaconConnection.receivedOnErrorInFromObserver();
 			try {
 				close();
@@ -279,16 +285,17 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 				logger.logException(e);
 			}
 		}
+		active = false;
 	}
 
 	@Override
 	public void onCompleted() {
 		active = false;
-		if (trace) {
+		if (TRACE_LOG_IN_INFO) {
 			logger.info("onCompleted in BeaconEndpointObserver");
 		}
-		if (trace)
-			logger.info("complete for tunnel id " + String.valueOf(getBeaconNetworkTunnel().getTunnelId()));
+		if (TRACE_LOG_IN_INFO)
+			logger.info("complete for tunnel id ", getBeaconNetworkTunnel().getTunnelId());
 	}
 
 	@Override
@@ -301,7 +308,7 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 		return builder.toString();
 	}
 
-	public long getLastMessageReceivedFromServerBeacon() {
+	long getLastMessageReceivedFromServerBeacon() {
 		return lastMessageReceivedFromServerBeacon;
 	}
 

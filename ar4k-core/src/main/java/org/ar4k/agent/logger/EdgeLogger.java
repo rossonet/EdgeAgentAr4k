@@ -41,11 +41,21 @@ import com.google.gson.GsonBuilder;
 
 public class EdgeLogger implements Logger {
 
+	// TODO implementare versione metodi con argomenti
+
+	private static final String ERROR_LABEL = "error";
+
+	private static final String LEVEL_LABEL = "level";
+
+	private static final String EXCEPTION_LABEL = "exception";
+
+	private static final String MESSAGE_LABEL = "msg";
+
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	private Logger logger;
 
-	private transient Anima anima = null;
+	private Anima anima = null;
 
 	public EdgeLogger(Class<?> clazz) {
 		logger = LoggerFactory.getLogger(clazz);
@@ -55,11 +65,19 @@ public class EdgeLogger implements Logger {
 		logger = LoggerFactory.getLogger(label);
 	}
 
-	public static enum LogLevel {
+	public enum LogLevel {
 		EXCEPTION, TRACE, DEBUG, INFO, WARN, ERROR, NONE
 	}
 
-	public static LogLevel level = LogLevel.INFO;
+	private static LogLevel level = LogLevel.INFO;
+
+	public static synchronized LogLevel getLevel() {
+		return level;
+	}
+
+	public static synchronized void setLevel(LogLevel level) {
+		EdgeLogger.level = level;
+	}
 
 	public static String stackTraceToString(Throwable e) {
 		final StringWriter sw = new StringWriter();
@@ -91,43 +109,42 @@ public class EdgeLogger implements Logger {
 
 	public void logException(Throwable e) {
 		final Map<String, Object> o = new HashMap<>();
-		o.put("msg", e.getMessage());
-		o.put("exception", stackTraceToString(e));
-		o.put("level", LogLevel.EXCEPTION.name());
-		logger.info("Exception -> " + stackTraceToString(e));
+		o.put(MESSAGE_LABEL, e.getMessage());
+		o.put(EXCEPTION_LABEL, stackTraceToString(e));
+		o.put(LEVEL_LABEL, LogLevel.EXCEPTION.name());
+		logger.info("Exception -> {}", stackTraceToString(e));
 		sendEvent(LogLevel.EXCEPTION, o);
 	}
 
 	public void logExceptionDebug(Throwable e) {
 		final Map<String, Object> o = new HashMap<>();
-		o.put("msg", e.getMessage());
-		o.put("exception", stackTraceToString(e));
-		o.put("level", LogLevel.DEBUG.name());
-		logger.debug("Exception -> " + stackTraceToString(e));
+		o.put(MESSAGE_LABEL, e.getMessage());
+		o.put(EXCEPTION_LABEL, stackTraceToString(e));
+		o.put(LEVEL_LABEL, LogLevel.DEBUG.name());
+		logger.debug("Exception -> {}", stackTraceToString(e));
 		sendEvent(LogLevel.DEBUG, o);
 	}
 
 	public void logException(String error, Throwable e) {
 		final Map<String, Object> o = new HashMap<>();
-		o.put("msg", e.getMessage());
-		o.put("error", error);
-		o.put("exception", stackTraceToString(e));
-		o.put("level", LogLevel.EXCEPTION.name());
-		logger.info(error + " -> " + stackTraceToString(e));
+		o.put(MESSAGE_LABEL, e.getMessage());
+		o.put(ERROR_LABEL, error);
+		o.put(EXCEPTION_LABEL, stackTraceToString(e));
+		o.put(LEVEL_LABEL, LogLevel.EXCEPTION.name());
+		logger.info("{} -> {}", error, stackTraceToString(e));
 		sendEvent(LogLevel.EXCEPTION, o);
 	}
 
 	private void sendEvent(LogLevel level, String logMessage) {
 		final Map<String, Object> o = new HashMap<>();
-		o.put("msg", logMessage);
-		o.put("level", level.toString());
+		o.put(MESSAGE_LABEL, logMessage);
+		o.put(LEVEL_LABEL, level.toString());
 		sendEvent(level, o);
 	}
 
 	private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
 		try {
 			if (anima == null && Anima.getApplicationContext() != null
-					&& Anima.getApplicationContext().getBean(Anima.class) != null
 					&& Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
 				anima = Anima.getApplicationContext().getBean(Anima.class);
 			}

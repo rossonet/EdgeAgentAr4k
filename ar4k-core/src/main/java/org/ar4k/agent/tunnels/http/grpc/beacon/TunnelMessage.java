@@ -73,7 +73,7 @@ private static final long serialVersionUID = 0L;
           }
           case 24: {
 
-            targeId_ = input.readInt64();
+            tunnelId_ = input.readInt64();
             break;
           }
           case 32: {
@@ -83,7 +83,7 @@ private static final long serialVersionUID = 0L;
           }
           case 40: {
 
-            uuid_ = input.readInt64();
+            classUuid_ = input.readInt64();
             break;
           }
           case 48: {
@@ -110,21 +110,31 @@ private static final long serialVersionUID = 0L;
           }
           case 80: {
 
-            messageUuid_ = input.readInt64();
+            messageId_ = input.readInt64();
             break;
           }
-          case 90: {
+          case 88: {
+
+            messageAckId_ = input.readInt64();
+            break;
+          }
+          case 96: {
+
+            messageAckReceivedId_ = input.readInt64();
+            break;
+          }
+          case 106: {
             java.lang.String s = input.readStringRequireUtf8();
 
             payload_ = s;
             break;
           }
-          case 96: {
+          case 112: {
 
             originalSize_ = input.readInt32();
             break;
           }
-          case 104: {
+          case 120: {
 
             messageHashCode_ = input.readInt32();
             break;
@@ -203,13 +213,13 @@ private static final long serialVersionUID = 0L;
     return getAgentDestination();
   }
 
-  public static final int TARGEID_FIELD_NUMBER = 3;
-  private long targeId_;
+  public static final int TUNNELID_FIELD_NUMBER = 3;
+  private long tunnelId_;
   /**
-   * <code>int64 targeId = 3;</code>
+   * <code>int64 tunnelId = 3;</code>
    */
-  public long getTargeId() {
-    return targeId_;
+  public long getTunnelId() {
+    return tunnelId_;
   }
 
   public static final int SESSIONID_FIELD_NUMBER = 4;
@@ -221,13 +231,13 @@ private static final long serialVersionUID = 0L;
     return sessionId_;
   }
 
-  public static final int UUID_FIELD_NUMBER = 5;
-  private long uuid_;
+  public static final int CLASSUUID_FIELD_NUMBER = 5;
+  private long classUuid_;
   /**
-   * <code>int64 uuid = 5;</code>
+   * <code>int64 classUuid = 5;</code>
    */
-  public long getUuid() {
-    return uuid_;
+  public long getClassUuid() {
+    return classUuid_;
   }
 
   public static final int MESSAGETYPE_FIELD_NUMBER = 6;
@@ -282,19 +292,37 @@ private static final long serialVersionUID = 0L;
     return totalChunks_;
   }
 
-  public static final int MESSAGEUUID_FIELD_NUMBER = 10;
-  private long messageUuid_;
+  public static final int MESSAGEID_FIELD_NUMBER = 10;
+  private long messageId_;
   /**
-   * <code>int64 messageUuid = 10;</code>
+   * <code>int64 messageId = 10;</code>
    */
-  public long getMessageUuid() {
-    return messageUuid_;
+  public long getMessageId() {
+    return messageId_;
   }
 
-  public static final int PAYLOAD_FIELD_NUMBER = 11;
+  public static final int MESSAGEACKID_FIELD_NUMBER = 11;
+  private long messageAckId_;
+  /**
+   * <code>int64 messageAckId = 11;</code>
+   */
+  public long getMessageAckId() {
+    return messageAckId_;
+  }
+
+  public static final int MESSAGEACKRECEIVEDID_FIELD_NUMBER = 12;
+  private long messageAckReceivedId_;
+  /**
+   * <code>int64 messageAckReceivedId = 12;</code>
+   */
+  public long getMessageAckReceivedId() {
+    return messageAckReceivedId_;
+  }
+
+  public static final int PAYLOAD_FIELD_NUMBER = 13;
   private volatile java.lang.Object payload_;
   /**
-   * <code>string payload = 11;</code>
+   * <code>string payload = 13;</code>
    */
   public java.lang.String getPayload() {
     java.lang.Object ref = payload_;
@@ -309,7 +337,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string payload = 11;</code>
+   * <code>string payload = 13;</code>
    */
   public com.google.protobuf.ByteString
       getPayloadBytes() {
@@ -325,19 +353,19 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int ORIGINALSIZE_FIELD_NUMBER = 12;
+  public static final int ORIGINALSIZE_FIELD_NUMBER = 14;
   private int originalSize_;
   /**
-   * <code>int32 originalSize = 12;</code>
+   * <code>int32 originalSize = 14;</code>
    */
   public int getOriginalSize() {
     return originalSize_;
   }
 
-  public static final int MESSAGEHASHCODE_FIELD_NUMBER = 13;
+  public static final int MESSAGEHASHCODE_FIELD_NUMBER = 15;
   private int messageHashCode_;
   /**
-   * <code>int32 messageHashCode = 13;</code>
+   * <code>int32 messageHashCode = 15;</code>
    */
   public int getMessageHashCode() {
     return messageHashCode_;
@@ -363,14 +391,14 @@ private static final long serialVersionUID = 0L;
     if (agentDestination_ != null) {
       output.writeMessage(2, getAgentDestination());
     }
-    if (targeId_ != 0L) {
-      output.writeInt64(3, targeId_);
+    if (tunnelId_ != 0L) {
+      output.writeInt64(3, tunnelId_);
     }
     if (sessionId_ != 0L) {
       output.writeInt64(4, sessionId_);
     }
-    if (uuid_ != 0L) {
-      output.writeInt64(5, uuid_);
+    if (classUuid_ != 0L) {
+      output.writeInt64(5, classUuid_);
     }
     if (messageType_ != org.ar4k.agent.tunnels.http.grpc.beacon.MessageType.FROM_CLIENT.getNumber()) {
       output.writeEnum(6, messageType_);
@@ -384,17 +412,23 @@ private static final long serialVersionUID = 0L;
     if (totalChunks_ != 0) {
       output.writeInt32(9, totalChunks_);
     }
-    if (messageUuid_ != 0L) {
-      output.writeInt64(10, messageUuid_);
+    if (messageId_ != 0L) {
+      output.writeInt64(10, messageId_);
+    }
+    if (messageAckId_ != 0L) {
+      output.writeInt64(11, messageAckId_);
+    }
+    if (messageAckReceivedId_ != 0L) {
+      output.writeInt64(12, messageAckReceivedId_);
     }
     if (!getPayloadBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, payload_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 13, payload_);
     }
     if (originalSize_ != 0) {
-      output.writeInt32(12, originalSize_);
+      output.writeInt32(14, originalSize_);
     }
     if (messageHashCode_ != 0) {
-      output.writeInt32(13, messageHashCode_);
+      output.writeInt32(15, messageHashCode_);
     }
     unknownFields.writeTo(output);
   }
@@ -413,17 +447,17 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getAgentDestination());
     }
-    if (targeId_ != 0L) {
+    if (tunnelId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, targeId_);
+        .computeInt64Size(3, tunnelId_);
     }
     if (sessionId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(4, sessionId_);
     }
-    if (uuid_ != 0L) {
+    if (classUuid_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(5, uuid_);
+        .computeInt64Size(5, classUuid_);
     }
     if (messageType_ != org.ar4k.agent.tunnels.http.grpc.beacon.MessageType.FROM_CLIENT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
@@ -441,20 +475,28 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(9, totalChunks_);
     }
-    if (messageUuid_ != 0L) {
+    if (messageId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(10, messageUuid_);
+        .computeInt64Size(10, messageId_);
+    }
+    if (messageAckId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(11, messageAckId_);
+    }
+    if (messageAckReceivedId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(12, messageAckReceivedId_);
     }
     if (!getPayloadBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, payload_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, payload_);
     }
     if (originalSize_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(12, originalSize_);
+        .computeInt32Size(14, originalSize_);
     }
     if (messageHashCode_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(13, messageHashCode_);
+        .computeInt32Size(15, messageHashCode_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -481,20 +523,24 @@ private static final long serialVersionUID = 0L;
       if (!getAgentDestination()
           .equals(other.getAgentDestination())) return false;
     }
-    if (getTargeId()
-        != other.getTargeId()) return false;
+    if (getTunnelId()
+        != other.getTunnelId()) return false;
     if (getSessionId()
         != other.getSessionId()) return false;
-    if (getUuid()
-        != other.getUuid()) return false;
+    if (getClassUuid()
+        != other.getClassUuid()) return false;
     if (messageType_ != other.messageType_) return false;
     if (messageStatus_ != other.messageStatus_) return false;
     if (getChunk()
         != other.getChunk()) return false;
     if (getTotalChunks()
         != other.getTotalChunks()) return false;
-    if (getMessageUuid()
-        != other.getMessageUuid()) return false;
+    if (getMessageId()
+        != other.getMessageId()) return false;
+    if (getMessageAckId()
+        != other.getMessageAckId()) return false;
+    if (getMessageAckReceivedId()
+        != other.getMessageAckReceivedId()) return false;
     if (!getPayload()
         .equals(other.getPayload())) return false;
     if (getOriginalSize()
@@ -520,15 +566,15 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + AGENTDESTINATION_FIELD_NUMBER;
       hash = (53 * hash) + getAgentDestination().hashCode();
     }
-    hash = (37 * hash) + TARGEID_FIELD_NUMBER;
+    hash = (37 * hash) + TUNNELID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTargeId());
+        getTunnelId());
     hash = (37 * hash) + SESSIONID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getSessionId());
-    hash = (37 * hash) + UUID_FIELD_NUMBER;
+    hash = (37 * hash) + CLASSUUID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getUuid());
+        getClassUuid());
     hash = (37 * hash) + MESSAGETYPE_FIELD_NUMBER;
     hash = (53 * hash) + messageType_;
     hash = (37 * hash) + MESSAGESTATUS_FIELD_NUMBER;
@@ -537,9 +583,15 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getChunk();
     hash = (37 * hash) + TOTALCHUNKS_FIELD_NUMBER;
     hash = (53 * hash) + getTotalChunks();
-    hash = (37 * hash) + MESSAGEUUID_FIELD_NUMBER;
+    hash = (37 * hash) + MESSAGEID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getMessageUuid());
+        getMessageId());
+    hash = (37 * hash) + MESSAGEACKID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getMessageAckId());
+    hash = (37 * hash) + MESSAGEACKRECEIVEDID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getMessageAckReceivedId());
     hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
     hash = (53 * hash) + getPayload().hashCode();
     hash = (37 * hash) + ORIGINALSIZE_FIELD_NUMBER;
@@ -691,11 +743,11 @@ private static final long serialVersionUID = 0L;
         agentDestination_ = null;
         agentDestinationBuilder_ = null;
       }
-      targeId_ = 0L;
+      tunnelId_ = 0L;
 
       sessionId_ = 0L;
 
-      uuid_ = 0L;
+      classUuid_ = 0L;
 
       messageType_ = 0;
 
@@ -705,7 +757,11 @@ private static final long serialVersionUID = 0L;
 
       totalChunks_ = 0;
 
-      messageUuid_ = 0L;
+      messageId_ = 0L;
+
+      messageAckId_ = 0L;
+
+      messageAckReceivedId_ = 0L;
 
       payload_ = "";
 
@@ -749,14 +805,16 @@ private static final long serialVersionUID = 0L;
       } else {
         result.agentDestination_ = agentDestinationBuilder_.build();
       }
-      result.targeId_ = targeId_;
+      result.tunnelId_ = tunnelId_;
       result.sessionId_ = sessionId_;
-      result.uuid_ = uuid_;
+      result.classUuid_ = classUuid_;
       result.messageType_ = messageType_;
       result.messageStatus_ = messageStatus_;
       result.chunk_ = chunk_;
       result.totalChunks_ = totalChunks_;
-      result.messageUuid_ = messageUuid_;
+      result.messageId_ = messageId_;
+      result.messageAckId_ = messageAckId_;
+      result.messageAckReceivedId_ = messageAckReceivedId_;
       result.payload_ = payload_;
       result.originalSize_ = originalSize_;
       result.messageHashCode_ = messageHashCode_;
@@ -814,14 +872,14 @@ private static final long serialVersionUID = 0L;
       if (other.hasAgentDestination()) {
         mergeAgentDestination(other.getAgentDestination());
       }
-      if (other.getTargeId() != 0L) {
-        setTargeId(other.getTargeId());
+      if (other.getTunnelId() != 0L) {
+        setTunnelId(other.getTunnelId());
       }
       if (other.getSessionId() != 0L) {
         setSessionId(other.getSessionId());
       }
-      if (other.getUuid() != 0L) {
-        setUuid(other.getUuid());
+      if (other.getClassUuid() != 0L) {
+        setClassUuid(other.getClassUuid());
       }
       if (other.messageType_ != 0) {
         setMessageTypeValue(other.getMessageTypeValue());
@@ -835,8 +893,14 @@ private static final long serialVersionUID = 0L;
       if (other.getTotalChunks() != 0) {
         setTotalChunks(other.getTotalChunks());
       }
-      if (other.getMessageUuid() != 0L) {
-        setMessageUuid(other.getMessageUuid());
+      if (other.getMessageId() != 0L) {
+        setMessageId(other.getMessageId());
+      }
+      if (other.getMessageAckId() != 0L) {
+        setMessageAckId(other.getMessageAckId());
+      }
+      if (other.getMessageAckReceivedId() != 0L) {
+        setMessageAckReceivedId(other.getMessageAckReceivedId());
       }
       if (!other.getPayload().isEmpty()) {
         payload_ = other.payload_;
@@ -1111,28 +1175,28 @@ private static final long serialVersionUID = 0L;
       return agentDestinationBuilder_;
     }
 
-    private long targeId_ ;
+    private long tunnelId_ ;
     /**
-     * <code>int64 targeId = 3;</code>
+     * <code>int64 tunnelId = 3;</code>
      */
-    public long getTargeId() {
-      return targeId_;
+    public long getTunnelId() {
+      return tunnelId_;
     }
     /**
-     * <code>int64 targeId = 3;</code>
+     * <code>int64 tunnelId = 3;</code>
      */
-    public Builder setTargeId(long value) {
+    public Builder setTunnelId(long value) {
       
-      targeId_ = value;
+      tunnelId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 targeId = 3;</code>
+     * <code>int64 tunnelId = 3;</code>
      */
-    public Builder clearTargeId() {
+    public Builder clearTunnelId() {
       
-      targeId_ = 0L;
+      tunnelId_ = 0L;
       onChanged();
       return this;
     }
@@ -1163,28 +1227,28 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long uuid_ ;
+    private long classUuid_ ;
     /**
-     * <code>int64 uuid = 5;</code>
+     * <code>int64 classUuid = 5;</code>
      */
-    public long getUuid() {
-      return uuid_;
+    public long getClassUuid() {
+      return classUuid_;
     }
     /**
-     * <code>int64 uuid = 5;</code>
+     * <code>int64 classUuid = 5;</code>
      */
-    public Builder setUuid(long value) {
+    public Builder setClassUuid(long value) {
       
-      uuid_ = value;
+      classUuid_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 uuid = 5;</code>
+     * <code>int64 classUuid = 5;</code>
      */
-    public Builder clearUuid() {
+    public Builder clearClassUuid() {
       
-      uuid_ = 0L;
+      classUuid_ = 0L;
       onChanged();
       return this;
     }
@@ -1331,35 +1395,87 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long messageUuid_ ;
+    private long messageId_ ;
     /**
-     * <code>int64 messageUuid = 10;</code>
+     * <code>int64 messageId = 10;</code>
      */
-    public long getMessageUuid() {
-      return messageUuid_;
+    public long getMessageId() {
+      return messageId_;
     }
     /**
-     * <code>int64 messageUuid = 10;</code>
+     * <code>int64 messageId = 10;</code>
      */
-    public Builder setMessageUuid(long value) {
+    public Builder setMessageId(long value) {
       
-      messageUuid_ = value;
+      messageId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 messageUuid = 10;</code>
+     * <code>int64 messageId = 10;</code>
      */
-    public Builder clearMessageUuid() {
+    public Builder clearMessageId() {
       
-      messageUuid_ = 0L;
+      messageId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long messageAckId_ ;
+    /**
+     * <code>int64 messageAckId = 11;</code>
+     */
+    public long getMessageAckId() {
+      return messageAckId_;
+    }
+    /**
+     * <code>int64 messageAckId = 11;</code>
+     */
+    public Builder setMessageAckId(long value) {
+      
+      messageAckId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 messageAckId = 11;</code>
+     */
+    public Builder clearMessageAckId() {
+      
+      messageAckId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long messageAckReceivedId_ ;
+    /**
+     * <code>int64 messageAckReceivedId = 12;</code>
+     */
+    public long getMessageAckReceivedId() {
+      return messageAckReceivedId_;
+    }
+    /**
+     * <code>int64 messageAckReceivedId = 12;</code>
+     */
+    public Builder setMessageAckReceivedId(long value) {
+      
+      messageAckReceivedId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 messageAckReceivedId = 12;</code>
+     */
+    public Builder clearMessageAckReceivedId() {
+      
+      messageAckReceivedId_ = 0L;
       onChanged();
       return this;
     }
 
     private java.lang.Object payload_ = "";
     /**
-     * <code>string payload = 11;</code>
+     * <code>string payload = 13;</code>
      */
     public java.lang.String getPayload() {
       java.lang.Object ref = payload_;
@@ -1374,7 +1490,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string payload = 11;</code>
+     * <code>string payload = 13;</code>
      */
     public com.google.protobuf.ByteString
         getPayloadBytes() {
@@ -1390,7 +1506,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string payload = 11;</code>
+     * <code>string payload = 13;</code>
      */
     public Builder setPayload(
         java.lang.String value) {
@@ -1403,7 +1519,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string payload = 11;</code>
+     * <code>string payload = 13;</code>
      */
     public Builder clearPayload() {
       
@@ -1412,7 +1528,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string payload = 11;</code>
+     * <code>string payload = 13;</code>
      */
     public Builder setPayloadBytes(
         com.google.protobuf.ByteString value) {
@@ -1428,13 +1544,13 @@ private static final long serialVersionUID = 0L;
 
     private int originalSize_ ;
     /**
-     * <code>int32 originalSize = 12;</code>
+     * <code>int32 originalSize = 14;</code>
      */
     public int getOriginalSize() {
       return originalSize_;
     }
     /**
-     * <code>int32 originalSize = 12;</code>
+     * <code>int32 originalSize = 14;</code>
      */
     public Builder setOriginalSize(int value) {
       
@@ -1443,7 +1559,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 originalSize = 12;</code>
+     * <code>int32 originalSize = 14;</code>
      */
     public Builder clearOriginalSize() {
       
@@ -1454,13 +1570,13 @@ private static final long serialVersionUID = 0L;
 
     private int messageHashCode_ ;
     /**
-     * <code>int32 messageHashCode = 13;</code>
+     * <code>int32 messageHashCode = 15;</code>
      */
     public int getMessageHashCode() {
       return messageHashCode_;
     }
     /**
-     * <code>int32 messageHashCode = 13;</code>
+     * <code>int32 messageHashCode = 15;</code>
      */
     public Builder setMessageHashCode(int value) {
       
@@ -1469,7 +1585,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 messageHashCode = 13;</code>
+     * <code>int32 messageHashCode = 15;</code>
      */
     public Builder clearMessageHashCode() {
       

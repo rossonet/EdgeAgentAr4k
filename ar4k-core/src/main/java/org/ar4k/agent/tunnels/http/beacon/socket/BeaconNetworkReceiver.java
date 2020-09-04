@@ -1,6 +1,6 @@
 package org.ar4k.agent.tunnels.http.beacon.socket;
 
-import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.trace;
+import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRACE_LOG_IN_INFO;
 
 import java.util.Date;
 import java.util.Map;
@@ -10,10 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
-import org.ar4k.agent.exception.ExceptionNetworkEvent;
-import org.ar4k.agent.exception.TimeoutNetworkEvent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
@@ -42,17 +39,295 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BeaconNetworkReceiver.class.toString());
 
+	private final class ServerTCPHandler extends SimpleChannelInboundHandler<ByteBuf> implements AutoCloseable {
+		private final long serverSessionId = UUID.randomUUID().getMostSignificantBits(); // battezza la sessione
+
+		public ServerTCPHandler(SocketChannel serverSocketChannel) {
+			getServerChannelHandler().put(serverSessionId, serverSocketChannel);
+			if (TRACE_LOG_IN_INFO)
+				logger.info("server socket for sessionId {} to {} role {} created", serverSessionId,
+						getBeaconNetworkTunnel().getTunnelId(), myRoleMode);
+		}
+
+		@Override
+		protected void channelRead0(final ChannelHandlerContext ctx, final ByteBuf s) {
+			try {
+				if (TRACE_LOG_IN_INFO) {
+					final String reportDetails = getBeaconNetworkTunnel().reportDetails();
+					logger.info("** channelRead0 server for sessionId {} to {} role {} received message\n{}",
+							serverSessionId, getBeaconNetworkTunnel().getTunnelId(), myRoleMode, reportDetails);
+				}
+				final long messageId = getBeaconNetworkTunnel().getProgressiveNetworkToBeacon(serverSessionId);
+				final byte[] bytes = ByteBufUtil.getBytes(s);
+				if (!terminate) {
+					getBeaconNetworkTunnel().addInputCachedMessage(serverSessionId, messageId,
+							new MessageCached(MessageCached.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
+									getBeaconNetworkTunnel(), ctx, myRoleMode, serverSessionId, messageId, bytes, null,
+									chunkLimit, bytes.length, null));
+				}
+				nextAction(serverSessionId, ctx);
+			} catch (final Exception ff) {
+				getBeaconNetworkTunnel().incrementPacketError();
+				logger.logException(ff);
+			}
+		}
+
+		@Override
+		public void channelActive(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelActive");
+			if (!terminate) {
+				try {
+					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
+							.setMessageStatus(MessageStatus.channelActive)
+							.setAgentSource(getBeaconNetworkTunnel().getMe())
+							.setTunnelId(getBeaconNetworkTunnel().getTunnelId()).setSessionId(serverSessionId)
+							.setMessageType(MessageType.FROM_SERVER).build();
+					getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+				} catch (final Exception a) {
+					logger.warn("sending message channelActive " + a.getMessage());
+				}
+			}
+			super.channelActive(ctx);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelInactive");
+			if (!terminate) {
+				try {
+					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
+							.setMessageStatus(MessageStatus.channelInactive)
+							.setAgentSource(getBeaconNetworkTunnel().getMe())
+							.setTunnelId(getBeaconNetworkTunnel().getTunnelId()).setSessionId(serverSessionId)
+							.setMessageType(MessageType.FROM_SERVER).build();
+					getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+				} catch (final Exception a) {
+					logger.warn("sending message channelInactive " + a.getMessage());
+				}
+			}
+			getBeaconNetworkTunnel().callChannelServerComplete(serverSessionId);
+			super.channelInactive(ctx);
+		}
+
+		@Override
+		public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelReadComplete");
+			super.channelReadComplete(ctx);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server from " + ctx.channel().localAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelRegistered");
+			super.channelRegistered(ctx);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelUnregistered");
+			super.channelUnregistered(ctx);
+		}
+
+		@Override
+		public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode
+						+ " channelWritabilityChanged");
+			super.channelWritabilityChanged(ctx);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+			logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+					+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " exceptionCaught");
+			if (!terminate) {
+				getBeaconNetworkTunnel().callChannelServerException(serverSessionId);
+			}
+			super.exceptionCaught(ctx, cause);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " userEventTriggered");
+			super.userEventTriggered(ctx, evt);
+			nextAction(serverSessionId, ctx);
+		}
+
+		@Override
+		public void close() throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("server socket with session " + serverSessionId + " to "
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " closed");
+		}
+
+	}
+
+	private final class ServerTcpInitHandler extends ChannelInitializer<SocketChannel> {
+		@Override
+		protected void initChannel(SocketChannel serverSocketChannel) throws Exception {
+			final ServerTCPHandler serverTCPSocketChannelHandler = new ServerTCPHandler(serverSocketChannel);
+			serverSocketChannel.pipeline().addLast(serverTCPSocketChannelHandler);
+		}
+	}
+
+	private final class ClientTCPChannelHandler extends SimpleChannelInboundHandler<ByteBuf> implements AutoCloseable {
+		private final long clientSerialId;
+
+		public ClientTCPChannelHandler(long clientSerialId) {
+			this.clientSerialId = clientSerialId;
+		}
+
+		@Override
+		public void channelRead0(final ChannelHandlerContext ctx, final ByteBuf s) {
+			try {
+				if (TRACE_LOG_IN_INFO) {
+					final String reportDetails = getBeaconNetworkTunnel().reportDetails();
+					logger.info("** channelRead0 client for session Id {} and tunnel {} role {} received message\n{}",
+							clientSerialId, getBeaconNetworkTunnel().getTunnelId(), myRoleMode, reportDetails);
+				}
+				if (!terminate) {
+					final long messageId = getBeaconNetworkTunnel().getProgressiveNetworkToBeacon(clientSerialId);
+					final byte[] bytes = ByteBufUtil.getBytes(s);
+					getBeaconNetworkTunnel().addInputCachedMessage(clientSerialId, messageId,
+							new MessageCached(MessageCached.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
+									getBeaconNetworkTunnel(), ctx, myRoleMode, clientSerialId, messageId, bytes, null,
+									chunkLimit, bytes.length, null));
+					nextAction(clientSerialId, ctx);
+				}
+			} catch (final Exception ff) {
+				getBeaconNetworkTunnel().incrementPacketError();
+				logger.logException(ff);
+			}
+		}
+
+		@Override
+		public void close() throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("close session " + clientSerialId + " role " + myRoleMode);
+		}
+
+		@Override
+		public void channelActive(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelActive");
+			if (!terminate) {
+				try {
+					getBeaconNetworkTunnel().registerSocketContext(clientSerialId, ctx);
+					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
+							.setMessageStatus(MessageStatus.channelActive)
+							.setAgentSource(getBeaconNetworkTunnel().getMe())
+							.setTunnelId(getBeaconNetworkTunnel().getTunnelId()).setMessageType(MessageType.FROM_CLIENT)
+							.setSessionId(clientSerialId).setClassUuid(uniqueClassId).build();
+					getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+				} catch (final Exception a) {
+					logger.warn("sending message channelActive {}", a.getMessage());
+				}
+				nextAction(clientSerialId, ctx);
+			}
+			super.channelActive(ctx);
+		}
+
+		@Override
+		public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelInactive");
+			if (!terminate) {
+				try {
+					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
+							.setMessageStatus(MessageStatus.channelInactive)
+							.setAgentSource(getBeaconNetworkTunnel().getMe())
+							.setTunnelId(getBeaconNetworkTunnel().getTunnelId()).setMessageType(MessageType.FROM_CLIENT)
+							.setSessionId(clientSerialId).setClassUuid(uniqueClassId).build();
+					getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+				} catch (final Exception a) {
+					logger.warn("sending message channelInactive {}", a.getMessage());
+				}
+			}
+			getBeaconNetworkTunnel().callChannelClientComplete(clientSerialId);
+			super.channelInactive(ctx);
+		}
+
+		@Override
+		public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelReadComplete");
+			super.channelReadComplete(ctx);
+			nextAction(clientSerialId, ctx);
+		}
+
+		@Override
+		public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " from " + ctx.channel().localAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelRegistered");
+			super.channelRegistered(ctx);
+			nextAction(clientSerialId, ctx);
+		}
+
+		@Override
+		public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelUnregistered");
+			super.channelUnregistered(ctx);
+		}
+
+		@Override
+		public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode
+						+ " channelWritabilityChanged");
+			super.channelWritabilityChanged(ctx);
+			nextAction(clientSerialId, ctx);
+		}
+
+		@Override
+		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " exceptionCaught");
+			if (!terminate) {
+				getBeaconNetworkTunnel().callChannelClientException(clientSerialId);
+			}
+			super.exceptionCaught(ctx, cause);
+			nextAction(clientSerialId, ctx);
+		}
+
+		@Override
+		public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+			if (TRACE_LOG_IN_INFO)
+				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
+						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " userEventTriggered");
+			super.userEventTriggered(ctx, evt);
+			nextAction(clientSerialId, ctx);
+		}
+	}
+
 	private final NetworkMode myRoleMode;
 	private final long uniqueClassId;
 	private final int chunkLimit;
 	private final BeaconNetworkTunnel beaconNetworkTunnel;
-	private final AtomicLong packetSend = new AtomicLong(0);
-	private final AtomicLong packetReceived = new AtomicLong(0);
-	private final AtomicLong packetError = new AtomicLong(0);
-	private final AtomicLong packetControl = new AtomicLong(0);
-	private final AtomicLong progressiveNetworkToBeacon = new AtomicLong(0);
-	private final AtomicLong lastAckSent = new AtomicLong(0);
-	private final AtomicLong lastAckReceived = new AtomicLong(0);
 	private final AtomicLong lastNetworkActiviti = new AtomicLong(0);
 	private EventLoopGroup bossGroup = null;
 	private EventLoopGroup workerGroup = null;
@@ -60,25 +335,21 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 	private final Map<Long, SocketChannel> serverChannelHandler = new ConcurrentHashMap<>();
 	private final Map<Long, ChannelFuture> clientChannelHandler = new ConcurrentHashMap<>();
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final Map<Long, MessageCached> inputCachedMessages = new ConcurrentHashMap<>();
 	private final Map<Long, CachedChunk> outputCachedDataBase64ByMessageId = new ConcurrentHashMap<>();
-	private final Map<Long, MessageCached> outputCachedMessages = new ConcurrentHashMap<>();
 	private boolean terminate = false;
-
-	private long lastControlMessage = new Date().getTime();
 
 	public BeaconNetworkReceiver(final BeaconNetworkTunnel tunnel, final long uniqueClassId, final int chunkLimit) {
 		terminate = false;
 		this.chunkLimit = chunkLimit;
 		this.uniqueClassId = uniqueClassId;
 		this.beaconNetworkTunnel = tunnel;
-		if (beaconNetworkTunnel.imTheClient()) {
+		if (getBeaconNetworkTunnel().imTheClient()) {
 			myRoleMode = NetworkMode.CLIENT;
 		} else {
 			myRoleMode = NetworkMode.SERVER;
 		}
-		if (trace)
-			logger.info("BeaconNetworkReceiver created [uuid:" + uniqueClassId + "/" + myRoleMode + "]");
+		if (TRACE_LOG_IN_INFO)
+			logger.info("BeaconNetworkReceiver created [ uuid: {} role: {} ]", uniqueClassId, myRoleMode);
 	}
 
 	private BeaconNetworkReceiver getBeaconNetworkReceiver() {
@@ -87,121 +358,103 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 
 	@Override
 	public long getTunnelId() {
-		return beaconNetworkTunnel.getTunnelId();
-	}
-
-	@Override
-	public long getPacketSend() {
-		return packetSend.get();
-	}
-
-	@Override
-	public long getPacketReceived() {
-		return packetReceived.get();
-	}
-
-	@Override
-	public long getPacketError() {
-		return packetError.get();
-	}
-
-	@Override
-	public long getPacketControl() {
-		return packetControl.get();
-	}
-
-	@Override
-	public int getWaitingPackagesCount() {
-		return inputCachedMessages.size();
+		return getBeaconNetworkTunnel().getTunnelId();
 	}
 
 	ExecutorService getExecutor() {
 		return executor;
 	}
 
-	Map<Long, CachedChunk> getOutputCachedDataBase64ByMessageId() {
-		return outputCachedDataBase64ByMessageId;
+	public BeaconNetworkTunnel getBeaconNetworkTunnel() {
+		return beaconNetworkTunnel;
 	}
 
-	Map<Long, MessageCached> getOutputCachedMessages() {
-		return outputCachedMessages;
+	Map<Long, CachedChunk> getOutputCachedDataBase64ByMessageId() {
+		return outputCachedDataBase64ByMessageId;
 	}
 
 	NetworkMode getMyRoleMode() {
 		return myRoleMode;
 	}
 
-	public long getLastAckSent() {
-		return lastAckSent.get();
+	long getLastAckSent(long sessionId) {
+		return getBeaconNetworkTunnel().getLastAckSent(sessionId);
 	}
 
 	@Override
 	public NetworkStatus getNetworkStatus() {
-		if ((myRoleMode.equals(NetworkMode.SERVER) && mainServerHandler != null && mainServerHandler.channel() != null
-				&& mainServerHandler.channel().isActive()) || myRoleMode.equals(NetworkMode.CLIENT)) {
+		if ((myRoleMode.equals(NetworkMode.SERVER) && getMainServerHandler() != null
+				&& getMainServerHandler().channel() != null && getMainServerHandler().channel().isActive())
+				|| myRoleMode.equals(NetworkMode.CLIENT)) {
 			return NetworkStatus.ACTIVE;
 		} else {
-			if (trace)
-				logger.info("Network receiver getStatus for uniqueClassId:" + uniqueClassId + " role " + myRoleMode
-						+ " is inactive");
+			if (TRACE_LOG_IN_INFO)
+				logger.info("Network receiver getStatus for uniqueClassId: {} role {} is inactive", uniqueClassId,
+						myRoleMode);
 			return NetworkStatus.INACTIVE;
 		}
 	}
 
-	synchronized void nextAction(final ChannelHandlerContext channelHandlerContext) {
+	Map<Long, ChannelFuture> getClientChannelHandler() {
+		return clientChannelHandler;
+	}
+
+	synchronized void nextAction(final long sessionId, final ChannelHandlerContext channelHandlerContext) {
 		if (getNetworkStatus().equals(NetworkStatus.ACTIVE)) {
-			if (lastControlMessage + BeaconNetworkTunnel.SYNC_TIME_OUT < new Date().getTime()) {
-				sendAckOrControlMessage(0, beaconNetworkTunnel.getTunnelId(), lastAckSent.get(), true);
-				lastControlMessage = new Date().getTime();
+			if (getBeaconNetworkTunnel().getLastControlMessage() + BeaconNetworkTunnel.SYNC_TIME_OUT < new Date()
+					.getTime()) {
+				sendAckOrControlMessage(sessionId, getBeaconNetworkTunnel().getTunnelId(),
+						getBeaconNetworkTunnel().getLastAckSent(sessionId), true);
+				getBeaconNetworkTunnel().setLastControlMessage();
 			}
 			try {
 				if (channelHandlerContext != null) {
 					callNextReadOnSocket(channelHandlerContext);
 				}
-				if (beaconNetworkTunnel.isBeaconConnectionOk(beaconNetworkTunnel)) {
-					if (!inputCachedMessages.isEmpty()) {
+				if (getBeaconNetworkTunnel().isBeaconConnectionOk()) {
+					if (!getBeaconNetworkTunnel().getInputCachedMessages(sessionId).isEmpty()) {
 						final TreeMap<Long, MessageCached> sortedIn = new TreeMap<>();
-						sortedIn.putAll(inputCachedMessages);
+						sortedIn.putAll(getBeaconNetworkTunnel().getInputCachedMessages(sessionId));
 						boolean firstInput = true;
 						for (final MessageCached mi : sortedIn.values()) {
 							if (mi.isValidToRetry()) {
 								if (mi.softChek()) {
-									if (trace)
-										logger.info((firstInput ? "first input " : "") + "in role " + myRoleMode
-												+ " sessionId " + mi.getSessionID() + " resend message to Beacon "
-												+ mi.getMessageId());
+									if (TRACE_LOG_IN_INFO)
+										logger.info("{} in sessionId {} resend message {} to Beacon ",
+												(firstInput ? "first input " : ""), mi.getSessionID(),
+												mi.getMessageId());
 								} else {
-									if (trace)
-										logger.info("in " + myRoleMode + " " + mi.getSessionID()
-												+ " cached to Beacon message " + mi.getMessageId());
+									if (TRACE_LOG_IN_INFO)
+										logger.info("in role {} sessionId {} messageId {} cached to Beacon message ",
+												myRoleMode, mi.getSessionID(), mi.getMessageId());
 								}
 							} else {
-								inputCachedMessages.remove(mi.getMessageId());
+								getBeaconNetworkTunnel().removeIputCachedMessage(sessionId, mi.getMessageId());
 							}
 							firstInput = false;
 						}
 					}
 				} else {
-					if (trace)
+					if (TRACE_LOG_IN_INFO)
 						logger.info("in nextAction of the " + myRoleMode + " waiting beacon connection...");
 				}
-				if (!outputCachedMessages.isEmpty()) {
+				if (!getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).isEmpty()) {
 					final TreeMap<Long, MessageCached> sortedOut = new TreeMap<>();
-					sortedOut.putAll(outputCachedMessages);
+					sortedOut.putAll(getBeaconNetworkTunnel().getOutputCachedMessages(sessionId));
 					boolean firstOutput = true;
 					for (final MessageCached mo : sortedOut.values()) {
 						if (mo.isValidToRetry()) {
 							if (mo.softChek()) {
-								if (trace)
+								if (TRACE_LOG_IN_INFO)
 									logger.info((firstOutput ? "first input " : "") + "in " + myRoleMode + " "
 											+ mo.getSessionID() + " resend message to network " + mo.getMessageId());
 							} else {
-								if (trace)
+								if (TRACE_LOG_IN_INFO)
 									logger.info("in " + myRoleMode + " " + mo.getSessionID()
 											+ " cached to network message " + mo.getMessageId());
 							}
 						} else {
-							outputCachedMessages.remove(mo.getMessageId());
+							getBeaconNetworkTunnel().removeOutputCachedMessage(sessionId, mo.getMessageId());
 						}
 						firstOutput = false;
 					}
@@ -210,56 +463,49 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 				logger.logException(nn);
 			}
 		} else {
-			if (trace)
-				logger.info("onNext in " + myRoleMode + " the status is not ACTIVE but " + getNetworkStatus());
+			if (TRACE_LOG_IN_INFO)
+				logger.info("onNext in {} the status is not ACTIVE but {}", myRoleMode, getNetworkStatus());
 		}
 	}
 
 	private void callNextReadOnSocket(final ChannelHandlerContext channelHandlerContext) {
 		if (channelHandlerContext != null && channelHandlerContext.channel() != null) {
 			channelHandlerContext.channel().read();
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("next read on socket " + channelHandlerContext + " role " + myRoleMode + " called");
 		}
 	}
 
-	ChannelFuture getOrCreateClientHandler(final long sessionId) {
-		if (!clientChannelHandler.containsKey(sessionId)) {
+	ChannelFuture getOrCreateClientHandler(final long sessionId) throws InterruptedException {
+		if (!getClientChannelHandler().containsKey(sessionId)) {
 			createSocketSessionClient(sessionId);
-			if (trace)
-				logger.info("created client socket for session " + sessionId);
+			if (TRACE_LOG_IN_INFO)
+				logger.info("created client socket for session {}", sessionId);
 		}
-		final ChannelFuture channelFuture = clientChannelHandler.get(sessionId);
+		final ChannelFuture channelFuture = getClientChannelHandler().get(sessionId);
 		if (channelFuture != null && !channelFuture.isDone()) {
-			try {
-				channelFuture.await(BeaconNetworkTunnel.SYNC_TIME_OUT);
-			} catch (final InterruptedException e) {
-				logger.logException(e);
-			}
+
+			channelFuture.await(BeaconNetworkTunnel.SYNC_TIME_OUT);
 		} else {
-			if (trace)
-				logger.info("the client socket for session " + sessionId + " is null");
+			if (TRACE_LOG_IN_INFO)
+				logger.info("the client socket for session {} is null", sessionId);
 		}
 		return channelFuture;
 	}
 
-	SocketChannel getOrCreateServerSocketChannel(final long sessionId) {
-		if (trace)
+	SocketChannel getOrCreateServerSocketChannel(final long sessionId) throws InterruptedException {
+		if (TRACE_LOG_IN_INFO)
 			logger.info("opening server channel for session " + sessionId + ". Actual server channels "
-					+ serverChannelHandler.size());
-		if (mainServerHandler == null || mainServerHandler.isCancelled()) {
-			try {
-				createServerSocket();
-				if (trace)
-					logger.info("created server socket for session " + sessionId);
-			} catch (final InterruptedException e) {
-				logger.logException(e);
-			}
+					+ getServerChannelHandler().size());
+		if (getMainServerHandler() == null || getMainServerHandler().isCancelled()) {
+			createServerSocket();
+			if (TRACE_LOG_IN_INFO)
+				logger.info("created server socket for session {}", sessionId);
 		} else {
-			if (trace)
-				logger.info("the server socket for session " + sessionId + " exists");
+			if (TRACE_LOG_IN_INFO)
+				logger.info("the server socket for session exists {}", sessionId);
 		}
-		return serverChannelHandler.get(sessionId);
+		return getServerChannelHandler().get(sessionId);
 	}
 
 	private synchronized void createSocketSessionClient(final long sessionId) {
@@ -272,8 +518,9 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		clientBootstrap.handler(createClientInitializerHandlerForSession(sessionId));
 		clientBootstrap.option(ChannelOption.AUTO_READ, false);
 		try {
-			clientChannelHandler.put(sessionId, clientBootstrap.connect(beaconNetworkTunnel.getConfig().getClientIp(),
-					beaconNetworkTunnel.getConfig().getClientPort()));
+			getClientChannelHandler().put(sessionId,
+					clientBootstrap.connect(getBeaconNetworkTunnel().getConfig().getClientIp(),
+							getBeaconNetworkTunnel().getConfig().getClientPort()));
 		} catch (final Exception e) {
 			logger.logException("EXCEPTION during client socket creation for sessionId " + sessionId, e);
 		}
@@ -289,139 +536,6 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		};
 	}
 
-	private final class ClientTCPChannelHandler extends SimpleChannelInboundHandler<ByteBuf> implements AutoCloseable {
-		private final long clientSerialId;
-
-		public ClientTCPChannelHandler(long clientSerialId) {
-			this.clientSerialId = clientSerialId;
-		}
-
-		@Override
-		public void channelRead0(final ChannelHandlerContext ctx, final ByteBuf s)
-				throws TimeoutNetworkEvent, ExceptionNetworkEvent {
-			try {
-				if (trace) {
-					logger.info("** channelRead0 client for session Id " + clientSerialId + " and tunnel "
-							+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " received message");
-				}
-				if (!terminate) {
-					final long messageId = progressiveNetworkToBeacon.incrementAndGet();
-					final byte[] bytes = ByteBufUtil.getBytes(s);
-					inputCachedMessages.put(messageId,
-							new MessageCached(MessageCached.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
-									beaconNetworkTunnel, ctx, myRoleMode, clientSerialId, messageId, bytes, null,
-									chunkLimit, bytes.length, null));
-					nextAction(ctx);
-				}
-			} catch (final Exception ff) {
-				incrementPacketError();
-				logger.logException(ff);
-			}
-		}
-
-		@Override
-		public void close() throws Exception {
-			if (trace)
-				logger.info("close session " + clientSerialId + " role " + myRoleMode);
-		}
-
-		@Override
-		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelActive");
-			if (!terminate) {
-				try {
-					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
-							.setMessageStatus(MessageStatus.channelActive).setAgentSource(beaconNetworkTunnel.getMe())
-							.setTargeId(beaconNetworkTunnel.getTunnelId()).setMessageType(MessageType.FROM_CLIENT)
-							.setSessionId(clientSerialId).setUuid(uniqueClassId).build();
-					beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-				} catch (final Exception a) {
-					logger.warn("sending message channelActive " + a.getMessage());
-				}
-				nextAction(ctx);
-			}
-			super.channelActive(ctx);
-		}
-
-		@Override
-		public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelInactive");
-			if (!terminate) {
-				try {
-					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
-							.setMessageStatus(MessageStatus.channelInactive).setAgentSource(beaconNetworkTunnel.getMe())
-							.setTargeId(beaconNetworkTunnel.getTunnelId()).setMessageType(MessageType.FROM_CLIENT)
-							.setSessionId(clientSerialId).setUuid(uniqueClassId).build();
-					beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-				} catch (final Exception a) {
-					logger.warn("sending message channelInactive " + a.getMessage());
-				}
-			}
-			beaconNetworkTunnel.callChannelClientComplete(clientSerialId);
-			super.channelInactive(ctx);
-		}
-
-		@Override
-		public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelReadComplete");
-			super.channelReadComplete(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " from " + ctx.channel().localAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelRegistered");
-			super.channelRegistered(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelUnregistered");
-			super.channelUnregistered(ctx);
-		}
-
-		@Override
-		public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelWritabilityChanged");
-			super.channelWritabilityChanged(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " exceptionCaught");
-			if (!terminate) {
-				beaconNetworkTunnel.callChannelClientException(clientSerialId);
-			}
-			super.exceptionCaught(ctx, cause);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-			if (trace)
-				logger.info("channel sessionId " + clientSerialId + " with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " userEventTriggered");
-			super.userEventTriggered(ctx, evt);
-			nextAction(ctx);
-		}
-	}
-
 	private synchronized void createServerSocket() throws InterruptedException {
 		if (bossGroup == null) {
 			bossGroup = new NioEventLoopGroup();
@@ -435,17 +549,17 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 					.channel(NioServerSocketChannel.class).childHandler(serverInitHandler)
 					.childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.SO_REUSEADDR, true)
 					.childOption(ChannelOption.AUTO_READ, false);
-			mainServerHandler = b.bind(beaconNetworkTunnel.getConfig().getServerPort()).sync();
-			if (mainServerHandler.isSuccess()) {
-				if (trace)
-					logger.info("server Netty on port " + beaconNetworkTunnel.getConfig().getServerPort()
-							+ " with tunnelId " + beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode
+			mainServerHandler = b.bind(getBeaconNetworkTunnel().getConfig().getServerPort()).sync();
+			if (getMainServerHandler().isSuccess()) {
+				if (TRACE_LOG_IN_INFO)
+					logger.info("server Netty on port " + getBeaconNetworkTunnel().getConfig().getServerPort()
+							+ " with tunnelId " + getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode
 							+ " started successfully");
 			} else {
 				closeServerMainSocket();
-				logger.warn("server Netty on port " + beaconNetworkTunnel.getConfig().getServerPort()
-						+ " with id_target " + beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode
-						+ " error on mainServerHandler, isSuccess replies " + mainServerHandler.isSuccess());
+				logger.warn("server Netty on port " + getBeaconNetworkTunnel().getConfig().getServerPort()
+						+ " with id_target " + getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode
+						+ " error on mainServerHandler, isSuccess replies " + getMainServerHandler().isSuccess());
 			}
 		} catch (final Exception a) {
 			logger.logException("EXCEPTION creating server socket for role " + myRoleMode, a);
@@ -457,345 +571,154 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		}
 	}
 
-	private final class ServerTcpInitHandler extends ChannelInitializer<SocketChannel> {
-		@Override
-		protected void initChannel(SocketChannel serverSocketChannel) throws Exception {
-			final ServerTCPHandler serverTCPSocketChannelHandler = new ServerTCPHandler(serverSocketChannel);
-			serverSocketChannel.pipeline().addLast(serverTCPSocketChannelHandler);
-		}
-	}
-
-	private final class ServerTCPHandler extends SimpleChannelInboundHandler<ByteBuf> implements AutoCloseable {
-		private final long serverSessionId = UUID.randomUUID().getMostSignificantBits(); // battezza la sessione
-
-		public ServerTCPHandler(SocketChannel serverSocketChannel) {
-			serverChannelHandler.put(serverSessionId, serverSocketChannel);
-			if (trace)
-				logger.info("server socket for sessionId " + serverSessionId + " to "
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " created");
-		}
-
-		@Override
-		protected void channelRead0(final ChannelHandlerContext ctx, final ByteBuf s) throws TimeoutNetworkEvent {
-			try {
-				if (trace)
-					logger.info("** channelRead0 server for sessionId " + serverSessionId + " to "
-							+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " received message");
-				final long messageId = progressiveNetworkToBeacon.incrementAndGet();
-				final byte[] bytes = ByteBufUtil.getBytes(s);
-				if (!terminate) {
-					inputCachedMessages.put(messageId,
-							new MessageCached(MessageCached.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
-									beaconNetworkTunnel, ctx, myRoleMode, serverSessionId, messageId, bytes, null,
-									chunkLimit, bytes.length, null));
-				}
-				nextAction(ctx);
-			} catch (final Exception ff) {
-				incrementPacketError();
-				logger.logException(ff);
-			}
-		}
-
-		@Override
-		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelActive");
-			if (!terminate) {
-				try {
-					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
-							.setMessageStatus(MessageStatus.channelActive).setAgentSource(beaconNetworkTunnel.getMe())
-							.setTargeId(beaconNetworkTunnel.getTunnelId()).setSessionId(serverSessionId)
-							.setMessageType(MessageType.FROM_SERVER).build();
-					beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-				} catch (final Exception a) {
-					logger.warn("sending message channelActive " + a.getMessage());
-				}
-			}
-			super.channelActive(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelInactive");
-			if (!terminate) {
-				try {
-					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
-							.setMessageStatus(MessageStatus.channelInactive).setAgentSource(beaconNetworkTunnel.getMe())
-							.setTargeId(beaconNetworkTunnel.getTunnelId()).setSessionId(serverSessionId)
-							.setMessageType(MessageType.FROM_SERVER).build();
-					beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-				} catch (final Exception a) {
-					logger.warn("sending message channelInactive " + a.getMessage());
-				}
-			}
-			beaconNetworkTunnel.callChannelServerComplete(serverSessionId);
-			super.channelInactive(ctx);
-		}
-
-		@Override
-		public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelReadComplete");
-			super.channelReadComplete(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server from " + ctx.channel().localAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelRegistered");
-			super.channelRegistered(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelUnregistered");
-			super.channelUnregistered(ctx);
-		}
-
-		@Override
-		public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " channelWritabilityChanged");
-			super.channelWritabilityChanged(ctx);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-			logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-					+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " exceptionCaught");
-			if (!terminate) {
-				beaconNetworkTunnel.callChannelServerException(serverSessionId);
-			}
-			super.exceptionCaught(ctx, cause);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-			if (trace)
-				logger.info("channel server with " + ctx.channel().remoteAddress() + "\n"
-						+ beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " userEventTriggered");
-			super.userEventTriggered(ctx, evt);
-			nextAction(ctx);
-		}
-
-		@Override
-		public void close() throws Exception {
-			if (trace)
-				logger.info("server socket with session " + serverSessionId + " to " + beaconNetworkTunnel.getTunnelId()
-						+ " role " + myRoleMode + " closed");
-		}
-
-	}
-
 	@Override
 	public void close() throws Exception {
 		terminate = true;
-		for (final MessageCached m : inputCachedMessages.values()) {
-			m.end();
-		}
-		inputCachedMessages.clear();
-		for (final MessageCached m : outputCachedMessages.values()) {
-			m.end();
-		}
-		outputCachedMessages.clear();
 		outputCachedDataBase64ByMessageId.clear();
 		executor.shutdownNow();
 		closeServerMainSocket();
 		closeClientsSocket();
 	}
 
-	private void closeServerMainSocket() {
-		if (trace)
-			logger.info("server socket " + beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " closing");
-		if (!serverChannelHandler.isEmpty()) {
-			for (final SocketChannel client : serverChannelHandler.values()) {
+	private void closeServerMainSocket() throws InterruptedException {
+		if (TRACE_LOG_IN_INFO)
+			logger.info("server socket " + getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " closing");
+		if (!getServerChannelHandler().isEmpty()) {
+			for (final SocketChannel client : getServerChannelHandler().values()) {
 				client.disconnect();
 				client.close();
 			}
-			serverChannelHandler.clear();
+			getServerChannelHandler().clear();
 		}
-		if (mainServerHandler != null) {
-			mainServerHandler.cancel(true);
+		if (getMainServerHandler() != null) {
+			getMainServerHandler().cancel(true);
 			mainServerHandler = null;
 		}
 		if (workerGroup != null) {
-			try {
-				workerGroup.shutdownGracefully().sync();
-			} catch (final InterruptedException e) {
-				logger.logException("interrupt during worker group shutdown", e);
-			}
+			workerGroup.shutdownGracefully().sync();
 			workerGroup = null;
 		}
 		if (bossGroup != null) {
-			try {
-				bossGroup.shutdownGracefully().sync();
-			} catch (final InterruptedException e) {
-				logger.logException("interrupt during boss group shutdown", e);
-			}
+			bossGroup.shutdownGracefully().sync();
 			bossGroup = null;
 		}
 	}
 
 	private void closeClientsSocket() {
-		if (trace)
-			logger.info("client socket " + beaconNetworkTunnel.getTunnelId() + " role " + myRoleMode + " closed");
-		if (!clientChannelHandler.isEmpty()) {
-			for (final ChannelFuture client : clientChannelHandler.values()) {
+		if (TRACE_LOG_IN_INFO)
+			logger.info("client socket " + getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " closed");
+		if (!getClientChannelHandler().isEmpty()) {
+			for (final ChannelFuture client : getClientChannelHandler().values()) {
 				if (client.channel() != null) {
 					client.channel().disconnect();
 				}
 				client.cancel(true);
 			}
-			clientChannelHandler.clear();
+			getClientChannelHandler().clear();
 		}
 		if (workerGroup != null) {
 			try {
 				workerGroup.shutdownGracefully().sync();
-			} catch (final InterruptedException e) {
-				logger.logException("interrupt during worker group shutdown", e);
+			} catch (final Exception e) {
+				logger.logException("exception during worker group shutdown", e);
 			}
 			workerGroup = null;
 		}
 		if (bossGroup != null) {
 			try {
 				bossGroup.shutdownGracefully().sync();
-			} catch (final InterruptedException e) {
-				logger.logException("interrupt during boss group shutdown", e);
+			} catch (final Exception e) {
+				logger.logException("exception during boss group shutdown", e);
 			}
 			bossGroup = null;
 		}
 	}
 
 	synchronized void deleteClientHandler(long sessionId) {
-		if (clientChannelHandler.containsKey(sessionId) && clientChannelHandler.get(sessionId).channel() != null
-				&& clientChannelHandler.get(sessionId).channel().isActive()) {
-			clientChannelHandler.get(sessionId).channel().disconnect();
-			clientChannelHandler.get(sessionId).cancel(true);
+		if (getClientChannelHandler().containsKey(sessionId)
+				&& getClientChannelHandler().get(sessionId).channel() != null
+				&& getClientChannelHandler().get(sessionId).channel().isActive()) {
+			getClientChannelHandler().get(sessionId).channel().disconnect();
+			getClientChannelHandler().get(sessionId).cancel(true);
 		}
-		clientChannelHandler.remove(sessionId);
+		getClientChannelHandler().remove(sessionId);
 	}
 
 	synchronized void deleteServerSocketChannel(long sessionId) {
-		if (serverChannelHandler.containsKey(sessionId) && serverChannelHandler.get(sessionId).isActive()) {
-			serverChannelHandler.get(sessionId).disconnect();
-			serverChannelHandler.get(sessionId).close();
+		if (getServerChannelHandler().containsKey(sessionId) && getServerChannelHandler().get(sessionId).isActive()) {
+			getServerChannelHandler().get(sessionId).disconnect();
+			getServerChannelHandler().get(sessionId).close();
 		}
-		serverChannelHandler.remove(sessionId);
-	}
-
-	@Override
-	public void incrementPacketSend() {
-		lastNetworkActiviti.set(new Date().getTime());
-		packetSend.incrementAndGet();
-	}
-
-	@Override
-	public void incrementPacketError() {
-		lastNetworkActiviti.set(new Date().getTime());
-		packetError.incrementAndGet();
-	}
-
-	@Override
-	public void incrementPacketControl() {
-		lastNetworkActiviti.set(new Date().getTime());
-		packetControl.incrementAndGet();
-	}
-
-	@Override
-	public void incrementPacketReceived() {
-		lastNetworkActiviti.set(new Date().getTime());
-		packetReceived.incrementAndGet();
+		getServerChannelHandler().remove(sessionId);
 	}
 
 	synchronized boolean isNextMessageToNetwork(long serialId, long tunnelId, long messageId,
 			MessageStatus messageStatus) {
-		if (messageId - 1 == lastAckSent.get()) {
-			if (trace)
+		if (messageId - 1 == getBeaconNetworkTunnel().getLastAckSent(serialId)) {
+			if (TRACE_LOG_IN_INFO)
 				logger.info("################ for " + myRoleMode + " session " + serialId + " is next message "
-						+ messageId + " [" + messageStatus + "]: TRUE, actual is " + lastAckSent.get());
+						+ messageId + " [" + messageStatus + "]: TRUE, actual is "
+						+ getBeaconNetworkTunnel().getLastAckSent(serialId));
 			return true;
 		} else {
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("################ for " + myRoleMode + " session " + serialId + " is next message "
-						+ messageId + " [" + messageStatus + "]: FALSE, actual is " + lastAckSent.get());
+						+ messageId + " [" + messageStatus + "]: FALSE, actual is "
+						+ getBeaconNetworkTunnel().getLastAckSent(serialId));
 			return false;
 		}
 	}
 
-	/*
-	 * boolean isOlderMessageToNetwork(long serialId, long tunnelId, long messageId,
-	 * MessageStatus messageStatus) { if (messageId - 1 < lastAckSent.get()) { if
-	 * (trace) logger.info("################ is older message " + messageId + " [" +
-	 * messageStatus + "]: TRUE, actual is " + lastAckSent.get()); return true; }
-	 * else { if (trace) logger.info("################ is older message " +
-	 * messageId + " [" + messageStatus + "]: FALSE, actual is " +
-	 * lastAckSent.get()); return false; } }
-	 */
-
 	@Override
-	public void confirmPacketReceived(long messageUuid, long lastReceived) {
-		incrementPacketControl();
-		for (final Long serialPacket : inputCachedMessages.keySet()) {
-			if (serialPacket <= messageUuid) {
-				final MessageCached lock = inputCachedMessages.get(serialPacket);
-				if (trace)
+	public void confirmPacketReceived(long sessionId, long ackMessageId, long lastReceivedAck) {
+		getBeaconNetworkTunnel().incrementPacketControl();
+		for (final Long serialPacket : getBeaconNetworkTunnel().getInputCachedMessages(sessionId).keySet()) {
+			if (serialPacket <= ackMessageId) {
+				final MessageCached lock = getBeaconNetworkTunnel().getInputCachedMessages(sessionId).get(serialPacket);
+				if (TRACE_LOG_IN_INFO)
 					logger.info("################ confirmed packet to Beacon and remove it " + serialPacket
-							+ " beacause ack received is " + messageUuid);
+							+ " beacause ack received is " + ackMessageId);
 				lock.ackReceived();
-				inputCachedMessages.remove(serialPacket);
-				updateLastAckReceivedIfNeed(messageUuid);
+				getBeaconNetworkTunnel().removeIputCachedMessage(sessionId, serialPacket);
+				updateLastAckReceivedIfNeed(sessionId, ackMessageId);
 			}
 		}
-		for (final Long serial : outputCachedMessages.keySet()) {
-			if (serial <= lastReceived) {
-				if (trace)
-					logger.info("################ remove packet to network " + serial
-							+ " beacause the last received on the other side is  " + lastReceived);
-				outputCachedMessages.remove(serial);
-				beaconNetworkTunnel.getNetworkReceiver().getOutputCachedDataBase64ByMessageId().remove(serial);
+		for (final Long idCachedMessage : getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).keySet()) {
+			if (idCachedMessage <= lastReceivedAck) {
+				if (TRACE_LOG_IN_INFO)
+					logger.info("################ remove packet to network " + idCachedMessage
+							+ " beacause the last received on the other side is  " + lastReceivedAck);
+				getBeaconNetworkTunnel().removeOutputCachedMessage(sessionId, idCachedMessage);
+				getBeaconNetworkTunnel().getNetworkReceiver().getOutputCachedDataBase64ByMessageId()
+						.remove(idCachedMessage);
 			} else {
-				if (outputCachedMessages != null && outputCachedMessages.containsKey(serial))
-					outputCachedMessages.get(serial).isCompleteOrTryToSend();
+				if (getBeaconNetworkTunnel().getOutputCachedMessages(sessionId) != null
+						&& getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).containsKey(idCachedMessage))
+					getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).get(idCachedMessage)
+							.isCompleteOrTryToSend();
 			}
-		}
-	}
-
-	private synchronized void updateLastAckReceivedIfNeed(long messageUuid) {
-		if (messageUuid > lastAckReceived.get()) {
-			lastAckReceived.set(messageUuid);
-		}
-	}
-
-	private synchronized void updateLastAckSentIfNeed(long messageUuid) {
-		if (messageUuid > lastAckSent.get()) {
-			lastAckSent.set(messageUuid);
 		}
 	}
 
 	@Override
-	public void exceptionPacketReceived(long messageUuid) {
-		incrementPacketControl();
-		final MessageCached lock = inputCachedMessages.get(messageUuid);
+	public void exceptionPacketReceived(long sessionId, long messageId) {
+		getBeaconNetworkTunnel().incrementPacketControl();
+		final MessageCached lock = getBeaconNetworkTunnel().getInputCachedMessages(sessionId).get(messageId);
 		if (lock != null) {
-			if (trace)
-				logger.info("################ exception packet " + messageUuid);
+			if (TRACE_LOG_IN_INFO)
+				logger.info("################ exception packet {}", messageId);
 			lock.resetReceived();
 		} else {
-			logger.warn("request resend message " + messageUuid + " but the lock object is null");
+			logger.warn("request resend messageId {} but the lock object is null", messageId);
 		}
+	}
+
+	private synchronized void updateLastAckReceivedIfNeed(long sessionId, long messageUuid) {
+		getBeaconNetworkTunnel().getOrCreateSessionById(sessionId).updateLastAckReceivedIfNeed(messageUuid);
+	}
+
+	private synchronized void updateLastAckSentIfNeed(long sessionId, long messageUuid) {
+		getBeaconNetworkTunnel().getOrCreateSessionById(sessionId).updateLastAckSentIfNeed(messageUuid);
 	}
 
 	@Override
@@ -805,102 +728,62 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		if (myRoleMode != null)
 			builder.append("myRoleMode=").append(myRoleMode).append(", ");
 		builder.append("uniqueClassId=").append(uniqueClassId).append(", chunkLimit=").append(chunkLimit).append(", ");
-		if (beaconNetworkTunnel != null)
-			builder.append("tunnel=").append(beaconNetworkTunnel).append(", ");
-		if (packetSend != null)
-			builder.append("packetSend=").append(packetSend).append(", ");
-		if (packetReceived != null)
-			builder.append("packetReceived=").append(packetReceived).append(", ");
-		if (packetError != null)
-			builder.append("packetError=").append(packetError).append(", ");
-		if (packetControl != null)
-			builder.append("packetControl=").append(packetControl).append(", ");
-		if (progressiveNetworkToBeacon != null)
-			builder.append("progressivePacketCounter=").append(progressiveNetworkToBeacon).append(", ");
 		builder.append("terminate=").append(terminate);
-		builder.append("]\n");
-		builder.append("details channel=").append(reportDetails());
-		return builder.toString();
-	}
+		builder.append("]");
 
-	String reportDetails() {
-		final StringBuilder sb = new StringBuilder();
-		if (trace) {
-			sb.append("\n--------------------\nDETAILS BeaconNetworkReceiver\n");
-			sb.append("ROLE: " + myRoleMode + "\n");
-			if (myRoleMode.equals(NetworkMode.CLIENT)) {
-				sb.append("- clientChannelHandler -> " + clientChannelHandler.entrySet().stream()
-						.map(n -> (n.getKey() + "["
-								+ ((n.getValue().channel() != null) ? n.getValue().channel().isActive() : "disabled")
-								+ "]"))
-						.collect(Collectors.joining(", ")) + "\n");
-			}
-			if (myRoleMode.equals(NetworkMode.SERVER)) {
-				sb.append("- serverChannelHandler -> " + serverChannelHandler.entrySet().stream()
-						.map(n -> (n.getKey() + "[" + (n.getValue().isActive()) + "]"))
-						.collect(Collectors.joining(", ")) + "\n");
-				sb.append(
-						"- mainServerHandler -> " + ((mainServerHandler != null && mainServerHandler.channel() != null)
-								? mainServerHandler.channel().isActive()
-								: "disabled") + "\n");
-			}
-			sb.append("- packetSemaphores ["
-					+ inputCachedMessages.size() + "] -> " + inputCachedMessages.entrySet().stream()
-							.map(n -> (n.getKey() + "[" + n.getValue() + "]")).collect(Collectors.joining(", "))
-					+ "\n");
-			sb.append("--------------------\n");
-			if (!inputCachedMessages.isEmpty()) {
-				sb.append("INPUT MESSAGE IN CACHE\n");
-				for (final MessageCached m : inputCachedMessages.values()) {
-					sb.append(". " + m.toString() + "\n");
-				}
-			}
-			if (!outputCachedMessages.isEmpty()) {
-				sb.append("OUTPUT MESSAGE IN CACHE\n");
-				for (final MessageCached m : outputCachedMessages.values()) {
-					sb.append(". " + m.toString() + "\n");
-				}
-			}
-		}
-		return sb.toString();
+		return builder.toString();
 	}
 
 	void sendExceptionMessage(long serverSessionId, long targertId, long messageUuid, Exception clientEx) {
 		try {
 			final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
-					.setMessageStatus(MessageStatus.exceptionCaught).setAgentSource(beaconNetworkTunnel.getMe())
-					.setTargeId(targertId).setSessionId(serverSessionId)
+					.setMessageStatus(MessageStatus.exceptionCaught).setAgentSource(getBeaconNetworkTunnel().getMe())
+					.setTunnelId(targertId).setSessionId(serverSessionId)
 					.setMessageType(
 							myRoleMode.equals(NetworkMode.CLIENT) ? MessageType.FROM_CLIENT : MessageType.FROM_SERVER)
 					.setPayload(EdgeLogger.stackTraceToString(clientEx)).build();
 
-			beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-			incrementPacketControl();
-			if (trace)
-				logger.info("################ exception message sent " + messageUuid);
+			getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+			getBeaconNetworkTunnel().incrementPacketControl();
+			if (TRACE_LOG_IN_INFO)
+				logger.info("################ exception message sent {}", messageUuid);
 
 		} catch (final Exception a) {
-			logger.warn("sending message exception " + a.getMessage());
+			logger.warn("sending message exception {}", a.getMessage());
 		}
 	}
 
-	void sendAckOrControlMessage(long serverSessionId, long targertId, long messageUuid, boolean control) {
+	void sendAckOrControlMessage(long sessionId, long tunnelId, long messageUuid, boolean control) {
 		try {
 			final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
 					.setMessageStatus(control ? MessageStatus.beaconMessageControl : MessageStatus.beaconMessageAck)
-					.setAgentSource(beaconNetworkTunnel.getMe()).setTargeId(targertId).setSessionId(serverSessionId)
-					.setPayload(String.valueOf(messageUuid)).setMessageUuid(lastAckReceived.get())
+					.setAgentSource(getBeaconNetworkTunnel().getMe()).setTunnelId(tunnelId).setSessionId(sessionId)
+					.setMessageAckId(messageUuid)
+					.setMessageAckReceivedId(getBeaconNetworkTunnel().getLastAckReceived(sessionId))
 					.setMessageType(
 							myRoleMode.equals(NetworkMode.CLIENT) ? MessageType.FROM_CLIENT : MessageType.FROM_SERVER)
 					.build();
-			beaconNetworkTunnel.sendMessageToBeaconTunnel(tunnelMessage);
-			incrementPacketControl();
-			updateLastAckSentIfNeed(messageUuid);
-			if (trace)
-				logger.info("################ " + (control ? "control" : "ack") + " message sent " + messageUuid);
+			getBeaconNetworkTunnel().sendMessageToBeaconTunnel(tunnelMessage);
+			getBeaconNetworkTunnel().incrementPacketControl();
+			updateLastAckSentIfNeed(sessionId, messageUuid);
+			if (TRACE_LOG_IN_INFO) {
+				logger.info("################ {} message sent {}", (control ? "control" : "ack"), messageUuid);
+			}
 		} catch (final Exception a) {
-			logger.warn("sending message ack " + a.getMessage());
+			logger.warn("sending message ack {}", a.getMessage());
 		}
+	}
+
+	void updateNetworkActiviti() {
+		lastNetworkActiviti.set(new Date().getTime());
+	}
+
+	Map<Long, SocketChannel> getServerChannelHandler() {
+		return serverChannelHandler;
+	}
+
+	ChannelFuture getMainServerHandler() {
+		return mainServerHandler;
 	}
 
 }

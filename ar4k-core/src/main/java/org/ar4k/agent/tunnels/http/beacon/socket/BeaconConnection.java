@@ -1,6 +1,6 @@
 package org.ar4k.agent.tunnels.http.beacon.socket;
 
-import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.trace;
+import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRACE_LOG_IN_INFO;
 
 import java.util.Date;
 
@@ -38,22 +38,26 @@ public class BeaconConnection implements AutoCloseable {
 
 	private synchronized void createNewBeaconConnection() {
 		final StatusNow originalState = statusNow;
+		MessageStatus messageType = null;
+		if (statusNow.equals(StatusNow.INIT)) {
+			messageType = MessageStatus.beaconChannelRequest;
+		} else {
+			messageType = (beaconNetworkTunnel.getMyRoleMode().equals(NetworkMode.CLIENT)
+					? MessageStatus.closeRequestClient
+					: MessageStatus.closeRequestServer);
+		}
 		final TunnelMessage tunnelMessage = TunnelMessage.newBuilder().setAgentSource(beaconNetworkTunnel.getMe())
-				.setTargeId(beaconNetworkTunnel.getTunnelId()).setUuid(beaconNetworkTunnel.getUniqueClassId())
-				.setMessageStatus(statusNow.equals(StatusNow.INIT) ? MessageStatus.beaconChannelRequest
-						: ((beaconNetworkTunnel.getMyRoleMode().equals(NetworkMode.CLIENT)
-								? MessageStatus.closeRequestClient
-								: MessageStatus.closeRequestServer)))
-				.build();
+				.setTunnelId(beaconNetworkTunnel.getTunnelId()).setClassUuid(beaconNetworkTunnel.getUniqueClassId())
+				.setMessageStatus(messageType).build();
 		fromBeaconServer = new BeaconEndpointFromObserver(this);
 		toBeaconServer = beaconNetworkTunnel.getAsyncStubTunnel().openNetworkChannel(fromBeaconServer);
 		statusNow = StatusNow.ONLINE;
-		if (trace)
-			logger.info("Beacon connection tunnel id " + beaconNetworkTunnel.getTunnelId() + " role "
-					+ beaconNetworkTunnel + " is now online");
+		if (TRACE_LOG_IN_INFO)
+			logger.info("Beacon connection tunnel id {} role {} is now online", beaconNetworkTunnel.getTunnelId(),
+					beaconNetworkTunnel);
 		toBeaconServerOnNext(tunnelMessage);
 		if (originalState.equals(StatusNow.RECONNECTION)) {
-			beaconNetworkTunnel.nextAction(null);
+			beaconNetworkTunnel.nextActionAllSessions();
 		}
 	}
 
@@ -83,7 +87,7 @@ public class BeaconConnection implements AutoCloseable {
 
 	boolean isBeaconToServerOnline() {
 		if (!statusNow.equals(StatusNow.ONLINE)) {
-			logger.info("beacon connection status is " + statusNow);
+			logger.info("beacon connection status is {}", statusNow);
 			return false;
 		} else {
 			return true;
@@ -97,8 +101,8 @@ public class BeaconConnection implements AutoCloseable {
 				&& ((fromBeaconServer.getLastMessageReceivedFromServerBeacon()
 						+ (BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT
 								* BeaconNetworkTunnel.PING_FROM_BEACON_SERVER_CHECK_FACTOR)) < time)) {
-			logger.warn("ping from server failed after "
-					+ (time - fromBeaconServer.getLastMessageReceivedFromServerBeacon()));
+			logger.warn("ping from server failed after {}",
+					(time - fromBeaconServer.getLastMessageReceivedFromServerBeacon()));
 			receivedOnErrorInFromObserver();
 		}
 	}
@@ -106,9 +110,9 @@ public class BeaconConnection implements AutoCloseable {
 	@Override
 	public void close() {
 		statusNow = StatusNow.CLOSED;
-		if (trace)
-			logger.info("Beacon connection tunnel id " + beaconNetworkTunnel.getTunnelId() + " role "
-					+ beaconNetworkTunnel + " is now closed");
+		if (TRACE_LOG_IN_INFO)
+			logger.info("Beacon connection tunnel id {} role {} is now closed", beaconNetworkTunnel.getTunnelId(),
+					beaconNetworkTunnel);
 	}
 
 	BeaconNetworkTunnel getBeaconNetworkTunnel() {
@@ -116,17 +120,17 @@ public class BeaconConnection implements AutoCloseable {
 	}
 
 	synchronized void receivedOnErrorInFromObserver() {
-		beaconNetworkTunnel.getNetworkReceiver().incrementPacketError();
+		beaconNetworkTunnel.incrementPacketError();
 		if (statusNow.equals(StatusNow.ONLINE)) {
 			statusNow = StatusNow.RECONNECTION;
-			if (trace)
-				logger.info("Beacon connection tunnel id " + beaconNetworkTunnel.getTunnelId() + " role "
-						+ beaconNetworkTunnel + " is now in recconnection state");
+			if (TRACE_LOG_IN_INFO)
+				logger.info("Beacon connection tunnel id {} role {} is now in recconnection state",
+						beaconNetworkTunnel.getTunnelId(), beaconNetworkTunnel);
 			createNewBeaconConnection();
 		} else {
-			if (trace)
-				logger.info("Beacon connection tunnel id " + beaconNetworkTunnel.getTunnelId() + " role "
-						+ beaconNetworkTunnel + " received onError but it is in state " + statusNow);
+			if (TRACE_LOG_IN_INFO)
+				logger.info("Beacon connection tunnel id {} role {} received onError but it is in state {}",
+						beaconNetworkTunnel.getTunnelId(), beaconNetworkTunnel, statusNow);
 		}
 	}
 }

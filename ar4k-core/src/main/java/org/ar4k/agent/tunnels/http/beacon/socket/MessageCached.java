@@ -1,11 +1,12 @@
 package org.ar4k.agent.tunnels.http.beacon.socket;
 
-import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.trace;
+import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRACE_LOG_IN_INFO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.channels.ClosedChannelException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -18,7 +19,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
-import org.ar4k.agent.exception.BeaconTunnelException;
 import org.ar4k.agent.exception.ExceptionNetworkEvent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -45,13 +45,13 @@ final class MessageCached implements Serializable {
 	private static final long serialVersionUID = 3207807089900926005L;
 	private final long timeRequest = new Date().getTime();
 	private final long messageId;
-	private final BeaconNetworkReceiver networkReceiver;
-	private final ChannelHandlerContext channelHandlerContext;
+	private final transient BeaconNetworkReceiver networkReceiver;
+	private final transient ChannelHandlerContext channelHandlerContext;
 	private final NetworkMode myRoleMode;
 	private final long serialId;
-	private final ExecutorService executor;
+	private final transient ExecutorService executor;
 	private final byte[] inputbytes;
-	private final BeaconNetworkTunnel tunnel;
+	private final transient BeaconNetworkTunnel tunnel;
 	private final int chunkLimit;
 	private final MessageCachedType messageCachedType;
 	private final String outputData;
@@ -105,16 +105,11 @@ final class MessageCached implements Serializable {
 		completed.set(new Date().getTime());
 	}
 
-	/*
-	 * private boolean isOlderMessageToNetwork() { return
-	 * networkReceiver.isOlderMessageToNetwork(serialId, tunnel.getTunnelId(),
-	 * messageId, messageStatus); }
-	 */
 	boolean softChek() {
 		if (lastRetry == 0 || (lastRetry + BeaconNetworkTunnel.DELAY_SOFT_CHECK < new Date().getTime())) {
 			isCompleteOrTryToSend();
-			if (trace)
-				logger.info("soft check called for " + toString());
+			if (TRACE_LOG_IN_INFO)
+				logger.info("soft check called for {}", this);
 			return true;
 		} else {
 			return false;
@@ -133,6 +128,8 @@ final class MessageCached implements Serializable {
 							messageStatus)) {
 						runActionSendToNetwork();
 					}
+					break;
+				default:
 					break;
 				}
 			} else {
@@ -161,6 +158,12 @@ final class MessageCached implements Serializable {
 			public void run() {
 				try {
 					deliveryMessageToNetwork();
+				} catch (final ClosedChannelException c) {
+					if (myRoleMode.equals(NetworkMode.CLIENT)) {
+						networkReceiver.deleteClientHandler(getSessionID());
+					} else {
+						networkReceiver.deleteServerSocketChannel(getSessionID());
+					}
 				} catch (final Exception e) {
 					logger.logException("IN ACTION SEND TO NETWORK", e);
 					networkReceiver.sendExceptionMessage(serialId, tunnel.getTunnelId(), messageId, e);
@@ -170,7 +173,7 @@ final class MessageCached implements Serializable {
 		});
 	}
 
-	private final void sendPacketToBeacon() throws BeaconTunnelException {
+	private final void sendPacketToBeacon() {
 		try {
 			byte[] compressedByteData = null;
 			if (inputbytes.length > chunkLimit) {
@@ -184,18 +187,18 @@ final class MessageCached implements Serializable {
 				retry++;
 				lastRetry = new Date().getTime();
 				sendAllChunkToBeaconServer(compressedByteData, base64Data, chunkSize);
-				if (trace)
+				if (TRACE_LOG_IN_INFO)
 					logger.info("** messageId " + messageId + " sent to Beacon server "
 							+ channelHandlerContext.channel().remoteAddress() + "\n" + tunnel.getTunnelId() + "/"
 							+ myRoleMode + " size " + base64Data.length() + " chunks: " + chunkSize + " data:\n"
 							+ base64Data + "\n");
-				networkReceiver.incrementPacketSend();
+				networkReceiver.getBeaconNetworkTunnel().incrementPacketSend();
 			} else {
 				logger.warn("error sending empty message " + myRoleMode + " to Beacon server");
 			}
 		} catch (final Exception f) {
 			logger.warn("EXCEPTION SENDING TO BEACON SERVER AS " + myRoleMode + " " + EdgeLogger.stackTraceToString(f));
-			networkReceiver.incrementPacketError();
+			networkReceiver.getBeaconNetworkTunnel().incrementPacketError();
 			throw new ExceptionNetworkEvent(f);
 		}
 	}
@@ -206,12 +209,12 @@ final class MessageCached implements Serializable {
 		while (chunk <= chunkSize) {
 			final int from = chunkLimit * (chunk - 1);
 			final int offset = (chunk < chunkSize) ? chunkLimit : (base64Data.length() - from);
-			if (trace)
+			if (TRACE_LOG_IN_INFO)
 				logger.info("elaborate chunk " + chunk + "/" + chunkSize + " from:" + from + " offset:" + offset);
 			final String payload = base64Data.substring(from, from + offset);
 			final Builder tunnelBuilder = TunnelMessage.newBuilder().setPayload(payload)
 					.setMessageHashCode(payload.hashCode()).setAgentSource(tunnel.getMe())
-					.setTargeId(tunnel.getTunnelId()).setSessionId(serialId)
+					.setTunnelId(tunnel.getTunnelId()).setSessionId(serialId)
 					.setMessageType((myRoleMode.equals(NetworkMode.SERVER)) ? MessageType.FROM_SERVER
 							: MessageType.FROM_CLIENT);
 			if (compressedByteData == null) {
@@ -221,8 +224,8 @@ final class MessageCached implements Serializable {
 						.setOriginalSize(inputbytes.length);
 			}
 
-			final TunnelMessage tunnelMessage = tunnelBuilder.setUuid(tunnel.getUniqueClassId()).setChunk(chunk)
-					.setTotalChunks(chunkSize).setMessageUuid(messageId).build();
+			final TunnelMessage tunnelMessage = tunnelBuilder.setClassUuid(tunnel.getUniqueClassId()).setChunk(chunk)
+					.setTotalChunks(chunkSize).setMessageId(messageId).build();
 			tunnel.sendMessageToBeaconTunnel(tunnelMessage);
 			chunk++;
 		}
@@ -230,6 +233,9 @@ final class MessageCached implements Serializable {
 
 	private final void deliveryMessageToNetwork()
 			throws IOException, InterruptedException, ExecutionException, TimeoutException {
+		if (TRACE_LOG_IN_INFO) {
+			logger.info("delivery message...");
+		}
 		final byte[] primitiveBytes = Base64.getDecoder().decode(outputData);
 		byte[] decompressedBytes = null;
 		if (messageStatus.equals(MessageStatus.channelTransmissionCompressed)) {
@@ -240,7 +246,7 @@ final class MessageCached implements Serializable {
 		if (myRoleMode.equals(NetworkMode.CLIENT)) {
 			if (networkReceiver.getOrCreateClientHandler(serialId) != null) {
 				sendToNetworkClient(primitiveBytes, decompressedBytes);
-				if (trace) {
+				if (TRACE_LOG_IN_INFO) {
 					logger.info("sent to network channel "
 							+ networkReceiver.getOrCreateClientHandler(serialId).isSuccess());
 					logger.info("message as " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + "/" + serialId
@@ -256,7 +262,7 @@ final class MessageCached implements Serializable {
 		} else {
 			if (networkReceiver.getOrCreateServerSocketChannel(serialId) != null) {
 				sendToNetworkServer(primitiveBytes, decompressedBytes);
-				if (trace)
+				if (TRACE_LOG_IN_INFO)
 					logger.info("message as " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + " serialId "
 							+ serialId + " sent to network\n"
 							+ Hex.encodeHexString((decompressedBytes == null) ? primitiveBytes : decompressedBytes));
@@ -267,7 +273,7 @@ final class MessageCached implements Serializable {
 						+ tunnel.getTunnelId() + " serialId " + serialId + "for message id " + messageId);
 			}
 		}
-		networkReceiver.incrementPacketReceived();
+		networkReceiver.getBeaconNetworkTunnel().incrementPacketReceived();
 		networkReceiver.sendAckOrControlMessage(serialId, tunnel.getTunnelId(), messageId, false);
 	}
 
@@ -278,6 +284,7 @@ final class MessageCached implements Serializable {
 					.writeAndFlush(
 							Unpooled.wrappedBuffer((decompressedBytes == null) ? primitiveBytes : decompressedBytes))
 					.get(BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT, TimeUnit.MILLISECONDS);
+			networkReceiver.deleteServerSocketChannel(serialId);
 			end();
 		}
 	}
@@ -295,8 +302,8 @@ final class MessageCached implements Serializable {
 
 	void ackReceived() {
 		end();
-		if (trace)
-			logger.info("ack register for " + this);
+		if (TRACE_LOG_IN_INFO)
+			logger.info("ack register for {}", this);
 	}
 
 	void resetReceived() {
@@ -340,8 +347,8 @@ final class MessageCached implements Serializable {
 		try (OutputStream dos = new DeflateCompressorOutputStream(os)) {
 			dos.write(bytesData);
 		}
-		if (trace)
-			logger.info("compress report: original size:" + bytesData.length + " compressed size:" + os.size());
+		if (TRACE_LOG_IN_INFO)
+			logger.info("compress report: original size: {} compressed size: {}", bytesData.length, os.size());
 		return os.toByteArray();
 	}
 

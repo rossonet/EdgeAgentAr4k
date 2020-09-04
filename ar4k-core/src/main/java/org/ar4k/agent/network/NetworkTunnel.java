@@ -1,6 +1,5 @@
 package org.ar4k.agent.network;
 
-import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 
@@ -23,7 +22,9 @@ public interface NetworkTunnel extends AutoCloseable {
 
 	long getPacketError();
 
-	void init() throws ServiceInitException;
+	int getWaitingPackagesCount();
+
+	void init();
 
 	void beaconObserverComplete(long targetId);
 
@@ -32,6 +33,8 @@ public interface NetworkTunnel extends AutoCloseable {
 	void setResponseNetworkChannel(ResponseNetworkChannel response);
 
 	long getTunnelId();
+
+	long getUniqueClassId();
 
 	Agent getRemoteAgent();
 

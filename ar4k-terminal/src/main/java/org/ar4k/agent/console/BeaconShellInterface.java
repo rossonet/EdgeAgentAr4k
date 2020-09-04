@@ -50,7 +50,7 @@ import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http.beacon.socket.server.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;

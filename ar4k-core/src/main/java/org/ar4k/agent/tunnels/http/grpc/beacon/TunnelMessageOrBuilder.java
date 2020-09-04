@@ -34,9 +34,9 @@ public interface TunnelMessageOrBuilder extends
   org.ar4k.agent.tunnels.http.grpc.beacon.AgentOrBuilder getAgentDestinationOrBuilder();
 
   /**
-   * <code>int64 targeId = 3;</code>
+   * <code>int64 tunnelId = 3;</code>
    */
-  long getTargeId();
+  long getTunnelId();
 
   /**
    * <code>int64 sessionId = 4;</code>
@@ -44,9 +44,9 @@ public interface TunnelMessageOrBuilder extends
   long getSessionId();
 
   /**
-   * <code>int64 uuid = 5;</code>
+   * <code>int64 classUuid = 5;</code>
    */
-  long getUuid();
+  long getClassUuid();
 
   /**
    * <code>.beacon.MessageType messageType = 6;</code>
@@ -77,27 +77,37 @@ public interface TunnelMessageOrBuilder extends
   int getTotalChunks();
 
   /**
-   * <code>int64 messageUuid = 10;</code>
+   * <code>int64 messageId = 10;</code>
    */
-  long getMessageUuid();
+  long getMessageId();
 
   /**
-   * <code>string payload = 11;</code>
+   * <code>int64 messageAckId = 11;</code>
+   */
+  long getMessageAckId();
+
+  /**
+   * <code>int64 messageAckReceivedId = 12;</code>
+   */
+  long getMessageAckReceivedId();
+
+  /**
+   * <code>string payload = 13;</code>
    */
   java.lang.String getPayload();
   /**
-   * <code>string payload = 11;</code>
+   * <code>string payload = 13;</code>
    */
   com.google.protobuf.ByteString
       getPayloadBytes();
 
   /**
-   * <code>int32 originalSize = 12;</code>
+   * <code>int32 originalSize = 14;</code>
    */
   int getOriginalSize();
 
   /**
-   * <code>int32 messageHashCode = 13;</code>
+   * <code>int32 messageHashCode = 15;</code>
    */
   int getMessageHashCode();
 }
