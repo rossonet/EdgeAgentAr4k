@@ -33,7 +33,7 @@ public class BeaconServerNetworkHub implements StreamObserver<TunnelMessage>, Au
 			if (!closed) {
 				if (TRACE_LOG_IN_INFO)
 					logger.info("Received on BeaconServer [session:" + value.getSessionId() + ",target:"
-							+ value.getTunnelId() + ", data:" + value.getPayload() + "]");
+							+ value.getTunnelId() + ", data:" + value + "]");
 				if (tunnel == null) {
 					for (final TunnelRunnerBeaconServer t : tunnelsRegister) {
 						if (TRACE_LOG_IN_INFO)

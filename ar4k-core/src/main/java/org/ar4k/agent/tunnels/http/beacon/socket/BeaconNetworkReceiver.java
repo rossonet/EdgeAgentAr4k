@@ -79,6 +79,7 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 						+ getBeaconNetworkTunnel().getTunnelId() + " role " + myRoleMode + " channelActive");
 			if (!terminate) {
 				try {
+					getBeaconNetworkTunnel().registerSocketContext(serverSessionId, ctx);
 					final TunnelMessage tunnelMessage = TunnelMessage.newBuilder()
 							.setMessageStatus(MessageStatus.channelActive)
 							.setAgentSource(getBeaconNetworkTunnel().getMe())
