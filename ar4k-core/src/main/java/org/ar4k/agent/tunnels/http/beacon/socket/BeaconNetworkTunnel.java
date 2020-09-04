@@ -283,6 +283,9 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
 		if (result == null) {
 			result = new SessionTunnel(sessionId);
 			sessions.add(result);
+			if (TRACE_LOG_IN_INFO) {
+				logger.info("-- NEW SESSION OBJECT CREATED FOR SESSIONID {} --", sessionId);
+			}
 		}
 		return result;
 	}
