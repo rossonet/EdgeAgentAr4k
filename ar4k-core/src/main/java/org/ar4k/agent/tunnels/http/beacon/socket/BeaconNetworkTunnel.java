@@ -26,7 +26,7 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BeaconNetworkTunnel.class.toString());
 	private static final int PACKET_CHUNK_LIMIT = 192;
-	public static final long LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT = 3500;
+	public static final long LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT = 1500;
 	static final int BEACON_DELAY_RECONNECTION = 1500;
 	static final int RETRY_LIMIT = 15;
 	public static final int WAIT_WHILE_DELAY = 1200;

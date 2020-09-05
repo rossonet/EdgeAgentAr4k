@@ -106,18 +106,19 @@ final class MessageCached implements Serializable {
 	}
 
 	synchronized boolean softChek() {
-		if (lastRetry == 0 || (lastRetry + BeaconNetworkTunnel.DELAY_SOFT_CHECK < new Date().getTime())) {
-			lastRetry = new Date().getTime();
-			isCompleteOrTryToSend();
+		final long time = new Date().getTime();
+		if (lastRetry == 0 || (lastRetry + BeaconNetworkTunnel.DELAY_SOFT_CHECK < time)) {
+			lastRetry = time;
 			if (TRACE_LOG_IN_INFO)
 				logger.info("soft check called for {}", this);
+			isCompleteOrTryToSend();
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	boolean isCompleteOrTryToSend() {
+	private boolean isCompleteOrTryToSend() {
 		if (isValidToRetry()) {
 			if (!isCompleted()) {
 				switch (messageCachedType) {

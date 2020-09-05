@@ -695,8 +695,7 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 			} else {
 				if (getBeaconNetworkTunnel().getOutputCachedMessages(sessionId) != null
 						&& getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).containsKey(idCachedMessage))
-					getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).get(idCachedMessage)
-							.isCompleteOrTryToSend();
+					getBeaconNetworkTunnel().getOutputCachedMessages(sessionId).get(idCachedMessage).softChek();
 			}
 		}
 	}
