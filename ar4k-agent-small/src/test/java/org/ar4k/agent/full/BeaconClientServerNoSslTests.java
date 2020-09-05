@@ -39,6 +39,7 @@ import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
@@ -797,6 +798,7 @@ public class BeaconClientServerNoSslTests {
 								}
 								w.flush();
 							} else {
+								System.out.println("*********** close Socket beacause toClose " + toClose);
 								socketClient.close();
 							}
 							System.out.println("--------------------------------------------------------------");
@@ -806,10 +808,10 @@ public class BeaconClientServerNoSslTests {
 					}
 				} catch (final InterruptedException f) {
 					socketClient.close();
-					System.out.println("client closed");
+					System.out.println("client closed beacause " + EdgeLogger.stackTraceToString(f));
 				} catch (final Exception a) {
 					socketClient.close();
-					System.out.println("client closed");
+					System.out.println("client closed " + EdgeLogger.stackTraceToString(a));
 					a.printStackTrace();
 				}
 				// socketClient.close();
