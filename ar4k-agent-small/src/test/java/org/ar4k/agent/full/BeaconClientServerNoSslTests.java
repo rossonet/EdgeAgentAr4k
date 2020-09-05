@@ -828,6 +828,7 @@ public class BeaconClientServerNoSslTests {
 					+ networkTunnel.getPacketError() + " [W]:" + networkTunnel.getWaitingPackagesCount());
 		} catch (final Exception a) {
 			// fallisce nei test preparatori
+			System.out.println("package counter " + EdgeLogger.stackTraceToString(a));
 		}
 		if (valueNew > actualTestSize) {
 			completed.add(tag);
