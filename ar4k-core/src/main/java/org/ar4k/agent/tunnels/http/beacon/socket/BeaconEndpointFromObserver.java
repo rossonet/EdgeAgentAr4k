@@ -212,12 +212,13 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 					getNetworkReceiver().getOrCreateClientHandler(sessionId).channel()
 							.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 					getNetworkReceiver().deleteClientHandler(sessionId);
-				} else {
-					if (getNetworkReceiver().getOrCreateServerSocketChannel(sessionId) != null
-							&& getNetworkReceiver().getOrCreateServerSocketChannel(sessionId).isActive()) {
-						getNetworkReceiver().getOrCreateServerSocketChannel(sessionId)
-								.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
-					}
+				}
+			} else {
+				if (getNetworkReceiver().getOrCreateServerSocketChannel(sessionId) != null
+						&& getNetworkReceiver().getOrCreateServerSocketChannel(sessionId).isActive()) {
+					getNetworkReceiver().getOrCreateServerSocketChannel(sessionId).writeAndFlush(Unpooled.EMPTY_BUFFER)
+							.addListener(ChannelFutureListener.CLOSE);
+					getNetworkReceiver().deleteServerSocketChannel(sessionId);
 				}
 			}
 			break;

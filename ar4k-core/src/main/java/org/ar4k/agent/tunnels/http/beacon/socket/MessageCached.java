@@ -241,7 +241,7 @@ final class MessageCached implements Serializable {
 		final byte[] primitiveBytes = Base64.getDecoder().decode(outputData);
 		byte[] decompressedBytes = null;
 		if (messageStatus.equals(MessageStatus.channelTransmissionCompressed)) {
-			decompressedBytes = decompress(primitiveBytes, originalSize);
+			decompressedBytes = decompress(primitiveBytes);
 		}
 		retry++;
 		if (myRoleMode.equals(NetworkMode.CLIENT)) {
@@ -285,7 +285,6 @@ final class MessageCached implements Serializable {
 					.writeAndFlush(
 							Unpooled.wrappedBuffer((decompressedBytes == null) ? primitiveBytes : decompressedBytes))
 					.get(BeaconNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT, TimeUnit.MILLISECONDS);
-			networkReceiver.deleteServerSocketChannel(serialId);
 			end();
 		}
 	}
@@ -353,7 +352,7 @@ final class MessageCached implements Serializable {
 		return os.toByteArray();
 	}
 
-	private static byte[] decompress(byte[] compressedBytes, int size) throws IOException {
+	private static byte[] decompress(byte[] compressedBytes) throws IOException {
 		return IOUtils.toByteArray(new DeflateCompressorInputStream(ByteSource.wrap(compressedBytes).openStream()));
 	}
 
