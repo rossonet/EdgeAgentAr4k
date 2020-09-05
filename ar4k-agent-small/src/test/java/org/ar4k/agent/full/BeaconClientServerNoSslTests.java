@@ -783,7 +783,7 @@ public class BeaconClientServerNoSslTests {
 								else {
 									if (last + 1 != valueNew) {
 										throw new Exception("error in client test " + tag + " last cached:" + last
-												+ ",new:" + valueNew);
+												+ ", new:" + valueNew);
 									} else {
 										last = valueNew + 1;
 									}

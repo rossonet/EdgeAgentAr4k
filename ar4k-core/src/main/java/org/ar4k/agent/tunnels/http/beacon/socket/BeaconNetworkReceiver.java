@@ -410,7 +410,7 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 			}
 			try {
 				if (channelHandlerContext != null) {
-					// callNextReadOnSocket(channelHandlerContext);
+					callNextReadOnSocket(channelHandlerContext);
 				}
 				if (getBeaconNetworkTunnel().isBeaconConnectionOk()) {
 					if (!getBeaconNetworkTunnel().getInputCachedMessages(sessionId).isEmpty()) {
@@ -517,7 +517,7 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		clientBootstrap.group(workerGroup);
 		clientBootstrap.channel(NioSocketChannel.class);
 		clientBootstrap.handler(createClientInitializerHandlerForSession(sessionId));
-		// clientBootstrap.option(ChannelOption.AUTO_READ, false);
+		clientBootstrap.option(ChannelOption.AUTO_READ, false);
 		try {
 			getClientChannelHandler().put(sessionId,
 					clientBootstrap.connect(getBeaconNetworkTunnel().getConfig().getClientIp(),
@@ -548,8 +548,8 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 			final ServerTcpInitHandler serverInitHandler = new ServerTcpInitHandler();
 			final ServerBootstrap b = new ServerBootstrap().group(bossGroup, workerGroup)
 					.channel(NioServerSocketChannel.class).childHandler(serverInitHandler)
-					.childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.SO_REUSEADDR, true);// .childOption(ChannelOption.AUTO_READ,
-																													// false);
+					.childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.SO_REUSEADDR, true)
+					.childOption(ChannelOption.AUTO_READ, false);
 			mainServerHandler = b.bind(getBeaconNetworkTunnel().getConfig().getServerPort()).sync();
 			if (getMainServerHandler().isSuccess()) {
 				if (TRACE_LOG_IN_INFO)
