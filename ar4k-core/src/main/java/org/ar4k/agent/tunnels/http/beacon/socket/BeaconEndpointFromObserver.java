@@ -195,6 +195,11 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 			if (TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelActive ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
+			if (getNetworkReceiver().getMyRoleMode().equals(NetworkMode.SERVER)) {
+				getNetworkReceiver().getOrCreateServerSocketChannel(sessionId);
+			} else {
+				getNetworkReceiver().getOrCreateClientHandler(sessionId);
+			}
 			break;
 		case channelInactive:
 			if (TRACE_LOG_IN_INFO)
