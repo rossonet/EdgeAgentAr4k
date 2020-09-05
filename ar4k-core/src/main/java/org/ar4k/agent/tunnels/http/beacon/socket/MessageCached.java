@@ -159,6 +159,7 @@ final class MessageCached implements Serializable {
 				try {
 					deliveryMessageToNetwork();
 				} catch (final ClosedChannelException c) {
+					logger.logException("IN ACTION SEND TO NETWORK", c);
 					if (myRoleMode.equals(NetworkMode.CLIENT)) {
 						networkReceiver.deleteClientHandler(getSessionID());
 					} else {
