@@ -822,6 +822,7 @@ public class BeaconClientServerNoSslTests {
 	}
 
 	protected boolean updateClientCounter(String tag, int valueNew) {
+		System.out.println("tag: " + tag + " newValue: " + valueNew + " actualValue: " + actualTestSize);
 		try {
 			System.out.println("package counter " + tag + " -> " + String.valueOf(valueNew) + " [R]:"
 					+ networkTunnel.getPacketReceived() + " [S]:" + networkTunnel.getPacketSend() + " [E]:"
@@ -887,9 +888,13 @@ public class BeaconClientServerNoSslTests {
 				clientTCP17.cancel(false);
 				break;
 			}
+			System.out.println(
+					"COMPLETED!!!! - tag: " + tag + " newValue: " + valueNew + " actualValue: " + actualTestSize);
 			return true;
 		} else
-			return false;
+			System.out.println(
+					"continue with tag: " + tag + " newValue: " + valueNew + " actualValue: " + actualTestSize);
+		return false;
 
 	}
 
