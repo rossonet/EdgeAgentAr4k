@@ -105,7 +105,7 @@ final class MessageCached implements Serializable {
 		completed.set(new Date().getTime());
 	}
 
-	boolean softChek() {
+	synchronized boolean softChek() {
 		if (lastRetry == 0 || (lastRetry + BeaconNetworkTunnel.DELAY_SOFT_CHECK < new Date().getTime())) {
 			isCompleteOrTryToSend();
 			if (TRACE_LOG_IN_INFO)
@@ -186,7 +186,6 @@ final class MessageCached implements Serializable {
 				final int chunkSize = (base64Data.length() / chunkLimit)
 						+ ((base64Data.length() == chunkLimit) ? 0 : 1);
 				retry++;
-				lastRetry = new Date().getTime();
 				sendAllChunkToBeaconServer(compressedByteData, base64Data, chunkSize);
 				if (TRACE_LOG_IN_INFO)
 					logger.info("** messageId " + messageId + " sent to Beacon server "
@@ -243,7 +242,6 @@ final class MessageCached implements Serializable {
 			decompressedBytes = decompress(primitiveBytes, originalSize);
 		}
 		retry++;
-		lastRetry = new Date().getTime();
 		if (myRoleMode.equals(NetworkMode.CLIENT)) {
 			if (networkReceiver.getOrCreateClientHandler(serialId) != null) {
 				sendToNetworkClient(primitiveBytes, decompressedBytes);
