@@ -665,13 +665,16 @@ public class BeaconClientServerNoSslTests {
 					}
 				} catch (final InterruptedException f) {
 					serverSocket.close();
-					System.out.println("-------------------------- server closed");
+					System.out.println("-------------------------- server closed " + EdgeLogger.stackTraceToString(f));
 				} catch (final Exception a) {
 					serverSocket.close();
-					System.out.println("-------------------------- server closed");
+					System.out.println("-------------------------- server closed " + EdgeLogger.stackTraceToString(a));
 					a.printStackTrace();
 				}
 				serverSocket.close();
+				System.out.println("--------------------------------------------------------------");
+				System.out.println("server test close on end");
+				System.out.println("--------------------------------------------------------------");
 				return true;
 			}
 

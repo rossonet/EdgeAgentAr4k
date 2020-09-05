@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorInputStream;
 import org.apache.commons.compress.compressors.deflate.DeflateCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
@@ -249,7 +250,8 @@ final class MessageCached implements Serializable {
 					logger.info("sent to network channel "
 							+ networkReceiver.getOrCreateClientHandler(serialId).isSuccess());
 					logger.info("message as " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + "/" + serialId
-							+ " sent\n" + ((decompressedBytes == null) ? primitiveBytes : decompressedBytes));
+							+ " sent (Hex bytes)\n"
+							+ Hex.encodeHexString((decompressedBytes == null) ? primitiveBytes : decompressedBytes));
 				}
 			} else {
 				logger.warn("client handler for " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + "/" + "/"
@@ -262,8 +264,8 @@ final class MessageCached implements Serializable {
 				sendToNetworkServer(primitiveBytes, decompressedBytes);
 				if (TRACE_LOG_IN_INFO)
 					logger.info("message as " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + " serialId "
-							+ serialId + " sent to network\n"
-							+ ((decompressedBytes == null) ? primitiveBytes : decompressedBytes));
+							+ serialId + " sent to network (Hex bytes)\n"
+							+ Hex.encodeHexString((decompressedBytes == null) ? primitiveBytes : decompressedBytes));
 			} else {
 				logger.warn("server handler for " + myRoleMode + " tunnel id " + tunnel.getTunnelId() + "/" + "/"
 						+ serialId + " is null");
