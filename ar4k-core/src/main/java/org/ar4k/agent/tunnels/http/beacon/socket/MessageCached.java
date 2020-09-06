@@ -128,7 +128,7 @@ final class MessageCached implements Serializable {
 				case TO_NETWORK:
 					if (networkReceiver.isNextMessageToNetwork(serialId, tunnel.getTunnelId(), messageId,
 							messageStatus)) {
-						runActionSendToNetwork(3);
+						runActionSendToNetwork(0);
 					}
 					break;
 				default:
