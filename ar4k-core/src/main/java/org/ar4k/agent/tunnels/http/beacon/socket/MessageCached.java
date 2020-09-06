@@ -161,23 +161,30 @@ final class MessageCached implements Serializable {
 				try {
 					deliveryMessageToNetwork();
 				} catch (final ClosedChannelException c) {
-					retryAction();
 					if (myRoleMode.equals(NetworkMode.CLIENT)) {
 						networkReceiver.deleteClientHandler(getSessionID());
 					} else {
 						networkReceiver.deleteServerSocketChannel(getSessionID());
 					}
 					logger.logException("IN ACTION SEND TO NETWORK FOUND NETWORK CLOSED", c);
+					retryAction();
 				} catch (final Exception e) {
 					logger.logException("IN ACTION SEND TO NETWORK", e);
-					networkReceiver.sendExceptionMessage(serialId, tunnel.getTunnelId(), messageId, e);
+					if (!retryAction()) {
+						networkReceiver.sendExceptionMessage(serialId, tunnel.getTunnelId(), messageId, e);
+					}
 				}
 
 			}
 
-			private void retryAction() {
+			private boolean retryAction() {
+				if (TRACE_LOG_IN_INFO)
+					logger.info("RETRY PACKET N." + retryTimes);
 				if (retryTimes > 0) {
 					runActionSendToNetwork(retryTimes - 1);
+					return true;
+				} else {
+					return false;
 				}
 
 			}
