@@ -646,6 +646,8 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 			getClientChannelHandler().get(sessionId).cancel(true);
 		}
 		getClientChannelHandler().remove(sessionId);
+		if (TRACE_LOG_IN_INFO)
+			logger.info("### delete client handler for sesionId {}", sessionId);
 	}
 
 	synchronized void deleteServerSocketChannel(long sessionId) {
@@ -654,6 +656,8 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 			getServerChannelHandler().get(sessionId).close();
 		}
 		getServerChannelHandler().remove(sessionId);
+		if (TRACE_LOG_IN_INFO)
+			logger.info("### delete server handler for sesionId {}", sessionId);
 	}
 
 	synchronized boolean isNextMessageToNetwork(long serialId, long tunnelId, long messageId,
