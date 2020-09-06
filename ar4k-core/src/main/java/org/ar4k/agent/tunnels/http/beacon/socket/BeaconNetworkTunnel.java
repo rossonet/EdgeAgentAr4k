@@ -34,7 +34,7 @@ public class BeaconNetworkTunnel implements NetworkTunnel {
 	static final int DELAY_SOFT_CHECK = 3500;
 	static final long PING_FROM_BEACON_SERVER_CHECK_FACTOR = 2;
 
-	public static final boolean TRACE_LOG_IN_INFO = true;
+	public static final boolean TRACE_LOG_IN_INFO = false;
 
 	private final TunnelServiceV1Stub asyncStubTunnel;
 
