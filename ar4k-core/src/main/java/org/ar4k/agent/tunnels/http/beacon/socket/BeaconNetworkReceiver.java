@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.ar4k.agent.logger.EdgeLogger;
@@ -477,7 +480,8 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		}
 	}
 
-	ChannelFuture getOrCreateClientHandler(final long sessionId) throws InterruptedException {
+	ChannelFuture getOrCreateClientHandler(final long sessionId)
+			throws InterruptedException, ExecutionException, TimeoutException {
 		if (!getClientChannelHandler().containsKey(sessionId)) {
 			createSocketSessionClient(sessionId);
 			if (TRACE_LOG_IN_INFO)
@@ -485,11 +489,10 @@ public class BeaconNetworkReceiver implements NetworkReceiver {
 		}
 		final ChannelFuture channelFuture = getClientChannelHandler().get(sessionId);
 		if (channelFuture != null && !channelFuture.isDone()) {
-
-			channelFuture.await(BeaconNetworkTunnel.SYNC_TIME_OUT);
+			channelFuture.get(BeaconNetworkTunnel.SYNC_TIME_OUT, TimeUnit.MILLISECONDS);
 		} else {
 			if (TRACE_LOG_IN_INFO)
-				logger.info("the client socket for session {} is null", sessionId);
+				logger.info("the client socket for session {} is ok", sessionId);
 		}
 		return channelFuture;
 	}
