@@ -315,7 +315,7 @@ public class BeaconClientToClientNetworkAndXpra {
 		final int srcPort = 8888;
 		final SshdSystemConfig sshdConfig = new SshdSystemConfig();
 		sshdConfig.setName("sshd mina server");
-		sshdConfig.port = 10000;
+		sshdConfig.port = 10001;
 		serverConfig.pots.add(sshdConfig);
 		final BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
 		beaconServiceConfig.discoveryPort = 33667;
@@ -332,7 +332,7 @@ public class BeaconClientToClientNetworkAndXpra {
 		sshRight.bindPort = 10008;
 		sshRight.bindHost = "0.0.0.0";
 		sshRight.host = destinationIp;
-		sshRight.port = 10000;
+		sshRight.port = 10001;
 		// sshRight.authkey = "~/.ssh/id_rsa";
 		sshRight.username = "admin";
 		sshRight.password = "password";
@@ -345,7 +345,7 @@ public class BeaconClientToClientNetworkAndXpra {
 		sshLeft.bindPort = srcPort;
 		sshLeft.bindHost = "0.0.0.0";
 		sshLeft.host = destinationIp;
-		sshLeft.port = 10000;
+		sshLeft.port = 10001;
 		// sshLeft.authkey = "~/.ssh/id_rsa";
 		sshLeft.username = "admin";
 		sshLeft.password = "password";
