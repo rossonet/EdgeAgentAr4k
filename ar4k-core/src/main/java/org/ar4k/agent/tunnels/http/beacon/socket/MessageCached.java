@@ -161,12 +161,12 @@ final class MessageCached implements Serializable {
 				try {
 					deliveryMessageToNetwork();
 				} catch (final ClosedChannelException c) {
-					logger.logException("IN ACTION SEND TO NETWORK", c);
 					if (myRoleMode.equals(NetworkMode.CLIENT)) {
 						networkReceiver.deleteClientHandler(getSessionID());
 					} else {
 						networkReceiver.deleteServerSocketChannel(getSessionID());
 					}
+					logger.logException("IN ACTION SEND TO NETWORK FOUND NETWORK CLOSED", c);
 				} catch (final Exception e) {
 					logger.logException("IN ACTION SEND TO NETWORK", e);
 					networkReceiver.sendExceptionMessage(serialId, tunnel.getTunnelId(), messageId, e);
