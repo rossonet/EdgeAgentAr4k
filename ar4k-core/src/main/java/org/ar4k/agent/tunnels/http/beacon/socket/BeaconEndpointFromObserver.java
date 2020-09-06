@@ -4,6 +4,8 @@ import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRAC
 
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -160,7 +162,7 @@ public class BeaconEndpointFromObserver implements StreamObserver<TunnelMessage>
 	}
 
 	private void elaborateStatusMessageActions(final TunnelMessage value, final long sessionId)
-			throws InterruptedException {
+			throws InterruptedException, ExecutionException, TimeoutException {
 		lastMessageReceivedFromServerBeacon = new Date().getTime();
 		switch (value.getMessageStatus()) {
 		case UNRECOGNIZED:
