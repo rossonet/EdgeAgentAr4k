@@ -128,7 +128,7 @@ final class MessageCached implements Serializable {
 				case TO_NETWORK:
 					if (networkReceiver.isNextMessageToNetwork(serialId, tunnel.getTunnelId(), messageId,
 							messageStatus)) {
-						runActionSendToNetwork(0);
+						runActionSendToNetwork(2);
 					}
 					break;
 				default:
@@ -161,11 +161,7 @@ final class MessageCached implements Serializable {
 				try {
 					deliveryMessageToNetwork();
 				} catch (final ClosedChannelException c) {
-					if (myRoleMode.equals(NetworkMode.CLIENT)) {
-						networkReceiver.deleteClientHandler(getSessionID());
-					} else {
-						networkReceiver.deleteServerSocketChannel(getSessionID());
-					}
+					resetClientHandler();
 					logger.logException("IN ACTION SEND TO NETWORK FOUND NETWORK CLOSED", c);
 					retryAction();
 				} catch (final Exception e) {
@@ -175,6 +171,14 @@ final class MessageCached implements Serializable {
 					}
 				}
 
+			}
+
+			private void resetClientHandler() {
+				if (myRoleMode.equals(NetworkMode.CLIENT)) {
+					networkReceiver.deleteClientHandler(getSessionID());
+				} else {
+					networkReceiver.deleteServerSocketChannel(getSessionID());
+				}
 			}
 
 			private boolean retryAction() {
@@ -293,7 +297,7 @@ final class MessageCached implements Serializable {
 		networkReceiver.sendAckOrControlMessage(serialId, tunnel.getTunnelId(), messageId, false);
 	}
 
-	private synchronized void sendToNetworkServer(final byte[] primitiveBytes, byte[] decompressedBytes)
+	private void sendToNetworkServer(final byte[] primitiveBytes, byte[] decompressedBytes)
 			throws InterruptedException, ExecutionException, TimeoutException {
 		if (!isCompleted()) {
 			networkReceiver.getOrCreateServerSocketChannel(serialId)
@@ -304,7 +308,7 @@ final class MessageCached implements Serializable {
 		}
 	}
 
-	private synchronized void sendToNetworkClient(final byte[] primitiveBytes, byte[] decompressedBytes)
+	private void sendToNetworkClient(final byte[] primitiveBytes, byte[] decompressedBytes)
 			throws InterruptedException, ExecutionException, TimeoutException {
 		if (!isCompleted()) {
 			networkReceiver.getOrCreateClientHandler(serialId).channel()
