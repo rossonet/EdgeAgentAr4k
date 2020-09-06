@@ -128,7 +128,7 @@ final class MessageCached implements Serializable {
 				case TO_NETWORK:
 					if (networkReceiver.isNextMessageToNetwork(serialId, tunnel.getTunnelId(), messageId,
 							messageStatus)) {
-						runActionSendToNetwork();
+						runActionSendToNetwork(3);
 					}
 					break;
 				default:
@@ -154,13 +154,14 @@ final class MessageCached implements Serializable {
 		});
 	}
 
-	private void runActionSendToNetwork() {
+	private void runActionSendToNetwork(final int retryTimes) {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					deliveryMessageToNetwork();
 				} catch (final ClosedChannelException c) {
+					retryAction();
 					if (myRoleMode.equals(NetworkMode.CLIENT)) {
 						networkReceiver.deleteClientHandler(getSessionID());
 					} else {
@@ -170,6 +171,13 @@ final class MessageCached implements Serializable {
 				} catch (final Exception e) {
 					logger.logException("IN ACTION SEND TO NETWORK", e);
 					networkReceiver.sendExceptionMessage(serialId, tunnel.getTunnelId(), messageId, e);
+				}
+
+			}
+
+			private void retryAction() {
+				if (retryTimes > 0) {
+					runActionSendToNetwork(retryTimes - 1);
 				}
 
 			}
