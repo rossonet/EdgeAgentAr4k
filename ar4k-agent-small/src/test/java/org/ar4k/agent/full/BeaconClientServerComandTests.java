@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
@@ -27,7 +27,7 @@ public class BeaconClientServerComandTests {
 
   private static final String SERVER_LABEL = "server";
   private final ExecutorService executor = Executors.newCachedThreadPool();
-  private final Map<String, Anima> testAnimas = new HashMap<>();
+  private final Map<String, Homunculus> testAnimas = new HashMap<>();
   private final File keyStoreServer = new File("./tmp/server.ks");
   private final File keyStoreClient1 = new File("./tmp/client1.ks");
   private final File keyStoreClient2 = new File("./tmp/client2.ks");
@@ -71,7 +71,7 @@ public class BeaconClientServerComandTests {
   @After
   public void tearDown() throws Exception {
     System.err.println("\n\nEND TESTS\n\n");
-    for (Anima a : testAnimas.values()) {
+    for (Homunculus a : testAnimas.values()) {
       a.close();
     }
     Files.deleteIfExists(Paths.get("./tmp/test.config.base64.ar4k"));
@@ -139,12 +139,12 @@ public class BeaconClientServerComandTests {
                 1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:22116"))
             .get());
     Thread.sleep(15000);
-    for (Anima a : testAnimas.values()) {
+    for (Homunculus a : testAnimas.values()) {
       String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
       if (animaName.equals("server-beacon")) {
-        Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
+        Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
       } else {
-        Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
+        Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.STAMINAL);
       }
     }
     Thread.sleep(5000);

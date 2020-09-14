@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
@@ -33,6 +30,9 @@ import org.ar4k.agent.core.data.generator.simulator.IncrementalSimulator;
 import org.ar4k.agent.core.data.generator.simulator.RandomSimulator;
 import org.ar4k.agent.core.data.generator.simulator.SinusoidSimulator;
 import org.ar4k.agent.core.data.generator.simulator.StaticSimulator;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -126,7 +126,7 @@ public class DataGeneratorService implements EdgeComponent {
 	// iniettata vedi set/get
 	private DataGeneratorConfig configuration = null;
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 	private Timer timerSimulation = new Timer();
 	private DataAddress dataspace = null;
 
@@ -237,7 +237,7 @@ public class DataGeneratorService implements EdgeComponent {
 			break;
 
 		}
-		final EdgeChannel dataChannel = anima.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
+		final EdgeChannel dataChannel = homunculus.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
 				single.description, (String) null, (String) null, single.tags);
 		dataChannel.setDomainId(single.domainId);
 		dataChannel.setNameSpace(single.namespace);
@@ -277,8 +277,8 @@ public class DataGeneratorService implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -292,8 +292,8 @@ public class DataGeneratorService implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

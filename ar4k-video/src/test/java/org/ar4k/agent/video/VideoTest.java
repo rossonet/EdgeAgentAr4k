@@ -18,9 +18,9 @@ import javax.swing.JFrame;
 import org.ar4k.agent.camera.CameraShellInterface;
 import org.ar4k.agent.camera.usb.StreamCameraConfig;
 import org.ar4k.agent.camera.usb.StreamCameraService;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
@@ -51,10 +51,10 @@ import com.github.sarxos.webcam.WebcamMotionListener;
 import com.github.sarxos.webcam.WebcamPanel;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
 		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, CameraShellInterface.class })
 @TestPropertySource(locations = "classpath:application-base.properties")
 @SpringBootConfiguration
@@ -63,7 +63,7 @@ import com.github.sarxos.webcam.WebcamPanel;
 public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 
 	@Autowired
-	Anima anima;
+	Homunculus homunculus;
 
 	public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
@@ -93,7 +93,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setVlcjDriverPath("rtsp://admin:westing85;@192.168.0.100:554/");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		detectMotionExample(service.getWebcam());
 		System.in.read(); // keep program open
@@ -106,7 +106,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setVlcjDriverPath(null);
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		detectMotionExample(service.getWebcam());
 		System.in.read(); // keep program open
@@ -118,7 +118,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setDriver("VlcjDriver");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		detectMotionExample(service.getWebcam());
 		System.in.read(); // keep program open
@@ -166,7 +166,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setDriver("VlcjDriver");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		System.out.println("Name: " + service.getName());
 		System.out.println("FPS: " + service.getFps());
@@ -185,7 +185,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setVlcjDriverPath("rtsp://admin:westing85;@192.168.0.100:554/");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		final WebcamPanel panel = new WebcamPanel(service.getWebcam());
 		panel.setFPSDisplayed(true);
@@ -212,7 +212,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setVlcjDriverPath(null);
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		final WebcamPanel panel = new WebcamPanel(service.getWebcam());
 		panel.setFPSDisplayed(true);
@@ -238,7 +238,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setDriver("VlcjDriver");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		final WebcamPanel panel = new WebcamPanel(service.getWebcam());
 		panel.setFPSDisplayed(true);
@@ -265,7 +265,7 @@ public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 		config.setWorkingSize("320x176");
 		service = new StreamCameraService();
 		service.setConfiguration(config);
-		service.setAnima(anima);
+		service.setHomunculus(homunculus);
 		service.init();
 		final WebcamPanel panel = new WebcamPanel(service.getWebcam());
 		panel.setFPSDisplayed(true);

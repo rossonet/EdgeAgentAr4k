@@ -24,6 +24,6 @@ public interface RpcExecutor extends AutoCloseable {
 
   List<CompletionProposal> complete(CompletionContext context);
 
-  void setHomunculus(IHomunculus homunculus);
+  void setHomunculus(IHomunculusRpc homunculusRpc);
 
 }

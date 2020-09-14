@@ -14,7 +14,7 @@
     */
 package org.ar4k.agent.spring.autoconfig;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeHealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -26,7 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@ConditionalOnClass(Anima.class)
+@ConditionalOnClass(Homunculus.class)
 /**
  * Classe starter per inclusione come libreria in ambiente Spring Boot.
  *
@@ -35,13 +35,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class EdgeAutoConfiguration {
 
   @Bean
-  @ConditionalOnBean(Anima.class)
+  @ConditionalOnBean(Homunculus.class)
   EdgeHealthIndicator edgeHealthIndicator() {
     return new EdgeHealthIndicator();
   }
 
   @Bean
-  @ConditionalOnBean(Anima.class)
+  @ConditionalOnBean(Homunculus.class)
   AuthenticationManager edgeAuthenticationManager() {
     return new EdgeAuthenticationManager();
   }

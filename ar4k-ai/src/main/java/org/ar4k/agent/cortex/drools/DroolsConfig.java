@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.cortex.drools.DroolsService.DroolsServiceUpdateAction;
 
 import com.beust.jcommander.Parameter;
@@ -39,11 +39,11 @@ public class DroolsConfig extends AbstractServiceConfig {
 	public Collection<String> stringModules = new ArrayList<>();
 	@Parameter(names = "--globalData", description = "array of global datas")
 	public Map<String, String> globalData = new HashMap<>();
-	@Parameter(names = "--insertAnima", description = "insert Anima istance in Drools workspace (true/false)")
-	public boolean insertAnima = false;
+	@Parameter(names = "--inserthomunculus", description = "insert Homunculus istance in Drools workspace (true/false)")
+	public boolean insertHomunculus = false;
 	@Parameter(names = "--insertDataAddress", description = "insert DataAddress in Drools workspace (true/false)")
 	public boolean insertDataAddress = false;
-	@Parameter(names = "--insertDataStore", description = "insert Anima DataStore in Drools workspace (true/false)")
+	@Parameter(names = "--insertDataStore", description = "insert Homunculus DataStore in Drools workspace (true/false)")
 	public boolean insertDataStore = false;
 	@Parameter(names = "--basePath", description = "basePath for class searching")
 	public String basePath = "drools";
@@ -93,8 +93,8 @@ public class DroolsConfig extends AbstractServiceConfig {
 		return globalData;
 	}
 
-	public boolean insertAnima() {
-		return insertAnima;
+	public boolean insertHomunculus() {
+		return insertHomunculus;
 	}
 
 	public boolean insertDataAddress() {
@@ -137,9 +137,9 @@ public class DroolsConfig extends AbstractServiceConfig {
 	public String toString() {
 		return "DroolsConfig [aiName=" + aiName + ", beanName=" + beanName + ", stateless=" + stateless
 				+ ", sessionName=" + sessionName + ", urlModules=" + urlModules + ", fileModules=" + fileModules
-				+ ", stringModules=" + stringModules + ", globalData=" + globalData + ", insertAnima=" + insertAnima
-				+ ", insertDataAddress=" + insertDataAddress + ", insertDataStore=" + insertDataStore + ", basePath="
-				+ basePath + ", openNlpEnable=" + openNlpEnable + ", droolsServiceUpdateAction="
+				+ ", stringModules=" + stringModules + ", globalData=" + globalData + ", insertHomunculus="
+				+ insertHomunculus + ", insertDataAddress=" + insertDataAddress + ", insertDataStore=" + insertDataStore
+				+ ", basePath=" + basePath + ", openNlpEnable=" + openNlpEnable + ", droolsServiceUpdateAction="
 				+ droolsServiceUpdateAction + "]";
 	}
 

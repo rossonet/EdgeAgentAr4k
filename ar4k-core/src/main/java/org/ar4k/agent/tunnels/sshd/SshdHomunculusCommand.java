@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.command.Command;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -28,7 +28,7 @@ import org.springframework.shell.Shell;
  * @author andrea
  *
  */
-public class SshdAnimaCommand implements Command {
+public class SshdHomunculusCommand implements Command {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(AbstractShellHelper.class.toString());
@@ -37,7 +37,7 @@ public class SshdAnimaCommand implements Command {
 	private static final CharSequence EXIT_MESSAGE = "exit";
 
 	private final Shell shell;
-	private final Anima anima;
+	private final Homunculus homunculus;
 	private RpcExecutor rpcExecutor = null;
 	private final String sessionId = UUID.randomUUID().toString();
 	private ExitCallback exitCallback = null;
@@ -48,8 +48,8 @@ public class SshdAnimaCommand implements Command {
 	private boolean running = true;
 	Thread runner = null;
 
-	public SshdAnimaCommand(Anima homunculus, Shell shell) {
-		this.anima = homunculus;
+	public SshdHomunculusCommand(Homunculus homunculus, Shell shell) {
+		this.homunculus = homunculus;
 		this.shell = shell;
 	}
 
@@ -185,9 +185,9 @@ public class SshdAnimaCommand implements Command {
 						}
 						if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
 							try {
-								final String session = anima.loginAgent(username, password, sessionId);
-								if (anima.isSessionValid(session) && session.equals(sessionId)) {
-									rpcExecutor = anima.getRpc(sessionId);
+								final String session = homunculus.loginAgent(username, password, sessionId);
+								if (homunculus.isSessionValid(session) && session.equals(sessionId)) {
+									rpcExecutor = homunculus.getRpc(sessionId);
 									logged = true;
 									printPrompt();
 								} else {
@@ -246,7 +246,7 @@ public class SshdAnimaCommand implements Command {
 
 		private void printPrompt() {
 			try {
-				sendMessage("\n\r" + username + "@" + anima.getAgentUniqueName() + " # ");
+				sendMessage("\n\r" + username + "@" + homunculus.getAgentUniqueName() + " # ");
 			} catch (final Exception e) {
 				logger.logException(e);
 			}

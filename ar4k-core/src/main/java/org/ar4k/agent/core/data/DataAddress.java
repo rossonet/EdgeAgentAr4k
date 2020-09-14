@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
+import org.ar4k.agent.core.interfaces.DataAddressChange;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.EdgeManagedNamespace;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.messaging.MessageChannel;
@@ -19,11 +22,11 @@ public class DataAddress implements AutoCloseable {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(DataAddress.class.toString());
 
-	protected final Anima anima;
+	protected final Homunculus homunculus;
 
-	public DataAddress(Anima anima) {
+	public DataAddress(Homunculus homunculus) {
 		dataChannels.clear();
-		this.anima = anima;
+		this.homunculus = homunculus;
 	}
 
 	protected final Collection<EdgeChannel> dataChannels = new HashSet<>();
@@ -189,7 +192,7 @@ public class DataAddress implements AutoCloseable {
 
 	public Collection<String> listSpringIntegrationChannels() {
 		final Collection<String> result = new ArrayList<>();
-		for (final Entry<String, MessageChannel> s : Anima.getApplicationContext().getBeansOfType(MessageChannel.class)
+		for (final Entry<String, MessageChannel> s : Homunculus.getApplicationContext().getBeansOfType(MessageChannel.class)
 				.entrySet()) {
 			result.add(s.getKey() + " -> " + s.getValue());
 		}
@@ -222,8 +225,8 @@ public class DataAddress implements AutoCloseable {
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("DataAddress [");
-		if (anima != null)
-			builder.append("anima=").append(anima.getAgentUniqueName()).append(", ");
+		if (homunculus != null)
+			builder.append("anima=").append(homunculus.getAgentUniqueName()).append(", ");
 		if (defaultScope != null)
 			builder.append("defaultScope=").append(defaultScope).append(", ");
 		if (levelSeparator != null)

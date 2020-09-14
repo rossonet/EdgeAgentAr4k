@@ -22,10 +22,10 @@ import java.util.UUID;
 import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.bouncycastle.cms.CMSAlgorithm;
@@ -239,7 +239,7 @@ public class ConfigHelper {
 
 	public static String toBase64Crypto(Object configObject, String aliasKey)
 			throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
-		final X509Certificate certificate = Anima.getApplicationContext().getBean(Anima.class).getMyIdentityKeystore()
+		final X509Certificate certificate = Homunculus.getApplicationContext().getBean(Homunculus.class).getMyIdentityKeystore()
 				.getClientCertificate(aliasKey);
 		return Base64.getEncoder().encodeToString(encryptData(toBase64(configObject).getBytes("UTF-8"), certificate));
 	}
@@ -261,7 +261,7 @@ public class ConfigHelper {
 
 	public static ConfigSeed fromBase64Crypto(String base64RsaConfig, String aliasKey)
 			throws ClassNotFoundException, IOException, CMSException, NoSuchAlgorithmException, NoSuchPaddingException {
-		final PrivateKey key = Anima.getApplicationContext().getBean(Anima.class).getMyIdentityKeystore()
+		final PrivateKey key = Homunculus.getApplicationContext().getBean(Homunculus.class).getMyIdentityKeystore()
 				.getPrivateKey(aliasKey);
 		return fromBase64(new String(decryptData(Base64.getDecoder().decode(base64RsaConfig), key)));
 	}

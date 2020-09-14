@@ -14,9 +14,9 @@
     */
 package org.ar4k.gw.studio.tunnels.socket.proxy;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.gw.studio.tunnels.socket.AbstractSocketFactoryComponent;
 import org.json.JSONObject;
@@ -58,7 +58,7 @@ public class SocketFactoryProxy extends AbstractSocketFactoryComponent {
   }
 
   @Override
-  public Anima getAnima() {
+  public Homunculus getHomunculus() {
     // Auto-generated method stub
     return null;
   }
@@ -76,7 +76,7 @@ public class SocketFactoryProxy extends AbstractSocketFactoryComponent {
   }
 
   @Override
-  public void setAnima(Anima anima) {
+  public void setHomunculus(Homunculus homunculus) {
     // Auto-generated method stub
 
   }

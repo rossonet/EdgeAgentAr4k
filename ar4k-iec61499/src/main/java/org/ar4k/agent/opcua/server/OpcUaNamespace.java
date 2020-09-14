@@ -7,7 +7,7 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.core.data.EdgeManagedNamespace;
+import org.ar4k.agent.core.interfaces.EdgeManagedNamespace;
 import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
 import org.eclipse.milo.opcua.sdk.server.api.DataItem;

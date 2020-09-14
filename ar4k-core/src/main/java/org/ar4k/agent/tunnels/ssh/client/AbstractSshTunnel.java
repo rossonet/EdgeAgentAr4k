@@ -1,10 +1,10 @@
 
 package org.ar4k.agent.tunnels.ssh.client;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -30,7 +30,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	protected DataAddress dataSpace;
 
-	protected Anima anima;
+	protected Homunculus homunculus;
 
 	private JSch jsch = null;
 
@@ -106,8 +106,8 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -121,8 +121,8 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

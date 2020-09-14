@@ -1,9 +1,9 @@
 package org.ar4k.agent.opcua.client;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -45,7 +45,7 @@ public class OpcUaClientService implements EdgeComponent {
   }
 
   @Override
-  public Anima getAnima() {
+  public Homunculus getHomunculus() {
     // TODO OPCUA Auto-generated method stub
     return null;
   }
@@ -63,7 +63,7 @@ public class OpcUaClientService implements EdgeComponent {
   }
 
   @Override
-  public void setAnima(Anima anima) {
+  public void setHomunculus(Homunculus homunculus) {
     // TODO OPCUA Auto-generated method stub
 
   }

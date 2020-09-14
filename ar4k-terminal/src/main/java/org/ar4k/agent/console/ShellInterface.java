@@ -42,13 +42,13 @@ import javax.management.IntrospectionException;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
 
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.core.ServiceComponent;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceComponent;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
@@ -98,7 +98,7 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 //@EnableMBeanExport
 //@ManagedResource(objectName = "bean:name=mainInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "mainInterface")
 @RestController
-@RequestMapping("/anima")
+@RequestMapping("/homunculus")
 public class ShellInterface extends AbstractShellHelper {
 
 	@Autowired
@@ -110,7 +110,7 @@ public class ShellInterface extends AbstractShellHelper {
 	public boolean login(@ShellOption(help = "username", defaultValue = "admin") String username,
 			@ShellOption(help = "password") String password) {
 		boolean result = false;
-		anima.loginAgent(username, password, null);
+		homunculus.loginAgent(username, password, null);
 		if (getSessionId() != null)
 			result = true;
 		return result;
@@ -144,7 +144,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public Collection<EdgeUserDetails> getUsersList() {
-		return anima.getLocalUsers();
+		return homunculus.getLocalUsers();
 	}
 
 	@ShellMethod(value = "Drop user from local users list", group = "Authentication Commands")
@@ -158,7 +158,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	public Collection<GrantedAuthority> getRolesAuthority() {
 		final Set<GrantedAuthority> roles = new HashSet<>();
-		for (final EdgeUserDetails u : anima.getLocalUsers()) {
+		for (final EdgeUserDetails u : homunculus.getLocalUsers()) {
 			for (final GrantedAuthority a : u.getAuthorities()) {
 				roles.add(a);
 			}
@@ -169,7 +169,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Get the unique name for the agent", group = "Monitoring Commands")
 	@ManagedOperation
 	public String getUniqueName() {
-		return anima.getAgentUniqueName();
+		return homunculus.getAgentUniqueName();
 	}
 
 	@ShellMethod(value = "Get a free port on host", group = "Monitoring Commands")
@@ -182,7 +182,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
 	public boolean logout() {
-		anima.logoutFromAgent();
+		homunculus.logoutFromAgent();
 		return true;
 	}
 
@@ -190,7 +190,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
 	public boolean closeSessionAndLogout() {
-		anima.terminateSession(getSessionId());
+		homunculus.terminateSession(getSessionId());
 		return true;
 	}
 
@@ -283,7 +283,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public void importSelectedConfigBase64Crypted(
 			@ShellOption(help = "configuration exported by export-selected-config-base64-crypted") String base64ConfigCrypto,
-			@ShellOption(help = "alias key in Anima repository") String aliasKey)
+			@ShellOption(help = "alias key in Homunculus repository") String aliasKey)
 			throws ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, IOException, CMSException {
 		setWorkingConfig((EdgeConfig) ConfigHelper.fromBase64Crypto(base64ConfigCrypto, aliasKey));
 	}
@@ -293,7 +293,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public void loadSelectedConfigBase64Crypted(
 			@ShellOption(help = "file in where the configuration is saved. The system will add .conf.base64.crypto.ar4k to the string") String filename,
-			@ShellOption(help = "alias key in Anima repository") String aliasKey) throws FileNotFoundException,
+			@ShellOption(help = "alias key in Homunculus repository") String aliasKey) throws FileNotFoundException,
 			IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, CMSException {
 		final String config = readFromFile(filename, ".conf.base64.crypto.ar4k");
 		importSelectedConfigBase64Crypted(config, aliasKey);
@@ -317,14 +317,14 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("testRuntimeConfigOk")
 	public String getRuntimeConfigJson() {
-		return ConfigHelper.toJson(anima.getRuntimeConfig());
+		return ConfigHelper.toJson(homunculus.getRuntimeConfig());
 	}
 
 	@ShellMethod("View the runtime configuration in Yaml text")
 	@ManagedOperation
 	@ShellMethodAvailability("testRuntimeConfigOk")
 	public String getRuntimeConfigYaml() {
-		return ConfigHelper.toYaml(anima.getRuntimeConfig());
+		return ConfigHelper.toYaml(homunculus.getRuntimeConfig());
 	}
 
 	@ShellMethod("Save selected configuration in json text file")
@@ -483,35 +483,35 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public String setSelectedConfigAsRuntime() {
-		anima.setTargetConfig(getWorkingConfig());
+		homunculus.setTargetConfig(getWorkingConfig());
 		return "set";
 	}
 
 	@ShellMethod(value = "View the actual status", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	public String getAgentStatus() {
-		return anima.getState().name();
+		return homunculus.getState().name();
 	}
 
-	@ShellMethod(value = "View the Anima Bean", group = "Agent Life Cycle Commands")
+	@ShellMethod(value = "View the Homunculus Bean", group = "Agent Life Cycle Commands")
 	@ManagedOperation
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@ShellMethod(value = "Set a event to the agent", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public void setAgentStatus(
-			@ShellOption(help = "target status", valueProvider = Ar4kEventsValuesProvider.class) AnimaEvents target) {
-		anima.sendEvent(target);
+			@ShellOption(help = "target status", valueProvider = Ar4kEventsValuesProvider.class) HomunculusEvents target) {
+		homunculus.sendEvent(target);
 	}
 
 	@ShellMethod(value = "Shutdown agent", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public void goodbye() {
-		setAgentStatus(AnimaEvents.STOP);
+		setAgentStatus(HomunculusEvents.STOP);
 		System.exit(0);
 	}
 
@@ -519,21 +519,21 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public void pause() {
-		setAgentStatus(AnimaEvents.PAUSE);
+		setAgentStatus(HomunculusEvents.PAUSE);
 	}
 
 	@ShellMethod(value = "Restart agent", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public void restart() {
-		setAgentStatus(AnimaEvents.RESTART);
+		setAgentStatus(HomunculusEvents.RESTART);
 	}
 
 	@ShellMethod(value = "Reload agent", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOkOrStatusInit")
 	public void completeReload() {
-		setAgentStatus(AnimaEvents.COMPLETE_RELOAD);
+		setAgentStatus(HomunculusEvents.COMPLETE_RELOAD);
 	}
 
 	@ShellMethod(value = "List runtime services", group = "Agent Life Cycle Commands")
@@ -541,7 +541,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testIsRunningOk")
 	public String listService() {
 		String risposta = "";
-		for (final ServiceComponent<EdgeComponent> servizio : anima.getComponents()) {
+		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN,
 					servizio.getPot().getConfiguration().getUniqueId().toString(), AnsiColor.DEFAULT, " - ",
 					servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED, servizio.getPot(),
@@ -556,7 +556,7 @@ public class ShellInterface extends AbstractShellHelper {
 	public void cloneRuntimeConfig(@ShellOption(help = "the name of the new config") String newName,
 			@ShellOption(help = "the promp for the new config") String newPrompt)
 			throws IOException, ClassNotFoundException {
-		final EdgeConfig target = anima.getRuntimeConfig();
+		final EdgeConfig target = homunculus.getRuntimeConfig();
 		final EdgeConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
 		addConfig(newTarget);
 	}
@@ -645,7 +645,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Get variable from Spring Framework", group = "Monitoring Commands")
 	@ManagedOperation
 	public void getEnvironmentVariables() {
-		System.out.println(anima.getEnvironmentVariablesAsString());
+		System.out.println(homunculus.getEnvironmentVariablesAsString());
 	}
 
 	@ShellMethod(value = "Run a text script in JSR 223 engine", group = "Jobs Runtime Commands")
@@ -658,7 +658,7 @@ public class ShellInterface extends AbstractShellHelper {
 		p.setLabel(executorLabel);
 		p.setEngine(scriptEngine);
 		p.eval(script);
-		((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
+		((RpcConversation) homunculus.getRpc(getSessionId())).getScriptSessions().put(executorLabel, p);
 		return true;
 	}
 
@@ -672,7 +672,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
 	public Map<String, AgentProcess> listProcesses() {
-		return ((RpcConversation) anima.getRpc(getSessionId())).getScriptSessions();
+		return ((RpcConversation) homunculus.getRpc(getSessionId())).getScriptSessions();
 	}
 
 	@ShellMethod(value = "List active Xpra endpoint ipv4", group = "Jobs Runtime Commands")
@@ -728,7 +728,7 @@ public class ShellInterface extends AbstractShellHelper {
 				System.in, System.out);
 	}
 
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 }

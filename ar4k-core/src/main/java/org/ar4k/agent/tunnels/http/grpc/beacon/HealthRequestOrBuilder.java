@@ -31,11 +31,11 @@ public interface HealthRequestOrBuilder extends
       getJsonHardwareInfoBytes();
 
   /**
-   * <code>.beacon.AnimaStates status = 3;</code>
+   * <code>.beacon.HomunculusStates status = 3;</code>
    */
   int getStatusValue();
   /**
-   * <code>.beacon.AnimaStates status = 3;</code>
+   * <code>.beacon.HomunculusStates status = 3;</code>
    */
-  org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus();
+  org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates getStatus();
 }

@@ -31,7 +31,11 @@ public class ScadaBeaconService implements AutoCloseable {
 
 			@Override
 			public void run() {
-				refreshAgentsFromBEacon();
+				try {
+					refreshAgentsFromBeacon();
+				} catch (final Exception a) {
+					logger.info("exception when refresh Beacon client");
+				}
 			}
 		};
 	}
@@ -47,7 +51,7 @@ public class ScadaBeaconService implements AutoCloseable {
 		if (filter == null || filter.isEmpty()) {
 			return agents.values();
 		} else {
-			final Collection<ScadaAgentWrapper> data = new ArrayList<ScadaAgentWrapper>();
+			final Collection<ScadaAgentWrapper> data = new ArrayList<>();
 			for (final ScadaAgentWrapper s : agents.values()) {
 				if (s.isFoundBy(filter)) {
 					data.add(s);
@@ -58,7 +62,7 @@ public class ScadaBeaconService implements AutoCloseable {
 
 	}
 
-	private void refreshAgentsFromBEacon() {
+	private void refreshAgentsFromBeacon() {
 		if (!beaconServers.isEmpty())
 			for (final BeaconClientWrapper c : beaconServers) {
 				if (c.getBeaconClient() != null && c.getBeaconClient().listAgentsConnectedToBeacon() != null

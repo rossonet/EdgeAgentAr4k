@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.network.NetworkTunnel;
@@ -57,7 +57,7 @@ public class RemoteControlOverSsh {
 	private static final String CLIENT2_LABEL = "client2";
 	private static final String SERVER_LABEL = "server";
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final Map<String, Anima> testAnimas = new HashMap<>();
+	private final Map<String, Homunculus> testAnimas = new HashMap<>();
 	private final File keyStoreMaster = new File("./tmp/master.ks");
 	private final File keyStoreServer = new File("./tmp/server.ks");
 	private final File keyStoreClient1 = new File("./tmp/client1.ks");
@@ -159,7 +159,7 @@ public class RemoteControlOverSsh {
 	@After
 	public void tearDown() throws Exception {
 		System.err.println("\n\nEND TESTS\n\n");
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			a.close();
 		}
 		Files.deleteIfExists(Paths.get("./tmp/test-server.config.base64.ar4k"));
@@ -352,10 +352,10 @@ public class RemoteControlOverSsh {
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, null)).get());
 		Thread.sleep(15000);
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			// String animaName = a.getRuntimeConfig() != null ?
 			// a.getRuntimeConfig().getName() : "no-config";
-			Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
+			Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 		}
 		Thread.sleep(25000);
 

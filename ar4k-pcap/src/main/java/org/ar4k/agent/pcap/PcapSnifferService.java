@@ -1,9 +1,9 @@
 package org.ar4k.agent.pcap;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
 
@@ -18,7 +18,7 @@ import com.google.gson.GsonBuilder;
 public class PcapSnifferService implements EdgeComponent {
 
 	private ServiceConfig configuration;
-	private Anima anima;
+	private Homunculus homunculus;
 	private DataAddress dataspace;
 
 	@Override
@@ -54,8 +54,8 @@ public class PcapSnifferService implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -69,8 +69,8 @@ public class PcapSnifferService implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

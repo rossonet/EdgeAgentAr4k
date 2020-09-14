@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
@@ -129,7 +129,7 @@ public class HazelcastConfig extends AbstractServiceConfig {
 
   @Override
   public String toString() {
-    return "HazelcastConfig [creationDate=" + getCreationDate() + ", lastUpdate=" + getLastUpdate() + ", uniqueName="
+    return "HazelcastConfig [creationDate=" + getCreationDate() + ", lastUpdate=" + getLastUpdateDate() + ", uniqueName="
         + uniqueName + ", beanName=" + beanName + ", groupName=" + groupName + ", groupPassword=" + groupPassword
         + ", multiCastEnable=" + multiCastEnable + ", members=" + members + ", kubernetesEnabled=" + kubernetesEnabled
         + ", kubernetesNameSpace=" + kubernetesNameSpace + "]";

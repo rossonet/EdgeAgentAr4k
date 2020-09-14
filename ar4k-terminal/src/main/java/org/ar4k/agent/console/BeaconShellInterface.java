@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.IBeaconClient;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
@@ -90,7 +90,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BeaconShellInterface extends AbstractShellHelper implements AutoCloseable {
 
 	@Autowired
-	private Anima anima;
+	private Homunculus homunculus;
 
 	@Autowired
 	private SshShellInterface sshShellInterface;
@@ -117,8 +117,8 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	}
 
 	protected Availability testBeaconClientRunning() {
-		return (tmpClient != null || anima.getBeaconClient() != null) ? Availability.available()
-				: Availability.unavailable("no Beacon client are running local and in Anima");
+		return (tmpClient != null || homunculus.getBeaconClient() != null) ? Availability.available()
+				: Availability.unavailable("no Beacon client are running local and in Homunculus");
 	}
 
 	protected Availability testBeaconClientRunningLocal() {
@@ -143,7 +143,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
 			@ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
 			throws IOException, UnrecoverableKeyException {
-		tmpServer = new BeaconServer.Builder().setAnima(anima).setPort(port).setDiscoveryPort(discoveryPort)
+		tmpServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(port).setDiscoveryPort(discoveryPort)
 				.setStringDiscovery(discoveryMessage).setBroadcastAddress(discoveryAddress)
 				.setAcceptCerts(acceptAllCerts).build();
 		tmpServer.start();
@@ -189,7 +189,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "the target Beacon Serve URL. If the port is 0 work just the discovery", defaultValue = "http://127.0.0.1:6599") String beaconServer,
 			@ShellOption(help = "the udp target port for the discovery message", defaultValue = "39666") int discoveryPort,
 			@ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage) {
-		tmpClient = anima.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage, true);
+		tmpClient = homunculus.connectToBeaconService(beaconServer, null, discoveryPort, discoveryMessage, true);
 		return tmpClient != null ? true : false;
 	}
 
@@ -347,9 +347,17 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "label to identify the xpra server on remote host", defaultValue = "xpra") String executorLabel,
 			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd)
 			throws Exception {
+		localPort = runRemoteXpraAndGetTunnel(uniqueId, port, localPort, executorLabel);
+		Thread.sleep(5000L);
+		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+			Desktop.getDesktop().browse(new URI("http://127.0.0.1:" + localPort));
+		}
+		return "xpra " + "attach " + "tcp:127.0.0.1:" + localPort + "\nhttp://127.0.0.1:" + localPort;
+	}
+
+	private int runRemoteXpraAndGetTunnel(String uniqueId, int port, int localPort, String executorLabel) {
 		final String command = "run-xpra-server --executor-label " + executorLabel + " --port " + port;
 		final String returnStartingXpra = runCommandOnRemoteAgent(uniqueId, command);
-		logger.info("REMOTE XPRA " + returnStartingXpra);
 		final int remoteXpraPort = Integer.valueOf(returnStartingXpra.replace("\n", ""));
 		if (localPort == 0) {
 			localPort = NetworkHelper.findAvailablePort(14600);
@@ -357,11 +365,8 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		final NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-xpra-" + remoteXpraPort, "tunnel xpra",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
 		resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
-		Thread.sleep(5000L);
-		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-			Desktop.getDesktop().browse(new URI("http://127.0.0.1:" + localPort));
-		}
-		return "xpra " + "attach " + "tcp:127.0.0.1:" + localPort + "\nhttp://127.0.0.1:" + localPort;
+		logger.info("REMOTE XPRA " + returnStartingXpra);
+		return localPort;
 	}
 
 	private static int getRandomNumberInRange(int min, int max) {
@@ -551,12 +556,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd)
 			throws IOException, URISyntaxException {
 		logger.info("Xpra server request -> port:" + port + " cmd:" + cmd);
-		final XpraSessionProcess xpraSessionProcess = new XpraSessionProcess();
-		xpraSessionProcess.setLabel(executorLabel);
-		xpraSessionProcess.setTcpPort(port);
-		xpraSessionProcess.setCommand(cmd);
-		xpraSessionProcess.eval(cmd);
-		resolveBeaconClient().getLocalExecutor().getScriptSessions().put(executorLabel, xpraSessionProcess);
+		final XpraSessionProcess xpraSessionProcess = resolveBeaconClient().startXpraService(executorLabel, port, cmd);
 		logger.info("Xpra server started on port " + xpraSessionProcess.getTcpPort());
 		return xpraSessionProcess.getTcpPort();
 	}
@@ -597,12 +597,12 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public String setSelectedConfigOnRemoteNode(
 			@ShellOption(help = "target agent", valueProvider = Ar4kRemoteAgentProvider.class) String agentName) {
-		anima.getBeaconClient().sendConfigToAgent(agentName, getWorkingConfig());
+		homunculus.getBeaconClient().sendConfigToAgent(agentName, getWorkingConfig());
 		return "sent";
 	}
 
 	private IBeaconClient resolveBeaconClient() {
-		return tmpClient != null ? tmpClient : anima.getBeaconClient();
+		return tmpClient != null ? tmpClient : homunculus.getBeaconClient();
 	}
 
 	@Override

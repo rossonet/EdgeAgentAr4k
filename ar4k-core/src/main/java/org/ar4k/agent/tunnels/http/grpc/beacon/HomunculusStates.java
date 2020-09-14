@@ -4,9 +4,9 @@
 package org.ar4k.agent.tunnels.http.grpc.beacon;
 
 /**
- * Protobuf enum {@code beacon.AnimaStates}
+ * Protobuf enum {@code beacon.HomunculusStates}
  */
-public enum AnimaStates
+public enum HomunculusStates
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
    * <code>INIT = 0;</code>
@@ -81,11 +81,11 @@ public enum AnimaStates
    * @deprecated Use {@link #forNumber(int)} instead.
    */
   @java.lang.Deprecated
-  public static AnimaStates valueOf(int value) {
+  public static HomunculusStates valueOf(int value) {
     return forNumber(value);
   }
 
-  public static AnimaStates forNumber(int value) {
+  public static HomunculusStates forNumber(int value) {
     switch (value) {
       case 0: return INIT;
       case 1: return STAMINAL;
@@ -98,15 +98,15 @@ public enum AnimaStates
     }
   }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<AnimaStates>
+  public static com.google.protobuf.Internal.EnumLiteMap<HomunculusStates>
       internalGetValueMap() {
     return internalValueMap;
   }
   private static final com.google.protobuf.Internal.EnumLiteMap<
-      AnimaStates> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<AnimaStates>() {
-          public AnimaStates findValueByNumber(int number) {
-            return AnimaStates.forNumber(number);
+      HomunculusStates> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<HomunculusStates>() {
+          public HomunculusStates findValueByNumber(int number) {
+            return HomunculusStates.forNumber(number);
           }
         };
 
@@ -123,9 +123,9 @@ public enum AnimaStates
     return org.ar4k.agent.tunnels.http.grpc.beacon.BeaconMirrorService.getDescriptor().getEnumTypes().get(1);
   }
 
-  private static final AnimaStates[] VALUES = values();
+  private static final HomunculusStates[] VALUES = values();
 
-  public static AnimaStates valueOf(
+  public static HomunculusStates valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
       throw new java.lang.IllegalArgumentException(
@@ -139,10 +139,10 @@ public enum AnimaStates
 
   private final int value;
 
-  private AnimaStates(int value) {
+  private HomunculusStates(int value) {
     this.value = value;
   }
 
-  // @@protoc_insertion_point(enum_scope:beacon.AnimaStates)
+  // @@protoc_insertion_point(enum_scope:beacon.HomunculusStates)
 }
 

@@ -1,9 +1,9 @@
 package org.ar4k.agent.tunnels.http.beacon;
 
-import org.ar4k.agent.rpc.IHomunculus;
+import org.ar4k.agent.rpc.IHomunculusRpc;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 
-public class RemoteBeaconAgentHomunculus implements IHomunculus {
+public class RemoteBeaconAgentHomunculus implements IHomunculusRpc {
 
   private Agent remoteAgent = null;
 

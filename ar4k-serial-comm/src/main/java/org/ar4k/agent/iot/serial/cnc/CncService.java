@@ -17,8 +17,8 @@ package org.ar4k.agent.iot.serial.cnc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.iot.serial.SerialService;
 import org.ar4k.agent.iot.serial.SerialStringMessage;
@@ -39,7 +39,7 @@ public class CncService extends SerialService {
 
 	private CncConfig configuration = null;
 
-	private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
@@ -65,14 +65,14 @@ public class CncService extends SerialService {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		super.setAnima(anima);
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		super.setHomunculus(homunculus);
+		this.homunculus = homunculus;
 	}
 
 	@Override

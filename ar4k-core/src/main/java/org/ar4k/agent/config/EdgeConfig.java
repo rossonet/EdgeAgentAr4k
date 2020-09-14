@@ -23,8 +23,10 @@ import java.util.UUID;
 import org.ar4k.agent.config.validator.AnsiColorValidator;
 import org.ar4k.agent.config.validator.EdgeStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaRouterType;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusRouterType;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.joda.time.Instant;
 import org.springframework.boot.ansi.AnsiColor;
 
@@ -112,7 +114,7 @@ public class EdgeConfig implements ConfigSeed {
 	public List<String> groups = new ArrayList<>();
 
 	@Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = EdgeStatusValidator.class)
-	public Anima.AnimaStates targetRunLevel = Anima.AnimaStates.RUNNING;
+	public Homunculus.HomunculusStates targetRunLevel = Homunculus.HomunculusStates.RUNNING;
 
 	@Parameter(names = "--preScript", description = "pre script")
 	public String preScript = null;
@@ -133,7 +135,7 @@ public class EdgeConfig implements ConfigSeed {
 	public String sshdAuthorizedKeysPath = "~/.ssh/authorized_keys";
 
 	@Parameter(names = "--routerType", description = "routerType", validateWith = RouterTypeValidator.class)
-	public AnimaRouterType routerType = AnimaRouterType.NONE;
+	public HomunculusRouterType routerType = HomunculusRouterType.NONE;
 
 	@Parameter(names = "--updateFileConfig", description = "if true, this configuration will update the original one on file", validateWith = RouterTypeValidator.class)
 	public boolean updateFileConfig = false;

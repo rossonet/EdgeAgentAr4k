@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.IBeaconServer;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.IBeaconServer;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.beacon.socket.server.BeaconServerNetworkHub;
@@ -107,7 +107,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	private boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di
 											// autorizzazione
 	private boolean running = true;
-	private transient Anima anima = null;
+	private transient Homunculus homunculus = null;
 
 	private final List<TunnelRunnerBeaconServer> tunnels = new LinkedList<>();
 
@@ -133,7 +133,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	private String markThread;
 
 	public static class Builder {
-		private Anima anima = null;
+		private Homunculus homunculus = null;
 		private int port = 0;
 		private int discoveryPort = 0;
 		private String broadcastAddress = null;
@@ -147,12 +147,12 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		private String filterActiveCommand = null;
 		private String filterBlackListCertRegister = null;
 
-		public Anima getAnima() {
-			return anima;
+		public Homunculus getHomunculus() {
+			return homunculus;
 		}
 
-		public Builder setAnima(Anima anima) {
-			this.anima = anima;
+		public Builder setHomunculus(Homunculus homunculus) {
+			this.homunculus = homunculus;
 			return this;
 		}
 
@@ -265,18 +265,18 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 
 		public BeaconServer build() throws UnrecoverableKeyException {
-			return new BeaconServer(anima, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
+			return new BeaconServer(homunculus, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
 					certChainFile, certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem,
 					filterActiveCommand, filterBlackListCertRegister);
 		}
 
 	}
 
-	private BeaconServer(Anima animaTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
+	private BeaconServer(Homunculus homunculusTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
 			String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
 			String aliasBeaconServerInKeystore, String caChainPem, String filterActiveCommand,
 			String filterBlackListCertRegister) throws UnrecoverableKeyException {
-		this.anima = animaTarget;
+		this.homunculus = homunculusTarget;
 		if (aliasBeaconServerInKeystore != null && !aliasBeaconServerInKeystore.isEmpty())
 			this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
 		this.port = port;
@@ -298,11 +298,11 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			this.filterActiveCommand = filterActiveCommand;
 		if (filterBlackListCertRegister != null && !filterBlackListCertRegister.isEmpty())
 			this.filterBlackListCertRegister = filterBlackListCertRegister;
-		getBeaconServer(animaTarget, port);
+		getBeaconServer(homunculusTarget, port);
 	}
 
-	public synchronized void getBeaconServer(Anima animaTarget, int port) throws UnrecoverableKeyException {
-		if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
+	public synchronized void getBeaconServer(Homunculus homunculusTarget, int port) throws UnrecoverableKeyException {
+		if (Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())) {
 			logger.info("Starting beacon server txt mode");
 			try {
 				final ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
@@ -313,18 +313,18 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				logger.logException(e);
 			}
 		} else {
-			if (animaTarget != null && animaTarget.getMyIdentityKeystore() != null
-					&& animaTarget.getMyIdentityKeystore().listCertificate() != null && animaTarget
+			if (homunculusTarget != null && homunculusTarget.getMyIdentityKeystore() != null
+					&& homunculusTarget.getMyIdentityKeystore().listCertificate() != null && homunculusTarget
 							.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconServerInKeystore)) {
 				logger.info("Certificate with alias '" + this.aliasBeaconServerInKeystore
 						+ "' for Beacon server is present in keystore");
 			} else {
 				throw new UnrecoverableKeyException(
-						"key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + animaTarget + "]");
+						"key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + homunculusTarget + "]");
 			}
 			writePemCa(this.certChainFileLastPart);
-			writePemCert(this.aliasBeaconServerInKeystore, animaTarget, this.certFileLastPart);
-			writePrivateKey(this.aliasBeaconServerInKeystore, animaTarget, this.privateKeyFileLastPart);
+			writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
+			writePrivateKey(this.aliasBeaconServerInKeystore, homunculusTarget, this.privateKeyFileLastPart);
 			try {
 				logger.info("Starting Beacon server");
 				final SslContextBuilder sslContextBuild = GrpcSslContexts
@@ -339,7 +339,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				logger.logException(e);
 			}
 		}
-		markThread = "bs-" + String.valueOf(port) + "-" + Anima.THREAD_ID;
+		markThread = "bs-" + String.valueOf(port) + "-" + Homunculus.THREAD_ID;
 		Thread.currentThread().setName(markThread);
 
 	}
@@ -408,8 +408,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	private static void writePrivateKey(String aliasBeaconServer, Anima animaTarget, String privateKey) {
-		final String pk = animaTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
+	private static void writePrivateKey(String aliasBeaconServer, Homunculus homunculusTarget, String privateKey) {
+		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
 		FileWriter writer;
 		try {
 			writer = new FileWriter(new File(privateKey));
@@ -436,10 +436,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	private void writePemCert(String aliasBeaconServer, Anima animaTarget, String certChain) {
+	private void writePemCert(String aliasBeaconServer, Homunculus homunculusTarget, String certChain) {
 		try {
 			final FileWriter writer = new FileWriter(new File(certChain));
-			final String pemTxtBase = animaTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
+			final String pemTxtBase = homunculusTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
 			writer.write("-----BEGIN CERTIFICATE-----\n");
 			writer.write(pemTxtBase);
 			writer.write("\n-----END CERTIFICATE-----\n");
@@ -693,7 +693,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				final org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply
 						.newBuilder();
 				RegisterReply reply = null;
-				if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())
+				if (!Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())
 						&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {
 					if (acceptAllCerts) {
 						reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
@@ -728,8 +728,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			final PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
 			if (!checkRegexOnX509(csrDecoded.getSubject())) {
 				logger.debug("SIGN CSR " + csrDecoded.getSubject());
-				return anima.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, SIGN_TIME,
-						anima.getMyAliasCertInKeystore());
+				return homunculus.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, SIGN_TIME,
+						homunculus.getMyAliasCertInKeystore());
 			} else
 				logger.warn("\nNOT SIGN CERT\n" + csrDecoded.getSubject() + "\nbeacause it matches the blacklist ["
 						+ filterBlackListCertRegister + "]");
@@ -1226,7 +1226,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		if (listAgentRequest != null) {
 			listAgentRequest.clear();
 		}
-		anima = null;
+		homunculus = null;
 	}
 
 	@Override

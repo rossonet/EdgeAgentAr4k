@@ -25,10 +25,10 @@ import org.ar4k.agent.console.DataShellInterface;
 import org.ar4k.agent.console.KeystoreShellInterface;
 import org.ar4k.agent.console.ShellInterface;
 import org.ar4k.agent.console.SshShellInterface;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
@@ -58,10 +58,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, KeystoreShellInterface.class,
     BeaconShellInterface.class, DataShellInterface.class, ShellInterface.class, SshShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
@@ -73,12 +73,12 @@ public class AllShellInterfaceTests {
   Shell shell;
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(anima.getState());
+    System.out.println(homunculus.getState());
   }
 
   @After
@@ -97,7 +97,7 @@ public class AllShellInterfaceTests {
   @Test
   public void listCommandAndCheck() throws InterruptedException, IOException {
     Thread.sleep(10000);
-    assertEquals(anima.getState(), AnimaStates.STAMINAL);
+    assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
     Map<String, MethodTarget> listCommands = shell.listCommands();
     System.out.println("commands: " + listCommands);
     assertTrue(listCommands.containsKey("add-beacon-service"));

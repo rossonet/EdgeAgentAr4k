@@ -4,10 +4,10 @@ import org.apache.activemq.artemis.api.core.client.ActiveMQClient;
 import org.apache.activemq.artemis.api.core.client.ClientSession;
 import org.apache.activemq.artemis.api.core.client.ClientSessionFactory;
 import org.apache.activemq.artemis.api.core.client.ServerLocator;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -27,19 +27,19 @@ public class ActiveMqService implements EdgeComponent {
 
 	private ActiveMqBroker broker = null;
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	private DataAddress dataAddress;
 
 	private ActiveMqConfig configuration;
 
 	private void registerBean() {
-		((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory()
+		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
 				.registerSingleton(configuration.beanName, this);
 	}
 
 	private void deregisterBean() {
-		((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().destroyBean(this);
+		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().destroyBean(this);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ActiveMqService implements EdgeComponent {
 		try {
 			broker = new ActiveMqBroker(configuration.secured ? new ActiveMqSecurityManager() : null,
 					configuration.portMqtt, configuration.portMqttSsl, configuration.portWebService,
-					anima.getMyIdentityKeystore().filePath(), anima.getMyIdentityKeystore().keystorePassword,
+					homunculus.getMyIdentityKeystore().filePath(), homunculus.getMyIdentityKeystore().keystorePassword,
 					configuration.discoveryName, configuration.broadcastPeriod, configuration.clusterName,
 					configuration.groupAddress, configuration.groupPort, configuration.clusterRetryInterval,
 					configuration.trunkPort, configuration.clusterTimeWait, configuration.clusterUnit,
@@ -87,8 +87,8 @@ public class ActiveMqService implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -102,8 +102,8 @@ public class ActiveMqService implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

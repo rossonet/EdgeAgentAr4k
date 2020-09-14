@@ -21,10 +21,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.data.generator.DataGeneratorConfig;
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig;
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.ChannelType;
@@ -62,10 +62,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
 		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, OpcUaShellInterface.class })
 @TestPropertySource(locations = "classpath:application-opc-ua.properties")
 @SpringBootConfiguration
@@ -73,7 +73,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class OpcUaServerTests {
 
 	@Autowired
-	Anima anima;
+	Homunculus homunculus;
 
 	@Autowired
 	Shell shell;
@@ -84,13 +84,13 @@ public class OpcUaServerTests {
 	public void setUp() throws Exception {
 		Files.deleteIfExists(Paths.get(fileName));
 		Thread.sleep(3000L);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 	}
 
 	@After
 	public void tearDownAfterClass() throws Exception {
 		Files.deleteIfExists(Paths.get(fileName));
-		anima.close();
+		homunculus.close();
 	}
 
 	@Rule
@@ -128,9 +128,9 @@ public class OpcUaServerTests {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(2000000);
 
 	}

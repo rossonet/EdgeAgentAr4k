@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.LoggerMessage;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class EdgeLogger implements Logger {
 
 	private Logger logger;
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	public EdgeLogger(Class<?> clazz) {
 		logger = LoggerFactory.getLogger(clazz);
@@ -144,14 +144,14 @@ public class EdgeLogger implements Logger {
 
 	private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
 		try {
-			if (anima == null && Anima.getApplicationContext() != null
-					&& Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
-				anima = Anima.getApplicationContext().getBean(Anima.class);
+			if (homunculus == null && Homunculus.getApplicationContext() != null
+					&& Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress() != null) {
+				homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 			}
-			if (anima != null) {
+			if (homunculus != null) {
 				final LoggerMessage messageObject = new LoggerMessage();
 				messageObject.setPayload(gson.toJson(logMessage));
-				((IPublishSubscribeChannel) anima.getDataAddress().getChannel("logger")).send(messageObject);
+				((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("logger")).send(messageObject);
 			}
 		} catch (final Exception aa) {
 			if (!level.equals(LogLevel.DEBUG))

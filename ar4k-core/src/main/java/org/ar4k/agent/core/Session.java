@@ -10,9 +10,9 @@ import java.util.UUID;
 import org.springframework.security.core.session.SessionInformation;
 //import org.springframework.session.Session;
 
-public class AnimaSession extends SessionInformation {
+public class Session extends SessionInformation {
 
-  public AnimaSession(Object principal, String sessionId, Date lastRequest) {
+  public Session(Object principal, String sessionId, Date lastRequest) {
     super(principal, sessionId, lastRequest);
   }
 

@@ -1,6 +1,6 @@
-package org.ar4k.agent.core;
+package org.ar4k.agent.core.interfaces;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -24,13 +24,13 @@ public interface EdgeComponent extends AutoCloseable {
 
   void kill();
 
-  Anima getAnima();
+  Homunculus getHomunculus();
 
   DataAddress getDataAddress();
 
   void setDataAddress(DataAddress dataAddress);
 
-  void setAnima(Anima anima);
+  void setHomunculus(Homunculus homunculus);
 
   ServiceConfig getConfiguration();
 

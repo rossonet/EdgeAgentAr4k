@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.data;
+package org.ar4k.agent.core.interfaces;
 
 public interface DataAddressChange {
 

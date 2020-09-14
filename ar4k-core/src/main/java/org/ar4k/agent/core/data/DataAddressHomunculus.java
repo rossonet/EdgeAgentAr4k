@@ -9,11 +9,12 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.messages.HealthMessage;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -21,12 +22,12 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class DataAddressAnima extends DataAddress {
+public class DataAddressHomunculus extends DataAddress {
 
 	private static final String TIMER_HEALTH_DATA_ADDRESS = "TimerHealthDataAddress";
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(DataAddressAnima.class.toString());
+			.getLogger(DataAddressHomunculus.class.toString());
 
 	private static final String SYSTEM_TAG = "system";
 
@@ -38,8 +39,8 @@ public class DataAddressAnima extends DataAddress {
 
 	private static final String COMMAND_TAG = "command-rpc";
 
-	public DataAddressAnima(Anima anima) {
-		super(anima);
+	public DataAddressHomunculus(Homunculus homunculus) {
+		super(homunculus);
 	}
 
 	// task per health
@@ -98,11 +99,11 @@ public class DataAddressAnima extends DataAddress {
 		super.close();
 	}
 
-	public void firstStart(Anima anima) {
+	public void firstStart(Homunculus homunculus) {
 		final List<String> tagList = new ArrayList<String>();
 		tagList.add(SYSTEM_TAG);
 		tagList.add(DIRECTORY_TAG);
-		tagList.addAll(anima.getTags());
+		tagList.addAll(homunculus.getTags());
 		final EdgeChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
 				(String) null, null, tagList);
 		tagList.add(LOGGER_TAG);
@@ -117,7 +118,7 @@ public class DataAddressAnima extends DataAddress {
 		createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope(),
 				tagList);
 		// start health regular messages
-		repeatedTask.setAnima(anima);
+		repeatedTask.setHomunculus(homunculus);
 		timer.scheduleAtFixedRate(repeatedTask, delay, period);
 	}
 
@@ -133,10 +134,10 @@ public class DataAddressAnima extends DataAddress {
 
 	private class HealthTimer extends TimerTask {
 
-		private transient Anima anima = null;
+		private transient Homunculus homunculus = null;
 
-		public void setAnima(Anima anima) {
-			this.anima = anima;
+		public void setHomunculus(Homunculus homunculus) {
+			this.homunculus = homunculus;
 		}
 
 		@Override
@@ -151,19 +152,19 @@ public class DataAddressAnima extends DataAddress {
 
 		private void sendEvent(Map<String, Object> healthMessage) {
 			try {
-				if (anima == null && Anima.getApplicationContext() != null
-						&& Anima.getApplicationContext().getBean(Anima.class) != null
-						&& Anima.getApplicationContext().getBean(Anima.class).getDataAddress() != null) {
-					anima = Anima.getApplicationContext().getBean(Anima.class);
+				if (homunculus == null && Homunculus.getApplicationContext() != null
+						&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null
+						&& Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress() != null) {
+					homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 				}
 			} catch (final Exception ee) {
 				logger.debug(EdgeLogger.stackTraceToString(ee));
 			}
-			if (anima != null && anima.getDataAddress() != null
-					&& anima.getDataAddress().getChannel("health") != null) {
+			if (homunculus != null && homunculus.getDataAddress() != null
+					&& homunculus.getDataAddress().getChannel("health") != null) {
 				final HealthMessage<String> messageObject = new HealthMessage<>();
 				messageObject.setPayload(gson.toJson(healthMessage));
-				((IPublishSubscribeChannel) anima.getDataAddress().getChannel("health")).send(messageObject);
+				((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("health")).send(messageObject);
 			}
 		}
 	};

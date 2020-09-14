@@ -85,7 +85,7 @@ public class SshShellInterface extends AbstractShellHelper {
   public String runSshTunnelRemoteToLocalSsh(@ShellOption(optOut = true) @Valid SshRemoteConfig sshRemoteConfig) {
     try {
       SshRemoteTunnel tunnelSsh = sshRemoteConfig.instantiate();
-      tunnelSsh.setAnima(anima);
+      tunnelSsh.setHomunculus(homunculus);
       tunnelSsh.init();
       tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
       logger.info("runned tunnel ssh remote " + tunnelSsh);
@@ -100,7 +100,7 @@ public class SshShellInterface extends AbstractShellHelper {
   public String runSshTunnelLocalToRemoteSsh(@ShellOption(optOut = true) @Valid SshLocalConfig sshLocalConfig) {
     try {
       SshLocalTunnel tunnelSsh = sshLocalConfig.instantiate();
-      tunnelSsh.setAnima(anima);
+      tunnelSsh.setHomunculus(homunculus);
       tunnelSsh.init();
       tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
       logger.info("runned tunnel ssh local " + tunnelSsh);

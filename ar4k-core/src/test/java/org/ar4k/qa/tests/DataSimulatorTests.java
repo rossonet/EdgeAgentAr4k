@@ -29,12 +29,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.data.DataBag;
 import org.ar4k.agent.core.data.DataChannelFilter;
 import org.ar4k.agent.core.data.DataChannelFilter.Label;
@@ -53,6 +52,7 @@ import org.ar4k.agent.core.data.messages.IntegerMessage;
 import org.ar4k.agent.core.data.messages.JSONMessage;
 import org.ar4k.agent.core.data.messages.LongMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
@@ -86,10 +86,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
 		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-data-simulator.properties")
 @SpringBootConfiguration
@@ -97,7 +97,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class DataSimulatorTests implements MessageHandler {
 
 	@Autowired
-	Anima anima;
+	Homunculus homunculus;
 
 	final String fileName = "/tmp/test-data-simulator.ar4k";
 	final String dataBagFile = "/tmp/test-databag.bin";
@@ -108,7 +108,7 @@ public class DataSimulatorTests implements MessageHandler {
 		Files.deleteIfExists(Paths.get(dataBagFile));
 		messages.clear();
 		Thread.sleep(3000L);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 	}
 
 	@After
@@ -151,13 +151,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -194,13 +194,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestBooleanData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestBooleanData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(10000);
 		boolean foundTrue = false;
 		boolean foundFalse = false;
@@ -243,13 +243,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = true;
 		for (final Object single : messages) {
@@ -295,13 +295,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IDirectChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IDirectChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -341,13 +341,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IDirectChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IDirectChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = true;
 		for (final Object single : messages) {
@@ -394,13 +394,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -455,12 +455,12 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s2);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestDataGood")).subscribe(this);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestDataBad")).subscribe(this);
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestDataGood")).subscribe(this);
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestDataBad")).subscribe(this);
 		final List<FilterLine> filters = new ArrayList<>();
 		final FilterLine tagLine = new FilterLine(Operator.AND, Label.TAG, Lists.list("prova", "single-point", "good"),
 				Operator.AND);
@@ -471,9 +471,9 @@ public class DataSimulatorTests implements MessageHandler {
 				Operator.AND);
 		filters.add(nameSpaceLine);
 		final DataChannelFilter dataChannelFilter = new DataChannelFilter(filters);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
-		final Collection<EdgeChannel> allChannels = anima.getDataAddress().getDataChannels(dataChannelFilter);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		final Collection<EdgeChannel> allChannels = homunculus.getDataAddress().getDataChannels(dataChannelFilter);
 		for (final EdgeChannel channel : allChannels) {
 			System.out.println("found -> " + channel);
 		}
@@ -502,14 +502,14 @@ public class DataSimulatorTests implements MessageHandler {
 		c3.pots.add(s3);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c3).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		messages.clear();
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
 		Thread.sleep(30000);
-		anima.sendEvent(AnimaEvents.STOP);
+		homunculus.sendEvent(HomunculusEvents.STOP);
 		for (final Integer checkValue : Lists.newArrayList(5014, 5016, 5018, 5020, 5022, 5024, 5026, 5028, 5030, 5032,
 				5034, 5036, 5038, 5040, 5042, 5044, 5046, 5048, 5050, 5052)) {
 			boolean found = false;
@@ -555,13 +555,13 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(anima.getState());
+		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) anima.getDataAddress().getChannel("TestData")).subscribe(this);
-		assertEquals(anima.getState(), AnimaStates.RUNNING);
-		assertTrue(check.equals(anima.getRuntimeConfig().author));
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {

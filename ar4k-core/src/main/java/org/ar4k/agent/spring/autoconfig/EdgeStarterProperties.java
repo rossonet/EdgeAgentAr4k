@@ -295,7 +295,7 @@ public class EdgeStarterProperties {
     this.beaconClearText = beaconClearText;
   }
 
-  public String getAnimaDatastoreFileName() {
+  public String getHomunculusDatastoreFileName() {
     return animaDatastoreFileName;
   }
 

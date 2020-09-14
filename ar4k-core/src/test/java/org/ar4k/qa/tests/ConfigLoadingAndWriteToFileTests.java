@@ -22,11 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
@@ -55,10 +55,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-file-write.properties")
 @SpringBootConfiguration
@@ -66,14 +66,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigLoadingAndWriteToFileTests {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   final String fileName = "/tmp/test-config.ar4k";
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(anima.getState());
+    System.out.println(homunculus.getState());
   }
 
   @After
@@ -92,15 +92,15 @@ public class ConfigLoadingAndWriteToFileTests {
   @Test
   public void checkConfigFileWithReload() throws InterruptedException, IOException {
     Thread.sleep(3000);
-    assertEquals(anima.getState(), AnimaStates.RUNNING);
+    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
     Files.deleteIfExists(Paths.get(fileName));
     assertTrue(!Files.exists(Paths.get(fileName)));
-    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+    homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
     Thread.sleep(30000);
     assertTrue(Files.exists(Paths.get(fileName)));
-    System.out.println(anima.getState());
-    assertEquals(anima.getState(), AnimaStates.RUNNING);
-    anima.sendEvent(AnimaEvents.COMPLETE_RELOAD);
+    System.out.println(homunculus.getState());
+    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+    homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
     Thread.sleep(10000);
   }
 

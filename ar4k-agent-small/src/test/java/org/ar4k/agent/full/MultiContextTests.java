@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ar4k.agent.console.Ar4kAgent;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,7 +18,7 @@ import org.junit.Test;
 public class MultiContextTests {
 
   private ExecutorService executor = Executors.newCachedThreadPool();
-  private Set<Anima> testAnimas = new HashSet<>();
+  private Set<Homunculus> testAnimas = new HashSet<>();
 
   private void deleteDir(File dir) {
     File[] files = dir.listFiles();
@@ -33,7 +33,7 @@ public class MultiContextTests {
   @After
   public void tearDown() throws Exception {
     System.err.println("\n\nEND TESTS\n\n");
-    for (Anima a : testAnimas) {
+    for (Homunculus a : testAnimas) {
       a.close();
     }
     deleteDir(new File("./tmp"));
@@ -78,8 +78,8 @@ public class MultiContextTests {
     testAnimas.add(
         executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", "c.ks", 1126, addArgs)).get());
     Thread.sleep(20000);
-    for (Anima a : testAnimas) {
-      Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
+    for (Homunculus a : testAnimas) {
+      Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.STAMINAL);
     }
     Thread.sleep(20000);
   }

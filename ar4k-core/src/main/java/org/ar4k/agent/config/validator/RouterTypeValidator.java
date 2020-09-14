@@ -16,7 +16,7 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.core.Anima.AnimaRouterType;
+import org.ar4k.agent.core.Homunculus.HomunculusRouterType;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
@@ -33,10 +33,10 @@ public class RouterTypeValidator implements IParameterValidator {
   @Override
   public void validate(String name, String value) throws ParameterException {
     try {
-      AnimaRouterType.valueOf(value);
+      HomunculusRouterType.valueOf(value);
     } catch (java.lang.IllegalArgumentException aa) {
       StringBuilder b = new StringBuilder();
-      EnumSet.allOf(AnimaRouterType.class).forEach(v -> {
+      EnumSet.allOf(HomunculusRouterType.class).forEach(v -> {
         b.append(v.toString() + " ");
       });
       throw new ParameterException("Parameter " + name + " should be in " + b.toString());

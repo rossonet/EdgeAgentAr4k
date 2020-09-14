@@ -4,7 +4,7 @@ import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.session.ServerSession;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -14,19 +14,19 @@ import org.springframework.security.core.Authentication;
  * @author andrea
  *
  */
-public class AnimaPasswordAuthenticator implements PasswordAuthenticator {
+public class HomunculusPasswordAuthenticator implements PasswordAuthenticator {
 
-	private final Anima anima;
+	private final Homunculus homunculus;
 
-	public AnimaPasswordAuthenticator(Anima anima) {
-		this.anima = anima;
+	public HomunculusPasswordAuthenticator(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override
 	public boolean authenticate(String username, String password, ServerSession session)
 			throws PasswordChangeRequiredException, AsyncAuthException {
 		final UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
-		final Authentication result = anima.getAuthenticationManager().authenticate(request);
+		final Authentication result = homunculus.getAuthenticationManager().authenticate(request);
 		if (result.isAuthenticated()) {
 			return true;
 		} else {

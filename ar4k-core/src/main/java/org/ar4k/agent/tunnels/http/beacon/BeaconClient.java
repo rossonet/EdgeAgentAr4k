@@ -21,11 +21,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ar4k.agent.config.ConfigSeed;
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.IBeaconClient;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -34,6 +34,7 @@ import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.network.NetworkTunnel;
+import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
 //import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel;
@@ -93,11 +94,11 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	public static final CharSequence COMPLETION_CHAR = "?";
 	public static final int discoveryPacketMaxSize = 1024;
 
-	private final String TMP_BEACON_PATH_DEFAULT = Anima.getApplicationContext().getBean(Anima.class)
+	private final String TMP_BEACON_PATH_DEFAULT = Homunculus.getApplicationContext().getBean(Homunculus.class)
 			.getStarterProperties().getConfPath() + "/beacon-client-" + UUID.randomUUID().toString();
 	private transient final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	private final transient Anima anima;
+	private final transient Homunculus homunculus;
 
 	private StatusBeaconClient status = StatusBeaconClient.IDLE;
 	private StatusValue registerStatus = StatusValue.BAD;
@@ -170,7 +171,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	public static class Builder {
-		private Anima anima = null;
+		private Homunculus homunculus = null;
 		private RpcConversation rpcConversation = null;
 		private String host = null;
 		private int port = 0;
@@ -183,12 +184,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		private String aliasBeaconClientInKeystore = null;
 		private String beaconCaChainPem = null;
 
-		public Anima getAnima() {
-			return anima;
+		public Homunculus getHomunculus() {
+			return homunculus;
 		}
 
-		public Builder setAnima(Anima anima) {
-			this.anima = anima;
+		public Builder setHomunculus(Homunculus homunculus) {
+			this.homunculus = homunculus;
 			return this;
 		}
 
@@ -288,21 +289,21 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 
 		public BeaconClient build() throws UnrecoverableKeyException {
-			return new BeaconClient(anima, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
+			return new BeaconClient(homunculus, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
 					certChainFile, certFile, privateFile, aliasBeaconClientInKeystore, beaconCaChainPem);
 		}
 
 	}
 
-	private BeaconClient(Anima anima, RpcConversation rpcConversation, String host, int port, int discoveryPort,
-			String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-			String aliasBeaconClientInKeystore, String certChain) throws UnrecoverableKeyException {
+	private BeaconClient(Homunculus homunculus, RpcConversation rpcConversation, String host, int port,
+			int discoveryPort, String discoveryFilter, String uniqueName, String certChainFile, String certFile,
+			String privateFile, String aliasBeaconClientInKeystore, String certChain) throws UnrecoverableKeyException {
 		this.localExecutor = rpcConversation;
 		this.discoveryPort = discoveryPort;
 		this.discoveryFilter = discoveryFilter;
-		this.anima = anima;
+		this.homunculus = homunculus;
 		// this.localExecutor = new
-		// RpcConversation(Anima.getApplicationContext().getBean(Shell.class));
+		// RpcConversation(Homunculus.getApplicationContext().getBean(Shell.class));
 		this.hostTarget = host;
 		this.port = port;
 		if (aliasBeaconClientInKeystore != null) {
@@ -321,15 +322,16 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		else
 			this.reservedUniqueName = UUID.randomUUID().toString();
 		// solo ssl
-		if (!Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
-			if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-				logger.info(anima.getAgentUniqueName() + " Certificate with alias '" + this.aliasBeaconClientInKeystore
-						+ "' for Beacon client is present in keystore");
+		if (!Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())) {
+			if (homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+				logger.info(homunculus.getAgentUniqueName() + " Certificate with alias '"
+						+ this.aliasBeaconClientInKeystore + "' for Beacon client is present in keystore");
 			} else {
-				csrRequest = anima.getMyIdentityKeystore()
-						.getPKCS10CertificationRequestBase64(anima.getMyAliasCertInKeystore());
-				logger.info(anima.getAgentUniqueName() + " Certificate with alias '" + this.aliasBeaconClientInKeystore
-						+ "' for Beacon client is not present in keystore, use " + anima.getMyAliasCertInKeystore());
+				csrRequest = homunculus.getMyIdentityKeystore()
+						.getPKCS10CertificationRequestBase64(homunculus.getMyAliasCertInKeystore());
+				logger.info(homunculus.getAgentUniqueName() + " Certificate with alias '"
+						+ this.aliasBeaconClientInKeystore + "' for Beacon client is not present in keystore, use "
+						+ homunculus.getMyAliasCertInKeystore());
 			}
 		}
 		if (this.port > 0) {
@@ -339,8 +341,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	private synchronized void startConnection(String host, int port, boolean register) {
-		logger.info(anima.getAgentUniqueName() + " Starting Beacon client");
-		if (Boolean.valueOf(anima.getStarterProperties().getBeaconClearText())) {
+		logger.info(homunculus.getAgentUniqueName() + " Starting Beacon client");
+		if (Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())) {
 			runConnection(NettyChannelBuilder.forAddress(host, port).usePlaintext(), register);
 		} else {
 			try {
@@ -351,25 +353,25 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				runConnection(NettyChannelBuilder.forAddress(host, port)
 						.sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()), register);
 			} catch (final Exception e) {
-				logger.logException(anima.getAgentUniqueName(), e);
+				logger.logException(homunculus.getAgentUniqueName(), e);
 			}
 		}
 	}
 
 	private void generateFilesCert() {
 		generateCaFile();
-		if (anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+		if (homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
 			generateCertFile(this.aliasBeaconClientInKeystore);
-			writePrivateKey(aliasBeaconClientInKeystore, anima, privateFile);
+			writePrivateKey(aliasBeaconClientInKeystore, homunculus, privateFile);
 		} else {
-			generateCertFile(anima.getMyAliasCertInKeystore());
-			writePrivateKey(anima.getMyAliasCertInKeystore(), anima, privateFile);
+			generateCertFile(homunculus.getMyAliasCertInKeystore());
+			writePrivateKey(homunculus.getMyAliasCertInKeystore(), homunculus, privateFile);
 		}
 	}
 
-	private static void writePrivateKey(String alias, Anima animaTarget, String privateKey) {
+	private static void writePrivateKey(String alias, Homunculus homunculusTarget, String privateKey) {
 		logger.info("USE KEY FOR CLIENT: " + alias + " target file -> " + privateKey);
-		final String pk = animaTarget.getMyIdentityKeystore().getPrivateKeyBase64(alias);
+		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(alias);
 		FileWriter writer;
 		try {
 			writer = new FileWriter(new File(privateKey));
@@ -393,22 +395,22 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			}
 			writer.close();
 		} catch (final IOException e) {
-			logger.logException(anima.getAgentUniqueName(), e);
+			logger.logException(homunculus.getAgentUniqueName(), e);
 		}
 	}
 
 	private void generateCertFile(String aliasBeaconClient) {
 		try {
 			final FileWriter writer = new FileWriter(new File(certFile));
-			final String pemTxt = anima.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
-			logger.info(anima.getAgentUniqueName() + " SubjectDN\n"
-					+ anima.getMyIdentityKeystore().getClientCertificate(aliasBeaconClient).getSubjectDN().getName());
+			final String pemTxt = homunculus.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
+			logger.info(homunculus.getAgentUniqueName() + " SubjectDN\n" + homunculus.getMyIdentityKeystore()
+					.getClientCertificate(aliasBeaconClient).getSubjectDN().getName());
 			writer.write("-----BEGIN CERTIFICATE-----\n");
 			writer.write(pemTxt);
 			writer.write("\n-----END CERTIFICATE-----\n");
 			writer.close();
 		} catch (final IOException e) {
-			logger.logException(anima.getAgentUniqueName(), e);
+			logger.logException(homunculus.getAgentUniqueName(), e);
 		}
 	}
 
@@ -425,21 +427,21 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private synchronized void actionRegister() {
 		try {
-			logger.info(anima.getAgentUniqueName() + " Try registration to beacon server. BEFORE[" + registerStatus
+			logger.info(homunculus.getAgentUniqueName() + " Try registration to beacon server. BEFORE[" + registerStatus
 					+ "/" + getStateConnection() + "]");
 			registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), csrRequest);
-			Thread.currentThread().setName("bc-" + Anima.THREAD_ID);
+			Thread.currentThread().setName("bc-" + Homunculus.THREAD_ID);
 		} catch (final Exception e) {
-			logger.logException(anima.getAgentUniqueName() + " in beacon registration", e);
+			logger.logException(homunculus.getAgentUniqueName() + " in beacon registration", e);
 		}
 	}
 
 	private String getDisplayRequestTxt() {
-		return Anima.getRegistrationPin();
+		return Homunculus.getRegistrationPin();
 	}
 
 	public void runInstance() {
-		logger.info(anima.getAgentUniqueName() + " Client Beacon started, connected state "
+		logger.info(homunculus.getAgentUniqueName() + " Client Beacon started, connected state "
 				+ ((channel != null && channel.getState(true) != null) ? channel.getState(true).toString()
 						: "WAITING BEACON CONNECTION"));
 		// gestione
@@ -449,8 +451,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				try {
 					checkProcedure();
 				} catch (final Exception e) {
-					logger.logException(anima.getAgentUniqueName() + " in beacon client " + this.toString() + " update",
-							e);
+					logger.logException(
+							homunculus.getAgentUniqueName() + " in beacon client " + this.toString() + " update", e);
 				}
 			}
 		}, 10, getPollingFreq(), TimeUnit.MILLISECONDS);
@@ -461,8 +463,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				try {
 					sendHardwareInfo();
 				} catch (final Exception e) {
-					logger.logException(anima.getAgentUniqueName() + " in beacon client " + this.toString() + " health",
-							e);
+					logger.logException(
+							homunculus.getAgentUniqueName() + " in beacon client " + this.toString() + " health", e);
 				}
 			}
 		}, INTERVAL_HEALTH, INTERVAL_HEALTH, TimeUnit.MILLISECONDS);
@@ -540,10 +542,10 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			if (csr != null && !csr.isEmpty()) {
 				requestBuilder.setRequestCsr(csr);
 				if (trace)
-					logger.info(anima.getAgentUniqueName() + " SENDING CSR: " + csr);
+					logger.info(homunculus.getAgentUniqueName() + " SENDING CSR: " + csr);
 			}
 			request = requestBuilder.build();
-			logger.info(anima.getAgentUniqueName() + " try registration, channel status "
+			logger.info(homunculus.getAgentUniqueName() + " try registration, channel status "
 					+ (channel != null ? channel.getState(true) : "null channel"));
 			final RegisterReply reply = blockingStub.register(request);
 			result = reply.getStatusRegistration().getStatus();
@@ -551,25 +553,27 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			// se funziona
 			if (result.equals(StatusValue.GOOD) && (reply.getCert() == null || reply.getCert().isEmpty())) {
 				me = Agent.newBuilder().setAgentUniqueName(reply.getRegisterCode()).build();
-				logger.info(anima.getAgentUniqueName() + " connection to beacon ok . I'm " + me.getAgentUniqueName());
+				logger.info(
+						homunculus.getAgentUniqueName() + " connection to beacon ok . I'm " + me.getAgentUniqueName());
 				status = StatusBeaconClient.REGISTERED;
 			}
 			// se nuovo certificato
 			if (result.equals(StatusValue.GOOD)
-					&& !anima.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
+					&& !homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
 					&& reply.getCert() != null && !reply.getCert().isEmpty()) {
 				try {
 					if (trace)
-						logger.info(anima.getAgentUniqueName() + " received signed cert and ca chain");
-					anima.getMyIdentityKeystore().setClientKeyPair(
-							anima.getMyIdentityKeystore().getPrivateKeyBase64(anima.getMyAliasCertInKeystore()),
+						logger.info(homunculus.getAgentUniqueName() + " received signed cert and ca chain");
+					homunculus.getMyIdentityKeystore().setClientKeyPair(
+							homunculus.getMyIdentityKeystore()
+									.getPrivateKeyBase64(homunculus.getMyAliasCertInKeystore()),
 							reply.getCert(), this.aliasBeaconClientInKeystore);
 					certChain = reply.getCa();
 					status = StatusBeaconClient.IDLE;
 					startConnection(this.hostTarget, this.port, false);
 					registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
 				} catch (final Exception e) {
-					logger.logException(anima.getAgentUniqueName(), e);
+					logger.logException(homunculus.getAgentUniqueName(), e);
 					result = StatusValue.FAULT;
 					status = StatusBeaconClient.IDLE;
 				}
@@ -577,8 +581,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		} catch (final Exception e) {
 			status = StatusBeaconClient.IDLE;
 			result = StatusValue.FAULT;
-			logger.warn(anima.getAgentUniqueName() + " Beacon server connection is " + e.getMessage());
-			logger.info(anima.getAgentUniqueName() + " " + EdgeLogger.stackTraceToString(e, 4));
+			logger.warn(homunculus.getAgentUniqueName() + " Beacon server connection is " + e.getMessage());
+			logger.info(homunculus.getAgentUniqueName() + " " + EdgeLogger.stackTraceToString(e, 4));
 		}
 		return result;
 	}
@@ -600,7 +604,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private synchronized void cleanChannel(String description) {
 		if (trace)
-			logger.info(anima.getAgentUniqueName() + " Reset beacon client because " + description);
+			logger.info(homunculus.getAgentUniqueName() + " Reset beacon client because " + description);
 		registerStatus = StatusValue.BAD;
 		status = StatusBeaconClient.IDLE;
 		if (channel != null) {
@@ -627,19 +631,19 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					if (packet.getData().length > 0) {
 						final String message = new String(packet.getData()).trim();
 						if (trace)
-							logger.info(anima.getAgentUniqueName() + " DISCOVERY FLASH: " + message);
+							logger.info(homunculus.getAgentUniqueName() + " DISCOVERY FLASH: " + message);
 						if (discoveryFilter == null || message.contains(discoveryFilter)) {
 							final String hostBeacon = packet.getAddress().getHostAddress();
 							final int portBeacon = Integer.valueOf(message.split(":")[1]);
 							if (trace)
-								logger.info(anima.getAgentUniqueName() + " -- Beacon server found on host " + hostBeacon
-										+ " port " + String.valueOf(portBeacon + "/TCP --"));
+								logger.info(homunculus.getAgentUniqueName() + " -- Beacon server found on host "
+										+ hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
 							startConnection(this.hostTarget, this.port, true);
 						}
 					}
 				}
 			} catch (final Exception e) {
-				logger.logException(anima.getAgentUniqueName() + " in beacon discovery", e);
+				logger.logException(homunculus.getAgentUniqueName() + " in beacon discovery", e);
 			}
 		}
 	}
@@ -649,7 +653,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			try {
 				elaborateRequestFromBus(blockingStub.pollingCmdQueue(me));
 			} catch (final Exception e) {
-				logger.logException(anima.getAgentUniqueName() + " GRPC POLL FAILED ", e);
+				logger.logException(homunculus.getAgentUniqueName() + " GRPC POLL FAILED ", e);
 			}
 		}
 	}
@@ -691,7 +695,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private void closePort(RequestToAgent m) {
 		try {
 			if (trace)
-				logger.info(anima.getAgentUniqueName() + " network port close call from beacon "
+				logger.info(homunculus.getAgentUniqueName() + " network port close call from beacon "
 						+ m.getTunnelRequest().getTargeId());
 			NetworkTunnel tunnelTarget = null;
 			for (final NetworkTunnel tunnel : tunnels) {
@@ -705,15 +709,15 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				tunnels.remove(tunnelTarget);
 			}
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
 	private void exposePort(RequestToAgent m) {
 		try {
 			if (trace)
-				logger.info(
-						anima.getAgentUniqueName() + " network port required from beacon " + m.getUniqueIdRequest());
+				logger.info(homunculus.getAgentUniqueName() + " network port required from beacon "
+						+ m.getUniqueIdRequest());
 			final NetworkConfig config = new BeaconNetworkConfig(m);
 			final BeaconNetworkTunnel tunnel = new BeaconNetworkTunnel(me, config, false, asyncStubTunnel,
 					m.getUniqueIdRequest());
@@ -725,21 +729,21 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			blockingStub.sendCommandReply(request);
 			tunnel.init();
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
 	private void setConfiguration(RequestToAgent m) {
 		try {
-			logger.warn(anima.getAgentUniqueName() + " received config from beacon client. RequestId:"
+			logger.warn(homunculus.getAgentUniqueName() + " received config from beacon client. RequestId:"
 					+ m.getUniqueIdRequest());
 			final ConfigSeed newConfig = ConfigHelper.fromBase64(m.getRequestCommand());
 			final CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
 					.setUniqueIdRequest(m.getUniqueIdRequest()).setBase64Config(m.getRequestCommand()).build();
 			blockingStub.sendCommandReply(reply);
-			anima.elaborateNewConfig((EdgeConfig) newConfig);
+			homunculus.elaborateNewConfig((EdgeConfig) newConfig);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
@@ -756,21 +760,21 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).addAllReplies(resultList).build();
 			blockingStub.sendCommandReply(request);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
 	private void execCommand(RequestToAgent m) {
 		try {
 			if (trace)
-				logger.info(anima.getAgentUniqueName() + " execute command " + m.getRequestCommand() + " with executor "
-						+ localExecutor.toString());
+				logger.info(homunculus.getAgentUniqueName() + " execute command " + m.getRequestCommand()
+						+ " with executor " + localExecutor.toString());
 			final String reply = localExecutor.elaborateMessage(m.getRequestCommand());
 			final CommandReplyRequest request = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
 					.setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).addReplies(reply).build();
 			blockingStub.sendCommandReply(request);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
@@ -781,7 +785,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).addErrors(error).build();
 			blockingStub.sendCommandReply(request);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
@@ -797,7 +801,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).addAllReplies(listReply).build();
 			blockingStub.sendCommandReply(request);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
@@ -808,7 +812,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 						.setJsonHardwareInfo(gson.toJson(HardwareHelper.getSystemInfo())).build();
 				blockingStub.sendHealth(hr);
 			} catch (final Exception e) {
-				logger.logException(anima.getAgentUniqueName() + " error sendHardwareInfo", e);
+				logger.logException(homunculus.getAgentUniqueName() + " error sendHardwareInfo", e);
 			}
 		}
 	}
@@ -861,7 +865,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 						.setLogLine(message).build();
 				blockingStub.sendLog(lr);
 			} catch (final Exception a) {
-				logger.logException(anima.getAgentUniqueName(), a);
+				logger.logException(homunculus.getAgentUniqueName(), a);
 			}
 		}
 	}
@@ -885,7 +889,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 						.setMessageException(message.getMessage()).setStackTraceException(sb.toString()).build();
 				blockingStub.sendException(e);
 			} catch (final Exception a) {
-				logger.logException(anima.getAgentUniqueName(), a);
+				logger.logException(homunculus.getAgentUniqueName(), a);
 			}
 		}
 	}
@@ -935,7 +939,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.build();
 			return blockingStub.listCommands(lcr);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -955,7 +959,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setBase64Config(ConfigHelper.toBase64(newConfig)).build();
 			return blockingStub.sendConfigRuntime(req);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -983,7 +987,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		try {
 			toRemove.close();
 		} catch (final Exception e) {
-			logger.logException(anima.getAgentUniqueName(), e);
+			logger.logException(homunculus.getAgentUniqueName(), e);
 		}
 	}
 
@@ -1018,20 +1022,20 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				}
 			}
 			if (trace)
-				logger.info(anima.getAgentUniqueName() + " request beacon tunnel " + request.build().getTargeId() + "/"
-						+ config.getNetworkModeRequested() + " from " + request.build().getAgentSource() + " to "
+				logger.info(homunculus.getAgentUniqueName() + " request beacon tunnel " + request.build().getTargeId()
+						+ "/" + config.getNetworkModeRequested() + " from " + request.build().getAgentSource() + " to "
 						+ request.build().getAgentDestination());
 			final ResponseNetworkChannel response = blockingStubTunnel.requestTunnel(request.build());
 			tunnel.setResponseNetworkChannel(response);
 			tunnels.add(tunnel);
 			if (trace)
-				logger.info(anima.getAgentUniqueName()
+				logger.info(homunculus.getAgentUniqueName()
 						+ " request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
 			tunnel.init();
 			// logger.info("INIT DONE");
 			return tunnel;
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -1051,7 +1055,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setAgentSender(me).setCommandMessage(command).build();
 			return blockingStub.elaborateMessage(emr);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -1064,7 +1068,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.addAllWords(words).setWordIndex(wordIndex).setPosition(position).build();
 			return blockingStub.completeCommand(ccr);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -1102,7 +1106,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			}
 			return runCompletitionOnAgent(agentUniqueName, clean, word, pos);
 		} catch (final Exception a) {
-			logger.logException(anima.getAgentUniqueName(), a);
+			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;
 		}
 	}
@@ -1213,7 +1217,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				try {
 					e.close();
 				} catch (final Exception e1) {
-					logger.logException(anima.getAgentUniqueName(), e1);
+					logger.logException(homunculus.getAgentUniqueName(), e1);
 				}
 			}
 			remoteExecutors.clear();
@@ -1222,7 +1226,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			try {
 				localExecutor.close();
 			} catch (final Exception e) {
-				logger.logException(anima.getAgentUniqueName(), e);
+				logger.logException(homunculus.getAgentUniqueName(), e);
 			}
 		}
 		if (tunnels != null && !tunnels.isEmpty()) {
@@ -1230,13 +1234,13 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				try {
 					t.close();
 				} catch (final Exception e) {
-					logger.logException(anima.getAgentUniqueName(), e);
+					logger.logException(homunculus.getAgentUniqueName(), e);
 				}
 			}
 			tunnels.clear();
 		}
 		if (trace)
-			logger.info(anima.getAgentUniqueName() + " Client Beacon closed");
+			logger.info(homunculus.getAgentUniqueName() + " Client Beacon closed");
 	}
 
 	@Override
@@ -1271,6 +1275,17 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 		final RequestToAgent messageSimulated = RequestToAgent.newBuilder().setTunnelRequest(tunnelRequest).build();
 		closePort(messageSimulated);
+	}
+
+	@Override
+	public XpraSessionProcess startXpraService(String executorLabel, int port, String cmd) {
+		final XpraSessionProcess xpraSessionProcess = new XpraSessionProcess();
+		xpraSessionProcess.setLabel(executorLabel);
+		xpraSessionProcess.setTcpPort(port);
+		xpraSessionProcess.setCommand(cmd);
+		xpraSessionProcess.eval(cmd);
+		getLocalExecutor().getScriptSessions().put(executorLabel, xpraSessionProcess);
+		return xpraSessionProcess;
 	}
 
 }

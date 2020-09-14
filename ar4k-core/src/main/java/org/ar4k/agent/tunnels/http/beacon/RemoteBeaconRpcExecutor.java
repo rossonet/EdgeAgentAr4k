@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ar4k.agent.core.data.messages.InternalMessage;
-import org.ar4k.agent.rpc.IHomunculus;
+import org.ar4k.agent.rpc.IHomunculusRpc;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
@@ -76,8 +76,8 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
   }
 
   @Override
-  public void setHomunculus(IHomunculus homunculus) {
-    setRemoteHomunculus((RemoteBeaconAgentHomunculus) homunculus);
+  public void setHomunculus(IHomunculusRpc homunculusRpc) {
+    setRemoteHomunculus((RemoteBeaconAgentHomunculus) homunculusRpc);
   }
 
   public RemoteBeaconAgentHomunculus getRemoteHomunculus() {

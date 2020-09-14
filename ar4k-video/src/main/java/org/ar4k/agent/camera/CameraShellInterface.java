@@ -115,8 +115,8 @@ public class CameraShellInterface extends AbstractShellHelper {
     if (videoInterface == null) {
       videoInterface = new VideoInterface();
     }
-    if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class)) {
-      ((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).subscribe(videoInterface);
+    if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class)) {
+      ((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(videoInterface);
     } else
       logger.error(channelId + " is not subscribable");
   }

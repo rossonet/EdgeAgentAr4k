@@ -20,12 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -50,7 +50,7 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private SerialConfig configuration = null;
 
-	private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 
 	public static enum BaudRate {
 		bs150, bs300, bs600, bs1200, bs1800, bs2400, bs4800, bs7200, bs9600, bs14400, bs19200, bs38400, bs56000,
@@ -123,11 +123,11 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	@Override
 	public void kill() {
-		anima.getDataAddress().removeDataChannel(writeChannelBytes, true);
-		anima.getDataAddress().removeDataChannel(writeChannel, true);
-		anima.getDataAddress().removeDataChannel(readChannelBytes, true);
-		anima.getDataAddress().removeDataChannel(readChannel, true);
-		anima.getDataAddress().removeDataChannel(channelRoot, true);
+		homunculus.getDataAddress().removeDataChannel(writeChannelBytes, true);
+		homunculus.getDataAddress().removeDataChannel(writeChannel, true);
+		homunculus.getDataAddress().removeDataChannel(readChannelBytes, true);
+		homunculus.getDataAddress().removeDataChannel(readChannel, true);
+		homunculus.getDataAddress().removeDataChannel(channelRoot, true);
 		if (comPort != null) {
 			comPort.closePort();
 			comPort = null;
@@ -145,13 +145,13 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	// ritorna le seriali disponibili
@@ -166,22 +166,22 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private void popolateDataTopics() {
 		openSerialPort();
-		readChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+		readChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointRead(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " read channel", channelRoot,
-				anima.getDataAddress().getDefaultScope(), anima.getTags());
-		readChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+		readChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointReadByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " read bytes node", channelRoot,
-				anima.getDataAddress().getDefaultScope(), anima.getTags());
-		writeChannel = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+		writeChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointWrite(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " write node", channelRoot,
-				anima.getDataAddress().getDefaultScope(), anima.getTags());
-		writeChannelBytes = (IPublishSubscribeChannel) anima.getDataAddress().createOrGetDataChannel(
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+		writeChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointWriteByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " write bytes node", channelRoot,
-				anima.getDataAddress().getDefaultScope(), anima.getTags());
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
 		readChannel.addTag("serial-read");
 		readChannelBytes.addTag("serial-read-bytes");
 		writeChannel.addTag("serial-write");

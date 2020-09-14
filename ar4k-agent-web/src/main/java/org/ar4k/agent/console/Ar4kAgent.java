@@ -17,7 +17,7 @@ package org.ar4k.agent.console;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,14 +45,14 @@ public class Ar4kAgent {
 		app.run(fullArgs);
 		final EdgeUserDetails u = new EdgeUserDetails();
 		u.setUsername("admin");
-		u.setPassword(Anima.getApplicationContext().getBean(PasswordEncoder.class).encode("admin"));
+		u.setPassword(Homunculus.getApplicationContext().getBean(PasswordEncoder.class).encode("admin"));
 		final List<SimpleGrantedAuthority> a = new ArrayList<>();
 		for (final String p : "ROLE_ADMIN,ROLE_USER".split(",")) {
 			final SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
 			a.add(g);
 		}
 		u.setAuthorities(a);
-		Anima.getApplicationContext().getBean(Anima.class).getLocalUsers().add(u);
+		Homunculus.getApplicationContext().getBean(Homunculus.class).getLocalUsers().add(u);
 	}
 
 }

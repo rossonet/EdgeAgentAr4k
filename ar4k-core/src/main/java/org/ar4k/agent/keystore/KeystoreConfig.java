@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.ar4k.agent.config.ConfigSeed;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
 import org.ar4k.agent.exception.EdgeException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -68,7 +68,7 @@ public class KeystoreConfig implements ConfigSeed {
   public List<String> tags = new ArrayList<>();
 
   @Parameter(names = "--filePath", description = "file path for the keystore")
-  public String filePathPre = Anima.DEFAULT_KS_PATH;
+  public String filePathPre = Homunculus.DEFAULT_KS_PATH;
 
   @Parameter(names = "--keystorePassword", description = "keystore password")
   public String keystorePassword = "secA4.rk!8";

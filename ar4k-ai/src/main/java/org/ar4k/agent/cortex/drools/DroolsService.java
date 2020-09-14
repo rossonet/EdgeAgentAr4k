@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.cortex.annotation.Ar4kDroolsContext;
 import org.ar4k.agent.cortex.annotation.DroolsGlobalClass;
 import org.ar4k.agent.cortex.drools.data.GlobalDataInterface;
@@ -55,8 +55,8 @@ public class DroolsService implements EdgeComponent {
 	public String toString() {
 		return "DroolsService [configuration=" + configuration + ", kieContainer=" + kieContainer + ", kieServices="
 				+ kieServices + ", kieRepository=" + kieRepository + ", allResources=" + allResources + ", kieModule="
-				+ kieModule + ", kieSession=" + kieSession + ", kieStatelessSession=" + kieStatelessSession + ", anima="
-				+ anima + ", dataAddress=" + dataAddress + "]";
+				+ kieModule + ", kieSession=" + kieSession + ", kieStatelessSession=" + kieStatelessSession
+				+ ", homunculus=" + homunculus + ", dataAddress=" + dataAddress + "]";
 	}
 
 	public enum DroolsServiceUpdateAction {
@@ -71,7 +71,7 @@ public class DroolsService implements EdgeComponent {
 	private KieModule kieModule = null;
 	private KieSession kieSession = null;
 	private StatelessKieSession kieStatelessSession = null;
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 	private DataAddress dataAddress = null;
 
 	public boolean isStateless() {
@@ -231,8 +231,8 @@ public class DroolsService implements EdgeComponent {
 
 	private void registerBean() {
 		try {
-			if (Anima.getApplicationContext() != null)
-				((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory()
+			if (Homunculus.getApplicationContext() != null)
+				((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
 						.registerSingleton(configuration.beanName, this);
 			else
 				logger.warn("Starting without Spring context");
@@ -243,8 +243,9 @@ public class DroolsService implements EdgeComponent {
 
 	private void deregisterBean() {
 		try {
-			if (Anima.getApplicationContext() != null)
-				((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().destroyBean(this);
+			if (Homunculus.getApplicationContext() != null)
+				((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+						.destroyBean(this);
 			else
 				logger.warn("Starting without Spring context");
 		} catch (final Exception aa) {
@@ -343,8 +344,8 @@ public class DroolsService implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -358,8 +359,8 @@ public class DroolsService implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

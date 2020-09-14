@@ -15,8 +15,8 @@
 package org.ar4k.agent.console;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.AnimaHomunculus;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.RpcConversation;
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,26 +38,26 @@ import org.springframework.stereotype.Component;
 public class CustomPromptProvider implements PromptProvider {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Autowired
-  private AnimaHomunculus animaHomunculus;
+  private HomunculusSession homunculusSession;
 
   @Override
   public AttributedString getPrompt() {
     EdgeConfig wc = null;
     Authentication a = SecurityContextHolder.getContext().getAuthentication();
     if (a != null) {
-      SessionInformation session = animaHomunculus.getAllSessions(a, false).get(0);
-      wc = ((RpcConversation) anima.getRpc(session.getSessionId())).getWorkingConfig();
+      SessionInformation session = homunculusSession.getAllSessions(a, false).get(0);
+      wc = ((RpcConversation) homunculus.getRpc(session.getSessionId())).getWorkingConfig();
     }
     AnsiColor colore = AnsiColor.BLUE;
     String testo = "AGENT:> ";
-    if (anima.getState() != null) {
-      testo = anima.getState().toString() + ":> ";
+    if (homunculus.getState() != null) {
+      testo = homunculus.getState().toString() + ":> ";
       if (wc != null) {
         colore = wc.promptColor;
-        testo = "-" + anima.getState().toString() + "- " + wc.prompt + ":# ";
+        testo = "-" + homunculus.getState().toString() + "- " + wc.prompt + ":# ";
       }
     }
     AttributedString prompt = null;

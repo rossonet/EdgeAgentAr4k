@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.ar4k.agent.core.Anima.AnimaEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Ar4kEventsValuesProvider extends ValueProviderSupport {
 
-  private final static String[] VALUES = Stream.of(AnimaEvents.values()).map(AnimaEvents::name).toArray(String[]::new);
+  private final static String[] VALUES = Stream.of(HomunculusEvents.values()).map(HomunculusEvents::name).toArray(String[]::new);
 
   @Override
   public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,

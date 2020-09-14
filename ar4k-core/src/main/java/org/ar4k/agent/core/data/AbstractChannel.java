@@ -11,7 +11,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ar4k.agent.config.validator.DataTypeValidator;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
@@ -222,7 +223,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		if (getChannel() != null) {
 			getChannel().setBeanName(getBrowseName());
 			getChannel().setComponentName(getBrowseName());
-			((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory()
+			((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
 					.registerSingleton(getBrowseName(), getChannel());
 		}
 		if (dataAddress != null) {
@@ -235,7 +236,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		if (dataAddress != null) {
 			dataAddress.callAddressSpaceRefresh(this);
 		}
-		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory())
+		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory())
 				.destroySingleton(getBrowseName());
 		setStatus(Status.DETROY);
 	}

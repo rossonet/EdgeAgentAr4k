@@ -28,15 +28,15 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.sshd.firstCommand.AnimaProcessShellFactory;
+import org.ar4k.agent.tunnels.sshd.firstCommand.HomunculusProcessShellFactory;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -69,7 +69,7 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	private SshServer server = null;
 	private final static Gson gson = new GsonBuilder().create();
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	private DataAddress dataspace = null;
 
@@ -88,15 +88,15 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	@Override
 	public synchronized void init() {
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new AnimaPasswordAuthenticator(anima);
+		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
 		server.setPasswordAuthenticator(passwordAuthenticator);
-		final PublickeyAuthenticator publickeyAuthenticator = new AnimaPublickeyAuthenticator(
+		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
 		server.setPublickeyAuthenticator(publickeyAuthenticator);
 		server.setHost(configuration.bindHost);
 		server.setPort(configuration.port);
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-		final ProcessShellFactory shellFactory = new AnimaProcessShellFactory(configuration.cmd.split("\\s+"));
+		final ProcessShellFactory shellFactory = new HomunculusProcessShellFactory(configuration.cmd.split("\\s+"));
 		server.setShellFactory(shellFactory);
 		server.setCommandFactory(new ScpCommandFactory());
 		server.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
@@ -139,8 +139,8 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -154,8 +154,8 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

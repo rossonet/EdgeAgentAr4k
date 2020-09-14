@@ -4,10 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.iot.serial.SerialConfig;
 import org.ar4k.agent.iot.serial.SerialService;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -26,7 +26,7 @@ public class SerialJsonService extends SerialService {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(SerialJsonService.class.toString());
 
-	private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 
 	private EdgeChannel channelRoot = null;
 	private IPublishSubscribeChannel exceptionChannel = null;
@@ -136,7 +136,7 @@ public class SerialJsonService extends SerialService {
 			final IPublishSubscribeChannel newChannel = (IPublishSubscribeChannel) getDataAddress()
 					.createOrGetDataChannel(configuration.getPreChannelName() + tagLabel,
 							IPublishSubscribeChannel.class, "serial port json tag " + tagLabel, channelRoot,
-							anima.getDataAddress().getDefaultScope(), anima.getTags());
+							homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
 			newChannel.addTag(tagLabel);
 			channelMap.put(tagLabel, newChannel);
 		}
@@ -146,11 +146,11 @@ public class SerialJsonService extends SerialService {
 	private void popolateDataTopics() {
 		exceptionChannel = (IPublishSubscribeChannel) getDataAddress().createOrGetDataChannel(
 				configuration.getBrokenMessage(), IPublishSubscribeChannel.class, "serial port json exception channel",
-				channelRoot, anima.getDataAddress().getDefaultScope(), anima.getTags());
+				channelRoot, homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
 		elseChannel = (IPublishSubscribeChannel) getDataAddress().createOrGetDataChannel(
 				configuration.getDefaultChannel(), IPublishSubscribeChannel.class,
-				"serial port json message not routed", channelRoot, anima.getDataAddress().getDefaultScope(),
-				anima.getTags());
+				"serial port json message not routed", channelRoot, homunculus.getDataAddress().getDefaultScope(),
+				homunculus.getTags());
 		exceptionChannel.addTag("exception");
 		elseChannel.addTag("not-routed");
 	}

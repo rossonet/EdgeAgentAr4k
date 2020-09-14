@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 

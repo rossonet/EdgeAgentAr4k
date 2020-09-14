@@ -16,10 +16,10 @@ package org.ar4k.qa.tests;
 
 import java.util.UUID;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaEvents;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
 import org.jline.builtins.Commands;
@@ -47,10 +47,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
@@ -59,12 +59,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ImplementedServiceTests {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(anima.getState());
+    System.out.println(homunculus.getState());
   }
 
   @Rule
@@ -78,12 +78,12 @@ public class ImplementedServiceTests {
   @Test
   public void putInDataStore() throws InterruptedException {
     Thread.sleep(2000L);
-    while (anima == null || !anima.getState().toString().equals("STAMINAL") || !anima.dataStoreExists()) {
-      if (anima != null && anima.getState().toString().equals("INIT")) {
-        anima.sendEvent(AnimaEvents.BOOTSTRAP);
+    while (homunculus == null || !homunculus.getState().toString().equals("STAMINAL") || !homunculus.dataStoreExists()) {
+      if (homunculus != null && homunculus.getState().toString().equals("INIT")) {
+        homunculus.sendEvent(HomunculusEvents.BOOTSTRAP);
       }
       try {
-        System.out.println("STATE A: " + anima.getState());
+        System.out.println("STATE A: " + homunculus.getState());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -93,13 +93,13 @@ public class ImplementedServiceTests {
     boolean primo = true;
     for (int i = 0; i < 10000; i++) {
       if (primo) {
-        anima.setContextData(stringa, UUID.randomUUID().toString());
+        homunculus.setContextData(stringa, UUID.randomUUID().toString());
         primo = false;
       } else {
-        anima.setContextData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        homunculus.setContextData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
       }
     }
-    System.out.println("STATE B: " + anima.getContextData(stringa));
+    System.out.println("STATE B: " + homunculus.getContextData(stringa));
   }
 
 }

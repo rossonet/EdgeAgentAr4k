@@ -15,9 +15,9 @@ import org.apache.sshd.server.shell.ProcessShell;
  *
  */
 
-public class AnimaProcessShell extends ProcessShell {
+public class HomunculusProcessShell extends ProcessShell {
 
-	public AnimaProcessShell(List<String> resolveEffectiveCommand) {
+	public HomunculusProcessShell(List<String> resolveEffectiveCommand) {
 		super(resolveEffectiveCommand);
 	}
 

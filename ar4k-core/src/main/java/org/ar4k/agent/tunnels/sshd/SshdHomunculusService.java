@@ -20,10 +20,10 @@ import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -51,7 +51,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	private SshServer server = null;
 	private final static Gson gson = new GsonBuilder().create();
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	private DataAddress dataspace = null;
 
@@ -70,17 +70,17 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	@Override
 	public void init() {
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new AnimaPasswordAuthenticator(anima);
+		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
 		server.setPasswordAuthenticator(passwordAuthenticator);
-		final PublickeyAuthenticator publickeyAuthenticator = new AnimaPublickeyAuthenticator(
+		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
 		server.setPublickeyAuthenticator(publickeyAuthenticator);
 		server.setHost(configuration.broadcastAddress);
 		server.setPort(configuration.port);
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
 		logger.warn("keys for sshd server generated");
-		final AnimaShellFactory shellFactory = new AnimaShellFactory(
-				Anima.getApplicationContext().getBean(Anima.class), Anima.getApplicationContext().getBean(Shell.class));
+		final HomunculusShellFactory shellFactory = new HomunculusShellFactory(
+				Homunculus.getApplicationContext().getBean(Homunculus.class), Homunculus.getApplicationContext().getBean(Shell.class));
 		server.setShellFactory(shellFactory);
 		server.addCloseFutureListener(this);
 		server.addSessionListener(this);
@@ -119,8 +119,8 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -134,8 +134,8 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

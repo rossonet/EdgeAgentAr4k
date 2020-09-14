@@ -20,12 +20,12 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import org.ar4k.agent.camera.messages.VideoMessage;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -57,7 +57,7 @@ public class StreamCameraService implements EdgeComponent {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(StreamCameraService.class.toString());
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	private StreamCameraConfig configuration = null;
 
@@ -98,14 +98,14 @@ public class StreamCameraService implements EdgeComponent {
 				configuration.getGlobalImageQueue(), IPublishSubscribeChannel.class,
 				"video " + configuration.description, channelRoot,
 				configuration.getScopeOfChannels() != null ? configuration.getScopeOfChannels()
-						: anima.getDataAddress().getDefaultScope(),
-				anima.getTags());
+						: homunculus.getDataAddress().getDefaultScope(),
+				homunculus.getTags());
 		globalMotionDetectQueue = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(
 				configuration.getGlobalMotionDetectQueue(), IPublishSubscribeChannel.class,
 				"video " + configuration.description, channelRoot,
 				configuration.getScopeOfChannels() != null ? configuration.getScopeOfChannels()
-						: anima.getDataAddress().getDefaultScope(),
-				anima.getTags());
+						: homunculus.getDataAddress().getDefaultScope(),
+				homunculus.getTags());
 		globalImageQueue.addTag("video");
 		globalImageQueue.setDescription("video camera stream of BufferedImage");
 		globalMotionDetectQueue.addTag("detect");
@@ -274,8 +274,8 @@ public class StreamCameraService implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -289,8 +289,8 @@ public class StreamCameraService implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

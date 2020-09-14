@@ -17,10 +17,10 @@ package org.ar4k.agent.tunnels.http.beacon;
 import java.io.IOException;
 import java.security.UnrecoverableKeyException;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -38,32 +38,32 @@ import com.google.gson.GsonBuilder;
 public class BeaconService implements EdgeComponent {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Anima.class.toString());
+      .getLogger(Homunculus.class.toString());
 
   // iniettata vedi set/get
   private BeaconServiceConfig configuration = null;
 
-  private Anima anima = null;
+  private Homunculus homunculus = null;
 
   private DataAddress dataAddress = null;
 
   private BeaconServer beaconServer = null;
 
   @Override
-  public Anima getAnima() {
-    return anima;
+  public Homunculus getHomunculus() {
+    return homunculus;
   }
 
   @Override
-  public void setAnima(Anima anima) {
-    this.anima = anima;
+  public void setHomunculus(Homunculus homunculus) {
+    this.homunculus = homunculus;
   }
 
   @Override
   public synchronized void init() {
     try {
       if (beaconServer == null) {
-        beaconServer = new BeaconServer.Builder().setAnima(anima).setPort(configuration.port)
+        beaconServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(configuration.port)
             .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
             .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
             .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)

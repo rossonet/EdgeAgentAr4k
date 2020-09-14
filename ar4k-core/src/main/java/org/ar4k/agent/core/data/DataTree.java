@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

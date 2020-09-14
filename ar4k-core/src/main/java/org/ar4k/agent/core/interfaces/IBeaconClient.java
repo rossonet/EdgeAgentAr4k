@@ -1,10 +1,12 @@
-package org.ar4k.agent.core;
+package org.ar4k.agent.core.interfaces;
 
 import java.util.List;
 
 import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.network.NetworkTunnel;
+import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http.beacon.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
@@ -20,6 +22,8 @@ import io.grpc.ConnectivityState;
 public interface IBeaconClient {
 
 	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
+
+	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
 
 	List<Agent> listAgentsConnectedToBeacon();
 

@@ -34,7 +34,7 @@ import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
@@ -94,7 +94,7 @@ public class BeaconClientServerNoSslTests {
 	private static final String CLIENT2_LABEL = "client2";
 	private static final String SERVER_LABEL = "server";
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final Map<String, Anima> testAnimas = new HashMap<>();
+	private final Map<String, Homunculus> testAnimas = new HashMap<>();
 	private final File keyStoreServer = new File("./tmp/server.ks");
 	private final File keyStoreClient1 = new File("./tmp/client1.ks");
 	private final File keyStoreClient2 = new File("./tmp/client2.ks");
@@ -249,7 +249,7 @@ public class BeaconClientServerNoSslTests {
 	@After
 	public void tearDown() throws Exception {
 		System.err.println("\n\nEND TESTS\n\n");
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			a.close();
 		}
 		testAnimas.clear();
@@ -394,12 +394,12 @@ public class BeaconClientServerNoSslTests {
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClient1, config1, client1AliasInKeystore,
 						client1AliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(5000);
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			final String animaName = a.getRuntimeConfig() != null ? a.getRuntimeConfig().getName() : "no-config";
 			if (animaName.equals("server-beacon")) {
-				Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
+				Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 			} else {
-				Assert.assertEquals(a.getState(), Anima.AnimaStates.STAMINAL);
+				Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.STAMINAL);
 			}
 		}
 		Thread.sleep(3000);

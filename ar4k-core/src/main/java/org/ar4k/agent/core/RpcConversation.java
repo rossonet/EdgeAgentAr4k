@@ -7,13 +7,13 @@ import java.util.Map;
 import javax.validation.ConstraintViolation;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.config.ServiceConfig;
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.rpc.IHomunculus;
+import org.ar4k.agent.rpc.IHomunculusRpc;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.springframework.shell.CompletionContext;
@@ -40,7 +40,7 @@ public class RpcConversation implements RpcExecutor {
   private Map<String, KeystoreConfig> keyStores = new HashMap<>();
   private Map<String, ServiceConfig> components = new HashMap<>();
   private Map<String, AgentProcess> scriptSessions = new HashMap<>();
-  private IHomunculus homunculus = null;
+  private IHomunculusRpc homunculusRpc = null;
   private String workingConfig = null;
 
   private final Shell shell;
@@ -96,8 +96,8 @@ public class RpcConversation implements RpcExecutor {
   }
 
   @Override
-  public void setHomunculus(IHomunculus homunculus) {
-    this.homunculus = homunculus;
+  public void setHomunculus(IHomunculusRpc homunculusRpc) {
+    this.homunculusRpc = homunculusRpc;
   }
 
   public Map<String, EdgeConfig> getConfigurations() {
@@ -124,8 +124,8 @@ public class RpcConversation implements RpcExecutor {
     this.components = components;
   }
 
-  protected IHomunculus getHomunculus() {
-    return homunculus;
+  protected IHomunculusRpc getHomunculus() {
+    return homunculusRpc;
   }
 
   public EdgeConfig getWorkingConfig() {
@@ -165,8 +165,8 @@ public class RpcConversation implements RpcExecutor {
     if (components != null && !components.isEmpty()) {
       components.clear();
     }
-    if (homunculus != null) {
-      homunculus.close();
+    if (homunculusRpc != null) {
+      homunculusRpc.close();
     }
     logger.debug("rpc coversation closed");
   }
@@ -175,7 +175,7 @@ public class RpcConversation implements RpcExecutor {
   public String toString() {
     return "RpcConversation [configurations=" + configurations.size() + ", keyStores=" + keyStores.size()
         + ", components=" + components.size() + ", scriptSessions=" + scriptSessions.size() + ", homunculus="
-        + homunculus.toString() + ", workingConfig=" + workingConfig + "]";
+        + homunculusRpc.toString() + ", workingConfig=" + workingConfig + "]";
   }
 
 }

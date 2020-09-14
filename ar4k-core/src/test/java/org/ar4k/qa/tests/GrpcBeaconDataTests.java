@@ -14,10 +14,10 @@
     */
 package org.ar4k.qa.tests;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.IBeaconClient;
-import org.ar4k.agent.core.IBeaconServer;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
+import org.ar4k.agent.core.interfaces.IBeaconServer;
 
 public class GrpcBeaconDataTests {
 
@@ -25,6 +25,6 @@ public class GrpcBeaconDataTests {
   IBeaconClient client = null;
   RpcConversation rpcConversation = null;
   int port = 2569;
-  Anima anima = new Anima();
+  Homunculus homunculus = new Homunculus();
 
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class AgentConsoleTest {
   private Shell shell;
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {

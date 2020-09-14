@@ -2,28 +2,28 @@ package org.ar4k.agent.tunnels.sshd;
 
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.shell.ShellFactory;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.shell.Shell;
 
-public class AnimaShellFactory implements ShellFactory {
+public class HomunculusShellFactory implements ShellFactory {
 
   private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(AnimaShellFactory.class.toString());
+      .getLogger(HomunculusShellFactory.class.toString());
 
-  private final Anima anima;
+  private final Homunculus homunculus;
   private final Shell shell;
 
-  public AnimaShellFactory(Anima anima, Shell shell) {
-    this.anima = anima;
+  public HomunculusShellFactory(Homunculus homunculus, Shell shell) {
+    this.homunculus = homunculus;
     this.shell = shell;
     logger.warn("Remote connection from SSH to the agent");
   }
 
   @Override
   public Command create() {
-    SshdAnimaCommand command = new SshdAnimaCommand(anima, shell);
+    SshdHomunculusCommand command = new SshdHomunculusCommand(homunculus, shell);
     return command;
   }
 

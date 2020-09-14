@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import javax.net.SocketFactory;
 
-import org.ar4k.agent.config.ServiceConfig;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com

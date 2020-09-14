@@ -17,9 +17,9 @@ package org.ar4k.agent.iot.serial.cnc;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.data.EdgeChannel;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 
 import com.beust.jcommander.Parameter;
 
@@ -40,7 +40,7 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 	@Parameter(names = "--endpoint", description = "internal queue for the messages found by the regular expression")
 	public String endpoint = null;
 
-	private Anima anima = Anima.getApplicationContext().getBean(Anima.class);
+	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 
 	private transient IPublishSubscribeChannel cacheChannel = null;
 	private transient Pattern pattern = null;
@@ -63,14 +63,14 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 
 	public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
 		if (cacheChannel == null) {
-			final EdgeChannel father = Anima.getApplicationContext().getBean(Anima.class).getDataAddress()
+			final EdgeChannel father = Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress()
 					.createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null,
-							null, anima.getTags());
-			cacheChannel = (IPublishSubscribeChannel) Anima.getApplicationContext().getBean(Anima.class)
+							null, homunculus.getTags());
+			cacheChannel = (IPublishSubscribeChannel) Homunculus.getApplicationContext().getBean(Homunculus.class)
 					.getDataAddress().createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class,
 							"cache data of the CNC", father,
-							scopeOfChannels != null ? scopeOfChannels : anima.getDataAddress().getDefaultScope(),
-							anima.getTags());
+							scopeOfChannels != null ? scopeOfChannels : homunculus.getDataAddress().getDefaultScope(),
+							homunculus.getTags());
 		}
 		return cacheChannel;
 	}

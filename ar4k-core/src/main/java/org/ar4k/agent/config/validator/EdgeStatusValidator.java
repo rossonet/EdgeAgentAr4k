@@ -16,7 +16,7 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.core.Anima.AnimaStates;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;
@@ -31,10 +31,10 @@ public class EdgeStatusValidator implements IParameterValidator {
   @Override
   public void validate(String name, String value) throws ParameterException {
     try {
-      AnimaStates.valueOf(value);
+      HomunculusStates.valueOf(value);
     } catch (java.lang.IllegalArgumentException aa) {
       StringBuilder b = new StringBuilder();
-      EnumSet.allOf(AnimaStates.class).forEach(v -> {
+      EnumSet.allOf(HomunculusStates.class).forEach(v -> {
         b.append(v.toString() + " ");
       });
       throw new ParameterException("Parameter " + name + " should be in " + b.toString());

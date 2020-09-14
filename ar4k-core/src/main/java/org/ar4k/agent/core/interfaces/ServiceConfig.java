@@ -1,6 +1,6 @@
-package org.ar4k.agent.config;
+package org.ar4k.agent.core.interfaces;
 
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.config.AbstractServiceConfig;
 
 /**
  * interfaccia da implementare per una configurazione di servizio valida

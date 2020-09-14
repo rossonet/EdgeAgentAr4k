@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.BeaconShellInterface;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
@@ -49,7 +49,7 @@ public class BeaconClientXpraViaSshTests {
 	private static final String CLIENT2_LABEL = "client2";
 	private static final String SERVER_LABEL = "server";
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final Map<String, Anima> testAnimas = new HashMap<>();
+	private final Map<String, Homunculus> testAnimas = new HashMap<>();
 	private final File keyStoreMaster = new File("./tmp/master.ks");
 	private final File keyStoreServer = new File("./tmp/server.ks");
 	private final File keyStoreClient1 = new File("./tmp/client1.ks");
@@ -146,7 +146,7 @@ public class BeaconClientXpraViaSshTests {
 	@After
 	public void tearDown() throws Exception {
 		System.err.println("\n\nEND TESTS\n\n");
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			a.close();
 		}
 		Files.deleteIfExists(Paths.get("./tmp/test-server.config.base64.ar4k"));
@@ -359,8 +359,8 @@ public class BeaconClientXpraViaSshTests {
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, "https://127.0.0.1:33666")).get());
 		Thread.sleep(15000);
-		for (final Anima a : testAnimas.values()) {
-			Assert.assertEquals(a.getState(), Anima.AnimaStates.RUNNING);
+		for (final Homunculus a : testAnimas.values()) {
+			Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 		}
 		Thread.sleep(5000);
 		final BeaconShellInterface beanBeaconShellInterface = testAnimas.get(CLIENT1_LABEL).getApplicationContext()

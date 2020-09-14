@@ -21,10 +21,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.List;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetails;
@@ -58,10 +58,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
@@ -69,7 +69,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AuthenticationAndRpcTests {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Autowired
   ApplicationContext applicationContext;
@@ -119,7 +119,7 @@ public class AuthenticationAndRpcTests {
 
   @Test
   public void authenticationTest() {
-    while (anima.getState() != null && anima.getState().equals(AnimaStates.INIT)) {
+    while (homunculus.getState() != null && homunculus.getState().equals(HomunculusStates.INIT)) {
       try {
         Thread.sleep(200L);
       } catch (InterruptedException e) {
@@ -128,7 +128,7 @@ public class AuthenticationAndRpcTests {
     }
     printBeans();
     checkAuthentication();
-    anima.loginAgent("admin", "a4c8ff551a", null);
+    homunculus.loginAgent("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
@@ -136,17 +136,17 @@ public class AuthenticationAndRpcTests {
 
   @Test
   public void baseSessionManagerTest() {
-    String sessionId = anima.loginAgent("admin", "a4c8ff551a", null);
+    String sessionId = homunculus.loginAgent("admin", "a4c8ff551a", null);
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-    RpcConversation rpc = (RpcConversation) anima.getRpc(sessionId);
+    RpcConversation rpc = (RpcConversation) homunculus.getRpc(sessionId);
     System.out.println(rpc.listCommands().toString());
     assertTrue(rpc.elaborateMessage("help").contains("Display or save the history of previously run commands"));
   }
 
   @Test
   public void destroySessionTest() {
-    while (anima.getState() != null && anima.getState().equals(AnimaStates.INIT)) {
+    while (homunculus.getState() != null && homunculus.getState().equals(HomunculusStates.INIT)) {
       try {
         Thread.sleep(200L);
       } catch (InterruptedException e) {
@@ -155,11 +155,11 @@ public class AuthenticationAndRpcTests {
     }
     printBeans();
     checkAuthentication();
-    String sessionId = anima.loginAgent("admin", "a4c8ff551a", null);
+    String sessionId = homunculus.loginAgent("admin", "a4c8ff551a", null);
     System.out.println("CONTEXT: " + SecurityContextHolder.getContext());
     checkAuthentication();
     assertEquals("admin", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-    anima.terminateSession(sessionId);
+    homunculus.terminateSession(sessionId);
     assertThat(sessionRegistry.getSessionInformation(sessionId)).isNull();
   }
 

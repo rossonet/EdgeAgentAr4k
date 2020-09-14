@@ -52,8 +52,11 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.data.DataAddressAnima;
+import org.ar4k.agent.core.data.DataAddressHomunculus;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
+import org.ar4k.agent.core.interfaces.ServiceComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -101,32 +104,32 @@ import jdbm.RecordManagerFactory;
  *         stati dei servizi e funge da Bean principale per l'uso delle API Ar4k
  */
 //@ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
-@Component("anima")
+@Component("homunculus")
 //@EnableMBeanExport
 @Scope("singleton")
 @EnableJms
 @EnableConfigurationProperties(EdgeStarterProperties.class)
-public class Anima
+public class Homunculus
 		implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
 	public static final String THREAD_ID = "a-" + (Math.round((new Random().nextDouble() * 9999)));
 
-	public static final ContextCreationHelper getNewAnimaInNewContext(Class<?> springMasterClass,
+	public static final ContextCreationHelper getNewHomunculusInNewContext(Class<?> springMasterClass,
 			ExecutorService executor, String loggerFile, String keyStore, int webPort, List<String> args,
-			EdgeConfig animaConfig, String mainAliasInKeystore, String keystoreBeaconAlias,
+			EdgeConfig homunculusConfig, String mainAliasInKeystore, String keystoreBeaconAlias,
 			String webRegistrationEndpoint) {
-		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args, animaConfig,
-				mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
+		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args,
+				homunculusConfig, mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
 	}
 
-	public Class<Anima> getStaticClass() {
-		return Anima.class;
+	public Class<Homunculus> getStaticClass() {
+		return Homunculus.class;
 	}
 
 	public static final String DEFAULT_KS_PATH = "default-new.ks";
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Anima.class.toString());
+			.getLogger(Homunculus.class.toString());
 
 	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
 	// assegnato da Spring tramite setter al boot
@@ -139,10 +142,10 @@ public class Anima
 	private Timer timerScheduler = null;
 
 	@Autowired
-	private StateMachine<AnimaStates, AnimaEvents> animaStateMachine;
+	private StateMachine<HomunculusStates, HomunculusEvents> homunculusStateMachine;
 
 	@Autowired
-	private AnimaHomunculus animaHomunculus;
+	private HomunculusSession homunculusSession;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -162,8 +165,8 @@ public class Anima
 	private EdgeConfig bootstrapConfig = null;
 	// configurazione per il reload
 	private EdgeConfig reloadConfig = null;
-	private AnimaStates stateTarget = AnimaStates.RUNNING;
-	private Map<Instant, AnimaStates> statesBefore = new HashMap<>();
+	private HomunculusStates stateTarget = HomunculusStates.RUNNING;
+	private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
 
 	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
 
@@ -173,11 +176,11 @@ public class Anima
 
 	private RecordManager recMan = null;
 
-	private String beanName = "anima";
+	private String beanName = "homunculus";
 
 	private BeaconClient beaconClient = null;
 
-	private DataAddressAnima dataAddress = new DataAddressAnima(this);
+	private DataAddressHomunculus dataAddress = new DataAddressHomunculus(this);
 
 	private KeystoreConfig myIdentityKeystore = null;
 	private String myAliasCertInKeystore = "agent";
@@ -188,47 +191,47 @@ public class Anima
 
 	private boolean firstStateFired = false;
 
-	public enum AnimaStates {
+	public enum HomunculusStates {
 		INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
 	}
 
 	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
 	// agenti, per la definizione della policy security sul routing public
-	public enum AnimaRouterType {
+	public enum HomunculusRouterType {
 		NONE, PRODUCTION, DEVELOP, ROAD
 	}
 
-	public enum AnimaEvents {
+	public enum HomunculusEvents {
 		BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
 	}
 
 	@ManagedOperation
-	public void sendEvent(AnimaEvents event) {
-		animaStateMachine.sendEvent(event);
+	public void sendEvent(HomunculusEvents event) {
+		homunculusStateMachine.sendEvent(event);
 	}
 
 	@ManagedOperation
-	public AnimaStates getState() {
-		return (animaStateMachine != null && animaStateMachine.getState() != null)
-				? animaStateMachine.getState().getId()
-				: AnimaStates.INIT;
+	public HomunculusStates getState() {
+		return (homunculusStateMachine != null && homunculusStateMachine.getState() != null)
+				? homunculusStateMachine.getState().getId()
+				: HomunculusStates.INIT;
 	}
 
 	public boolean isRunning() {
-		return AnimaStates.RUNNING.equals(getState());
+		return HomunculusStates.RUNNING.equals(getState());
 	}
 
 	@Override
 	public void close() {
 		finalizeAgent();
-		if (animaStateMachine != null) {
-			animaStateMachine.sendEvent(AnimaEvents.STOP);
-			animaStateMachine.stop();
-			animaStateMachine = null;
+		if (homunculusStateMachine != null) {
+			homunculusStateMachine.sendEvent(HomunculusEvents.STOP);
+			homunculusStateMachine.stop();
+			homunculusStateMachine = null;
 		}
-		if (animaHomunculus != null) {
+		if (homunculusSession != null) {
 			try {
-				animaHomunculus.close();
+				homunculusSession.close();
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
@@ -238,7 +241,7 @@ public class Anima
 	// workaround Spring State Machine
 	// @OnStateChanged()
 	synchronized void stateChanged() {
-		logger.info("State change in ANIMA to " + getState());
+		logger.info("State change in Homunculus to " + getState());
 		statesBefore.put(new Instant(), getState());
 	}
 
@@ -275,7 +278,7 @@ public class Anima
 		try {
 			recMan.close();
 		} catch (final IOException e) {
-			logger.info("IOException closing file data map of anima");
+			logger.info("IOException closing file data map of Homunculus");
 		}
 	}
 
@@ -287,7 +290,7 @@ public class Anima
 			bootstrapConfig = null;
 			targetConfig = null;
 			runtimeConfig = null;
-			dataAddress = new DataAddressAnima(this);
+			dataAddress = new DataAddressHomunculus(this);
 		} catch (final Exception aa) {
 			logger.logException("error during reloading phase", aa);
 		}
@@ -427,8 +430,9 @@ public class Anima
 			}
 			setMyIdentityKeystore(ks);
 			setMyAliasCertInKeystore(ks.keyStoreAlias);
-			logger.info("Certificate for anima: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
-					+ " - alias " + ks.keyStoreAlias);
+			logger.info(
+					"Certificate for Homunculus: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
+							+ " - alias " + ks.keyStoreAlias);
 		} else {
 			logger.info("Use keystore " + myIdentityKeystore.toString());
 		}
@@ -453,7 +457,7 @@ public class Anima
 	synchronized void initAgent() {
 		if (starterProperties.isConsoleOnly() != null && !(starterProperties.isConsoleOnly().equals("true")
 				|| starterProperties.isConsoleOnly().equals("yes"))) {
-			animaStateMachine.sendEvent(AnimaEvents.BOOTSTRAP);
+			homunculusStateMachine.sendEvent(HomunculusEvents.BOOTSTRAP);
 		} else {
 			logger.warn("console only true, run just the command line");
 		}
@@ -470,12 +474,12 @@ public class Anima
 			if (dataStore == null) {
 				recMan = RecordManagerFactory
 						.createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
-								+ "/" + starterProperties.getAnimaDatastoreFileName());
+								+ "/" + starterProperties.getHomunculusDatastoreFileName());
 				dataStore = recMan.treeMap(DB_DATASTORE_NAME);
-				logger.info("datastore on Anima started");
+				logger.info("datastore on Homunculus started");
 			}
 		} catch (final IOException e) {
-			logger.logException("datastore on Anima problem", e);
+			logger.logException("datastore on Homunculus problem", e);
 		}
 		setMasterKeystore();
 		bootstrapConfig = resolveBootstrapConfig();
@@ -495,7 +499,7 @@ public class Anima
 		}
 		if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
 			logger.info("Starting with config: " + runtimeConfig.toString());
-			animaStateMachine.sendEvent(AnimaEvents.SETCONF);
+			homunculusStateMachine.sendEvent(HomunculusEvents.SETCONF);
 		}
 	}
 
@@ -568,11 +572,11 @@ public class Anima
 				if (urlBeacon != null)
 					urlTarget = new URL(urlBeacon);
 				final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
-				animaHomunculus.registerNewSession(sessionId, sessionId);
-				final RpcConversation rpc = animaHomunculus.getRpc(sessionId);
+				homunculusSession.registerNewSession(sessionId, sessionId);
+				final RpcConversation rpc = homunculusSession.getRpc(sessionId);
 				beaconClientTarget = new BeaconClient.Builder()
 						.setAliasBeaconClientInKeystore(starterProperties.getKeystoreBeaconAlias())
-						.setUniqueName(getAgentUniqueName()).setAnima(this).setBeaconCaChainPem(beaconCaChainPem)
+						.setUniqueName(getAgentUniqueName()).setHomunculus(this).setBeaconCaChainPem(beaconCaChainPem)
 						.setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
 						.setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
 				if (beaconClientTarget != null
@@ -796,7 +800,7 @@ public class Anima
 	synchronized void configureAgent() {
 		if (runtimeConfig == null) {
 			logger.warn("Required running state without conf");
-			animaStateMachine.sendEvent(AnimaEvents.EXCEPTION);
+			homunculusStateMachine.sendEvent(HomunculusEvents.EXCEPTION);
 		}
 		if (stateTarget == null && runtimeConfig != null) {
 			stateTarget = runtimeConfig.targetRunLevel;
@@ -804,9 +808,9 @@ public class Anima
 		if (runtimeConfig != null && runtimeConfig.updateFileConfig == true) {
 			updateFileConfig(runtimeConfig);
 		}
-		if (stateTarget != null && stateTarget.equals(AnimaStates.RUNNING)) {
+		if (stateTarget != null && stateTarget.equals(HomunculusStates.RUNNING)) {
 			timerScheduler = new Timer("t-" + (Math.round((new Random().nextDouble() * 99))) + "-" + THREAD_ID);
-			animaStateMachine.sendEvent(AnimaEvents.START);
+			homunculusStateMachine.sendEvent(HomunculusEvents.START);
 		} else {
 			logger.warn("stateTarget is null in runtime config");
 		}
@@ -859,7 +863,7 @@ public class Anima
 	}
 
 	private void runSeedService(ServiceConfig confServizio) {
-		final AnimaService service = new AnimaService(this, confServizio, timerScheduler);
+		final HomunculusService service = new HomunculusService(this, confServizio, timerScheduler);
 		components.add(service);
 		service.start();
 	}
@@ -903,7 +907,7 @@ public class Anima
 	}
 
 	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
-		Anima.applicationContext = applicationContext;
+		Homunculus.applicationContext = applicationContext;
 	}
 
 	public static ApplicationContext getApplicationContext() {
@@ -933,7 +937,7 @@ public class Anima
 			}
 			logger.info("STARTING AGENT...");
 			Thread.currentThread().setName(THREAD_ID);
-			animaStateMachine.start();
+			homunculusStateMachine.start();
 		}
 	}
 
@@ -952,7 +956,7 @@ public class Anima
 		targetConfig = config;
 	}
 
-	public AnimaStates getTargetState() {
+	public HomunculusStates getTargetState() {
 		return stateTarget;
 	}
 
@@ -999,23 +1003,23 @@ public class Anima
 		final Authentication result = authenticationManager.authenticate(request);
 		SecurityContextHolder.getContext().setAuthentication(result);
 		if (sessionId == null || sessionId.isEmpty()) {
-			if (animaHomunculus.getAllSessions(result, false).isEmpty()) {
+			if (homunculusSession.getAllSessions(result, false).isEmpty()) {
 				sessionId = UUID.randomUUID().toString().replace("-", "");
-				animaHomunculus.registerNewSession(sessionId, result);
+				homunculusSession.registerNewSession(sessionId, result);
 			} else {
-				sessionId = animaHomunculus.getAllSessions(result, false).get(0).getSessionId();
+				sessionId = homunculusSession.getAllSessions(result, false).get(0).getSessionId();
 			}
 		} else {
-			if (animaHomunculus.getSessionInformation(sessionId) == null
-					|| animaHomunculus.getSessionInformation(sessionId).isExpired()) {
-				animaHomunculus.registerNewSession(sessionId, result);
+			if (homunculusSession.getSessionInformation(sessionId) == null
+					|| homunculusSession.getSessionInformation(sessionId).isExpired()) {
+				homunculusSession.registerNewSession(sessionId, result);
 			}
 		}
 		return sessionId;
 	}
 
 	public void terminateSession(String sessionId) {
-		animaHomunculus.removeSessionInformation(sessionId);
+		homunculusSession.removeSessionInformation(sessionId);
 		logoutFromAgent();
 	}
 
@@ -1023,16 +1027,16 @@ public class Anima
 		SecurityContextHolder.clearContext();
 	}
 
-	public AnimaSession getSession(String sessionId) {
-		return (AnimaSession) animaHomunculus.getSessionInformation(sessionId);
+	public Session getSession(String sessionId) {
+		return (Session) homunculusSession.getSessionInformation(sessionId);
 	}
 
 	public boolean isSessionValid(String sessionId) {
-		return animaHomunculus.getSessionInformation(sessionId) != null;
+		return homunculusSession.getSessionInformation(sessionId) != null;
 	}
 
 	public RpcExecutor getRpc(String sessionId) {
-		return animaHomunculus.getRpc(sessionId);
+		return homunculusSession.getRpc(sessionId);
 	}
 
 	protected String getBeanName() {
@@ -1043,11 +1047,11 @@ public class Anima
 		return agentUniqueName;
 	}
 
-	public DataAddressAnima getDataAddress() {
+	public DataAddressHomunculus getDataAddress() {
 		return dataAddress;
 	}
 
-	public void setDataAddress(DataAddressAnima dataAddress) {
+	public void setDataAddress(DataAddressHomunculus dataAddress) {
 		this.dataAddress = dataAddress;
 	}
 
@@ -1156,15 +1160,15 @@ public class Anima
 			reloadConfig = newTargetConfig;
 			runtimeConfig = newTargetConfig;
 			if (newTargetConfig.nextConfigReload == null || !newTargetConfig.nextConfigReload) {
-				sendEvent(AnimaEvents.RESTART);
+				sendEvent(HomunculusEvents.RESTART);
 			} else {
-				sendEvent(AnimaEvents.COMPLETE_RELOAD);
+				sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 			}
 		}
 	}
 
-	public StateMachine<AnimaStates, AnimaEvents> getAnimaStateMachine() {
-		return animaStateMachine;
+	public StateMachine<HomunculusStates, HomunculusEvents> getHomunculusStateMachine() {
+		return homunculusStateMachine;
 	}
 
 	public String getFileKeystore() {
@@ -1190,8 +1194,8 @@ public class Anima
 		p.setEngine(scriptLanguage);
 		p.eval(script);
 		final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + scriptLabel;
-		animaHomunculus.registerNewSession(sessionId, sessionId);
-		final RpcConversation rpc = animaHomunculus.getRpc(sessionId);
+		homunculusSession.registerNewSession(sessionId, sessionId);
+		final RpcConversation rpc = homunculusSession.getRpc(sessionId);
 		rpc.getScriptSessions().put(scriptLabel, p);
 	}
 
@@ -1237,13 +1241,13 @@ public class Anima
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Anima [");
+		builder.append("Homunculus [");
 		if (agentUniqueName != null)
 			builder.append("agentUniqueName=").append(agentUniqueName).append(", ");
-		if (animaStateMachine != null)
-			builder.append("animaStateMachine=").append(animaStateMachine).append(", ");
-		if (animaHomunculus != null)
-			builder.append("animaHomunculus=").append(animaHomunculus).append(", ");
+		if (homunculusStateMachine != null)
+			builder.append("stateMachine=").append(homunculusStateMachine).append(", ");
+		if (homunculusSession != null)
+			builder.append("homunculusSession=").append(homunculusSession).append(", ");
 		if (starterProperties != null)
 			builder.append("starterProperties=").append(starterProperties).append(", ");
 		if (runtimeConfig != null)

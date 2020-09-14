@@ -13,20 +13,20 @@ import org.apache.sshd.server.shell.ProcessShellFactory;
  * @author andrea
  *
  */
-public class AnimaProcessShellFactory extends ProcessShellFactory {
+public class HomunculusProcessShellFactory extends ProcessShellFactory {
 
-	public AnimaProcessShellFactory(String[] strings) {
+	public HomunculusProcessShellFactory(String[] strings) {
 		super(strings);
 	}
 
 	@Override
 	public Command create() {
-		return new AnimaInvertedShellWrapper(createInvertedShell());
+		return new HomunculusInvertedShellWrapper(createInvertedShell());
 	}
 
 	@Override
 	protected InvertedShell createInvertedShell() {
-		return new AnimaProcessShell(resolveEffectiveCommand(getCommand()));
+		return new HomunculusProcessShell(resolveEffectiveCommand(getCommand()));
 	}
 
 }

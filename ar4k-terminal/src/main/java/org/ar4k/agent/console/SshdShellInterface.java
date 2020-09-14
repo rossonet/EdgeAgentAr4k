@@ -23,12 +23,12 @@ import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.tunnels.sshd.AnimaShellFactory;
+import org.ar4k.agent.tunnels.sshd.HomunculusShellFactory;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
-import org.ar4k.agent.tunnels.sshd.firstCommand.AnimaProcessShellFactory;
+import org.ar4k.agent.tunnels.sshd.firstCommand.HomunculusProcessShellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
@@ -94,7 +94,7 @@ public class SshdShellInterface extends AbstractShellHelper {
     server.setHost(host);
     server.setPort(port);
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-    ProcessShellFactory shellFactory = new AnimaProcessShellFactory(new String[] { "/bin/bash", "-i", "-l" });
+    ProcessShellFactory shellFactory = new HomunculusProcessShellFactory(new String[] { "/bin/bash", "-i", "-l" });
     server.setShellFactory(shellFactory);
     try {
       server.start();
@@ -113,7 +113,7 @@ public class SshdShellInterface extends AbstractShellHelper {
     server.setHost(host);
     server.setPort(port);
     server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-    AnimaShellFactory shellFactory = new AnimaShellFactory(Anima.getApplicationContext().getBean(Anima.class),
+    HomunculusShellFactory shellFactory = new HomunculusShellFactory(Homunculus.getApplicationContext().getBean(Homunculus.class),
         this.shell);
     server.setShellFactory(shellFactory);
     try {

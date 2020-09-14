@@ -5,9 +5,9 @@ import java.util.UUID;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.IBeaconClient;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
@@ -48,7 +48,7 @@ public class BeaconClientWrapper {
 			}
 		}
 		if (host != null && !host.isEmpty() && port != 0) {
-			this.beaconClient = Anima.getApplicationContext().getBean(Anima.class).connectToBeaconService(
+			this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).connectToBeaconService(
 					"http://" + host + ":" + port, beaconCaChainPem, discoveryPort, discoveryFilter, false);
 		}
 	}

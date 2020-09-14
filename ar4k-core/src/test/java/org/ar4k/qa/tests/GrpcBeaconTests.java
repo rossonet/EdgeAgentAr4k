@@ -24,11 +24,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
-import org.ar4k.agent.core.IBeaconClient;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.interfaces.IBeaconClient;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
@@ -64,10 +64,10 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
@@ -80,20 +80,20 @@ public class GrpcBeaconTests {
   int port = 2569;
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Before
   public void setUp() throws Exception {
     System.out.println("Waiting anima");
-    while (!anima.getState().equals(AnimaStates.STAMINAL)) {
-      System.out.println("waiting anima, actual state: " + anima.getState());
+    while (!homunculus.getState().equals(HomunculusStates.STAMINAL)) {
+      System.out.println("waiting anima, actual state: " + homunculus.getState());
       Thread.sleep(1500L);
     }
     Thread.sleep(1500L);
     System.out.println("Beacon server starting");
-    server = new BeaconServer.Builder().setAnima(anima).setPort(port)
+    server = new BeaconServer.Builder().setHomunculus(homunculus).setPort(port)
         .setStringDiscovery("AR4K-BEACON-" + UUID.randomUUID().toString()).setBroadcastAddress("255.255.255.255")
-        .setAcceptCerts(true).setAliasBeaconServerInKeystore(anima.getMyAliasCertInKeystore()).build();
+        .setAcceptCerts(true).setAliasBeaconServerInKeystore(homunculus.getMyAliasCertInKeystore()).build();
     server.start();
     System.out.println("Beacon server started");
     Thread.sleep(3000L);
@@ -135,8 +135,8 @@ public class GrpcBeaconTests {
   public void implementTest() {
     try {
       Thread.sleep(6000L);
-      System.out.println("looking for alias " + anima.getMyAliasCertInKeystore());
-      System.out.println("in keystore certificates " + anima.getMyIdentityKeystore().listCertificate());
+      System.out.println("looking for alias " + homunculus.getMyAliasCertInKeystore());
+      System.out.println("in keystore certificates " + homunculus.getMyIdentityKeystore().listCertificate());
       System.out.println("Test completed");
     } catch (InterruptedException e) {
       e.printStackTrace();
@@ -147,8 +147,8 @@ public class GrpcBeaconTests {
   public void implementTestClass() throws UnrecoverableKeyException {
     try {
       Thread.sleep(2000L);
-      client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+      client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
           .build();
       Thread.sleep(10000L);
       String ls = client.getStateConnection().name();
@@ -164,8 +164,8 @@ public class GrpcBeaconTests {
     try {
       changeLogLevel("DEBUG");
       Thread.sleep(2000L);
-      client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+      client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+          .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
           .build();
       Thread.sleep(2000L);
       String ls = client.getStateConnection().name();
@@ -179,8 +179,8 @@ public class GrpcBeaconTests {
 
   @Test
   public void checkRemoteList() throws Exception {
-    client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+    client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
         .build();
     Thread.sleep(6000L);
     String ls = client.getStateConnection().name();
@@ -200,8 +200,8 @@ public class GrpcBeaconTests {
   @Test
   public void checkDiscoveryRegistration()
       throws InterruptedException, IOException, ParseException, UnrecoverableKeyException {
-    client = new BeaconClient.Builder().setAnima(anima).setPort(port).setRpcConversation(rpcConversation)
-        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(anima.getMyAliasCertInKeystore())
+    client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+        .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
         .build();
     Thread.sleep(12000L);
     String ls = client.getStateConnection().name();

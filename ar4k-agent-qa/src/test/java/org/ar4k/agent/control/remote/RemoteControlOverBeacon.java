@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
@@ -48,7 +48,7 @@ import io.grpc.stub.StreamObserver;
 public class RemoteControlOverBeacon {
 
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private final Map<String, Anima> testAnimas = new HashMap<>();
+	private final Map<String, Homunculus> testAnimas = new HashMap<>();
 	private final File keyStoreMaster = new File("./tmp/master.ks");
 	private final File keyStoreServer = new File("./tmp/server.ks");
 	private final File keyStoreClient1 = new File("./tmp/client1.ks");
@@ -135,7 +135,7 @@ public class RemoteControlOverBeacon {
 	@After
 	public void tearDown() throws Exception {
 		System.err.println("\n\nEND TESTS\n\n");
-		for (final Anima a : testAnimas.values()) {
+		for (final Homunculus a : testAnimas.values()) {
 			a.close();
 		}
 		Files.deleteIfExists(Paths.get("./tmp/test-server.config.base64.ar4k"));

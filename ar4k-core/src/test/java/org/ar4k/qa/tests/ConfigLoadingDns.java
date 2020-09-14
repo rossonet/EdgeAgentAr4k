@@ -20,10 +20,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
@@ -53,10 +53,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-dns.properties")
 @SpringBootConfiguration
@@ -64,12 +64,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigLoadingDns {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(anima.getState());
+    System.out.println(homunculus.getState());
   }
 
   @After
@@ -88,14 +88,14 @@ public class ConfigLoadingDns {
   @Test
   public void checkConfigDns() throws InterruptedException, IOException {
     Thread.sleep(10000);
-    assertEquals(anima.getState(), AnimaStates.RUNNING);
-    assertTrue("prova56H1".equals(anima.getRuntimeConfig().author));
-    assertTrue("dnsconfig".equals(anima.getRuntimeConfig().name));
-    assertTrue("EF56T".equals(anima.getRuntimeConfig().tagVersion));
-    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
-    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+    assertTrue("prova56H1".equals(homunculus.getRuntimeConfig().author));
+    assertTrue("dnsconfig".equals(homunculus.getRuntimeConfig().name));
+    assertTrue("EF56T".equals(homunculus.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
   }
 
   @Test

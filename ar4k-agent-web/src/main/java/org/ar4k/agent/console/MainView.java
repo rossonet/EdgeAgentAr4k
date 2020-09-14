@@ -1,6 +1,6 @@
 package org.ar4k.agent.console;
 
-import org.ar4k.agent.core.Anima;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.web.scada.BeaconClientWrapper;
@@ -34,7 +34,7 @@ public class MainView extends VerticalLayout {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MainView.class.toString());
 
-	private ScadaBeaconService scadaBeaconService = Anima.getApplicationContext().getBean(ScadaBeaconService.class);
+	private ScadaBeaconService scadaBeaconService = Homunculus.getApplicationContext().getBean(ScadaBeaconService.class);
 
 	private final TextField serverFilterText = new TextField();
 	private final TextField agentFilterText = new TextField();
@@ -75,10 +75,12 @@ public class MainView extends VerticalLayout {
 	}
 
 	private void editbeaconAgentWrapper(ScadaAgentWrapper beaconAgent) {
-		beaconAgentForm = new BeaconAgentDialog(this, beaconAgent);
-		beaconAgentForm.setVisible(true);
-		add(beaconAgentForm);
-		beaconAgentForm.open();
+		if (beaconAgent != null) {
+			beaconAgentForm = new BeaconAgentDialog(this, beaconAgent);
+			beaconAgentForm.setVisible(true);
+			add(beaconAgentForm);
+			beaconAgentForm.open();
+		}
 	}
 
 	private void configureGridServer() {

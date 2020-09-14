@@ -83,26 +83,26 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ShellMethod(value = "List all data channels in Spring Integration enviroments", group = "Data Manager Commands")
 	@ManagedOperation
 	public Collection<String> listSpringDataChannels() {
-		final Collection<String> result = anima.getDataAddress().listSpringIntegrationChannels();
+		final Collection<String> result = homunculus.getDataAddress().listSpringIntegrationChannels();
 		return result;
 	}
 
 	@ShellMethod(value = "List all managed data channels", group = "Data Manager Commands")
 	@ManagedOperation
 	public Collection<String> listDataChannels() {
-		return anima.getDataAddress().listChannels();
+		return homunculus.getDataAddress().listChannels();
 	}
 
 	@ShellMethod(value = "List all managed slaves", group = "Data Manager Commands")
 	@ManagedOperation
 	public Collection<DataAddress> listSlaveDataAddress() {
-		return anima.getDataAddress().getSlaves();
+		return homunculus.getDataAddress().getSlaves();
 	}
 
 	@ShellMethod(value = "get details of a single channel", group = "Data Manager Commands")
 	@ManagedOperation
 	public String getDataChannelDetails(@ShellOption(help = "channel id (nodeId)") String channelId) {
-		return anima.getDataAddress().getChannel(channelId).toString();
+		return homunculus.getDataAddress().getChannel(channelId).toString();
 	}
 
 	@ShellMethod(value = "Send a message to a channel", group = "Data Manager Commands")
@@ -112,18 +112,18 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 			@ShellOption(help = "timeout for blocking call") int timeout) {
 		final StringMessage messageObject = new StringMessage();
 		messageObject.setPayload(message);
-		if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
-			((IPriorityChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
-			((IQueueChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
-			((IRendezvousChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
-			((IDirectChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
-			((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
-			((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
+			((IPriorityChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
+			((IQueueChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
+			((IRendezvousChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
 		else
 			logger.error("can't send message to " + channelId);
 	}
@@ -140,12 +140,12 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ShellMethod(value = "Subscribe channel and view the output in console", group = "Data Manager Commands")
 	@ManagedOperation
 	public void subscribeDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId) {
-		if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
-			((IDirectChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
-			((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
-			((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).subscribe(this);
+		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
 		else
 			logger.error(channelId + " is not subscribable");
 	}
@@ -154,14 +154,14 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void pollDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId,
 			@ShellOption(help = "timeout for blocking call") int timeout) {
-		if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
-			System.out.println(((IPriorityChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout)
+		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
+			System.out.println(((IPriorityChannel) homunculus.getDataAddress().getChannel(channelId)).receive(timeout)
 					.getPayload().toString());
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
-			System.out.println(((IQueueChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout)
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
+			System.out.println(((IQueueChannel) homunculus.getDataAddress().getChannel(channelId)).receive(timeout)
 					.getPayload().toString());
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
-			System.out.println(((IRendezvousChannel) anima.getDataAddress().getChannel(channelId)).receive(timeout)
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
+			System.out.println(((IRendezvousChannel) homunculus.getDataAddress().getChannel(channelId)).receive(timeout)
 					.getPayload().toString());
 		else
 			logger.error(channelId + " is not pollable");
@@ -170,12 +170,12 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ShellMethod(value = "Unsubscribe channel", group = "Data Manager Commands")
 	@ManagedOperation
 	public void unsubscribeDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId) {
-		if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
-			((IDirectChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
-			((IExecutorChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
-		else if (anima.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
-			((IPublishSubscribeChannel) anima.getDataAddress().getChannel(channelId)).unsubscribe(this);
+		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
 		else
 			logger.error(channelId + " is not subscribable");
 	}
@@ -184,7 +184,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataDirectChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class, description, (String) null,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class, description, (String) null,
 				null, tags);
 	}
 
@@ -192,7 +192,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataExecutorChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class, description, (String) null,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class, description, (String) null,
 				null, tags);
 	}
 
@@ -200,7 +200,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataPriorityChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class, description, (String) null,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class, description, (String) null,
 				null, tags);
 	}
 
@@ -208,7 +208,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataPubSubChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class, description,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class, description,
 				(String) null, null, tags);
 	}
 
@@ -216,7 +216,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataQueueChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class, description, (String) null,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class, description, (String) null,
 				null, tags);
 	}
 
@@ -224,20 +224,20 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataRendezvousChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		anima.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class, description, (String) null,
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class, description, (String) null,
 				null, tags);
 	}
 
 	@ShellMethod(value = "Remove data channel from the address space", group = "Data Manager Commands")
 	@ManagedOperation
 	public void removeDataChannel(@ShellOption(help = "target channel id to remove") String idChannel) {
-		anima.getDataAddress().removeDataChannel(idChannel, true);
+		homunculus.getDataAddress().removeDataChannel(idChannel, true);
 	}
 
 	@ShellMethod(value = "Clear address space", group = "Data Manager Commands")
 	@ManagedOperation
 	public void clearDataChannelsInAddressSpace() {
-		anima.getDataAddress().clearDataChannels();
+		homunculus.getDataAddress().clearDataChannels();
 	}
 
 	@Override

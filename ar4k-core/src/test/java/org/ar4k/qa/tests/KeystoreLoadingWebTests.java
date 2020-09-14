@@ -24,10 +24,10 @@ import java.nio.file.StandardOpenOption;
 import java.security.cert.CertificateEncodingException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
-import org.ar4k.agent.core.AnimaHomunculus;
-import org.ar4k.agent.core.AnimaStateMachineConfig;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.HomunculusSession;
+import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgekuserDetailsService;
@@ -58,10 +58,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Anima.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, AnimaStateMachineConfig.class, AnimaHomunculus.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-kstore-web.properties")
 @SpringBootConfiguration
@@ -69,12 +69,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class KeystoreLoadingWebTests {
 
   @Autowired
-  Anima anima;
+  Homunculus homunculus;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(anima.getState());
+    System.out.println(homunculus.getState());
   }
 
   @After
@@ -93,18 +93,18 @@ public class KeystoreLoadingWebTests {
   @Test
   public void downloadKeystoreWeb() throws InterruptedException {
     Thread.sleep(5000L);
-    assertTrue(anima.getMyIdentityKeystore().check());
-    System.out.println(anima.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
-    assertEquals(anima.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
+    assertTrue(homunculus.getMyIdentityKeystore().check());
+    System.out.println(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
+    assertEquals(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
         "C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
-    assertEquals(anima.getState(), AnimaStates.RUNNING);
-    assertTrue("pcryptoAA".equals(anima.getRuntimeConfig().author));
-    assertTrue("webconfig".equals(anima.getRuntimeConfig().name));
-    assertTrue("AFYU8K".equals(anima.getRuntimeConfig().tagVersion));
-    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[0]).note));
-    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) anima.getRuntimeConfig().pots.toArray()[1]).note));
+    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+    assertTrue("pcryptoAA".equals(homunculus.getRuntimeConfig().author));
+    assertTrue("webconfig".equals(homunculus.getRuntimeConfig().name));
+    assertTrue("AFYU8K".equals(homunculus.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
   }
 
   @Test

@@ -1,4 +1,4 @@
-package org.ar4k.agent.core;
+package org.ar4k.agent.core.interfaces;
 
 import java.io.IOException;
 import java.util.List;

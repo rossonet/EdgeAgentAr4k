@@ -29,8 +29,8 @@ import javax.management.ObjectInstance;
 import javax.management.ReflectionException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.Anima.AnimaStates;
+import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -63,7 +63,7 @@ public abstract class AbstractShellHelper {
   protected ApplicationContext applicationContext;
 
   @Autowired
-  protected Anima anima;
+  protected Homunculus homunculus;
 
   @Autowired
   protected SessionRegistry sessionRegistry;
@@ -85,8 +85,8 @@ public abstract class AbstractShellHelper {
   }
 
   protected Availability sessionOkOrStatusInit() {
-    return (getSessionId() != null || anima.getState().equals(AnimaStates.INIT)
-        || anima.getState().equals(AnimaStates.STAMINAL)) ? Availability.available()
+    return (getSessionId() != null || homunculus.getState().equals(HomunculusStates.INIT)
+        || homunculus.getState().equals(HomunculusStates.STAMINAL)) ? Availability.available()
             : Availability.unavailable("you must login in the system or to be in INIT status");
   }
 
@@ -124,7 +124,7 @@ public abstract class AbstractShellHelper {
       ok = false;
       message += "you have to select a config before";
     }
-    if (anima.getMyIdentityKeystore() == null) {
+    if (homunculus.getMyIdentityKeystore() == null) {
       if (ok == false) {
         message += " and ";
       }
@@ -136,24 +136,24 @@ public abstract class AbstractShellHelper {
 
   protected EdgeConfig getWorkingConfig() {
     if (getSessionId() != null) {
-      return ((RpcConversation) anima.getRpc(getSessionId())).getWorkingConfig();
+      return ((RpcConversation) homunculus.getRpc(getSessionId())).getWorkingConfig();
     } else
       return null;
   }
 
   protected void setWorkingConfig(EdgeConfig config) {
-    Map<String, EdgeConfig> actualConfig = ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
+    Map<String, EdgeConfig> actualConfig = ((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations();
     if (config != null && actualConfig != null && !actualConfig.containsValue(config))
       addConfig(config);
     if (config != null)
-      ((RpcConversation) anima.getRpc(getSessionId())).setWorkingConfig(config.getName());
+      ((RpcConversation) homunculus.getRpc(getSessionId())).setWorkingConfig(config.getName());
     else
-      ((RpcConversation) anima.getRpc(getSessionId())).setWorkingConfig(null);
+      ((RpcConversation) homunculus.getRpc(getSessionId())).setWorkingConfig(null);
   }
 
   protected Availability testRuntimeConfigOk() {
-    return (anima.getRuntimeConfig() != null && getSessionId() != null) ? Availability.available()
-        : anima.getRuntimeConfig() != null ? Availability.unavailable("you have to configure a runtime config before")
+    return (homunculus.getRuntimeConfig() != null && getSessionId() != null) ? Availability.available()
+        : homunculus.getRuntimeConfig() != null ? Availability.unavailable("you have to configure a runtime config before")
             : Availability.unavailable("you must login in the system or to be in INIT status");
   }
 
@@ -167,15 +167,15 @@ public abstract class AbstractShellHelper {
   }
 
   protected Map<String, EdgeConfig> getConfigs() {
-    return ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations();
+    return ((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations();
   }
 
   protected void addConfig(EdgeConfig config) {
-    ((RpcConversation) anima.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);
+    ((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);
   }
 
   protected Availability testIsRunningOk() {
-    return anima.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
+    return homunculus.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
   }
 
   protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {
@@ -188,21 +188,21 @@ public abstract class AbstractShellHelper {
       a.add(g);
     }
     u.setAuthorities(a);
-    anima.getLocalUsers().add(u);
+    homunculus.getLocalUsers().add(u);
     return true;
   }
 
   protected boolean removeUser(String username) {
     boolean result = false;
     EdgeUserDetails t = null;
-    for (EdgeUserDetails u : anima.getLocalUsers()) {
+    for (EdgeUserDetails u : homunculus.getLocalUsers()) {
       if (u.getUsername().equals(username)) {
         t = u;
         break;
       }
     }
     if (t != null) {
-      anima.getLocalUsers().remove(t);
+      homunculus.getLocalUsers().remove(t);
       t = null;
       result = true;
     }

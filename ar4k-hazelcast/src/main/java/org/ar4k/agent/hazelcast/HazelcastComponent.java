@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.ar4k.agent.config.ServiceConfig;
-import org.ar4k.agent.core.Anima;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -32,9 +32,9 @@ public class HazelcastComponent implements EdgeComponent {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Anima.class.toString());
+			.getLogger(Homunculus.class.toString());
 
-	private Anima anima = null;
+	private Homunculus homunculus = null;
 
 	private HazelcastConfig configuration = null;
 
@@ -48,14 +48,14 @@ public class HazelcastComponent implements EdgeComponent {
 	// TODO DataAddress
 	private DataAddress dataspace = null;
 
-	public HazelcastComponent(Anima anima, HazelcastConfig tribeConfig) {
+	public HazelcastComponent(Homunculus homunculus, HazelcastConfig tribeConfig) {
 		this.configuration = tribeConfig;
-		this.anima = anima;
+		this.homunculus = homunculus;
 		beanName = this.configuration.getBeanName();
 	}
 
 	public HazelcastComponent(HazelcastConfig tribeConfig) {
-		anima = tribeConfig.anima;
+		homunculus = tribeConfig.homunculus;
 		this.configuration = tribeConfig;
 		beanName = this.configuration.getBeanName();
 	}
@@ -86,7 +86,7 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	private void registerBean() {
-		((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().registerSingleton(beanName,
+		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().registerSingleton(beanName,
 				this);
 	}
 
@@ -110,7 +110,7 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	private void deregisterBean() {
-		((ConfigurableApplicationContext) Anima.getApplicationContext()).getBeanFactory().destroyBean(this);
+		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().destroyBean(this);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class HazelcastComponent implements EdgeComponent {
 	private Config generateHazelcastConfig() {
 		final Config config = new Config();
 		config.setInstanceName(
-				configuration.getUniqueId() != null ? configuration.getUniqueId() : anima.getAgentUniqueName());
+				configuration.getUniqueId() != null ? configuration.getUniqueId() : homunculus.getAgentUniqueName());
 		final JoinConfig joinConfig = config.getNetworkConfig().getJoin();
 		if (configuration.isMultiCast()) {
 			joinConfig.getMulticastConfig().setEnabled(true);
@@ -188,8 +188,8 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	@Override
-	public Anima getAnima() {
-		return anima;
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
@@ -203,8 +203,8 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	@Override
-	public void setAnima(Anima anima) {
-		this.anima = anima;
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
 	}
 
 	@Override

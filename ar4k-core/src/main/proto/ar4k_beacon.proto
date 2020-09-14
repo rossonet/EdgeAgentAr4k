@@ -85,7 +85,7 @@ enum StatusValue {
   WAIT_HUMAN = 3;
 }
 
-enum AnimaStates {
+enum HomunculusStates {
     INIT = 0;
     STAMINAL = 1;
     CONFIGURED = 2;
@@ -162,7 +162,7 @@ message CommandReplyRequest {
 message HealthRequest {
   Agent agentSender = 1;
   string jsonHardwareInfo = 2;
-  AnimaStates status = 3;
+  HomunculusStates status = 3;
 }
 
 message LogRequest {

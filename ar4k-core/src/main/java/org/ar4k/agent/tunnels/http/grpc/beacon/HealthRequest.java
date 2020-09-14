@@ -159,18 +159,18 @@ private static final long serialVersionUID = 0L;
   public static final int STATUS_FIELD_NUMBER = 3;
   private int status_;
   /**
-   * <code>.beacon.AnimaStates status = 3;</code>
+   * <code>.beacon.HomunculusStates status = 3;</code>
    */
   public int getStatusValue() {
     return status_;
   }
   /**
-   * <code>.beacon.AnimaStates status = 3;</code>
+   * <code>.beacon.HomunculusStates status = 3;</code>
    */
-  public org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus() {
+  public org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates getStatus() {
     @SuppressWarnings("deprecation")
-    org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates result = org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.valueOf(status_);
-    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.UNRECOGNIZED : result;
+    org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates result = org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.valueOf(status_);
+    return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -193,7 +193,7 @@ private static final long serialVersionUID = 0L;
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, jsonHardwareInfo_);
     }
-    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.INIT.getNumber()) {
       output.writeEnum(3, status_);
     }
     unknownFields.writeTo(output);
@@ -212,7 +212,7 @@ private static final long serialVersionUID = 0L;
     if (!getJsonHardwareInfoBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, jsonHardwareInfo_);
     }
-    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.INIT.getNumber()) {
+    if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.INIT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(3, status_);
     }
@@ -709,13 +709,13 @@ private static final long serialVersionUID = 0L;
 
     private int status_ = 0;
     /**
-     * <code>.beacon.AnimaStates status = 3;</code>
+     * <code>.beacon.HomunculusStates status = 3;</code>
      */
     public int getStatusValue() {
       return status_;
     }
     /**
-     * <code>.beacon.AnimaStates status = 3;</code>
+     * <code>.beacon.HomunculusStates status = 3;</code>
      */
     public Builder setStatusValue(int value) {
       status_ = value;
@@ -723,17 +723,17 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.AnimaStates status = 3;</code>
+     * <code>.beacon.HomunculusStates status = 3;</code>
      */
-    public org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates getStatus() {
+    public org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates getStatus() {
       @SuppressWarnings("deprecation")
-      org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates result = org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.valueOf(status_);
-      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates.UNRECOGNIZED : result;
+      org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates result = org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.valueOf(status_);
+      return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates.UNRECOGNIZED : result;
     }
     /**
-     * <code>.beacon.AnimaStates status = 3;</code>
+     * <code>.beacon.HomunculusStates status = 3;</code>
      */
-    public Builder setStatus(org.ar4k.agent.tunnels.http.grpc.beacon.AnimaStates value) {
+    public Builder setStatus(org.ar4k.agent.tunnels.http.grpc.beacon.HomunculusStates value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -743,7 +743,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.AnimaStates status = 3;</code>
+     * <code>.beacon.HomunculusStates status = 3;</code>
      */
     public Builder clearStatus() {
       

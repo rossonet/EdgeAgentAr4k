@@ -17,6 +17,7 @@ import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.ar4k.agent.core.data.messages.InternalMessage;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.messaging.Message;

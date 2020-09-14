@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.EdgeComponent;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.opcua.CryptoModeValidator;
 import org.ar4k.agent.opcua.Enumerator.CryptoMode;
 import org.ar4k.agent.opcua.Enumerator.SecurityMode;
