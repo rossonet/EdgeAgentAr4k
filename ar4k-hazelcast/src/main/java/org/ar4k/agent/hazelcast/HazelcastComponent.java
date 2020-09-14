@@ -32,7 +32,7 @@ public class HazelcastComponent implements EdgeComponent {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Homunculus.class.toString());
+			.getLogger(HazelcastComponent.class.toString());
 
 	private Homunculus homunculus = null;
 
@@ -86,8 +86,8 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	private void registerBean() {
-		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().registerSingleton(beanName,
-				this);
+		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+				.registerSingleton(beanName, this);
 	}
 
 	@Override
