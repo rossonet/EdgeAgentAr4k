@@ -1,4 +1,4 @@
-package org.ar4k.agent.network;
+package org.ar4k.agent.config.network;
 
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;

@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.ar4k.agent.config.network.NetworkReceiver;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.network.NetworkReceiver;
 import org.ar4k.agent.tunnels.http.grpc.beacon.MessageStatus;
 import org.ar4k.agent.tunnels.http.grpc.beacon.MessageType;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;

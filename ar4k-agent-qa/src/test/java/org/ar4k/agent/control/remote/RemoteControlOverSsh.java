@@ -33,11 +33,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;

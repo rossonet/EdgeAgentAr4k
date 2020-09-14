@@ -27,7 +27,7 @@ import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -56,87 +56,88 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, BeaconShellInterface.class, SshShellInterface.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
+		BeaconShellInterface.class, SshShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class BeaconShellInterfaceTests {
 
-  @Autowired
-  Shell shell;
+	@Autowired
+	Shell shell;
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
+	@After
+	public void tearDownAfterClass() throws Exception {
 
-  }
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void listCommandAndCheck() throws InterruptedException, IOException {
-    Thread.sleep(10000);
-    assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
-    Map<String, MethodTarget> listCommands = shell.listCommands();
-    System.out.println("commands: " + listCommands);
-    assertTrue(listCommands.containsKey("add-beacon-service"));
-    assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
-    assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
-    assertTrue(listCommands.containsKey("clear"));
-    assertTrue(listCommands.containsKey("complete-reload-remote-agent"));
-    assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
-    assertTrue(listCommands.containsKey("connect-to-beacon-service"));
-    assertTrue(listCommands.containsKey("create-beacon-tunnel"));
-    assertTrue(listCommands.containsKey("exit"));
-    assertTrue(listCommands.containsKey("help"));
-    assertTrue(listCommands.containsKey("history"));
-    assertTrue(listCommands.containsKey("list-beacon-agents"));
-    assertTrue(listCommands.containsKey("list-beacon-agents-connected"));
-    assertTrue(listCommands.containsKey("list-beacon-agents-human-readable"));
-    assertTrue(listCommands.containsKey("list-beacon-registrations"));
-    assertTrue(listCommands.containsKey("list-beacon-tunnels"));
-    assertTrue(listCommands.containsKey("list-commands-on-remote-agent"));
-    assertTrue(listCommands.containsKey("list-ssh-tunnels"));
-    assertTrue(listCommands.containsKey("quit"));
-    assertTrue(listCommands.containsKey("remove-ssh-tunnels"));
-    assertTrue(listCommands.containsKey("restart-remote-agent"));
-    assertTrue(listCommands.containsKey("run-beacon-server"));
-    assertTrue(listCommands.containsKey("run-command-on-remote-agent"));
-    assertTrue(listCommands.containsKey("run-ssh-tunnel-local-to-remote-ssh"));
-    assertTrue(listCommands.containsKey("run-ssh-tunnel-remote-to-local-ssh"));
-    assertTrue(listCommands.containsKey("run-xpra-server"));
-    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-beacon"));
-    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-ssh"));
-    assertTrue(listCommands.containsKey("script"));
-    assertTrue(listCommands.containsKey("set-selected-config-on-remote-node"));
-    assertTrue(listCommands.containsKey("stacktrace"));
-    assertTrue(listCommands.containsKey("stop-beacon-client"));
-    assertTrue(listCommands.containsKey("stop-beacon-server"));
-  }
+	@Test
+	public void listCommandAndCheck() throws InterruptedException, IOException {
+		Thread.sleep(10000);
+		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
+		final Map<String, MethodTarget> listCommands = shell.listCommands();
+		System.out.println("commands: " + listCommands);
+		assertTrue(listCommands.containsKey("add-beacon-service"));
+		assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
+		assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
+		assertTrue(listCommands.containsKey("clear"));
+		assertTrue(listCommands.containsKey("complete-reload-remote-agent"));
+		assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
+		assertTrue(listCommands.containsKey("connect-to-beacon-service"));
+		assertTrue(listCommands.containsKey("create-beacon-tunnel"));
+		assertTrue(listCommands.containsKey("exit"));
+		assertTrue(listCommands.containsKey("help"));
+		assertTrue(listCommands.containsKey("history"));
+		assertTrue(listCommands.containsKey("list-beacon-agents"));
+		assertTrue(listCommands.containsKey("list-beacon-agents-connected"));
+		assertTrue(listCommands.containsKey("list-beacon-agents-human-readable"));
+		assertTrue(listCommands.containsKey("list-beacon-registrations"));
+		assertTrue(listCommands.containsKey("list-beacon-tunnels"));
+		assertTrue(listCommands.containsKey("list-commands-on-remote-agent"));
+		assertTrue(listCommands.containsKey("list-ssh-tunnels"));
+		assertTrue(listCommands.containsKey("quit"));
+		assertTrue(listCommands.containsKey("remove-ssh-tunnels"));
+		assertTrue(listCommands.containsKey("restart-remote-agent"));
+		assertTrue(listCommands.containsKey("run-beacon-server"));
+		assertTrue(listCommands.containsKey("run-command-on-remote-agent"));
+		assertTrue(listCommands.containsKey("run-ssh-tunnel-local-to-remote-ssh"));
+		assertTrue(listCommands.containsKey("run-ssh-tunnel-remote-to-local-ssh"));
+		assertTrue(listCommands.containsKey("run-xpra-server"));
+		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-beacon"));
+		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-ssh"));
+		assertTrue(listCommands.containsKey("script"));
+		assertTrue(listCommands.containsKey("set-selected-config-on-remote-node"));
+		assertTrue(listCommands.containsKey("stacktrace"));
+		assertTrue(listCommands.containsKey("stop-beacon-client"));
+		assertTrue(listCommands.containsKey("stop-beacon-server"));
+	}
 
-  @SuppressWarnings("unused")
-  private void printCheckNow(Map<String, MethodTarget> listCommands) {
-    for (String command : listCommands.keySet()) {
-      System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");
-    }
+	@SuppressWarnings("unused")
+	private void printCheckNow(Map<String, MethodTarget> listCommands) {
+		for (final String command : listCommands.keySet()) {
+			System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");
+		}
 
-  }
+	}
 
 }

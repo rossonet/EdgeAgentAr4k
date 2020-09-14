@@ -31,7 +31,7 @@ import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
@@ -67,7 +67,7 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration

@@ -33,14 +33,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.config.network.NetworkConfig;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.network.NetworkConfig;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
-import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;

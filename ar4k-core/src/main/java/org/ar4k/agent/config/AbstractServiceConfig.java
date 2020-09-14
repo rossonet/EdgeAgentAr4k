@@ -35,7 +35,7 @@ import com.beust.jcommander.Parameter;
  *         Configurazione astratta servizio con parametri generici
  *
  * @see org.ar4k.agent.config.EdgeConfig
- * @see org.ar4k.agent.core.AbstractEdgeService
+ * @see org.ar4k.agent.core.services.AbstractEdgeService
  * @see org.ar4k.agent.core.interfaces.ServiceConfig
  *
  */

@@ -3,9 +3,9 @@ package org.ar4k.agent.core.interfaces;
 import java.util.List;
 
 import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.config.network.NetworkConfig;
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.network.NetworkConfig;
-import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http.beacon.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;

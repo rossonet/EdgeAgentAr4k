@@ -29,7 +29,7 @@ import org.ar4k.agent.iot.serial.cnc.CncShellInterface;
 import org.ar4k.agent.iot.serial.json.SerialJsonShellInterface;
 import org.ar4k.agent.iot.serial.marlin.MarlinShellInterface;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -60,9 +60,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
-		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, SerialShellInterface.class,
-		CncShellInterface.class, SerialJsonShellInterface.class, MarlinShellInterface.class })
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
+		SerialShellInterface.class, CncShellInterface.class, SerialJsonShellInterface.class,
+		MarlinShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

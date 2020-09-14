@@ -25,7 +25,7 @@ import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.jline.builtins.Commands;
 import org.junit.After;
@@ -57,7 +57,7 @@ import com.google.gson.GsonBuilder;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
+    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
     EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration

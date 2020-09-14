@@ -3,8 +3,8 @@ package org.ar4k.agent.tunnels.http.beacon.socket;
 import java.util.List;
 import java.util.UUID;
 
+import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.exception.ServiceInitException;
-import org.ar4k.agent.network.NetworkConfig;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RequestTunnelMessage;
 import org.joda.time.Instant;

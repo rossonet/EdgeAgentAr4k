@@ -33,7 +33,7 @@ import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.DataTyp
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.assertj.core.util.Lists;
 import org.jline.builtins.Commands;
 import org.junit.After;
@@ -65,8 +65,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
-		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, OpcUaShellInterface.class })
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
+		OpcUaShellInterface.class })
 @TestPropertySource(locations = "classpath:application-opc-ua.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

@@ -1,4 +1,4 @@
-package org.ar4k.agent.network;
+package org.ar4k.agent.config.network;
 
 public interface NetworkReceiver extends AutoCloseable {
 

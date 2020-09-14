@@ -36,14 +36,14 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.config.network.NetworkConfig;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
-import org.ar4k.agent.network.NetworkConfig;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http.beacon.BeaconClient;

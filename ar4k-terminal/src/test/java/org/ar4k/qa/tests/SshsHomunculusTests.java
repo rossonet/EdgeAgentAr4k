@@ -18,7 +18,7 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusService;
 import org.jline.builtins.Commands;
@@ -48,51 +48,51 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class SshsHomunculusTests {
 
-  @Autowired
-  Shell shell;
+	@Autowired
+	Shell shell;
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
+	@After
+	public void tearDownAfterClass() throws Exception {
 
-  }
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void simpleSShServerWithHomunculusShell() throws InterruptedException {
-    Thread.sleep(10000);
-    SshdHomunculusConfig testServerConfig = new SshdHomunculusConfig();
-    SshdHomunculusService server = (SshdHomunculusService) testServerConfig.instantiate();
-    server.init();
-    for (int i = 0; i < 20; i++) {
-      System.out.println(server.getDescriptionJson());
-      Thread.sleep(5000);
-    }
-    server.kill();
-  }
+	@Test
+	public void simpleSShServerWithHomunculusShell() throws InterruptedException {
+		Thread.sleep(10000);
+		final SshdHomunculusConfig testServerConfig = new SshdHomunculusConfig();
+		final SshdHomunculusService server = (SshdHomunculusService) testServerConfig.instantiate();
+		server.init();
+		for (int i = 0; i < 20; i++) {
+			System.out.println(server.getDescriptionJson());
+			Thread.sleep(5000);
+		}
+		server.kill();
+	}
 
 }

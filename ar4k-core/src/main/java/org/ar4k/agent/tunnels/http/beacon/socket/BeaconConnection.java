@@ -4,9 +4,9 @@ import static org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkTunnel.TRAC
 
 import java.util.Date;
 
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.tunnels.http.grpc.beacon.MessageStatus;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 import org.joda.time.Instant;

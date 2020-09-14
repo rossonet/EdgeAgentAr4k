@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.tunnels.http.grpc.beacon.MessageStatus;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;
 

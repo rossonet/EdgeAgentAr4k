@@ -57,6 +57,7 @@ import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.interfaces.ServiceComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.HomunculusService;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.HardwareHelper;

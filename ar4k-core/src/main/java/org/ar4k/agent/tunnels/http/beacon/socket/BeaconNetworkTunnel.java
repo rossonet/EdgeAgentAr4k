@@ -9,11 +9,11 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.ar4k.agent.config.network.NetworkConfig;
+import org.ar4k.agent.config.network.NetworkTunnel;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.network.NetworkConfig;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.network.NetworkTunnel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage;

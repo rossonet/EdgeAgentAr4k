@@ -23,11 +23,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.console.BeaconShellInterface;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;

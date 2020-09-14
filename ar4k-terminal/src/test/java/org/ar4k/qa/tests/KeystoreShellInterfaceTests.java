@@ -26,7 +26,7 @@ import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
-import org.ar4k.agent.spring.EdgekuserDetailsService;
+import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -55,78 +55,79 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgekuserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class, KeystoreShellInterface.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
+		KeystoreShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class KeystoreShellInterfaceTests {
 
-  @Autowired
-  Shell shell;
+	@Autowired
+	Shell shell;
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
+	@After
+	public void tearDownAfterClass() throws Exception {
 
-  }
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void listCommandAndCheck() throws InterruptedException, IOException {
-    Thread.sleep(10000);
-    assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
-    Map<String, MethodTarget> listCommands = shell.listCommands();
-    System.out.println("commands: " + listCommands);
-    assertTrue(listCommands.containsKey("add-keystore"));
-    assertTrue(listCommands.containsKey("add-keystore-runtime"));
-    assertTrue(listCommands.containsKey("check-keystore"));
-    assertTrue(listCommands.containsKey("clear"));
-    assertTrue(listCommands.containsKey("create-self-signed-cert"));
-    assertTrue(listCommands.containsKey("create-self-signed-cert-and-sign"));
-    assertTrue(listCommands.containsKey("exit"));
-    assertTrue(listCommands.containsKey("get-client-certificate-base64"));
-    assertTrue(listCommands.containsKey("get-keystore-for-dns"));
-    assertTrue(listCommands.containsKey("get-pkcs10certification-request-base64"));
-    assertTrue(listCommands.containsKey("get-private-key-base64"));
-    assertTrue(listCommands.containsKey("help"));
-    assertTrue(listCommands.containsKey("history"));
-    assertTrue(listCommands.containsKey("initialize-keystore-ca"));
-    assertTrue(listCommands.containsKey("list-keys-in-keystore"));
-    assertTrue(listCommands.containsKey("list-keystore-keys"));
-    assertTrue(listCommands.containsKey("list-keystores"));
-    assertTrue(listCommands.containsKey("quit"));
-    assertTrue(listCommands.containsKey("script"));
-    assertTrue(listCommands.containsKey("set-client-key-pair"));
-    assertTrue(listCommands.containsKey("sign-certificate-base64"));
-    assertTrue(listCommands.containsKey("stacktrace"));
-    assertTrue(listCommands.containsKey("view-key-in-keystore"));
-    // printCheckNow(listCommands);
-  }
+	@Test
+	public void listCommandAndCheck() throws InterruptedException, IOException {
+		Thread.sleep(10000);
+		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
+		final Map<String, MethodTarget> listCommands = shell.listCommands();
+		System.out.println("commands: " + listCommands);
+		assertTrue(listCommands.containsKey("add-keystore"));
+		assertTrue(listCommands.containsKey("add-keystore-runtime"));
+		assertTrue(listCommands.containsKey("check-keystore"));
+		assertTrue(listCommands.containsKey("clear"));
+		assertTrue(listCommands.containsKey("create-self-signed-cert"));
+		assertTrue(listCommands.containsKey("create-self-signed-cert-and-sign"));
+		assertTrue(listCommands.containsKey("exit"));
+		assertTrue(listCommands.containsKey("get-client-certificate-base64"));
+		assertTrue(listCommands.containsKey("get-keystore-for-dns"));
+		assertTrue(listCommands.containsKey("get-pkcs10certification-request-base64"));
+		assertTrue(listCommands.containsKey("get-private-key-base64"));
+		assertTrue(listCommands.containsKey("help"));
+		assertTrue(listCommands.containsKey("history"));
+		assertTrue(listCommands.containsKey("initialize-keystore-ca"));
+		assertTrue(listCommands.containsKey("list-keys-in-keystore"));
+		assertTrue(listCommands.containsKey("list-keystore-keys"));
+		assertTrue(listCommands.containsKey("list-keystores"));
+		assertTrue(listCommands.containsKey("quit"));
+		assertTrue(listCommands.containsKey("script"));
+		assertTrue(listCommands.containsKey("set-client-key-pair"));
+		assertTrue(listCommands.containsKey("sign-certificate-base64"));
+		assertTrue(listCommands.containsKey("stacktrace"));
+		assertTrue(listCommands.containsKey("view-key-in-keystore"));
+		// printCheckNow(listCommands);
+	}
 
-  @SuppressWarnings("unused")
-  private void printCheckNow(Map<String, MethodTarget> listCommands) {
-    for (String command : listCommands.keySet()) {
-      System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");
-    }
+	@SuppressWarnings("unused")
+	private void printCheckNow(Map<String, MethodTarget> listCommands) {
+		for (final String command : listCommands.keySet()) {
+			System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");
+		}
 
-  }
+	}
 
 }
