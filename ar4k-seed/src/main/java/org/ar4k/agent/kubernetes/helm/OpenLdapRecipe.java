@@ -1,6 +1,6 @@
 package org.ar4k.agent.kubernetes.helm;
 
-@Ar4kHelmRecipe
+@EdgeHelmRecipe
 public class OpenLdapRecipe implements HelmRecipe {
 
   private String name = null;

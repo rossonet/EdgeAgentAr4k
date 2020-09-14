@@ -1,6 +1,6 @@
 package org.ar4k.agent.kubernetes.helm;
 
-@Ar4kHelmRecipe
+@EdgeHelmRecipe
 public class MariaDbRecipe implements HelmRecipe {
 
   private String name = null;
