@@ -18,9 +18,7 @@ public abstract class FarmConfig extends AbstractServiceConfig {
 	}
 
 	@Override
-	public EdgeComponent instantiate() {
-		return new FarmComponent(this);
-	}
+	public abstract EdgeComponent instantiate();
 
 	@Override
 	public String getUniqueId() {
