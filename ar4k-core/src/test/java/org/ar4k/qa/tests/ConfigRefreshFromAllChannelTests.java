@@ -63,8 +63,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -126,7 +126,7 @@ public class ConfigRefreshFromAllChannelTests {
 		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(80000);
 		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals("dnsToFile", homunculus.getRuntimeConfig().name);
+		assertEquals("configToFile", homunculus.getRuntimeConfig().name);
 		assertEquals(fileNameSecond, homunculus.getRuntimeConfig().nextConfigFile);
 		final EdgeConfig c2 = new EdgeConfig();
 		c2.name = "test aggiornamento configurazione";
@@ -152,7 +152,7 @@ public class ConfigRefreshFromAllChannelTests {
 	@Test
 	public void createConfigWeb() throws IOException {
 		final EdgeConfig config = new EdgeConfig();
-		config.name = "dnsToFile";
+		config.name = "configToFile";
 		config.nextConfigFile = fileNameSecond;
 		final Path path = Paths.get("config-to-file.ar4k");
 		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,

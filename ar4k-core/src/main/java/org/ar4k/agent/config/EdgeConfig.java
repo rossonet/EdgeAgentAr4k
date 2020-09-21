@@ -27,6 +27,8 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusRouterType;
 import org.ar4k.agent.core.interfaces.ConfigSeed;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.joda.time.Instant;
 import org.springframework.boot.ansi.AnsiColor;
 
@@ -37,6 +39,9 @@ import com.beust.jcommander.Parameter;
  *
  */
 public class EdgeConfig implements ConfigSeed {
+
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(EdgeConfig.class.toString());
 
 	private static final long serialVersionUID = 7447810727276010241L;
 
@@ -176,7 +181,13 @@ public class EdgeConfig implements ConfigSeed {
 	}
 
 	public boolean isMoreUpToDateThan(EdgeConfig runtimeConfig) {
-		return lastUpdate.isAfter(runtimeConfig.lastUpdate);
+		boolean check = true;
+		if (lastUpdate != null && runtimeConfig != null && runtimeConfig.lastUpdate != null) {
+			check = lastUpdate.isAfter(runtimeConfig.lastUpdate);
+		}
+		logger.warn("compare config time. runtime config: {}, this config: {}, result: {}",
+				(runtimeConfig != null ? runtimeConfig.lastUpdate : "NaN"), lastUpdate, check);
+		return check;
 	}
 
 	@Override

@@ -89,8 +89,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-		EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-data-simulator.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -443,7 +443,7 @@ public class DataSimulatorTests implements MessageHandler {
 		sp2.description = "test point";
 		sp2.rangeHi = 40000;
 		sp2.rangeLower = 6002;
-		sp2.frequency = 50;
+		sp2.frequency = 400;
 		sp2.nodeId = "TestDataBad";
 		sp2.namespace = "testing";
 		sp2.domainId = "mydom";
@@ -479,7 +479,7 @@ public class DataSimulatorTests implements MessageHandler {
 		}
 		assertEquals(1, allChannels.size());
 		final DataBag db = new DataBag(new File(dataBagFile), allChannels, 500, 1000);
-		Thread.sleep(20000);
+		Thread.sleep(30000);
 		db.close();
 		final EdgeConfig c3 = new EdgeConfig();
 		final String check3 = UUID.randomUUID().toString();
@@ -489,7 +489,7 @@ public class DataSimulatorTests implements MessageHandler {
 		s3.name = "data simulator";
 		final SingleDataGeneratorPointConfig sp3 = new SingleDataGeneratorPointConfig();
 		sp3.description = "test point databag";
-		sp3.frequency = 5;
+		sp3.frequency = 500;
 		sp3.delta = 5000;
 		sp3.nodeId = "TestData";
 		sp3.namespace = "testing";
@@ -506,9 +506,8 @@ public class DataSimulatorTests implements MessageHandler {
 		messages.clear();
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
-		Thread.sleep(3000);
 		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
-		Thread.sleep(30000);
+		Thread.sleep(40000);
 		homunculus.sendEvent(HomunculusEvents.STOP);
 		for (final Integer checkValue : Lists.newArrayList(5014, 5016, 5018, 5020, 5022, 5024, 5026, 5028, 5030, 5032,
 				5034, 5036, 5038, 5040, 5042, 5044, 5046, 5048, 5050, 5052)) {
