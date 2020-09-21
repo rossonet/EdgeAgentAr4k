@@ -49,6 +49,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -206,6 +207,7 @@ public class RemoteControlOverBeaconRegistration {
 	}
 
 	@Test
+	@Ignore
 	public void allNodeSimulatedWithTunnelSsl() throws Exception {
 		allNodeSimulatedWithTunnel(true);
 	}
