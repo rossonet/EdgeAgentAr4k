@@ -96,6 +96,7 @@ public class MainShellInterfaceTests {
 		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		final Map<String, MethodTarget> listCommands = shell.listCommands();
 		System.out.println("commands: " + listCommands);
+		printCheckNow(listCommands);
 		assertTrue(listCommands.containsKey("clear"));
 		assertTrue(listCommands.containsKey("clone-config"));
 		assertTrue(listCommands.containsKey("clone-runtime-config"));
@@ -106,11 +107,11 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("delete-user-account"));
 		assertTrue(listCommands.containsKey("exit"));
 		assertTrue(listCommands.containsKey("get-agent-status"));
-		assertTrue(listCommands.containsKey("get-anima"));
 		assertTrue(listCommands.containsKey("get-beans-info"));
 		assertTrue(listCommands.containsKey("get-environment-variables"));
 		assertTrue(listCommands.containsKey("get-free-port"));
 		assertTrue(listCommands.containsKey("get-hardware-info"));
+		assertTrue(listCommands.containsKey("get-homunculus"));
 		assertTrue(listCommands.containsKey("get-log-level"));
 		assertTrue(listCommands.containsKey("get-roles-authority"));
 		assertTrue(listCommands.containsKey("get-runtime-config-json"));
@@ -168,7 +169,6 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("unset-selected-config"));
 	}
 
-	@SuppressWarnings("unused")
 	private void printCheckNow(Map<String, MethodTarget> listCommands) {
 		for (final String command : listCommands.keySet()) {
 			System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");

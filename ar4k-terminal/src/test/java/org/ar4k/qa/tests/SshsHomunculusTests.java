@@ -24,6 +24,7 @@ import org.ar4k.agent.tunnels.sshd.SshdHomunculusService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -83,6 +84,7 @@ public class SshsHomunculusTests {
 	};
 
 	@Test
+	@Ignore
 	public void simpleSShServerWithHomunculusShell() throws InterruptedException {
 		Thread.sleep(10000);
 		final SshdHomunculusConfig testServerConfig = new SshdHomunculusConfig();
