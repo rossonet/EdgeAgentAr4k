@@ -1,77 +1,49 @@
 package org.ar4k.agent.farm;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
-import org.ar4k.agent.exception.ServiceWatchDogException;
+import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public abstract class FarmComponent implements EdgeComponent {
+	public enum ConnectionState {
+		CONNECTED, DISCONNECTED, UNKNOW
+	}
 
-	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(FarmComponent.class.toString());
 
 	private Homunculus homunculus = null;
 
-	private FarmConfig configuration = null;
-
-	private String beanName = null;
-
 	// TODO DataAddress
 	private DataAddress dataspace = null;
 
-	public FarmComponent(Homunculus homunculus, FarmConfig tribeConfig) {
-		this.configuration = tribeConfig;
-		this.homunculus = homunculus;
-	}
+	public abstract ConnectionState getConnectionState();
 
-	public FarmComponent(FarmConfig tribeConfig) {
-		homunculus = tribeConfig.homunculus;
-		this.configuration = tribeConfig;
-	}
+	public abstract List<ManagedVirtualSystem> getManagedSystems();
 
-	@Override
-	public ServiceConfig getConfiguration() {
-		return configuration;
-	}
+	public abstract List<ManagedNetworkInterface> getManagedNetworks();
 
-	@Override
-	public void setConfiguration(ServiceConfig configuration) {
-		this.configuration = (FarmConfig) configuration;
-	}
+	public abstract List<ManagedArchives> getManagedArchives();
 
-	public String getBeanName() {
-		return beanName;
+	public abstract List<ManagedHost> getManagedHosts();
+
+	public abstract void pruneSystem();
+
+	public abstract SystemStatus getSystemStatus();
+
+	public FarmComponent(FarmConfig farmConfig) {
+		homunculus = farmConfig.homunculus;
 	}
 
 	@Override
 	public void close() throws IOException {
 		kill();
-	}
-
-	@Override
-	public void init() {
-
-	}
-
-	@Override
-	public void kill() {
-
-	}
-
-	@Override
-	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		return ServiceStatus.RUNNING;
 	}
 
 	@Override
@@ -92,11 +64,6 @@ public abstract class FarmComponent implements EdgeComponent {
 	@Override
 	public void setHomunculus(Homunculus homunculus) {
 		this.homunculus = homunculus;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
 }

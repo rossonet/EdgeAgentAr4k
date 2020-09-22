@@ -1,28 +1,22 @@
 package org.ar4k.agent.farm;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
 public abstract class FarmConfig extends AbstractServiceConfig {
 
 	private static final long serialVersionUID = -2924869182396567535L;
-	private String uniqueName;
 
-	@Parameter(names = "--uniqueName", description = "the farm uniqueName")
+	@Parameter(names = "--farmName", description = "the farm unique name")
+	private String farmName;
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public abstract EdgeComponent instantiate();
+	@Parameter(names = "--farmType", description = "class name for the farm operator")
+	private String farmType;
 
 	@Override
 	public String getUniqueId() {
-		return uniqueName;
+		return farmName;
 	}
 
 	@Override
@@ -37,12 +31,7 @@ public abstract class FarmConfig extends AbstractServiceConfig {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("FarmConfig [");
-		if (uniqueName != null)
-			builder.append("uniqueName=").append(uniqueName);
-		builder.append("]");
-		return builder.toString();
+		return "FarmConfig [farmName=" + farmName + ", farmType=" + farmType + "]";
 	}
 
 }

@@ -74,10 +74,6 @@ import io.kubernetes.client.util.Yaml;
 //@ManagedResource(objectName = "bean:name=kubernetesInterface", description = "Ar4k Agent Kubernetes Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "kubernetesInterface")
 @RestController
 @RequestMapping("/kubernetesInterface")
-//TODO finire implementazione console per gestire il deploy in cluster
-//TODO implementare un gestore di cluster come servizio che utilizza i canali per mettere a disposizione servizi (tramite i servizi esterni)
-//TODO implementare servizio dati per la gestione k8s. Di fatto delle lambda su k8s.
-//TODO includere https://kind.sigs.k8s.io/
 public class KubernetesShellInterface extends AbstractShellHelper {
 	@Autowired
 	Shell shell;
