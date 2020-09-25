@@ -12,7 +12,6 @@ dependencies {
 	compile project(':ar4k-serial-comm')
 	compile project(':ar4k-video')
 	compile project(':ar4k-seed')
-	compile project(':ar4k-siddhi')
 	compile project(':ar4k-vaadin')
 	compile project(':ar4k-iec61499')
 }

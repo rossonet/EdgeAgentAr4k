@@ -9,7 +9,6 @@ COPY ar4k-core/ /ar4kAgent/ar4k-core/
 COPY ar4k-pcap/ /ar4kAgent/ar4k-pcap/
 COPY ar4k-terminal/ /ar4kAgent/ar4k-terminal/
 COPY ar4k-hazelcast/ /ar4kAgent/ar4k-hazelcast/
-COPY ar4k-siddhi/ /ar4kAgent/ar4k-siddhi/
 COPY ar4k-video/ /ar4kAgent/ar4k-video/
 COPY gradlew /ar4kAgent/gradlew
 COPY gradle/ /ar4kAgent/gradle/
