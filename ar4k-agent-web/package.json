@@ -9,9 +9,9 @@
     "@vaadin/vaadin-icons": "4.3.1",
     "@vaadin/vaadin-split-layout": "4.2.0",
     "@vaadin/vaadin-combo-box": "5.2.0",
-    "@vaadin/vaadin-core-shrinkwrap": "14.3.5",
+    "@vaadin/vaadin-core-shrinkwrap": "14.3.7",
     "@vaadin/vaadin-upload": "4.3.0",
-    "@vaadin/vaadin-dialog": "2.4.3",
+    "@vaadin/vaadin-dialog": "2.4.5",
     "@vaadin/vaadin-select": "2.2.0",
     "@vaadin/vaadin-app-layout": "2.1.0",
     "@vaadin/vaadin-item": "2.2.0",
@@ -35,11 +35,9 @@
     "@vaadin/vaadin-time-picker": "2.2.0",
     "@vaadin/vaadin-context-menu": "4.4.0",
     "@vaadin/vaadin-tabs": "3.1.0",
-    "@vaadin/vaadin-radio-button": "1.3.0",
+    "@vaadin/vaadin-radio-button": "1.3.1",
     "@vaadin/vaadin-lumo-styles": "1.6.0",
     "@vaadin/vaadin-material-styles": "1.3.2",
-    "@vaadin/vaadin-board": "2.1.1",
-    "@vaadin/vaadin-charts": "6.3.1",
     "@vaadin/vaadin-rich-text-editor": "1.2.2"
   },
   "devDependencies": {
@@ -62,9 +60,9 @@
       "@vaadin/vaadin-icons": "4.3.1",
       "@vaadin/vaadin-split-layout": "4.2.0",
       "@vaadin/vaadin-combo-box": "5.2.0",
-      "@vaadin/vaadin-core-shrinkwrap": "14.3.5",
+      "@vaadin/vaadin-core-shrinkwrap": "14.3.7",
       "@vaadin/vaadin-upload": "4.3.0",
-      "@vaadin/vaadin-dialog": "2.4.3",
+      "@vaadin/vaadin-dialog": "2.4.5",
       "@vaadin/vaadin-select": "2.2.0",
       "@vaadin/vaadin-app-layout": "2.1.0",
       "@vaadin/vaadin-item": "2.2.0",
@@ -88,7 +86,7 @@
       "@vaadin/vaadin-time-picker": "2.2.0",
       "@vaadin/vaadin-context-menu": "4.4.0",
       "@vaadin/vaadin-tabs": "3.1.0",
-      "@vaadin/vaadin-radio-button": "1.3.0",
+      "@vaadin/vaadin-radio-button": "1.3.1",
       "@vaadin/vaadin-lumo-styles": "1.6.0",
       "@vaadin/vaadin-material-styles": "1.3.2",
       "@vaadin/vaadin-board": "2.1.1",
@@ -106,6 +104,6 @@
       "webpack-merge": "4.2.2",
       "webpack-dev-server": "3.10.3"
     },
-    "hash": "c8f7e47f982c5441788ee37aa23bf2366c916095d49311edd20b1b8f8b35c501"
+    "hash": "dfd2a2ce97b4b663ba7cbf6a7fba943697d30c862785219bf4dcdecb07905b61"
   }
 }

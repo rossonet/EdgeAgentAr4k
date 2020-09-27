@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
 	compile project(':ar4k-core')
-	compile project(':ar4k-terminal')
+//	compile project(':ar4k-terminal')
 	compile project(':ar4k-vaadin')
 	// il plugin gretty + vaadin usano questa versione la 2.7 per ora è incompatibile
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'

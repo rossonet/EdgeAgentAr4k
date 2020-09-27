@@ -101,7 +101,7 @@ public class ScadaBeaconService implements AutoCloseable {
 		s.setBeaconCaChainPem("beaconCaChainPem");
 		s.setCertChainFile("certChainFile");
 		s.setCertFile("cert file");
-		s.setPort(10000);
+		s.setPort(11231);
 		s.setHost("127.0.0.1");
 		s.setCompany("Rossonet");
 		s.setPrivateFile("privateFile");
