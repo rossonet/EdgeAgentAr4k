@@ -4,7 +4,7 @@ dependencies {
 	compile project(':ar4k-core')
 	// OPCUA
 	compile('org.eclipse.milo:sdk-client:0.4.1')
-	compile('org.eclipse.milo:stack-client:0.4.1')
+	compile('org.eclipse.milo:stack-client:0.5.1')
 	compile('org.eclipse.milo:sdk-server:0.4.1')
 	compile('org.eclipse.milo:stack-server:0.4.1')
 	compile('org.eclipse.milo:sdk-core:0.4.1')
