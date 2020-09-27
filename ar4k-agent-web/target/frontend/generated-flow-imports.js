@@ -1,6 +1,7 @@
 const div = document.createElement('div');
 div.innerHTML = '<custom-style><style include="material-color-light material-typography"></style></custom-style>';
 document.head.insertBefore(div.firstElementChild, document.head.firstChild);
+document.documentElement.setAttribute('theme', 'dark');
 
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-list/iron-list.js';
@@ -20,10 +21,7 @@ import '@vaadin/flow-frontend/vaadin-grid-flow-selection-column.js';
 import '@vaadin/vaadin-accordion/theme/material/vaadin-accordion.js';
 import '@vaadin/vaadin-app-layout/theme/material/vaadin-app-layout.js';
 import '@vaadin/vaadin-app-layout/theme/material/vaadin-drawer-toggle.js';
-import '@vaadin/vaadin-board/vaadin-board-row.js';
-import '@vaadin/vaadin-board/vaadin-board.js';
 import '@vaadin/vaadin-button/theme/material/vaadin-button.js';
-import '@vaadin/vaadin-charts/vaadin-chart.js';
 import '@vaadin/vaadin-checkbox/theme/material/vaadin-checkbox-group.js';
 import '@vaadin/vaadin-checkbox/theme/material/vaadin-checkbox.js';
 import '@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box.js';

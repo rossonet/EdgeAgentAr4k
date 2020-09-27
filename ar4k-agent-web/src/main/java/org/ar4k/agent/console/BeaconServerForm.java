@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.web.scada.BeaconClientWrapper;
+import org.ar4k.agent.web.widget.menu.BeaconServerMenu;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -63,8 +64,11 @@ public class BeaconServerForm extends FormLayout {
 
 	private BeaconClientWrapper beaconClientWrapper;
 
-	public BeaconServerForm(MainView mainView) {
-		this.mainView = mainView;
+	private final BeaconServerMenu beaconServerMenu;
+
+	public BeaconServerForm(BeaconServerMenu beaconServerMenu) {
+		this.beaconServerMenu = beaconServerMenu;
+		this.mainView = beaconServerMenu.getMainView();
 		addClassName("contact-form");
 		add(host, port, discoveryPort, discoveryFilter, aliasBeaconClientInKeystore, certFile, certChainFile,
 				privateFile, beaconCaChainPem, company, context, createButtons());
@@ -162,30 +166,30 @@ public class BeaconServerForm extends FormLayout {
 		}
 	}
 
-	public static class SaveEvent extends BeaconServerFormEvent {
+	public class SaveEvent extends BeaconServerFormEvent {
 
-		private static final long serialVersionUID = 6L;
+		private static final long serialVersionUID = -7021301590382929238L;
 
 		SaveEvent(BeaconServerForm source, BeaconClientWrapper beaconClientWrapper, MainView mainView) {
 			super(source, beaconClientWrapper);
-			mainView.updateListBeaconServer();
+			beaconServerMenu.updateListBeaconServer();
 		}
 	}
 
-	public static class DeleteEvent extends BeaconServerFormEvent {
+	public class DeleteEvent extends BeaconServerFormEvent {
 
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = -6021301590382929238L;
 
 		DeleteEvent(BeaconServerForm source, BeaconClientWrapper beaconClientWrapper, MainView mainView) {
 			super(source, beaconClientWrapper);
-			mainView.updateListBeaconServer();
+			beaconServerMenu.updateListBeaconServer();
 		}
 
 	}
 
-	public static class CloseEvent extends BeaconServerFormEvent {
+	public class CloseEvent extends BeaconServerFormEvent {
 
-		private static final long serialVersionUID = 9L;
+		private static final long serialVersionUID = -5021301590382929238L;
 
 		CloseEvent(BeaconServerForm source) {
 			super(source, null);
@@ -198,7 +202,6 @@ public class BeaconServerForm extends FormLayout {
 		setVisible(false);
 		removeClassName("editing");
 		removeClassName("new");
-		mainView.clearGridServer();
 	}
 
 	@Override

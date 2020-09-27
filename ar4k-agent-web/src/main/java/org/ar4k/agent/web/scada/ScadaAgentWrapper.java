@@ -2,15 +2,10 @@ package org.ar4k.agent.web.scada;
 
 import java.util.Date;
 
-import org.ar4k.agent.config.network.NetworkConfig;
-import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
-import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
-import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
 import org.json.JSONObject;
 
@@ -80,32 +75,6 @@ public class ScadaAgentWrapper {
 	public String getJavaVm() {
 		final JSONObject jsonObject = new JSONObject(agent.getJsonHardwareInfo());
 		return jsonObject.getString("piJavaVM") + " " + jsonObject.getString("piJavaVersion");
-	}
-
-	public void activateXpraConnection() {
-		runRemoteXpraAndGetTunnel();
-	}
-
-	private int runRemoteXpraAndGetTunnel() {
-		final String command = "run-xpra-server";
-		final String returnStartingXpra = beaconClient.runCommadsOnAgent(agent.getAgentUniqueName(), command)
-				.getReply();
-		final int remoteXpraPort = Integer.parseInt(returnStartingXpra.replace("\n", ""));
-		final int localPort = NetworkHelper.findAvailablePort(14600);
-		final NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-xpra-" + remoteXpraPort, "tunnel xpra",
-				NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
-		xpraNetworkTunnel = beaconClient.getNetworkTunnel(agent.getAgentUniqueName(), remoteConfig);
-		return localPort;
-	}
-
-	public void sendDisconnectToXpraConnection() {
-		try {
-			xpraNetworkTunnel.close();
-		} catch (final Exception e) {
-			logger.logException("during xpra disconnection", e);
-		}
-		xpraNetworkTunnel = null;
-
 	}
 
 }

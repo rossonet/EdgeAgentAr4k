@@ -5,6 +5,8 @@ import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
+import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -16,6 +18,9 @@ import com.google.gson.GsonBuilder;
  */
 // TODO implementare servizio di sniffing PCAP verso dataspace
 public class PcapSnifferService implements EdgeComponent {
+
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(PcapSnifferService.class.toString());
 
 	private ServiceConfig configuration;
 	private Homunculus homunculus;
@@ -48,8 +53,7 @@ public class PcapSnifferService implements EdgeComponent {
 		try {
 			close();
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logException(e);
 		}
 	}
 
