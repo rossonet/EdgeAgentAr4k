@@ -19,6 +19,7 @@ buildscript {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
 		classpath "com.diffplug.gradle:goomph:3.18.1"
+		classpath "com.netflix.nebula:gradle-ospackage-plugin:8.4.1"
 	}
 }
 
@@ -33,6 +34,8 @@ apply plugin: "com.gorylenko.gradle-git-properties"
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 apply plugin: 'jacoco'
 apply plugin: 'base'
+apply plugin: "nebula.rpm"
+apply plugin: 'nebula.deb'
 
 oomphIde {
 	repoEclipseLatest()
@@ -326,6 +329,120 @@ task ar4kBootJarDruido {
 	description 'Build Ar4k Semantic Router as a single fat jar. This is the Druido robot version'
 	ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:bootJar")
 	ar4kBootJarDruido.dependsOn(":ar4k-agent-druido:endBootJar")
+}
+
+task makeRpmDruido(type: Rpm){
+  makeRpmDruido.dependsOn("ar4kBootJarDruido")
+  requires('java-1.8.0-openjdk')
+  requires('telnet')
+  requires('bash')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Druido agent in rpm format'
+  packageName "ar4k-agent-druido"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.com'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'Druido agent of Edge System Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-druido/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('rpm/init-druido'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-druido-${rootProject.version}.jar")
+}
+
+task makeRpmWeb(type: Rpm){
+  makeRpmWeb.dependsOn("ar4kBootJarWeb")
+  requires('java-1.8.0-openjdk')
+  requires('telnet')
+  requires('bash')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Web agent in rpm format'
+  packageName "ar4k-agent-web"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.com'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'Web agent of Edge System Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-web/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('rpm/init-web'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-web.jar',"/opt/rossonet/ar4k-agent-web-${rootProject.version}.jar")
+}
+
+task makeDebianDruido(type: Deb){
+  makeDebianDruido.dependsOn("ar4kBootJarDruido")
+  requires('default-jdk')
+  requires('telnet')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Druido agent in deb package format'
+  packageName "ar4k-agent-druido"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.com'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'Druido agent of Edge System Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-druido/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('rpm/init-druido'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-druido-${rootProject.version}.jar")
+}
+
+task makeDebianWeb(type: Deb){
+  makeDebianWeb.dependsOn("ar4kBootJarWeb")
+  requires('default-jdk')
+  requires('telnet')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Web agent in deb package format'
+  packageName "ar4k-agent-web"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.com'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'Web agent of Edge System Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-web/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('rpm/init-web'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-web.jar',"/opt/rossonet/ar4k-agent-web-${rootProject.version}.jar")
 }
 
 task ar4kDockerContainerDruido {

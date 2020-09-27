@@ -1,0 +1,13 @@
+[Unit]
+Description=Ar4k Druido Agent 
+After=rc-local.service
+[Service]
+Type=simple
+User=root
+ExecStart=java -jar /opt/rossonet/ar4k-agent-druido.jar --spring.shell.interactive.enabled=false
+PIDFile=/opt/rossonet/ar4k/druido.pid
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+[Install]
+WantedBy=multi-user.target
