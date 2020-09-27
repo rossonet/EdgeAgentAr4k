@@ -68,7 +68,7 @@ dependencies {
 	// compile 'org.shredzone.acme4j:acme4j:2.7'
 	//testCompile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
 	// commons-compress
-	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.20'
 	// https://mvnrepository.com/artifact/commons-codec/commons-codec
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.14'
 	// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
