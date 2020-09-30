@@ -1,0 +1,520 @@
+/*
+* Copyright 2014 Jacopo Farina.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+package org.ar4k.agent.cortex.opennlp;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.util.ResourceUtils;
+
+//import com.github.jacopofar.italib.ItalianVerbConjugation.ConjugationException;
+//import com.github.jacopofar.italib.postagger.POSUtils;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.util.Span;
+
+/**
+ * The main class to load an Italian language model and use it. The model is
+ * based on Apache OpenNLP and the data extracted by
+ * com.github.jacopofar.conceptnetextractor Currently, the OpenNLP models are
+ * from https://github.com/aciapetti/opennlp-italian-models while the verb
+ * conjugations are from a dump of en.wiktionary
+ */
+
+public class ItalianModel {
+	private static final Logger logger = LogManager.getLogger(ItalianModel.class.getName());
+
+	private final Cache<String, Span[]> tagCache = CacheBuilder.newBuilder().maximumSize(8000).build();
+	// new ConcurrentHashMap<>();
+	private final HashSet<String> stopWords = new HashSet<>();
+
+	private Connection connectionVerb, connectionPOS;
+
+	// private POSTaggerME POStagger;
+	private final ConcurrentLinkedQueue<POSTaggerME> posTaggers = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<TokenizerME> tokenizers = new ConcurrentLinkedQueue<>();
+
+	// private TokenizerME tokenizer;
+	// private SentenceDetectorME sentencer;
+	private final ConcurrentLinkedQueue<SentenceDetectorME> sentencers = new ConcurrentLinkedQueue<>();
+	private final int concurrentInstances = 200;
+
+	/**
+	 * Load a model reading the data from the given folder If the folder is null, it
+	 * will look inside the resource folder
+	 *
+	 * @param modelFolder the folder containing the model binary files
+	 * @throws java.lang.ClassNotFoundException Class not found
+	 * @throws java.sql.SQLException SQL Exception
+	 * @throws java.io.FileNotFoundException File not found
+	 */
+	public ItalianModel(String modelFolder) throws ClassNotFoundException, SQLException, FileNotFoundException {
+		// connect to the database for verb conjugations, hyponyms and POS tags
+		Class.forName("org.sqlite.JDBC");
+		if (modelFolder == null)
+			modelFolder = ItalianModel.class.getResource("/opennlp/jacopofar").getPath();
+		if (!new File(modelFolder + "/it_verb_model.db").isFile()) {
+			throw new FileNotFoundException("database " + modelFolder + "/it_verb_model.db not found or not a file");
+		}
+		connectionVerb = DriverManager.getConnection("jdbc:sqlite:" + modelFolder + "/it_verb_model.db");
+
+		if (!new File(modelFolder + "/it_POS_model.db").isFile()) {
+			throw new FileNotFoundException("database " + modelFolder + "/it_POS_model.db not found or not a file");
+		}
+		connectionPOS = DriverManager.getConnection("jdbc:sqlite:" + modelFolder + "/it_POS_model.db");
+
+		// load the tokener model for OpenNLP
+		File fileModel = ResourceUtils
+				.getFile("classpath:opennlp/opennlp-italian-models-master/models/it/it-token.bin");
+		InputStream modelIn = new FileInputStream(fileModel);
+
+		try {
+			TokenizerModel model = new TokenizerModel(modelIn);
+			for (int i = 0; i < concurrentInstances; i++)
+				tokenizers.add(new TokenizerME(model));
+			// tokenizer = new TokenizerME(new TokenizerModel(modelIn));
+		} catch (IOException e) {
+			logger.error("error opening the tokener model", e);
+		} finally {
+
+			try {
+				modelIn.close();
+			} catch (IOException e) {
+				logger.error("error closing the tokener model", e);
+			}
+
+		}
+		// load the POS tagger model for OpenNLP
+		File fileModelMaxent = ResourceUtils
+				.getFile("classpath:opennlp/opennlp-italian-models-master/models/it/it-pos-maxent.bin");
+		modelIn = new FileInputStream(fileModelMaxent);
+		try {
+			POSModel model = new POSModel(modelIn);
+			for (int i = 0; i < concurrentInstances; i++)
+				posTaggers.add(new POSTaggerME(model));
+			// this.POStagger = new POSTaggerME(new POSModel(modelIn));
+
+		} catch (IOException e) {
+			logger.error("error opening the PoS tagger model", e);
+		} finally {
+			try {
+				modelIn.close();
+			} catch (IOException e) {
+				logger.error("error closing the poS tager model", e);
+			}
+		}
+
+		// load the sentencer model for OpenNLP
+		File fileModelSentencer = ResourceUtils
+				.getFile("classpath:opennlp/opennlp-italian-models-master/models/it/it-sent.bin");
+		InputStream modelInSentence = new FileInputStream(fileModelSentencer);
+		try {
+			SentenceModel model = new SentenceModel(modelInSentence);
+			for (int i = 0; i < concurrentInstances; i++)
+				sentencers.add(new SentenceDetectorME(model));
+			// sentencer=new SentenceDetectorME(new SentenceModel(modelInSentence));
+		} catch (IOException e) {
+			logger.error("error opening the sentencer model", e);
+		}
+		// load the list of stopWords
+		FileReader sfr = new FileReader(modelFolder + "/stopwords.txt");
+		BufferedReader sbr = new BufferedReader(sfr);
+		String line;
+		try {
+			while ((line = sbr.readLine()) != null)
+				stopWords.add(line);
+		} catch (IOException ex) {
+			logger.error("error opening the stopwords list model", ex);
+
+		}
+	}
+
+	public ItalianModel() throws ClassNotFoundException, FileNotFoundException, SQLException {
+		this(null);
+	}
+
+	/**
+	 * Returns the possible verb conjugations corresponding to this verb.
+	 * 
+	 * @param word                the verb to identify
+	 * @param forceIdentification whether or not to guess the verb form if not
+	 *                            present in the database. If used, a non empty set
+	 *                            is always returned
+	 * @return the possible verb conjugations as ItalianVerbConjugation instances
+	 */
+	public Set<ItalianVerbConjugation> getVerbs(String word, boolean forceIdentification) {
+		HashSet<ItalianVerbConjugation> res = new HashSet<>(4);
+		try {
+			PreparedStatement ps = connectionVerb
+					.prepareStatement("SELECT * FROM verb_conjugations WHERE conjugated=?");
+			ps.setString(1, word);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				ItalianVerbConjugation ic = new ItalianVerbConjugation(this);
+				ic.setMode(rs.getString("form"));
+				ic.setInfinitive(rs.getString("infinitive"));
+				ic.setPerson(rs.getInt("person"));
+				ic.setNumber(rs.getString("number").charAt(0));
+				ic.setConjugated(rs.getString("conjugated"));
+				res.add(ic);
+			}
+
+		} catch (SQLException e) {
+			logger.error("error loading data from the verb conjugation database", e);
+		}
+		if (!forceIdentification || res.size() > 0)
+			return res;
+		else
+			// no verb found, but we must force the identification, let's look for it
+			return ItalianVerbConjugation.guessVerb(word, this);
+	}
+
+	/**
+	 * Returns the possible verb conjugations corresponding to this verb. It doesn't
+	 * force the identification, if the verb is not in the model, it returns an
+	 * empty set
+	 * 
+	 * @param word the verb to identify
+	 * @return the possible verb conjugations as ItalianVerbConjugation instances
+	 *
+	 */
+	public Set<ItalianVerbConjugation> getVerbs(String word) {
+		return getVerbs(word, false);
+	}
+
+	protected String getVerbConjugation(String infinitive, String mode, char number, int person) {
+		try {
+			PreparedStatement ps = connectionVerb.prepareStatement("SELECT conjugated FROM verb_conjugations "
+					+ "WHERE infinitive=? AND form=? AND number=? AND person=?");
+			ps.setString(1, infinitive);
+			ps.setString(2, mode);
+			ps.setString(3, number + "");
+			ps.setInt(4, person);
+
+			ResultSet rs = ps.executeQuery();
+			String longest = "";
+			while (rs.next()) {
+				if (rs.getString("conjugated").length() > longest.length())
+					longest = rs.getString("conjugated");
+				else if (rs.getString("conjugated").length() == longest.length()
+						&& rs.getString("conjugated").hashCode() < longest.hashCode())
+					longest = rs.getString("conjugated");
+			}
+			if (longest.length() > 0)
+				return longest;
+
+		} catch (SQLException e) {
+			logger.error("error loading data from the verb conjugation database", e);
+		}
+		return null;
+	}
+
+	public String getVerbConjugation(String infinitive, String mode) {
+		try {
+			PreparedStatement ps = null;
+			if (ItalianVerbConjugation.isImpersonalMode(mode)) {
+				ps = connectionVerb.prepareStatement(
+						"SELECT conjugated FROM verb_conjugations " + "WHERE infinitive=? AND form=?");
+			} else {
+				throw new RuntimeException("requested a verb conjugation without a person and number, but " + mode
+						+ " is not an impersonal form");
+			}
+			ps.setString(1, infinitive);
+			ps.setString(2, mode);
+
+			ResultSet rs = ps.executeQuery();
+			// look for the longest one with the hightst hash, as a criteria to be
+			// deterministic
+			String longest = "";
+			while (rs.next()) {
+				if (rs.getString("conjugated").length() > longest.length())
+					longest = rs.getString("conjugated");
+				else if (rs.getString("conjugated").length() == longest.length()
+						&& rs.getString("conjugated").hashCode() < longest.hashCode())
+					longest = rs.getString("conjugated");
+			}
+			if (longest.length() > 0)
+				return longest;
+
+		} catch (SQLException e) {
+			logger.error("error loading data from the verb conjugation database", e);
+		}
+		return null;
+	}
+
+	/**
+	 * Split a sentence into token and return the most ranked tag sequence using
+	 * OpenNLP. The dictionary of POS tags is not used
+	 *
+	 * @param sentence the String to tokenize
+	 * @return the tokens found in the sentence, in the same order
+	 *
+	 */
+	public String[] quickPOSTag(String sentence) {
+		TokenizerME tokenizer;
+		// wait to get a tokenizer
+		while ((tokenizer = tokenizers.poll()) == null)
+			try {
+				synchronized (tokenizers) {
+					tokenizers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel tokening!", ex);
+			}
+
+		POSTaggerME POStagger;
+		// wait to get a PoS tagger
+		while ((POStagger = posTaggers.poll()) == null)
+			try {
+				synchronized (posTaggers) {
+					posTaggers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel PoS-tagging!", ex);
+			}
+		String[] val = POStagger.tag(tokenizer.tokenize(sentence));
+
+		// give back the tokenizer and the tagger
+		tokenizers.add(tokenizer);
+		synchronized (tokenizers) {
+			tokenizers.notify();
+		}
+		posTaggers.add(POStagger);
+		synchronized (posTaggers) {
+			posTaggers.notify();
+		}
+		return val;
+
+	}
+
+	/**
+	 * Return the PoS values from en.wiktionary. Those PoS are broader than the ones
+	 * from getPoStags, and come from the parsing of a en.wiktionary dump. This
+	 * method is provided for who's interested in comparing the tags from the two
+	 * sources.
+	 * 
+	 * @param word the word to classify
+	 * @return the PoS values from the parsing of an en.wiktionary dump, or an empty
+	 *         array in case of no matches
+	 */
+	public String[] getPoSvalues(String word) {
+		try {
+			PreparedStatement ps = connectionPOS.prepareStatement("SELECT types FROM POS_tags WHERE word=?");
+			ps.setString(1, word);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getString("types").split(",");
+			}
+		} catch (SQLException e) {
+			logger.error("error loading data from the verb PoS tags database", e);
+		}
+		return null;
+	}
+
+	/**
+	 * Split a string in tokens, returning them in an array
+	 * 
+	 * @param statement the text to tokenize
+	 * @return an array of the found tokens, as strings
+	 */
+	public String[] tokenize(String statement) {
+		TokenizerME tokenizer;
+		// wait to get a tokenizer
+		while ((tokenizer = tokenizers.poll()) == null)
+			try {
+				synchronized (tokenizers) {
+					tokenizers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel tokening!", ex);
+			}
+		String[] val = tokenizer.tokenize(statement);
+		tokenizers.add(tokenizer);
+		synchronized (tokenizers) {
+			tokenizers.notify();
+		}
+		return val;
+
+	}
+
+	/**
+	 * Tokenize and run POS tagging on the given text, returns an array of spans,
+	 * each with the POS tag as the Span type
+	 *
+	 * @param text the text to tokenize and tag
+	 * @return an array of Spans, each Span will have the identified PoS tag as
+	 *         type, that can be retrieved using getType()
+	 */
+	public Span[] getPosTags(String text) {
+		Span[] spans;
+		Span[] returnMe = tagCache.getIfPresent(text);
+		if (returnMe != null)
+			return returnMe;
+
+		String[] tags;
+
+		TokenizerME tokenizer;
+		// wait to get a tokenizer
+		while ((tokenizer = tokenizers.poll()) == null)
+			try {
+				synchronized (tokenizers) {
+					tokenizers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel tokening!", ex);
+			}
+
+		POSTaggerME POStagger;
+		// wait to get a PoS tagger
+		while ((POStagger = posTaggers.poll()) == null)
+			try {
+				synchronized (posTaggers) {
+					posTaggers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel PoS-tagging!", ex);
+			}
+
+		spans = tokenizer.tokenizePos(text);
+
+		tags = POStagger.tag(Span.spansToStrings(spans, text));
+
+		for (int i = 0; i < spans.length; i++) {
+			spans[i] = new Span(spans[i].getStart(), spans[i].getEnd(), tags[i]);
+		}
+
+		tagCache.put(text, spans);
+
+		// give back the tokenizer and the tagger
+		tokenizers.add(tokenizer);
+		synchronized (tokenizers) {
+			tokenizers.notify();
+		}
+		posTaggers.add(POStagger);
+		synchronized (posTaggers) {
+			posTaggers.notify();
+		}
+		return spans;
+	}
+
+	/**
+	 * Return the tokens in this text as Span
+	 *
+	 * @param text the text to tokenize
+	 * @return an array of Span instances, marking the start and end positions of
+	 *         each token
+	 */
+	public Span[] getTokens(String text) {
+		TokenizerME tokenizer;
+		// wait to get a tokenizer
+		while ((tokenizer = tokenizers.poll()) == null)
+			try {
+				synchronized (tokenizers) {
+					tokenizers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel tokening!", ex);
+			}
+		Span[] val = tokenizer.tokenizePos(text);
+		tokenizers.add(tokenizer);
+		synchronized (tokenizers) {
+			tokenizers.notify();
+		}
+		return val;
+	}
+
+	/**
+	 * Return the list of the infinitive verbs in the database, currently about 9K
+	 * entries
+	 *
+	 * @return AllKnownInfinitiveVerbs
+	 */
+	public Set<String> getAllKnownInfinitiveVerbs() {
+
+		PreparedStatement ps;
+		HashSet<String> res = new HashSet<>(500);
+		try {
+			ps = connectionVerb.prepareStatement("SELECT infinitive FROM verb_conjugations WHERE form='infinitive'");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				res.add(rs.getString("infinitive"));
+			}
+		} catch (SQLException e) {
+			logger.error("error loading data from the verb conjugation database", e);
+		}
+		return res;
+
+	}
+
+	/**
+	 * Split a text in sentences, returning them as an array
+	 *
+	 * @param text the text to split in sentences
+	 * @return an array of sentences
+	 */
+	public String[] getSentences(String text) {
+		SentenceDetectorME sentencer;
+		// wait to get a tokenizer
+
+		while ((sentencer = sentencers.poll()) == null)
+			try {
+				synchronized (sentencers) {
+					sentencers.wait();
+				}
+			} catch (InterruptedException ex) {
+				logger.error("interruption applying parallel sentencing!", ex);
+			}
+		String[] val = sentencer.sentDetect(text);
+		sentencers.add(sentencer);
+		synchronized (sentencers) {
+			sentencers.notify();
+		}
+		return val;
+	}
+
+	/**
+	 * Tells whether a word is an Italian stopword
+	 * 
+	 * @param token the word to examine
+	 * @return true if the word is a stopword
+	 */
+	public boolean isStopWord(String token) {
+		token = token.toLowerCase();
+		return stopWords.contains(token);
+	}
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<root level="DEBUG" />
+	<include
+		resource="org/springframework/boot/logging/logback/base.xml" />
+	<logger name="sun.rmi" level="INFO" />
+	<logger
+		name="org.springframework.integration.channel.PublishSubscribeChannel"
+		level="INFO" />
+	<logger
+		name="org.springframework.integration.dispatcher.BroadcastingDispatcher"
+		level="INFO" />
+	<logger
+		name="  org.springframework.statemachine.support.LifecycleObjectSupport"
+		level="WARN" />
+</configuration>

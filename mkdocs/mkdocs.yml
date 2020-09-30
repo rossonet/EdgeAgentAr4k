@@ -1,0 +1,8 @@
+site_name: Framework Ar4k by Rossonet
+theme: material
+nav:
+    - GUIDA RAPIDA: quick.md
+    - Readme progetto: README.md
+    - Implementazioni future: TODO.md
+    - Licenza: LICENSE.md
+    - Doc classi: classi.md

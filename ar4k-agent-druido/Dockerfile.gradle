@@ -1,0 +1,4 @@
+FROM openjdk:8-jdk-alpine
+RUN apk add --no-cache bash gawk sed grep bc coreutils wget binutils
+COPY target/ar4k-agent-druido-*.jar ar4kAgent.jar
+ENTRYPOINT ["java","-XX:+UnlockExperimentalVMOptions","-Djava.net.preferIPv4Stack=true","-XX:+UseCGroupMemoryLimitForHeap","-XshowSettings:vm","-Djava.security.egd=file:/dev/./urandom","-jar","/ar4kAgent.jar"]
