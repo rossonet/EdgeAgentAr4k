@@ -14,8 +14,6 @@
 
 [Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-web/src/main/java/org/ar4k/agent/web/scada/BeaconClientWrapper.java)
 
-[Help Online](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-web/src/main/java/org/ar4k/agent/web/widget/menu/HelpMenu.java)
-
 [aggiungere global data anima se flag true](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
 
 [inserire ogetti per NLP](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
