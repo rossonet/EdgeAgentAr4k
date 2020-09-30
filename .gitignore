@@ -7,6 +7,7 @@ training-data/*
 *.hprof
 ar4k-agent-druido.tar.gz
 ar4k-agent-druido.tar
+doc-site.tgz
 
 ### OUTPUT ###
 spring-shell.log
