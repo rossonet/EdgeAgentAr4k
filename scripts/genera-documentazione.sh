@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "update todo"
+scripts/rigenerate_todo.sh
 echo "Gradle clean"
 ./gradlew clean
 echo "Gradle javadoc"

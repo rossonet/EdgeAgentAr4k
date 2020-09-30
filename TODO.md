@@ -102,7 +102,7 @@
 
 [input.interrupt();   better thing to do?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/NativeShellRunner.java)
 
-[](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/UserSpaceBashScriptEngineFactory.java)
+[: provare BashScriptEngineFactory e scrivere tests](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/UserSpaceBashScriptEngineFactory.java)
 
 [TEST scrivere SocketFactoryProxy](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/test/java/org/ar4k/gw/studio/tunnels/socket/proxy/SocketFactoryProxy.java)
 
@@ -152,7 +152,7 @@
 
 [register e list services k8s](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/kubernetes/KubernetesShellInterface.java)
 
-[](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/kubernetes/KubernetesShellInterface.java)
+[: impostare i recipes helm](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/kubernetes/KubernetesShellInterface.java)
 
 [studiare l'uso degli operator](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/kubernetes/operator/OperatorBind.java)
 
@@ -224,7 +224,7 @@
 
 [DataAddress](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/FarmComponent.java)
 
-[# ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/test/resources/docker/rasa/rasa_nlu/evaluate.py)
+[# : move parsing into sub parser](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/test/resources/docker/rasa/rasa_nlu/evaluate.py)
 
 [DataAddress](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-serial-comm/src/main/java/org/ar4k/agent/iot/serial/SerialService.java)
 
