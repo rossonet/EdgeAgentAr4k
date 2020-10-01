@@ -14,7 +14,7 @@ dependencies {
 	compile group: 'com.vaadin', name: 'flow-client', version: '3.1.5'
 	compile group: 'com.vaadin', name: 'vaadin-server', version: '8.+'
 	compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'
-	compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.3.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.0'
 	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.3.RELEASE'
 
 	compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: '0.62.2'
