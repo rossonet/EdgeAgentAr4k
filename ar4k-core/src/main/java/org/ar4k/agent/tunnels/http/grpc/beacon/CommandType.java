@@ -40,6 +40,10 @@ public enum CommandType
    * <code>SET_CONFIGURATION = 7;</code>
    */
   SET_CONFIGURATION(7),
+  /**
+   * <code>GET_CONFIGURATION = 8;</code>
+   */
+  GET_CONFIGURATION(8),
   UNRECOGNIZED(-1),
   ;
 
@@ -75,6 +79,10 @@ public enum CommandType
    * <code>SET_CONFIGURATION = 7;</code>
    */
   public static final int SET_CONFIGURATION_VALUE = 7;
+  /**
+   * <code>GET_CONFIGURATION = 8;</code>
+   */
+  public static final int GET_CONFIGURATION_VALUE = 8;
 
 
   public final int getNumber() {
@@ -103,6 +111,7 @@ public enum CommandType
       case 5: return CLOSE_PORT;
       case 6: return CONNECT_DATA_CHANNEL;
       case 7: return SET_CONFIGURATION;
+      case 8: return GET_CONFIGURATION;
       default: return null;
     }
   }

@@ -48,7 +48,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 		Div divComponent = new Div();
 		beaconAgentWrapper = beaconAgent;
 		this.mainView = mainView;
-		divComponent.getStyle().set("padding", "6px");
+		divComponent.getStyle().set("padding", "3px");
 		int selected = 0;
 		tabsComponent.setAutoselect(false);
 		add(tabsComponent);

@@ -23,9 +23,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkConfig;
-import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.interfaces.ConfigSeed;
@@ -682,6 +682,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			case SET_CONFIGURATION:
 				setConfiguration(m);
 				break;
+			case GET_CONFIGURATION:
+				getConfiguration(m);
+				break;
 			case UNRECOGNIZED:
 				notImplemented(m);
 				break;
@@ -742,6 +745,17 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setUniqueIdRequest(m.getUniqueIdRequest()).setBase64Config(m.getRequestCommand()).build();
 			blockingStub.sendCommandReply(reply);
 			homunculus.elaborateNewConfig((EdgeConfig) newConfig);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
+		}
+	}
+
+	private void getConfiguration(RequestToAgent m) {
+		try {
+			final CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
+					.setUniqueIdRequest(m.getUniqueIdRequest())
+					.setBase64Config(ConfigHelper.toBase64(homunculus.getRuntimeConfig())).build();
+			blockingStub.sendCommandReply(reply);
 		} catch (final Exception a) {
 			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
@@ -958,6 +972,17 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			final ConfigReport req = ConfigReport.newBuilder().setAgent(a)
 					.setBase64Config(ConfigHelper.toBase64(newConfig)).build();
 			return blockingStub.sendConfigRuntime(req);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
+			return null;
+		}
+	}
+
+	@Override
+	public ConfigReply getConfigFromAgent(String agentId) {
+		try {
+			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
+			return blockingStub.getConfigRuntime(a);
 		} catch (final Exception a) {
 			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;

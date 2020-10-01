@@ -18,16 +18,36 @@ public interface ConfigReplyOrBuilder extends
       getBase64ConfigBytes();
 
   /**
-   * <code>int64 restartAt = 2;</code>
+   * <code>string jsonConfig = 2;</code>
+   */
+  java.lang.String getJsonConfig();
+  /**
+   * <code>string jsonConfig = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getJsonConfigBytes();
+
+  /**
+   * <code>string ymlConfig = 3;</code>
+   */
+  java.lang.String getYmlConfig();
+  /**
+   * <code>string ymlConfig = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getYmlConfigBytes();
+
+  /**
+   * <code>int64 restartAt = 4;</code>
    */
   long getRestartAt();
 
   /**
-   * <code>.beacon.StatusValue status = 3;</code>
+   * <code>.beacon.StatusValue status = 5;</code>
    */
   int getStatusValue();
   /**
-   * <code>.beacon.StatusValue status = 3;</code>
+   * <code>.beacon.StatusValue status = 5;</code>
    */
   org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus();
 }

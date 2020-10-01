@@ -1,12 +1,14 @@
 package org.ar4k.agent.web.scada;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
 import org.json.JSONObject;
 
 public class ScadaAgentWrapper {
@@ -16,7 +18,6 @@ public class ScadaAgentWrapper {
 
 	private final Agent agent;
 	private final IBeaconClient beaconClient;
-	private NetworkTunnel xpraNetworkTunnel = null;
 
 	public ScadaAgentWrapper(IBeaconClient beaconClient, Agent agent) {
 		this.beaconClient = beaconClient;
@@ -72,9 +73,33 @@ public class ScadaAgentWrapper {
 		return jsonObject.getString("piProcessor") + " x " + jsonObject.getString("piCPUModelName");
 	}
 
+	public String getAgentConfigJson() {
+		return beaconClient.getConfigFromAgent(agent.getAgentUniqueName()).getJsonConfig();
+	}
+
+	public String getAgentHelp() {
+		return beaconClient.runCommadsOnAgent(agent.getAgentUniqueName(), "help").getReply();
+	}
+
+	public String getAgentConfigYml() {
+		return beaconClient.getConfigFromAgent(agent.getAgentUniqueName()).getYmlConfig();
+	}
+
+	public List<String> listCommands() {
+		final List<String> returnList = new ArrayList<>();
+		for (Command c : beaconClient.listCommadsOnAgent(agent.getAgentUniqueName()).getCommandsList()) {
+			returnList.add(c.getCommand());
+		}
+		return returnList;
+	}
+
 	public String getJavaVm() {
 		final JSONObject jsonObject = new JSONObject(agent.getJsonHardwareInfo());
 		return jsonObject.getString("piJavaVM") + " " + jsonObject.getString("piJavaVersion");
+	}
+
+	public String getJsonHardwareInfo() {
+		return agent.getJsonHardwareInfo();
 	}
 
 }

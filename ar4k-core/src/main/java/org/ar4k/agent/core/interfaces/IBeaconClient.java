@@ -47,6 +47,8 @@ public interface IBeaconClient {
 
 	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
 
+	ConfigReply getConfigFromAgent(String agentId);
+
 	List<NetworkTunnel> getTunnels();
 
 	void removeTunnel(NetworkTunnel toRemove);

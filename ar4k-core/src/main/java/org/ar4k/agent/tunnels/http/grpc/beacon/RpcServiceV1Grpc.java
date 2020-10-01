@@ -315,6 +315,38 @@ public final class RpcServiceV1Grpc {
      return getSendConfigRuntimeMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigRuntimeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetConfigRuntime",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigRuntimeMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getGetConfigRuntimeMethod;
+    if ((getGetConfigRuntimeMethod = RpcServiceV1Grpc.getGetConfigRuntimeMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getGetConfigRuntimeMethod = RpcServiceV1Grpc.getGetConfigRuntimeMethod) == null) {
+          RpcServiceV1Grpc.getGetConfigRuntimeMethod = getGetConfigRuntimeMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "GetConfigRuntime"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetConfigRuntime"))
+                  .build();
+          }
+        }
+     }
+     return getGetConfigRuntimeMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
       org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> getListAgentsMethod;
 
@@ -663,6 +695,13 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public void getConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetConfigRuntimeMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListAgentsMethod(), responseObserver);
@@ -782,6 +821,13 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport,
                 org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
                   this, METHODID_SEND_CONFIG_RUNTIME)))
+          .addMethod(
+            getGetConfigRuntimeMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
+                  this, METHODID_GET_CONFIG_RUNTIME)))
           .addMethod(
             getListAgentsMethod(),
             asyncUnaryCall(
@@ -934,6 +980,14 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public void getConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetConfigRuntimeMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnaryCall(
@@ -1081,6 +1135,13 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply getConfigRuntime(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return blockingUnaryCall(
+          getChannel(), getGetConfigRuntimeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
     public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListAgentsMethod(), getCallOptions(), request);
@@ -1220,6 +1281,14 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply> getConfigRuntime(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetConfigRuntimeMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> listAgents(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
@@ -1292,14 +1361,15 @@ public final class RpcServiceV1Grpc {
   private static final int METHODID_SEND_LOG = 6;
   private static final int METHODID_SEND_EXCEPTION = 7;
   private static final int METHODID_SEND_CONFIG_RUNTIME = 8;
-  private static final int METHODID_LIST_AGENTS = 9;
-  private static final int METHODID_LIST_AGENTS_REQUEST_COMPLETE = 10;
-  private static final int METHODID_LIST_AGENTS_REQUEST_TO_DO = 11;
-  private static final int METHODID_APPROVE_AGENT_REQUEST = 12;
-  private static final int METHODID_KICK_AGENT = 13;
-  private static final int METHODID_ELABORATE_MESSAGE = 14;
-  private static final int METHODID_LIST_COMMANDS = 15;
-  private static final int METHODID_COMPLETE_COMMAND = 16;
+  private static final int METHODID_GET_CONFIG_RUNTIME = 9;
+  private static final int METHODID_LIST_AGENTS = 10;
+  private static final int METHODID_LIST_AGENTS_REQUEST_COMPLETE = 11;
+  private static final int METHODID_LIST_AGENTS_REQUEST_TO_DO = 12;
+  private static final int METHODID_APPROVE_AGENT_REQUEST = 13;
+  private static final int METHODID_KICK_AGENT = 14;
+  private static final int METHODID_ELABORATE_MESSAGE = 15;
+  private static final int METHODID_LIST_COMMANDS = 16;
+  private static final int METHODID_COMPLETE_COMMAND = 17;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1352,6 +1422,10 @@ public final class RpcServiceV1Grpc {
           break;
         case METHODID_SEND_CONFIG_RUNTIME:
           serviceImpl.sendConfigRuntime((org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReport) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
+          break;
+        case METHODID_GET_CONFIG_RUNTIME:
+          serviceImpl.getConfigRuntime((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
           break;
         case METHODID_LIST_AGENTS:
@@ -1456,6 +1530,7 @@ public final class RpcServiceV1Grpc {
               .addMethod(getSendLogMethod())
               .addMethod(getSendExceptionMethod())
               .addMethod(getSendConfigRuntimeMethod())
+              .addMethod(getGetConfigRuntimeMethod())
               .addMethod(getListAgentsMethod())
               .addMethod(getListAgentsRequestCompleteMethod())
               .addMethod(getListAgentsRequestToDoMethod())

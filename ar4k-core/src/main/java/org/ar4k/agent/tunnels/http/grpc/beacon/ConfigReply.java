@@ -17,6 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private ConfigReply() {
     base64Config_ = "";
+    jsonConfig_ = "";
+    ymlConfig_ = "";
     status_ = 0;
   }
 
@@ -50,12 +52,24 @@ private static final long serialVersionUID = 0L;
             base64Config_ = s;
             break;
           }
-          case 16: {
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            jsonConfig_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            ymlConfig_ = s;
+            break;
+          }
+          case 32: {
 
             restartAt_ = input.readInt64();
             break;
           }
-          case 24: {
+          case 40: {
             int rawValue = input.readEnum();
 
             status_ = rawValue;
@@ -127,25 +141,93 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int RESTARTAT_FIELD_NUMBER = 2;
+  public static final int JSONCONFIG_FIELD_NUMBER = 2;
+  private volatile java.lang.Object jsonConfig_;
+  /**
+   * <code>string jsonConfig = 2;</code>
+   */
+  public java.lang.String getJsonConfig() {
+    java.lang.Object ref = jsonConfig_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      jsonConfig_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string jsonConfig = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getJsonConfigBytes() {
+    java.lang.Object ref = jsonConfig_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      jsonConfig_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int YMLCONFIG_FIELD_NUMBER = 3;
+  private volatile java.lang.Object ymlConfig_;
+  /**
+   * <code>string ymlConfig = 3;</code>
+   */
+  public java.lang.String getYmlConfig() {
+    java.lang.Object ref = ymlConfig_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      ymlConfig_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string ymlConfig = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getYmlConfigBytes() {
+    java.lang.Object ref = ymlConfig_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      ymlConfig_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int RESTARTAT_FIELD_NUMBER = 4;
   private long restartAt_;
   /**
-   * <code>int64 restartAt = 2;</code>
+   * <code>int64 restartAt = 4;</code>
    */
   public long getRestartAt() {
     return restartAt_;
   }
 
-  public static final int STATUS_FIELD_NUMBER = 3;
+  public static final int STATUS_FIELD_NUMBER = 5;
   private int status_;
   /**
-   * <code>.beacon.StatusValue status = 3;</code>
+   * <code>.beacon.StatusValue status = 5;</code>
    */
   public int getStatusValue() {
     return status_;
   }
   /**
-   * <code>.beacon.StatusValue status = 3;</code>
+   * <code>.beacon.StatusValue status = 5;</code>
    */
   public org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus() {
     @SuppressWarnings("deprecation")
@@ -170,11 +252,17 @@ private static final long serialVersionUID = 0L;
     if (!getBase64ConfigBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, base64Config_);
     }
+    if (!getJsonConfigBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, jsonConfig_);
+    }
+    if (!getYmlConfigBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, ymlConfig_);
+    }
     if (restartAt_ != 0L) {
-      output.writeInt64(2, restartAt_);
+      output.writeInt64(4, restartAt_);
     }
     if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.GOOD.getNumber()) {
-      output.writeEnum(3, status_);
+      output.writeEnum(5, status_);
     }
     unknownFields.writeTo(output);
   }
@@ -188,13 +276,19 @@ private static final long serialVersionUID = 0L;
     if (!getBase64ConfigBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, base64Config_);
     }
+    if (!getJsonConfigBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, jsonConfig_);
+    }
+    if (!getYmlConfigBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, ymlConfig_);
+    }
     if (restartAt_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, restartAt_);
+        .computeInt64Size(4, restartAt_);
     }
     if (status_ != org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.GOOD.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(3, status_);
+        .computeEnumSize(5, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -213,6 +307,10 @@ private static final long serialVersionUID = 0L;
 
     if (!getBase64Config()
         .equals(other.getBase64Config())) return false;
+    if (!getJsonConfig()
+        .equals(other.getJsonConfig())) return false;
+    if (!getYmlConfig()
+        .equals(other.getYmlConfig())) return false;
     if (getRestartAt()
         != other.getRestartAt()) return false;
     if (status_ != other.status_) return false;
@@ -229,6 +327,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + BASE64CONFIG_FIELD_NUMBER;
     hash = (53 * hash) + getBase64Config().hashCode();
+    hash = (37 * hash) + JSONCONFIG_FIELD_NUMBER;
+    hash = (53 * hash) + getJsonConfig().hashCode();
+    hash = (37 * hash) + YMLCONFIG_FIELD_NUMBER;
+    hash = (53 * hash) + getYmlConfig().hashCode();
     hash = (37 * hash) + RESTARTAT_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getRestartAt());
@@ -369,6 +471,10 @@ private static final long serialVersionUID = 0L;
       super.clear();
       base64Config_ = "";
 
+      jsonConfig_ = "";
+
+      ymlConfig_ = "";
+
       restartAt_ = 0L;
 
       status_ = 0;
@@ -400,6 +506,8 @@ private static final long serialVersionUID = 0L;
     public org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply buildPartial() {
       org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply result = new org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply(this);
       result.base64Config_ = base64Config_;
+      result.jsonConfig_ = jsonConfig_;
+      result.ymlConfig_ = ymlConfig_;
       result.restartAt_ = restartAt_;
       result.status_ = status_;
       onBuilt();
@@ -452,6 +560,14 @@ private static final long serialVersionUID = 0L;
       if (other == org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply.getDefaultInstance()) return this;
       if (!other.getBase64Config().isEmpty()) {
         base64Config_ = other.base64Config_;
+        onChanged();
+      }
+      if (!other.getJsonConfig().isEmpty()) {
+        jsonConfig_ = other.jsonConfig_;
+        onChanged();
+      }
+      if (!other.getYmlConfig().isEmpty()) {
+        ymlConfig_ = other.ymlConfig_;
         onChanged();
       }
       if (other.getRestartAt() != 0L) {
@@ -558,15 +674,153 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private java.lang.Object jsonConfig_ = "";
+    /**
+     * <code>string jsonConfig = 2;</code>
+     */
+    public java.lang.String getJsonConfig() {
+      java.lang.Object ref = jsonConfig_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        jsonConfig_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string jsonConfig = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getJsonConfigBytes() {
+      java.lang.Object ref = jsonConfig_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        jsonConfig_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string jsonConfig = 2;</code>
+     */
+    public Builder setJsonConfig(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      jsonConfig_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string jsonConfig = 2;</code>
+     */
+    public Builder clearJsonConfig() {
+      
+      jsonConfig_ = getDefaultInstance().getJsonConfig();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string jsonConfig = 2;</code>
+     */
+    public Builder setJsonConfigBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      jsonConfig_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object ymlConfig_ = "";
+    /**
+     * <code>string ymlConfig = 3;</code>
+     */
+    public java.lang.String getYmlConfig() {
+      java.lang.Object ref = ymlConfig_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ymlConfig_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string ymlConfig = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getYmlConfigBytes() {
+      java.lang.Object ref = ymlConfig_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ymlConfig_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string ymlConfig = 3;</code>
+     */
+    public Builder setYmlConfig(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      ymlConfig_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string ymlConfig = 3;</code>
+     */
+    public Builder clearYmlConfig() {
+      
+      ymlConfig_ = getDefaultInstance().getYmlConfig();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string ymlConfig = 3;</code>
+     */
+    public Builder setYmlConfigBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      ymlConfig_ = value;
+      onChanged();
+      return this;
+    }
+
     private long restartAt_ ;
     /**
-     * <code>int64 restartAt = 2;</code>
+     * <code>int64 restartAt = 4;</code>
      */
     public long getRestartAt() {
       return restartAt_;
     }
     /**
-     * <code>int64 restartAt = 2;</code>
+     * <code>int64 restartAt = 4;</code>
      */
     public Builder setRestartAt(long value) {
       
@@ -575,7 +829,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 restartAt = 2;</code>
+     * <code>int64 restartAt = 4;</code>
      */
     public Builder clearRestartAt() {
       
@@ -586,13 +840,13 @@ private static final long serialVersionUID = 0L;
 
     private int status_ = 0;
     /**
-     * <code>.beacon.StatusValue status = 3;</code>
+     * <code>.beacon.StatusValue status = 5;</code>
      */
     public int getStatusValue() {
       return status_;
     }
     /**
-     * <code>.beacon.StatusValue status = 3;</code>
+     * <code>.beacon.StatusValue status = 5;</code>
      */
     public Builder setStatusValue(int value) {
       status_ = value;
@@ -600,7 +854,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.StatusValue status = 3;</code>
+     * <code>.beacon.StatusValue status = 5;</code>
      */
     public org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue getStatus() {
       @SuppressWarnings("deprecation")
@@ -608,7 +862,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue.UNRECOGNIZED : result;
     }
     /**
-     * <code>.beacon.StatusValue status = 3;</code>
+     * <code>.beacon.StatusValue status = 5;</code>
      */
     public Builder setStatus(org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue value) {
       if (value == null) {
@@ -620,7 +874,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.beacon.StatusValue status = 3;</code>
+     * <code>.beacon.StatusValue status = 5;</code>
      */
     public Builder clearStatus() {
       

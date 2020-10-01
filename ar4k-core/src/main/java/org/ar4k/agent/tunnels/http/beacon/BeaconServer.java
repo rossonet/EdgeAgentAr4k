@@ -10,7 +10,6 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -26,7 +25,9 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.interfaces.ConfigSeed;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http.beacon.socket.server.BeaconServerNetworkHub;
@@ -95,6 +96,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BeaconServer.class.toString());
+
+	private static final int SIGN_TIME = 3650;
 	private static final long defaultTimeOut = 10000L;
 	private static final long waitReplyLoopWaitTime = 300L;
 	private static final long TIMEOUT_AGENT_POOL = 15 * 60 * 1000;
@@ -272,8 +275,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	}
 
-	private BeaconServer(Homunculus homunculusTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
-			String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
+	private BeaconServer(Homunculus homunculusTarget, int port, int discoveryPort, String broadcastAddress,
+			boolean acceptCerts, String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
 			String aliasBeaconServerInKeystore, String caChainPem, String filterActiveCommand,
 			String filterBlackListCertRegister) throws UnrecoverableKeyException {
 		this.homunculus = homunculusTarget;
@@ -319,8 +322,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				logger.info("Certificate with alias '" + this.aliasBeaconServerInKeystore
 						+ "' for Beacon server is present in keystore");
 			} else {
-				throw new UnrecoverableKeyException(
-						"key " + this.aliasBeaconServerInKeystore + " not found in keystore [" + homunculusTarget + "]");
+				throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore
+						+ " not found in keystore [" + homunculusTarget + "]");
 			}
 			writePemCa(this.certChainFileLastPart);
 			writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
@@ -627,6 +630,27 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	private class RpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 
 		@Override
+		public void getConfigRuntime(Agent agent, StreamObserver<ConfigReply> responseObserver) {
+			try {
+				final String idRequest = UUID.randomUUID().toString();
+				for (final BeaconAgent at : agents) {
+					if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
+						final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
+								.setUniqueIdRequest(idRequest).setType(CommandType.GET_CONFIGURATION).build();
+						at.addRequestForAgent(rta);
+						break;
+					}
+				}
+				CommandReplyRequest agentReply = null;
+				agentReply = waitReply(idRequest, defaultTimeOut);
+				elaborateConfigReply(responseObserver, agentReply);
+				responseObserver.onCompleted();
+			} catch (final Exception e) {
+				logger.logException(e);
+			}
+		}
+
+		@Override
 		public void sendConfigRuntime(ConfigReport request, StreamObserver<ConfigReply> responseObserver) {
 			try {
 				final String idRequest = UUID.randomUUID().toString();
@@ -641,19 +665,24 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				}
 				CommandReplyRequest agentReply = null;
 				agentReply = waitReply(idRequest, defaultTimeOut);
-				if (agentReply != null) {
-					final ConfigReply finalReply = ConfigReply.newBuilder()
-							.setBase64Config(agentReply.getBase64Config()).setRestartAt(Instant.now().getEpochSecond())
-							.build();
-					responseObserver.onNext(finalReply);
-				}
+				elaborateConfigReply(responseObserver, agentReply);
 				responseObserver.onCompleted();
 			} catch (final Exception e) {
 				logger.logException(e);
 			}
 		}
 
-		private static final int SIGN_TIME = 3650;
+		private void elaborateConfigReply(StreamObserver<ConfigReply> responseObserver, CommandReplyRequest agentReply)
+				throws IOException, ClassNotFoundException {
+			if (agentReply != null) {
+				final String base64Config = agentReply.getBase64Config();
+				final ConfigSeed configSeed = ConfigHelper.fromBase64(base64Config);
+				final ConfigReply finalReply = ConfigReply.newBuilder().setBase64Config(base64Config)
+						.setJsonConfig(ConfigHelper.toJson(configSeed)).setYmlConfig(ConfigHelper.toYaml(configSeed))
+						.build();
+				responseObserver.onNext(finalReply);
+			}
+		}
 
 		@Override
 		public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
