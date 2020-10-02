@@ -46,12 +46,11 @@ public class BaseConsolePage implements AgentTab {
 	public Div getPage(ScadaAgentWrapper beaconAgentWrapper) {
 		this.beaconAgentWrapper = beaconAgentWrapper;
 		Div div = new Div();
-		div.setSizeFull();
 		XTerm xterm = new XTerm();
 		xterm.writeln(ANSI_RESET + "Type " + ANSI_RED + "help" + ANSI_RESET + " to list the available commands\n" + "\n"
 				+ "You can use the " + ANSI_RED + "TAB" + ANSI_RESET + " completation;\n" + "the " + ANSI_RED + "CTRL-R"
 				+ ANSI_RESET + " to invoke the reverse-i-search in the history and\n"
-				+ "you can run a sequence of commands saved in a file.\n\n" + "");
+				+ "you can run a sequence of commands saved in a file.\n\n");
 		xterm.write(getPrompt());
 		xterm.setCursorBlink(true);
 		xterm.setCursorStyle(CursorStyle.BLOCK);
@@ -65,18 +64,21 @@ public class BaseConsolePage implements AgentTab {
 		xterm.getFeature(XTermFit.class).ifPresent(fit -> {
 			fit.fit();
 		});
-		xterm.setSizeFull();
+		// xterm.setHeight("90vh");
 		div.add(xterm);
+		div.setWidth("95vw");
+		div.setHeight("85vh");
+		xterm.setSizeFull();
 		return div;
 	}
 
 	private String getPrompt() {
-		return "#" + ANSI_GREEN + "> " + ANSI_GREEN;
+		return ANSI_RED + beaconAgentWrapper.getName() + ANSI_GREEN + " > " + ANSI_RESET;
 	}
 
 	@Override
 	public int getActivePriority() {
-		return 9000;
+		return 1000;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.dom.Style;
 
 @AgentWebMenu
-public class HelpMenu implements AgentMenu {
+public class AboutMenu implements AgentMenu {
 
 	@SuppressWarnings("unused")
 	private static final String MD_HELP = "## EDGE AGENT GUIDE\n" + "\n"
@@ -21,20 +21,20 @@ public class HelpMenu implements AgentMenu {
 
 	private MainView mainView = null;
 
-	private IFrame divHelp = new IFrame();
+	private IFrame aboutMenu = new IFrame();
 
 	@Override
 	public void setMainView(MainView mainView) {
 		this.mainView = mainView;
-		divHelp.setSrc("https://www.rossonet.net/dati/edge-docs/doc-site/");
-		Style style = divHelp.getStyle();
+		aboutMenu.setSrc("https://www.rossonet.net/");
+		Style style = aboutMenu.getStyle();
 		style.set("padding", "3px");
 		style.set("border", "0px");
 		style.set("overflow", "hidden");
 		// Node node = Parser.builder().build().parse(MD_HELP);
 		// divHelp.getElement().setProperty("innerHTML",
 		// HtmlRenderer.builder().build().render(node));
-		divHelp.setSizeFull();
+		aboutMenu.setSizeFull();
 	}
 
 	@Override
@@ -44,23 +44,23 @@ public class HelpMenu implements AgentMenu {
 
 	@Override
 	public void addMenuWidget(MenuBar menuBar) {
-		menuBar.addItem("HELP", e -> showHelp());
+		menuBar.addItem("ABOUT", e -> showHelp());
 	}
 
 	private void showHelp() {
 		mainView.hide();
-		divHelp.setVisible(true);
+		aboutMenu.setVisible(true);
 	}
 
 	@Override
 	public void setVisibleTrue() {
-		divHelp.setVisible(true);
+		aboutMenu.setVisible(true);
 	}
 
 	@Override
 	public List<Component> getLayots() {
 		List<Component> l = new ArrayList<>();
-		l.add(divHelp);
+		l.add(aboutMenu);
 		return l;
 	}
 
@@ -70,12 +70,12 @@ public class HelpMenu implements AgentMenu {
 
 	@Override
 	public String toString() {
-		return "Help Menù";
+		return "About Menù";
 	}
 
 	@Override
 	public Integer getMenuOrderNumber() {
-		return 10000;
+		return 9000;
 	}
 
 }

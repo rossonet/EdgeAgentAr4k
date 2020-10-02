@@ -110,7 +110,7 @@ public class BeaconServerMenu implements AgentMenu {
 
 	@Override
 	public String toString() {
-		return "BeaconServerMenu";
+		return "BeaconServer Menù";
 	}
 
 	@Override

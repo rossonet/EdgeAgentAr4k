@@ -108,7 +108,7 @@ public class AgentStatusPage implements AgentTab {
 		grid.addComponentColumn(StatusDataLineString::getData).setHeader("value");
 		grid.setItems(lines);
 		grid.setMaxWidth("95vw");
-		grid.setMaxHeight("90vh");
+		grid.setMaxHeight("85vh");
 		grid.setSizeFull();
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 		div.add(grid);
@@ -154,7 +154,7 @@ public class AgentStatusPage implements AgentTab {
 
 	@Override
 	public int getActivePriority() {
-		return 10000;
+		return 100;
 	}
 
 	@Override

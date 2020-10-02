@@ -63,10 +63,10 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 		}
 		add(divComponent);
 		tabsComponent.setSelectedIndex(selected);
-		setResizable(true);
+		setResizable(false);
 		setCloseOnEsc(true);
 		setCloseOnOutsideClick(true);
-		setMaxWidth("96vw");
+		setMaxWidth("98vw");
 		setSizeFull();
 		startingMonitoring();
 	}
@@ -98,6 +98,9 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 				t.setClassName(tab.getClassName());
 			final Div page = tab.getPage(beaconAgentWrapper);
 			if (tab.getActivePriority() > actualPriority) {
+				if (selectedComponent != null) {
+					selectedComponent.setVisible(false);
+				}
 				selectedComponent = page;
 				tabIndexSelected = tabIndex;
 				selectedComponent.setVisible(true);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -89,6 +90,14 @@ public class ScadaAgentWrapper {
 		final List<String> returnList = new ArrayList<>();
 		for (Command c : beaconClient.listCommadsOnAgent(agent.getAgentUniqueName()).getCommandsList()) {
 			returnList.add(c.getCommand());
+		}
+		return returnList;
+	}
+
+	public List<String> listTunnelsDescription() {
+		final List<String> returnList = new ArrayList<>();
+		for (NetworkTunnel c : beaconClient.getTunnels()) {
+			returnList.add(c.toString());
 		}
 		return returnList;
 	}
