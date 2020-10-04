@@ -1,10 +1,8 @@
-package org.ar4k.agent.web.widget.agent;
+package org.ar4k.agent.cortex.web.page;
 
 import org.ar4k.agent.core.interfaces.AgentWebTab;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
-import org.ar4k.agent.logger.EdgeLogger;
-import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.cortex.drools.DroolsConfig;
 import org.ar4k.agent.web.interfaces.AgentTab;
 
 import com.vaadin.flow.component.Text;
@@ -12,15 +10,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @AgentWebTab
-public class BeaconServerPage implements AgentTab {
-
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconServerPage.class.toString());
+public class RulesServerPage implements AgentTab {
 
 	@Override
 	public boolean isActive(IScadaAgent beaconAgentWrapper) {
 		if (beaconAgentWrapper != null && beaconAgentWrapper.getProvides() != null) {
-			return beaconAgentWrapper.getProvides().contains(BeaconServiceConfig.class.getCanonicalName());
+			return beaconAgentWrapper.getProvides().contains(DroolsConfig.class.getCanonicalName());
 		} else {
 			return false;
 		}
@@ -28,12 +23,12 @@ public class BeaconServerPage implements AgentTab {
 
 	@Override
 	public String getTabName() {
-		return "BEACON SERVER";
+		return "RULES";
 	}
 
 	@Override
 	public String getClassName() {
-		return "console-beacon-server";
+		return "console-rules";
 	}
 
 	@Override
@@ -50,12 +45,12 @@ public class BeaconServerPage implements AgentTab {
 
 	@Override
 	public int getActivePriority() {
-		return 600;
+		return 650;
 	}
 
 	@Override
 	public Integer getTabOrderNumber() {
-		return 20;
+		return 100;
 	}
 
 }

@@ -347,6 +347,70 @@ public final class RpcServiceV1Grpc {
      return getGetConfigRuntimeMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeProvidesMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetRuntimeProvides",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeProvidesMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeProvidesMethod;
+    if ((getGetRuntimeProvidesMethod = RpcServiceV1Grpc.getGetRuntimeProvidesMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getGetRuntimeProvidesMethod = RpcServiceV1Grpc.getGetRuntimeProvidesMethod) == null) {
+          RpcServiceV1Grpc.getGetRuntimeProvidesMethod = getGetRuntimeProvidesMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "GetRuntimeProvides"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetRuntimeProvides"))
+                  .build();
+          }
+        }
+     }
+     return getGetRuntimeProvidesMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeRequiredMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetRuntimeRequired",
+      requestType = org.ar4k.agent.tunnels.http.grpc.beacon.Agent.class,
+      responseType = org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+      org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeRequiredMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getGetRuntimeRequiredMethod;
+    if ((getGetRuntimeRequiredMethod = RpcServiceV1Grpc.getGetRuntimeRequiredMethod) == null) {
+      synchronized (RpcServiceV1Grpc.class) {
+        if ((getGetRuntimeRequiredMethod = RpcServiceV1Grpc.getGetRuntimeRequiredMethod) == null) {
+          RpcServiceV1Grpc.getGetRuntimeRequiredMethod = getGetRuntimeRequiredMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http.grpc.beacon.Agent, org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.RpcServiceV1", "GetRuntimeRequired"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.Agent.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new RpcServiceV1MethodDescriptorSupplier("GetRuntimeRequired"))
+                  .build();
+          }
+        }
+     }
+     return getGetRuntimeRequiredMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http.grpc.beacon.Empty,
       org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> getListAgentsMethod;
 
@@ -702,6 +766,20 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public void getRuntimeProvides(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetRuntimeProvidesMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void getRuntimeRequired(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetRuntimeRequiredMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnimplementedUnaryCall(getListAgentsMethod(), responseObserver);
@@ -828,6 +906,20 @@ public final class RpcServiceV1Grpc {
                 org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
                 org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>(
                   this, METHODID_GET_CONFIG_RUNTIME)))
+          .addMethod(
+            getGetRuntimeProvidesMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>(
+                  this, METHODID_GET_RUNTIME_PROVIDES)))
+          .addMethod(
+            getGetRuntimeRequiredMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http.grpc.beacon.Agent,
+                org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>(
+                  this, METHODID_GET_RUNTIME_REQUIRED)))
           .addMethod(
             getListAgentsMethod(),
             asyncUnaryCall(
@@ -988,6 +1080,22 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public void getRuntimeProvides(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetRuntimeProvidesMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void getRuntimeRequired(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetRuntimeRequiredMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request,
         io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> responseObserver) {
       asyncUnaryCall(
@@ -1142,6 +1250,20 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply getRuntimeProvides(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return blockingUnaryCall(
+          getChannel(), getGetRuntimeProvidesMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply getRuntimeRequired(org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return blockingUnaryCall(
+          getChannel(), getGetRuntimeRequiredMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
     public org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply listAgents(org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return blockingUnaryCall(
           getChannel(), getListAgentsMethod(), getCallOptions(), request);
@@ -1289,6 +1411,22 @@ public final class RpcServiceV1Grpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getRuntimeProvides(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetRuntimeProvidesMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply> getRuntimeRequired(
+        org.ar4k.agent.tunnels.http.grpc.beacon.Agent request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetRuntimeRequiredMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply> listAgents(
         org.ar4k.agent.tunnels.http.grpc.beacon.Empty request) {
       return futureUnaryCall(
@@ -1362,14 +1500,16 @@ public final class RpcServiceV1Grpc {
   private static final int METHODID_SEND_EXCEPTION = 7;
   private static final int METHODID_SEND_CONFIG_RUNTIME = 8;
   private static final int METHODID_GET_CONFIG_RUNTIME = 9;
-  private static final int METHODID_LIST_AGENTS = 10;
-  private static final int METHODID_LIST_AGENTS_REQUEST_COMPLETE = 11;
-  private static final int METHODID_LIST_AGENTS_REQUEST_TO_DO = 12;
-  private static final int METHODID_APPROVE_AGENT_REQUEST = 13;
-  private static final int METHODID_KICK_AGENT = 14;
-  private static final int METHODID_ELABORATE_MESSAGE = 15;
-  private static final int METHODID_LIST_COMMANDS = 16;
-  private static final int METHODID_COMPLETE_COMMAND = 17;
+  private static final int METHODID_GET_RUNTIME_PROVIDES = 10;
+  private static final int METHODID_GET_RUNTIME_REQUIRED = 11;
+  private static final int METHODID_LIST_AGENTS = 12;
+  private static final int METHODID_LIST_AGENTS_REQUEST_COMPLETE = 13;
+  private static final int METHODID_LIST_AGENTS_REQUEST_TO_DO = 14;
+  private static final int METHODID_APPROVE_AGENT_REQUEST = 15;
+  private static final int METHODID_KICK_AGENT = 16;
+  private static final int METHODID_ELABORATE_MESSAGE = 17;
+  private static final int METHODID_LIST_COMMANDS = 18;
+  private static final int METHODID_COMPLETE_COMMAND = 19;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1427,6 +1567,14 @@ public final class RpcServiceV1Grpc {
         case METHODID_GET_CONFIG_RUNTIME:
           serviceImpl.getConfigRuntime((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply>) responseObserver);
+          break;
+        case METHODID_GET_RUNTIME_PROVIDES:
+          serviceImpl.getRuntimeProvides((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>) responseObserver);
+          break;
+        case METHODID_GET_RUNTIME_REQUIRED:
+          serviceImpl.getRuntimeRequired((org.ar4k.agent.tunnels.http.grpc.beacon.Agent) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply>) responseObserver);
           break;
         case METHODID_LIST_AGENTS:
           serviceImpl.listAgents((org.ar4k.agent.tunnels.http.grpc.beacon.Empty) request,
@@ -1531,6 +1679,8 @@ public final class RpcServiceV1Grpc {
               .addMethod(getSendExceptionMethod())
               .addMethod(getSendConfigRuntimeMethod())
               .addMethod(getGetConfigRuntimeMethod())
+              .addMethod(getGetRuntimeProvidesMethod())
+              .addMethod(getGetRuntimeRequiredMethod())
               .addMethod(getListAgentsMethod())
               .addMethod(getListAgentsRequestCompleteMethod())
               .addMethod(getListAgentsRequestToDoMethod())

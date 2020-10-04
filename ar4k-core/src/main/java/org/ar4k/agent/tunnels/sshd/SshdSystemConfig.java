@@ -45,4 +45,5 @@ public class SshdSystemConfig extends AbstractServiceConfig {
 	public String toString() {
 		return "SshdSystemConfig [port=" + port + ", bindHost=" + bindHost + ", cmd=" + cmd + "]";
 	}
+
 }

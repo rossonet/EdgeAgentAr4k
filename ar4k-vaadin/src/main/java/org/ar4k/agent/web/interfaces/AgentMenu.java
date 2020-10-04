@@ -1,19 +1,18 @@
-package org.ar4k.agent.design;
+package org.ar4k.agent.web.interfaces;
 
 import java.util.List;
 
-import org.ar4k.agent.console.MainView;
+import org.ar4k.agent.core.interfaces.IMainView;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.menubar.MenuBar;
 
 public interface AgentMenu extends Comparable<AgentMenu> {
 
-	void setMainView(MainView mainView);
+	void setMainView(IMainView mainView);
 
 	boolean isActive();
 
-	void addMenuWidget(MenuBar menuBar);
+	void addMenuWidget(com.vaadin.flow.component.menubar.MenuBar menuBar);
 
 	List<Component> getLayots();
 

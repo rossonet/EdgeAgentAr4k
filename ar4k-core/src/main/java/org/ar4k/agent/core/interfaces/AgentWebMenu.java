@@ -1,4 +1,4 @@
-package org.ar4k.agent.design;
+package org.ar4k.agent.core.interfaces;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface AgentWebTab {
+public @interface AgentWebMenu {
 
 }

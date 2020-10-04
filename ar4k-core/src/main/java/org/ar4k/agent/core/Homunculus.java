@@ -1283,4 +1283,27 @@ public class Homunculus
 		return builder.toString();
 	}
 
+	public Collection<String> getRuntimeProvides() {
+		final Collection<String> result = new ArrayList<String>();
+		for (ServiceComponent<EdgeComponent> c : components) {
+			if (c.isRunning() && c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getProvides() != null) {
+				result.addAll(c.getPot().getConfiguration().getProvides());
+			}
+
+		}
+		return result;
+	}
+
+	public Collection<String> getRuntimeRequired() {
+		final Collection<String> result = new ArrayList<String>();
+		for (ServiceComponent<EdgeComponent> c : components) {
+			if (c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getRequired() != null) {
+				result.addAll(c.getPot().getConfiguration().getRequired());
+			}
+		}
+		return result;
+	}
+
 }

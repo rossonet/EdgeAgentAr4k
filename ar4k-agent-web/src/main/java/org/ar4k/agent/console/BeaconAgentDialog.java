@@ -10,11 +10,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ar4k.agent.console.AgentTabTemplate.ClickTabEvent;
-import org.ar4k.agent.design.AgentTab;
-import org.ar4k.agent.design.AgentWebTab;
+import org.ar4k.agent.core.interfaces.AgentWebTab;
+import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.web.scada.ScadaAgentWrapper;
+import org.ar4k.agent.web.interfaces.AgentTab;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -34,9 +35,9 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 	private static final long serialVersionUID = -7889305640288767762L;
 
 	@SuppressWarnings("unused")
-	private final MainView mainView;
+	private final IMainView mainView;
 
-	private final ScadaAgentWrapper beaconAgentWrapper;
+	private final IScadaAgent beaconAgentWrapper;
 
 	private final Map<Tab, Component> tabsToPages = new HashMap<>();
 
@@ -44,7 +45,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 
 	final Tabs tabsComponent = new Tabs();
 
-	public BeaconAgentDialog(MainView mainView, ScadaAgentWrapper beaconAgent) {
+	public BeaconAgentDialog(IMainView mainView, IScadaAgent beaconAgent) {
 		Div divComponent = new Div();
 		beaconAgentWrapper = beaconAgent;
 		this.mainView = mainView;
@@ -96,7 +97,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 			final AgentTabTemplate t = new AgentTabTemplate(tab.getTabName(), tabIndex);
 			if (tab.getClassName() != null)
 				t.setClassName(tab.getClassName());
-			final Div page = tab.getPage(beaconAgentWrapper);
+			final Component page = tab.getPage(beaconAgentWrapper);
 			if (tab.getActivePriority() > actualPriority) {
 				if (selectedComponent != null) {
 					selectedComponent.setVisible(false);
@@ -136,8 +137,10 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 		List<AgentTab> annotatedTabs = getAnnotatedTabs(MainView.PACKET_SEARCH_BASE);
 		List<AgentTab> finalTabs = new ArrayList<>();
 		for (AgentTab a : annotatedTabs) {
-			if (a.isActive()) {
+			if (a.isActive(beaconAgentWrapper)) {
 				finalTabs.add(a);
+			} else {
+				logger.info("tab " + a.toString() + " is disabled");
 			}
 		}
 		return finalTabs;
@@ -166,7 +169,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 		return constructor.newInstance();
 	}
 
-	public ScadaAgentWrapper getAgent() {
+	public IScadaAgent getAgent() {
 		return beaconAgentWrapper;
 	}
 

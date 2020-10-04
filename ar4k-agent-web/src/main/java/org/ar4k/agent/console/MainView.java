@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.design.AgentMenu;
-import org.ar4k.agent.design.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.web.scada.BeaconClientWrapper;
-import org.ar4k.agent.web.scada.ScadaAgentWrapper;
+import org.ar4k.agent.web.interfaces.AgentMenu;
 import org.ar4k.agent.web.scada.ScadaBeaconService;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -42,7 +43,7 @@ import com.vaadin.flow.theme.material.Material;
 @Theme(value = Material.class, variant = Material.DARK)
 @PageTitle("Rossonet Scada")
 @StyleSheet("frontend://edge.css")
-public class MainView extends VerticalLayout {
+public class MainView extends VerticalLayout implements IMainView {
 
 	private static final long serialVersionUID = 53637205682774475L;
 
@@ -60,7 +61,7 @@ public class MainView extends VerticalLayout {
 
 	private final Set<Component> components = new HashSet<>();
 
-	private final Grid<ScadaAgentWrapper> gridClient = new Grid<>(ScadaAgentWrapper.class);
+	private final Grid<IScadaAgent> gridClient = new Grid<>(IScadaAgent.class);
 	// private final Board board = new Board();
 	private BeaconAgentDialog beaconAgentForm = null;
 
@@ -95,7 +96,7 @@ public class MainView extends VerticalLayout {
 		gridClient.asSingleSelect().addValueChangeListener(event -> editbeaconAgentWrapper(event.getValue()));
 	}
 
-	private void editbeaconAgentWrapper(ScadaAgentWrapper beaconAgent) {
+	private void editbeaconAgentWrapper(IScadaAgent beaconAgent) {
 		if (beaconAgent != null) {
 			beaconAgentForm = new BeaconAgentDialog(this, beaconAgent);
 			beaconAgentForm.setVisible(true);
@@ -146,7 +147,7 @@ public class MainView extends VerticalLayout {
 			if (a.isActive()) {
 				finalMenus.add(a);
 			} else {
-				logger.info("menu is disabled");
+				logger.info("menu " + a.toString() + " is disabled");
 			}
 		}
 		return finalMenus;
@@ -201,6 +202,12 @@ public class MainView extends VerticalLayout {
 
 	}
 
+	@Override
+	public Collection<IScadaAgent> getAllAgents() {
+		return scadaBeaconService.getClients(null);
+	}
+
+	@Override
 	public void hide() {
 		hideAllCustomObjects();
 		gridClient.setVisible(false);
@@ -215,11 +222,13 @@ public class MainView extends VerticalLayout {
 		}
 	}
 
-	public void addClientServer(BeaconClientWrapper beaconClientWrapper) {
+	@Override
+	public void addClientServer(IBeaconClientScadaWrapper beaconClientWrapper) {
 		scadaBeaconService.addClientServer(beaconClientWrapper);
 	}
 
-	public Collection<BeaconClientWrapper> getBeaconServersList(String value) {
+	@Override
+	public Collection<IBeaconClientScadaWrapper> getBeaconServersList(String value) {
 		return scadaBeaconService.getBeaconServersList(value);
 	}
 

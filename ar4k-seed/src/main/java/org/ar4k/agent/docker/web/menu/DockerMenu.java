@@ -1,11 +1,13 @@
-package org.ar4k.agent.web.widget.menu;
+package org.ar4k.agent.docker.web.menu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.console.MainView;
-import org.ar4k.agent.design.AgentMenu;
-import org.ar4k.agent.design.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
+import org.ar4k.agent.docker.DockerHostConfig;
+import org.ar4k.agent.web.interfaces.AgentMenu;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.IFrame;
@@ -13,38 +15,38 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.dom.Style;
 
 @AgentWebMenu
-public class SeedMenu implements AgentMenu {
+public class DockerMenu implements AgentMenu {
 
-	@SuppressWarnings("unused")
-	private static final String MD_HELP = "## EDGE AGENT GUIDE\n" + "\n"
-			+ "![Work in progress](https://raw.githubusercontent.com/mydearxym/coderplanets_admin/dev/static/waji.png)\n";
-
-	private MainView mainView = null;
+	private IMainView mainView = null;
 
 	private IFrame seedManagerMenu = new IFrame();
 
 	@Override
-	public void setMainView(MainView mainView) {
+	public void setMainView(IMainView mainView) {
 		this.mainView = mainView;
 		seedManagerMenu.setSrc("https://www.rossonet.net/");
 		Style style = seedManagerMenu.getStyle();
 		style.set("padding", "3px");
 		style.set("border", "0px");
 		style.set("overflow", "hidden");
-		// Node node = Parser.builder().build().parse(MD_HELP);
-		// divHelp.getElement().setProperty("innerHTML",
-		// HtmlRenderer.builder().build().render(node));
 		seedManagerMenu.setSizeFull();
 	}
 
 	@Override
 	public boolean isActive() {
-		return true;
+		boolean result = false;
+		for (IScadaAgent beaconAgentWrapper : mainView.getAllAgents()) {
+			if (beaconAgentWrapper.getProvides().contains(DockerHostConfig.class.getCanonicalName())) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public void addMenuWidget(MenuBar menuBar) {
-		menuBar.addItem("CONTAINERS MANAGER", e -> showSeedMenu());
+		menuBar.addItem("DOCKER MANAGER", e -> showSeedMenu());
 	}
 
 	private void showSeedMenu() {
@@ -64,7 +66,7 @@ public class SeedMenu implements AgentMenu {
 		return l;
 	}
 
-	public MainView getMainView() {
+	public IMainView getMainView() {
 		return mainView;
 	}
 

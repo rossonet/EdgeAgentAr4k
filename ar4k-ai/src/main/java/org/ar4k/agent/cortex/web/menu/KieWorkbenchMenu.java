@@ -1,10 +1,12 @@
-package org.ar4k.agent.web.widget.menu;
+package org.ar4k.agent.cortex.web.menu;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ar4k.agent.core.interfaces.AgentWebMenu;
 import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
+import org.ar4k.agent.cortex.drools.DroolsConfig;
 import org.ar4k.agent.web.interfaces.AgentMenu;
 
 import com.vaadin.flow.component.Component;
@@ -13,54 +15,54 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.dom.Style;
 
 @AgentWebMenu
-public class HelpMenu implements AgentMenu {
-
-	@SuppressWarnings("unused")
-	private static final String MD_HELP = "## EDGE AGENT GUIDE\n" + "\n"
-			+ "![Work in progress](https://raw.githubusercontent.com/mydearxym/coderplanets_admin/dev/static/waji.png)\n";
+public class KieWorkbenchMenu implements AgentMenu {
 
 	private IMainView mainView = null;
 
-	private IFrame divHelp = new IFrame();
+	private IFrame ideMenu = new IFrame();
 
 	@Override
 	public void setMainView(IMainView mainView) {
 		this.mainView = mainView;
-		divHelp.setSrc("https://www.rossonet.net/dati/edge-docs/doc-site/");
-		Style style = divHelp.getStyle();
+		ideMenu.setSrc("https://www.rossonet.net/");
+		Style style = ideMenu.getStyle();
 		style.set("padding", "3px");
 		style.set("border", "0px");
 		style.set("overflow", "hidden");
-		// Node node = Parser.builder().build().parse(MD_HELP);
-		// divHelp.getElement().setProperty("innerHTML",
-		// HtmlRenderer.builder().build().render(node));
-		divHelp.setSizeFull();
+		ideMenu.setSizeFull();
 	}
 
 	@Override
 	public boolean isActive() {
-		return true;
+		boolean result = false;
+		for (IScadaAgent beaconAgentWrapper : mainView.getAllAgents()) {
+			if (beaconAgentWrapper.getProvides().contains(DroolsConfig.class.getCanonicalName())) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public void addMenuWidget(MenuBar menuBar) {
-		menuBar.addItem("HELP", e -> showHelp());
+		menuBar.addItem("RULES IDE", e -> showIdeMenu());
 	}
 
-	private void showHelp() {
+	private void showIdeMenu() {
 		mainView.hide();
-		divHelp.setVisible(true);
+		ideMenu.setVisible(true);
 	}
 
 	@Override
 	public void setVisibleTrue() {
-		divHelp.setVisible(true);
+		ideMenu.setVisible(true);
 	}
 
 	@Override
 	public List<Component> getLayots() {
 		List<Component> l = new ArrayList<>();
-		l.add(divHelp);
+		l.add(ideMenu);
 		return l;
 	}
 
@@ -70,12 +72,12 @@ public class HelpMenu implements AgentMenu {
 
 	@Override
 	public String toString() {
-		return "Help Menù";
+		return "Kie Workbench (Drools IDE) Menù";
 	}
 
 	@Override
 	public Integer getMenuOrderNumber() {
-		return 10000;
+		return 2400;
 	}
 
 }

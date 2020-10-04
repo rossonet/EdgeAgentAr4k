@@ -53,6 +53,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.LogRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.LogSeverity;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
@@ -685,6 +686,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			case GET_CONFIGURATION:
 				getConfiguration(m);
 				break;
+			case GET_PROVIDES:
+				getProvides(m);
+				break;
+			case GET_REQUIRED:
+				getRequired(m);
+				break;
 			case UNRECOGNIZED:
 				notImplemented(m);
 				break;
@@ -692,6 +699,28 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				notImplemented(m);
 				break;
 			}
+		}
+	}
+
+	private void getProvides(RequestToAgent m) {
+		try {
+			Iterable<String> provides = homunculus.getRuntimeProvides();
+			final CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
+					.setUniqueIdRequest(m.getUniqueIdRequest()).addAllReplies(provides).build();
+			blockingStub.sendCommandReply(reply);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
+		}
+	}
+
+	private void getRequired(RequestToAgent m) {
+		try {
+			Iterable<String> required = homunculus.getRuntimeRequired();
+			final CommandReplyRequest reply = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
+					.setUniqueIdRequest(m.getUniqueIdRequest()).addAllReplies(required).build();
+			blockingStub.sendCommandReply(reply);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
 		}
 	}
 
@@ -983,6 +1012,28 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		try {
 			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
 			return blockingStub.getConfigRuntime(a);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
+			return null;
+		}
+	}
+
+	@Override
+	public ListStringReply getRuntimeProvides(String agentId) {
+		try {
+			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
+			return blockingStub.getRuntimeProvides(a);
+		} catch (final Exception a) {
+			logger.logException(homunculus.getAgentUniqueName(), a);
+			return null;
+		}
+	}
+
+	@Override
+	public ListStringReply getRuntimeRequired(String agentId) {
+		try {
+			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
+			return blockingStub.getRuntimeRequired(a);
 		} catch (final Exception a) {
 			logger.logException(homunculus.getAgentUniqueName(), a);
 			return null;

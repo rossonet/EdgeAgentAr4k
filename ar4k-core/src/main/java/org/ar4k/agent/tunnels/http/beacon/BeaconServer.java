@@ -54,6 +54,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListAgentsRequestReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsRequest;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.PollingRequest;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
@@ -941,6 +942,71 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				responseObserver.onCompleted();
 			} catch (final Exception e) {
 				logger.logException(e);
+			}
+		}
+
+		@Override
+		public void getRuntimeProvides(Agent agent, StreamObserver<ListStringReply> responseObserver) {
+			try {
+				final String idRequest = UUID.randomUUID().toString();
+				for (final BeaconAgent at : agents) {
+					if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
+						final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
+								.setUniqueIdRequest(idRequest).setType(CommandType.GET_PROVIDES).build();
+						at.addRequestForAgent(rta);
+						break;
+					}
+				}
+				CommandReplyRequest agentReply = null;
+				agentReply = waitReply(idRequest, defaultTimeOut);
+				elaborateProvidesReply(responseObserver, agentReply);
+				responseObserver.onCompleted();
+			} catch (final Exception e) {
+				logger.logException(e);
+			}
+		}
+
+		private void elaborateProvidesReply(StreamObserver<ListStringReply> responseObserver,
+				CommandReplyRequest agentReply) {
+			if (agentReply != null) {
+				final List<String> providesList = agentReply.getRepliesList();
+				final ListStringReply finalReply = ListStringReply.newBuilder()
+						.setAgentSender(agentReply.getAgentSender()).setLinesNumber(providesList.size())
+						.addAllListDatas(providesList).build();
+				responseObserver.onNext(finalReply);
+			}
+
+		}
+
+		@Override
+		public void getRuntimeRequired(Agent agent, StreamObserver<ListStringReply> responseObserver) {
+			try {
+				final String idRequest = UUID.randomUUID().toString();
+				for (final BeaconAgent at : agents) {
+					if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
+						final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
+								.setUniqueIdRequest(idRequest).setType(CommandType.GET_REQUIRED).build();
+						at.addRequestForAgent(rta);
+						break;
+					}
+				}
+				CommandReplyRequest agentReply = null;
+				agentReply = waitReply(idRequest, defaultTimeOut);
+				elaborateRequiredReply(responseObserver, agentReply);
+				responseObserver.onCompleted();
+			} catch (final Exception e) {
+				logger.logException(e);
+			}
+		}
+
+		private void elaborateRequiredReply(StreamObserver<ListStringReply> responseObserver,
+				CommandReplyRequest agentReply) {
+			if (agentReply != null) {
+				final List<String> providesList = agentReply.getRepliesList();
+				final ListStringReply finalReply = ListStringReply.newBuilder()
+						.setAgentSender(agentReply.getAgentSender()).setLinesNumber(providesList.size())
+						.addAllListDatas(providesList).build();
+				responseObserver.onNext(finalReply);
 			}
 		}
 

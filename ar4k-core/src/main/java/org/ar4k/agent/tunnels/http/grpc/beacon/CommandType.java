@@ -44,6 +44,14 @@ public enum CommandType
    * <code>GET_CONFIGURATION = 8;</code>
    */
   GET_CONFIGURATION(8),
+  /**
+   * <code>GET_PROVIDES = 9;</code>
+   */
+  GET_PROVIDES(9),
+  /**
+   * <code>GET_REQUIRED = 10;</code>
+   */
+  GET_REQUIRED(10),
   UNRECOGNIZED(-1),
   ;
 
@@ -83,6 +91,14 @@ public enum CommandType
    * <code>GET_CONFIGURATION = 8;</code>
    */
   public static final int GET_CONFIGURATION_VALUE = 8;
+  /**
+   * <code>GET_PROVIDES = 9;</code>
+   */
+  public static final int GET_PROVIDES_VALUE = 9;
+  /**
+   * <code>GET_REQUIRED = 10;</code>
+   */
+  public static final int GET_REQUIRED_VALUE = 10;
 
 
   public final int getNumber() {
@@ -112,6 +128,8 @@ public enum CommandType
       case 6: return CONNECT_DATA_CHANNEL;
       case 7: return SET_CONFIGURATION;
       case 8: return GET_CONFIGURATION;
+      case 9: return GET_PROVIDES;
+      case 10: return GET_REQUIRED;
       default: return null;
     }
   }

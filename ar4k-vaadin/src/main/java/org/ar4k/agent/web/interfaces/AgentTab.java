@@ -1,18 +1,18 @@
-package org.ar4k.agent.design;
+package org.ar4k.agent.web.interfaces;
 
-import org.ar4k.agent.web.scada.ScadaAgentWrapper;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
 
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.Component;
 
 public interface AgentTab extends Comparable<AgentTab> {
 
-	boolean isActive();
+	boolean isActive(IScadaAgent beaconAgentWrapper);
 
 	String getTabName();
 
 	String getClassName();
 
-	Div getPage(ScadaAgentWrapper beaconAgentWrapper);
+	Component getPage(IScadaAgent beaconAgentWrapper);
 
 	int getActivePriority();
 

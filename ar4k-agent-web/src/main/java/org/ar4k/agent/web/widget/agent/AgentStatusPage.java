@@ -3,9 +3,9 @@ package org.ar4k.agent.web.widget.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.design.AgentTab;
-import org.ar4k.agent.design.AgentWebTab;
-import org.ar4k.agent.web.scada.ScadaAgentWrapper;
+import org.ar4k.agent.core.interfaces.AgentWebTab;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
+import org.ar4k.agent.web.interfaces.AgentTab;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -18,10 +18,10 @@ import com.vaadin.flow.component.textfield.TextArea;
 @AgentWebTab
 public class AgentStatusPage implements AgentTab {
 
-	private ScadaAgentWrapper beaconAgentWrapper = null;
+	private IScadaAgent beaconAgentWrapper = null;
 
 	@Override
-	public boolean isActive() {
+	public boolean isActive(IScadaAgent beaconAgentWrapper) {
 		return true;
 	}
 
@@ -76,7 +76,7 @@ public class AgentStatusPage implements AgentTab {
 	}
 
 	@Override
-	public Div getPage(ScadaAgentWrapper beaconAgentWrapper) {
+	public Div getPage(IScadaAgent beaconAgentWrapper) {
 		Div div = new Div();
 		Grid<StatusDataLineString> grid = new Grid<>(StatusDataLineString.class);
 		grid.getStyle().set("position", "absolute");

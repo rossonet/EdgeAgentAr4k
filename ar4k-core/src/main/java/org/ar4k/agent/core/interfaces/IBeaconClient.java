@@ -13,6 +13,7 @@ import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
+import org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
 import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
@@ -80,5 +81,9 @@ public interface IBeaconClient {
 	RpcConversation getLocalExecutor();
 
 	void closeNetworkTunnel(long targetId);
+
+	ListStringReply getRuntimeProvides(String agentId);
+
+	ListStringReply getRuntimeRequired(String agentId);
 
 }

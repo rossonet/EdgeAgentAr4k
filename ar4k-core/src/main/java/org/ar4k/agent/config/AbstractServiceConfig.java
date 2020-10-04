@@ -22,8 +22,8 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.core.interfaces.EdgeComponent.ServiceStatus;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -54,10 +54,10 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	public String name;
 
 	@Parameter(names = "--description", description = "service description", required = false)
-	public String description;
+	public String description = null;
 
 	@Parameter(names = "--version", description = "service version", required = false)
-	public String version;
+	public String version = null;
 
 	/**
 	 * per installazioni multi contesto.
@@ -75,25 +75,25 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	public List<Integer> ports = new ArrayList<>();
 
 	@Parameter(names = "--tags", description = "service tags (multi selection)", variableArity = true, required = false)
-	public List<String> tags;
+	public List<String> tags = new ArrayList<>();
 
 	/**
 	 * per dipendenze tra i servizi
 	 */
 	@Parameter(names = "--provides", description = "what service provides (multi selection)", variableArity = true, required = false)
-	public List<String> provides;
+	public List<String> provides = new ArrayList<>();
 
 	/**
 	 * per dipendenze tra i servizi
 	 */
 	@Parameter(names = "--required", description = "what is required by the service to run. It is correlated to -provides (multi selection)", variableArity = true, required = false)
-	public List<String> required;
+	public List<String> required = new ArrayList<>();
 
 	@Parameter(names = "--note", description = "service note text", required = false)
-	public String note;
+	public String note = null;
 
 	@Parameter(names = "--comment", description = "service comment text", required = false)
-	public String comment;
+	public String comment = null;
 
 	/**
 	 * per servizi gestiti esternamente alla JVM impostare true
@@ -220,14 +220,23 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 		this.ports = ports;
 	}
 
+	@Override
 	public List<String> getProvides() {
-		return provides;
+		if (provides != null) {
+			provides.add(getClass().getCanonicalName());
+			return provides;
+		} else {
+			List<String> p = new ArrayList<>();
+			p.add(getClass().getCanonicalName());
+			return p;
+		}
 	}
 
 	public void setProvides(List<String> provides) {
 		this.provides = provides;
 	}
 
+	@Override
 	public List<String> getRequired() {
 		return required;
 	}
