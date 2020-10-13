@@ -29,3 +29,5 @@ task buildDocker(type: Docker, dependsOn: bootJar) {
 bootJar.doLast { task ->
 	ant.checksum file: task.archivePath
 }
+
+23

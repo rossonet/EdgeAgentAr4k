@@ -89,7 +89,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
+//@Ignore
 public class BeaconClientServerNoSslTests {
 	private static final String CLIENT1_LABEL = "client1";
 	private static final String CLIENT2_LABEL = "client2";
@@ -172,7 +172,7 @@ public class BeaconClientServerNoSslTests {
 		serverAndClientTest(false, false, 250, false, 80, false);
 	}
 
-	@Test(timeout = 640000)
+	@Test(timeout = 2560000)
 	public void short_e_serverAndClientTestWithSshPayload() throws Exception {
 		serverAndClientTest(false, false, 0, true, 80, false);
 	}
