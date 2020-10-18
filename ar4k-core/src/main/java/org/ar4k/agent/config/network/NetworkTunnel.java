@@ -1,7 +1,7 @@
 package org.ar4k.agent.config.network;
 
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ResponseNetworkChannel;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel;
 
 public interface NetworkTunnel extends AutoCloseable {
 	public static enum NetworkModeRequest {

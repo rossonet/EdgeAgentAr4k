@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.DataTree;
-import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;
 import org.joda.time.Instant;
 import org.springframework.integration.channel.AbstractMessageChannel;
 

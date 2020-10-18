@@ -68,7 +68,7 @@ import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
-import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.BeanNameAware;

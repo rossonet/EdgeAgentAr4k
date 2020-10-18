@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.ar4k.agent.console.BeaconShellInterface;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;

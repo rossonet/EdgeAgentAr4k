@@ -44,8 +44,9 @@ import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -221,6 +222,8 @@ public class BeaconClientServerNoSslTests {
 
 	@Before
 	public void before() throws Exception {
+		// use original netty
+		BeaconClient.setUseNettyForTunnel(true);
 		actualTestSize = 0;
 		deleteTmpDirectories();
 		Files.createDirectories(Paths.get("./tmp"));
@@ -420,7 +423,7 @@ public class BeaconClientServerNoSslTests {
 
 		// codice
 		serverTCP = executor.submit(runner);
-		final NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test",
+		final NetworkConfig config = new BeaconNetworkClassicConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
 		networkTunnel = testAnimas.get(CLIENT1_LABEL).getBeaconClient()
 				.getNetworkTunnel(testAnimas.get(CLIENT2_LABEL).getAgentUniqueName(), config);

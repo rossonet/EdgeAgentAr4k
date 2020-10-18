@@ -31,7 +31,7 @@ import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.bouncycastle.cms.CMSException;
 import org.jline.builtins.Commands;
 import org.junit.After;

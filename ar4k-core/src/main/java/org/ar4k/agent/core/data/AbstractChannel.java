@@ -15,7 +15,7 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;

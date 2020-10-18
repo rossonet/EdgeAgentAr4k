@@ -45,18 +45,19 @@ import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
-import org.ar4k.agent.tunnels.http.beacon.BeaconAgent;
-import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServer;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.server.TunnelRunnerBeaconServer;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.AgentRequest;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
-import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Command;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ElaborateMessageReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,10 +276,10 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		}
 	}
 
-	@ShellMethod(value = "Create TCP tunnel over Beacon protocol", group = "Beacon Client Commands")
+	@ShellMethod(value = "Create TCP tunnel over Beacon protocol with Socket", group = "Beacon Client Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconClientRunning")
-	public void createBeaconTunnel(
+	public void createBeaconTunnelClassic(
 			@ShellOption(help = "the unique ID of the remote agent on the other side of tunnel", valueProvider = Ar4kRemoteAgentProvider.class) String agentTarget,
 			@ShellOption(help = "the port for the TCP Server bind") int sourceServerPort,
 			@ShellOption(help = "the destination TCP port for the client side") int destinationIpPort,
@@ -286,8 +287,24 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "description of this tunnel") String description,
 			@ShellOption(help = "tunnel name") String name,
 			@ShellOption(help = "the role in TCP connection that the other side have. It should be SERVER or CLIENT") NetworkMode role) {
-		final BeaconNetworkConfig config = new BeaconNetworkConfig(name, description, role, NetworkProtocol.TCP,
-				destinationIp, destinationIpPort, sourceServerPort);
+		final BeaconNetworkClassicConfig config = new BeaconNetworkClassicConfig(name, description, role,
+				NetworkProtocol.TCP, destinationIp, destinationIpPort, sourceServerPort);
+		resolveBeaconClient().getNetworkTunnel(agentTarget, config);
+	}
+
+	@ShellMethod(value = "Create TCP tunnel over Beacon protocol with Netty", group = "Beacon Client Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testBeaconClientRunning")
+	public void createBeaconTunnelNetty(
+			@ShellOption(help = "the unique ID of the remote agent on the other side of tunnel", valueProvider = Ar4kRemoteAgentProvider.class) String agentTarget,
+			@ShellOption(help = "the port for the TCP Server bind") int sourceServerPort,
+			@ShellOption(help = "the destination TCP port for the client side") int destinationIpPort,
+			@ShellOption(help = "the destination ip for the client") String destinationIp,
+			@ShellOption(help = "description of this tunnel") String description,
+			@ShellOption(help = "tunnel name") String name,
+			@ShellOption(help = "the role in TCP connection that the other side have. It should be SERVER or CLIENT") NetworkMode role) {
+		final BeaconNettyNetworkConfig config = new BeaconNettyNetworkConfig(name, description, role,
+				NetworkProtocol.TCP, destinationIp, destinationIpPort, sourceServerPort);
 		resolveBeaconClient().getNetworkTunnel(agentTarget, config);
 	}
 
@@ -362,8 +379,8 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		if (localPort == 0) {
 			localPort = NetworkHelper.findAvailablePort(14600);
 		}
-		final NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-xpra-" + remoteXpraPort, "tunnel xpra",
-				NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
+		final NetworkConfig remoteConfig = new BeaconNetworkClassicConfig("beacon-xpra-" + remoteXpraPort,
+				"tunnel xpra", NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
 		resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
 		logger.info("REMOTE XPRA " + returnStartingXpra);
 		return localPort;
@@ -569,8 +586,8 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "ssh user to login on the agent", defaultValue = "root") String sshUser,
 			@ShellOption(help = "ssh destination port", defaultValue = "22") String sshPort) throws Exception {
 		final int localPort = NetworkHelper.findAvailablePort(14500);
-		final NetworkConfig remoteConfig = new BeaconNetworkConfig("beacon-ssh-22", "tunnel ssh", NetworkMode.CLIENT,
-				NetworkProtocol.TCP, "127.0.0.1", Integer.valueOf(sshPort), localPort);
+		final NetworkConfig remoteConfig = new BeaconNetworkClassicConfig("beacon-ssh-22", "tunnel ssh",
+				NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", Integer.valueOf(sshPort), localPort);
 		resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
 		Thread.sleep(5000L);
 		return "ssh " + sshUser + "@127.0.0.1 " + "-p " + String.valueOf(localPort);

@@ -2,7 +2,7 @@ package org.ar4k.agent.core.interfaces;
 
 import java.util.List;
 
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 
 public interface IScadaAgent {
 

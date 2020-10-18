@@ -28,7 +28,7 @@ import org.ar4k.agent.console.BeaconShellInterface;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshLocalConfig;
 import org.ar4k.agent.tunnels.ssh.client.SshRemoteConfig;
 import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
@@ -380,8 +380,8 @@ public class BeaconClientToClientNetworkAndXpra {
 		}
 		if (sshTest) {
 			System.out.println("REMOTE SSH TUNNEL");
-			beanBeaconShellInterface.createBeaconTunnel(targetAgent, 8022, 22, "127.0.0.1", "test ssh", "ssh-tunnel",
-					NetworkMode.CLIENT);
+			beanBeaconShellInterface.createBeaconTunnelClassic(targetAgent, 8022, 22, "127.0.0.1", "test ssh",
+					"ssh-tunnel", NetworkMode.CLIENT);
 		}
 		Thread.sleep(15 * 60 * 1000);
 	}

@@ -7,16 +7,16 @@ import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
-import org.ar4k.agent.tunnels.http.beacon.RemoteBeaconRpcExecutor;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.CompleteCommandReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ConfigReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ElaborateMessageReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ListStringReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
-import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
+import org.ar4k.agent.tunnels.http2.beacon.RemoteBeaconRpcExecutor;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ConfigReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ElaborateMessageReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ListStringReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
 
 import io.grpc.ConnectivityState;
 
