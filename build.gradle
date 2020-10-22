@@ -126,6 +126,7 @@ subprojects {
 		maven { url "https://repo1.maven.org/maven2/" }
 		maven { url "https://maven.wso2.org/nexus/content/repositories/releases/" }
 		maven { url "http://vaadin.com/nexus/content/repositories/vaadin-addons/" }
+		maven { url "https://nexus.pentaho.org/content/groups/omni/" }
 	}
 
 	task eclipseClosedDependencies {}
