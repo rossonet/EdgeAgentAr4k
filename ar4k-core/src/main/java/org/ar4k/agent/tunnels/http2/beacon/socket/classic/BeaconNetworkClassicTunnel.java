@@ -2,12 +2,15 @@ package org.ar4k.agent.tunnels.http2.beacon.socket.classic;
 
 import java.net.Socket;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.config.network.NetworkReceiver;
 import org.ar4k.agent.config.network.NetworkTunnel;
+import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage;
@@ -17,6 +20,9 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(BeaconNetworkClassicTunnel.class.toString());
+
 	public static final long BEACON_DELAY_RECONNECTION = 0;
 	public static final int LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT = 0;
 	public static final int PING_FROM_BEACON_SERVER_CHECK_FACTOR = 0;
@@ -25,35 +31,39 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 	public static final boolean TRACE_LOG_IN_INFO = true;
 
 	private final AtomicReference<Socket> socket = new AtomicReference<>();
+	private final NetworkMode myRoleMode;
+	private final long tunnelId;
+	private final Agent me;
+	private final long uniqueClassId;
+	private int packetError = 0;
+	private final NetworkConfig networkConfig;
+	private long packetReceived = 0;
+	private long packetControl = 0;
+	private Agent remoteAgent = null;
+	private final boolean isStartingFromMe;
+	private final TunnelServiceV1Stub asyncStubTunnel;
 
-	public BeaconNetworkClassicTunnel(Agent me, NetworkConfig config, boolean b, TunnelServiceV1Stub asyncStubTunnel,
-			String uniqueIdRequest) {
+	public BeaconNetworkClassicTunnel(Agent me, NetworkConfig config, boolean ownerRequest,
+			TunnelServiceV1Stub asyncStubTunnel, String tunnelId) {
+		this.uniqueClassId = UUID.randomUUID().getMostSignificantBits();
+		this.networkConfig = config;
+		this.me = me;
+		this.isStartingFromMe = ownerRequest;
+		this.tunnelId = Long.valueOf(tunnelId);
+		this.asyncStubTunnel = asyncStubTunnel;
+		if ((config.getNetworkModeRequested().equals(NetworkMode.CLIENT) && ownerRequest)
+				|| config.getNetworkModeRequested().equals(NetworkMode.SERVER) && !ownerRequest) {
+			myRoleMode = NetworkMode.CLIENT;
+		} else {
+			myRoleMode = NetworkMode.SERVER;
+		}
+		if (TRACE_LOG_IN_INFO)
+			logger.info(me.getAgentUniqueName() + " created BeaconNetworkTunnel tunnel id {} role {}", tunnelId,
+					myRoleMode);
 		// TODO Auto-generated constructor stub
 	}
 
-	public NetworkMode getMyRoleMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long getTunnelId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public Agent getMe() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long getUniqueClassId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void nextActionAllSessions() {
+	public void nextAction() {
 		// TODO Auto-generated method stub
 
 	}
@@ -63,7 +73,20 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 		return false;
 	}
 
-	public void incrementPacketError() {
+	@Override
+	public int getWaitingPackagesCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beaconObserverComplete(long targetId) {
 		// TODO Auto-generated method stub
 
 	}
@@ -131,12 +154,6 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 	}
 
 	@Override
-	public NetworkConfig getConfig() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void kill() {
 		// TODO Auto-generated method stub
 
@@ -155,63 +172,65 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 	}
 
 	@Override
-	public long getPacketReceived() {
+	public void selfCheckIfNeeded() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long getPacketControl() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long getPacketError() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getWaitingPackagesCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void beaconObserverComplete(long targetId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setRemoteAgent(Agent remoteAgent) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void setResponseNetworkChannel(ResponseNetworkChannel response) {
 		// TODO Auto-generated method stub
+	}
 
+	public void incrementPacketError() {
+		packetError++;
+	}
+
+	public NetworkMode getMyRoleMode() {
+		return myRoleMode;
+	}
+
+	@Override
+	public long getTunnelId() {
+		return tunnelId;
+	}
+
+	public Agent getMe() {
+		return me;
+	}
+
+	@Override
+	public long getUniqueClassId() {
+		return uniqueClassId;
+	}
+
+	@Override
+	public long getPacketReceived() {
+		return packetReceived;
+	}
+
+	@Override
+	public long getPacketControl() {
+		return packetControl;
+	}
+
+	@Override
+	public long getPacketError() {
+		return packetError;
+	}
+
+	@Override
+	public NetworkConfig getConfig() {
+		return networkConfig;
+	}
+
+	@Override
+	public void setRemoteAgent(Agent remoteAgent) {
+		this.remoteAgent = remoteAgent;
 	}
 
 	@Override
 	public Agent getRemoteAgent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void selfCheckIfNeeded() {
-		// TODO Auto-generated method stub
-
+		return remoteAgent;
 	}
 
 }

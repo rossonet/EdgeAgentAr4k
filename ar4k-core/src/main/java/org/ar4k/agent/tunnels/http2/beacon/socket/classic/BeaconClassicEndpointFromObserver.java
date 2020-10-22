@@ -106,7 +106,7 @@ public class BeaconClassicEndpointFromObserver implements StreamObserver<TunnelM
 									 * totalChunks, value.getOriginalSize(), value.getMessageStatus()));
 									 */
 									// TODO cahe message
-									getBeaconNetworkTunnel().nextActionAllSessions();
+									getBeaconNetworkTunnel().nextAction();
 								} else {
 									if (containsOutputCachedMessage(messageUuid, sessionId)) {
 										if (BeaconNetworkClassicTunnel.TRACE_LOG_IN_INFO)

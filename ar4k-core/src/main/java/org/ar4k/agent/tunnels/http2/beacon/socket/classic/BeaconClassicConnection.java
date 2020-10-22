@@ -57,7 +57,7 @@ public class BeaconClassicConnection implements AutoCloseable {
 					beaconNetworkClassicTunnel.getTunnelId(), beaconNetworkClassicTunnel);
 		toBeaconServerOnNext(tunnelMessage);
 		if (originalState.equals(StatusNow.RECONNECTION)) {
-			beaconNetworkClassicTunnel.nextActionAllSessions();
+			beaconNetworkClassicTunnel.nextAction();
 		}
 	}
 

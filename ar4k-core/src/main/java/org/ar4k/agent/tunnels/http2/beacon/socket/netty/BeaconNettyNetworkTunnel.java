@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.ar4k.agent.config.network.NetworkConfig;
-import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
+import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
@@ -39,7 +39,7 @@ public class BeaconNettyNetworkTunnel implements NetworkTunnel {
 	private final TunnelServiceV1Stub asyncStubTunnel;
 
 	private long tunnelUniqueId;
-	private long uniqueClassId = 0;
+	private final long uniqueClassId;
 	private final NetworkConfig config;
 	private final boolean isStartingFromMe;
 	private final Agent meAgent;
@@ -58,6 +58,7 @@ public class BeaconNettyNetworkTunnel implements NetworkTunnel {
 
 	public BeaconNettyNetworkTunnel(Agent me, NetworkConfig config, boolean ownerRequest,
 			TunnelServiceV1Stub asyncStubTunnel, String tunnelId) {
+		this.uniqueClassId = UUID.randomUUID().getMostSignificantBits();
 		this.meAgent = me;
 		this.config = config;
 		this.isStartingFromMe = ownerRequest;
@@ -76,7 +77,6 @@ public class BeaconNettyNetworkTunnel implements NetworkTunnel {
 
 	@Override
 	public void init() {
-		uniqueClassId = UUID.randomUUID().getMostSignificantBits();
 		networkReceiver = new BeaconNettyNetworkReceiver(this, uniqueClassId, PACKET_CHUNK_LIMIT);
 		if (myRoleMode.equals(NetworkMode.SERVER)) {
 			try {

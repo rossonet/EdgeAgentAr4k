@@ -198,7 +198,7 @@ public class BeaconClientServerNoSslTests {
 		serverAndClientTest(false, false, 250, false, 100, false);
 	}
 
-	@Test(timeout = 2560000)
+	@Test(timeout = 5120000)
 	public void verybig_e_serverAndClientTestWithSshPayload() throws Exception {
 		serverAndClientTest(false, false, 0, true, 100, false);
 	}
