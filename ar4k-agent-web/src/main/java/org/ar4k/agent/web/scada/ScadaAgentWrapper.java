@@ -9,8 +9,8 @@ import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Command;
 import org.json.JSONObject;
 
 import com.google.protobuf.ByteString;
@@ -32,11 +32,6 @@ public class ScadaAgentWrapper implements IScadaAgent {
 	public boolean isFoundBy(String filter) {
 		// TODO Auto-generated method stub
 		return true;
-	}
-
-	@Override
-	public Agent getAgent() {
-		return agent;
 	}
 
 	@Override
@@ -156,6 +151,11 @@ public class ScadaAgentWrapper implements IScadaAgent {
 	@Override
 	public List<String> getRequired() {
 		return beaconClient.getRuntimeRequired(agent.getAgentUniqueName()).getListDatasList();
+	}
+
+	@Override
+	public Agent getAgent() {
+		return agent;
 	}
 
 }

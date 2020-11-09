@@ -12,7 +12,7 @@ import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.springframework.stereotype.Service;
 
 @Service

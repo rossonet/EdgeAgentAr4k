@@ -4,7 +4,7 @@ import org.ar4k.agent.core.interfaces.AgentWebTab;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.web.interfaces.AgentTab;
 
 import com.vaadin.flow.component.Text;

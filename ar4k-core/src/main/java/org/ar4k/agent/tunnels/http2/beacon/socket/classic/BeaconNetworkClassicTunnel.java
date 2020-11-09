@@ -1,5 +1,6 @@
 package org.ar4k.agent.tunnels.http2.beacon.socket.classic;
 
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +31,9 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 
 	public static final boolean TRACE_LOG_IN_INFO = true;
 
-	private final AtomicReference<Socket> socket = new AtomicReference<>();
+	private final AtomicReference<Socket> socketClient = new AtomicReference<>();
+
+	private final AtomicReference<ServerSocket> socketServer = new AtomicReference<>();
 	private final NetworkMode myRoleMode;
 	private final long tunnelId;
 	private final Agent me;
@@ -136,7 +139,7 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 		return false;
 	}
 
-	public Socket getOrCreateServerSocketChannel(long sessionId) {
+	public ServerSocket getOrCreateServerSocketChannel(long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

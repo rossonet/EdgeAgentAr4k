@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "org.ar4k.agent.tunnels.http.grpc.beacon";
+option java_package = "org.ar4k.agent.tunnels.http2.grpc.beacon";
 option java_outer_classname = "BeaconMirrorService";
 option objc_class_prefix = "AR4K";
 
