@@ -1,6 +1,5 @@
-description = "Rules Engine component and NLU"
-apply plugin: 'de.undercouch.download'
-configurations { openNLPCompile }
+description = "Rules Engine component"
+
 dependencies {
 	compile project(':ar4k-core')
 	compile project(':ar4k-vaadin')
@@ -10,98 +9,10 @@ dependencies {
 	compile group: 'org.drools', name: 'drools-compiler', version: '7.34.0.Final'
 	compile group: 'org.drools', name: 'drools-templates', version: '7.34.0.Final'
 	compile group: 'org.drools', name: 'drools-decisiontables', version: '7.34.0.Final'
-	// OpenNLP
-	compile group: 'org.apache.opennlp', name: 'opennlp-uima', version: '1.9.2'
-	compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.9.2'
-	openNLPCompile 'org.apache.opennlp:opennlp-tools:1.9.2'
-	compile group: 'com.joestelmach', name: 'natty', version: '0.13'
-	compile group: 'com.bladecoder.ink', name: 'blade-ink', version: '0.7.3'
-	// dipendenza per i file di trainning OpenNLP Examples
-	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
 	// per serie dati a disposizione di drools
 	compile group: 'org.rrd4j', name: 'rrd4j', version: '3.6'
 }
 
-task createModelsDir {
-	doLast{
-		project.file('src/main/resources/models').mkdirs()
-	}
-}
-
-createModelsDir.outputs.upToDateWhen { false }
-
-task generateIntentModel(type:JavaExec) {
-	main = 'opennlp.tools.cmdline.CLI'
-	classpath = configurations.openNLPCompile
-	args = [
-		'DoccatTrainer',
-		'-model',
-		'src/main/resources/models/en-cat-taxi-intents.bin',
-		'-lang',
-		'en',
-		'-data',
-		'src/main/resources/opennlp/test/TaxiBotIntents.txt',
-		'-encoding',
-		'UTF-8',
-		'-featureGenerators',
-		'opennlp.tools.doccat.NGramFeatureGenerator,opennlp.tools.doccat.BagOfWordsFeatureGenerator',
-		'-params',
-		'src/main/resources/opennlp/test/TaxiBotIntentsParams.txt'//,
-		//'-tokenizer',
-		//'opennlp.tools.tokenize.WhitespaceTokenizer'
-	]
-}
-
-generateIntentModel.dependsOn createModelsDir
-
-task generateAddressModel(type:JavaExec) {
-	main = 'opennlp.tools.cmdline.CLI'
-	classpath = configurations.openNLPCompile
-	args = [
-		'TokenNameFinderTrainer',
-		'-model',
-		'src/main/resources/models/en-ner-address.bin',
-		'-lang',
-		'en',
-		'-data',
-		'src/main/resources/opennlp/test/NERAddresses.txt',
-		'-encoding',
-		'UTF-8',
-		'-params',
-		'src/main/resources/opennlp/test/NERAddressesParams.txt'
-	]
-}
-generateAddressModel.dependsOn createModelsDir
-
-task downloadModels  {
-	doLast{
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin',   'en-ner-persons.bin')
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-location.bin', 'en-ner-locations.bin')
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-date.bin',     'en-ner-dates.bin')
-	}
-}
-
-downloadModels.dependsOn createModelsDir
-
-def downloadIfNotExists(String url, String file) {
-	def dir = project.file('src' + File.separator + 'main' + File.separator + 'resources' + File.separator + 'models')
-
-	if (new File(dir,file).exists() == false) {
-		download {
-			src url
-			dest new File(dir, file)
-		}
-	}
-}
-
-processResources.dependsOn downloadModels
-processResources.dependsOn generateIntentModel
-processResources.dependsOn generateAddressModel
-
-clean {
-	delete "src/main/resources/models"
-	delete "databases"
-}
 
 bootJar {
 	enabled = false

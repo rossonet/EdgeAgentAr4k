@@ -1,5 +1,5 @@
 dependencies {
-	compile project(':ar4k-core')
+	compile project(':ar4k-ai')
 	compile group: 'com.vaadin', name: 'vaadin-material-theme', version: '4.+'
 	compile "com.vaadin:vaadin-core"
 	compile "com.vaadin:vaadin-themes:8.+"
