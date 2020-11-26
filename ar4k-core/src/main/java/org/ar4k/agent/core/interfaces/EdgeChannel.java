@@ -22,7 +22,7 @@ public interface EdgeChannel extends AutoCloseable {
 
 	String getBrowseName();
 
-	String getScopeAbsoluteNameByScope(String scope);
+	String getAbsoluteNameByScope(String scope);
 
 	Class<? extends EdgeChannel> getChannelClass();
 

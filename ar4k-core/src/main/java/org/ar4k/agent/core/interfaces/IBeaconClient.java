@@ -54,7 +54,7 @@ public interface IBeaconClient {
 
 	void removeTunnel(NetworkTunnel toRemove);
 
-	NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config);
+	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
 
 	ElaborateMessageReply runCommadsOnAgent(String agentId, String command);
 

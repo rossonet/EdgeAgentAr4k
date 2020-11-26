@@ -131,7 +131,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
 	private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
 	private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
-	private transient List<NetworkTunnel> tunnels = new LinkedList<>();
+	private transient final List<NetworkTunnel> tunnels = new LinkedList<>();
+	private transient final BeaconDataAddress beaconDataAddress;
 	private String certChain = null;
 	private transient String csrRequest = null;
 
@@ -337,6 +338,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		if (this.port > 0) {
 			startConnection(this.hostTarget, this.port, true);
 		}
+		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
 		runInstance();
 	}
 
@@ -618,6 +620,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		asyncStubTunnel = null;
 	}
 
+	// TODO Implementare discovery peer2peer (viene richiesto in brodcast ai nodi
+	// presenti il beacon server a cui sono connessi e viene utilizzata la risposta
+	// più presente)
 	public synchronized void lookAround() {
 		if (status == StatusBeaconClient.IDLE) {
 			try {
@@ -668,7 +673,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				execCommand(m);
 				break;
 			case EXPOSE_PORT:
-				exposePort(m);
+				exposeNewPort(m);
 				break;
 			case CLOSE_PORT:
 				closePort(m);
@@ -744,7 +749,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 	}
 
-	private void exposePort(RequestToAgent m) {
+	private void exposeNewPort(RequestToAgent m) {
 		try {
 			if (trace)
 				logger.info(homunculus.getAgentUniqueName() + " network port required from beacon "
@@ -753,8 +758,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			NetworkTunnel tunnel = null;
 			if (useNettyForTunnel) {
 				config = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig(m);
-				tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkTunnel(me, config, false,
-						asyncStubTunnel, m.getUniqueIdRequest());
+				tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkTunnel(me, config,
+						false, asyncStubTunnel, m.getUniqueIdRequest());
 			} else {
 				config = new org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig(m);
 				tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicTunnel(me, config,
@@ -1057,6 +1062,10 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		return tunnels;
 	}
 
+	public BeaconDataAddress getBeaconDataAddress() {
+		return beaconDataAddress;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1082,7 +1091,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	 * String, org.ar4k.agent.network.NetworkConfig)
 	 */
 	@Override
-	public NetworkTunnel getNetworkTunnel(String agentId, NetworkConfig config) {
+	public NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config) {
 		NetworkTunnel tunnel = null;
 		if (useNettyForTunnel) {
 			tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkTunnel(me, config, true,
