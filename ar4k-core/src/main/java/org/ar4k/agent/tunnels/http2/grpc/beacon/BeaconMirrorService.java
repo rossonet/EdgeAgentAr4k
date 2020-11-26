@@ -415,8 +415,9 @@ public final class BeaconMirrorService {
       "elMessage\032\025.beacon.TunnelMessage\"\000(\0010\001\022O" +
       "\n\rRequestTunnel\022\034.beacon.RequestTunnelMe" +
       "ssage\032\036.beacon.ResponseNetworkChannel\"\000B" +
-      "G\n\'org.ar4k.agent.tunnels.http.grpc.beac" +
-      "onB\023BeaconMirrorServiceP\001\242\002\004AR4Kb\006proto3"
+      "H\n(org.ar4k.agent.tunnels.http2.grpc.bea" +
+      "conB\023BeaconMirrorServiceP\001\242\002\004AR4Kb\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
