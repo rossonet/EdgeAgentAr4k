@@ -90,7 +90,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-//@Ignore
+// TODO Completare test tunnel rete
+@Ignore
 public class BeaconClientServerNoSslTests {
 	private static final String CLIENT1_LABEL = "client1";
 	private static final String CLIENT2_LABEL = "client2";
