@@ -43,6 +43,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -59,6 +60,8 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 import io.grpc.stub.StreamObserver;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+//TODO Completare test beacon
+@Ignore
 public class RemoteControlOverBeaconRpcConfig {
 
 	private static final String CLIENT1_LABEL = "client1";
