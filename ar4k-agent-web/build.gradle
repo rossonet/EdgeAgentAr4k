@@ -2,17 +2,13 @@ plugins {
 	//id "org.gretty" version '3.0.2'
 	id 'com.vaadin' version '0.8.0'
 	//id 'com.devsoap.plugin.vaadin' version '1.2.0'
-	id "application"
+	// id "application"
 }
 
 apply plugin: "docker"
-apply plugin : "application"
+//apply plugin : "application"
 
 description = "Test platform. Agente gestione Web"
-
-repositories {
-	jcenter()
-}
 
 dependencies {
 	compile project(':ar4k-core')
@@ -29,7 +25,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-devtools")
 }
 
-mainClassName = 'org.ar4k.agent.console.Ar4kAgent'
+//mainClassName = 'org.ar4k.agent.console.Ar4kAgent'
 
 bootJar {
 	launchScript()
