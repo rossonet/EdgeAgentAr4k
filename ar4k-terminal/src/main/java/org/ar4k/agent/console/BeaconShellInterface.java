@@ -289,7 +289,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "the role in TCP connection that the other side have. It should be SERVER or CLIENT") NetworkMode role) {
 		final BeaconNetworkClassicConfig config = new BeaconNetworkClassicConfig(name, description, role,
 				NetworkProtocol.TCP, destinationIp, destinationIpPort, sourceServerPort);
-		resolveBeaconClient().getNetworkTunnel(agentTarget, config);
+		resolveBeaconClient().getNewNetworkTunnel(agentTarget, config);
 	}
 
 	@ShellMethod(value = "Create TCP tunnel over Beacon protocol with Netty", group = "Beacon Client Commands")
@@ -305,7 +305,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "the role in TCP connection that the other side have. It should be SERVER or CLIENT") NetworkMode role) {
 		final BeaconNettyNetworkConfig config = new BeaconNettyNetworkConfig(name, description, role,
 				NetworkProtocol.TCP, destinationIp, destinationIpPort, sourceServerPort);
-		resolveBeaconClient().getNetworkTunnel(agentTarget, config);
+		resolveBeaconClient().getNewNetworkTunnel(agentTarget, config);
 	}
 
 	public void closeBeaconTunnel(@ShellOption(help = "the target Id of beacon network tunnel") long targetId) {
@@ -381,7 +381,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		}
 		final NetworkConfig remoteConfig = new BeaconNetworkClassicConfig("beacon-xpra-" + remoteXpraPort,
 				"tunnel xpra", NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
-		resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
+		resolveBeaconClient().getNewNetworkTunnel(uniqueId, remoteConfig);
 		logger.info("REMOTE XPRA " + returnStartingXpra);
 		return localPort;
 	}
@@ -588,7 +588,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		final int localPort = NetworkHelper.findAvailablePort(14500);
 		final NetworkConfig remoteConfig = new BeaconNetworkClassicConfig("beacon-ssh-22", "tunnel ssh",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", Integer.valueOf(sshPort), localPort);
-		resolveBeaconClient().getNetworkTunnel(uniqueId, remoteConfig);
+		resolveBeaconClient().getNewNetworkTunnel(uniqueId, remoteConfig);
 		Thread.sleep(5000L);
 		return "ssh " + sshUser + "@127.0.0.1 " + "-p " + String.valueOf(localPort);
 	}

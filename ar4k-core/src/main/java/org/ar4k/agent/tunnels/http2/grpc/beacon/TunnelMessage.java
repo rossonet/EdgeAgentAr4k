@@ -713,7 +713,7 @@ private static final long serialVersionUID = 0L;
               org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage.class, org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.TunnelMessage.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }

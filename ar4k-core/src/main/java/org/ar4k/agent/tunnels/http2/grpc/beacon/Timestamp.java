@@ -289,7 +289,7 @@ private static final long serialVersionUID = 0L;
               org.ar4k.agent.tunnels.http2.grpc.beacon.Timestamp.class, org.ar4k.agent.tunnels.http2.grpc.beacon.Timestamp.Builder.class);
     }
 
-    // Construct using org.ar4k.agent.tunnels.http.grpc.beacon.Timestamp.newBuilder()
+    // Construct using org.ar4k.agent.tunnels.http2.grpc.beacon.Timestamp.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
