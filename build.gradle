@@ -5,6 +5,7 @@ ext {
 	sourceCompatibility = 1.8
 	springStatemachineVersion = '2.2.0.RELEASE'
 	springBootVersion = '2.3.2.RELEASE'
+	ossrhPassword = System.getenv('OSSRH_PASSWORD')
 }
 
 buildscript {
@@ -190,10 +191,10 @@ subprojects {
 	    mavenDeployer {
 	      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 	      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-	        authentication(userName: "rossonet", password: ossrhPassword)
+	        authentication(userName: "rossonet", password: "${rootProject.ext.ossrhPassword}")
 	      }
 	      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-	        authentication(userName: "rossonet", password: ossrhPassword)
+	        authentication(userName: "rossonet", password: "${rootProject.ext.ossrhPassword}")
 	      }
 	
 	      pom.project {
