@@ -90,7 +90,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-//@Ignore
+@Ignore
 public class BeaconClientServerNoSslTests {
 	private static final String CLIENT1_LABEL = "client1";
 	private static final String CLIENT2_LABEL = "client2";
@@ -426,7 +426,7 @@ public class BeaconClientServerNoSslTests {
 		final NetworkConfig config = new BeaconNetworkClassicConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
 		networkTunnel = testAnimas.get(CLIENT1_LABEL).getBeaconClient()
-				.getNetworkTunnel(testAnimas.get(CLIENT2_LABEL).getAgentUniqueName(), config);
+				.getNewNetworkTunnel(testAnimas.get(CLIENT2_LABEL).getAgentUniqueName(), config);
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		Thread.sleep(5000);
 		System.err.println("\n\n\n\n\n\n\n\n\n\n");

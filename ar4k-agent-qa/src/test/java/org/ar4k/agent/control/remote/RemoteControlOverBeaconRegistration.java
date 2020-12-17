@@ -457,7 +457,7 @@ public class RemoteControlOverBeaconRegistration {
 		serverTCP = executor.submit(runner);
 		final NetworkConfig config = new BeaconNettyNetworkConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
-		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
+		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNewNetworkTunnel(agentToQuery, config);
 		Thread.sleep(20000);
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("try to send package");

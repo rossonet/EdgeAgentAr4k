@@ -452,7 +452,7 @@ public class BeaconClientDataTests {
 		// codice
 		final NetworkConfig config = new BeaconNetworkClassicConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
-		networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
+		networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNewNetworkTunnel(agentToQuery, config);
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("Try to connect to:\nssh localhost -p " + srcPort);
 		Thread.sleep(120000);

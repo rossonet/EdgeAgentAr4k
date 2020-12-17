@@ -23,8 +23,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -37,15 +35,15 @@ import org.springframework.web.bind.annotation.RestController;
 @ShellComponent
 //@EnableMBeanExport
 //@ManagedResource(objectName = "bean:name=droolsInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "droolsInterface")
-@RestController
-@RequestMapping("/droolsInterface")
+//@RestController
+//@RequestMapping("/droolsInterface")
 public class DroolsShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "Add a Drools interface to the selected configuration", group = "AI Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addDroolsService(@ShellOption(optOut = true) @Valid DroolsConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a Drools interface to the selected configuration", group = "AI Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addDroolsService(@ShellOption(optOut = true) @Valid DroolsConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
 }
