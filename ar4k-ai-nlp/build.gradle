@@ -66,9 +66,9 @@ generateAddressModel.dependsOn createModelsDir
 
 task downloadModels  {
 	doLast{
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin',   'en-ner-persons.bin')
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-location.bin', 'en-ner-locations.bin')
-		downloadIfNotExists('http://opennlp.sourceforge.net/models-1.5/en-ner-date.bin',     'en-ner-dates.bin')
+		downloadIfNotExists('https://www.rossonet.net/dati/cache-data/en-ner-person.bin',   'en-ner-persons.bin')
+		downloadIfNotExists('https://www.rossonet.net/dati/cache-data/en-ner-location.bin', 'en-ner-locations.bin')
+		downloadIfNotExists('https://www.rossonet.net/dati/cache-data/en-ner-date.bin',     'en-ner-dates.bin')
 	}
 }
 

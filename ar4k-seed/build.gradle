@@ -2,10 +2,6 @@ description = "Add the JCloud API,Kubernetes and Docker Java API to the Semantic
 
 dependencies {
 	compile project(':ar4k-core')
-	compile project(':ar4k-vaadin')
-	//compile project(':ar4k-agent-web')
-	//compile project(':ar4k-terminal')
-	//compile group: 'org.apache.jclouds', name: 'jclouds-all', version: '2.1.0'
 	compile group: 'com.github.docker-java', name: 'docker-java', version: '3.1.2'
 	compile group: 'com.openshift', name: 'openshift-java-client', version: '2.5.0.Final'
 	compile 'io.kubernetes:client-java:5.0.0'
