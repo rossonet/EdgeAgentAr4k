@@ -8,10 +8,11 @@ import javax.validation.constraints.NotNull;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
+import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
-public class BeaconClientWrapper {
+public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BeaconClientWrapper.class.toString());
@@ -53,6 +54,7 @@ public class BeaconClientWrapper {
 		}
 	}
 
+	@Override
 	public IBeaconClient getBeaconClient() {
 		return beaconClient;
 	}
@@ -60,6 +62,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the host
 	 */
+	@Override
 	public String getHost() {
 		return host;
 	}
@@ -67,6 +70,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param host the host to set
 	 */
+	@Override
 	public void setHost(String host) {
 		this.host = host;
 		tryConnection();
@@ -75,6 +79,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the port
 	 */
+	@Override
 	public Integer getPort() {
 		return port;
 	}
@@ -82,6 +87,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param port the port to set
 	 */
+	@Override
 	public void setPort(Integer port) {
 		this.port = port;
 		tryConnection();
@@ -90,6 +96,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the discoveryPort
 	 */
+	@Override
 	public Integer getDiscoveryPort() {
 		return discoveryPort;
 	}
@@ -97,6 +104,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param discoveryPort the discoveryPort to set
 	 */
+	@Override
 	public void setDiscoveryPort(Integer discoveryPort) {
 		this.discoveryPort = discoveryPort;
 		tryConnection();
@@ -105,6 +113,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the discoveryFilter
 	 */
+	@Override
 	public String getDiscoveryFilter() {
 		return discoveryFilter;
 	}
@@ -112,6 +121,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param discoveryFilter the discoveryFilter to set
 	 */
+	@Override
 	public void setDiscoveryFilter(String discoveryFilter) {
 		this.discoveryFilter = discoveryFilter;
 		tryConnection();
@@ -120,6 +130,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the rpcConversation
 	 */
+	@Override
 	public RpcConversation getRpcConversation() {
 		return rpcConversation;
 	}
@@ -127,6 +138,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param rpcConversation the rpcConversation to set
 	 */
+	@Override
 	public void setRpcConversation(RpcConversation rpcConversation) {
 		this.rpcConversation = rpcConversation;
 		tryConnection();
@@ -135,6 +147,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the aliasBeaconClientInKeystore
 	 */
+	@Override
 	public String getAliasBeaconClientInKeystore() {
 		return aliasBeaconClientInKeystore;
 	}
@@ -142,6 +155,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param aliasBeaconClientInKeystore the aliasBeaconClientInKeystore to set
 	 */
+	@Override
 	public void setAliasBeaconClientInKeystore(String aliasBeaconClientInKeystore) {
 		this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
 		tryConnection();
@@ -150,6 +164,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the certFile
 	 */
+	@Override
 	public String getCertFile() {
 		return certFile;
 	}
@@ -157,6 +172,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param certFile the certFile to set
 	 */
+	@Override
 	public void setCertFile(String certFile) {
 		this.certFile = certFile;
 		tryConnection();
@@ -165,6 +181,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the certChainFile
 	 */
+	@Override
 	public String getCertChainFile() {
 		return certChainFile;
 	}
@@ -172,6 +189,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param certChainFile the certChainFile to set
 	 */
+	@Override
 	public void setCertChainFile(String certChainFile) {
 		this.certChainFile = certChainFile;
 		tryConnection();
@@ -180,6 +198,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the privateFile
 	 */
+	@Override
 	public String getPrivateFile() {
 		return privateFile;
 	}
@@ -187,6 +206,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @param privateFile the privateFile to set
 	 */
+	@Override
 	public void setPrivateFile(String privateFile) {
 		this.privateFile = privateFile;
 		tryConnection();
@@ -195,6 +215,7 @@ public class BeaconClientWrapper {
 	/**
 	 * @return the beaconCaChainPem
 	 */
+	@Override
 	public String getBeaconCaChainPem() {
 		return beaconCaChainPem;
 	}
@@ -202,31 +223,38 @@ public class BeaconClientWrapper {
 	/**
 	 * @param beaconCaChainPem the beaconCaChainPem to set
 	 */
+	@Override
 	public void setBeaconCaChainPem(String beaconCaChainPem) {
 		this.beaconCaChainPem = beaconCaChainPem;
 		tryConnection();
 	}
 
+	@Override
 	public String getCompany() {
 		return company;
 	}
 
+	@Override
 	public void setCompany(String company) {
 		this.company = company;
 	}
 
+	@Override
 	public String getContext() {
 		return context;
 	}
 
+	@Override
 	public void setContext(String context) {
 		this.context = context;
 	}
 
+	@Override
 	public String getAgentUniqueName() {
 		return beaconClient.getAgentUniqueName();
 	}
 
+	@Override
 	public boolean isFoundBy(String filter) {
 		// TODO Auto-generated method stub
 		return true;
@@ -266,20 +294,24 @@ public class BeaconClientWrapper {
 		return builder.toString();
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public String getStatus() {
 		return beaconClient != null ? beaconClient.getStateConnection().toString() : "DISCONNECTED";
 
 	}
 
+	@Override
 	public String getRegistrationStatus() {
 		return beaconClient != null ? beaconClient.getRegistrationStatus().toString() : "DISCONNECTED";
 
 	}
 
+	@Override
 	public Integer getAgentsCount() {
 		return beaconClient != null ? beaconClient.listAgentsConnectedToBeacon().size() : 0;
 

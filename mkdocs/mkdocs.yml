@@ -1,5 +1,9 @@
 site_name: Framework Ar4k by Rossonet
-theme: material
+theme:
+  name: material
+  scheme: slate
+  palette:
+    primary: deep purple
 nav:
     - GUIDA RAPIDA: quick.md
     - Readme progetto: README.md

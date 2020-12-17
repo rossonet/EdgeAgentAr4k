@@ -1,6 +1,6 @@
 package org.ar4k.agent.core.interfaces;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
+import java.util.List;
 
 /**
  * interfaccia da implementare per una configurazione di servizio valida
@@ -12,16 +12,20 @@ import org.ar4k.agent.config.AbstractServiceConfig;
  */
 public interface ServiceConfig extends ConfigSeed {
 
-  EdgeComponent instantiate();
+	EdgeComponent instantiate();
 
-  boolean isSpringBean();
+	boolean isSpringBean();
 
-  int getPriority();
+	int getPriority();
 
-  int getWatchDogInterval();
+	int getWatchDogInterval();
 
-  int getMaxRestartRetries();
+	int getMaxRestartRetries();
 
-  int getWatchDogTimeout();
+	int getWatchDogTimeout();
+
+	List<String> getProvides();
+
+	List<String> getRequired();
 
 }

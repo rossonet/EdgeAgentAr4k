@@ -28,11 +28,11 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Command;
-import org.ar4k.agent.tunnels.http.grpc.beacon.ListCommandsReply;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Command;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -450,9 +450,9 @@ public class BeaconClientDataTests {
 		final int destinationPort = 22;
 		final int srcPort = 8822;
 		// codice
-		final NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test",
+		final NetworkConfig config = new BeaconNetworkClassicConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
-		networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
+		networkTunnel = testAnimas.get(SERVER_LABEL).getBeaconClient().getNewNetworkTunnel(agentToQuery, config);
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("Try to connect to:\nssh localhost -p " + srcPort);
 		Thread.sleep(120000);

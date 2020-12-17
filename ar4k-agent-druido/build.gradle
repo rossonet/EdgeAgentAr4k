@@ -8,12 +8,14 @@ dependencies {
 	compile project(':ar4k-hazelcast')
 	compile project(':ar4k-activemq')
 	compile project(':ar4k-pcap')
-	compile project(':ar4k-ai')
+	compile project(':ar4k-ai') //compreso in ai-nlp
+	compile project(':ar4k-ai-nlp') 
+	compile project(':ar4k-kettle')
 	compile project(':ar4k-serial-comm')
 	compile project(':ar4k-video')
 	compile project(':ar4k-seed')
 	compile project(':ar4k-vaadin')
-	compile project(':ar4k-iec61499')
+	compile project(':ar4k-industrial')
 }
 
 bootJar {

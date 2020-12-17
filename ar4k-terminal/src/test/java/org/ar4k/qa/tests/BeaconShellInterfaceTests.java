@@ -97,6 +97,7 @@ public class BeaconShellInterfaceTests {
 		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		final Map<String, MethodTarget> listCommands = shell.listCommands();
 		System.out.println("commands: " + listCommands);
+		printCheckNow(listCommands);
 		assertTrue(listCommands.containsKey("add-beacon-service"));
 		assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
 		assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
@@ -104,7 +105,9 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("complete-reload-remote-agent"));
 		assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
 		assertTrue(listCommands.containsKey("connect-to-beacon-service"));
-		assertTrue(listCommands.containsKey("create-beacon-tunnel"));
+		assertTrue(listCommands.containsKey("create-beacon-tunnel-classic"));
+		assertTrue(listCommands.containsKey("create-beacon-tunnel-netty"));
+		assertTrue(listCommands.containsKey("create-ssh-mirror-tunnel"));
 		assertTrue(listCommands.containsKey("exit"));
 		assertTrue(listCommands.containsKey("help"));
 		assertTrue(listCommands.containsKey("history"));
@@ -132,7 +135,6 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("stop-beacon-server"));
 	}
 
-	@SuppressWarnings("unused")
 	private void printCheckNow(Map<String, MethodTarget> listCommands) {
 		for (final String command : listCommands.keySet()) {
 			System.out.println("assertTrue(listCommands.containsKey(\"" + command + "\"));");

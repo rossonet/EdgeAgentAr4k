@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "org.ar4k.agent.tunnels.http.grpc.beacon";
+option java_package = "org.ar4k.agent.tunnels.http2.grpc.beacon";
 option java_outer_classname = "BeaconMirrorService";
 option objc_class_prefix = "AR4K";
 
@@ -19,6 +19,9 @@ service RpcServiceV1 {
   rpc SendLog (LogRequest) returns (Status) {}
   rpc SendException (ExceptionRequest) returns (Status) {}
   rpc SendConfigRuntime (ConfigReport) returns (ConfigReply) {}
+  rpc GetConfigRuntime (Agent) returns (ConfigReply) {}
+  rpc GetRuntimeProvides (Agent) returns (ListStringReply) {}
+  rpc GetRuntimeRequired (Agent) returns (ListStringReply) {}
 
   rpc ListAgents (Empty) returns (ListAgentsReply) {}
   rpc ListAgentsRequestComplete (Empty) returns (ListAgentsRequestReply) {}
@@ -105,8 +108,16 @@ message Agent {
  
 message ConfigReply {
   string base64Config = 1;
-  int64 restartAt = 2;
-  StatusValue status = 3;
+  string jsonConfig = 2;
+  string ymlConfig = 3;
+  int64 restartAt = 4;
+  StatusValue status = 5;
+}
+
+message ListStringReply {
+  Agent agentSender = 1;
+  repeated string listDatas = 2;
+  int32 linesNumber = 3;
 }
 
 message ConfigReport {
@@ -140,6 +151,9 @@ enum CommandType {
   CLOSE_PORT = 5;
   CONNECT_DATA_CHANNEL = 6;
   SET_CONFIGURATION = 7;
+  GET_CONFIGURATION = 8;
+  GET_PROVIDES = 9;
+  GET_REQUIRED = 10;
 }
 
 message ChatMessage {

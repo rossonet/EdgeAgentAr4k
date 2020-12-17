@@ -1,10 +1,11 @@
-group = 'org.ar4k.agent'
-version = '0.8.97'
+group = 'net.rossonet'
+version = '0.2'
 
 ext {
 	sourceCompatibility = 1.8
 	springStatemachineVersion = '2.2.0.RELEASE'
 	springBootVersion = '2.3.2.RELEASE'
+	ossrhPassword = System.getenv('OSSRH_PASSWORD')
 }
 
 buildscript {
@@ -36,6 +37,7 @@ apply plugin: 'jacoco'
 apply plugin: 'base'
 apply plugin: "nebula.rpm"
 apply plugin: 'nebula.deb'
+
 
 oomphIde {
 	repoEclipseLatest()
@@ -93,11 +95,30 @@ subprojects {
 	apply plugin: "com.gorylenko.gradle-git-properties"
 	apply plugin: "maven-publish"
 	apply plugin: 'base'
+	apply plugin: 'signing'
+
+	task javadocJar(type: Jar) {
+		classifier = 'javadoc'
+		from javadoc
+	}
+
+	task sourcesJar(type: Jar) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	artifacts {
+		archives javadocJar, sourcesJar
+	}
+
+	signing {
+		sign configurations.archives
+	}
 
 	test {
 		useJUnit()
-		maxHeapSize = "1024m"
-		minHeapSize = "1024m"
+		maxHeapSize = "3g"
+		minHeapSize = "3g"
 		failFast = true
 		//jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
 		testLogging {
@@ -126,6 +147,7 @@ subprojects {
 		maven { url "https://repo1.maven.org/maven2/" }
 		maven { url "https://maven.wso2.org/nexus/content/repositories/releases/" }
 		maven { url "http://vaadin.com/nexus/content/repositories/vaadin-addons/" }
+		maven { url "https://nexus.pentaho.org/content/groups/omni/" }
 	}
 
 	task eclipseClosedDependencies {}
@@ -156,13 +178,56 @@ subprojects {
 	jar.doLast { task ->
 		ant.checksum file: task.archivePath
 	}
-
+/*
 	uploadArchives {
 		repositories {
 			mavenDeployer { repository(url: "file://maven") }
 		}
 	}
+*/
 
+	uploadArchives {
+	  repositories {
+	    mavenDeployer {
+	      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+	      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+	        authentication(userName: "rossonet", password: "${rootProject.ext.ossrhPassword}")
+	      }
+	      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+	        authentication(userName: "rossonet", password: "${rootProject.ext.ossrhPassword}")
+	      }
+	
+	      pom.project {
+	        name 'Ar4k Edge Agent'
+	        packaging 'jar'
+	        description 'Java Edge Agent Rossonet.'
+	        url 'https://app.rossonet.net/'
+	
+	        scm {
+	          connection 'scm:git:git://github.com/rossonet/EdgeAgentAr4k.git'
+	          developerConnection 'scm:git:ssh://github.com:rossonet/EdgeAgentAr4k.git'
+	          url 'https://github.com/rossonet/EdgeAgentAr4k/tree/master'
+	        }
+	        
+	        licenses {
+	          license {
+	            name 'GNU AFFERO GENERAL PUBLIC LICENSE 3.0'
+	            url 'https://www.gnu.org/licenses/agpl-3.0.html'
+	          }
+	        }
+	
+	        developers {
+	          developer {
+	            id 'ar4k'
+	            name 'Andrea Ambrosini'
+	            email 'andrea.ambrosini@rossonet.org'
+	          }
+	        }
+	      }
+	    }
+	  }
+	}
+	
 	gitProperties {
 		failOnNoGitDirectory = false
 		customProperty 'ar4kComponent', "${project.name}"
@@ -275,11 +340,11 @@ task ar4kListProjects {
 	}
 }
 
-task ar4kPublishLocalMavenProjects {
+task ar4kPublishMavenProjects {
 	group "Ar4k Semantic Router repository MVN"
 	description 'Publish to local directory ./maven all the artifacts and the pom files of Ar4k Semantic Router.'
 	subprojects { pr ->
-		ar4kPublishLocalMavenProjects.dependsOn("${pr.path}:uploadArchives")
+		ar4kPublishMavenProjects.dependsOn("${pr.path}:uploadArchives")
 	}
 }
 

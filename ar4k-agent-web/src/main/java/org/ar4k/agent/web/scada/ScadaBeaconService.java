@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,15 +46,15 @@ public class ScadaBeaconService implements AutoCloseable {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(ScadaBeaconService.class.toString());
 
-	private List<BeaconClientWrapper> beaconServers = new ArrayList<>();
-	private Map<String, ScadaAgentWrapper> agents = new HashMap<>();
+	private List<IBeaconClientScadaWrapper> beaconServers = new ArrayList<>();
+	private Map<String, IScadaAgent> agents = new HashMap<>();
 
-	public Collection<ScadaAgentWrapper> getClients(String filter) {
+	public Collection<IScadaAgent> getClients(String filter) {
 		if (filter == null || filter.isEmpty()) {
 			return agents.values();
 		} else {
-			final Collection<ScadaAgentWrapper> data = new ArrayList<>();
-			for (final ScadaAgentWrapper s : agents.values()) {
+			final Collection<IScadaAgent> data = new ArrayList<>();
+			for (final IScadaAgent s : agents.values()) {
 				if (s.isFoundBy(filter)) {
 					data.add(s);
 				}
@@ -64,7 +66,7 @@ public class ScadaBeaconService implements AutoCloseable {
 
 	private void refreshAgentsFromBeacon() {
 		if (!beaconServers.isEmpty())
-			for (final BeaconClientWrapper c : beaconServers) {
+			for (final IBeaconClientScadaWrapper c : beaconServers) {
 				if (c.getBeaconClient() != null && c.getBeaconClient().listAgentsConnectedToBeacon() != null
 						&& !c.getBeaconClient().listAgentsConnectedToBeacon().isEmpty())
 					for (final Agent a : c.getBeaconClient().listAgentsConnectedToBeacon()) {
@@ -75,16 +77,16 @@ public class ScadaBeaconService implements AutoCloseable {
 			}
 	}
 
-	public Collection<BeaconClientWrapper> getBeaconServersList() {
+	public Collection<IBeaconClientScadaWrapper> getBeaconServersList() {
 		return beaconServers;
 	}
 
-	public Collection<BeaconClientWrapper> getBeaconServersList(String filter) {
+	public Collection<IBeaconClientScadaWrapper> getBeaconServersList(String filter) {
 		if (filter == null || filter.isEmpty()) {
 			return beaconServers;
 		} else {
-			final Collection<BeaconClientWrapper> data = new ArrayList<BeaconClientWrapper>();
-			for (final BeaconClientWrapper s : getBeaconServersList()) {
+			final Collection<IBeaconClientScadaWrapper> data = new ArrayList<IBeaconClientScadaWrapper>();
+			for (final IBeaconClientScadaWrapper s : getBeaconServersList()) {
 				if (s.isFoundBy(filter)) {
 					data.add(s);
 				}
@@ -94,7 +96,7 @@ public class ScadaBeaconService implements AutoCloseable {
 	}
 
 	public void createDemoData() {
-		final BeaconClientWrapper s = new BeaconClientWrapper();
+		final IBeaconClientScadaWrapper s = new BeaconClientWrapper();
 		s.setDiscoveryPort(0);
 		s.setDiscoveryFilter("SCADA");
 		s.setAliasBeaconClientInKeystore("scada-web");
@@ -109,7 +111,7 @@ public class ScadaBeaconService implements AutoCloseable {
 		beaconServers.add(s);
 	}
 
-	public void addClientServer(BeaconClientWrapper bc) {
+	public void addClientServer(IBeaconClientScadaWrapper bc) {
 		beaconServers.add(bc);
 	}
 

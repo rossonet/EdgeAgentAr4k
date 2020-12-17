@@ -16,7 +16,7 @@ package org.ar4k.agent.config.validator;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

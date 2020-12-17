@@ -68,7 +68,7 @@ import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
-import org.ar4k.agent.tunnels.http.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.BeanNameAware;
@@ -1281,6 +1281,29 @@ public class Homunculus
 			builder.append("myAliasCertInKeystore=").append(myAliasCertInKeystore).append(", ");
 		builder.append("firstStateFired=").append(firstStateFired).append("]");
 		return builder.toString();
+	}
+
+	public Collection<String> getRuntimeProvides() {
+		final Collection<String> result = new ArrayList<String>();
+		for (ServiceComponent<EdgeComponent> c : components) {
+			if (c.isRunning() && c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getProvides() != null) {
+				result.addAll(c.getPot().getConfiguration().getProvides());
+			}
+
+		}
+		return result;
+	}
+
+	public Collection<String> getRuntimeRequired() {
+		final Collection<String> result = new ArrayList<String>();
+		for (ServiceComponent<EdgeComponent> c : components) {
+			if (c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getRequired() != null) {
+				result.addAll(c.getPot().getConfiguration().getRequired());
+			}
+		}
+		return result;
 	}
 
 }

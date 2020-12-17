@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterReply;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RegisterRequest;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc;
-import org.ar4k.agent.tunnels.http.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Status;
-import org.ar4k.agent.tunnels.http.grpc.beacon.StatusValue;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterRequest;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;

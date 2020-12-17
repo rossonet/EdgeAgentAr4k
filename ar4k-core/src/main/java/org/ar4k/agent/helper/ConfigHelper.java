@@ -239,8 +239,8 @@ public class ConfigHelper {
 
 	public static String toBase64Crypto(Object configObject, String aliasKey)
 			throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
-		final X509Certificate certificate = Homunculus.getApplicationContext().getBean(Homunculus.class).getMyIdentityKeystore()
-				.getClientCertificate(aliasKey);
+		final X509Certificate certificate = Homunculus.getApplicationContext().getBean(Homunculus.class)
+				.getMyIdentityKeystore().getClientCertificate(aliasKey);
 		return Base64.getEncoder().encodeToString(encryptData(toBase64(configObject).getBytes("UTF-8"), certificate));
 	}
 
@@ -271,7 +271,7 @@ public class ConfigHelper {
 		return yaml.load(yamlConfig);
 	}
 
-	public static String toYaml(EdgeConfig workingConfig) {
+	public static String toYaml(ConfigSeed workingConfig) {
 		final Yaml yaml = new Yaml();
 		return yaml.dump(workingConfig);
 	}

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ar4k.agent.console.BeaconServerForm;
-import org.ar4k.agent.console.MainView;
-import org.ar4k.agent.design.AgentMenu;
-import org.ar4k.agent.design.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.AgentWebMenu;
+import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.web.interfaces.AgentMenu;
 import org.ar4k.agent.web.scada.BeaconClientWrapper;
 
 import com.vaadin.flow.component.Component;
@@ -20,20 +21,21 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 @AgentWebMenu
 public class BeaconServerMenu implements AgentMenu {
 
-	private MainView mainView = null;
+	private IMainView mainView = null;
 
 	private final TextField serverFilterText = new TextField();
-	private final Grid<BeaconClientWrapper> gridServer = new Grid<>(BeaconClientWrapper.class);
+	private final Grid<IBeaconClientScadaWrapper> gridServer = new Grid<>(IBeaconClientScadaWrapper.class);
 	private BeaconServerForm beaconServerForm = null;
 
 	@Override
-	public void setMainView(MainView mainView) {
+	public void setMainView(IMainView mainView) {
 		this.mainView = mainView;
 		configureFilterServers();
 		this.beaconServerForm = new BeaconServerForm(this);
 		gridServer.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
 
+	// sempre attivo il client web può collegarsi ovunque
 	@Override
 	public boolean isActive() {
 		return true;
@@ -84,7 +86,7 @@ public class BeaconServerMenu implements AgentMenu {
 		gridServer.asSingleSelect().addValueChangeListener(event -> editbeaconServerWrapper(event.getValue()));
 	}
 
-	public void editbeaconServerWrapper(BeaconClientWrapper beaconClientWrapper) {
+	public void editbeaconServerWrapper(IBeaconClientScadaWrapper beaconClientWrapper) {
 		beaconServerForm.editBeaconConnection(beaconClientWrapper);
 		beaconServerForm.setVisible(true);
 		beaconServerForm.addClassName("editing");
@@ -104,13 +106,13 @@ public class BeaconServerMenu implements AgentMenu {
 		return l;
 	}
 
-	public MainView getMainView() {
+	public IMainView getMainView() {
 		return mainView;
 	}
 
 	@Override
 	public String toString() {
-		return "BeaconServerMenu";
+		return "BeaconServer Menù";
 	}
 
 	@Override

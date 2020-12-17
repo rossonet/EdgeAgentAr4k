@@ -126,7 +126,8 @@ public class AllShellInterfaceTests {
 		assertTrue(listCommands.containsKey("complete-reload-remote-agent"));
 		assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
 		assertTrue(listCommands.containsKey("connect-to-beacon-service"));
-		assertTrue(listCommands.containsKey("create-beacon-tunnel"));
+		assertTrue(listCommands.containsKey("create-beacon-tunnel-classic"));
+		assertTrue(listCommands.containsKey("create-beacon-tunnel-netty"));
 		assertTrue(listCommands.containsKey("create-selected-config"));
 		assertTrue(listCommands.containsKey("create-self-signed-cert"));
 		assertTrue(listCommands.containsKey("create-self-signed-cert-and-sign"));
@@ -235,6 +236,7 @@ public class AllShellInterfaceTests {
 		assertTrue(listCommands.containsKey("unset-selected-config"));
 		assertTrue(listCommands.containsKey("unsubscribe-data-channel"));
 		assertTrue(listCommands.containsKey("view-key-in-keystore"));
+
 	}
 
 	private void printCheckNow(Map<String, MethodTarget> listCommands) {

@@ -38,7 +38,7 @@ $ service ar4kAgent start
 
 ### Install as Systemd service
 
-systemd is the successor of the System V init system and is now being used by many modern Linux distributions. Although you can continue to use init.d scripts with systemd, it is also possible to launch Ar4kAgent by using systemd ‘service’ scripts.
+Systemd is the successor of the System V init system and is now being used by many modern Linux distributions. Although you can continue to use init.d scripts with systemd, it is also possible to launch Ar4kAgent by using systemd ‘service’ scripts.
 
 Assuming that you have a Ar4kAgent installed in /var/ar4kAgent, to install a Spring Boot application as a systemd service, create a script named ar4kAgent.service and place it in /etc/systemd/system directory. The following script offers an example:
 

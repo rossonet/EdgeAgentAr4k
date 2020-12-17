@@ -15,7 +15,7 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http.grpc.beacon.DataType;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -313,12 +313,12 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public String getScopeAbsoluteNameByScope(String scope) {
+	public String getAbsoluteNameByScope(String scope) {
 		final StringBuilder reply = new StringBuilder();
 		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
-			if (scopeFather.get(scope).getScopeAbsoluteNameByScope(scope) != null) {
+			if (scopeFather.get(scope).getAbsoluteNameByScope(scope) != null) {
 				reply.append(
-						scopeFather.get(scope).getScopeAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
+						scopeFather.get(scope).getAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
 			}
 		}
 		reply.append(getBrowseName());

@@ -2,6 +2,8 @@ package org.ar4k.agent.console;
 
 import java.util.Arrays;
 
+import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.web.scada.BeaconClientWrapper;
@@ -29,7 +31,7 @@ public class BeaconServerForm extends FormLayout {
 
 	private static final long serialVersionUID = -7889305640288767762L;
 
-	private Binder<BeaconClientWrapper> binder = new BeanValidationBinder<>(BeaconClientWrapper.class);
+	private Binder<IBeaconClientScadaWrapper> binder = new BeanValidationBinder<>(IBeaconClientScadaWrapper.class);
 
 	private TextField host = new TextField("Target host");
 
@@ -53,7 +55,7 @@ public class BeaconServerForm extends FormLayout {
 
 	private TextField context = new TextField("Context label");
 
-	private final MainView mainView;
+	private final IMainView mainView;
 
 	// private ListSelect<String> tags = new ListSelect<String>("Tags");
 
@@ -62,7 +64,7 @@ public class BeaconServerForm extends FormLayout {
 	private Button delete = new Button("Delete Beacon connection");
 	private Button close = new Button("Close");
 
-	private BeaconClientWrapper beaconClientWrapper;
+	private IBeaconClientScadaWrapper beaconClientWrapper;
 
 	private final BeaconServerMenu beaconServerMenu;
 
@@ -81,7 +83,7 @@ public class BeaconServerForm extends FormLayout {
 		}
 	}
 
-	public void editBeaconConnection(BeaconClientWrapper beaconClientWrapper) {
+	public void editBeaconConnection(IBeaconClientScadaWrapper beaconClientWrapper) {
 		if (beaconClientWrapper != null) {
 			logger.debug("selected: " + beaconClientWrapper + " host:" + beaconClientWrapper.getHost());
 			save.setVisible(false);
@@ -135,18 +137,20 @@ public class BeaconServerForm extends FormLayout {
 
 	private void validateAndSave() {
 		try {
-			binder.writeBean(beaconClientWrapper);
-			fireEvent(new SaveEvent(this, beaconClientWrapper, mainView));
+			if (beaconClientWrapper != null) {
+				binder.writeBean(beaconClientWrapper);
+				fireEvent(new SaveEvent(this, beaconClientWrapper, mainView));
+			}
 		} catch (final ValidationException e) {
 			logger.logException(e);
 		}
 	}
 
-	public BeaconClientWrapper getBeaconClientWrapper() {
+	public IBeaconClientScadaWrapper getBeaconClientWrapper() {
 		return beaconClientWrapper;
 	}
 
-	private void setBeaconClientWrapper(BeaconClientWrapper beaconClientWrapper) {
+	private void setBeaconClientWrapper(IBeaconClientScadaWrapper beaconClientWrapper) {
 		this.beaconClientWrapper = beaconClientWrapper;
 	}
 
@@ -154,14 +158,14 @@ public class BeaconServerForm extends FormLayout {
 	public static abstract class BeaconServerFormEvent extends ComponentEvent<BeaconServerForm> {
 
 		private static final long serialVersionUID = 8827352050113884890L;
-		private BeaconClientWrapper beaconClientWrapper;
+		private IBeaconClientScadaWrapper beaconClientWrapper;
 
-		protected BeaconServerFormEvent(BeaconServerForm source, BeaconClientWrapper beaconClientWrapper) {
+		protected BeaconServerFormEvent(BeaconServerForm source, IBeaconClientScadaWrapper beaconClientWrapper) {
 			super(source, false);
 			this.beaconClientWrapper = beaconClientWrapper;
 		}
 
-		public BeaconClientWrapper getContact() {
+		public IBeaconClientScadaWrapper getContact() {
 			return beaconClientWrapper;
 		}
 	}
@@ -170,7 +174,7 @@ public class BeaconServerForm extends FormLayout {
 
 		private static final long serialVersionUID = -7021301590382929238L;
 
-		SaveEvent(BeaconServerForm source, BeaconClientWrapper beaconClientWrapper, MainView mainView) {
+		SaveEvent(BeaconServerForm source, IBeaconClientScadaWrapper beaconClientWrapper, IMainView mainView) {
 			super(source, beaconClientWrapper);
 			beaconServerMenu.updateListBeaconServer();
 		}
@@ -180,7 +184,7 @@ public class BeaconServerForm extends FormLayout {
 
 		private static final long serialVersionUID = -6021301590382929238L;
 
-		DeleteEvent(BeaconServerForm source, BeaconClientWrapper beaconClientWrapper, MainView mainView) {
+		DeleteEvent(BeaconServerForm source, IBeaconClientScadaWrapper beaconClientWrapper, IMainView mainView) {
 			super(source, beaconClientWrapper);
 			beaconServerMenu.updateListBeaconServer();
 		}

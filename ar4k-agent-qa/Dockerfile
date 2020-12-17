@@ -2,7 +2,7 @@ FROM openjdk:8-jdk as ar4k-builder
 RUN apt-get update -y && apt-get install curl gnupg bash sed grep coreutils wget -y
 COPY ar4k-seed/ /ar4kAgent/ar4k-seed/
 COPY ar4k-activemq/ /ar4kAgent/ar4k-activemq/
-COPY ar4k-iec61499/ /ar4kAgent/ar4k-iec61499/
+COPY ar4k-industrial/ /ar4kAgent/ar4k-industrial/
 COPY ar4k-serial-comm/ /ar4kAgent/ar4k-serial-comm/
 COPY ar4k-agent-qa/ /ar4kAgent/ar4k-agent-qa/
 COPY ar4k-core/ /ar4kAgent/ar4k-core/

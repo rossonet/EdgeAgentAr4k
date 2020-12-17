@@ -31,7 +31,7 @@ import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.bouncycastle.cms.CMSException;
 import org.jline.builtins.Commands;
 import org.junit.After;
@@ -59,69 +59,70 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-kstore-web.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class KeystoreLoadingWebTests {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
-    Files.deleteIfExists(Paths.get("removed-keystore.ks"));
-  }
+	@After
+	public void tearDownAfterClass() throws Exception {
+		Files.deleteIfExists(Paths.get("removed-keystore.ks"));
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void downloadKeystoreWeb() throws InterruptedException {
-    Thread.sleep(5000L);
-    assertTrue(homunculus.getMyIdentityKeystore().check());
-    System.out.println(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
-    assertEquals(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
-        "C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    assertTrue("pcryptoAA".equals(homunculus.getRuntimeConfig().author));
-    assertTrue("webconfig".equals(homunculus.getRuntimeConfig().name));
-    assertTrue("AFYU8K".equals(homunculus.getRuntimeConfig().tagVersion));
-    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
-  }
+	@Test
+	public void downloadKeystoreWeb() throws InterruptedException {
+		Thread.sleep(5000L);
+		assertTrue(homunculus.getMyIdentityKeystore().check());
+		System.out.println(
+				homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
+		assertEquals(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
+				"C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
+		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
+		assertTrue("pcryptoAA".equals(homunculus.getRuntimeConfig().author));
+		assertTrue("webconfig".equals(homunculus.getRuntimeConfig().name));
+		assertTrue("AFYU8K".equals(homunculus.getRuntimeConfig().tagVersion));
+		System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
+		assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
+		System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
+		assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
+	}
 
-  @Test
-  public void createConfigWeb() throws IOException, CertificateEncodingException, CMSException {
-    EdgeConfig config = new EdgeConfig();
-    config.author = "pcryptoAA";
-    config.name = "webconfig";
-    config.tagVersion = "AFYU8K";
-    BeaconServiceConfig s0 = new BeaconServiceConfig();
-    s0.setNote("345F");
-    s0.name = "socket-0";
-    BeaconServiceConfig s1 = new BeaconServiceConfig();
-    s1.setNote("345F");
-    s1.name = "socket-1";
-    config.pots.add(s0);
-    config.pots.add(s1);
-    Files.write(Paths.get("crypto.test-config.a.ar4k"), ConfigHelper.toBase64Crypto(config, "ca").getBytes(),
-        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-  }
+	@Test
+	public void createConfigWeb() throws IOException, CertificateEncodingException, CMSException {
+		EdgeConfig config = new EdgeConfig();
+		config.author = "pcryptoAA";
+		config.name = "webconfig";
+		config.tagVersion = "AFYU8K";
+		BeaconServiceConfig s0 = new BeaconServiceConfig();
+		s0.setNote("345F");
+		s0.name = "socket-0";
+		BeaconServiceConfig s1 = new BeaconServiceConfig();
+		s1.setNote("345F");
+		s1.name = "socket-1";
+		config.pots.add(s0);
+		config.pots.add(s1);
+		Files.write(Paths.get("crypto.test-config.a.ar4k"), ConfigHelper.toBase64Crypto(config, "ca").getBytes(),
+				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+	}
 }

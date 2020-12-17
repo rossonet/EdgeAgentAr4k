@@ -41,9 +41,9 @@ import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.keystore.KeystoreLoader;
-import org.ar4k.agent.tunnels.http.beacon.BeaconServiceConfig;
-import org.ar4k.agent.tunnels.http.beacon.socket.BeaconNetworkConfig;
-import org.ar4k.agent.tunnels.http.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
@@ -455,9 +455,9 @@ public class RemoteControlOverBeaconRegistration {
 		};
 		// codice
 		serverTCP = executor.submit(runner);
-		final NetworkConfig config = new BeaconNetworkConfig("tunnel-test", "tunnel in fase di test",
+		final NetworkConfig config = new BeaconNettyNetworkConfig("tunnel-test", "tunnel in fase di test",
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
-		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNetworkTunnel(agentToQuery, config);
+		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNewNetworkTunnel(agentToQuery, config);
 		Thread.sleep(20000);
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("try to send package");
