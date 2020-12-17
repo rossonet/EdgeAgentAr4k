@@ -24,4 +24,5 @@ jobs:
     - name: Build with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       run: ./gradlew test
