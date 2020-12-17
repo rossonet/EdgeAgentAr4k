@@ -41,24 +41,3 @@ jobs:
         docker push $IMAGE_ID:$VERSION
     - name: Logout from GitHub
       run: docker logout docker.pkg.github.com
-      # Per pubblicazione in Docker Hub
-      #
-      #    - name: Log into Docker Hub registry
-      #      run: echo "${{ secrets.DHUB_TOKEN }}" | docker login -u rossonet --password-stdin
-      #
-      #   - name: Push image on Docker Hub
-      #     run: |
-      #     IMAGE_ID=rossonet/theia-ide
-      #     VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-      #     [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-      #     [ "$VERSION" == "release" ] && VERSION=latest
-      #     echo IMAGE_ID=$IMAGE_ID
-      #     echo VERSION=$VERSION
-      #     docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-      #     docker push $IMAGE_ID:$VERSION
-      #
-      #  - name: Logout from Docker Hub
-      #    run: docker logout
-
-
-

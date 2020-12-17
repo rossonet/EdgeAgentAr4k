@@ -31,6 +31,7 @@ jobs:
     - name: Publish with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      run: ./gradlew uploadArchives
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      run: ./gradlew uploadArchives -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733
 
 
