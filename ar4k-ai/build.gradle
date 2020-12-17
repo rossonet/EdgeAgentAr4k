@@ -2,8 +2,6 @@ description = "Rules Engine component"
 
 dependencies {
 	compile project(':ar4k-core')
-	compile project(':ar4k-vaadin')
-	//compile project(':ar4k-agent-web')
 	// rules engine
 	compile group: 'org.drools', name: 'drools-core', version: '7.34.0.Final'
 	compile group: 'org.drools', name: 'drools-compiler', version: '7.34.0.Final'
