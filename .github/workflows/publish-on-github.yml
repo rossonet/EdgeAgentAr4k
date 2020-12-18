@@ -29,9 +29,9 @@ jobs:
     - name: Publish with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      run: ./gradlew publish -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733 -Psigning.secretKeyRingFile=/home/runner/.gnupg/private.key
+      run: ./gradlew publish -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733 -Psigning.secretKeyRingFile=/home/runner/.gnupg/private.key -Dorg.gradle.jvmargs="-Xms512M -Xmx4G"
     - name: Build Docker image
-      run: ./gradlew ar4kDockerContainerDruido -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733 -Psigning.secretKeyRingFile=/home/runner/.gnupg/private.key
+      run: ./gradlew ar4kDockerContainerDruido -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733 -Psigning.secretKeyRingFile=/home/runner/.gnupg/private.key -Dorg.gradle.jvmargs="-Xms512M -Xmx4G"
     - name: Log into GitHub registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
     - name: Push image on GitHub
