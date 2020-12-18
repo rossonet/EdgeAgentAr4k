@@ -19,37 +19,37 @@ jobs:
         java-version: 1.8
     - name: Print env
       run: echo $GITHUB_ACTOR
-    - name: Build and testi ar4k-core with gradle
-      run: ./gradlew :ar4k-core:test 
+    - name: Build and test ar4k-agent-druido with gradle
+      run: ./gradlew :ar4k-agent-druido:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-agent-small with gradle
+      run: ./gradlew :ar4k-agent-small:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-agent-qa with gradle
+      run: ./gradlew :ar4k-agent-qa:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-agent-web with gradle
+      run: ./gradlew :ar4k-agent-web:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-core with gradle
+      run: ./gradlew :ar4k-core:test -Dorg.gradle.daemon=false
     - name: Build and test ar4k-seed with gradle
-      run: ./gradlew :ar4k-seed:test 
+      run: ./gradlew :ar4k-seed:test -Dorg.gradle.daemon=false
     - name: Build and test ar4k-hazelcast with gradle
-      run: ./gradlew :ar4k-hazelcast:test 
+      run: ./gradlew :ar4k-hazelcast:test -Dorg.gradle.daemon=false
     - name: Build and test ar4k-activemq with gradle
-      run: ./gradlew :ar4k-activemq:test 
+      run: ./gradlew :ar4k-activemq:test -Dorg.gradle.daemon=false
     - name: Build and test ar4k-terminal with gradle
-      run: ./gradlew :ar4k-terminal:test 
+      run: ./gradlew :ar4k-terminal:test -Dorg.gradle.daemon=false
     - name: Build and test ar4k-serial-comm with gradle
-      run: ./gradlew :ar4k-serial-comm:test 
-    - name: Build and testi ar4k-video with gradle
-      run: ./gradlew :ar4k-video:test 
-    - name: Build and testi ar4k-pcap with gradle
-      run: ./gradlew :ar4k-pcap:test 
-    - name: Build and testi ar4k-agent-small with gradle
-      run: ./gradlew :ar4k-agent-small:test 
-    - name: Build and testi ar4k-agent-qa with gradle
-      run: ./gradlew :ar4k-agent-qa:test 
-    - name: Build and testi ar4k-agent-druido with gradle
-      run: ./gradlew :ar4k-agent-druido:test 
-    - name: Build and testi ar4k-agent-web with gradle
-      run: ./gradlew :ar4k-agent-web:test 
-    - name: Build and testi ar4k-industrial with gradle
-      run: ./gradlew :ar4k-industrial:test 
-    - name: Build and testi ar4k-ai with gradle
-      run: ./gradlew :ar4k-ai:test 
-    - name: Build and testi ar4k-ai-nlp with gradle
-      run: ./gradlew :ar4k-ai-nlp:test 
-    - name: Build and testi ar4k-kettle with gradle
-      run: ./gradlew :ar4k-kettle:test 
-    - name: Build and testi ar4k-vaadin with gradle
-      run: ./gradlew :ar4k-vaadin:test 
+      run: ./gradlew :ar4k-serial-comm:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-video with gradle
+      run: ./gradlew :ar4k-video:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-pcap with gradle
+      run: ./gradlew :ar4k-pcap:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-industrial with gradle
+      run: ./gradlew :ar4k-industrial:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-ai with gradle
+      run: ./gradlew :ar4k-ai:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-ai-nlp with gradle
+      run: ./gradlew :ar4k-ai-nlp:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-kettle with gradle
+      run: ./gradlew :ar4k-kettle:test -Dorg.gradle.daemon=false
+    - name: Build and test ar4k-vaadin with gradle
+      run: ./gradlew :ar4k-vaadin:test -Dorg.gradle.daemon=false
