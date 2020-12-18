@@ -36,7 +36,7 @@ jobs:
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
     - name: Push image on GitHub
       run: |
-        IMAGE_NAME=org.ar4k.agent/ar4k-agent-druido
+        IMAGE_NAME=net.rossonet/ar4k-agent-druido
         IMAGE_ID=docker.pkg.github.com/rossonet/edgeagentar4k/ar4k-agent-druido
         VERSION=latest
         ACTUAL=$(docker images --format "{{.Tag}}:{{.Repository}}" | grep ar4k-agent-druido | cut -f1 -d:)
