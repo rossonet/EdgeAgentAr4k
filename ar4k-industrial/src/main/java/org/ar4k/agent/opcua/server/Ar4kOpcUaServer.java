@@ -121,7 +121,7 @@ public class Ar4kOpcUaServer {
 		server = new OpcUaServer(serverConfig);
 
 		nameSpaceOpc = new OpcUaNamespace(server, configuration);
-		nameSpaceOpc.startup();
+		// nameSpaceOpc.startup();
 	}
 
 	private Set<EndpointConfiguration> createEndpointConfigurations(X509Certificate certificate) {
@@ -185,7 +185,7 @@ public class Ar4kOpcUaServer {
 	}
 
 	public CompletableFuture<OpcUaServer> shutdown() {
-		nameSpaceOpc.shutdown();
+		// nameSpaceOpc.shutdown();
 
 		return server.shutdown();
 	}

@@ -49,8 +49,7 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 	}
 
 	@Override
-	protected void onStartup() {
-		super.onStartup();
+	public void onStartup() {
 
 		dictionaryManager.startup();
 		subscriptionModel.startup();
@@ -111,7 +110,7 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 	}
 
 	@Override
-	protected void onShutdown() {
+	public void onShutdown() {
 		dictionaryManager.shutdown();
 		subscriptionModel.shutdown();
 
@@ -122,8 +121,6 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 		} catch (final InterruptedException ignored) {
 			// ignored
 		}
-
-		super.onShutdown();
 	}
 
 	@Override
