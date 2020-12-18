@@ -1,11 +1,8 @@
 # Ar4k Edge Agent by Rossonet
 
 ![Test on master branch](https://github.com/rossonet/EdgeAgentAr4k/workflows/Test%20on%20master%20branch/badge.svg)
-
 ![Build docs and publish on web.rossonet.net](https://github.com/rossonet/EdgeAgentAr4k/workflows/Build%20docs%20and%20publish%20on%20web.rossonet.net/badge.svg)
-
 ![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/workflows/Publish%20on%20Maven%20Central/badge.svg)
-
 ![Publish on GitHub Packages](https://github.com/rossonet/EdgeAgentAr4k/workflows/Publish%20on%20GitHub%20Packages/badge.svg)
 
 ## Reference
