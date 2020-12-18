@@ -19,12 +19,19 @@ jobs:
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       run: echo $GITHUB_ACTOR
+    - name: Configure GPG Key
+      run: |
+        mkdir -p ~/.gnupg/
+        printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
+        gpg --import --batch ~/.gnupg/private.key
+      env:
+        GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
     - name: Publish with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      run: ./gradlew publish
+      run: ./gradlew publish -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733
     - name: Build Docker image
-      run: ./gradlew ar4kDockerContainerDruido
+      run: ./gradlew ar4kDockerContainerDruido -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733
     - name: Log into GitHub registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
     - name: Push image on GitHub
