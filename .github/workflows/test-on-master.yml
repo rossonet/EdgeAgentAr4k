@@ -18,11 +18,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Print env
-      env:
-        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       run: echo $GITHUB_ACTOR
     - name: Build with Gradle
-      env:
-        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-      run: ./gradlew test
+      run: ./gradlew test -q
