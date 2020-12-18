@@ -4,7 +4,7 @@ scripts/rigenerate_todo.sh
 echo "Gradle clean"
 ./gradlew clean
 echo "Gradle javadoc"
-./gradlew ar4kAllJavaDoc
+./gradlew ar4kAllJavaDoc -Dorg.gradle.daemon=false > /dev/null
 cp -LR mkdocs/* build/docs
 echo "Genera il sito con MkDoc"
 cd build
