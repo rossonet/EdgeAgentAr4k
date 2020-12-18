@@ -342,7 +342,7 @@ task ar4kListProjects {
 
 task ar4kPublishMavenProjects {
 	group "Ar4k Semantic Router repository MVN"
-	description 'Publish to local directory ./maven all the artifacts and the pom files of Ar4k Semantic Router.'
+	description 'Publish all the artifacts and the pom files of Ar4k Semantic Router.'
 	subprojects { pr ->
 		ar4kPublishMavenProjects.dependsOn("${pr.path}:uploadArchives")
 	}
