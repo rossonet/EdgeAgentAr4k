@@ -20,4 +20,4 @@ jobs:
     - name: Print env
       run: echo $GITHUB_ACTOR
     - name: Build with Gradle
-      run: ./gradlew test -q
+      run: ./gradlew test -q -Dorg.gradle.daemon=false

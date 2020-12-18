@@ -117,8 +117,8 @@ subprojects {
 
 	test {
 		useJUnit()
-		maxHeapSize = "3g"
-		minHeapSize = "3g"
+		maxHeapSize = "4g"
+		minHeapSize = "4g"
 		failFast = true
 		//jvmArgs '-Xdebug','-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
 		testLogging {

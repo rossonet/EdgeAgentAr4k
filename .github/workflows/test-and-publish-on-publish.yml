@@ -27,7 +27,7 @@ jobs:
       env:
         GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
     - name: Build and test with Gradle
-      run: ./gradlew clean test
+      run: ./gradlew clean test -q -Dorg.gradle.daemon=false
     - name: Publish with Gradle
       env:
         PASSWORD: ${{ secrets.GITHUB_TOKEN }}
