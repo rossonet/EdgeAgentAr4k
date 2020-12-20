@@ -17,7 +17,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile("org.springframework:spring-jms")
 	compile('org.springframework.boot:spring-boot-starter-logging')
-	//compile('org.springframework.boot:spring-boot-starter-webflux')
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 	compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
 	compile('org.springframework.boot:spring-boot-starter-security')
@@ -26,16 +25,11 @@ dependencies {
 	compile "org.springframework.statemachine:spring-statemachine-core:${rootProject.ext.springStatemachineVersion}"
 	// jms
 	compile group: 'org.springframework.integration', name: 'spring-integration-jms'
-	// mail
-	//compile group: 'org.springframework.integration', name: 'spring-integration-mail'
-	// mqtt
-	//compile group: 'org.springframework.integration', name: 'spring-integration-mqtt'
 	// file
 	compile group: 'org.springframework.integration', name: 'spring-integration-file'
 	// git
 	//compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.0.2.201807311906-r'
-	compile 'dnsjava:dnsjava:2.1.9'
-	//compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
+	compile 'dnsjava:dnsjava:3.2.2'
 	// datastore
 	compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
 	compile group: 'joda-time', name: 'joda-time', version: '2.10.8'

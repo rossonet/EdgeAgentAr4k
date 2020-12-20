@@ -9,7 +9,7 @@ dependencies {
 	openNLPCompile 'org.apache.opennlp:opennlp-tools:1.9.2'
 	compile group: 'com.joestelmach', name: 'natty', version: '0.13'
 	compile group: 'com.bladecoder.ink', name: 'blade-ink', version: '0.7.3'
-	//compile group: 'org.deeplearning4j', name: 'deeplearning4j-nlp', version: '0.9.1'
+	compile group: 'org.deeplearning4j', name: 'deeplearning4j-nlp', version: '1.0.0-beta6'
 }
 
 task createModelsDir {

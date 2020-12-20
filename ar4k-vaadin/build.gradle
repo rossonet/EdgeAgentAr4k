@@ -5,9 +5,7 @@ dependencies {
 	compile group: 'com.vaadin', name: 'vaadin-material-theme', version: '4.0.4'
 	compile "com.vaadin:vaadin-core"
 	compile "com.vaadin:vaadin-themes:8.12.1"
-	//compile "com.vaadin:vaadin-push:8.+"
 	compile group: 'com.vaadin', name: 'vaadin-icons-flow', version: '4.0.0'
-	//compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.+'
 	compile group: 'com.vaadin', name: 'vaadin-grid-flow', version: '5.1.2'
 	compile group: 'com.vaadin', name: 'vaadin-app-layout-flow', version: '3.1.1'
 	compile group: 'com.vaadin', name: 'vaadin-split-layout-flow', version: '3.1.0'
@@ -16,12 +14,9 @@ dependencies {
 	compile group: 'com.vaadin', name: 'flow-client', version: '4.0.8' //'3.1.5'
 	compile group: 'com.vaadin', name: 'vaadin-server', version: '8.12.1'
 	compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'
-//	compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.3.RELEASE'
-//	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.3.RELEASE'
 	compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: '0.62.2'
 	compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-	// https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
-	//compile group: 'org.deeplearning4j', name: 'deeplearning4j-ui_2.11', version: '0.9.1'	
+	compile group: 'org.deeplearning4j', name: 'deeplearning4j-ui', version: '1.0.0-beta6'	
 }
 
 description = "Vaadin integration component"
