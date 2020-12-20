@@ -20,9 +20,13 @@ public interface ManagedVirtualSystem {
 		DESIDERATA, DEPLOY, RUNNING, STOP, REMOVED
 	}
 
-	public static List<String> getSupportedTypes(String packageBaseSearch) {
+	public enum Provider {
+		DOCKER, KUBERNETES, OPENSHIFT, LOCAL_ACCOUNT, SSH_ACCOUNT
+	}
+
+	public static List<String> getSupportedRecipes(String packageBaseSearch) {
 		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-		provider.addIncludeFilter(new AnnotationTypeFilter(EdgeContainerizedApplication.class));
+		provider.addIncludeFilter(new AnnotationTypeFilter(EdgeContainerizedVirtualSystem.class));
 		Set<BeanDefinition> classes = provider.findCandidateComponents(packageBaseSearch);
 		final List<String> rit = new ArrayList<>();
 		for (BeanDefinition c : classes) {
@@ -37,6 +41,8 @@ public interface ManagedVirtualSystem {
 	public boolean isAutostartEnabled();
 
 	public Map<String, ManagedArchives> getArchives();
+
+	public List<Provider> getSupportedProviders();
 
 	public Map<String, ManagedNetworkInterface> getNetworks();
 

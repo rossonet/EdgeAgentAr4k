@@ -16,11 +16,9 @@ dependencies {
 	compile project(':ar4k-vaadin')
 	compile project(':ar4k-ai')
 	compile project(':ar4k-seed')
-	compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.2'
-	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.3.RELEASE'
+	//compile group: 'org.springframework.security', name: 'spring-security-web'//, version: '5.4.2'
+	compile group: 'org.springframework.security', name: 'spring-security-config'//, version: '5.3.3.RELEASE'
 	compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.4.4'
-	
-	// il plugin gretty + vaadin usano questa versione la 2.7 per ora è incompatibile
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
 	compile("org.springframework.boot:spring-boot-devtools")
 }

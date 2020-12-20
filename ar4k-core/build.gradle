@@ -3,11 +3,8 @@ description = "core Ar4k Edge Gateway"
 apply plugin: 'com.google.protobuf'
 
 dependencies {
-	//compile project(':ar4k-terminal')
-	// crittografia
 	compile('org.bouncycastle:bcprov-jdk15on:1.59')
 	compile('org.bouncycastle:bcpkix-jdk15on:1.59')
-	// rilevamento hardware e so
 	compile 'com.github.oshi:oshi-core:3.5.0'
 	compile group: 'com.pi4j', name: 'pi4j-core', version: '1.2'
 	// ssh

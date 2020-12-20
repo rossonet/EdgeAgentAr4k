@@ -20,6 +20,8 @@ dependencies {
 //	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.3.RELEASE'
 	compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: '0.62.2'
 	compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+	// https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-ui
+	//compile group: 'org.deeplearning4j', name: 'deeplearning4j-ui_2.11', version: '0.9.1'	
 }
 
 description = "Vaadin integration component"

@@ -22,11 +22,11 @@ import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.farm.docker.DockerShellInterface;
+import org.ar4k.agent.farm.kubernetes.KubernetesShellInterface;
+import org.ar4k.agent.farm.openshift.OpenShiftShellInterface;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
-import org.ar4k.agent.docker.DockerShellInterface;
-import org.ar4k.agent.kubernetes.KubernetesShellInterface;
-import org.ar4k.agent.openshift.OpenShiftShellInterface;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;

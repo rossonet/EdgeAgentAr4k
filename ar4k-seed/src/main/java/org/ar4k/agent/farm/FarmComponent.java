@@ -20,7 +20,6 @@ public abstract class FarmComponent implements EdgeComponent {
 
 	private Homunculus homunculus = null;
 
-	// TODO DataAddress
 	private DataAddress dataspace = null;
 
 	public abstract ConnectionState getConnectionState();

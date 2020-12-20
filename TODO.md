@@ -6,7 +6,11 @@
 
 [completare gestion password integrata](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqBroker.java)
 
+[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRpcConfig.java)
+
 [provare con firma intermedia, ovvero firmando non con master ma con un](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRegistration.java)
+
+[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverSsh.java)
 
 [Metodo per creare la configurazione di un nuovo agente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-web/src/main/java/org/ar4k/agent/console/MainView.java)
 
@@ -14,15 +18,15 @@
 
 [Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-web/src/main/java/org/ar4k/agent/web/scada/BeaconClientWrapper.java)
 
+[what to do with multi matches?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/bot/intents/OpenNLPEntityMatcher.java)
+
+[to be improved, someday](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/NumberMatcherIT.java)
+
 [aggiungere global data anima se flag true](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
 
 [inserire ogetti per NLP](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
 
 [Auto-generated method getDescriptionJson](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
-
-[what to do with multi matches?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/opennlp/bot/intents/OpenNLPEntityMatcher.java)
-
-[to be improved, someday](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/opennlp/NumberMatcherIT.java)
 
 [completare output json descrizione simulatore](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/generator/DataGeneratorService.java)
 
@@ -68,35 +72,105 @@
 
 [implementare versione metodi con argomenti](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/logger/EdgeLogger.java)
 
-[controllare come viene wrappata la risposta alla chiamata di](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/RegistrationRequest.java)
+[controllare come viene wrappata la risposta alla chiamata di](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/RegistrationRequest.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[DATASERVICE Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[inserire il meccanismo per la coda autorizzativa](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/BeaconServer.java)
+[inserire il meccanismo per la coda autorizzativa](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconServer.java)
 
-[da provare il giro su una sola macchina](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/socket/server/TunnelRunnerBeaconServer.java)
+[da provare il giro su una sola macchina](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/server/TunnelRunnerBeaconServer.java)
 
-[valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/beacon/RemoteBeaconRpcExecutor.java)
+[cahe message](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java)
 
-[public static final int LIST_FIELD_NUMBER = 1;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/grpc/beacon/FlowMessage.java)
+[close channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java)
 
-[hash = (37 * hash) + LIST_FIELD_NUMBER;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http/grpc/beacon/FlowMessage.java)
+[Auto-generated constructor stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+
+[valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/RemoteBeaconRpcExecutor.java)
+
+[Implementare discovery peer2peer (viene richiesto in brodcast ai nodi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/BeaconClient.java)
+
+[Develop modem interface](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/modem/ModemWrapper.java)
+
+[public static final int LIST_FIELD_NUMBER = 1;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java)
+
+[hash = (37 * hash) + LIST_FIELD_NUMBER;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java)
 
 [PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngine.java)
 
 [PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngineFactory.java)
 
 [binding dati Anima. Valutare binding in boot per pre e post script.](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/ScriptEngineManagerProcess.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraConfig.java)
+
+[DataAddress](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
+
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/xpra/XpraComponent.java)
 
 [input.interrupt();   better thing to do?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/NativeShellRunner.java)
 
@@ -114,35 +188,37 @@
 
 [implementare BeaconServer multi nodo collegato via Hazelcast.](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/hazelcast/HazelcastShellInterface.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
 
-[sostituire con certificati generali](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[sostituire con certificati generali](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
 
-[inserire wrapper autenticazione](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[inserire wrapper autenticazione](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-iec61499/src/main/java/org/ar4k/agent/opcua/server/OpcUaServerService.java)
+[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaServerService.java)
+
+[servizio che esegue job da repository pre configurati (da zip file o connessione db) e permetta tramite coda di messaggi la manipolazione e il running](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-kettle/src/main/java/org/ar4k/agent/core/kettle/Kettle.java)
 
 [fornisce bean per sniffare a comando e riportare i dati sulle code ( eventualmenti lavorati con un plugin come mib)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-pcap/src/main/java/org/ar4k/agent/pcap/PcapShellInterface.java)
 

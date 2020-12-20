@@ -1,23 +1,25 @@
 group = 'net.rossonet'
-version = '0.1.3'
+version = '0.1.4'
 
 ext {
 	sourceCompatibility = 1.8
 	springStatemachineVersion = '2.2.0.RELEASE'
-	springBootVersion = '2.3.2.RELEASE'
+	springBootVersion = '2.4.1.RELEASE'
 	ossrhPassword = System.getenv('OSSRH_PASSWORD')
+	springGradleBootVersion = '2.4.1'
 }
 
 buildscript {
-	ext {
-		springBootVersion = '2.3.2.RELEASE'
+    ext {
+		springGradleBootVersion = '2.4.1'
 	}
+	
 	repositories {
 		mavenCentral()
 		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springGradleBootVersion}")
 		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
 		classpath "com.diffplug.gradle:goomph:3.18.1"
 		classpath "com.netflix.nebula:gradle-ospackage-plugin:8.4.1"
@@ -71,7 +73,7 @@ subprojects {
 	buildscript {
 		ext {
 			springStatemachineVersion = rootProject.ext.springStatemachineVersion
-			springBootVersion = rootProject.ext.springBootVersion
+			springGradleBootVersion = rootProject.ext.springGradleBootVersion
 		}
 		repositories {
 			mavenCentral()
@@ -79,7 +81,7 @@ subprojects {
 			maven { url "https://plugins.gradle.org/m2/" }
 		}
 		dependencies {
-			classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.springBootVersion}")
+			classpath("org.springframework.boot:spring-boot-gradle-plugin:${springGradleBootVersion}")
 			classpath('se.transmode.gradle:gradle-docker:1.2')
 			classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
 			classpath 'de.undercouch:gradle-download-task:3.1.1'
@@ -138,14 +140,7 @@ subprojects {
 	repositories {
 		mavenCentral()
 		jcenter()
-		maven { url "https://repo.spring.io/milestone" }
-		maven { url "https://dl.bintray.com/ethereum/maven/" }
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 		maven { url "https://maven.mangoautomation.net/repository/ias-release/" }
-		maven { url "https://nexus.bedatadriven.com/content/groups/public" }
-		maven { url "http://dist.wso2.org/maven2/" }
-		maven { url "https://repo1.maven.org/maven2/" }
-		maven { url "https://maven.wso2.org/nexus/content/repositories/releases/" }
 		maven { url "http://vaadin.com/nexus/content/repositories/vaadin-addons/" }
 		maven { url "https://nexus.pentaho.org/content/groups/omni/" }
 	}
@@ -166,9 +161,9 @@ subprojects {
 	dependencies {
 		// per annotazioni console
 		compile group: 'com.beust', name: 'jcommander', version: '1.48'
-		compile('org.springframework.shell:spring-shell-starter:2.0.1.RELEASE')
+		compile group: 'org.springframework.shell', name: 'spring-shell-starter', version:'2.0.1.RELEASE'
 		compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-		compile 'io.netty:netty-all:4.1.42.Final'
+		compile 'io.netty:netty-all:4.1.56.Final'
 		compile("org.springframework.boot:spring-boot-configuration-processor")
 		testCompile('org.springframework.boot:spring-boot-starter-test')
 	}
@@ -292,6 +287,7 @@ subprojects {
 
 
 task eclipseClosedDependencies {}
+
 
 task ar4kRegenerateProtoBuf {
 	group "Ar4k Semantic Router Build"
@@ -508,6 +504,12 @@ task makeDebianWeb(type: Deb){
   }
   directory('/opt/rossonet/ar4k')
   link('/opt/rossonet/ar4k-agent-web.jar',"/opt/rossonet/ar4k-agent-web-${rootProject.version}.jar")
+}
+
+task printVersionName() {
+	group "Ar4k Semantic Router Build"
+	description 'Print Agent version'
+        println "\nAr4k version ${rootProject.version}"
 }
 
 task ar4kDockerContainerDruido {
