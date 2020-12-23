@@ -454,7 +454,6 @@ task makeDebianDruido(type: Deb){
   makeDebianDruido.dependsOn("ar4kBootJarDruido")
   requires('default-jdk')
   requires('telnet')
-  requires('xterm')
   requires('wget')
   group "Ar4k Semantic Router Build"
   description 'Builds the Druido agent in deb package format'
@@ -482,7 +481,6 @@ task makeDebianWeb(type: Deb){
   makeDebianWeb.dependsOn("ar4kBootJarWeb")
   requires('default-jdk')
   requires('telnet')
-  requires('xterm')
   requires('wget')
   group "Ar4k Semantic Router Build"
   description 'Builds the Web agent in deb package format'

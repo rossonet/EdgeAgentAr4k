@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo dnf install wget eclipse-jdt eclipse-egit asciinema bash nmap vim-enhanced vim-javabrowser vim-syntastic-java vim-syntastic-javascript vim-syntastic-json vim-syntastic-sh gource mkdocs mkdocs-material git xorg-x11-xauth xterm netpbm-progs qiv xpra xorg-x11-drv-evdev wireshark tcpdump -y
+sudo dnf install wget eclipse-jdt eclipse-egit asciinema bash nmap vim-enhanced vim-javabrowser vim-syntastic-java vim-syntastic-javascript vim-syntastic-json vim-syntastic-sh gource mkdocs mkdocs-material git xorg-x11-xauth xterm netpbm-progs qiv xpra xorg-x11-drv-evdev wireshark tcpdump gimp arduino -y
 
 sudo dnf upgrade -y
 
