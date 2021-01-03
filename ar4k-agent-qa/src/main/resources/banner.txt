@@ -10,7 +10,7 @@ ${AnsiColor.RED}
  |_.__/ \__, | |_| \_\___/|___/___/\___/|_| |_|\___|\__|  
         |___/                                             
 
-${AnsiColor.YELLOW}Internal Tests version
+${AnsiColor.YELLOW}BOOTSTRAP CONSOLE
 
 ${AnsiColor.GREEN}BUILD ${application.version}
 ${AnsiColor.MAGENTA}based on Spring Boot Framework${spring-boot.formatted-version}

@@ -11,7 +11,7 @@ ${AnsiColor.RED}
         |___/                                             
 
 ${AnsiColor.YELLOW}DRUIDO
-${AnsiColor.GREEN}Robot and domotic agent
+${AnsiColor.GREEN}all components
 
 ${AnsiColor.DEFAULT}
 Type ${AnsiColor.RED}help${AnsiColor.DEFAULT} to list the available commands

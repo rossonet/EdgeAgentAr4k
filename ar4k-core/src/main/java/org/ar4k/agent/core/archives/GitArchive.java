@@ -42,4 +42,9 @@ public class GitArchive implements ManagedArchives {
 		return null;
 	}
 
+	public static GitArchive fromHttpUrl(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
