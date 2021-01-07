@@ -16,7 +16,6 @@ import com.google.gson.GsonBuilder;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
-// TODO implementare servizio di sniffing PCAP verso dataspace
 public class PcapSnifferService implements EdgeComponent {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

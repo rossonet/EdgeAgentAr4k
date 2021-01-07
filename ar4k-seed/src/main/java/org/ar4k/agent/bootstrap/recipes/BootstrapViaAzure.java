@@ -2,7 +2,7 @@ package org.ar4k.agent.bootstrap.recipes;
 
 import org.ar4k.agent.bootstrap.BootstrapRecipe;
 
-public class BootstrapViaRossonet extends BootstrapRecipe {
+public class BootstrapViaAzure extends BootstrapRecipe {
 
 	@Override
 	public void close() throws Exception {

@@ -105,7 +105,7 @@ public class BeaconClassicEndpointFromObserver implements StreamObserver<TunnelM
 									 * getOutputCachedDataBase64ByMessageId().get(messageUuid) .getCompleteData(),
 									 * totalChunks, value.getOriginalSize(), value.getMessageStatus()));
 									 */
-									// TODO cahe message
+									// TODO cache messages
 									getBeaconNetworkTunnel().nextAction();
 								} else {
 									if (containsOutputCachedMessage(messageUuid, sessionId)) {

@@ -16,4 +16,6 @@ public interface ManagedArchives {
 
 	public String getLog();
 
+	public void setUrl(String url);
+
 }

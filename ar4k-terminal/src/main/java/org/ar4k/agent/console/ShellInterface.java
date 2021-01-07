@@ -56,6 +56,7 @@ import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
+import org.ar4k.agent.helper.StorageTypeValuesProvider;
 import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.rpc.process.AgentProcess;
@@ -491,6 +492,12 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	public String getAgentStatus() {
 		return homunculus.getState().name();
+	}
+
+	@ShellMethod(value = "View storage drivers in classpath", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	public Set<String> getStorageDrivers() {
+		return StorageTypeValuesProvider.listStorageDrivers();
 	}
 
 	@ShellMethod(value = "View the Homunculus Bean", group = "Agent Life Cycle Commands")

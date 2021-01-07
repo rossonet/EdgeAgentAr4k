@@ -2,9 +2,11 @@ package org.ar4k.agent.core.archives;
 
 import java.nio.file.Path;
 
+import org.ar4k.agent.core.interfaces.ManagedArchiveAr4k;
 import org.ar4k.agent.core.interfaces.ManagedArchives;
 
-public class S3Archive implements ManagedArchives {
+@ManagedArchiveAr4k
+public class AwsS3Archive implements ManagedArchives {
 
 	@Override
 	public String getUniqueName() {
@@ -40,6 +42,12 @@ public class S3Archive implements ManagedArchives {
 	public String getLog() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setUrl(String url) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

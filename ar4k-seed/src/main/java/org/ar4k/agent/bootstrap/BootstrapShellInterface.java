@@ -14,9 +14,12 @@
     */
 package org.ar4k.agent.bootstrap;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.validation.Valid;
 
 import org.ar4k.agent.bootstrap.recipes.BootstrapViaAws;
+import org.ar4k.agent.bootstrap.recipes.BootstrapViaAzure;
 import org.ar4k.agent.bootstrap.recipes.BootstrapViaLocalConsole;
 import org.ar4k.agent.bootstrap.recipes.BootstrapViaLocalDocker;
 import org.ar4k.agent.bootstrap.recipes.BootstrapViaLocalVirtualBox;
@@ -27,14 +30,19 @@ import org.ar4k.agent.bootstrap.recipes.BootstrapViaSshVirtualBox;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.archives.GitArchive;
 import org.ar4k.agent.core.interfaces.ManagedArchives;
+import org.ar4k.agent.exception.DriverClassNotFoundException;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.helper.StorageTypeValuesProvider;
 import org.ar4k.agent.keystore.KeystoreConfig;
+import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,11 +59,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bootStrapInterface")
 public class BootstrapShellInterface extends AbstractShellHelper implements AutoCloseable {
 
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(BootstrapShellInterface.class.toString());
+
 	public enum BootstrapSupport {
 		LOCAL_CONSOLE(new BootstrapViaLocalConsole()), LOCAL_DOCKER(new BootstrapViaLocalDocker()),
 		LOCAL_VIRTUALBOX(new BootstrapViaLocalVirtualBox()), SSH_CONSOLE(new BootstrapViaSshConsole()),
 		SSH_DOCKER(new BootstrapViaSshDocker()), SSH_VIRTUALBOX(new BootstrapViaSshVirtualBox()),
-		AWS(new BootstrapViaAws()), ROSSONET(new BootstrapViaRossonet());
+		AWS(new BootstrapViaAws()), AZURE(new BootstrapViaAzure()), ROSSONET(new BootstrapViaRossonet());
 
 		private final BootstrapRecipe bootstrapRecipe;
 
@@ -76,33 +87,84 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 
 	private KeystoreConfig masterKeystore = null;
 
-	private GitArchive templateProject = GitArchive
-			.fromHttpUrl("https://github.com/rossonet/TemplateEdgeAgentAr4k.git");
+	private GitArchive templateProject = null;
 
 	private ManagedArchives runningProject = null;
 
-	protected Availability authRequired() {
-		return (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe().isAuthRequired())
+	protected Availability mayStart() {
+		return (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isSetupRequired())
 				? Availability.available()
-				: Availability.unavailable(bootstrapSupport.getBootstrapRecipe().descriptionAuthenticationRequired());
+				: Availability.unavailable("setup the enviroment before");
 	}
 
-	protected Availability endPointRequired() {
-		return (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe().isEndPointRequired())
+	protected Availability mayStop() {
+		return (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe().isStarted())
 				? Availability.available()
-				: Availability.unavailable(bootstrapSupport.getBootstrapRecipe().descriptionEndPointRequired());
+				: Availability.unavailable("the server is not started");
 	}
 
-	protected Availability masterKeystoreRequired() {
-		return (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe().isMasterKeystoreRequired())
-				? Availability.available()
-				: Availability.unavailable(bootstrapSupport.getBootstrapRecipe().descriptionMasterKeystoreRequired());
+	protected Availability mayClean() {
+		return (bootstrapSupport != null) ? Availability.available() : Availability.unavailable("no objects to clean");
 	}
 
-	protected Availability runningArchiveRequired() {
-		return (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe().isRunningArchiveRequired())
-				? Availability.available()
-				: Availability.unavailable(bootstrapSupport.getBootstrapRecipe().descriptionRunningArchiveRequired());
+	protected Availability completedConfigurationRequired() {
+		if (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isAuthRequired()
+				&& !bootstrapSupport.getBootstrapRecipe().isEndPointRequired()
+				&& !bootstrapSupport.getBootstrapRecipe().isRunningArchiveRequired()
+				&& !bootstrapSupport.getBootstrapRecipe().isMasterKeystoreRequired())
+			return Availability.available();
+		else {
+			StringBuilder sb = new StringBuilder();
+			if (bootstrapSupport == null) {
+				sb.append("set bootstrap method before");
+			} else {
+				if (bootstrapSupport.getBootstrapRecipe().isAuthRequired()) {
+					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionAuthenticationRequired());
+				}
+				if (bootstrapSupport.getBootstrapRecipe().isEndPointRequired()) {
+					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionEndPointRequired());
+				}
+				if (bootstrapSupport.getBootstrapRecipe().isMasterKeystoreRequired()) {
+					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionMasterKeystoreRequired());
+				}
+				if (bootstrapSupport.getBootstrapRecipe().isRunningArchiveRequired()) {
+					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionRunningArchiveRequired());
+				}
+			}
+			return Availability.unavailable(sb.toString());
+		}
+	}
+
+	@ShellMethod(value = "Setup enviroment")
+	@ManagedOperation
+	@ShellMethodAvailability("completedConfigurationRequired")
+	public void setupBootstrapEnviroment() {
+		bootstrapSupport.getBootstrapRecipe().setUp();
+	}
+
+	@ShellMethod(value = "Start Beacon server")
+	@ManagedOperation
+	@ShellMethodAvailability("mayStart")
+	public void startBootstrapEnviroment() {
+		bootstrapSupport.getBootstrapRecipe().start();
+	}
+
+	@ShellMethod(value = "Stop Beacon server")
+	@ManagedOperation
+	@ShellMethodAvailability("mayStop")
+	public void stopBootstrapEnviroment() {
+		bootstrapSupport.getBootstrapRecipe().stop();
+	}
+
+	@ShellMethod(value = "Clean enviroment")
+	@ManagedOperation
+	@ShellMethodAvailability("mayClean")
+	public void cleanBootstrapEnviroment() {
+		bootstrapSupport.getBootstrapRecipe().destroy();
+		bootstrapSupport = null;
+		masterKeystore = null;
+		templateProject = null;
+		runningProject = null;
 	}
 
 	@ShellMethod(value = "Set bootstrap method")
@@ -111,21 +173,67 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 		bootstrapSupport = method;
 	}
 
+	@ShellMethod(value = "Get bootstrap status")
+	@ManagedOperation
+	public String getBootstrapStatus() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("BOOTSTRAP WORKFLOW: ");
+		sb.append(bootstrapSupport + "\n");
+		sb.append("PROJECT TEMPLATE: ");
+		sb.append(templateProject + "\n");
+		sb.append("PROJECT STORAGE: ");
+		sb.append(runningProject + "\n");
+		sb.append("PROJECT MASTER KEYSTORE: ");
+		sb.append(masterKeystore + "\n");
+		return sb.toString();
+	}
+
 	@ShellMethod(value = "Set template repository")
 	@ManagedOperation
-	public void setTemplateRepository(@ShellOption(help = "the template repository url") String gitUrl) {
-		templateProject = GitArchive.fromHttpUrl("https://github.com/rossonet/TemplateEdgeAgentAr4k.git");
+	public void setBootstrapTemplateRepository(
+			@ShellOption(help = "the template repository url", defaultValue = "https://github.com/rossonet/TemplateEdgeAgentAr4k.git") String gitUrl) {
+		templateProject = GitArchive.fromHttpUrl(gitUrl);
+	}
+
+	@ShellMethod(value = "List Gradle build tasks in runtime repository")
+	@ManagedOperation
+	@ShellMethodAvailability("mayStart")
+	public String listGradleBuildTasksInRuntimeRepository() {
+		return bootstrapSupport.getBootstrapRecipe().listGradleTasks();
 	}
 
 	@ShellMethod(value = "Set runtime repository")
 	@ManagedOperation
-	public void setRuntimeRepository(@ShellOption(help = "the bootstrap method") String url) {
-		runningProject = method;
+	public void setBootstrapRuntimeRepository(@ShellOption(help = "the local bootstrap directory") String url,
+			@ShellOption(help = "storage driver", defaultValue = "org.ar4k.agent.core.archives.LocalFileSystemArchive", valueProvider = StorageTypeValuesProvider.class) String driver) {
+		boolean foundDriver = false;
+		try {
+			runningProject = (ManagedArchives) Class.forName(driver).getConstructor().newInstance();
+			runningProject.setUrl(url);
+			foundDriver = true;
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
+			logger.logException(e);
+		}
+		if (!foundDriver) {
+			throw new DriverClassNotFoundException("Driver class " + driver + " for url " + url + " not works");
+		}
 	}
 
-	@ShellMethod(value = "Generate master keystore")
+	@ShellMethod(value = "Set master keystore")
 	@ManagedOperation
-	public void generateBootstrapKeystore(@ShellOption(optOut = true) @Valid KeystoreConfig keyStore) {
+	public void setBootstrapKeystore(@ShellOption(optOut = true) @Valid KeystoreConfig keyStore,
+			@ShellOption(help = "common name for the CA certificate", defaultValue = "ca.agents.ar4k.org") String commonName,
+			@ShellOption(help = "company for the CA certificate", defaultValue = "Rossonet s.c.a r.l.") String organization,
+			@ShellOption(help = "organization unit for the CA certificate", defaultValue = "AR4K") String unit,
+			@ShellOption(help = "city for the CA certificate", defaultValue = "Imola") String locality,
+			@ShellOption(help = "province for the CA certificate", defaultValue = "Bologna") String state,
+			@ShellOption(help = "country for the CA certificate", defaultValue = "IT") String country,
+			@ShellOption(help = "URI for the CA certificate", defaultValue = "urn:org.ar4k.agent:ca-agents") String uri,
+			@ShellOption(help = "host name for the CA certificate", defaultValue = "localhost") String dns,
+			@ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip,
+			@ShellOption(help = "alias for new cert in the keystore", defaultValue = "new_cert") String alias) {
+		keyStore.create(commonName, organization, unit, locality, state, country, uri, dns, ip, alias, true);
 		masterKeystore = keyStore;
 	}
 
@@ -143,9 +251,7 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 
 	@Override
 	public void close() throws Exception {
-		if (bootstrapSupport != null) {
-			bootstrapSupport.getBootstrapRecipe().cleanAll();
-		}
+		// TODO valutare chiusure oggetti in shell bootstrap
 	}
 
 	public Homunculus getHomunculus() {

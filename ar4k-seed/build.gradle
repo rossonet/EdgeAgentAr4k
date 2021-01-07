@@ -8,6 +8,7 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:ec2'
     implementation 'software.amazon.awssdk:s3'
+	implementation group: 'org.gradle', name: 'gradle-tooling-api', version: '4.3'
 }
 
 bootJar {

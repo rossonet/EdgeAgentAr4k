@@ -13,79 +13,79 @@ public abstract class AbstractVirtualApplication implements ManagedVirtualApplic
 
 	@Override
 	public void setAutoStart(boolean isAutostartEnable) {
-		// TODO Auto-generated method stub
+		// TODO setAutoStart in AbstractVirtualApplication
 
 	}
 
 	@Override
 	public boolean isAutostartEnabled() {
-		// TODO Auto-generated method stub
+		// TODO isAutostartEnabled in AbstractVirtualApplication
 		return false;
 	}
 
 	@Override
 	public Map<String, ManagedArchives> getArchives() {
-		// TODO Auto-generated method stub
+		// TODO getArchives in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public List<Provider> getSupportedProviders() {
-		// TODO Auto-generated method stub
+		// TODO getSupportedProviders in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public Map<String, ManagedNetworkInterface> getNetworks() {
-		// TODO Auto-generated method stub
+		// TODO getNetworks in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public SystemStatus getStatus() {
-		// TODO Auto-generated method stub
+		// TODO getStatus in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public SystemStatus start() {
-		// TODO Auto-generated method stub
+		// TODO start in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public SystemStatus stop() {
-		// TODO Auto-generated method stub
+		// TODO stop in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public SystemStatus remove() {
-		// TODO Auto-generated method stub
+		// TODO remove in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public JSONObject getJSONStatus() {
-		// TODO Auto-generated method stub
+		// TODO getJSONStatus in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public String getLog() {
-		// TODO Auto-generated method stub
+		// TODO getLog in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public Path getLogPath() {
-		// TODO Auto-generated method stub
+		// TODO getLogPath in AbstractVirtualApplication
 		return null;
 	}
 
 	@Override
 	public String execOnContainer(String targetReference, String command, long timeout) {
-		// TODO Auto-generated method stub
+		// TODO execOnContainer in AbstractVirtualApplication
 		return null;
 	}
 

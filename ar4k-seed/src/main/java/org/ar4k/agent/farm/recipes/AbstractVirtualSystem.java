@@ -13,79 +13,79 @@ public abstract class AbstractVirtualSystem implements ManagedVirtualSystem {
 
 	@Override
 	public void setAutoStart(boolean isAutostartEnable) {
-		// TODO Auto-generated method stub
+		// TODO setAutoStart in AbstractVirtualSystem
 
 	}
 
 	@Override
 	public boolean isAutostartEnabled() {
-		// TODO Auto-generated method stub
+		// TODO isAutostartEnabled in AbstractVirtualSystem
 		return false;
 	}
 
 	@Override
 	public Map<String, ManagedArchives> getArchives() {
-		// TODO Auto-generated method stub
+		// TODO getArchives in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public List<Provider> getSupportedProviders() {
-		// TODO Auto-generated method stub
+		// TODO getSupportedProviders in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public Map<String, ManagedNetworkInterface> getNetworks() {
-		// TODO Auto-generated method stub
+		// TODO getNetworks in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public SystemStatus getStatus() {
-		// TODO Auto-generated method stub
+		// TODO getStatus in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public SystemStatus start() {
-		// TODO Auto-generated method stub
+		// TODO start in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public SystemStatus stop() {
-		// TODO Auto-generated method stub
+		// TODO stop in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public SystemStatus remove() {
-		// TODO Auto-generated method stub
+		// TODO remove in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public JSONObject getJSONStatus() {
-		// TODO Auto-generated method stub
+		// TODO getJSONStatus in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public String getLog() {
-		// TODO Auto-generated method stub
+		// TODO getLog in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public Path getLogPath() {
-		// TODO Auto-generated method stub
+		// TODO getLogPath in AbstractVirtualSystem
 		return null;
 	}
 
 	@Override
 	public String execOnContainer(String targetReference, String command, long timeout) {
-		// TODO Auto-generated method stub
+		// TODO execOnContainer in AbstractVirtualSystem
 		return null;
 	}
 

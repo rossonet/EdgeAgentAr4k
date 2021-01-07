@@ -53,22 +53,22 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 	Shell shell;
 	IOpenShiftConnection connection = null;
 
-	protected Availability testOpenShiftApiClientNull() {
+	protected Availability testOpenshiftApiClientNull() {
 		return (connection == null) ? Availability.available()
 				: Availability.unavailable(
 						"the OpenShift client is already connected to " + connection != null ? connection.toString()
 								: "NaN");
 	}
 
-	protected Availability testOpenShiftApiClientRunning() {
+	protected Availability testOpenshiftApiClientRunning() {
 		return (connection != null) ? Availability.available()
 				: Availability.unavailable("the OpenShift client is not connected");
 	}
 
 	@ShellMethod(value = "Connect to OpenShift cluster with username and password", group = "OpenShift Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testOpenShiftApiClientNull")
-	public void connectToOpenShift(@ShellOption(help = "server URL") String serverUrl,
+	@ShellMethodAvailability("testOpenshiftApiClientNull")
+	public void connectToOpenshift(@ShellOption(help = "server URL") String serverUrl,
 			@ShellOption(help = "the username for the login") String apiUsername,
 			@ShellOption(help = "the password for the login") String apiPassword) {
 		try {
@@ -80,8 +80,8 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Connect to OpenShift cluster with username and password", group = "OpenShift Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testOpenShiftApiClientNull")
-	public void connectToOpenShiftWithToken(@ShellOption(help = "server URL") String serverUrl,
+	@ShellMethodAvailability("testOpenshiftApiClientNull")
+	public void connectToOpenshiftWithToken(@ShellOption(help = "server URL") String serverUrl,
 			@ShellOption(help = "the token for the login") String token) {
 		try {
 			connection = new ConnectionBuilder(serverUrl).token(token).create();
@@ -92,8 +92,8 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Connect to OpenShift cluster with username and password", group = "OpenShift Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testOpenShiftApiClientNull")
-	public void connectToOpenShiftWithKey(@ShellOption(help = "server URL") String serverUrl,
+	@ShellMethodAvailability("testOpenshiftApiClientNull")
+	public void connectToOpenshiftWithKey(@ShellOption(help = "server URL") String serverUrl,
 			@ShellOption(help = "the auth for the login") String auth,
 			@ShellOption(help = "the authKey for the login") String authKey) {
 		try {
@@ -105,7 +105,7 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "List OpenShift cartridges", group = "OpenShift Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testOpenShiftApiClientRunning")
+	@ShellMethodAvailability("testOpenshiftApiClientRunning")
 	public List<ICartridge> listCartridges() {
 		try {
 			return connection.getCartridges();
@@ -117,7 +117,7 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "List OpenShift quick starts", group = "OpenShift Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testOpenShiftApiClientRunning")
+	@ShellMethodAvailability("testOpenshiftApiClientRunning")
 	public List<IQuickstart> listQuickstarts() {
 		try {
 			return connection.getQuickstarts();

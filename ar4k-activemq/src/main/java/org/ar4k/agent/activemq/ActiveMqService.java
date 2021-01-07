@@ -118,7 +118,7 @@ public class ActiveMqService implements EdgeComponent {
 
 	@Override
 	public JSONObject getDescriptionJson() {
-		// TODO ACTIVEMQ Auto-generated method stub
+		// TODO ACTIVEMQ descrizione servizio in json
 		return null;
 	}
 

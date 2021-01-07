@@ -81,13 +81,13 @@ public class Ar4kOpcUaServer {
 				httpsKeyPair);
 		httpsCertificateBuilder.setCommonName(HostnameUtil.getHostname());
 		HostnameUtil.getHostnames(configuration.bindAddress).forEach(httpsCertificateBuilder::addDnsName);
-		// TODO sostituire con certificati generali
+		// TODO sostituire con certificati di sistema in OPCUA
 		final X509Certificate httpsCertificate = httpsCertificateBuilder.build();
 
 		final UsernameIdentityValidator identityValidator = new UsernameIdentityValidator(true, authChallenge -> {
 			final String username = authChallenge.getUsername();
 			final String password = authChallenge.getPassword();
-//TODO inserire wrapper autenticazione
+//TODO inserire wrapper autenticazione per OPCUA
 			final boolean userOk = "user".equals(username) && "password1".equals(password);
 			final boolean adminOk = "admin".equals(username) && "password2".equals(password);
 
@@ -191,7 +191,7 @@ public class Ar4kOpcUaServer {
 	}
 
 	public ServiceStatus updateAndGetStatus() {
-		// TODO Auto-generated method stub
+		// TODO updateAndGetStatus di OPCUA
 		return null;
 	}
 
