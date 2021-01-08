@@ -232,7 +232,7 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 			@ShellOption(help = "URI for the CA certificate", defaultValue = "urn:org.ar4k.agent:ca-agents") String uri,
 			@ShellOption(help = "host name for the CA certificate", defaultValue = "localhost") String dns,
 			@ShellOption(help = "id address for the CA certificate", defaultValue = "127.0.0.1") String ip,
-			@ShellOption(help = "alias for new cert in the keystore", defaultValue = "new_cert") String alias) {
+			@ShellOption(help = "alias for new cert in the keystore", defaultValue = "master") String alias) {
 		keyStore.create(commonName, organization, unit, locality, state, country, uri, dns, ip, alias, true);
 		masterKeystore = keyStore;
 	}

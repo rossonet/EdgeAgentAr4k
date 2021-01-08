@@ -16,7 +16,6 @@ public class BootstrapViaLocalConsole extends BootstrapRecipe {
 		copyMasterKeyToLocalStorage();
 		generateAgentJar();
 		generateBeaconServerConfig();
-		generateSimpleConfig();
 	}
 
 	@Override

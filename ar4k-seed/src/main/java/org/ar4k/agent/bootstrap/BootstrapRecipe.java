@@ -2,16 +2,27 @@ package org.ar4k.agent.bootstrap;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
+import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.archives.GitArchive;
 import org.ar4k.agent.core.interfaces.ManagedArchives;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.GradleProject;
 import org.gradle.tooling.model.Task;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.FileCopyUtils;
 
 public abstract class BootstrapRecipe implements AutoCloseable {
 
@@ -60,19 +71,68 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 		return "Please configure a running archive path";
 	}
 
-	protected void generateSimpleConfig() {
-		// TODO Auto-generated method stub
-
-	}
-
 	protected void generateBeaconServerConfig() {
-		// TODO Auto-generated method stub
-
+		String serverPort = "8442";
+		String keystoreFile = "keys/master.ks";
+		String keystoreCa = "master";
+		String keystoreBeacon = "master";
+		String keystorePassword = "secA4.rk!8";
+		String adminPassword = "password1";
+		String discoveryPort = "8444";
+		String beaconserverPort = "8443";
+		EdgeConfig ar4kConfig = new EdgeConfig();
+		BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
+		beaconServiceConfig.aliasBeaconServerInKeystore = keystoreBeacon;
+		beaconServiceConfig.discoveryPort = Integer.valueOf(discoveryPort);
+		beaconServiceConfig.port = Integer.valueOf(beaconserverPort);
+		ar4kConfig.pots.add(beaconServiceConfig);
+		try {
+			String base64Config = ConfigHelper.toBase64(ar4kConfig);
+			ResourceLoader resourceLoader = new DefaultResourceLoader();
+			Resource resource = resourceLoader.getResource("classpath:application.properties.template");
+			Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
+			String templateApplicationProperties = FileCopyUtils.copyToString(reader);
+			String elaboratedConfig = templateApplicationProperties.replace("<?base64-config?>", base64Config)
+					.replace("<?server-port?>", serverPort).replace("<?keystore-file?>", keystoreFile)
+					.replace("<?keystore-ca?>", keystoreCa).replace("<?keystore-beacon?>", keystoreBeacon)
+					.replace("<?keystore-password?>", keystorePassword).replace("<?admin-password?>", adminPassword)
+					.replace("<?discovery-port?>", discoveryPort)
+					.replace("<?beacon-endpoint?>", "http://localhost:" + beaconserverPort);
+			FileUtils.write(new File(shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath()
+					+ "/application.properties"), elaboratedConfig, StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			logger.logException(e);
+		}
 	}
 
 	protected void generateAgentJar() {
-		// TODO Auto-generated method stub
-
+		if (shellInterface != null) {
+			File sourceDirectory = new File(
+					shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath() + "/source");
+			File buildJarFolder = new File(
+					shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath()
+							+ "/source/build/libs");
+			GradleConnector connector = GradleConnector.newConnector();
+			connector.forProjectDirectory(sourceDirectory);
+			ProjectConnection connection = connector.connect();
+			try {
+				BuildLauncher build = connection.newBuild();
+				build.forTasks("clean", "bootJar");
+				build.run();
+				for (File f : buildJarFolder.listFiles()) {
+					if (f.getName().endsWith(".jar"))
+						try {
+							FileUtils.copyFile(f, new File(
+									shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath()
+											+ "/app.jar"));
+						} catch (IOException e) {
+							logger.logException(e);
+						}
+				}
+			} finally {
+				connection.close();
+			}
+		}
 	}
 
 	protected void copyMasterKeyToLocalStorage() {
@@ -131,7 +191,7 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 			sb.append("Tasks:\n");
 			for (Task task : project.getTasks()) {
 				if (task.getDisplayName() != null)
-					sb.append("- " + task.getDisplayName() + "[" + task.getDescription() + "]\n");
+					sb.append(task.getName() + " -> " + task.getDisplayName() + "[" + task.getDescription() + "]\n");
 			}
 		} finally {
 			connection.close();
