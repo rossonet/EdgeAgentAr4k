@@ -138,8 +138,16 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 	@ShellMethod(value = "Setup enviroment")
 	@ManagedOperation
 	@ShellMethodAvailability("completedConfigurationRequired")
-	public void setupBootstrapEnviroment() {
-		bootstrapSupport.getBootstrapRecipe().setUp();
+	public void setupBootstrapEnviroment(
+			@ShellOption(help = "web server port for Beacon agent", defaultValue = "8442") String serverPort,
+			@ShellOption(help = "keystore path", defaultValue = "keys/master.ks") String keystoreFile,
+			@ShellOption(help = "master alias in keystore", defaultValue = "master") String keystoreCa,
+			@ShellOption(help = "Beacon server alias in keystore", defaultValue = "master") String keystoreBeacon,
+			@ShellOption(help = "admin password of the agent", defaultValue = "password") String adminPassword,
+			@ShellOption(help = "Beacon discovery port", defaultValue = "8444") String discoveryPort,
+			@ShellOption(help = "port of Beacon service", defaultValue = "8443") String beaconserverPort) {
+		bootstrapSupport.getBootstrapRecipe().setUp(serverPort, keystoreFile, keystoreCa, keystoreBeacon, adminPassword,
+				discoveryPort, beaconserverPort);
 	}
 
 	@ShellMethod(value = "Start Beacon server")

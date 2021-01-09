@@ -31,7 +31,8 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 
 	protected BootstrapShellInterface shellInterface = null;
 
-	public abstract void setUp();
+	public abstract void setUp(String serverPort, String keystoreFile, String keystoreCa, String keystoreBeacon,
+			String adminPassword, String discoveryPort, String beaconserverPort);
 
 	public abstract void start();
 
@@ -71,15 +72,8 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 		return "Please configure a running archive path";
 	}
 
-	protected void generateBeaconServerConfig() {
-		String serverPort = "8442";
-		String keystoreFile = "keys/master.ks";
-		String keystoreCa = "master";
-		String keystoreBeacon = "master";
-		String keystorePassword = "secA4.rk!8";
-		String adminPassword = "password1";
-		String discoveryPort = "8444";
-		String beaconserverPort = "8443";
+	protected void generateBeaconServerConfig(String serverPort, String keystoreFile, String keystoreCa,
+			String keystoreBeacon, String adminPassword, String discoveryPort, String beaconserverPort) {
 		EdgeConfig ar4kConfig = new EdgeConfig();
 		BeaconServiceConfig beaconServiceConfig = new BeaconServiceConfig();
 		beaconServiceConfig.aliasBeaconServerInKeystore = keystoreBeacon;
@@ -95,8 +89,8 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 			String elaboratedConfig = templateApplicationProperties.replace("<?base64-config?>", base64Config)
 					.replace("<?server-port?>", serverPort).replace("<?keystore-file?>", keystoreFile)
 					.replace("<?keystore-ca?>", keystoreCa).replace("<?keystore-beacon?>", keystoreBeacon)
-					.replace("<?keystore-password?>", keystorePassword).replace("<?admin-password?>", adminPassword)
-					.replace("<?discovery-port?>", discoveryPort)
+					.replace("<?keystore-password?>", shellInterface.getMasterKeystore().keystorePassword)
+					.replace("<?admin-password?>", adminPassword).replace("<?discovery-port?>", discoveryPort)
 					.replace("<?beacon-endpoint?>", "http://localhost:" + beaconserverPort);
 			FileUtils.write(new File(shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath()
 					+ "/application.properties"), elaboratedConfig, StandardCharsets.UTF_8);

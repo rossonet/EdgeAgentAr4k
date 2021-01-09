@@ -21,11 +21,13 @@ public class BootstrapViaLocalConsole extends BootstrapRecipe {
 	}
 
 	@Override
-	public void setUp() {
+	public void setUp(String serverPort, String keystoreFile, String keystoreCa, String keystoreBeacon,
+			String adminPassword, String discoveryPort, String beaconserverPort) {
 		copyTemplateToLocalStorage();
 		copyMasterKeyToLocalStorage();
 		generateAgentJar();
-		generateBeaconServerConfig();
+		generateBeaconServerConfig(serverPort, keystoreFile, keystoreCa, keystoreBeacon, adminPassword, discoveryPort,
+				beaconserverPort);
 		setupOk = true;
 	}
 
