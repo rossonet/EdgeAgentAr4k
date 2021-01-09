@@ -29,7 +29,7 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BootstrapRecipe.class.toString());
 
-	private BootstrapShellInterface shellInterface = null;
+	protected BootstrapShellInterface shellInterface = null;
 
 	public abstract void setUp();
 
@@ -103,6 +103,21 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 		} catch (Exception e) {
 			logger.logException(e);
 		}
+		generateSystemFiles();
+	}
+
+	private void generateSystemFiles() {
+		try {
+			ResourceLoader resourceLoader = new DefaultResourceLoader();
+			Resource resource = resourceLoader.getResource("classpath:agent.service.template");
+			Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
+			String templateAgentService = FileCopyUtils.copyToString(reader);
+			FileUtils.write(new File(shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath()
+					+ "/agent.service"), templateAgentService, StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			logger.logException(e);
+		}
+
 	}
 
 	protected void generateAgentJar() {

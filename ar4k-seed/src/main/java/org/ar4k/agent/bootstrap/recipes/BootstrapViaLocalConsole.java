@@ -1,13 +1,23 @@
 package org.ar4k.agent.bootstrap.recipes;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import org.ar4k.agent.bootstrap.BootstrapRecipe;
+import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
 public class BootstrapViaLocalConsole extends BootstrapRecipe {
 
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(BootstrapViaLocalConsole.class.toString());
+	private Process process = null;
+	private boolean setupOk = false;
+
+	private final String killUuid = UUID.randomUUID().toString();
+
 	@Override
 	public void close() throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -16,60 +26,71 @@ public class BootstrapViaLocalConsole extends BootstrapRecipe {
 		copyMasterKeyToLocalStorage();
 		generateAgentJar();
 		generateBeaconServerConfig();
+		setupOk = true;
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-
+		try {
+			ProcessBuilder processBuilder = new ProcessBuilder(
+					shellInterface.getRunningProject().getFileSystemPath().toFile().getAbsolutePath() + "/app.jar",
+					"--spring.shell.interactive.enabled=false", killUuid);
+			process = processBuilder.start();
+		} catch (IOException e) {
+			logger.logException(e);
+		}
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		if (process != null) {
+			process.destroyForcibly();
+			process = null;
+			final String[] killCommand = { "pkill", "-f", killUuid };
+			ProcessBuilder processBuilder = new ProcessBuilder(killCommand);
+			try {
+				processBuilder.start();
+			} catch (IOException e) {
+				logger.logException(e);
+			}
+		}
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-
+		if (process != null) {
+			stop();
+		}
 	}
 
 	@Override
 	public boolean isAuthRequired() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String descriptionAuthenticationRequired() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isEndPointRequired() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String descriptionEndPointRequired() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isSetupRequired() {
-		// TODO Auto-generated method stub
-		return false;
+		return !setupOk;
 	}
 
 	@Override
 	public boolean isStarted() {
-		// TODO Auto-generated method stub
-		return false;
+		return process != null;
 	}
 
 }

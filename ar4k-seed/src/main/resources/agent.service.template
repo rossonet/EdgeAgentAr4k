@@ -1,0 +1,15 @@
+[Unit]
+Description=Ar4k Agent
+After=NetworkManager.service
+[Service]
+Type=simple
+User=root
+#ExecStartPre=update.sh
+#ExecStopPost=reboot.sh
+ExecStart=java -jar /opt/app.jar --spring.shell.interactive.enabled=false
+PIDFile=/var/run/ar4k.pid
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+[Install]
+WantedBy=multi-user.target

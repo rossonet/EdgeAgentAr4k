@@ -92,9 +92,9 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 	private ManagedArchives runningProject = null;
 
 	protected Availability mayStart() {
-		return (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isSetupRequired())
-				? Availability.available()
-				: Availability.unavailable("setup the enviroment before");
+		return (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isSetupRequired()
+				&& !bootstrapSupport.getBootstrapRecipe().isStarted()) ? Availability.available()
+						: Availability.unavailable("setup the enviroment before");
 	}
 
 	protected Availability mayStop() {
@@ -185,6 +185,10 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 		sb.append(runningProject + "\n");
 		sb.append("PROJECT MASTER KEYSTORE: ");
 		sb.append(masterKeystore + "\n");
+		if (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe() != null) {
+			sb.append("SETUP REQUIRED: ");
+			sb.append(bootstrapSupport.getBootstrapRecipe().isSetupRequired() + "\n");
+		}
 		return sb.toString();
 	}
 
