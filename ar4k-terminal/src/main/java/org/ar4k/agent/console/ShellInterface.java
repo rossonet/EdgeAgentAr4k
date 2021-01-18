@@ -117,8 +117,6 @@ public class ShellInterface extends AbstractShellHelper {
 		return result;
 	}
 
-	// TODO implementare la gestione dell'Address Space
-
 	@ShellMethod(value = "List sessions attached to the user", group = "Authentication Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")

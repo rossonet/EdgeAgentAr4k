@@ -40,13 +40,11 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 
 	public abstract void destroy();
 
-	public abstract boolean isAuthRequired();
+	public abstract boolean isProviderEndpointAndAuthRequired();
 
-	public abstract String descriptionAuthenticationRequired();
+	public abstract String descriptionProviderEndpointAndAuthRequired();
 
-	public abstract boolean isEndPointRequired();
-
-	public abstract String descriptionEndPointRequired();
+	public abstract void shellProviderEndpointAndAuth();
 
 	public abstract boolean isSetupRequired();
 

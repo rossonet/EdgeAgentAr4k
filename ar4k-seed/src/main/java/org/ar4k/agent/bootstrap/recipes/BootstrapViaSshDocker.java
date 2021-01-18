@@ -1,8 +1,6 @@
 package org.ar4k.agent.bootstrap.recipes;
 
-import org.ar4k.agent.bootstrap.BootstrapRecipe;
-
-public class BootstrapViaSshDocker extends BootstrapRecipe {
+public class BootstrapViaSshDocker extends BootstrapViaLocalDocker {
 
 	@Override
 	public void close() throws Exception {
@@ -33,30 +31,6 @@ public class BootstrapViaSshDocker extends BootstrapRecipe {
 	public void destroy() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean isAuthRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String descriptionAuthenticationRequired() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isEndPointRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String descriptionEndPointRequired() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

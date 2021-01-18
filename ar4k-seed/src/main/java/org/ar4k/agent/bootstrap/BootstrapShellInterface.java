@@ -108,8 +108,7 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 	}
 
 	protected Availability completedConfigurationRequired() {
-		if (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isAuthRequired()
-				&& !bootstrapSupport.getBootstrapRecipe().isEndPointRequired()
+		if (bootstrapSupport != null && !bootstrapSupport.getBootstrapRecipe().isProviderEndpointAndAuthRequired()
 				&& !bootstrapSupport.getBootstrapRecipe().isRunningArchiveRequired()
 				&& !bootstrapSupport.getBootstrapRecipe().isMasterKeystoreRequired())
 			return Availability.available();
@@ -118,11 +117,8 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 			if (bootstrapSupport == null) {
 				sb.append("set bootstrap method before");
 			} else {
-				if (bootstrapSupport.getBootstrapRecipe().isAuthRequired()) {
-					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionAuthenticationRequired());
-				}
-				if (bootstrapSupport.getBootstrapRecipe().isEndPointRequired()) {
-					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionEndPointRequired());
+				if (bootstrapSupport.getBootstrapRecipe().isProviderEndpointAndAuthRequired()) {
+					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionProviderEndpointAndAuthRequired());
 				}
 				if (bootstrapSupport.getBootstrapRecipe().isMasterKeystoreRequired()) {
 					sb.append(" " + bootstrapSupport.getBootstrapRecipe().descriptionMasterKeystoreRequired());
@@ -148,6 +144,13 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 			@ShellOption(help = "port of Beacon service", defaultValue = "8443") String beaconserverPort) {
 		bootstrapSupport.getBootstrapRecipe().setUp(serverPort, keystoreFile, keystoreCa, keystoreBeacon, adminPassword,
 				discoveryPort, beaconserverPort);
+	}
+
+	@ShellMethod(value = "Configure provider auth and endpoint")
+	@ManagedOperation
+	@ShellMethodAvailability("mayClean")
+	public void configureBootstrapProvider() {
+		bootstrapSupport.getBootstrapRecipe().shellProviderEndpointAndAuth();
 	}
 
 	@ShellMethod(value = "Start Beacon server")
@@ -196,6 +199,10 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 		if (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe() != null) {
 			sb.append("SETUP REQUIRED: ");
 			sb.append(bootstrapSupport.getBootstrapRecipe().isSetupRequired() + "\n");
+		}
+		if (bootstrapSupport != null && bootstrapSupport.getBootstrapRecipe() != null) {
+			sb.append("ENDPOINT AND AUTH REQUIRED: ");
+			sb.append(bootstrapSupport.getBootstrapRecipe().isProviderEndpointAndAuthRequired() + "\n");
 		}
 		return sb.toString();
 	}

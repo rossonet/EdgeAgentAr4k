@@ -36,30 +36,6 @@ public class BootstrapViaLocalDocker extends BootstrapRecipe {
 	}
 
 	@Override
-	public boolean isAuthRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String descriptionAuthenticationRequired() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isEndPointRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String descriptionEndPointRequired() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isSetupRequired() {
 		// TODO Auto-generated method stub
 		return false;
@@ -69,6 +45,24 @@ public class BootstrapViaLocalDocker extends BootstrapRecipe {
 	public boolean isStarted() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean isProviderEndpointAndAuthRequired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String descriptionProviderEndpointAndAuthRequired() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void shellProviderEndpointAndAuth() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

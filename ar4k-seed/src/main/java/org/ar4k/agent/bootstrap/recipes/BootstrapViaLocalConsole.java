@@ -66,26 +66,6 @@ public class BootstrapViaLocalConsole extends BootstrapRecipe {
 	}
 
 	@Override
-	public boolean isAuthRequired() {
-		return false;
-	}
-
-	@Override
-	public String descriptionAuthenticationRequired() {
-		return null;
-	}
-
-	@Override
-	public boolean isEndPointRequired() {
-		return false;
-	}
-
-	@Override
-	public String descriptionEndPointRequired() {
-		return null;
-	}
-
-	@Override
 	public boolean isSetupRequired() {
 		return !setupOk;
 	}
@@ -93,6 +73,21 @@ public class BootstrapViaLocalConsole extends BootstrapRecipe {
 	@Override
 	public boolean isStarted() {
 		return process != null;
+	}
+
+	@Override
+	public boolean isProviderEndpointAndAuthRequired() {
+		return false;
+	}
+
+	@Override
+	public String descriptionProviderEndpointAndAuthRequired() {
+		return null;
+	}
+
+	@Override
+	public void shellProviderEndpointAndAuth() {
+		// not used
 	}
 
 }
