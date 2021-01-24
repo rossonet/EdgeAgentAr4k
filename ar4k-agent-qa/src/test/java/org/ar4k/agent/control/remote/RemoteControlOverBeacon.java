@@ -46,7 +46,7 @@ import io.grpc.stub.StreamObserver;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RemoteControlOverBeacon {
-
+	private static final int VALIDITY_CERT_DAYS = 365 * 3;
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final Map<String, Homunculus> testAnimas = new HashMap<>();
 	private final File keyStoreMaster = new File("./tmp/master.ks");
@@ -72,16 +72,16 @@ public class RemoteControlOverBeacon {
 		Files.createDirectories(Paths.get("./tmp"));
 		KeystoreLoader.createSelfSignedCert("ca", "Rossonet", "TEST UNIT", "IMOLA", "BOLOGNA", "IT",
 				"urn:org.ar4k.agent:ca", "*.ar4k.net", "127.0.0.1", masterAliasInKeystore,
-				keyStoreMaster.getAbsolutePath(), passwordKs, true);
+				keyStoreMaster.getAbsolutePath(), passwordKs, true, VALIDITY_CERT_DAYS);
 		KeystoreLoader.create("server", "Rossonet", "TEST UNIT S", "IMOLA", "BOLOGNA", "IT",
 				"urn:org.ar4k.agent:server-test-agent", "*.ar4k.net", "127.0.0.1", serverAliasInKeystore,
-				keyStoreServer.getAbsolutePath(), passwordKs, false);
+				keyStoreServer.getAbsolutePath(), passwordKs, false, VALIDITY_CERT_DAYS);
 		KeystoreLoader.create("client2", "Rossonet", "TEST UNIT C2", "IMOLA", "BOLOGNA", "IT",
 				"urn:org.ar4k.agent:client2-test-agent", "*.ar4k.net", "127.0.0.1", client2AliasInKeystore,
-				keyStoreClient2.getAbsolutePath(), passwordKs, false);
+				keyStoreClient2.getAbsolutePath(), passwordKs, false, VALIDITY_CERT_DAYS);
 		KeystoreLoader.create("client1", "Rossonet", "TEST UNIT C1", "IMOLA", "BOLOGNA", "IT",
 				"urn:org.ar4k.agent:client1-test-agent", "*.ar4k.net", "127.0.0.1", client1AliasInKeystore,
-				keyStoreClient1.getAbsolutePath(), passwordKs, false);
+				keyStoreClient1.getAbsolutePath(), passwordKs, false, VALIDITY_CERT_DAYS);
 		final PKCS10CertificationRequest csrServer = KeystoreLoader.getPKCS10CertificationRequest(serverAliasInKeystore,
 				keyStoreServer.getAbsolutePath(), passwordKs);
 		final PKCS10CertificationRequest csrClient2 = KeystoreLoader

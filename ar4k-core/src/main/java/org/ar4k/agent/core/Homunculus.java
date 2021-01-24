@@ -140,6 +140,8 @@ public class Homunculus
 
 	private static final String DB_DATASTORE_NAME = "datastore";
 
+	private static final int VALIDITY_CERT_DAYS = 365 * 3;
+
 	private Timer timerScheduler = null;
 
 	@Autowired
@@ -427,7 +429,7 @@ public class Homunculus
 				logger.warn("new keystore: {}", ks);
 				ks.createSelfSignedCert(getAgentUniqueName() + "-master", ConfigHelper.organization, ConfigHelper.unit,
 						ConfigHelper.locality, ConfigHelper.state, ConfigHelper.country, ConfigHelper.uri,
-						ConfigHelper.dns, ConfigHelper.ip, ks.keyStoreAlias, true);
+						ConfigHelper.dns, ConfigHelper.ip, ks.keyStoreAlias, true, VALIDITY_CERT_DAYS);
 			}
 			setMyIdentityKeystore(ks);
 			setMyAliasCertInKeystore(ks.keyStoreAlias);
