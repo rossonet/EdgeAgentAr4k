@@ -2,7 +2,7 @@ description = "Atomix integration component"
 
 dependencies {
 	compile project(':ar4k-core')
-	compile group: 'com.hazelcast', name: 'hazelcast', version: '3.12.2'
+	compile group: 'com.hazelcast', name: 'hazelcast', version: '4.1.1'
 	compile group: 'com.hazelcast', name: 'hazelcast-kubernetes', version: '1.5.1'
 }
 
