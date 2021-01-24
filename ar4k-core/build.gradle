@@ -3,11 +3,8 @@ description = "core Ar4k Edge Gateway"
 apply plugin: 'com.google.protobuf'
 
 dependencies {
-	//compile project(':ar4k-terminal')
-	// crittografia
 	compile('org.bouncycastle:bcprov-jdk15on:1.59')
 	compile('org.bouncycastle:bcpkix-jdk15on:1.59')
-	// rilevamento hardware e so
 	compile 'com.github.oshi:oshi-core:3.5.0'
 	compile group: 'com.pi4j', name: 'pi4j-core', version: '1.2'
 	// ssh
@@ -20,7 +17,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile("org.springframework:spring-jms")
 	compile('org.springframework.boot:spring-boot-starter-logging')
-	//compile('org.springframework.boot:spring-boot-starter-webflux')
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 	compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
 	compile('org.springframework.boot:spring-boot-starter-security')
@@ -29,16 +25,11 @@ dependencies {
 	compile "org.springframework.statemachine:spring-statemachine-core:${rootProject.ext.springStatemachineVersion}"
 	// jms
 	compile group: 'org.springframework.integration', name: 'spring-integration-jms'
-	// mail
-	//compile group: 'org.springframework.integration', name: 'spring-integration-mail'
-	// mqtt
-	//compile group: 'org.springframework.integration', name: 'spring-integration-mqtt'
 	// file
 	compile group: 'org.springframework.integration', name: 'spring-integration-file'
 	// git
 	//compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.0.2.201807311906-r'
-	compile 'dnsjava:dnsjava:2.1.9'
-	//compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.6'
+	compile 'dnsjava:dnsjava:3.2.2'
 	// datastore
 	compile group: 'org.fusesource.jdbm', name: 'jdbm', version: '2.0.1'
 	compile group: 'joda-time', name: 'joda-time', version: '2.10.8'
@@ -58,7 +49,7 @@ dependencies {
 	//compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
 	//script engine groovy-jsr223
-	compile 'org.codehaus.groovy:groovy-all:2.5.13'
+	compile 'org.codehaus.groovy:groovy-all:3.0.7'
 	compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.13'
 	//compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
