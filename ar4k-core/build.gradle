@@ -49,7 +49,7 @@ dependencies {
 	//compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
 	//script engine groovy-jsr223
-	compile 'org.codehaus.groovy:groovy-all:2.5.13'
+	compile 'org.codehaus.groovy:groovy-all:3.0.7'
 	compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.13'
 	//compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
