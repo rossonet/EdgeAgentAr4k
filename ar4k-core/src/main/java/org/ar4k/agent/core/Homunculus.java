@@ -464,9 +464,11 @@ public class Homunculus
 		} else {
 			logger.warn("console only true, run just the command line");
 		}
-		System.out.println("__________________________________________________");
-		System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
-		System.out.println("__________________________________________________\n");
+		if (starterProperties.isShowRegistrationCode()) {
+			System.out.println("__________________________________________________");
+			System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
+			System.out.println("__________________________________________________\n");
+		}
 	}
 
 	// workaround Spring State Machine
@@ -1287,7 +1289,7 @@ public class Homunculus
 
 	public Collection<String> getRuntimeProvides() {
 		final Collection<String> result = new ArrayList<String>();
-		for (ServiceComponent<EdgeComponent> c : components) {
+		for (final ServiceComponent<EdgeComponent> c : components) {
 			if (c.isRunning() && c.getPot() != null && c.getPot().getConfiguration() != null
 					&& c.getPot().getConfiguration().getProvides() != null) {
 				result.addAll(c.getPot().getConfiguration().getProvides());
@@ -1299,7 +1301,7 @@ public class Homunculus
 
 	public Collection<String> getRuntimeRequired() {
 		final Collection<String> result = new ArrayList<String>();
-		for (ServiceComponent<EdgeComponent> c : components) {
+		for (final ServiceComponent<EdgeComponent> c : components) {
 			if (c.getPot() != null && c.getPot().getConfiguration() != null
 					&& c.getPot().getConfiguration().getRequired() != null) {
 				result.addAll(c.getPot().getConfiguration().getRequired());
