@@ -35,20 +35,20 @@ public class EdgeStarterProperties {
 	private String uniqueName = null;
 	private String uniqueNameFile = null;
 	private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
-	private String fileConfig = ConfigHelper.USER_HOME + "/.ar4k/defaultBoot.config.base64.ar4k";
-	private String webConfig = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.config.base64.ar4k";
+	private String fileConfig = ConfigHelper.USER_HOME + "/.ar4k/default.config.base64.ar4k";
+	private String webConfig = "";
 	private String dnsConfig = "";
 	private String baseConfig = "";
 	private String fileKeystore = ConfigHelper.USER_HOME + "/.ar4k/default.keystore";
-	private String webKeystore = "https://www.rossonet.name/dati/ar4kAgent/defaultBoot.keystore";
+	private String webKeystore = "";
 	private String dnsKeystore = "";
 	private String keystoreMainAlias = "cert-agent";
 	private String keystoreConfigAlias = "";
 	private String keystoreBeaconAlias = "";
-	private String keystorePassword = "se-A4.rk!9";
+	private String keystorePassword = "1234";
 	private String beaconCaChainPem = "xxxxx";
 	private String beaconClearText = "true";
-	private String adminPassword = "a4c8ff551a";
+	private String adminPassword = "admin";
 	private String webRegistrationEndpoint = "";
 	private String dnsRegistrationEndpoint = "";
 	private String beaconDiscoveryFilterString = "AR4K";
@@ -62,6 +62,7 @@ public class EdgeStarterProperties {
 	private String animaDatastoreFileName = "data_map";
 	private String test = "true";
 	private String logoUrl = "/static/img/ar4k.png";
+	private String showRegistrationCode = "true";
 
 	public String getConfPath() {
 		return confPath;
@@ -263,23 +264,6 @@ public class EdgeStarterProperties {
 		this.keystoreConfigAlias = keystoreConfigAlias;
 	}
 
-	@Override
-	public String toString() {
-		return "Ar4kStarterProperties [uniqueName=" + uniqueName + ", uniqueNameFile=" + uniqueNameFile + ", confPath="
-				+ confPath + ", fileConfig=" + fileConfig + ", webConfig=" + webConfig + ", dnsConfig=" + dnsConfig
-				+ ", baseConfig=" + baseConfig + ", fileKeystore=" + fileKeystore + ", webKeystore=" + webKeystore
-				+ ", dnsKeystore=" + dnsKeystore + ", keystoreMainAlias=" + keystoreMainAlias + ", keystoreConfigAlias="
-				+ keystoreConfigAlias + ", keystoreBeaconAlias=" + keystoreBeaconAlias + ", keystorePassword=" + "xxxx"
-				+ ", beaconCaChainPem=" + beaconCaChainPem + ", beaconClearText=" + beaconClearText + ", adminPassword="
-				+ "xxxx" + ", webRegistrationEndpoint=" + webRegistrationEndpoint + ", dnsRegistrationEndpoint="
-				+ dnsRegistrationEndpoint + ", beaconDiscoveryFilterString=" + beaconDiscoveryFilterString
-				+ ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", fileConfigOrder=" + fileConfigOrder
-				+ ", webConfigOrder=" + webConfigOrder + ", dnsConfigOrder=" + dnsConfigOrder + ", baseConfigOrder="
-				+ baseConfigOrder + ", threadSleep=" + threadSleep + ", consoleOnly=" + consoleOnly
-				+ ", animaDatastoreFileName=" + animaDatastoreFileName + ", test=" + test + ", logoUrl=" + logoUrl
-				+ "]";
-	}
-
 	public String getKeystoreBeaconAlias() {
 		return keystoreBeaconAlias;
 	}
@@ -318,6 +302,14 @@ public class EdgeStarterProperties {
 
 	public void setUniqueNameFile(String uniqueNameFile) {
 		this.uniqueNameFile = uniqueNameFile;
+	}
+
+	public String isShowRegistrationCode() {
+		return showRegistrationCode;
+	}
+
+	public synchronized void setShowRegistrationCode(String showRegistrationCode) {
+		this.showRegistrationCode = showRegistrationCode;
 	}
 
 }
