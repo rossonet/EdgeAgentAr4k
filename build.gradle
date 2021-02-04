@@ -1,5 +1,5 @@
 group = 'net.rossonet'
-version = '0.2.1'
+version = '0.9.1'
 
 ext {
 	sourceCompatibility = 1.8
