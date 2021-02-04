@@ -237,7 +237,8 @@ subprojects {
 
 	javadoc{
 		destinationDir = file("${rootProject.buildDir}/docs/javadoc/${project.name}/")
-		failOnError=false
+		failOnError=true
+		exclude 'com/vaadin/server/**'
 	}
 
 	publishing {
