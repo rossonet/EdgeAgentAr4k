@@ -23,12 +23,13 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.vaadin.annotations.StyleSheet;
+//import com.vaadin.annotations.StyleSheet;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ReconnectDialogConfiguration;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

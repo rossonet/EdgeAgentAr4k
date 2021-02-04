@@ -4,14 +4,14 @@ version = '0.9.3'
 ext {
 	sourceCompatibility = 1.8
 	springStatemachineVersion = '2.2.0.RELEASE'
-	springBootVersion = '2.4.1.RELEASE'
+	springBootVersion = '2.4.2.RELEASE'
 	ossrhPassword = System.getenv('OSSRH_PASSWORD')
-	springGradleBootVersion = '2.4.1'
+	springGradleBootVersion = '2.4.2'
 }
 
 buildscript {
     ext {
-		springGradleBootVersion = '2.4.1'
+		springGradleBootVersion = '2.4.2'
 	}
 	
 	repositories {
