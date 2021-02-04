@@ -464,7 +464,8 @@ public class Homunculus
 		} else {
 			logger.warn("console only true, run just the command line");
 		}
-		if (starterProperties.isShowRegistrationCode()) {
+		if (starterProperties.isShowRegistrationCode().equals("true")
+				|| starterProperties.isShowRegistrationCode().equals("yes")) {
 			System.out.println("__________________________________________________");
 			System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
 			System.out.println("__________________________________________________\n");
