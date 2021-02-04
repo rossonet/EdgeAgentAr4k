@@ -12,7 +12,7 @@ dependencies {
 	compile group: 'org.eclipse.milo', name: 'dictionary-manager', version: '0.5.3'
 	compile group: 'org.eclipse.milo', name: 'dictionary-reader', version: '0.5.3'
 	// MODBUS
-	compile group: 'com.infiniteautomation', name: 'modbus4j', version: '3.0.3'
+	//compile group: 'com.infiniteautomation', name: 'modbus4j', version: '3.0.3'
 
 }
 
