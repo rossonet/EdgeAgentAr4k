@@ -238,7 +238,7 @@ subprojects {
 	javadoc{
 		destinationDir = file("${rootProject.buildDir}/docs/javadoc/${project.name}/")
 		failOnError=true
-		exclude 'com/vaadin/server/**'
+		exclude 'com/vaadin/server/**','org/ar4k/agent/tunnels/http2/grpc/beacon/**'
 	}
 
 	publishing {
