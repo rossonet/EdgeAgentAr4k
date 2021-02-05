@@ -2,7 +2,7 @@ description = "Kettle addons"
 
 dependencies {
 	compile project(':ar4k-core')
-	compile('log4j:log4j:1.2.17')
+	compile('log4j:log4j:1.2.17-cloudera1')
 	compile group: 'pentaho-kettle', name: 'kettle-core', version: '9.2.0.0-186'
 	compile group: 'pentaho-kettle', name: 'kettle-engine', version: '9.1.0.0-295'
 	compile group: 'pentaho-kettle', name: 'pdi-salesforce-plugin', version: '7.1.0.1-34'
