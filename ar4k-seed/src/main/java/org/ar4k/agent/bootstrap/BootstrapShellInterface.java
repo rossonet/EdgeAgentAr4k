@@ -59,6 +59,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bootStrapInterface")
 public class BootstrapShellInterface extends AbstractShellHelper implements AutoCloseable {
 
+	private static final String DEFAULT_CONFIGURATION_APTH = "./seed-config.bin";
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(BootstrapShellInterface.class.toString());
 
@@ -151,6 +152,22 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 	@ShellMethodAvailability("mayClean")
 	public void configureBootstrapProvider() {
 		bootstrapSupport.getBootstrapRecipe().shellProviderEndpointAndAuth();
+	}
+
+	@ShellMethod(value = "Save this configuration")
+	@ManagedOperation
+	@ShellMethodAvailability("mayClean")
+	public void saveBootstrapConfiguration(
+			@ShellOption(help = "configuration file path", defaultValue = DEFAULT_CONFIGURATION_APTH) String seedConfigFile) {
+		bootstrapSupport.getBootstrapRecipe().saveConfiguration(seedConfigFile);
+	}
+
+	@ShellMethod(value = "Load this configuration")
+	@ManagedOperation
+	@ShellMethodAvailability("mayClean")
+	public void loadBootstrapConfiguration(
+			@ShellOption(help = "configuration file path", defaultValue = DEFAULT_CONFIGURATION_APTH) String seedConfigFile) {
+		bootstrapSupport.getBootstrapRecipe().loadConfiguration(seedConfigFile);
 	}
 
 	@ShellMethod(value = "Start Beacon server")

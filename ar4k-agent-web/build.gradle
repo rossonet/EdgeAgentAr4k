@@ -1,28 +1,21 @@
+// NPM dep!
+//npm add -g pnpm@4.5.0
+
+
 plugins {
-	//id "org.gretty" version '3.0.2'
 	id 'com.vaadin' version '0.8.0'
-	//id 'com.devsoap.plugin.vaadin' version '1.2.0'
-	// id "application"
 }
 
 apply plugin: "docker"
-//apply plugin : "application"
 
 description = "Test platform. Agente gestione Web"
 
 dependencies {
 	compile project(':ar4k-core')
-	compile project(':ar4k-terminal')
 	compile project(':ar4k-vaadin')
-	compile project(':ar4k-seed')
-	//compile group: 'org.springframework.security', name: 'spring-security-web'//, version: '5.4.2'
-	compile group: 'org.springframework.security', name: 'spring-security-config'//, version: '5.3.3.RELEASE'
-	//compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.4.4'
+	compile group: 'org.springframework.security', name: 'spring-security-config'
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
-	compile("org.springframework.boot:spring-boot-devtools")
 }
-
-//mainClassName = 'org.ar4k.agent.console.Ar4kAgent'
 
 bootJar {
 	launchScript()

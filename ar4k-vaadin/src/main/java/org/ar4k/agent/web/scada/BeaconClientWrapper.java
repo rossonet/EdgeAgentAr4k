@@ -49,8 +49,13 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 			}
 		}
 		if (host != null && !host.isEmpty() && port != 0) {
-			this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).connectToBeaconService(
-					"http://" + host + ":" + port, beaconCaChainPem, discoveryPort, discoveryFilter, false);
+			if (Homunculus.getApplicationContext() != null
+					&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
+				this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).connectToBeaconService(
+						"http://" + host + ":" + port, beaconCaChainPem, discoveryPort, discoveryFilter, false);
+			} else {
+				logger.warn("no Homunculus found");
+			}
 		}
 	}
 
