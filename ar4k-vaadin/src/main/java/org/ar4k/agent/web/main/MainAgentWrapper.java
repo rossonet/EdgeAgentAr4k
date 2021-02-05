@@ -1,4 +1,4 @@
-package org.ar4k.agent.web.scada;
+package org.ar4k.agent.web.main;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,15 +15,15 @@ import org.json.JSONObject;
 
 import com.google.protobuf.ByteString;
 
-public class ScadaAgentWrapper implements IScadaAgent {
+public class MainAgentWrapper implements IScadaAgent {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ScadaAgentWrapper.class.toString());
+			.getLogger(MainAgentWrapper.class.toString());
 
 	private final Agent agent;
 	private final IBeaconClient beaconClient;
 
-	public ScadaAgentWrapper(IBeaconClient beaconClient, Agent agent) {
+	public MainAgentWrapper(IBeaconClient beaconClient, Agent agent) {
 		this.beaconClient = beaconClient;
 		this.agent = agent;
 	}

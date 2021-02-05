@@ -1,4 +1,4 @@
-package org.ar4k.agent.web.scada;
+package org.ar4k.agent.web.main;
 
 import java.util.UUID;
 

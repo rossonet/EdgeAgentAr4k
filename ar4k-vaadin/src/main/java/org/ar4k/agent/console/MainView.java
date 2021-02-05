@@ -17,7 +17,7 @@ import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.web.interfaces.AgentMenu;
-import org.ar4k.agent.web.scada.ScadaBeaconService;
+import org.ar4k.agent.web.main.MainBeaconService;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -42,7 +42,7 @@ import com.vaadin.flow.theme.material.Material;
 
 @Route("")
 @Theme(value = Material.class, variant = Material.DARK)
-@PageTitle("Rossonet Scada")
+@PageTitle("Rossonet Ar4k Console")
 @StyleSheet("frontend://edge.css")
 public class MainView extends VerticalLayout implements IMainView {
 
@@ -53,8 +53,8 @@ public class MainView extends VerticalLayout implements IMainView {
 
 	public static final String PACKET_SEARCH_BASE = "org.ar4k.agent";
 
-	private transient ScadaBeaconService scadaBeaconService = Homunculus.getApplicationContext()
-			.getBean(ScadaBeaconService.class);
+	private transient MainBeaconService mainBeaconService = Homunculus.getApplicationContext()
+			.getBean(MainBeaconService.class);
 
 	private final TextField agentFilterText = new TextField();
 	private final MenuBar menuBar = new MenuBar();
@@ -199,13 +199,13 @@ public class MainView extends VerticalLayout implements IMainView {
 	}
 
 	private void updateListBeaconAgent() {
-		gridClient.setItems(scadaBeaconService.getClients(agentFilterText.getValue()));
+		gridClient.setItems(mainBeaconService.getClients(agentFilterText.getValue()));
 
 	}
 
 	@Override
 	public Collection<IScadaAgent> getAllAgents() {
-		return scadaBeaconService.getClients(null);
+		return mainBeaconService.getClients(null);
 	}
 
 	@Override
@@ -225,12 +225,12 @@ public class MainView extends VerticalLayout implements IMainView {
 
 	@Override
 	public void addClientServer(IBeaconClientScadaWrapper beaconClientWrapper) {
-		scadaBeaconService.addClientServer(beaconClientWrapper);
+		mainBeaconService.addClientServer(beaconClientWrapper);
 	}
 
 	@Override
 	public Collection<IBeaconClientScadaWrapper> getBeaconServersList(String value) {
-		return scadaBeaconService.getBeaconServersList(value);
+		return mainBeaconService.getBeaconServersList(value);
 	}
 
 }

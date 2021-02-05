@@ -6,7 +6,7 @@ import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.web.scada.BeaconClientWrapper;
+import org.ar4k.agent.web.main.BeaconClientWrapper;
 import org.ar4k.agent.web.widget.menu.BeaconServerMenu;
 
 import com.vaadin.flow.component.ComponentEvent;

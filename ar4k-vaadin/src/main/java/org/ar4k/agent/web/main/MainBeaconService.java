@@ -1,4 +1,4 @@
-package org.ar4k.agent.web.scada;
+package org.ar4k.agent.web.main;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,13 +16,13 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScadaBeaconService implements AutoCloseable {
+public class MainBeaconService implements AutoCloseable {
 
 	private final static int SCAN_DELAY = 20000;
 	private final Timer timer = new Timer();
 	private final TimerTask refreshServer;
 
-	public ScadaBeaconService() {
+	public MainBeaconService() {
 		createDemoData();
 		refreshServer = createTimerTask();
 		timer.schedule(refreshServer, SCAN_DELAY, SCAN_DELAY);
@@ -44,7 +44,7 @@ public class ScadaBeaconService implements AutoCloseable {
 
 	@SuppressWarnings("unused")
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ScadaBeaconService.class.toString());
+			.getLogger(MainBeaconService.class.toString());
 
 	private List<IBeaconClientScadaWrapper> beaconServers = new ArrayList<>();
 	private Map<String, IScadaAgent> agents = new HashMap<>();
@@ -71,7 +71,7 @@ public class ScadaBeaconService implements AutoCloseable {
 						&& !c.getBeaconClient().listAgentsConnectedToBeacon().isEmpty())
 					for (final Agent a : c.getBeaconClient().listAgentsConnectedToBeacon()) {
 						if (agents.keySet().isEmpty() || !agents.keySet().contains(a.getAgentUniqueName())) {
-							agents.put(a.getAgentUniqueName(), new ScadaAgentWrapper(c.getBeaconClient(), a));
+							agents.put(a.getAgentUniqueName(), new MainAgentWrapper(c.getBeaconClient(), a));
 						}
 					}
 			}

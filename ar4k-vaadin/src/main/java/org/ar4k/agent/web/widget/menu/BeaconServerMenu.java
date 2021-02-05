@@ -8,7 +8,7 @@ import org.ar4k.agent.core.interfaces.AgentWebMenu;
 import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.web.interfaces.AgentMenu;
-import org.ar4k.agent.web.scada.BeaconClientWrapper;
+import org.ar4k.agent.web.main.BeaconClientWrapper;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.contextmenu.MenuItem;
