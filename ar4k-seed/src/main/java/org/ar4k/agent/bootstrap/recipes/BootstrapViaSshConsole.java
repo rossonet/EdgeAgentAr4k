@@ -7,6 +7,8 @@ import org.ar4k.agent.tunnels.ssh.client.SSHUserInfo;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
@@ -107,7 +109,24 @@ public class BootstrapViaSshConsole extends BootstrapViaLocalConsole {
 
 	@Override
 	public void start() {
-		// TODO remote start
+		String command = "nohup java -jar " + remotePath + "/app.jar --spring.shell.interactive.enabled=false &";
+		try {
+			Session session = connect();
+			if (session != null && session.isConnected()) {
+				Channel channel = session.openChannel("exec");
+				((ChannelExec) channel).setCommand(command);
+				channel.setInputStream(null);
+				channel.connect();
+				((ChannelExec) channel).run();
+				Thread.sleep(5000);
+				channel.disconnect();
+				session.disconnect();
+			} else {
+				logger.error("ssh connection doesn't work");
+			}
+		} catch (Exception e) {
+			logger.logException(e);
+		}
 	}
 
 	@Override
