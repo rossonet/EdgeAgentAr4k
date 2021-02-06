@@ -1,5 +1,5 @@
 group = 'net.rossonet'
-version = '0.9.4'
+version = '0.9.5'
 
 ext {
 	sourceCompatibility = 1.8
@@ -415,7 +415,7 @@ task makeRpmDruido(type: Rpm){
   from('ar4k-agent-druido/build/libs'){
     into '/opt/rossonet'
   }
-  from('rpm/init-druido'){
+  from('dist-utils/init-druido'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')
@@ -444,7 +444,7 @@ task makeRpmWeb(type: Rpm){
   from('ar4k-agent-web/build/libs'){
     into '/opt/rossonet'
   }
-  from('rpm/init-web'){
+  from('dist-utils/init-web'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')
@@ -471,7 +471,7 @@ task makeDebianDruido(type: Deb){
   from('ar4k-agent-druido/build/libs'){
     into '/opt/rossonet'
   }
-  from('rpm/init-druido'){
+  from('dist-utils/init-druido'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')
@@ -498,7 +498,7 @@ task makeDebianWeb(type: Deb){
   from('ar4k-agent-web/build/libs'){
     into '/opt/rossonet'
   }
-  from('rpm/init-web'){
+  from('dist-utils/init-web'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')

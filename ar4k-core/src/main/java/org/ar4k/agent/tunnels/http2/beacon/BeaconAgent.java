@@ -13,89 +13,94 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestToAgent;
 import org.joda.time.Instant;
 import org.json.JSONObject;
 
+//TODO Beacon Agent to Agent per unire due server Beacon in modalità distribuita e cluster ( namespace unico? )
+//TODO Beacon Agent to Agent deve avere funzioni di gestione della sicurezza dei dati sottoscritti con logica sui certificati
+// unisce oggetti con livelli di sicurezza pari o diversa in termine di utilizzo dei comandi (ShellScript) e dati.
+// attenzione al deny of service. Ci deve essere un controllo sulla frequenza di sottoscrizione e di esecuzione dei comandi
 public class BeaconAgent implements AutoCloseable {
 
-  private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(BeaconAgent.class.toString());
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(BeaconAgent.class.toString());
 
-  private static final int queueSize = 50;
+	private static final int queueSize = 50;
 
-  private Instant lastCall = Instant.now();
+	private Instant lastCall = Instant.now();
 
-  private final RegisterRequest registerRequest;
-  private final RegisterReply registerReply;
-  private final Queue<RequestToAgent> cmdCalls = new ArrayBlockingQueue<>(queueSize);
+	private final RegisterRequest registerRequest;
+	private final RegisterReply registerReply;
+	private final Queue<RequestToAgent> cmdCalls = new ArrayBlockingQueue<>(queueSize);
 
-  private JSONObject hardwareInfo;
+	private JSONObject hardwareInfo;
 
-  public BeaconAgent(RegisterRequest registerRequest, RegisterReply registerReply) {
-    this.registerRequest = registerRequest;
-    this.registerReply = registerReply;
-    try {
-      this.hardwareInfo = new JSONObject(registerRequest.getJsonHealth());
-    } catch (Exception a) {
-      logger.logException(a);
-    }
-  }
+	public BeaconAgent(RegisterRequest registerRequest, RegisterReply registerReply) {
+		this.registerRequest = registerRequest;
+		this.registerReply = registerReply;
+		try {
+			this.hardwareInfo = new JSONObject(registerRequest.getJsonHealth());
+		} catch (Exception a) {
+			logger.logException(a);
+		}
+	}
 
-  public RegisterRequest getRegisterRequest() {
-    return registerRequest;
-  }
+	public RegisterRequest getRegisterRequest() {
+		return registerRequest;
+	}
 
-  public RegisterReply getRegisterReply() {
-    return registerReply;
-  }
+	public RegisterReply getRegisterReply() {
+		return registerReply;
+	}
 
-  public String getAgentUniqueName() {
-    return registerReply.getRegisterCode();
-  }
+	public String getAgentUniqueName() {
+		return registerReply.getRegisterCode();
+	}
 
-  public JSONObject getHardwareInfoAsJson() {
-    return hardwareInfo;
-  }
+	public JSONObject getHardwareInfoAsJson() {
+		return hardwareInfo;
+	}
 
-  public List<RequestToAgent> getCommandsToBeExecute() {
-    List<RequestToAgent> r = new ArrayList<>();
-    while (!cmdCalls.isEmpty()) {
-      r.add(cmdCalls.poll());
-    }
-    lastCall = Instant.now();
-    return r;
-  }
+	public List<RequestToAgent> getCommandsToBeExecute() {
+		List<RequestToAgent> r = new ArrayList<>();
+		while (!cmdCalls.isEmpty()) {
+			r.add(cmdCalls.poll());
+		}
+		lastCall = Instant.now();
+		return r;
+	}
 
-  public void addRequestForAgent(RequestToAgent req) {
-    cmdCalls.offer(req);
-  }
+	public void addRequestForAgent(RequestToAgent req) {
+		cmdCalls.offer(req);
+	}
 
-  public int getPollingFrequency() {
-    return registerReply.getMonitoringFrequency();
-  }
+	public int getPollingFrequency() {
+		return registerReply.getMonitoringFrequency();
+	}
 
-  public long getTimestampRegistration() {
-    return registerRequest.getTime().getSeconds();
-  }
+	public long getTimestampRegistration() {
+		return registerRequest.getTime().getSeconds();
+	}
 
-  @Override
-  public void close() throws Exception {
-    cmdCalls.clear();
-  }
+	@Override
+	public void close() throws Exception {
+		cmdCalls.clear();
+	}
 
-  public Instant getLastCall() {
-    return lastCall;
-  }
+	public Instant getLastCall() {
+		return lastCall;
+	}
 
-  public void setHardwareInfo(JSONObject hardwareInfo) {
-    this.hardwareInfo = hardwareInfo;
-  }
+	public void setHardwareInfo(JSONObject hardwareInfo) {
+		this.hardwareInfo = hardwareInfo;
+	}
 
-  @Override
-  public String toString() {
-    return "BeaconAgent [lastCall=" + lastCall + ", registerRequest=" + registerRequest + ", registerReply="
-        + registerReply + "]";
-  }
+	@Override
+	public String toString() {
+		return "BeaconAgent [lastCall=" + lastCall + ", registerRequest=" + registerRequest + ", registerReply="
+				+ registerReply + "]";
+	}
 
-  public String getShortDescription() {
-    return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: " + cmdCalls.size();
-  }
+	public String getShortDescription() {
+		return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: "
+				+ cmdCalls.size();
+	}
 
 }

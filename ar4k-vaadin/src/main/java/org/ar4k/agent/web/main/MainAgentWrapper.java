@@ -145,12 +145,16 @@ public class MainAgentWrapper implements IScadaAgent {
 
 	@Override
 	public List<String> getProvides() {
-		return beaconClient.getRuntimeProvides(agent.getAgentUniqueName()).getListDatasList();
+		return (beaconClient != null && beaconClient.getRuntimeProvides(agent.getAgentUniqueName()) != null)
+				? beaconClient.getRuntimeProvides(agent.getAgentUniqueName()).getListDatasList()
+				: new ArrayList<>();
 	}
 
 	@Override
 	public List<String> getRequired() {
-		return beaconClient.getRuntimeRequired(agent.getAgentUniqueName()).getListDatasList();
+		return (beaconClient != null && beaconClient.getRuntimeRequired(agent.getAgentUniqueName()) != null)
+				? beaconClient.getRuntimeRequired(agent.getAgentUniqueName()).getListDatasList()
+				: new ArrayList<>();
 	}
 
 	@Override

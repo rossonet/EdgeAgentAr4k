@@ -40,8 +40,16 @@ public class BeaconServerPage implements AgentTab {
 	public Div getPage(IScadaAgent beaconAgentWrapper) {
 		Div externalDiv = new Div();
 		VerticalLayout div = new VerticalLayout();
-		div.add(new Text("PROVIDES: " + beaconAgentWrapper.getProvides()));
-		div.add(new Text("REQUIRED: " + beaconAgentWrapper.getRequired()));
+		Text titleProviders = new Text("PROVIDES");
+		div.add(titleProviders);
+		for (String provider : beaconAgentWrapper.getProvides()) {
+			div.add(new Text(provider));
+		}
+		Text titleRequired = new Text("REQUIRED");
+		div.add(titleRequired);
+		for (String requirement : beaconAgentWrapper.getRequired()) {
+			div.add(new Text(requirement));
+		}
 		externalDiv.setWidth("95vw");
 		externalDiv.setHeight("85vh");
 		externalDiv.add(div);
