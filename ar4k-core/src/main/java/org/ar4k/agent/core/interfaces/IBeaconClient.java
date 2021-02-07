@@ -9,14 +9,15 @@ import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ConfigReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListStringReply;
-import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 
 import io.grpc.ConnectivityState;
 
@@ -85,5 +86,7 @@ public interface IBeaconClient {
 	ListStringReply getRuntimeProvides(String agentId);
 
 	ListStringReply getRuntimeRequired(String agentId);
+
+	List<AgentRequest> listProvisioningRequests();
 
 }

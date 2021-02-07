@@ -12,6 +12,7 @@ import java.util.Set;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.AgentWebMenu;
 import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
 import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -231,6 +232,11 @@ public class MainView extends VerticalLayout implements IMainView {
 	@Override
 	public Collection<IBeaconClientScadaWrapper> getBeaconServersList(String value) {
 		return mainBeaconService.getBeaconServersList(value);
+	}
+
+	@Override
+	public Collection<IBeaconProvisioningAuthorization> getProvisioningAuthorizationList(String value) {
+		return mainBeaconService.getProvisioningAuthorizationList(value);
 	}
 
 }

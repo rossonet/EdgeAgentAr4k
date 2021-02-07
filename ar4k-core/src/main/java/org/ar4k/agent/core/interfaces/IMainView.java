@@ -12,4 +12,6 @@ public interface IMainView {
 
 	Collection<IBeaconClientScadaWrapper> getBeaconServersList(String value);
 
+	Collection<IBeaconProvisioningAuthorization> getProvisioningAuthorizationList(String value);
+
 }

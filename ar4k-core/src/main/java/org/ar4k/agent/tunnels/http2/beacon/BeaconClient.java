@@ -36,6 +36,7 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandRequest;
@@ -48,6 +49,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.ExceptionRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.FlowMessage;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.HealthRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListAgentsReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ListAgentsRequestReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListStringReply;
@@ -1417,6 +1419,16 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	public static void setDiscoveryPacketMaxSize(int discoveryPacketMaxSize) {
 		BeaconClient.discoveryPacketMaxSize = discoveryPacketMaxSize;
+	}
+
+	@Override
+	public List<AgentRequest> listProvisioningRequests() {
+		final Empty empty = Empty.newBuilder().build();
+		final ListAgentsRequestReply reply = blockingStub.listAgentsRequestComplete(empty);
+		final ListAgentsRequestReply replyToDo = blockingStub.listAgentsRequestToDo(empty);
+		List<AgentRequest> requestsList = reply.getRequestsList();
+		requestsList.addAll(replyToDo.getRequestsList());
+		return requestsList;
 	}
 
 }

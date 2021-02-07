@@ -201,6 +201,13 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		return resolveBeaconClient().listAgentsConnectedToBeacon();
 	}
 
+	@ShellMethod(value = "List provisioning requests opened on Beacon server", group = "Beacon Client Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testBeaconClientRunning")
+	public List<AgentRequest> listProvisioningRequests() {
+		return resolveBeaconClient().listProvisioningRequests();
+	}
+
 	@ShellMethod(value = "List Agents connected to the Beacon server with health in JSON", group = "Beacon Client Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconClientRunning")

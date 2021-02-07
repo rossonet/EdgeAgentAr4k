@@ -9,10 +9,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
+import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +37,9 @@ public class MainBeaconService implements AutoCloseable {
 			public void run() {
 				try {
 					refreshAgentsFromBeacon();
+					refreshProvisioningRequestsFromBeacon();
 				} catch (final Exception a) {
+					logger.logException(a);
 					logger.info("exception when refresh Beacon client");
 				}
 			}
@@ -47,6 +51,8 @@ public class MainBeaconService implements AutoCloseable {
 			.getLogger(MainBeaconService.class.toString());
 
 	private List<IBeaconClientScadaWrapper> beaconServers = new ArrayList<>();
+
+	private Map<String, IBeaconProvisioningAuthorization> provisioningRequests = new HashMap<>();
 	private Map<String, IScadaAgent> agents = new HashMap<>();
 
 	public Collection<IScadaAgent> getClients(String filter) {
@@ -72,6 +78,20 @@ public class MainBeaconService implements AutoCloseable {
 					for (final Agent a : c.getBeaconClient().listAgentsConnectedToBeacon()) {
 						if (agents.keySet().isEmpty() || !agents.keySet().contains(a.getAgentUniqueName())) {
 							agents.put(a.getAgentUniqueName(), new MainAgentWrapper(c.getBeaconClient(), a));
+						}
+					}
+			}
+	}
+
+	private void refreshProvisioningRequestsFromBeacon() {
+		if (!beaconServers.isEmpty())
+			for (final IBeaconClientScadaWrapper c : beaconServers) {
+				if (c.getBeaconClient() != null && c.getBeaconClient().listProvisioningRequests() != null
+						&& !c.getBeaconClient().listProvisioningRequests().isEmpty())
+					for (final AgentRequest a : c.getBeaconClient().listProvisioningRequests()) {
+						if (provisioningRequests.keySet().isEmpty()
+								|| !provisioningRequests.keySet().contains(a.getIdRequest())) {
+							provisioningRequests.put(a.getIdRequest(), new BeaconProvisioningAuthorization(a));
 						}
 					}
 			}
@@ -119,6 +139,20 @@ public class MainBeaconService implements AutoCloseable {
 	public void close() throws Exception {
 		if (timer != null) {
 			timer.cancel();
+		}
+	}
+
+	public Collection<IBeaconProvisioningAuthorization> getProvisioningAuthorizationList(String filter) {
+		if (filter == null || filter.isEmpty()) {
+			return provisioningRequests.values();
+		} else {
+			final Collection<IBeaconProvisioningAuthorization> data = new ArrayList<>();
+			for (final IBeaconProvisioningAuthorization s : provisioningRequests.values()) {
+				if (s.isFoundBy(filter)) {
+					data.add(s);
+				}
+			}
+			return data;
 		}
 	}
 

@@ -1010,6 +1010,19 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			}
 		}
 
+		@Override
+		public void listAgentsRequestToDo(Empty request, StreamObserver<ListAgentsRequestReply> responseObserver) {
+			try {
+				final List<AgentRequest> values = listAgentRequests();
+				final ListAgentsRequestReply reply = ListAgentsRequestReply.newBuilder().addAllRequests(values)
+						.setResult(Status.newBuilder().setStatus(StatusValue.GOOD)).build();
+				responseObserver.onNext(reply);
+				responseObserver.onCompleted();
+			} catch (final Exception a) {
+				logger.logException(a);
+			}
+		}
+
 	}
 
 	/*
