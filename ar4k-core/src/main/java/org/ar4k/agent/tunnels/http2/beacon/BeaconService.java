@@ -37,102 +37,107 @@ import com.google.gson.GsonBuilder;
  */
 public class BeaconService implements EdgeComponent {
 
-  private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(Homunculus.class.toString());
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(Homunculus.class.toString());
 
-  // iniettata vedi set/get
-  private BeaconServiceConfig configuration = null;
+	// iniettata vedi set/get
+	private BeaconServiceConfig configuration = null;
 
-  private Homunculus homunculus = null;
+	private Homunculus homunculus = null;
 
-  private DataAddress dataAddress = null;
+	private DataAddress dataAddress = null;
 
-  private BeaconServer beaconServer = null;
+	private BeaconServer beaconServer = null;
 
-  @Override
-  public Homunculus getHomunculus() {
-    return homunculus;
-  }
+	@Override
+	public Homunculus getHomunculus() {
+		return homunculus;
+	}
 
-  @Override
-  public void setHomunculus(Homunculus homunculus) {
-    this.homunculus = homunculus;
-  }
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
+	}
 
-  @Override
-  public synchronized void init() {
-    try {
-      if (beaconServer == null) {
-        beaconServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(configuration.port)
-            .setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
-            .setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
-            .setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
-            .setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
-            .setBroadcastAddress(configuration.broadcastAddress).setAcceptCerts(configuration.acceptAllCerts).build();
-        beaconServer.start();
-      }
-    } catch (IOException e) {
-      logger.logException(e);
-    } catch (UnrecoverableKeyException e) {
-      logger.warn(e.getMessage());
-    }
-  }
+	@Override
+	public synchronized void init() {
+		try {
+			if (beaconServer == null) {
+				beaconServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(configuration.port)
+						.setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
+						.setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
+						.setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
+						.setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
+						.setBroadcastAddress(configuration.broadcastAddress)
+						.setAcceptCerts(configuration.acceptAllCerts).build();
+				beaconServer.start();
+			}
+		} catch (IOException e) {
+			logger.logException(e);
+		} catch (UnrecoverableKeyException e) {
+			logger.warn(e.getMessage());
+		}
+	}
 
-  @Override
-  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-    if (beaconServer == null) {
-      init();
-    } else {
-      if (beaconServer.isStopped()) {
-        beaconServer.stop();
-        beaconServer = null;
-        init();
-      } else {
-        beaconServer.clearOldData();
-      }
-    }
-    return ServiceStatus.RUNNING;
-  }
+	@Override
+	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		if (beaconServer == null) {
+			init();
+		} else {
+			if (beaconServer.isStopped()) {
+				beaconServer.stop();
+				beaconServer = null;
+				init();
+			} else {
+				beaconServer.clearOldData();
+			}
+		}
+		return ServiceStatus.RUNNING;
+	}
 
-  @Override
-  public void kill() {
-    if (beaconServer != null) {
-      beaconServer.stop();
-      beaconServer = null;
-    }
-  }
+	@Override
+	public void kill() {
+		if (beaconServer != null) {
+			beaconServer.stop();
+			beaconServer = null;
+		}
+	}
 
-  @Override
-  public DataAddress getDataAddress() {
-    return dataAddress;
-  }
+	@Override
+	public DataAddress getDataAddress() {
+		return dataAddress;
+	}
 
-  @Override
-  public void setDataAddress(DataAddress dataAddress) {
-    this.dataAddress = dataAddress;
-  }
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		this.dataAddress = dataAddress;
+	}
 
-  @Override
-  public void setConfiguration(ServiceConfig configuration) {
-    this.configuration = (BeaconServiceConfig) configuration;
-  }
+	@Override
+	public void setConfiguration(ServiceConfig configuration) {
+		this.configuration = (BeaconServiceConfig) configuration;
+	}
 
-  @Override
-  public JSONObject getDescriptionJson() {
-    Gson gson = new GsonBuilder().create();
-    return new JSONObject(gson.toJsonTree(configuration).getAsString());
-  }
+	@Override
+	public JSONObject getDescriptionJson() {
+		Gson gson = new GsonBuilder().create();
+		return new JSONObject(gson.toJsonTree(configuration).getAsString());
+	}
 
-  @Override
-  public void close() throws Exception {
-    if (beaconServer != null) {
-      beaconServer.close();
-    }
-  }
+	@Override
+	public void close() throws Exception {
+		if (beaconServer != null) {
+			beaconServer.close();
+		}
+	}
 
-  @Override
-  public ServiceConfig getConfiguration() {
-    return configuration;
-  }
+	@Override
+	public ServiceConfig getConfiguration() {
+		return configuration;
+	}
+
+	public BeaconServer getBeaconServer() {
+		return beaconServer;
+	}
 
 }

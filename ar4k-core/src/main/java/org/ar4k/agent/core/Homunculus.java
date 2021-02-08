@@ -55,6 +55,7 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
+import org.ar4k.agent.core.interfaces.IBeaconServer;
 import org.ar4k.agent.core.interfaces.ServiceComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.core.services.HomunculusService;
@@ -69,6 +70,7 @@ import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconService;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.BeanNameAware;
@@ -104,9 +106,7 @@ import jdbm.RecordManagerFactory;
  *         Classe principale singleton Ar4k Edge Agent. Gestisce la macchina a
  *         stati dei servizi e funge da Bean principale per l'uso delle API Ar4k
  */
-//@ManagedResource(objectName = "bean:name=anima", description = "Gestore principale agente", log = true, logFile = "anima.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "anima")
 @Component("homunculus")
-//@EnableMBeanExport
 @Scope("singleton")
 @EnableJms
 @EnableConfigurationProperties(EdgeStarterProperties.class)
@@ -1309,6 +1309,15 @@ public class Homunculus
 			}
 		}
 		return result;
+	}
+
+	public IBeaconServer getBeaconServerIfExists() {
+		for (ServiceComponent<EdgeComponent> singlePot : components) {
+			if (singlePot.getPot() instanceof BeaconService) {
+				return ((BeaconService) singlePot.getPot()).getBeaconServer();
+			}
+		}
+		return null;
 	}
 
 }

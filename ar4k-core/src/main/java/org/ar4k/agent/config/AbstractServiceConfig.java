@@ -222,7 +222,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
 	@Override
 	public List<String> getProvides() {
-		if (provides != null) {
+		if (provides != null && !provides.contains(getClass().getCanonicalName())) {
 			provides.add(getClass().getCanonicalName());
 			return provides;
 		} else {

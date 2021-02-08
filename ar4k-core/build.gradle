@@ -5,7 +5,7 @@ apply plugin: 'com.google.protobuf'
 dependencies {
 	compile('org.bouncycastle:bcprov-jdk15on:1.59')
 	compile('org.bouncycastle:bcpkix-jdk15on:1.59')
-	compile 'com.github.oshi:oshi-core:3.5.0'
+	compile 'com.github.oshi:oshi-core:5.4.1'
 	compile group: 'com.pi4j', name: 'pi4j-core', version: '1.2'
 	// ssh
 	compile "com.jcraft:jsch:0.1.55"
@@ -43,26 +43,15 @@ dependencies {
 	compile ('io.grpc:grpc-stub:1.34.0')//{ exclude (group:"com.google.guava",module:"guava")}
 	compile ("io.grpc:grpc-auth:1.34.0")//{ exclude (group:"com.google.guava",module:"guava")}
 	runtime 'io.netty:netty-tcnative-boringssl-static:2.0.36.Final'
-	//compile group: 'io.netty', name: 'netty-tcnative-boringssl-static', version: '2.0.28.Final'
-
-
-	//compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
 	//script engine groovy-jsr223
 	compile 'org.codehaus.groovy:groovy-all:2.5.14'
 	compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.14'
-	//compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
 
-	// per let's encrypt
-	// compile 'org.shredzone.acme4j:acme4j:2.7'
-	//testCompile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
-	// commons-compress
 	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
-	// https://mvnrepository.com/artifact/commons-codec/commons-codec
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.15'
-	// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.9.0.202009080501-r'
 
 
@@ -75,16 +64,14 @@ protobuf {
 	}
 	plugins {
 		grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.20.0' }
-		//javalite { artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0' }
 	}
 	generateProtoTasks {
 		all().each { task ->
 			task.group = 'GRPC ProtoBuf'
 			task.plugins {
 				grpc {
-					outputSubDir = 'java' //option 'lite'
+					outputSubDir = 'java'
 				}
-				//javalite { }
 			}
 		}
 	}

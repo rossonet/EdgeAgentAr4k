@@ -44,6 +44,7 @@ import org.ar4k.agent.keystore.KeystoreLoader;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.junit.After;
@@ -55,7 +56,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class RemoteControlOverBeaconRegistration {
+public class RemoteControlOverBeaconRegistrationAndApprove {
 	private static final int VALIDITY_CERT_DAYS = 365 * 3;
 	private static final String CLIENT1_LABEL = "client1";
 	private static final String CLIENT2_LABEL = "client2";
@@ -112,57 +113,18 @@ public class RemoteControlOverBeaconRegistration {
 				keyStoreClient1.getAbsolutePath(), passwordKs, false, VALIDITY_CERT_DAYS);
 		final PKCS10CertificationRequest csrServer = KeystoreLoader.getPKCS10CertificationRequest(serverAliasInKeystore,
 				keyStoreServer.getAbsolutePath(), passwordKs);
-		/*
-		 * PKCS10CertificationRequest csrClient2 =
-		 * KeystoreLoader.getPKCS10CertificationRequest(client2AliasInKeystore,
-		 * keyStoreClient2.getAbsolutePath(), passwordKs); PKCS10CertificationRequest
-		 * csrClient1 =
-		 * KeystoreLoader.getPKCS10CertificationRequest(client1AliasInKeystore,
-		 * keyStoreClient1.getAbsolutePath(), passwordKs);
-		 */
 		final JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
 		final PublicKey pubKeyServer = converter.getPublicKey(csrServer.getSubjectPublicKeyInfo());
 		writeCSr("./tmp/csr-server.pem", Base64.getEncoder().encodeToString(csrServer.getEncoded()));
 		System.out.println("\nCSR SERVER\n" + pubKeyServer);
-		/*
-		 * PublicKey pubKeyClient1 =
-		 * converter.getPublicKey(csrClient1.getSubjectPublicKeyInfo());
-		 * writeCSr("./tmp/csr-client1.pem",
-		 * Base64.getEncoder().encodeToString(csrClient1.getEncoded()));
-		 * System.out.println("\nCSR CLIENT1\n" + pubKeyClient1); PublicKey
-		 * pubKeyClient2 = converter.getPublicKey(csrClient2.getSubjectPublicKeyInfo());
-		 * writeCSr("./tmp/csr-client2.pem",
-		 * Base64.getEncoder().encodeToString(csrClient2.getEncoded()));
-		 * System.out.println("\nCSR CLIENT2\n" + pubKeyClient2);
-		 */
 		KeystoreLoader.signCertificate(csrServer, signServerAliasInKeystore, 100, masterAliasInKeystore,
 				keyStoreMaster.getAbsolutePath(), passwordKs);
-		/*
-		 * KeystoreLoader.signCertificate(csrClient2, signClient2AliasInKeystore, 100,
-		 * masterAliasInKeystore, keyStoreMaster.getAbsolutePath(), passwordKs);
-		 * KeystoreLoader.signCertificate(csrClient1, signClient1AliasInKeystore, 100,
-		 * masterAliasInKeystore, keyStoreMaster.getAbsolutePath(), passwordKs);
-		 */
 		final String crtServer = KeystoreLoader.getCertCaAsPem(signServerAliasInKeystore,
 				keyStoreMaster.getAbsolutePath(), passwordKs);
 		final String keyServer = KeystoreLoader.getPrivateKeyBase64(serverAliasInKeystore,
 				keyStoreServer.getAbsolutePath(), passwordKs);
 		KeystoreLoader.setClientKeyPair(keyServer, crtServer, signServerAliasInKeystore,
 				keyStoreServer.getAbsolutePath(), passwordKs);
-		/*
-		 * String crtClient1 = KeystoreLoader.getCertCaAsPem(signClient1AliasInKeystore,
-		 * keyStoreMaster.getAbsolutePath(), passwordKs); String keyClient1 =
-		 * KeystoreLoader.getPrivateKeyBase64(client1AliasInKeystore,
-		 * keyStoreClient1.getAbsolutePath(), passwordKs);
-		 * KeystoreLoader.setClientKeyPair(keyClient1, crtClient1,
-		 * signClient1AliasInKeystore, keyStoreClient1.getAbsolutePath(), passwordKs);
-		 * String crtClient2 = KeystoreLoader.getCertCaAsPem(signClient2AliasInKeystore,
-		 * keyStoreMaster.getAbsolutePath(), passwordKs); String keyClient2 =
-		 * KeystoreLoader.getPrivateKeyBase64(client2AliasInKeystore,
-		 * keyStoreClient2.getAbsolutePath(), passwordKs);
-		 * KeystoreLoader.setClientKeyPair(keyClient2, crtClient2,
-		 * signClient2AliasInKeystore, keyStoreClient2.getAbsolutePath(), passwordKs);
-		 */
 		System.out.println(
 				"\n\nLIST MASTER " + KeystoreLoader.listCertificate(keyStoreMaster.getAbsolutePath(), passwordKs));
 		System.out.println(
@@ -208,7 +170,7 @@ public class RemoteControlOverBeaconRegistration {
 
 	@Test
 	@Ignore
-	public void allNodeSimulatedWithTunnelSsl() throws Exception {
+	public void allNodeSimulatedWithTunnelSslAndApprove() throws Exception {
 		allNodeSimulatedWithTunnel(true);
 	}
 
@@ -314,7 +276,6 @@ public class RemoteControlOverBeaconRegistration {
 		final EdgeConfig clientTwoConfig = new EdgeConfig();
 		final EdgeConfig serverConfig = new EdgeConfig();
 		serverConfig.name = "server-beacon";
-		// serverConfig.beaconServer = null;
 		serverConfig.beaconDiscoveryPort = 0;
 		serverConfig.beaconServerCertChain = certCaAsPem;
 		clientOneConfig.beaconServerCertChain = certCaAsPem;
@@ -324,11 +285,10 @@ public class RemoteControlOverBeaconRegistration {
 		beaconServiceConfig.port = 32676;
 		beaconServiceConfig.aliasBeaconServerInKeystore = masterAliasInKeystore;
 		beaconServiceConfig.caChainPem = certCaAsPem;
+		beaconServiceConfig.acceptAllCerts = false;
 		beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
 		serverConfig.pots.add(beaconServiceConfig);
 
-		// TODO provare con firma intermedia, ovvero firmando non con master ma con un
-		// certifico firmato da master
 		testAnimas.put(SERVER_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
 						keyStoreMaster.getAbsolutePath(), 1124, baseArgs, serverConfig, masterAliasInKeystore,
@@ -342,10 +302,17 @@ public class RemoteControlOverBeaconRegistration {
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, "https://localhost:32676")).get());
 		for (final Homunculus a : testAnimas.values()) {
-			// String animaName = a.getRuntimeConfig() != null ?
-			// a.getRuntimeConfig().getName() : "no-config";
 			Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 		}
+		Thread.sleep(40000);
+		System.out.println("server provides " + testAnimas.get(SERVER_LABEL).getRuntimeProvides());
+		System.out.println("\n\nAPPROVE ALL REQUESTS\n");
+		for (AgentRequest s : testAnimas.get(SERVER_LABEL).getBeaconServerIfExists().listAgentRequests()) {
+			final String requestCsr = s.getRequest().getRequestCsr();
+			System.out.println("approve csr\n" + requestCsr);
+			testAnimas.get(SERVER_LABEL).getBeaconServerIfExists().approveCsrRequest(requestCsr);
+		}
+
 		Thread.sleep(40000);
 		final List<Agent> agents = testAnimas.get(CLIENT1_LABEL).getBeaconClient().listAgentsConnectedToBeacon();
 		String agentToQuery = null;
@@ -459,7 +426,6 @@ public class RemoteControlOverBeaconRegistration {
 				NetworkMode.CLIENT, NetworkProtocol.TCP, destinationIp, destinationPort, srcPort);
 		networkTunnel = testAnimas.get(CLIENT2_LABEL).getBeaconClient().getNewNetworkTunnel(agentToQuery, config);
 		Thread.sleep(20000);
-		// approva i client
 
 		System.out.println("network tunnel status -> " + networkTunnel.getNetworkReceiver().getNetworkStatus());
 		System.out.println("try to send package");

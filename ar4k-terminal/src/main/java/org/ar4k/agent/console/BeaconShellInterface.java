@@ -164,7 +164,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconServerRunning")
 	public List<BeaconAgent> listBeaconAgentsConnected() {
-		return tmpServer.getAgentLabelRegisterReplies();
+		return tmpServer.getAgentRegistered();
 	}
 
 	@ShellMethod(value = "List tunnels running to the Beacon server", group = "Beacon Server Commands")

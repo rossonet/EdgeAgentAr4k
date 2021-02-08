@@ -453,11 +453,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#start()
-	 */
 	@Override
 	public void start() throws IOException {
 		server.start();
@@ -477,11 +472,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#stop()
-	 */
 	@Override
 	public void stop() {
 		running = false;
@@ -524,11 +514,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#blockUntilShutdown()
-	 */
 	@Override
 	public void blockUntilShutdown() throws InterruptedException {
 		if (server != null) {
@@ -725,15 +710,14 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				RegisterReply reply = null;
 				if (!Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())
 						&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {
-					if (acceptAllCerts) {
+					if (acceptAllCerts || isCsrApproved(request.getRequestCsr())) {
 						reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
 								.setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
 								.setCert(getFirmedCert(request.getRequestCsr())).setCa(caChainPem).build();
 						agents.add(new BeaconAgent(request, reply));
 					} else {
-						// TODO inserire il meccanismo per la coda autorizzativa
 						final RegistrationRequest newRequest = new RegistrationRequest(request);
-						listAgentRequest.add(newRequest);
+						addNewCsrToAgentRequest(newRequest);
 						reply = replyBuilder
 								.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.WAIT_HUMAN))
 								.setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(defaultPollTime)
@@ -749,6 +733,32 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			} catch (final Exception a) {
 				logger.logException(a);
 			}
+		}
+
+		private void addNewCsrToAgentRequest(RegistrationRequest newRequest) {
+			boolean isPresent = false;
+			for (RegistrationRequest registeredRequest : listAgentRequest) {
+				if (registeredRequest.requestCsr.equals(newRequest.getRegisterRequest().getRequestCsr())) {
+					isPresent = true;
+					break;
+				}
+			}
+			if (!isPresent) {
+				listAgentRequest.add(newRequest);
+			}
+		}
+
+		private boolean isCsrApproved(String newRequestCsr) {
+			for (RegistrationRequest registeredRequest : listAgentRequest) {
+				if (newRequestCsr.equals(registeredRequest.requestCsr)) {
+					if (registeredRequest.approved) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+			return false;
 		}
 
 		private String getFirmedCert(String requestCsr) throws IOException {
@@ -1025,33 +1035,16 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getStatus()
-	 */
 	@Override
 	public String getStatus() {
 		return server != null ? ("running on " + server.getPort()) : null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getTunnels()
-	 */
 	@Override
 	public List<TunnelRunnerBeaconServer> getTunnels() {
 		return tunnels;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#waitReply(java.lang.String,
-	 * long)
-	 */
 	@Override
 	public CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException {
 		final long start = new Date().getTime();
@@ -1070,55 +1063,28 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		return ret;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#isStopped()
-	 */
 	@Override
 	public boolean isStopped() {
 		return server != null ? (server.isShutdown() || server.isTerminated()) : true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getPort()
-	 */
 	@Override
 	public int getPort() {
 		return port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getDefaultPollTime()
-	 */
 	@Override
 	public int getDefaultPollTime() {
 		return defaultPollTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setDefaultPollTime(int)
-	 */
 	@Override
 	public void setDefaultPollTime(int defaultPollTime) {
 		this.defaultPollTime = defaultPollTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getAgentLabelRegisterReplies
-	 * ()
-	 */
 	@Override
-	public List<BeaconAgent> getAgentLabelRegisterReplies() {
+	public List<BeaconAgent> getAgentRegistered() {
 		return agents;
 	}
 
@@ -1141,11 +1107,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		logger.info("in Beacon server loop terminated ");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#sendFlashUdp()
-	 */
 	@Override
 	public void sendFlashUdp() {
 		try {
@@ -1193,87 +1154,41 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#
-	 * getDefaultBeaconFlashMoltiplicator()
-	 */
 	@Override
 	public int getDefaultBeaconFlashMoltiplicator() {
 		return defaultBeaconFlashMoltiplicator;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#
-	 * setDefaultBeaconFlashMoltiplicator(int)
-	 */
 	@Override
 	public void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator) {
 		this.defaultBeaconFlashMoltiplicator = defaultBeaconFlashMoltiplicator;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getDiscoveryPort()
-	 */
 	@Override
 	public int getDiscoveryPort() {
 		return discoveryPort;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setDiscoveryPort(int)
-	 */
 	@Override
 	public void setDiscoveryPort(int discoveryPort) {
 		this.discoveryPort = discoveryPort;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getBroadcastAddress()
-	 */
 	@Override
 	public String getBroadcastAddress() {
 		return broadcastAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setBroadcastAddress(java.
-	 * lang.String)
-	 */
 	@Override
 	public void setBroadcastAddress(String broadcastAddress) {
 		this.broadcastAddress = broadcastAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getStringDiscovery()
-	 */
 	@Override
 	public String getStringDiscovery() {
 		return stringDiscovery;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.ar4k.agent.tunnels.http.beacon.IBeaconServer#setStringDiscovery(java.lang
-	 * .String)
-	 */
 	@Override
 	public void setStringDiscovery(String stringDiscovery) {
 		this.stringDiscovery = stringDiscovery;
@@ -1287,41 +1202,21 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		return waitReplyLoopWaitTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#isAcceptAllCerts()
-	 */
 	@Override
 	public boolean isAcceptAllCerts() {
 		return acceptAllCerts;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getCertChainFile()
-	 */
 	@Override
 	public String getCertChainFile() {
 		return certFileLastPart;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#getPrivateKeyFile()
-	 */
 	@Override
 	public String getPrivateKeyFile() {
 		return privateKeyFileLastPart;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#close()
-	 */
 	@Override
 	public void close() {
 		stop();
@@ -1337,22 +1232,6 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		homunculus = null;
 	}
 
-	@Override
-	public String toString() {
-		return "BeaconServer [port=" + port + ", server=" + server + ", defaultPollTime=" + defaultPollTime
-				+ ", defaultBeaconFlashMoltiplicator=" + defaultBeaconFlashMoltiplicator
-				+ ", agentLabelRegisterReplies=" + agents + ", acceptAllCerts=" + acceptAllCerts + ", running="
-				+ running + ", discoveryPort=" + discoveryPort + ", broadcastAddress=" + broadcastAddress
-				+ ", stringDiscovery=" + stringDiscovery + ", certChainFile=" + certChainFileLastPart + ", certFile="
-				+ certFileLastPart + ", privateKeyFile=" + privateKeyFileLastPart + ", aliasBeaconServerInKeystore="
-				+ aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem + "]";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.ar4k.agent.tunnels.http.beacon.IBeaconServer#clearOldData()
-	 */
 	@Override
 	public void clearOldData() {
 		final List<BeaconAgent> toDelete = new ArrayList<>();
@@ -1388,6 +1267,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
+	@Override
 	public List<AgentRequest> listAgentRequests() {
 		final List<AgentRequest> values = new ArrayList<>();
 		for (final RegistrationRequest r : listAgentRequest) {
@@ -1400,6 +1280,74 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			values.add(a.build());
 		}
 		return values;
+	}
+
+	@Override
+	public void approveCsrRequest(String csr) {
+		for (final RegistrationRequest r : listAgentRequest) {
+			if (r.getRegisterRequest().getRequestCsr().equals(csr)) {
+				r.approved = true;
+				r.approvedDate = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+				break;
+			}
+		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder2 = new StringBuilder();
+		builder2.append("BeaconServer [port=");
+		builder2.append(port);
+		builder2.append(", server=");
+		builder2.append(server);
+		builder2.append(", defaultPollTime=");
+		builder2.append(defaultPollTime);
+		builder2.append(", defaultBeaconFlashMoltiplicator=");
+		builder2.append(defaultBeaconFlashMoltiplicator);
+		builder2.append(", agents=");
+		builder2.append(agents);
+		builder2.append(", acceptAllCerts=");
+		builder2.append(acceptAllCerts);
+		builder2.append(", running=");
+		builder2.append(running);
+		builder2.append(", tunnels=");
+		builder2.append(tunnels);
+		builder2.append(", process=");
+		builder2.append(process);
+		builder2.append(", socketFlashBeacon=");
+		builder2.append(socketFlashBeacon);
+		builder2.append(", listAgentRequest=");
+		builder2.append(listAgentRequest);
+		builder2.append(", repliesQueue=");
+		builder2.append(repliesQueue);
+		builder2.append(", discoveryPort=");
+		builder2.append(discoveryPort);
+		builder2.append(", broadcastAddress=");
+		builder2.append(broadcastAddress);
+		builder2.append(", stringDiscovery=");
+		builder2.append(stringDiscovery);
+		builder2.append(", certChainFileLastPart=");
+		builder2.append(certChainFileLastPart);
+		builder2.append(", certFileLastPart=");
+		builder2.append(certFileLastPart);
+		builder2.append(", privateKeyFileLastPart=");
+		builder2.append(privateKeyFileLastPart);
+		builder2.append(", aliasBeaconServerInKeystore=");
+		builder2.append(aliasBeaconServerInKeystore);
+		builder2.append(", caChainPem=");
+		builder2.append(caChainPem);
+		builder2.append(", filterActiveCommand=");
+		builder2.append(filterActiveCommand);
+		builder2.append(", filterBlackListCertRegister=");
+		builder2.append(filterBlackListCertRegister);
+		builder2.append(", filterBlackListCertRegisterPattern=");
+		builder2.append(filterBlackListCertRegisterPattern);
+		builder2.append(", filterActiveCommandPattern=");
+		builder2.append(filterActiveCommandPattern);
+		builder2.append(", markThread=");
+		builder2.append(markThread);
+		builder2.append("]");
+		return builder2.toString();
 	}
 
 }

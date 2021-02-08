@@ -1,5 +1,8 @@
 package org.ar4k.agent.web.widget.agent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ar4k.agent.core.interfaces.AgentWebTab;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -7,9 +10,8 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.web.interfaces.AgentTab;
 
-import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @AgentWebTab
 public class BeaconServerPage implements AgentTab {
@@ -39,20 +41,24 @@ public class BeaconServerPage implements AgentTab {
 	@Override
 	public Div getPage(IScadaAgent beaconAgentWrapper) {
 		Div externalDiv = new Div();
-		VerticalLayout div = new VerticalLayout();
-		Text titleProviders = new Text("PROVIDES");
-		div.add(titleProviders);
+		Grid<StatusProvidesRequiredLineString> grid = new Grid<>(StatusProvidesRequiredLineString.class);
+		grid.getStyle().set("position", "absolute");
+		List<StatusProvidesRequiredLineString> lines = new ArrayList<>();
 		for (String provider : beaconAgentWrapper.getProvides()) {
-			div.add(new Text(provider));
+			lines.add(new StatusProvidesRequiredLineString(provider, true));
 		}
-		Text titleRequired = new Text("REQUIRED");
-		div.add(titleRequired);
 		for (String requirement : beaconAgentWrapper.getRequired()) {
-			div.add(new Text(requirement));
+			lines.add(new StatusProvidesRequiredLineString(requirement, false));
 		}
+		grid.setItems(lines);
+		grid.setMaxWidth("95vw");
+		grid.setMaxHeight("85vh");
+		grid.setSizeFull();
+		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+		externalDiv.add(grid);
 		externalDiv.setWidth("95vw");
 		externalDiv.setHeight("85vh");
-		externalDiv.add(div);
+		externalDiv.setSizeFull();
 		return externalDiv;
 	}
 
@@ -64,6 +70,30 @@ public class BeaconServerPage implements AgentTab {
 	@Override
 	public Integer getTabOrderNumber() {
 		return 20;
+	}
+
+	public final class StatusProvidesRequiredLineString {
+		private final String provider;
+		private final String requirement;
+
+		public StatusProvidesRequiredLineString(String function, boolean provider) {
+			if (provider) {
+				this.provider = function;
+				this.requirement = "";
+			} else {
+				this.provider = "";
+				this.requirement = function;
+			}
+		}
+
+		public String getRequirement() {
+			return requirement;
+		}
+
+		public String getProvider() {
+			return provider;
+		}
+
 	}
 
 }
