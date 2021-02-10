@@ -71,15 +71,63 @@ import oshi.software.os.OperatingSystem;
  */
 public class HardwareHelper {
 
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(HardwareHelper.class.toString());
+
+	public static final boolean DEBUG_FREEZE_HAL = false;
+
+	private static final int BUFFER_SIZE = 512;
+
 	private HardwareHelper() {
 		throw new UnsupportedOperationException("Just for static usage");
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HardwareHelper.class.toString());
+	public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
+		final long result = 0L;
+		FileOutputStream fileOutputStream = null;
+		ReadableByteChannel readableByteChannel = null;
+		FileChannel fileChannel = null;
+		try {
+			readableByteChannel = Channels.newChannel(new URL(url).openStream());
+			fileOutputStream = new FileOutputStream(filename);
+			fileChannel = fileOutputStream.getChannel();
+			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+			fileOutputStream.flush();
+		} finally {
+			if (fileChannel != null)
+				fileChannel.close();
+			if (fileOutputStream != null)
+				fileOutputStream.close();
+		}
+		return result;
+	}
 
-	public static final boolean debugFreezeHal = false;
-	private static final int BUFFER_SIZE = 512;
+	public static void extractTarGz(String path, InputStream in) throws IOException {
+		final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
+		try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+			TarArchiveEntry entry = null;
+			while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+				/** If the entry is a directory, create the directory. **/
+				if (entry.isDirectory()) {
+					final File f = new File(path + "/" + entry.getName());
+					final boolean created = f.mkdirs();
+					if (!created) {
+						throw new EdgeException("Unable to create directory " + f.getAbsolutePath()
+								+ ", during extraction of archive contents.");
+					}
+				} else {
+					int count;
+					final byte data[] = new byte[BUFFER_SIZE];
+					final FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
+					try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
+						while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+							dest.write(data, 0, count);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public static HardwareInfoData getSystemInfo() throws IOException, InterruptedException, ParseException {
 		final HardwareInfoData dato = new HardwareInfoData();
@@ -110,7 +158,7 @@ public class HardwareHelper {
 		// System.out.println("check1");
 		dato.setHardwareFilelistroots(fileSystem);
 		final HardwareAbstractionLayer hal = si.getHardware();
-		if (debugFreezeHal) {
+		if (DEBUG_FREEZE_HAL) {
 			// System.out.println("check1.1");
 			try {
 				dato.setHardwareComputersystem(hal.getComputerSystem());
@@ -395,35 +443,6 @@ public class HardwareHelper {
 		}
 	}
 
-	private static String readAll(Reader rd) throws IOException {
-		final StringBuilder sb = new StringBuilder();
-		int cp;
-		while ((cp = rd.read()) != -1) {
-			sb.append((char) cp);
-		}
-		return sb.toString();
-	}
-
-	public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
-		final long result = 0L;
-		FileOutputStream fileOutputStream = null;
-		ReadableByteChannel readableByteChannel = null;
-		FileChannel fileChannel = null;
-		try {
-			readableByteChannel = Channels.newChannel(new URL(url).openStream());
-			fileOutputStream = new FileOutputStream(filename);
-			fileChannel = fileOutputStream.getChannel();
-			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-			fileOutputStream.flush();
-		} finally {
-			if (fileChannel != null)
-				fileChannel.close();
-			if (fileOutputStream != null)
-				fileOutputStream.close();
-		}
-		return result;
-	}
-
 	public static String resolveFileFromDns(final String hostPart, final String domainPart, final int retry)
 			throws TextParseException, UnknownHostException {
 		final StringBuilder resultString = new StringBuilder();
@@ -466,30 +485,12 @@ public class HardwareHelper {
 		}
 	}
 
-	public static void extractTarGz(String path, InputStream in) throws IOException {
-		final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
-		try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
-			TarArchiveEntry entry = null;
-			while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
-				/** If the entry is a directory, create the directory. **/
-				if (entry.isDirectory()) {
-					final File f = new File(path + "/" + entry.getName());
-					final boolean created = f.mkdirs();
-					if (!created) {
-						throw new EdgeException("Unable to create directory " + f.getAbsolutePath()
-								+ ", during extraction of archive contents.");
-					}
-				} else {
-					int count;
-					final byte data[] = new byte[BUFFER_SIZE];
-					final FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
-					try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
-						while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-							dest.write(data, 0, count);
-						}
-					}
-				}
-			}
+	private static String readAll(Reader rd) throws IOException {
+		final StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
 		}
+		return sb.toString();
 	}
 }

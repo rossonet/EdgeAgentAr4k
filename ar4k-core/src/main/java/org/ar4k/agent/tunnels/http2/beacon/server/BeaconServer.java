@@ -44,9 +44,9 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			.getLogger(BeaconServer.class.toString());
 
 	static final int SIGN_TIME = 3650;
-	static final long defaultTimeOut = 10000L;
-	private static final long waitReplyLoopWaitTime = 300L;
-	private static final long TIMEOUT_AGENT_POOL = 15 * 60 * 1000;
+	static final long DEFAULT_TIMEOUT = 10000L;
+	private static final long WAIT_REPLY_LOOP = 300L;
+	private static final long TIMEOUT_AGENT_POOL = (15 * 60 * 1000);
 	private int port = 0;
 	private Server server = null;
 	int defaultPollTime = 6000;
@@ -58,7 +58,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	// autorizzazione
 	private boolean running = true;
 
-	transient Homunculus homunculus = null;
+	Homunculus homunculus = null;
 
 	final List<TunnelRunnerBeaconServer> tunnels = new LinkedList<>();
 	private Thread process = null;
@@ -155,15 +155,11 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	@Override
 	public void close() {
 		stop();
-		if (agents != null) {
-			agents.clear();
-		}
+		agents.clear();
 		if (getTunnels() != null) {
 			getTunnels().clear();
 		}
-		if (listAgentRequest != null) {
-			listAgentRequest.clear();
-		}
+		listAgentRequest.clear();
 		homunculus = null;
 	}
 
@@ -229,7 +225,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	@Override
 	public boolean isStopped() {
-		return server != null ? (server.isShutdown() || server.isTerminated()) : true;
+		return server != null && (server.isShutdown() || server.isTerminated());
 	}
 
 	@Override
@@ -258,7 +254,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			}
 			try {
 				Thread.sleep(defaultPollTime);
-			} catch (final InterruptedException e) {
+			} catch (final Exception e) {
 				logger.info("in Beacon server loop error " + e.getMessage());
 				logger.logException(e);
 			}
@@ -274,15 +270,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				socketFlashBeacon.setBroadcast(true);
 			}
 			final byte[] sendData = (stringDiscovery + ":" + String.valueOf(port)).getBytes();
-			try {
-				final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
-						InetAddress.getByName(broadcastAddress), discoveryPort);
-				socketFlashBeacon.send(sendPacket);
-				logger.debug(getClass().getName() + ">>> Request packet sent to: " + broadcastAddress);
-			} catch (final Exception e) {
-				logger.logException(e);
-				logger.warn("Error sending flash beacon " + e.getMessage());
-			}
+			sendDiscoveryPacket(sendData);
 			final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 			while (interfaces.hasMoreElements()) {
 				final NetworkInterface networkInterface = interfaces.nextElement();
@@ -370,7 +358,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			}
 			getTunnels().clear();
 		}
-		if (agents != null && !agents.isEmpty()) {
+		if (!agents.isEmpty()) {
 			for (final BeaconAgent a : agents) {
 				try {
 					a.close();
@@ -466,7 +454,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 					ret = repliesQueue.remove(idRequest);
 					break;
 				}
-				Thread.sleep(waitReplyLoopWaitTime);
+				Thread.sleep(WAIT_REPLY_LOOP);
 			}
 		} catch (final Exception e) {
 			logger.logException(e);
@@ -533,47 +521,53 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	}
 
-	private void writePemCa(String certChain) {
+	private void sendDiscoveryPacket(final byte[] sendData) {
 		try {
+			final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+					InetAddress.getByName(broadcastAddress), discoveryPort);
+			socketFlashBeacon.send(sendPacket);
+			logger.debug(getClass().getName() + ">>> Request packet sent to: " + broadcastAddress);
+		} catch (final Exception e) {
+			logger.logException(e);
+			logger.warn("Error sending flash beacon " + e.getMessage());
+		}
+	}
+
+	private void writePemCa(String certChain) {
+		try (final FileWriter writer = new FileWriter(new File(certChain))) {
 			logger.info("path of Beacon trust certificate -> " + new File(certChain).getAbsolutePath());
-			final FileWriter writer = new FileWriter(new File(certChain));
 			for (final String cert : caChainPem.split(",")) {
 				writer.write("-----BEGIN CERTIFICATE-----\n");
 				writer.write(cert);
 				writer.write("\n-----END CERTIFICATE-----\n");
 			}
-			writer.close();
 		} catch (final IOException e) {
 			logger.logException(e);
 		}
 	}
 
 	private void writePemCert(String aliasBeaconServer, Homunculus homunculusTarget, String certChain) {
-		try {
-			final FileWriter writer = new FileWriter(new File(certChain));
+		try (final FileWriter writer = new FileWriter(new File(certChain))) {
 			final String pemTxtBase = homunculusTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
 			writer.write("-----BEGIN CERTIFICATE-----\n");
 			writer.write(pemTxtBase);
 			writer.write("\n-----END CERTIFICATE-----\n");
-			writer.close();
 		} catch (final IOException e) {
 			logger.logException(e);
 		}
 	}
 
 	public static long getDefaultTimeout() {
-		return defaultTimeOut;
+		return DEFAULT_TIMEOUT;
 	}
 
 	public static long getWaitreplyloopwaittime() {
-		return waitReplyLoopWaitTime;
+		return WAIT_REPLY_LOOP;
 	}
 
 	private static void writePrivateKey(String aliasBeaconServer, Homunculus homunculusTarget, String privateKey) {
 		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
-		FileWriter writer;
-		try {
-			writer = new FileWriter(new File(privateKey));
+		try (final FileWriter writer = new FileWriter(new File(privateKey))) {
 			writer.write("-----BEGIN PRIVATE KEY-----\n");
 			writer.write(pk);
 			writer.write("\n-----END PRIVATE KEY-----\n");

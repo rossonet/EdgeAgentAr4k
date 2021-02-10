@@ -99,7 +99,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			if (agentReply != null) {
 				final List<String> sb = new ArrayList<>();
 				for (final String cr : agentReply.getRepliesList()) {
@@ -129,7 +129,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			if (agentReply != null) {
 				final StringBuilder sb = new StringBuilder();
 				for (final String cr : agentReply.getRepliesList()) {
@@ -158,7 +158,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			elaborateConfigReply(responseObserver, agentReply);
 			responseObserver.onCompleted();
 		} catch (final Exception e) {
@@ -179,7 +179,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			elaborateProvidesReply(responseObserver, agentReply);
 			responseObserver.onCompleted();
 		} catch (final Exception e) {
@@ -200,7 +200,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			elaborateRequiredReply(responseObserver, agentReply);
 			responseObserver.onCompleted();
 		} catch (final Exception e) {
@@ -268,7 +268,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			if (agentReply != null) {
 				final List<Command> listCommands = new ArrayList<>();
 				for (final String cr : agentReply.getRepliesList()) {
@@ -363,7 +363,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				}
 			}
 			CommandReplyRequest agentReply = null;
-			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.defaultTimeOut);
+			agentReply = this.beaconServer.waitReply(idRequest, BeaconServer.DEFAULT_TIMEOUT);
 			elaborateConfigReply(responseObserver, agentReply);
 			responseObserver.onCompleted();
 		} catch (final Exception e) {

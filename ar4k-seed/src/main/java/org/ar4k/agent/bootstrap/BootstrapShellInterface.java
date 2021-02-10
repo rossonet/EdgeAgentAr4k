@@ -32,7 +32,6 @@ import org.ar4k.agent.core.archives.GitArchive;
 import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.ar4k.agent.exception.DriverClassNotFoundException;
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.helper.StorageTypeValuesProvider;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -241,7 +240,7 @@ public class BootstrapShellInterface extends AbstractShellHelper implements Auto
 	@ShellMethod(value = "Set runtime repository")
 	@ManagedOperation
 	public void setBootstrapRuntimeRepository(@ShellOption(help = "the local bootstrap directory") String url,
-			@ShellOption(help = "storage driver", defaultValue = "org.ar4k.agent.core.archives.LocalFileSystemArchive", valueProvider = StorageTypeValuesProvider.class) String driver) {
+			@ShellOption(help = "storage driver", defaultValue = "org.ar4k.agent.core.archives.LocalFileSystemArchive", valueProvider = org.ar4k.agent.spring.valueProvider.StorageTypeValuesProvider.class) String driver) {
 		boolean foundDriver = false;
 		try {
 			runningProject = (ManagedArchives) Class.forName(driver).getConstructor().newInstance();

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.security.UnrecoverableKeyException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,22 +98,22 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private static CharSequence completitionChar = "?";
 	private static int discoveryPacketMaxSize = 1024;
 
-	private final boolean trace = true;
+	private static final boolean TRACE = true;
 
-	private final String TMP_BEACON_PATH_DEFAULT = ConfigHelper.resolveWorkingString(
+	private final String tmpBeaconPathDefault = ConfigHelper.resolveWorkingString(
 			Homunculus.getApplicationContext().getBean(Homunculus.class).getStarterProperties().getConfPath(), true)
 			+ "/beacon-client-" + UUID.randomUUID().toString();
 
-	private transient final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	private final transient Homunculus homunculus;
+	private final Homunculus homunculus;
 	private StatusBeaconClient status = StatusBeaconClient.IDLE;
 	private StatusValue registerStatus = StatusValue.BAD;
 	private String reservedUniqueName = null;
 
 	private Agent me = null;
 
-	private transient final ScheduledExecutorService timerExecutor = Executors
+	private final ScheduledExecutorService timerExecutor = Executors
 			.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
 	private ManagedChannel channel = null;
@@ -123,27 +122,27 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private RpcServiceV1Stub asyncStub = null;
 	private TunnelServiceV1Stub asyncStubTunnel = null;
 
-	private transient RpcConversation localExecutor = null;
-	private transient List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
+	private RpcConversation localExecutor = null;
+	private List<RemoteBeaconRpcExecutor> remoteExecutors = new ArrayList<>();
 	private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
 	private String discoveryFilter = "AR4K";
-	private transient DatagramSocket socketDiscovery = null;
+	private DatagramSocket socketDiscovery = null;
 	private final int pollingFrequency = 800;
 
 	private String aliasBeaconClientInKeystore = "beacon-client";
 	private String hostTarget = null;
 	private int port = 0; // se zero esclude la connessione diretta ed eventualmente passa al discovery
-	private String certChainFile = TMP_BEACON_PATH_DEFAULT + "-ca.pem";
-	private String privateFile = TMP_BEACON_PATH_DEFAULT + ".key";
-	private String certFile = TMP_BEACON_PATH_DEFAULT + ".pem";
-	private transient final List<NetworkTunnel> tunnels = new LinkedList<>();
-	private transient final BeaconDataAddress beaconDataAddress;
+	private String certChainFile = tmpBeaconPathDefault + "-ca.pem";
+	private String privateFile = tmpBeaconPathDefault + ".key";
+	private String certFile = tmpBeaconPathDefault + ".pem";
+	private final List<NetworkTunnel> tunnels = new LinkedList<>();
+	private final BeaconDataAddress beaconDataAddress;
 	private String certChain = null;
-	private transient String csrRequest = null;
+	private String csrRequest = null;
 
 	BeaconClient(Homunculus homunculus, RpcConversation rpcConversation, String host, int port, int discoveryPort,
 			String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-			String aliasBeaconClientInKeystore, String certChain) throws UnrecoverableKeyException {
+			String aliasBeaconClientInKeystore, String certChain) {
 		this.localExecutor = rpcConversation;
 		this.discoveryPort = discoveryPort;
 		this.discoveryFilter = discoveryFilter;
@@ -209,7 +208,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				logger.logException(homunculus.getAgentUniqueName(), e);
 			}
 		}
-		if (tunnels != null && !tunnels.isEmpty()) {
+		if (!tunnels.isEmpty()) {
 			for (final NetworkTunnel t : tunnels) {
 				try {
 					t.close();
@@ -219,7 +218,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			}
 			tunnels.clear();
 		}
-		if (trace)
+		if (TRACE)
 			logger.info(homunculus.getAgentUniqueName() + " Client Beacon closed");
 	}
 
@@ -288,15 +287,16 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	@Override
 	public NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config) {
-		NetworkTunnel tunnel = null;
-		if (useNettyForTunnel) {
-			tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkTunnel(me, config, true,
-					asyncStubTunnel, "0");
-		} else {
-			tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicTunnel(me, config, true,
-					asyncStubTunnel, "0");
-		}
 		try {
+			NetworkTunnel tunnel = null;
+			if (useNettyForTunnel) {
+				tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkTunnel(me, config, true,
+						asyncStubTunnel, "0");
+			} else {
+				tunnel = new org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicTunnel(me, config,
+						true, asyncStubTunnel, "0");
+			}
+
 			final Agent agentDestination = Agent.newBuilder().setAgentUniqueName(agentId).build();
 			tunnel.setRemoteAgent(agentDestination);
 			final org.ar4k.agent.tunnels.http2.grpc.beacon.RequestTunnelMessage.Builder request = RequestTunnelMessage
@@ -316,14 +316,14 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					request.setMode(TunnelType.SERVER_TO_BYTES_UDP);
 				}
 			}
-			if (trace)
+			if (TRACE)
 				logger.info(homunculus.getAgentUniqueName() + " request beacon tunnel " + request.build().getTargeId()
 						+ "/" + config.getNetworkModeRequested() + " from " + request.build().getAgentSource() + " to "
 						+ request.build().getAgentDestination());
 			final ResponseNetworkChannel response = blockingStubTunnel.requestTunnel(request.build());
 			tunnel.setResponseNetworkChannel(response);
 			tunnels.add(tunnel);
-			if (trace)
+			if (TRACE)
 				logger.info(homunculus.getAgentUniqueName()
 						+ " request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
 			tunnel.init();
@@ -450,12 +450,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					socketDiscovery.receive(packet);
 					if (packet.getData().length > 0) {
 						final String message = new String(packet.getData()).trim();
-						if (trace)
+						if (TRACE)
 							logger.info(homunculus.getAgentUniqueName() + " DISCOVERY FLASH: " + message);
 						if (discoveryFilter == null || message.contains(discoveryFilter)) {
 							final String hostBeacon = packet.getAddress().getHostAddress();
 							final int portBeacon = Integer.valueOf(message.split(":")[1]);
-							if (trace)
+							if (TRACE)
 								logger.info(homunculus.getAgentUniqueName() + " -- Beacon server found on host "
 										+ hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
 							startConnection(this.hostTarget, this.port, true);
@@ -678,13 +678,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	@Override
 	public String toString() {
-		return "BeaconClient [TMP_BEACON_PATH_DEFAULT=" + TMP_BEACON_PATH_DEFAULT + ", status=" + status
-				+ ", registerStatus=" + registerStatus + ", reservedUniqueName=" + reservedUniqueName + ", me=" + me
-				+ ", discoveryPort=" + discoveryPort + ", discoveryFilter=" + discoveryFilter + ", pollingFrequency="
-				+ pollingFrequency + ", aliasBeaconClientInKeystore=" + aliasBeaconClientInKeystore + ", hostTarget="
-				+ hostTarget + ", port=" + port + ", certChainFile=" + certChainFile + ", privateFile=" + privateFile
-				+ ", certFile=" + certFile + ", tunnels=" + tunnels + ", certChain=" + certChain + ", csrRequest="
-				+ csrRequest + "]";
+		return "BeaconClient [tmpBeaconPathDefault=" + tmpBeaconPathDefault + ", status=" + status + ", registerStatus="
+				+ registerStatus + ", reservedUniqueName=" + reservedUniqueName + ", me=" + me + ", discoveryPort="
+				+ discoveryPort + ", discoveryFilter=" + discoveryFilter + ", pollingFrequency=" + pollingFrequency
+				+ ", aliasBeaconClientInKeystore=" + aliasBeaconClientInKeystore + ", hostTarget=" + hostTarget
+				+ ", port=" + port + ", certChainFile=" + certChainFile + ", privateFile=" + privateFile + ", certFile="
+				+ certFile + ", tunnels=" + tunnels + ", certChain=" + certChain + ", csrRequest=" + csrRequest + "]";
 	}
 
 	private synchronized void actionRegister() {
@@ -736,7 +735,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	private synchronized void cleanChannel(String description) {
-		if (trace)
+		if (TRACE)
 			logger.info(homunculus.getAgentUniqueName() + " Reset beacon client because " + description);
 		registerStatus = StatusValue.BAD;
 		status = StatusBeaconClient.IDLE;
@@ -753,7 +752,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void closePort(RequestToAgent m) {
 		try {
-			if (trace)
+			if (TRACE)
 				logger.info(homunculus.getAgentUniqueName() + " network port close call from beacon "
 						+ m.getTunnelRequest().getTargeId());
 			NetworkTunnel tunnelTarget = null;
@@ -834,7 +833,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void execCommand(RequestToAgent m) {
 		try {
-			if (trace)
+			if (TRACE)
 				logger.info(homunculus.getAgentUniqueName() + " execute command " + m.getRequestCommand()
 						+ " with executor " + localExecutor.toString());
 			final String reply = localExecutor.elaborateMessage(m.getRequestCommand());
@@ -848,7 +847,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void exposeNewPort(RequestToAgent m) {
 		try {
-			if (trace)
+			if (TRACE)
 				logger.info(homunculus.getAgentUniqueName() + " network port required from beacon "
 						+ m.getUniqueIdRequest());
 			NetworkConfig config = null;
@@ -875,29 +874,25 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	private void generateCaFile() {
-		try {
-			final FileWriter writer = new FileWriter(new File(certChainFile));
+		try (final FileWriter writer = new FileWriter(new File(certChainFile));) {
 			for (final String cert : certChain.split(",")) {
 				writer.write("-----BEGIN CERTIFICATE-----\n");
 				writer.write(cert);
 				writer.write("\n-----END CERTIFICATE-----\n");
 			}
-			writer.close();
 		} catch (final IOException e) {
 			logger.logException(homunculus.getAgentUniqueName(), e);
 		}
 	}
 
 	private void generateCertFile(String aliasBeaconClient) {
-		try {
-			final FileWriter writer = new FileWriter(new File(certFile));
+		try (final FileWriter writer = new FileWriter(new File(certFile))) {
 			final String pemTxt = homunculus.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
 			logger.info(homunculus.getAgentUniqueName() + " SubjectDN\n" + homunculus.getMyIdentityKeystore()
 					.getClientCertificate(aliasBeaconClient).getSubjectDN().getName());
 			writer.write("-----BEGIN CERTIFICATE-----\n");
 			writer.write(pemTxt);
 			writer.write("\n-----END CERTIFICATE-----\n");
-			writer.close();
 		} catch (final IOException e) {
 			logger.logException(homunculus.getAgentUniqueName(), e);
 		}
@@ -972,6 +967,25 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 	}
 
+	private StatusValue makeRealConnection(StatusValue result, final RegisterReply reply) {
+		try {
+			if (TRACE)
+				logger.info(homunculus.getAgentUniqueName() + " received signed cert and ca chain");
+			homunculus.getMyIdentityKeystore().setClientKeyPair(
+					homunculus.getMyIdentityKeystore().getPrivateKeyBase64(homunculus.getMyAliasCertInKeystore()),
+					reply.getCert(), this.aliasBeaconClientInKeystore);
+			certChain = reply.getCa();
+			status = StatusBeaconClient.IDLE;
+			startConnection(this.hostTarget, this.port, false);
+			registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
+		} catch (final Exception e) {
+			logger.logException(homunculus.getAgentUniqueName(), e);
+			result = StatusValue.FAULT;
+			status = StatusBeaconClient.IDLE;
+		}
+		return result;
+	}
+
 	private void notImplemented(RequestToAgent m) {
 		try {
 			final String error = "Type " + m.getType() + " not implemented";
@@ -1002,7 +1016,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest));
 			if (csr != null && !csr.isEmpty()) {
 				requestBuilder.setRequestCsr(csr);
-				if (trace)
+				if (TRACE)
 					logger.info(homunculus.getAgentUniqueName() + " SENDING CSR: " + csr);
 			}
 			request = requestBuilder.build();
@@ -1022,22 +1036,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			if (result.equals(StatusValue.GOOD)
 					&& !homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
 					&& reply.getCert() != null && !reply.getCert().isEmpty()) {
-				try {
-					if (trace)
-						logger.info(homunculus.getAgentUniqueName() + " received signed cert and ca chain");
-					homunculus.getMyIdentityKeystore().setClientKeyPair(
-							homunculus.getMyIdentityKeystore()
-									.getPrivateKeyBase64(homunculus.getMyAliasCertInKeystore()),
-							reply.getCert(), this.aliasBeaconClientInKeystore);
-					certChain = reply.getCa();
-					status = StatusBeaconClient.IDLE;
-					startConnection(this.hostTarget, this.port, false);
-					registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
-				} catch (final Exception e) {
-					logger.logException(homunculus.getAgentUniqueName(), e);
-					result = StatusValue.FAULT;
-					status = StatusBeaconClient.IDLE;
-				}
+				result = makeRealConnection(result, reply);
 			}
 		} catch (final Exception e) {
 			status = StatusBeaconClient.IDLE;
@@ -1140,13 +1139,10 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private static void writePrivateKey(String alias, Homunculus homunculusTarget, String privateKey) {
 		logger.info("USE KEY FOR CLIENT: " + alias + " target file -> " + privateKey);
 		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(alias);
-		FileWriter writer;
-		try {
-			writer = new FileWriter(new File(privateKey));
+		try (final FileWriter writer = new FileWriter(new File(privateKey))) {
 			writer.write("-----BEGIN PRIVATE KEY-----\n");
 			writer.write(pk);
 			writer.write("\n-----END PRIVATE KEY-----\n");
-			writer.close();
 		} catch (final IOException e) {
 			logger.logException(e);
 		}

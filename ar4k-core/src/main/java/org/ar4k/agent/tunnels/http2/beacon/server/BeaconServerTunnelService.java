@@ -74,7 +74,7 @@ class BeaconServerTunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplB
 				break;
 			}
 		}
-		final CommandReplyRequest cmdReply = this.beaconServer.waitReply(String.valueOf(idRequest), BeaconServer.defaultTimeOut);
+		final CommandReplyRequest cmdReply = this.beaconServer.waitReply(String.valueOf(idRequest), BeaconServer.DEFAULT_TIMEOUT);
 		final ResponseNetworkChannel channelCreated = cmdReply.getTunnelReply();
 		BeaconServer.logger.debug("Beacon client tunnel reply -> " + channelCreated);
 		return channelCreated;

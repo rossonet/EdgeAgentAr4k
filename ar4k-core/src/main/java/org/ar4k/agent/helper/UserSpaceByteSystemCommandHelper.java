@@ -22,6 +22,38 @@ public class UserSpaceByteSystemCommandHelper {
     throw new UnsupportedOperationException("Just for static usage");
   }
 
+  @SuppressWarnings("unused")
+  private boolean processIsTerminated(Process process) {
+    try {
+      process.exitValue();
+    } catch (IllegalThreadStateException itse) {
+      return false;
+    }
+    return true;
+  }
+
+  public static void extractFromJar(String jarEntry, File outputFile) throws IOException {
+    ApplicationHome a = new ApplicationHome();
+    extractFromJar(jarEntry, a.getSource(), outputFile);
+  }
+
+  public static void extractFromJar(String jarEntry, File jar, File outputFile) throws IOException {
+    JarFile jarFile = new JarFile(jar);
+    JarEntry entry = jarFile.getJarEntry(jarEntry);
+    if (entry != null) {
+      InputStream jarEntryStream = jarFile.getInputStream(entry);
+      FileOutputStream outStream = new FileOutputStream(outputFile);
+      byte[] buffer = new byte[1024];
+      int bytes;
+      while ((bytes = jarEntryStream.read(buffer)) != -1) {
+        outStream.write(buffer, 0, bytes);
+      }
+      outStream.close();
+      jarEntryStream.close();
+      jarFile.close();
+    }
+  }
+
   public static String runShellCommandLineByteToByte(String shellCommand, String endCharacter, EdgeLogger logger,
       InputStream input, OutputStream output) {
     Integer errori = 0;
@@ -166,38 +198,6 @@ public class UserSpaceByteSystemCommandHelper {
 
   private static void filterOutCharacter(Writer so, char[] c) throws IOException {
     so.write(c);
-  }
-
-  @SuppressWarnings("unused")
-  private boolean processIsTerminated(Process process) {
-    try {
-      process.exitValue();
-    } catch (IllegalThreadStateException itse) {
-      return false;
-    }
-    return true;
-  }
-
-  public static void extractFromJar(String jarEntry, File outputFile) throws IOException {
-    ApplicationHome a = new ApplicationHome();
-    extractFromJar(jarEntry, a.getSource(), outputFile);
-  }
-
-  public static void extractFromJar(String jarEntry, File jar, File outputFile) throws IOException {
-    JarFile jarFile = new JarFile(jar);
-    JarEntry entry = jarFile.getJarEntry(jarEntry);
-    if (entry != null) {
-      InputStream jarEntryStream = jarFile.getInputStream(entry);
-      FileOutputStream outStream = new FileOutputStream(outputFile);
-      byte[] buffer = new byte[1024];
-      int bytes;
-      while ((bytes = jarEntryStream.read(buffer)) != -1) {
-        outStream.write(buffer, 0, bytes);
-      }
-      outStream.close();
-      jarEntryStream.close();
-      jarFile.close();
-    }
   }
 
 }

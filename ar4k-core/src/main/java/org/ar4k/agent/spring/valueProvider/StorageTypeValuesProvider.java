@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.helper;
+package org.ar4k.agent.spring.valueProvider;
 
 import java.util.Arrays;
 import java.util.HashSet;

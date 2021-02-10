@@ -14,11 +14,8 @@ public class ReflectionUtils {
 
 	private static ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 
-	private static String getTaskName(long id, String name) {
-		if (name == null) {
-			return Long.toString(id);
-		}
-		return id + " (" + name + ")";
+	private ReflectionUtils() {
+		throw new UnsupportedOperationException("Just for static usage");
 	}
 
 	public static String logThreadInfo() {
@@ -56,5 +53,12 @@ public class ReflectionUtils {
 		}
 		logger.info(sb.toString());
 		return sb.toString();
+	}
+
+	private static String getTaskName(long id, String name) {
+		if (name == null) {
+			return Long.toString(id);
+		}
+		return id + " (" + name + ")";
 	}
 }
