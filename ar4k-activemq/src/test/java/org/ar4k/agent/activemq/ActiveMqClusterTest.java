@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
-import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;

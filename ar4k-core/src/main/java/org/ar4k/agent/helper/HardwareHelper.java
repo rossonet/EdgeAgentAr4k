@@ -155,33 +155,25 @@ public class HardwareHelper {
 			rootFs.setChilds(childs);
 			fileSystem.add(rootFs);
 		}
-		// System.out.println("check1");
 		dato.setHardwareFilelistroots(fileSystem);
 		final HardwareAbstractionLayer hal = si.getHardware();
 		if (DEBUG_FREEZE_HAL) {
-			// System.out.println("check1.1");
 			try {
 				dato.setHardwareComputersystem(hal.getComputerSystem());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.2");
 			try {
 				dato.setHardwareDisk(hal.getDiskStores().toArray(new HWDiskStore[0]));
 			} catch (final Exception re) {
 			}
-			;
-			// System.out.println("check1.3");
 			try {
 				dato.setHardwareDislay(hal.getDisplays().toArray(new Display[0]));
 			} catch (final Exception re) {
 			}
-			;
-			// System.out.println("check1.4");
 			try {
 				dato.setHardwareMemorytotal(hal.getMemory().getTotal());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.5");
 			try {
 				dato.setHardwareMemoryavailable(hal.getMemory().getAvailable());
 			} catch (final Exception re) {
@@ -190,22 +182,18 @@ public class HardwareHelper {
 				dato.setHardwareSwaptotal(hal.getMemory().getVirtualMemory().getSwapTotal());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.6");
 			try {
 				dato.setHardwareSwapused(hal.getMemory().getVirtualMemory().getSwapUsed());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.7");
 			try {
 				dato.setHardwareNetwork(hal.getNetworkIFs().toArray(new NetworkIF[0]));
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.8");
 			try {
 				dato.setHardwarePower(hal.getPowerSources().toArray(new PowerSource[0]));
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.9");
 			try {
 				dato.setHardwareProcessor(hal.getProcessor());
 			} catch (final Exception re) {
@@ -339,7 +327,6 @@ public class HardwareHelper {
 			dato.setPiOSFirmwareDate(SystemInfo.getOsFirmwareDate());
 		} catch (final Exception ex) {
 		}
-		// System.out.println("check3");
 		try {
 			dato.setPiJavaVendor(SystemInfo.getJavaVendor());
 			dato.setPiJavaVendorURL(SystemInfo.getJavaVendorUrl());

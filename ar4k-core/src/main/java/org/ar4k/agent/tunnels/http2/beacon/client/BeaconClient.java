@@ -31,6 +31,7 @@ import org.ar4k.agent.core.interfaces.ConfigSeed;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
@@ -902,10 +903,10 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		generateCaFile();
 		if (homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
 			generateCertFile(this.aliasBeaconClientInKeystore);
-			writePrivateKey(aliasBeaconClientInKeystore, homunculus, privateFile);
+			KeystoreLoader.writePrivateKey(aliasBeaconClientInKeystore, homunculus, privateFile);
 		} else {
 			generateCertFile(homunculus.getMyAliasCertInKeystore());
-			writePrivateKey(homunculus.getMyAliasCertInKeystore(), homunculus, privateFile);
+			KeystoreLoader.writePrivateKey(homunculus.getMyAliasCertInKeystore(), homunculus, privateFile);
 		}
 	}
 
@@ -1134,19 +1135,6 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	public static void setUseNettyForTunnel(boolean useNettyForTunnel) {
 		BeaconClient.useNettyForTunnel = useNettyForTunnel;
-	}
-
-	private static void writePrivateKey(String alias, Homunculus homunculusTarget, String privateKey) {
-		logger.info("USE KEY FOR CLIENT: " + alias + " target file -> " + privateKey);
-		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(alias);
-		try (final FileWriter writer = new FileWriter(new File(privateKey))) {
-			writer.write("-----BEGIN PRIVATE KEY-----\n");
-			writer.write(pk);
-			writer.write("\n-----END PRIVATE KEY-----\n");
-		} catch (final IOException e) {
-			logger.logException(e);
-		}
-
 	}
 
 }

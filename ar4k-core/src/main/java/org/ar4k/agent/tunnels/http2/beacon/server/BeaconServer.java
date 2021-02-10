@@ -1,7 +1,6 @@
 package org.ar4k.agent.tunnels.http2.beacon.server;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
+import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
@@ -340,7 +340,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		});
 		if (process == null) {
 			process = new Thread(this);
-			process.setName("p-" + markThread);
+			process.setName("bserver-" + markThread);
 			process.start();
 		}
 	}
@@ -498,9 +498,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore
 						+ " not found in keystore [" + homunculusTarget + "]");
 			}
-			writePemCa(this.certChainFileLastPart);
-			writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
-			writePrivateKey(this.aliasBeaconServerInKeystore, homunculusTarget, this.privateKeyFileLastPart);
+			KeystoreLoader.writePemCa(this.certChainFileLastPart, caChainPem);
+			KeystoreLoader.writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
+			KeystoreLoader.writePrivateKey(this.aliasBeaconServerInKeystore, homunculusTarget,
+					this.privateKeyFileLastPart);
 			try {
 				logger.info("Starting Beacon server");
 				final SslContextBuilder sslContextBuild = GrpcSslContexts
@@ -533,48 +534,12 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 		}
 	}
 
-	private void writePemCa(String certChain) {
-		try (final FileWriter writer = new FileWriter(new File(certChain))) {
-			logger.info("path of Beacon trust certificate -> " + new File(certChain).getAbsolutePath());
-			for (final String cert : caChainPem.split(",")) {
-				writer.write("-----BEGIN CERTIFICATE-----\n");
-				writer.write(cert);
-				writer.write("\n-----END CERTIFICATE-----\n");
-			}
-		} catch (final IOException e) {
-			logger.logException(e);
-		}
-	}
-
-	private void writePemCert(String aliasBeaconServer, Homunculus homunculusTarget, String certChain) {
-		try (final FileWriter writer = new FileWriter(new File(certChain))) {
-			final String pemTxtBase = homunculusTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
-			writer.write("-----BEGIN CERTIFICATE-----\n");
-			writer.write(pemTxtBase);
-			writer.write("\n-----END CERTIFICATE-----\n");
-		} catch (final IOException e) {
-			logger.logException(e);
-		}
-	}
-
 	public static long getDefaultTimeout() {
 		return DEFAULT_TIMEOUT;
 	}
 
 	public static long getWaitreplyloopwaittime() {
 		return WAIT_REPLY_LOOP;
-	}
-
-	private static void writePrivateKey(String aliasBeaconServer, Homunculus homunculusTarget, String privateKey) {
-		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
-		try (final FileWriter writer = new FileWriter(new File(privateKey))) {
-			writer.write("-----BEGIN PRIVATE KEY-----\n");
-			writer.write(pk);
-			writer.write("\n-----END PRIVATE KEY-----\n");
-			writer.close();
-		} catch (final IOException e) {
-			logger.logException(e);
-		}
 	}
 
 }

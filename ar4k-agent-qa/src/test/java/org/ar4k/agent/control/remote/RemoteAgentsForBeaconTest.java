@@ -15,7 +15,7 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.console.Ar4kAgent;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
-import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.agent.helper.KeystoreLoader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
