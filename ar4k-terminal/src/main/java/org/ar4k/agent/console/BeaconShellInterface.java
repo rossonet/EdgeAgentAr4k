@@ -46,9 +46,10 @@ import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
 import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
@@ -144,7 +145,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
 			@ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
 			throws IOException, UnrecoverableKeyException {
-		tmpServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(port).setDiscoveryPort(discoveryPort)
+		tmpServer = new BeaconServerBuilder().setHomunculus(homunculus).setPort(port).setDiscoveryPort(discoveryPort)
 				.setStringDiscovery(discoveryMessage).setBroadcastAddress(discoveryAddress)
 				.setAcceptCerts(acceptAllCerts).build();
 		tmpServer.start();

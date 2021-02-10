@@ -24,6 +24,8 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -50,20 +52,42 @@ public class BeaconService implements EdgeComponent {
 	private BeaconServer beaconServer = null;
 
 	@Override
-	public Homunculus getHomunculus() {
-		return homunculus;
+	public void close() throws Exception {
+		if (beaconServer != null) {
+			beaconServer.close();
+		}
+	}
+
+	public BeaconServer getBeaconServer() {
+		return beaconServer;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public ServiceConfig getConfiguration() {
+		return configuration;
+	}
+
+	@Override
+	public DataAddress getDataAddress() {
+		return dataAddress;
+	}
+
+	@Override
+	public JSONObject getDescriptionJson() {
+		Gson gson = new GsonBuilder().create();
+		return new JSONObject(gson.toJsonTree(configuration).getAsString());
+	}
+
+	@Override
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override
 	public synchronized void init() {
 		try {
 			if (beaconServer == null) {
-				beaconServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(configuration.port)
+				beaconServer = new BeaconServerBuilder().setHomunculus(homunculus).setPort(configuration.port)
 						.setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
 						.setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
 						.setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
@@ -80,6 +104,29 @@ public class BeaconService implements EdgeComponent {
 	}
 
 	@Override
+	public void kill() {
+		if (beaconServer != null) {
+			beaconServer.stop();
+			beaconServer = null;
+		}
+	}
+
+	@Override
+	public void setConfiguration(ServiceConfig configuration) {
+		this.configuration = (BeaconServiceConfig) configuration;
+	}
+
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		this.dataAddress = dataAddress;
+	}
+
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
+	}
+
+	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
 		if (beaconServer == null) {
 			init();
@@ -93,51 +140,6 @@ public class BeaconService implements EdgeComponent {
 			}
 		}
 		return ServiceStatus.RUNNING;
-	}
-
-	@Override
-	public void kill() {
-		if (beaconServer != null) {
-			beaconServer.stop();
-			beaconServer = null;
-		}
-	}
-
-	@Override
-	public DataAddress getDataAddress() {
-		return dataAddress;
-	}
-
-	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		this.dataAddress = dataAddress;
-	}
-
-	@Override
-	public void setConfiguration(ServiceConfig configuration) {
-		this.configuration = (BeaconServiceConfig) configuration;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		Gson gson = new GsonBuilder().create();
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
-	}
-
-	@Override
-	public void close() throws Exception {
-		if (beaconServer != null) {
-			beaconServer.close();
-		}
-	}
-
-	@Override
-	public ServiceConfig getConfiguration() {
-		return configuration;
-	}
-
-	public BeaconServer getBeaconServer() {
-		return beaconServer;
 	}
 
 }

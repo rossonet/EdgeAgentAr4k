@@ -42,20 +42,17 @@ public class BeaconAgent implements AutoCloseable {
 		}
 	}
 
-	public RegisterRequest getRegisterRequest() {
-		return registerRequest;
+	public void addRequestForAgent(RequestToAgent req) {
+		cmdCalls.offer(req);
 	}
 
-	public RegisterReply getRegisterReply() {
-		return registerReply;
+	@Override
+	public void close() throws Exception {
+		cmdCalls.clear();
 	}
 
 	public String getAgentUniqueName() {
 		return registerReply.getRegisterCode();
-	}
-
-	public JSONObject getHardwareInfoAsJson() {
-		return hardwareInfo;
 	}
 
 	public List<RequestToAgent> getCommandsToBeExecute() {
@@ -67,25 +64,33 @@ public class BeaconAgent implements AutoCloseable {
 		return r;
 	}
 
-	public void addRequestForAgent(RequestToAgent req) {
-		cmdCalls.offer(req);
+	public JSONObject getHardwareInfoAsJson() {
+		return hardwareInfo;
+	}
+
+	public Instant getLastCall() {
+		return lastCall;
 	}
 
 	public int getPollingFrequency() {
 		return registerReply.getMonitoringFrequency();
 	}
 
+	public RegisterReply getRegisterReply() {
+		return registerReply;
+	}
+
+	public RegisterRequest getRegisterRequest() {
+		return registerRequest;
+	}
+
+	public String getShortDescription() {
+		return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: "
+				+ cmdCalls.size();
+	}
+
 	public long getTimestampRegistration() {
 		return registerRequest.getTime().getSeconds();
-	}
-
-	@Override
-	public void close() throws Exception {
-		cmdCalls.clear();
-	}
-
-	public Instant getLastCall() {
-		return lastCall;
 	}
 
 	public void setHardwareInfo(JSONObject hardwareInfo) {
@@ -96,11 +101,6 @@ public class BeaconAgent implements AutoCloseable {
 	public String toString() {
 		return "BeaconAgent [lastCall=" + lastCall + ", registerRequest=" + registerRequest + ", registerReply="
 				+ registerReply + "]";
-	}
-
-	public String getShortDescription() {
-		return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: "
-				+ cmdCalls.size();
 	}
 
 }

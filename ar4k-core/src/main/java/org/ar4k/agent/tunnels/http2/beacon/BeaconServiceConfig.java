@@ -55,10 +55,20 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
 	public String filterActiveCommand = ".*";
 
 	@Override
+	public int getPriority() {
+		return 300;
+	}
+
+	@Override
 	public BeaconService instantiate() {
 		final BeaconService ss = new BeaconService();
 		ss.setConfiguration(this);
 		return ss;
+	}
+
+	@Override
+	public boolean isSpringBean() {
+		return false;
 	}
 
 	@Override
@@ -69,16 +79,6 @@ public class BeaconServiceConfig extends AbstractServiceConfig {
 				+ certChainFile + ", certFile=" + certFile + ", privateKeyFile=" + privateKeyFile
 				+ ", aliasBeaconServerInKeystore=" + aliasBeaconServerInKeystore + ", caChainPem=" + caChainPem
 				+ ", filterActiveCommand=" + filterActiveCommand + "]";
-	}
-
-	@Override
-	public boolean isSpringBean() {
-		return false;
-	}
-
-	@Override
-	public int getPriority() {
-		return 300;
 	}
 
 }

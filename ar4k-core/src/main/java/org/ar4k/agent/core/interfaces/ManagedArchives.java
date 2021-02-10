@@ -4,18 +4,18 @@ import java.nio.file.Path;
 
 public interface ManagedArchives {
 
-	public String getUniqueName();
-
-	public void synchronize();
-
 	public Path getFileSystemPath();
+
+	public String getLog();
+
+	public String getUniqueName();
 
 	public void install();
 
 	public boolean isInstalled();
 
-	public String getLog();
-
 	public void setUrl(String url);
+
+	public void synchronize();
 
 }

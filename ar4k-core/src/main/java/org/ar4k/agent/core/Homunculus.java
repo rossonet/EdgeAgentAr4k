@@ -69,8 +69,9 @@ import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.ar4k.agent.spring.autoconfig.EdgeStarterProperties;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconService;
+import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClientBuilder;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.BeanNameAware;
@@ -113,34 +114,36 @@ import jdbm.RecordManagerFactory;
 public class Homunculus
 		implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
 
-	public static final String THREAD_ID = "a-" + (Math.round((new Random().nextDouble() * 9999)));
-
-	public static final ContextCreationHelper getNewHomunculusInNewContext(Class<?> springMasterClass,
-			ExecutorService executor, String loggerFile, String keyStore, int webPort, List<String> args,
-			EdgeConfig homunculusConfig, String mainAliasInKeystore, String keystoreBeaconAlias,
-			String webRegistrationEndpoint) {
-		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args,
-				homunculusConfig, mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
+	public enum HomunculusEvents {
+		BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
 	}
 
-	public Class<Homunculus> getStaticClass() {
-		return Homunculus.class;
+	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
+	// agenti, per la definizione della policy security sul routing public
+	public enum HomunculusRouterType {
+		NONE, PRODUCTION, DEVELOP, ROAD
 	}
+
+	public enum HomunculusStates {
+		INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
+	}
+
+	public static final String THREAD_ID = "ar4k-" + (Math.round((new Random().nextDouble() * 9999)));
 
 	public static final String DEFAULT_KS_PATH = "default-new.ks";
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(Homunculus.class.toString());
-
 	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
+
 	// assegnato da Spring tramite setter al boot
 	private static ApplicationContext applicationContext;
-
-	private String agentUniqueName = null;
 
 	private static final String DB_DATASTORE_NAME = "datastore";
 
 	private static final int VALIDITY_CERT_DAYS = 365 * 3;
+
+	private String agentUniqueName = null;
 
 	private Timer timerScheduler = null;
 
@@ -158,7 +161,6 @@ public class Homunculus
 
 	@Autowired
 	private EdgeStarterProperties starterProperties;
-
 	// gestione configurazioni
 	// attuale configurazione in runtime
 	private EdgeConfig runtimeConfig = null;
@@ -169,6 +171,7 @@ public class Homunculus
 	// configurazione per il reload
 	private EdgeConfig reloadConfig = null;
 	private HomunculusStates stateTarget = HomunculusStates.RUNNING;
+
 	private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
 
 	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
@@ -184,8 +187,8 @@ public class Homunculus
 	private BeaconClient beaconClient = null;
 
 	private DataAddressHomunculus dataAddress = new DataAddressHomunculus(this);
-
 	private KeystoreConfig myIdentityKeystore = null;
+
 	private String myAliasCertInKeystore = "agent";
 
 	private boolean onApplicationEventFlag = false;
@@ -194,34 +197,18 @@ public class Homunculus
 
 	private boolean firstStateFired = false;
 
-	public enum HomunculusStates {
-		INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
-	}
+	private Comparator<ServiceConfig> comparatorOrderPots = new Comparator<ServiceConfig>() {
+		@Override
+		public int compare(ServiceConfig o1, ServiceConfig o2) {
+			return Integer.compare(o1.getPriority(), o2.getPriority());
+		}
+	};
 
-	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
-	// agenti, per la definizione della policy security sul routing public
-	public enum HomunculusRouterType {
-		NONE, PRODUCTION, DEVELOP, ROAD
-	}
+	private int indexBeaconClient = -1;
 
-	public enum HomunculusEvents {
-		BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
-	}
-
-	@ManagedOperation
-	public void sendEvent(HomunculusEvents event) {
-		homunculusStateMachine.sendEvent(event);
-	}
-
-	@ManagedOperation
-	public HomunculusStates getState() {
-		return (homunculusStateMachine != null && homunculusStateMachine.getState() != null)
-				? homunculusStateMachine.getState().getId()
-				: HomunculusStates.INIT;
-	}
-
-	public boolean isRunning() {
-		return HomunculusStates.RUNNING.equals(getState());
+	public void clearDataStore() {
+		if (dataStore != null)
+			dataStore.clear();
 	}
 
 	@Override
@@ -241,11 +228,388 @@ public class Homunculus
 		}
 	}
 
+	public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
+			String discoveryFilter, boolean force) {
+		URL urlTarget = null;
+		BeaconClient beaconClientTarget = null;
+		{
+			try {
+				if (urlBeacon != null)
+					urlTarget = new URL(urlBeacon);
+				final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
+				homunculusSession.registerNewSession(sessionId, sessionId);
+				final RpcConversation rpc = homunculusSession.getRpc(sessionId);
+				beaconClientTarget = new BeaconClientBuilder()
+						.setAliasBeaconClientInKeystore(starterProperties.getKeystoreBeaconAlias())
+						.setUniqueName(getAgentUniqueName()).setHomunculus(this).setBeaconCaChainPem(beaconCaChainPem)
+						.setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
+						.setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
+				if (beaconClientTarget != null
+						&& beaconClientTarget.getStateConnection().equals(ConnectivityState.READY)) {
+					logger.info("found Beacon endpoint: " + urlBeacon);
+					if (!getAgentUniqueName().equals(beaconClientTarget.getAgentUniqueName())) {
+						logger.info("the unique name is changed in " + getAgentUniqueName());
+					}
+				} else {
+					logger.info(
+							"the Beacon endpoint " + urlBeacon + " return " + beaconClientTarget.getStateConnection());
+				}
+			} catch (final IOException e) {
+				logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
+			} catch (final UnrecoverableKeyException e) {
+				logger.warn(e.getMessage());
+			} catch (final Exception e) {
+				logger.info(EdgeLogger.stackTraceToString(e, 6));
+			}
+			return beaconClientTarget;
+		}
+	}
+
+	public boolean dataStoreExists() {
+		return (dataStore != null);
+	}
+
+	public final void elaborateNewConfig(EdgeConfig newTargetConfig) {
+		if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
+			logger.warn("Found new config {}", newTargetConfig);
+			reloadConfig = newTargetConfig;
+			runtimeConfig = newTargetConfig;
+			if (newTargetConfig.nextConfigReload == null || !newTargetConfig.nextConfigReload) {
+				sendEvent(HomunculusEvents.RESTART);
+			} else {
+				sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+			}
+		}
+	}
+
+	public String getAgentUniqueName() {
+		return agentUniqueName;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	public IBeaconClient getBeaconClient() {
+		return beaconClient;
+	}
+
+	public IBeaconServer getBeaconServerIfExists() {
+		for (ServiceComponent<EdgeComponent> singlePot : components) {
+			if (singlePot.getPot() instanceof BeaconService) {
+				return ((BeaconService) singlePot.getPot()).getBeaconServer();
+			}
+		}
+		return null;
+	}
+
+	public Set<ServiceComponent<EdgeComponent>> getComponents() {
+		return components;
+	}
+
+	public Object getContextData(String index) {
+		if (dataStore != null)
+			return dataStore.get(index);
+		else
+			return null;
+	}
+
+	public DataAddressHomunculus getDataAddress() {
+		return dataAddress;
+	}
+
+	public Map<String, Object> getDataStore() {
+		return dataStore;
+	}
+
+	public String getDbDataStoreName() {
+		return DB_DATASTORE_NAME;
+	}
+
+	// adminPassword è escluso
+	public Map<String, String> getEnvironmentVariables() {
+		final Map<String, String> ritorno = new HashMap<>();
+		ritorno.put("ar4k.fileKeystore", starterProperties.getFileKeystore());
+		ritorno.put("ar4k.webKeystore", starterProperties.getWebKeystore());
+		ritorno.put("ar4k.dnsKeystore", starterProperties.getDnsKeystore());
+		ritorno.put("ar4k.keystorePassword", starterProperties.getKeystorePassword());
+		ritorno.put("ar4k.keystoreMainAlias", starterProperties.getKeystoreMainAlias());
+		ritorno.put("ar4k.keystoreBeaconAlias", starterProperties.getKeystoreBeaconAlias());
+		ritorno.put("ar4k.confPath", starterProperties.getConfPath());
+		ritorno.put("ar4k.fileConfig", starterProperties.getFileConfig());
+		ritorno.put("ar4k.webConfig", starterProperties.getWebConfig());
+		ritorno.put("ar4k.dnsConfig", starterProperties.getDnsConfig());
+		ritorno.put("ar4k.baseConfig", starterProperties.getBaseConfig());
+		ritorno.put("ar4k.webRegistrationEndpoint", starterProperties.getWebRegistrationEndpoint());
+		ritorno.put("ar4k.dnsRegistrationEndpoint", starterProperties.getDnsRegistrationEndpoint());
+		ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(starterProperties.getBeaconDiscoveryPort()));
+		ritorno.put("ar4k.beaconDiscoveryFilterString", starterProperties.getBeaconDiscoveryFilterString());
+		ritorno.put("ar4k.beaconCaChainPem", starterProperties.getBeaconCaChainPem());
+		ritorno.put("ar4k.fileConfigOrder", String.valueOf(starterProperties.getFileConfigOrder()));
+		ritorno.put("ar4k.webConfigOrder", String.valueOf(starterProperties.getWebConfigOrder()));
+		ritorno.put("ar4k.dnsConfigOrder", String.valueOf(starterProperties.getDnsConfigOrder()));
+		ritorno.put("ar4k.baseConfigOrder", String.valueOf(starterProperties.getBaseConfigOrder()));
+		ritorno.put("ar4k.threadSleep", String.valueOf(starterProperties.getThreadSleep()));
+		ritorno.put("ar4k.consoleOnly", String.valueOf(starterProperties.isConsoleOnly()));
+		ritorno.put("ar4k.logoUrl", String.valueOf(starterProperties.getLogoUrl()));
+		return ritorno;
+	}
+
+	public String getEnvironmentVariablesAsString() {
+		return starterProperties.toString();
+	}
+
+	public String getFileKeystore() {
+		return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
+	}
+
+	public StateMachine<HomunculusStates, HomunculusEvents> getHomunculusStateMachine() {
+		return homunculusStateMachine;
+	}
+
+	public Collection<EdgeUserDetails> getLocalUsers() {
+		return localUsers;
+	}
+
+	public String getLogoUrl() {
+		String logo = "/static/img/ar4k.png";
+		if (starterProperties.getLogoUrl() != null && !starterProperties.getLogoUrl().isEmpty()) {
+			logo = starterProperties.getLogoUrl();
+		}
+		if (runtimeConfig != null && runtimeConfig.logoUrl != null) {
+			logo = runtimeConfig.logoUrl;
+		}
+		return logo;
+	}
+
+	public String getMyAliasCertInKeystore() {
+		return myAliasCertInKeystore;
+	}
+
+	public KeystoreConfig getMyIdentityKeystore() {
+		return myIdentityKeystore;
+	}
+
+	public RpcExecutor getRpc(String sessionId) {
+		return homunculusSession.getRpc(sessionId);
+	}
+
+	public EdgeConfig getRuntimeConfig() {
+		return runtimeConfig;
+	}
+
+	public Collection<String> getRuntimeProvides() {
+		final Collection<String> result = new ArrayList<String>();
+		for (final ServiceComponent<EdgeComponent> c : components) {
+			if (c.isRunning() && c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getProvides() != null) {
+				result.addAll(c.getPot().getConfiguration().getProvides());
+			}
+
+		}
+		return result;
+	}
+
+	public Collection<String> getRuntimeRequired() {
+		final Collection<String> result = new ArrayList<String>();
+		for (final ServiceComponent<EdgeComponent> c : components) {
+			if (c.getPot() != null && c.getPot().getConfiguration() != null
+					&& c.getPot().getConfiguration().getRequired() != null) {
+				result.addAll(c.getPot().getConfiguration().getRequired());
+			}
+		}
+		return result;
+	}
+
+	public Session getSession(String sessionId) {
+		return (Session) homunculusSession.getSessionInformation(sessionId);
+	}
+
+	public EdgeStarterProperties getStarterProperties() {
+		return starterProperties;
+	}
+
+	@ManagedOperation
+	public HomunculusStates getState() {
+		return (homunculusStateMachine != null && homunculusStateMachine.getState() != null)
+				? homunculusStateMachine.getState().getId()
+				: HomunculusStates.INIT;
+	}
+
+	public Class<Homunculus> getStaticClass() {
+		return Homunculus.class;
+	}
+
+	public List<String> getTags() {
+		final List<String> result = new ArrayList<>();
+		if (getRuntimeConfig() != null) {
+			result.addAll(getRuntimeConfig().getTags());
+			result.add(getRuntimeConfig().dataCenter);
+			result.add(getRuntimeConfig().author);
+			result.add(String.valueOf(getRuntimeConfig().subVersion));
+			result.add(getRuntimeConfig().tagVersion);
+			result.add(String.valueOf(getRuntimeConfig().version));
+		}
+		result.add(getAgentUniqueName());
+		return result;
+	}
+
+	public HomunculusStates getTargetState() {
+		return stateTarget;
+	}
+
+	public boolean isRunning() {
+		return HomunculusStates.RUNNING.equals(getState());
+	}
+
+	public boolean isSessionValid(String sessionId) {
+		return homunculusSession.getSessionInformation(sessionId) != null;
+	}
+
+	public String loginAgent(String username, String password, String sessionId) {
+		final UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
+		final Authentication result = authenticationManager.authenticate(request);
+		SecurityContextHolder.getContext().setAuthentication(result);
+		if (sessionId == null || sessionId.isEmpty()) {
+			if (homunculusSession.getAllSessions(result, false).isEmpty()) {
+				sessionId = UUID.randomUUID().toString().replace("-", "");
+				homunculusSession.registerNewSession(sessionId, result);
+			} else {
+				sessionId = homunculusSession.getAllSessions(result, false).get(0).getSessionId();
+			}
+		} else {
+			if (homunculusSession.getSessionInformation(sessionId) == null
+					|| homunculusSession.getSessionInformation(sessionId).isExpired()) {
+				homunculusSession.registerNewSession(sessionId, result);
+			}
+		}
+		return sessionId;
+	}
+
+	public void logoutFromAgent() {
+		SecurityContextHolder.clearContext();
+	}
+
+	@Override
+	public void onApplicationEvent(ApplicationEvent event) {
+		logger.debug(" event: {}", event);
+		if (event instanceof ContextRefreshedEvent) {
+			// avvio a contesto spring caricato
+			onApplicationEventFlag = true;
+			checkDualStart();
+		}
+	}
+
+	@ManagedOperation
+	public void sendEvent(HomunculusEvents event) {
+		homunculusStateMachine.sendEvent(event);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		updateApplicationContext(applicationContext);
+	}
+
+	@Override
+	public void setBeanName(String name) {
+		beanName = name;
+	}
+
+	public void setContextData(String index, Object data) {
+		if (dataStore != null)
+			dataStore.put(index, data);
+	}
+
+	public void setDataAddress(DataAddressHomunculus dataAddress) {
+		this.dataAddress = dataAddress;
+	}
+
+	public void setMyAliasCertInKeystore(String myAliasCertInKeystore) {
+		this.myAliasCertInKeystore = myAliasCertInKeystore;
+	}
+
+	public void setMyIdentityKeystore(KeystoreConfig myIdentityKeystore) {
+		this.myIdentityKeystore = myIdentityKeystore;
+	}
+
+	public void setTargetConfig(EdgeConfig config) {
+		targetConfig = config;
+	}
+
+	public void terminateSession(String sessionId) {
+		homunculusSession.removeSessionInformation(sessionId);
+		logoutFromAgent();
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Homunculus [");
+		if (agentUniqueName != null)
+			builder.append("agentUniqueName=").append(agentUniqueName).append(", ");
+		if (homunculusStateMachine != null)
+			builder.append("stateMachine=").append(homunculusStateMachine).append(", ");
+		if (homunculusSession != null)
+			builder.append("homunculusSession=").append(homunculusSession).append(", ");
+		if (starterProperties != null)
+			builder.append("starterProperties=").append(starterProperties).append(", ");
+		if (runtimeConfig != null)
+			builder.append("runtimeConfig=").append(runtimeConfig).append(", ");
+		if (targetConfig != null)
+			builder.append("targetConfig=").append(targetConfig).append(", ");
+		if (bootstrapConfig != null)
+			builder.append("bootstrapConfig=").append(bootstrapConfig).append(", ");
+		if (reloadConfig != null)
+			builder.append("reloadConfig=").append(reloadConfig).append(", ");
+		if (stateTarget != null)
+			builder.append("stateTarget=").append(stateTarget).append(", ");
+		if (statesBefore != null)
+			builder.append("statesBefore=").append(statesBefore).append(", ");
+		if (components != null)
+			builder.append("components=").append(components).append(", ");
+		if (dataStore != null)
+			builder.append("dataStore=").append(dataStore).append(", ");
+		if (localUsers != null)
+			builder.append("localUsers=").append(localUsers).append(", ");
+		if (beanName != null)
+			builder.append("beanName=").append(beanName).append(", ");
+		if (beaconClient != null)
+			builder.append("beaconClient=").append(beaconClient).append(", ");
+		if (dataAddress != null)
+			builder.append("dataAddress=").append(dataAddress).append(", ");
+		if (myIdentityKeystore != null)
+			builder.append("myIdentityKeystore=").append(myIdentityKeystore).append(", ");
+		if (myAliasCertInKeystore != null)
+			builder.append("myAliasCertInKeystore=").append(myAliasCertInKeystore).append(", ");
+		builder.append("firstStateFired=").append(firstStateFired).append("]");
+		return builder.toString();
+	}
+
+	@PostConstruct
+	void afterSpringInit() throws Exception {
+		afterSpringInitFlag = true;
+		checkDualStart();
+	}
+
 	// workaround Spring State Machine
-	// @OnStateChanged()
-	synchronized void stateChanged() {
-		logger.info("State change in Homunculus to " + getState());
-		statesBefore.put(new Instant(), getState());
+	// @OnStateChanged(target = "CONFIGURED")
+	synchronized void configureAgent() {
+		if (runtimeConfig == null) {
+			logger.warn("Required running state without conf");
+			homunculusStateMachine.sendEvent(HomunculusEvents.EXCEPTION);
+		}
+		if (stateTarget == null && runtimeConfig != null) {
+			stateTarget = runtimeConfig.targetRunLevel;
+		}
+		if (runtimeConfig != null && runtimeConfig.updateFileConfig == true) {
+			updateFileConfig(runtimeConfig);
+		}
+		if (stateTarget != null && stateTarget.equals(HomunculusStates.RUNNING)) {
+			timerScheduler = new Timer("t-" + (Math.round((new Random().nextDouble() * 99))) + "-" + THREAD_ID);
+			homunculusStateMachine.sendEvent(HomunculusEvents.START);
+		} else {
+			logger.warn("stateTarget is null in runtime config");
+		}
 	}
 
 	// workaround Spring State Machine
@@ -277,12 +641,36 @@ public class Homunculus
 		}
 	}
 
-	private void closeDataMap() {
-		try {
-			recMan.close();
-		} catch (final IOException e) {
-			logger.info("IOException closing file data map of Homunculus");
+	// workaround Spring State Machine
+	// @OnStateMachineStart
+	synchronized void initAgent() {
+		if (starterProperties.isConsoleOnly() != null && !(starterProperties.isConsoleOnly().equals("true")
+				|| starterProperties.isConsoleOnly().equals("yes"))) {
+			homunculusStateMachine.sendEvent(HomunculusEvents.BOOTSTRAP);
+		} else {
+			logger.warn("console only true, run just the command line");
 		}
+		if (starterProperties.isShowRegistrationCode().equals("true")
+				|| starterProperties.isShowRegistrationCode().equals("yes")) {
+			System.out.println("__________________________________________________");
+			System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
+			System.out.println("__________________________________________________\n");
+		}
+	}
+
+	void prepareAgentStasis() {
+		logger.warn("PUTTING AGENT IN STASIS STATE...");
+		finalizeAgent();
+	}
+
+	void prepareRestart() {
+		logger.warn("RESTARTING AGENT...");
+		finalizeAgent();
+	}
+
+	void reloadAgent() {
+		logger.warn("RELOAD AGENT...");
+		resetAgent();
 	}
 
 	// workaround Spring State Machine
@@ -296,6 +684,46 @@ public class Homunculus
 			dataAddress = new DataAddressHomunculus(this);
 		} catch (final Exception aa) {
 			logger.logException("error during reloading phase", aa);
+		}
+	}
+
+	void runPostScript() {
+		if (runtimeConfig.postScript != null && runtimeConfig.postScriptLanguage != null
+				&& !runtimeConfig.postScript.isEmpty() && !runtimeConfig.postScriptLanguage.isEmpty()) {
+			logger.info("run post script in language {}", runtimeConfig.postScriptLanguage);
+			final String scriptLabel = "postscript";
+			try {
+				scriptRunner(scriptLabel, runtimeConfig.postScriptLanguage, runtimeConfig.postScript);
+			} catch (final Exception a) {
+				logger.logException("error running " + scriptLabel, a);
+			}
+		}
+	}
+
+	void runPreScript() {
+		if (runtimeConfig.preScript != null && runtimeConfig.preScriptLanguage != null
+				&& !runtimeConfig.preScript.isEmpty() && !runtimeConfig.preScriptLanguage.isEmpty()) {
+			logger.info("run pre script in language {}", runtimeConfig.preScriptLanguage);
+			final String scriptLabel = "prescript";
+			try {
+				scriptRunner(scriptLabel, runtimeConfig.preScriptLanguage, runtimeConfig.preScript);
+			} catch (final Exception a) {
+				logger.logException("error running " + scriptLabel, a);
+			}
+		}
+	}
+
+	// workaround Spring State Machine
+	// @OnStateChanged(target = "RUNNING")
+	// avvia i servizi
+	synchronized void runServices() {
+		final List<ServiceConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
+		Collections.sort(sortedList, comparatorOrderPots);
+		for (final ServiceConfig confServizio : sortedList) {
+			if (confServizio instanceof ServiceConfig) {
+				logger.info("run {} as service", confServizio);
+				runSeedService(confServizio);
+			}
 		}
 	}
 
@@ -321,6 +749,385 @@ public class Homunculus
 				logger.warn("created user " + admin.getUsername());
 			}
 		}
+	}
+
+	void startCheckingNextConfig() {
+		reloadConfig = null;
+		if (runtimeConfig != null
+				&& (runtimeConfig.nextConfigFile != null || runtimeConfig.nextConfigDns != null
+						|| runtimeConfig.nextConfigWeb != null)
+				&& runtimeConfig.configCheckPeriod != null && runtimeConfig.configCheckPeriod > 0) {
+			if (runtimeConfig.nextConfigFile != null) {
+				timerScheduler.schedule(checkFileConfigUpdate(runtimeConfig.nextConfigFile),
+						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
+				logger.warn("scheduled periodically configuration checking on file {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
+			}
+			if (runtimeConfig.nextConfigDns != null) {
+				timerScheduler.schedule(checkDnsConfigUpdate(runtimeConfig.nextConfigDns),
+						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
+				logger.warn("scheduled periodically configuration checking on dns {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
+			}
+			if (runtimeConfig.nextConfigWeb != null) {
+				timerScheduler.schedule(checkWebConfigUpdate(runtimeConfig.nextConfigWeb),
+						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
+				logger.warn("scheduled periodically configuration checking on url {} with rate time of {} ms",
+						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
+			}
+		}
+	}
+
+	// workaround Spring State Machine
+	// @OnStateChanged(target = "STAMINAL")
+	synchronized void startingAgent() {
+		new File(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)).mkdirs();
+		try {
+			if (dataStore == null) {
+				recMan = RecordManagerFactory
+						.createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
+								+ "/" + starterProperties.getHomunculusDatastoreFileName());
+				dataStore = recMan.treeMap(DB_DATASTORE_NAME);
+				logger.info("datastore on Homunculus started");
+			}
+		} catch (final IOException e) {
+			logger.logException("datastore on Homunculus problem", e);
+		}
+		setMasterKeystore();
+		bootstrapConfig = resolveBootstrapConfig();
+		popolateAddressSpace();
+		setInitialAuth();
+		try {
+			checkBeaconClient();
+		} catch (final Exception a) {
+			logger.warn("Error connecting beacon client -> " + EdgeLogger.stackTraceToString(a, 4));
+		}
+		if (runtimeConfig == null && targetConfig == null && bootstrapConfig != null) {
+			targetConfig = bootstrapConfig;
+		}
+		if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
+			if (targetConfig != null)
+				runtimeConfig = targetConfig;
+		}
+		if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
+			logger.info("Starting with config: " + runtimeConfig.toString());
+			homunculusStateMachine.sendEvent(HomunculusEvents.SETCONF);
+		}
+	}
+
+	// workaround Spring State Machine
+	// @OnStateChanged()
+	synchronized void stateChanged() {
+		logger.info("State change in Homunculus to " + getState());
+		statesBefore.put(new Instant(), getState());
+	}
+
+	protected String getBeanName() {
+		return beanName;
+	}
+
+	private void checkBeaconClient() {
+		if (runtimeConfig != null && runtimeConfig.beaconServer != null && !runtimeConfig.beaconServer.isEmpty()) {
+			try {
+				indexBeaconClient++;
+				if (indexBeaconClient > (ConfigHelper
+						.countWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer), false) - 1)) {
+					indexBeaconClient = 0;
+				}
+				logger.info("TRY CONNECTION TO BEACON IN CONFIG RUNTIME AT "
+						+ ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
+								false, indexBeaconClient));
+				beaconClient = connectToBeaconService(
+						ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
+								false, indexBeaconClient),
+						runtimeConfig.beaconServerCertChain, Integer.valueOf(runtimeConfig.beaconDiscoveryPort),
+						runtimeConfig.beaconDiscoveryFilterString, true);
+			} catch (final Exception e) {
+				logger.warn("Beacon connection in config not ok: " + e.getMessage());
+				logger.info(EdgeLogger.stackTraceToString(e, 40));
+			}
+		} else {
+			if ((starterProperties.getWebRegistrationEndpoint() != null
+					&& !starterProperties.getWebRegistrationEndpoint().isEmpty())
+					|| Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
+				try {
+					indexBeaconClient++;
+					if (indexBeaconClient > (ConfigHelper.countWorkingStringSplittedByComma(
+							filterBeaconUrl(filterBeaconUrl(starterProperties.getWebRegistrationEndpoint())), false)
+							- 1)) {
+						indexBeaconClient = 0;
+					}
+					if (starterProperties.getWebRegistrationEndpoint() == null
+							|| starterProperties.getWebRegistrationEndpoint().isEmpty()) {
+						logger.warn("Beacon connection is not configured");
+					}
+					logger.info("TRY CONNECTION TO BEACON AT " + ConfigHelper.resolveWorkingStringSplittedByComma(
+							filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false, indexBeaconClient));
+					beaconClient = connectToBeaconService(
+							ConfigHelper.resolveWorkingStringSplittedByComma(
+									filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false,
+									indexBeaconClient),
+							starterProperties.getBeaconCaChainPem(),
+							Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
+							starterProperties.getBeaconDiscoveryFilterString(), false);
+				} catch (final Exception e) {
+					logger.warn("Beacon connection not ok: " + e.getMessage());
+					logger.info(EdgeLogger.stackTraceToString(e, 6));
+				}
+			}
+		}
+	}
+
+	private TimerTask checkDnsConfigUpdate(String nextConfigDns) {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				final EdgeConfig newTargetConfig = dnsConfigDownload(nextConfigDns,
+						starterProperties.getKeystoreConfigAlias());
+				elaborateNewConfig(newTargetConfig);
+			}
+		};
+	}
+
+	private synchronized void checkDualStart() {
+		if (onApplicationEventFlag && afterSpringInitFlag && !firstStateFired) {
+			firstStateFired = true;
+			if (starterProperties != null) {
+				agentUniqueName = ConfigHelper.generateNewUniqueName(starterProperties.getUniqueName(),
+						starterProperties.getUniqueNameFile());
+			}
+			logger.info("STARTING AGENT...");
+			Thread.currentThread().setName(THREAD_ID);
+			homunculusStateMachine.start();
+		}
+	}
+
+	private TimerTask checkFileConfigUpdate(String nextConfigFile) {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				final EdgeConfig newTargetConfig = loadConfigFromFile(nextConfigFile,
+						starterProperties.getKeystoreConfigAlias());
+				elaborateNewConfig(newTargetConfig);
+			}
+		};
+	}
+
+	private TimerTask checkWebConfigUpdate(String nextConfigWeb) {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
+						starterProperties.getKeystoreConfigAlias());
+				elaborateNewConfig(newTargetConfig);
+			}
+		};
+	}
+
+	private void closeDataMap() {
+		try {
+			recMan.close();
+		} catch (final IOException e) {
+			logger.info("IOException closing file data map of Homunculus");
+		}
+	}
+
+	private EdgeConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
+		logger.debug("try dns config {}", dnsTarget);
+		final String hostPart = dnsTarget.split("\\.")[0];
+		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
+		try {
+			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 3);
+			try {
+				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
+					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
+							? ConfigHelper.fromBase64Crypto(payloadString, cryptoAlias)
+							: null);
+				} else {
+					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
+							? ConfigHelper.fromBase64(payloadString)
+							: null);
+				}
+			} catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
+					| CMSException e) {
+				logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
+						+ EdgeLogger.stackTraceToString(e, 4));
+				return null;
+			}
+		} catch (UnknownHostException | TextParseException e) {
+			logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
+					+ EdgeLogger.stackTraceToString(e, 4));
+			return null;
+		}
+	}
+
+	private String dnsKeystoreResolvedString() {
+		return ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false);
+	}
+
+	private String filterBeaconUrl(String beaconServer) {
+		return beaconServer;
+	}
+
+	private EdgeConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
+		logger.debug("try file config {}", pathConfig);
+		EdgeConfig resultConfig = null;
+		try (final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
+				final BufferedReader bufferedReader = new BufferedReader(fileReader);) {
+			final StringBuilder config = new StringBuilder();
+
+			String line = null;
+			while ((line = bufferedReader.readLine()) != null) {
+				config.append(line);
+			}
+			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config.toString(), cryptoAlias);
+			} else {
+				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config.toString());
+			}
+			logger.trace("resultConfig\n{}", resultConfig);
+			return resultConfig;
+
+		} catch (final FileNotFoundException ff) {
+			logger.debug("config file not found " + pathConfig);
+			return null;
+		} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
+				| CMSException e) {
+			logger.warn("error in config file -> " + EdgeLogger.stackTraceToString(e, 4));
+			return null;
+		}
+	}
+
+	private void popolateAddressSpace() {
+		dataAddress.firstStart(this);
+	}
+
+	// trova la configurazione appropriata per il bootstrap in funzione dei
+	// parametri di configurazione
+	private EdgeConfig resolveBootstrapConfig() {
+		EdgeConfig targetConfig = null;
+		if (reloadConfig == null) {
+			int maxConfig = 0;
+			try {
+				maxConfig = Integer.max(maxConfig,
+						starterProperties.getWebConfigOrder() != null
+								? Integer.valueOf(starterProperties.getWebConfigOrder())
+								: 6);
+			} catch (final Exception a) {
+				logger.warn("webConfigOrder -> " + starterProperties.getWebConfigOrder());
+				maxConfig = 6;
+			}
+			try {
+				maxConfig = Integer.max(maxConfig,
+						starterProperties.getDnsConfigOrder() != null
+								? Integer.valueOf(starterProperties.getDnsConfigOrder())
+								: 6);
+			} catch (final Exception a) {
+				logger.warn("dnsConfigOrder -> " + starterProperties.getDnsConfigOrder());
+				maxConfig = 6;
+			}
+			try {
+				maxConfig = Integer.max(maxConfig,
+						starterProperties.getBaseConfigOrder() != null
+								? Integer.valueOf(starterProperties.getBaseConfigOrder())
+								: 6);
+			} catch (final Exception a) {
+				logger.warn("base64ConfigOrder -> " + starterProperties.getBaseConfigOrder());
+				maxConfig = 5;
+			}
+			try {
+				maxConfig = Integer.max(maxConfig,
+						starterProperties.getFileConfigOrder() != null
+								? Integer.valueOf(starterProperties.getFileConfigOrder())
+								: 6);
+			} catch (final Exception a) {
+				logger.warn("fileConfigOrder -> " + starterProperties.getFileConfigOrder());
+				maxConfig = 4;
+			}
+			for (int liv = 0; liv <= maxConfig; liv++) {
+				logger.info(String.valueOf(liv) + "/" + maxConfig + " searching config...");
+				if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
+						&& starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
+					try {
+						logger.info("try webConfig");
+						targetConfig = webConfigDownload(
+								ConfigHelper.resolveWorkingString(starterProperties.getWebConfig(), false),
+								starterProperties.getKeystoreConfigAlias());
+						if (targetConfig != null) {
+							logger.info("found webConfig");
+							break;
+						}
+					} catch (final Exception e) {
+						logger.warn("error in webconfig download" + EdgeLogger.stackTraceToString(e, 4));
+					}
+				}
+				if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
+						&& starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
+					try {
+						logger.info("try dnsConfig");
+						targetConfig = dnsConfigDownload(
+								ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false),
+								starterProperties.getKeystoreConfigAlias());
+						if (targetConfig != null) {
+							logger.info("found dnsConfig "
+									+ ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false));
+							break;
+						}
+					} catch (final Exception e) {
+						logger.warn("error in dns config download" + EdgeLogger.stackTraceToString(e, 4));
+					}
+				}
+				if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
+						&& starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
+					try {
+						logger.info("try base64Config");
+						targetConfig = (EdgeConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
+						if (targetConfig != null) {
+							logger.info("found base64Config");
+							break;
+						}
+					} catch (final Exception e) {
+						logger.warn("error in baseconfig" + EdgeLogger.stackTraceToString(e, 4));
+					}
+				}
+				if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
+						&& starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
+					try {
+						logger.info("try fileConfig");
+						targetConfig = loadConfigFromFile(
+								ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
+								starterProperties.getKeystoreConfigAlias());
+						if (targetConfig != null) {
+							logger.info("found fileConfig {}",
+									ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true));
+							break;
+						}
+					} catch (final Exception e) {
+						logger.warn("error in fileconfig" + EdgeLogger.stackTraceToString(e, 4));
+					}
+				}
+			}
+		} else {
+			targetConfig = reloadConfig;
+		}
+		return targetConfig;
+	}
+
+	private void runSeedService(ServiceConfig confServizio) {
+		final HomunculusService service = new HomunculusService(this, confServizio, timerScheduler);
+		components.add(service);
+		service.start();
+	}
+
+	private void scriptRunner(String scriptLabel, String scriptLanguage, String script) {
+		final ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
+		p.setLabel(scriptLabel);
+		p.setEngine(scriptLanguage);
+		p.eval(script);
+		final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + scriptLabel;
+		homunculusSession.registerNewSession(sessionId, sessionId);
+		final RpcConversation rpc = homunculusSession.getRpc(sessionId);
+		rpc.getScriptSessions().put(scriptLabel, p);
 	}
 
 	private void setMasterKeystore() {
@@ -441,337 +1248,26 @@ public class Homunculus
 		}
 	}
 
-	private String dnsKeystoreResolvedString() {
-		return ConfigHelper.resolveWorkingString(starterProperties.getDnsKeystore(), false);
-	}
-
-	private String webKeystoreResolvedString() {
-		return ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false);
-	}
-
-	@PostConstruct
-	void afterSpringInit() throws Exception {
-		afterSpringInitFlag = true;
-		checkDualStart();
-	}
-
-	// workaround Spring State Machine
-	// @OnStateMachineStart
-	synchronized void initAgent() {
-		if (starterProperties.isConsoleOnly() != null && !(starterProperties.isConsoleOnly().equals("true")
-				|| starterProperties.isConsoleOnly().equals("yes"))) {
-			homunculusStateMachine.sendEvent(HomunculusEvents.BOOTSTRAP);
-		} else {
-			logger.warn("console only true, run just the command line");
-		}
-		if (starterProperties.isShowRegistrationCode().equals("true")
-				|| starterProperties.isShowRegistrationCode().equals("yes")) {
-			System.out.println("__________________________________________________");
-			System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
-			System.out.println("__________________________________________________\n");
-		}
-	}
-
-	// workaround Spring State Machine
-	// @OnStateChanged(target = "STAMINAL")
-	synchronized void startingAgent() {
-		new File(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)).mkdirs();
-		try {
-			if (dataStore == null) {
-				recMan = RecordManagerFactory
-						.createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
-								+ "/" + starterProperties.getHomunculusDatastoreFileName());
-				dataStore = recMan.treeMap(DB_DATASTORE_NAME);
-				logger.info("datastore on Homunculus started");
-			}
-		} catch (final IOException e) {
-			logger.logException("datastore on Homunculus problem", e);
-		}
-		setMasterKeystore();
-		bootstrapConfig = resolveBootstrapConfig();
-		popolateAddressSpace();
-		setInitialAuth();
-		try {
-			checkBeaconClient();
-		} catch (final Exception a) {
-			logger.warn("Error connecting beacon client -> " + EdgeLogger.stackTraceToString(a, 4));
-		}
-		if (runtimeConfig == null && targetConfig == null && bootstrapConfig != null) {
-			targetConfig = bootstrapConfig;
-		}
-		if (runtimeConfig != null || (runtimeConfig == null && targetConfig != null)) {
-			if (targetConfig != null)
-				runtimeConfig = targetConfig;
-		}
-		if (runtimeConfig != null && runtimeConfig.name != null && !runtimeConfig.name.isEmpty()) {
-			logger.info("Starting with config: " + runtimeConfig.toString());
-			homunculusStateMachine.sendEvent(HomunculusEvents.SETCONF);
-		}
-	}
-
-	private void popolateAddressSpace() {
-		dataAddress.firstStart(this);
-	}
-
-	private void checkBeaconClient() {
-		if (runtimeConfig != null && runtimeConfig.beaconServer != null && !runtimeConfig.beaconServer.isEmpty()) {
+	private void updateFileConfig(EdgeConfig config) {
+		final String fileTarget = ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true);
+		if (starterProperties.getKeystoreConfigAlias() != null
+				&& !starterProperties.getKeystoreConfigAlias().isEmpty()) {
 			try {
-				indexBeaconClient++;
-				if (indexBeaconClient > (ConfigHelper
-						.countWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer), false) - 1)) {
-					indexBeaconClient = 0;
-				}
-				logger.info("TRY CONNECTION TO BEACON IN CONFIG RUNTIME AT "
-						+ ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
-								false, indexBeaconClient));
-				beaconClient = connectToBeaconService(
-						ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
-								false, indexBeaconClient),
-						runtimeConfig.beaconServerCertChain, Integer.valueOf(runtimeConfig.beaconDiscoveryPort),
-						runtimeConfig.beaconDiscoveryFilterString, true);
+				Files.write(Paths.get(fileTarget),
+						ConfigHelper.toBase64Crypto(config, starterProperties.getKeystoreConfigAlias()).getBytes(),
+						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+				logger.info("crypto configuration in {} updated with runtime config", fileTarget);
 			} catch (final Exception e) {
-				logger.warn("Beacon connection in config not ok: " + e.getMessage());
-				logger.info(EdgeLogger.stackTraceToString(e, 40));
+				logger.logException("error saving crypto configuration in runtime to " + fileTarget, e);
 			}
 		} else {
-			if ((starterProperties.getWebRegistrationEndpoint() != null
-					&& !starterProperties.getWebRegistrationEndpoint().isEmpty())
-					|| Integer.valueOf(starterProperties.getBeaconDiscoveryPort()) != 0) {
-				try {
-					indexBeaconClient++;
-					if (indexBeaconClient > (ConfigHelper.countWorkingStringSplittedByComma(
-							filterBeaconUrl(filterBeaconUrl(starterProperties.getWebRegistrationEndpoint())), false)
-							- 1)) {
-						indexBeaconClient = 0;
-					}
-					if (starterProperties.getWebRegistrationEndpoint() == null
-							|| starterProperties.getWebRegistrationEndpoint().isEmpty()) {
-						logger.warn("Beacon connection is not configured");
-					}
-					logger.info("TRY CONNECTION TO BEACON AT " + ConfigHelper.resolveWorkingStringSplittedByComma(
-							filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false, indexBeaconClient));
-					beaconClient = connectToBeaconService(
-							ConfigHelper.resolveWorkingStringSplittedByComma(
-									filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false,
-									indexBeaconClient),
-							starterProperties.getBeaconCaChainPem(),
-							Integer.valueOf(starterProperties.getBeaconDiscoveryPort()),
-							starterProperties.getBeaconDiscoveryFilterString(), false);
-				} catch (final Exception e) {
-					logger.warn("Beacon connection not ok: " + e.getMessage());
-					logger.info(EdgeLogger.stackTraceToString(e, 6));
-				}
-			}
-		}
-	}
-
-	private String filterBeaconUrl(String beaconServer) {
-		return beaconServer;
-	}
-
-	public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
-			String discoveryFilter, boolean force) {
-		URL urlTarget = null;
-		BeaconClient beaconClientTarget = null;
-		{
 			try {
-				if (urlBeacon != null)
-					urlTarget = new URL(urlBeacon);
-				final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + urlBeacon;
-				homunculusSession.registerNewSession(sessionId, sessionId);
-				final RpcConversation rpc = homunculusSession.getRpc(sessionId);
-				beaconClientTarget = new BeaconClient.Builder()
-						.setAliasBeaconClientInKeystore(starterProperties.getKeystoreBeaconAlias())
-						.setUniqueName(getAgentUniqueName()).setHomunculus(this).setBeaconCaChainPem(beaconCaChainPem)
-						.setDiscoveryFilter(discoveryFilter).setDiscoveryPort(discoveryPort)
-						.setPort(urlTarget.getPort()).setRpcConversation(rpc).setHost(urlTarget.getHost()).build();
-				if (beaconClientTarget != null
-						&& beaconClientTarget.getStateConnection().equals(ConnectivityState.READY)) {
-					logger.info("found Beacon endpoint: " + urlBeacon);
-					if (!getAgentUniqueName().equals(beaconClientTarget.getAgentUniqueName())) {
-						logger.info("the unique name is changed in " + getAgentUniqueName());
-					}
-				} else {
-					logger.info(
-							"the Beacon endpoint " + urlBeacon + " return " + beaconClientTarget.getStateConnection());
-				}
-			} catch (final IOException e) {
-				logger.info("the url " + urlBeacon + " is malformed or unreachable [" + e.getCause() + "]");
-			} catch (final UnrecoverableKeyException e) {
-				logger.warn(e.getMessage());
+				Files.write(Paths.get(fileTarget), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
+						StandardOpenOption.TRUNCATE_EXISTING);
+				logger.info("configuration in {} updated with runtime config", fileTarget);
 			} catch (final Exception e) {
-				logger.info(EdgeLogger.stackTraceToString(e, 6));
+				logger.logException("error saving configuration in runtime to " + fileTarget, e);
 			}
-			return beaconClientTarget;
-		}
-	}
-
-	// trova la configurazione appropriata per il bootstrap in funzione dei
-	// parametri di configurazione
-	private EdgeConfig resolveBootstrapConfig() {
-		EdgeConfig targetConfig = null;
-		if (reloadConfig == null) {
-			int maxConfig = 0;
-			try {
-				maxConfig = Integer.max(maxConfig,
-						starterProperties.getWebConfigOrder() != null
-								? Integer.valueOf(starterProperties.getWebConfigOrder())
-								: 6);
-			} catch (final Exception a) {
-				logger.warn("webConfigOrder -> " + starterProperties.getWebConfigOrder());
-				maxConfig = 6;
-			}
-			try {
-				maxConfig = Integer.max(maxConfig,
-						starterProperties.getDnsConfigOrder() != null
-								? Integer.valueOf(starterProperties.getDnsConfigOrder())
-								: 6);
-			} catch (final Exception a) {
-				logger.warn("dnsConfigOrder -> " + starterProperties.getDnsConfigOrder());
-				maxConfig = 6;
-			}
-			try {
-				maxConfig = Integer.max(maxConfig,
-						starterProperties.getBaseConfigOrder() != null
-								? Integer.valueOf(starterProperties.getBaseConfigOrder())
-								: 6);
-			} catch (final Exception a) {
-				logger.warn("base64ConfigOrder -> " + starterProperties.getBaseConfigOrder());
-				maxConfig = 5;
-			}
-			try {
-				maxConfig = Integer.max(maxConfig,
-						starterProperties.getFileConfigOrder() != null
-								? Integer.valueOf(starterProperties.getFileConfigOrder())
-								: 6);
-			} catch (final Exception a) {
-				logger.warn("fileConfigOrder -> " + starterProperties.getFileConfigOrder());
-				maxConfig = 4;
-			}
-			for (int liv = 0; liv <= maxConfig; liv++) {
-				logger.info(String.valueOf(liv) + "/" + maxConfig + " searching config...");
-				if (liv == Integer.valueOf(starterProperties.getWebConfigOrder()) && targetConfig == null
-						&& starterProperties.getWebConfig() != null && !starterProperties.getWebConfig().isEmpty()) {
-					try {
-						logger.info("try webConfig");
-						targetConfig = webConfigDownload(
-								ConfigHelper.resolveWorkingString(starterProperties.getWebConfig(), false),
-								starterProperties.getKeystoreConfigAlias());
-						if (targetConfig != null) {
-							logger.info("found webConfig");
-							break;
-						}
-					} catch (final Exception e) {
-						logger.warn("error in webconfig download" + EdgeLogger.stackTraceToString(e, 4));
-					}
-				}
-				if (liv == Integer.valueOf(starterProperties.getDnsConfigOrder()) && targetConfig == null
-						&& starterProperties.getDnsConfig() != null && !starterProperties.getDnsConfig().isEmpty()) {
-					try {
-						logger.info("try dnsConfig");
-						targetConfig = dnsConfigDownload(
-								ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false),
-								starterProperties.getKeystoreConfigAlias());
-						if (targetConfig != null) {
-							logger.info("found dnsConfig "
-									+ ConfigHelper.resolveWorkingString(starterProperties.getDnsConfig(), false));
-							break;
-						}
-					} catch (final Exception e) {
-						logger.warn("error in dns config download" + EdgeLogger.stackTraceToString(e, 4));
-					}
-				}
-				if (liv == Integer.valueOf(starterProperties.getBaseConfigOrder()) && targetConfig == null
-						&& starterProperties.getBaseConfig() != null && !starterProperties.getBaseConfig().isEmpty()) {
-					try {
-						logger.info("try base64Config");
-						targetConfig = (EdgeConfig) ConfigHelper.fromBase64(starterProperties.getBaseConfig());
-						if (targetConfig != null) {
-							logger.info("found base64Config");
-							break;
-						}
-					} catch (final Exception e) {
-						logger.warn("error in baseconfig" + EdgeLogger.stackTraceToString(e, 4));
-					}
-				}
-				if (liv == Integer.valueOf(starterProperties.getFileConfigOrder()) && targetConfig == null
-						&& starterProperties.getFileConfig() != null && !starterProperties.getFileConfig().isEmpty()) {
-					try {
-						logger.info("try fileConfig");
-						targetConfig = loadConfigFromFile(
-								ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true),
-								starterProperties.getKeystoreConfigAlias());
-						if (targetConfig != null) {
-							logger.info("found fileConfig {}",
-									ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true));
-							break;
-						}
-					} catch (final Exception e) {
-						logger.warn("error in fileconfig" + EdgeLogger.stackTraceToString(e, 4));
-					}
-				}
-			}
-		} else {
-			targetConfig = reloadConfig;
-		}
-		return targetConfig;
-	}
-
-	private EdgeConfig dnsConfigDownload(String dnsTarget, String cryptoAlias) {
-		logger.debug("try dns config {}", dnsTarget);
-		final String hostPart = dnsTarget.split("\\.")[0];
-		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
-		try {
-			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 3);
-			try {
-				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
-					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
-							? ConfigHelper.fromBase64Crypto(payloadString, cryptoAlias)
-							: null);
-				} else {
-					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
-							? ConfigHelper.fromBase64(payloadString)
-							: null);
-				}
-			} catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
-					| CMSException e) {
-				logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
-						+ EdgeLogger.stackTraceToString(e, 4));
-				return null;
-			}
-		} catch (UnknownHostException | TextParseException e) {
-			logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
-					+ EdgeLogger.stackTraceToString(e, 4));
-			return null;
-		}
-	}
-
-	private EdgeConfig loadConfigFromFile(String pathConfig, String cryptoAlias) {
-		logger.debug("try file config {}", pathConfig);
-		EdgeConfig resultConfig = null;
-		try (final FileReader fileReader = new FileReader(ConfigHelper.resolveWorkingString(pathConfig, true));
-				final BufferedReader bufferedReader = new BufferedReader(fileReader);) {
-			final StringBuilder config = new StringBuilder();
-
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				config.append(line);
-			}
-			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
-				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config.toString(), cryptoAlias);
-			} else {
-				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config.toString());
-			}
-			logger.trace("resultConfig\n{}", resultConfig);
-			return resultConfig;
-
-		} catch (final FileNotFoundException ff) {
-			logger.debug("config file not found " + pathConfig);
-			return null;
-		} catch (IOException | ClassNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
-				| CMSException e) {
-			logger.warn("error in config file -> " + EdgeLogger.stackTraceToString(e, 4));
-			return null;
 		}
 	}
 
@@ -801,523 +1297,28 @@ public class Homunculus
 
 	}
 
-	// workaround Spring State Machine
-	// @OnStateChanged(target = "CONFIGURED")
-	synchronized void configureAgent() {
-		if (runtimeConfig == null) {
-			logger.warn("Required running state without conf");
-			homunculusStateMachine.sendEvent(HomunculusEvents.EXCEPTION);
-		}
-		if (stateTarget == null && runtimeConfig != null) {
-			stateTarget = runtimeConfig.targetRunLevel;
-		}
-		if (runtimeConfig != null && runtimeConfig.updateFileConfig == true) {
-			updateFileConfig(runtimeConfig);
-		}
-		if (stateTarget != null && stateTarget.equals(HomunculusStates.RUNNING)) {
-			timerScheduler = new Timer("t-" + (Math.round((new Random().nextDouble() * 99))) + "-" + THREAD_ID);
-			homunculusStateMachine.sendEvent(HomunculusEvents.START);
-		} else {
-			logger.warn("stateTarget is null in runtime config");
-		}
-	}
-
-	private void updateFileConfig(EdgeConfig config) {
-		final String fileTarget = ConfigHelper.resolveWorkingString(starterProperties.getFileConfig(), true);
-		if (starterProperties.getKeystoreConfigAlias() != null
-				&& !starterProperties.getKeystoreConfigAlias().isEmpty()) {
-			try {
-				Files.write(Paths.get(fileTarget),
-						ConfigHelper.toBase64Crypto(config, starterProperties.getKeystoreConfigAlias()).getBytes(),
-						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-				logger.info("crypto configuration in {} updated with runtime config", fileTarget);
-			} catch (final Exception e) {
-				logger.logException("error saving crypto configuration in runtime to " + fileTarget, e);
-			}
-		} else {
-			try {
-				Files.write(Paths.get(fileTarget), ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
-						StandardOpenOption.TRUNCATE_EXISTING);
-				logger.info("configuration in {} updated with runtime config", fileTarget);
-			} catch (final Exception e) {
-				logger.logException("error saving configuration in runtime to " + fileTarget, e);
-			}
-		}
-	}
-
-	private Comparator<ServiceConfig> comparatorOrderPots = new Comparator<ServiceConfig>() {
-		@Override
-		public int compare(ServiceConfig o1, ServiceConfig o2) {
-			return Integer.compare(o1.getPriority(), o2.getPriority());
-		}
-	};
-
-	private int indexBeaconClient = -1;
-
-	// workaround Spring State Machine
-	// @OnStateChanged(target = "RUNNING")
-	// avvia i servizi
-	synchronized void runServices() {
-		final List<ServiceConfig> sortedList = new ArrayList<>(runtimeConfig.pots);
-		Collections.sort(sortedList, comparatorOrderPots);
-		for (final ServiceConfig confServizio : sortedList) {
-			if (confServizio instanceof ServiceConfig) {
-				logger.info("run {} as service", confServizio);
-				runSeedService(confServizio);
-			}
-		}
-	}
-
-	private void runSeedService(ServiceConfig confServizio) {
-		final HomunculusService service = new HomunculusService(this, confServizio, timerScheduler);
-		components.add(service);
-		service.start();
-	}
-
-	// adminPassword è escluso
-	public Map<String, String> getEnvironmentVariables() {
-		final Map<String, String> ritorno = new HashMap<>();
-		ritorno.put("ar4k.fileKeystore", starterProperties.getFileKeystore());
-		ritorno.put("ar4k.webKeystore", starterProperties.getWebKeystore());
-		ritorno.put("ar4k.dnsKeystore", starterProperties.getDnsKeystore());
-		ritorno.put("ar4k.keystorePassword", starterProperties.getKeystorePassword());
-		ritorno.put("ar4k.keystoreMainAlias", starterProperties.getKeystoreMainAlias());
-		ritorno.put("ar4k.keystoreBeaconAlias", starterProperties.getKeystoreBeaconAlias());
-		ritorno.put("ar4k.confPath", starterProperties.getConfPath());
-		ritorno.put("ar4k.fileConfig", starterProperties.getFileConfig());
-		ritorno.put("ar4k.webConfig", starterProperties.getWebConfig());
-		ritorno.put("ar4k.dnsConfig", starterProperties.getDnsConfig());
-		ritorno.put("ar4k.baseConfig", starterProperties.getBaseConfig());
-		ritorno.put("ar4k.webRegistrationEndpoint", starterProperties.getWebRegistrationEndpoint());
-		ritorno.put("ar4k.dnsRegistrationEndpoint", starterProperties.getDnsRegistrationEndpoint());
-		ritorno.put("ar4k.beaconDiscoveryPort", String.valueOf(starterProperties.getBeaconDiscoveryPort()));
-		ritorno.put("ar4k.beaconDiscoveryFilterString", starterProperties.getBeaconDiscoveryFilterString());
-		ritorno.put("ar4k.beaconCaChainPem", starterProperties.getBeaconCaChainPem());
-		ritorno.put("ar4k.fileConfigOrder", String.valueOf(starterProperties.getFileConfigOrder()));
-		ritorno.put("ar4k.webConfigOrder", String.valueOf(starterProperties.getWebConfigOrder()));
-		ritorno.put("ar4k.dnsConfigOrder", String.valueOf(starterProperties.getDnsConfigOrder()));
-		ritorno.put("ar4k.baseConfigOrder", String.valueOf(starterProperties.getBaseConfigOrder()));
-		ritorno.put("ar4k.threadSleep", String.valueOf(starterProperties.getThreadSleep()));
-		ritorno.put("ar4k.consoleOnly", String.valueOf(starterProperties.isConsoleOnly()));
-		ritorno.put("ar4k.logoUrl", String.valueOf(starterProperties.getLogoUrl()));
-		return ritorno;
-	}
-
-	public String getEnvironmentVariablesAsString() {
-		return starterProperties.toString();
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		updateApplicationContext(applicationContext);
-	}
-
-	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
-		Homunculus.applicationContext = applicationContext;
+	private String webKeystoreResolvedString() {
+		return ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false);
 	}
 
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 
-	public Set<ServiceComponent<EdgeComponent>> getComponents() {
-		return components;
-	}
-
-	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
-		logger.debug(" event: {}", event);
-		if (event instanceof ContextRefreshedEvent) {
-			// avvio a contesto spring caricato
-			onApplicationEventFlag = true;
-			checkDualStart();
-		}
-	}
-
-	private synchronized void checkDualStart() {
-		if (onApplicationEventFlag && afterSpringInitFlag && !firstStateFired) {
-			firstStateFired = true;
-			if (starterProperties != null) {
-				agentUniqueName = ConfigHelper.generateNewUniqueName(starterProperties.getUniqueName(),
-						starterProperties.getUniqueNameFile());
-			}
-			logger.info("STARTING AGENT...");
-			Thread.currentThread().setName(THREAD_ID);
-			homunculusStateMachine.start();
-		}
-	}
-
-	public String getLogoUrl() {
-		String logo = "/static/img/ar4k.png";
-		if (starterProperties.getLogoUrl() != null && !starterProperties.getLogoUrl().isEmpty()) {
-			logo = starterProperties.getLogoUrl();
-		}
-		if (runtimeConfig != null && runtimeConfig.logoUrl != null) {
-			logo = runtimeConfig.logoUrl;
-		}
-		return logo;
-	}
-
-	public void setTargetConfig(EdgeConfig config) {
-		targetConfig = config;
-	}
-
-	public HomunculusStates getTargetState() {
-		return stateTarget;
-	}
-
-	public EdgeConfig getRuntimeConfig() {
-		return runtimeConfig;
-	}
-
-	public Object getContextData(String index) {
-		if (dataStore != null)
-			return dataStore.get(index);
-		else
-			return null;
-	}
-
-	public void setContextData(String index, Object data) {
-		if (dataStore != null)
-			dataStore.put(index, data);
-	}
-
-	public void clearDataStore() {
-		if (dataStore != null)
-			dataStore.clear();
-	}
-
-	public Map<String, Object> getDataStore() {
-		return dataStore;
-	}
-
-	public boolean dataStoreExists() {
-		return (dataStore != null);
-	}
-
-	@Override
-	public void setBeanName(String name) {
-		beanName = name;
-	}
-
-	public Collection<EdgeUserDetails> getLocalUsers() {
-		return localUsers;
-	}
-
-	public String loginAgent(String username, String password, String sessionId) {
-		final UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
-		final Authentication result = authenticationManager.authenticate(request);
-		SecurityContextHolder.getContext().setAuthentication(result);
-		if (sessionId == null || sessionId.isEmpty()) {
-			if (homunculusSession.getAllSessions(result, false).isEmpty()) {
-				sessionId = UUID.randomUUID().toString().replace("-", "");
-				homunculusSession.registerNewSession(sessionId, result);
-			} else {
-				sessionId = homunculusSession.getAllSessions(result, false).get(0).getSessionId();
-			}
-		} else {
-			if (homunculusSession.getSessionInformation(sessionId) == null
-					|| homunculusSession.getSessionInformation(sessionId).isExpired()) {
-				homunculusSession.registerNewSession(sessionId, result);
-			}
-		}
-		return sessionId;
-	}
-
-	public void terminateSession(String sessionId) {
-		homunculusSession.removeSessionInformation(sessionId);
-		logoutFromAgent();
-	}
-
-	public void logoutFromAgent() {
-		SecurityContextHolder.clearContext();
-	}
-
-	public Session getSession(String sessionId) {
-		return (Session) homunculusSession.getSessionInformation(sessionId);
-	}
-
-	public boolean isSessionValid(String sessionId) {
-		return homunculusSession.getSessionInformation(sessionId) != null;
-	}
-
-	public RpcExecutor getRpc(String sessionId) {
-		return homunculusSession.getRpc(sessionId);
-	}
-
-	protected String getBeanName() {
-		return beanName;
-	}
-
-	public String getAgentUniqueName() {
-		return agentUniqueName;
-	}
-
-	public DataAddressHomunculus getDataAddress() {
-		return dataAddress;
-	}
-
-	public void setDataAddress(DataAddressHomunculus dataAddress) {
-		this.dataAddress = dataAddress;
-	}
-
-	public String getDbDataStoreName() {
-		return DB_DATASTORE_NAME;
-	}
-
-	public KeystoreConfig getMyIdentityKeystore() {
-		return myIdentityKeystore;
-	}
-
-	public void setMyIdentityKeystore(KeystoreConfig myIdentityKeystore) {
-		this.myIdentityKeystore = myIdentityKeystore;
-	}
-
-	public void setMyAliasCertInKeystore(String myAliasCertInKeystore) {
-		this.myAliasCertInKeystore = myAliasCertInKeystore;
-	}
-
-	public String getMyAliasCertInKeystore() {
-		return myAliasCertInKeystore;
+	public static final ContextCreationHelper getNewHomunculusInNewContext(Class<?> springMasterClass,
+			ExecutorService executor, String loggerFile, String keyStore, int webPort, List<String> args,
+			EdgeConfig homunculusConfig, String mainAliasInKeystore, String keystoreBeaconAlias,
+			String webRegistrationEndpoint) {
+		return new ContextCreationHelper(springMasterClass, executor, loggerFile, keyStore, webPort, args,
+				homunculusConfig, mainAliasInKeystore, keystoreBeaconAlias, webRegistrationEndpoint);
 	}
 
 	public static String getRegistrationPin() {
 		return REGISTRATION_PIN;
 	}
 
-	void prepareAgentStasis() {
-		logger.warn("PUTTING AGENT IN STASIS STATE...");
-		finalizeAgent();
-	}
-
-	void prepareRestart() {
-		logger.warn("RESTARTING AGENT...");
-		finalizeAgent();
-	}
-
-	void reloadAgent() {
-		logger.warn("RELOAD AGENT...");
-		resetAgent();
-	}
-
-	void startCheckingNextConfig() {
-		reloadConfig = null;
-		if (runtimeConfig != null
-				&& (runtimeConfig.nextConfigFile != null || runtimeConfig.nextConfigDns != null
-						|| runtimeConfig.nextConfigWeb != null)
-				&& runtimeConfig.configCheckPeriod != null && runtimeConfig.configCheckPeriod > 0) {
-			if (runtimeConfig.nextConfigFile != null) {
-				timerScheduler.schedule(checkFileConfigUpdate(runtimeConfig.nextConfigFile),
-						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on file {} with rate time of {} ms",
-						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
-			}
-			if (runtimeConfig.nextConfigDns != null) {
-				timerScheduler.schedule(checkDnsConfigUpdate(runtimeConfig.nextConfigDns),
-						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on dns {} with rate time of {} ms",
-						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
-			}
-			if (runtimeConfig.nextConfigWeb != null) {
-				timerScheduler.schedule(checkWebConfigUpdate(runtimeConfig.nextConfigWeb),
-						runtimeConfig.configCheckPeriod, runtimeConfig.configCheckPeriod);
-				logger.warn("scheduled periodically configuration checking on url {} with rate time of {} ms",
-						runtimeConfig.nextConfigWeb, runtimeConfig.configCheckPeriod);
-			}
-		}
-	}
-
-	private TimerTask checkWebConfigUpdate(String nextConfigWeb) {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
-						starterProperties.getKeystoreConfigAlias());
-				elaborateNewConfig(newTargetConfig);
-			}
-		};
-	}
-
-	private TimerTask checkDnsConfigUpdate(String nextConfigDns) {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				final EdgeConfig newTargetConfig = dnsConfigDownload(nextConfigDns,
-						starterProperties.getKeystoreConfigAlias());
-				elaborateNewConfig(newTargetConfig);
-			}
-		};
-	}
-
-	private TimerTask checkFileConfigUpdate(String nextConfigFile) {
-		return new TimerTask() {
-			@Override
-			public void run() {
-				final EdgeConfig newTargetConfig = loadConfigFromFile(nextConfigFile,
-						starterProperties.getKeystoreConfigAlias());
-				elaborateNewConfig(newTargetConfig);
-			}
-		};
-	}
-
-	public final void elaborateNewConfig(EdgeConfig newTargetConfig) {
-		if (newTargetConfig != null && newTargetConfig.isMoreUpToDateThan(getRuntimeConfig())) {
-			logger.warn("Found new config {}", newTargetConfig);
-			reloadConfig = newTargetConfig;
-			runtimeConfig = newTargetConfig;
-			if (newTargetConfig.nextConfigReload == null || !newTargetConfig.nextConfigReload) {
-				sendEvent(HomunculusEvents.RESTART);
-			} else {
-				sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-			}
-		}
-	}
-
-	public StateMachine<HomunculusStates, HomunculusEvents> getHomunculusStateMachine() {
-		return homunculusStateMachine;
-	}
-
-	public String getFileKeystore() {
-		return ConfigHelper.resolveWorkingString(starterProperties.getFileKeystore(), true);
-	}
-
-	void runPreScript() {
-		if (runtimeConfig.preScript != null && runtimeConfig.preScriptLanguage != null
-				&& !runtimeConfig.preScript.isEmpty() && !runtimeConfig.preScriptLanguage.isEmpty()) {
-			logger.info("run pre script in language {}", runtimeConfig.preScriptLanguage);
-			final String scriptLabel = "prescript";
-			try {
-				scriptRunner(scriptLabel, runtimeConfig.preScriptLanguage, runtimeConfig.preScript);
-			} catch (final Exception a) {
-				logger.logException("error running " + scriptLabel, a);
-			}
-		}
-	}
-
-	private void scriptRunner(String scriptLabel, String scriptLanguage, String script) {
-		final ScriptEngineManagerProcess p = new ScriptEngineManagerProcess();
-		p.setLabel(scriptLabel);
-		p.setEngine(scriptLanguage);
-		p.eval(script);
-		final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_" + scriptLabel;
-		homunculusSession.registerNewSession(sessionId, sessionId);
-		final RpcConversation rpc = homunculusSession.getRpc(sessionId);
-		rpc.getScriptSessions().put(scriptLabel, p);
-	}
-
-	void runPostScript() {
-		if (runtimeConfig.postScript != null && runtimeConfig.postScriptLanguage != null
-				&& !runtimeConfig.postScript.isEmpty() && !runtimeConfig.postScriptLanguage.isEmpty()) {
-			logger.info("run post script in language {}", runtimeConfig.postScriptLanguage);
-			final String scriptLabel = "postscript";
-			try {
-				scriptRunner(scriptLabel, runtimeConfig.postScriptLanguage, runtimeConfig.postScript);
-			} catch (final Exception a) {
-				logger.logException("error running " + scriptLabel, a);
-			}
-		}
-	}
-
-	public IBeaconClient getBeaconClient() {
-		return beaconClient;
-	}
-
-	public EdgeStarterProperties getStarterProperties() {
-		return starterProperties;
-	}
-
-	public AuthenticationManager getAuthenticationManager() {
-		return authenticationManager;
-	}
-
-	public List<String> getTags() {
-		final List<String> result = new ArrayList<>();
-		if (getRuntimeConfig() != null) {
-			result.addAll(getRuntimeConfig().getTags());
-			result.add(getRuntimeConfig().dataCenter);
-			result.add(getRuntimeConfig().author);
-			result.add(String.valueOf(getRuntimeConfig().subVersion));
-			result.add(getRuntimeConfig().tagVersion);
-			result.add(String.valueOf(getRuntimeConfig().version));
-		}
-		result.add(getAgentUniqueName());
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Homunculus [");
-		if (agentUniqueName != null)
-			builder.append("agentUniqueName=").append(agentUniqueName).append(", ");
-		if (homunculusStateMachine != null)
-			builder.append("stateMachine=").append(homunculusStateMachine).append(", ");
-		if (homunculusSession != null)
-			builder.append("homunculusSession=").append(homunculusSession).append(", ");
-		if (starterProperties != null)
-			builder.append("starterProperties=").append(starterProperties).append(", ");
-		if (runtimeConfig != null)
-			builder.append("runtimeConfig=").append(runtimeConfig).append(", ");
-		if (targetConfig != null)
-			builder.append("targetConfig=").append(targetConfig).append(", ");
-		if (bootstrapConfig != null)
-			builder.append("bootstrapConfig=").append(bootstrapConfig).append(", ");
-		if (reloadConfig != null)
-			builder.append("reloadConfig=").append(reloadConfig).append(", ");
-		if (stateTarget != null)
-			builder.append("stateTarget=").append(stateTarget).append(", ");
-		if (statesBefore != null)
-			builder.append("statesBefore=").append(statesBefore).append(", ");
-		if (components != null)
-			builder.append("components=").append(components).append(", ");
-		if (dataStore != null)
-			builder.append("dataStore=").append(dataStore).append(", ");
-		if (localUsers != null)
-			builder.append("localUsers=").append(localUsers).append(", ");
-		if (beanName != null)
-			builder.append("beanName=").append(beanName).append(", ");
-		if (beaconClient != null)
-			builder.append("beaconClient=").append(beaconClient).append(", ");
-		if (dataAddress != null)
-			builder.append("dataAddress=").append(dataAddress).append(", ");
-		if (myIdentityKeystore != null)
-			builder.append("myIdentityKeystore=").append(myIdentityKeystore).append(", ");
-		if (myAliasCertInKeystore != null)
-			builder.append("myAliasCertInKeystore=").append(myAliasCertInKeystore).append(", ");
-		builder.append("firstStateFired=").append(firstStateFired).append("]");
-		return builder.toString();
-	}
-
-	public Collection<String> getRuntimeProvides() {
-		final Collection<String> result = new ArrayList<String>();
-		for (final ServiceComponent<EdgeComponent> c : components) {
-			if (c.isRunning() && c.getPot() != null && c.getPot().getConfiguration() != null
-					&& c.getPot().getConfiguration().getProvides() != null) {
-				result.addAll(c.getPot().getConfiguration().getProvides());
-			}
-
-		}
-		return result;
-	}
-
-	public Collection<String> getRuntimeRequired() {
-		final Collection<String> result = new ArrayList<String>();
-		for (final ServiceComponent<EdgeComponent> c : components) {
-			if (c.getPot() != null && c.getPot().getConfiguration() != null
-					&& c.getPot().getConfiguration().getRequired() != null) {
-				result.addAll(c.getPot().getConfiguration().getRequired());
-			}
-		}
-		return result;
-	}
-
-	public IBeaconServer getBeaconServerIfExists() {
-		for (ServiceComponent<EdgeComponent> singlePot : components) {
-			if (singlePot.getPot() instanceof BeaconService) {
-				return ((BeaconService) singlePot.getPot()).getBeaconServer();
-			}
-		}
-		return null;
+	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
+		Homunculus.applicationContext = applicationContext;
 	}
 
 }

@@ -48,7 +48,7 @@ public class EdgeStarterProperties {
 	private String keystorePassword = "1234";
 	private String beaconCaChainPem = "xxxxx";
 	private String beaconClearText = "true";
-	private String adminPassword = "admin";
+	private String adminPassword = "admin123";
 	private String webRegistrationEndpoint = "";
 	private String dnsRegistrationEndpoint = "";
 	private String beaconDiscoveryFilterString = "AR4K";

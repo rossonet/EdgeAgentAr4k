@@ -7,7 +7,7 @@ import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
-import org.ar4k.agent.tunnels.http2.beacon.RemoteBeaconRpcExecutor;
+import org.ar4k.agent.tunnels.http2.beacon.client.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
@@ -23,21 +23,7 @@ import io.grpc.ConnectivityState;
 
 public interface IBeaconClient {
 
-	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
-
-	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
-
-	List<Agent> listAgentsConnectedToBeacon();
-
-	void shutdown() throws InterruptedException;
-
-	ConnectivityState getStateConnection();
-
-	int getPollingFreq();
-
-	void sendLoggerLine(String message, String level);
-
-	void sendException(Exception message);
+	void closeNetworkTunnel(long targetId);
 
 	String getAgentUniqueName();
 
@@ -45,48 +31,62 @@ public interface IBeaconClient {
 
 	RpcServiceV1BlockingStub getBlockingStub();
 
-	ListCommandsReply listCommadsOnAgent(String agentId);
-
-	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
-
 	ConfigReply getConfigFromAgent(String agentId);
-
-	List<NetworkTunnel> getTunnels();
-
-	void removeTunnel(NetworkTunnel toRemove);
-
-	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
-
-	ElaborateMessageReply runCommadsOnAgent(String agentId, String command);
-
-	CompleteCommandReply runCompletitionOnAgent(String agentUniqueName, String command);
-
-	List<RemoteBeaconRpcExecutor> getRemoteExecutors();
-
-	void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors);
-
-	int getDiscoveryPort();
-
-	void setDiscoveryPort(int discoveryPort);
 
 	String getDiscoveryFilter();
 
-	void setDiscoveryFilter(String discoveryFilter);
-
-	String getReservedUniqueName();
-
-	void setReservedUniqueName(String reservedUniqueName);
-
-	StatusValue getRegistrationStatus();
+	int getDiscoveryPort();
 
 	RpcConversation getLocalExecutor();
 
-	void closeNetworkTunnel(long targetId);
+	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
+
+	int getPollingFreq();
+
+	StatusValue getRegistrationStatus();
+
+	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
+
+	List<RemoteBeaconRpcExecutor> getRemoteExecutors();
+
+	String getReservedUniqueName();
 
 	ListStringReply getRuntimeProvides(String agentId);
 
 	ListStringReply getRuntimeRequired(String agentId);
 
+	ConnectivityState getStateConnection();
+
+	List<NetworkTunnel> getTunnels();
+
+	List<Agent> listAgentsConnectedToBeacon();
+
+	ListCommandsReply listCommadsOnAgent(String agentId);
+
 	List<AgentRequest> listProvisioningRequests();
+
+	void removeTunnel(NetworkTunnel toRemove);
+
+	ElaborateMessageReply runCommadsOnAgent(String agentId, String command);
+
+	CompleteCommandReply runCompletitionOnAgent(String agentUniqueName, String command);
+
+	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
+
+	void sendException(Exception message);
+
+	void sendLoggerLine(String message, String level);
+
+	void setDiscoveryFilter(String discoveryFilter);
+
+	void setDiscoveryPort(int discoveryPort);
+
+	void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors);
+
+	void setReservedUniqueName(String reservedUniqueName);
+
+	void shutdown() throws InterruptedException;
+
+	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
 
 }

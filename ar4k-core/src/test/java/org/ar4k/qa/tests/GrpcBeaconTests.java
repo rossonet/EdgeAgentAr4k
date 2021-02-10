@@ -32,8 +32,9 @@ import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClientBuilder;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.assertj.core.util.Files;
 import org.jline.builtins.Commands;
@@ -91,7 +92,7 @@ public class GrpcBeaconTests {
     }
     Thread.sleep(1500L);
     System.out.println("Beacon server starting");
-    server = new BeaconServer.Builder().setHomunculus(homunculus).setPort(port)
+    server = new BeaconServerBuilder().setHomunculus(homunculus).setPort(port)
         .setStringDiscovery("AR4K-BEACON-" + UUID.randomUUID().toString()).setBroadcastAddress("255.255.255.255")
         .setAcceptCerts(true).setAliasBeaconServerInKeystore(homunculus.getMyAliasCertInKeystore()).build();
     server.start();
@@ -147,7 +148,7 @@ public class GrpcBeaconTests {
   public void implementTestClass() throws UnrecoverableKeyException {
     try {
       Thread.sleep(2000L);
-      client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+      client = new BeaconClientBuilder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
           .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
           .build();
       Thread.sleep(10000L);
@@ -164,7 +165,7 @@ public class GrpcBeaconTests {
     try {
       changeLogLevel("DEBUG");
       Thread.sleep(2000L);
-      client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+      client = new BeaconClientBuilder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
           .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
           .build();
       Thread.sleep(2000L);
@@ -179,7 +180,7 @@ public class GrpcBeaconTests {
 
   @Test
   public void checkRemoteList() throws Exception {
-    client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+    client = new BeaconClientBuilder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
         .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
         .build();
     Thread.sleep(6000L);
@@ -200,7 +201,7 @@ public class GrpcBeaconTests {
   @Test
   public void checkDiscoveryRegistration()
       throws InterruptedException, IOException, ParseException, UnrecoverableKeyException {
-    client = new BeaconClient.Builder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
+    client = new BeaconClientBuilder().setHomunculus(homunculus).setPort(port).setRpcConversation(rpcConversation)
         .setHost("localhost").setDiscoveryPort(0).setAliasBeaconClientInKeystore(homunculus.getMyAliasCertInKeystore())
         .build();
     Thread.sleep(12000L);

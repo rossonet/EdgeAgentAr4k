@@ -1,4 +1,4 @@
-package org.ar4k.agent.tunnels.http2.beacon;
+package org.ar4k.agent.tunnels.http2.beacon.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,30 +35,13 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
   }
 
   @Override
-  public String elaborateMessage(String message) {
-    ElaborateMessageRequest request = ElaborateMessageRequest.newBuilder().setAgentSender(me)
-        .setAgentTarget(remoteHomunculus.getRemoteAgent()).setCommandMessage(message).build();
-    ElaborateMessageReply reply = blockingStub.elaborateMessage(request);
-    return reply.getReply();
-  }
-
-  @Override
-  public InternalMessage<? extends String> elaborateMessage(InternalMessage<? extends String> message) {
-    // TODO valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring
-    // message
-    return null;
-  }
-
-  @Override
-  public Map<String, MethodTarget> listCommands() {
-    ListCommandsRequest request = ListCommandsRequest.newBuilder().setAgentSender(me)
-        .setAgentTarget(remoteHomunculus.getRemoteAgent()).build();
-    ListCommandsReply reply = blockingStub.listCommands(request);
-    Map<String, MethodTarget> formattedReply = new HashMap<>();
-    for (Command r : reply.getCommandsList()) {
-      formattedReply.put(r.getCommand(), null);
+  public void close() throws Exception {
+    if (remoteHomunculus != null) {
+      remoteHomunculus.close();
+      remoteHomunculus = null;
     }
-    return formattedReply;
+    me = null;
+    blockingStub = null;
   }
 
   @Override
@@ -76,26 +59,43 @@ public class RemoteBeaconRpcExecutor implements RpcExecutor {
   }
 
   @Override
-  public void setHomunculus(IHomunculusRpc homunculusRpc) {
-    setRemoteHomunculus((RemoteBeaconAgentHomunculus) homunculusRpc);
+  public InternalMessage<? extends String> elaborateMessage(InternalMessage<? extends String> message) {
+    // TODO valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring
+    // message
+    return null;
+  }
+
+  @Override
+  public String elaborateMessage(String message) {
+    ElaborateMessageRequest request = ElaborateMessageRequest.newBuilder().setAgentSender(me)
+        .setAgentTarget(remoteHomunculus.getRemoteAgent()).setCommandMessage(message).build();
+    ElaborateMessageReply reply = blockingStub.elaborateMessage(request);
+    return reply.getReply();
   }
 
   public RemoteBeaconAgentHomunculus getRemoteHomunculus() {
     return remoteHomunculus;
   }
 
-  private void setRemoteHomunculus(RemoteBeaconAgentHomunculus remoteHomunculus) {
-    this.remoteHomunculus = remoteHomunculus;
+  @Override
+  public Map<String, MethodTarget> listCommands() {
+    ListCommandsRequest request = ListCommandsRequest.newBuilder().setAgentSender(me)
+        .setAgentTarget(remoteHomunculus.getRemoteAgent()).build();
+    ListCommandsReply reply = blockingStub.listCommands(request);
+    Map<String, MethodTarget> formattedReply = new HashMap<>();
+    for (Command r : reply.getCommandsList()) {
+      formattedReply.put(r.getCommand(), null);
+    }
+    return formattedReply;
   }
 
   @Override
-  public void close() throws Exception {
-    if (remoteHomunculus != null) {
-      remoteHomunculus.close();
-      remoteHomunculus = null;
-    }
-    me = null;
-    blockingStub = null;
+  public void setHomunculus(IHomunculusRpc homunculusRpc) {
+    setRemoteHomunculus((RemoteBeaconAgentHomunculus) homunculusRpc);
+  }
+
+  private void setRemoteHomunculus(RemoteBeaconAgentHomunculus remoteHomunculus) {
+    this.remoteHomunculus = remoteHomunculus;
   }
 
 }
