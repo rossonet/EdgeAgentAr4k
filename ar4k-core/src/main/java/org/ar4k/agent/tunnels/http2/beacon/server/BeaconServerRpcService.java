@@ -84,8 +84,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	}
 
 	@Override
-	public void completeCommand(CompleteCommandRequest request,
-			StreamObserver<CompleteCommandReply> responseObserver) {
+	public void completeCommand(CompleteCommandRequest request, StreamObserver<CompleteCommandReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
 			for (final BeaconAgent at : this.beaconServer.agents) {
@@ -216,8 +215,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				final Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName())
 						.setShortDescription(r.getShortDescription()).setRegisterData(r.getRegisterReply())
 						.setJsonHardwareInfo(r.getHardwareInfoAsJson().toString(2))
-						.setLastContact(Timestamp.newBuilder().setSeconds(r.getLastCall().getMillis() / 1000))
-						.build();
+						.setLastContact(Timestamp.newBuilder().setSeconds(r.getLastCall().getMillis() / 1000)).build();
 				values.add(a);
 			}
 			final ListAgentsReply reply = ListAgentsReply.newBuilder().addAllAgents(values)
@@ -272,8 +270,8 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			if (agentReply != null) {
 				final List<Command> listCommands = new ArrayList<>();
 				for (final String cr : agentReply.getRepliesList()) {
-					final Command c = Command.newBuilder().setAgentSender(agentReply.getAgentSender())
-							.setCommand(cr).build();
+					final Command c = Command.newBuilder().setAgentSender(agentReply.getAgentSender()).setCommand(cr)
+							.build();
 					listCommands.add(c);
 				}
 				final ListCommandsReply finalReply = ListCommandsReply.newBuilder().addAllCommands(listCommands)
@@ -311,24 +309,27 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			final org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply
 					.newBuilder();
 			RegisterReply reply = null;
-			if (!Boolean.valueOf(this.beaconServer.homunculus.getStarterProperties().getBeaconClearText())
+			if (!Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText())
 					&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {
 				if (this.beaconServer.acceptAllCerts || isCsrApproved(request.getRequestCsr())) {
 					reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
-							.setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(this.beaconServer.defaultPollTime)
-							.setCert(getFirmedCert(request.getRequestCsr())).setCa(this.beaconServer.caChainPem).build();
+							.setRegisterCode(uniqueClientNameForBeacon)
+							.setMonitoringFrequency(this.beaconServer.defaultPollTime)
+							.setCert(getFirmedCert(request.getRequestCsr())).setCa(this.beaconServer.caChainPem)
+							.build();
 					this.beaconServer.agents.add(new BeaconAgent(request, reply));
 				} else {
 					final RegistrationRequest newRequest = new RegistrationRequest(request);
 					addNewCsrToAgentRequest(newRequest);
-					reply = replyBuilder
-							.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.WAIT_HUMAN))
-							.setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(this.beaconServer.defaultPollTime)
+					reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.WAIT_HUMAN))
+							.setRegisterCode(uniqueClientNameForBeacon)
+							.setMonitoringFrequency(this.beaconServer.defaultPollTime)
 							.setCa(this.beaconServer.caChainPem).build();
 				}
 			} else {
 				reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
-						.setRegisterCode(uniqueClientNameForBeacon).setMonitoringFrequency(this.beaconServer.defaultPollTime).build();
+						.setRegisterCode(uniqueClientNameForBeacon)
+						.setMonitoringFrequency(this.beaconServer.defaultPollTime).build();
 				this.beaconServer.agents.add(new BeaconAgent(request, reply));
 			}
 			responseObserver.onNext(reply);
@@ -405,13 +406,15 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	}
 
 	private boolean checkRegexOnX509(X500Name subject) {
-		if (this.beaconServer.filterBlackListCertRegister != null && !this.beaconServer.filterBlackListCertRegister.isEmpty()) {
+		if (this.beaconServer.filterBlackListCertRegister != null
+				&& !this.beaconServer.filterBlackListCertRegister.isEmpty()) {
 			if (this.beaconServer.filterBlackListCertRegisterPattern == null) {
-				this.beaconServer.filterBlackListCertRegisterPattern = Pattern.compile(this.beaconServer.filterBlackListCertRegister);
+				this.beaconServer.filterBlackListCertRegisterPattern = Pattern
+						.compile(this.beaconServer.filterBlackListCertRegister);
 			}
 			final RDN cn = subject.getRDNs(BCStyle.CN)[0];
-			return this.beaconServer.filterBlackListCertRegisterPattern.matcher(IETFUtils.valueToString(cn.getFirst().getValue()))
-					.matches();
+			return this.beaconServer.filterBlackListCertRegisterPattern
+					.matcher(IETFUtils.valueToString(cn.getFirst().getValue())).matches();
 		} else {
 			return false;
 		}
@@ -433,9 +436,8 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			CommandReplyRequest agentReply) {
 		if (agentReply != null) {
 			final List<String> providesList = agentReply.getRepliesList();
-			final ListStringReply finalReply = ListStringReply.newBuilder()
-					.setAgentSender(agentReply.getAgentSender()).setLinesNumber(providesList.size())
-					.addAllListDatas(providesList).build();
+			final ListStringReply finalReply = ListStringReply.newBuilder().setAgentSender(agentReply.getAgentSender())
+					.setLinesNumber(providesList.size()).addAllListDatas(providesList).build();
 			responseObserver.onNext(finalReply);
 		}
 
@@ -445,9 +447,8 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			CommandReplyRequest agentReply) {
 		if (agentReply != null) {
 			final List<String> providesList = agentReply.getRepliesList();
-			final ListStringReply finalReply = ListStringReply.newBuilder()
-					.setAgentSender(agentReply.getAgentSender()).setLinesNumber(providesList.size())
-					.addAllListDatas(providesList).build();
+			final ListStringReply finalReply = ListStringReply.newBuilder().setAgentSender(agentReply.getAgentSender())
+					.setLinesNumber(providesList.size()).addAllListDatas(providesList).build();
 			responseObserver.onNext(finalReply);
 		}
 	}
@@ -459,11 +460,11 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 		final PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
 		if (!checkRegexOnX509(csrDecoded.getSubject())) {
 			BeaconServer.logger.debug("SIGN CSR " + csrDecoded.getSubject());
-			return this.beaconServer.homunculus.getMyIdentityKeystore().signCertificateBase64(csrDecoded, requestAlias, BeaconServer.SIGN_TIME,
-					this.beaconServer.homunculus.getMyAliasCertInKeystore());
+			return this.beaconServer.getHomunculus().getMyIdentityKeystore().signCertificateBase64(csrDecoded,
+					requestAlias, BeaconServer.SIGN_TIME, this.beaconServer.getHomunculus().getMyAliasCertInKeystore());
 		} else
-			BeaconServer.logger.warn("\nNOT SIGN CERT\n" + csrDecoded.getSubject() + "\nbeacause it matches the blacklist ["
-					+ this.beaconServer.filterBlackListCertRegister + "]");
+			BeaconServer.logger.warn("\nNOT SIGN CERT\n" + csrDecoded.getSubject()
+					+ "\nbeacause it matches the blacklist [" + this.beaconServer.filterBlackListCertRegister + "]");
 		return null;
 	}
 

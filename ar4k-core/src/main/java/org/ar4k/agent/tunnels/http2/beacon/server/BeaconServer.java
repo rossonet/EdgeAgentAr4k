@@ -58,7 +58,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	// autorizzazione
 	private boolean running = true;
 
-	Homunculus homunculus = null;
+	private Homunculus homunculus = null;
 
 	final List<TunnelRunnerBeaconServer> tunnels = new LinkedList<>();
 	private Thread process = null;
@@ -191,6 +191,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	@Override
 	public int getDiscoveryPort() {
 		return discoveryPort;
+	}
+
+	public Homunculus getHomunculus() {
+		return homunculus;
 	}
 
 	@Override

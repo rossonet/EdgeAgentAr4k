@@ -138,12 +138,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private String certFile = tmpBeaconPathDefault + ".pem";
 	private final List<NetworkTunnel> tunnels = new LinkedList<>();
 	private final BeaconDataAddress beaconDataAddress;
-	private String certChain = null;
+	private String certChainAuthority = null;
 	private String csrRequest = null;
 
 	BeaconClient(Homunculus homunculus, RpcConversation rpcConversation, String host, int port, int discoveryPort,
 			String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
-			String aliasBeaconClientInKeystore, String certChain) {
+			String aliasBeaconClientInKeystore, String certChainAuthority) {
 		this.localExecutor = rpcConversation;
 		this.discoveryPort = discoveryPort;
 		this.discoveryFilter = discoveryFilter;
@@ -155,8 +155,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		if (aliasBeaconClientInKeystore != null) {
 			this.aliasBeaconClientInKeystore = aliasBeaconClientInKeystore;
 		}
-		if (certChain != null && !certChain.isEmpty())
-			this.certChain = certChain;
+		if (certChainAuthority != null && !certChainAuthority.isEmpty())
+			this.certChainAuthority = certChainAuthority;
 		if (certChainFile != null)
 			this.certChainFile = certChainFile;
 		if (certFile != null)
@@ -684,7 +684,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				+ discoveryPort + ", discoveryFilter=" + discoveryFilter + ", pollingFrequency=" + pollingFrequency
 				+ ", aliasBeaconClientInKeystore=" + aliasBeaconClientInKeystore + ", hostTarget=" + hostTarget
 				+ ", port=" + port + ", certChainFile=" + certChainFile + ", privateFile=" + privateFile + ", certFile="
-				+ certFile + ", tunnels=" + tunnels + ", certChain=" + certChain + ", csrRequest=" + csrRequest + "]";
+				+ certFile + ", tunnels=" + tunnels + ", certChainAuthority=" + certChainAuthority + ", csrRequest="
+				+ csrRequest + "]";
 	}
 
 	private synchronized void actionRegister() {
@@ -876,7 +877,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void generateCaFile() {
 		try (final FileWriter writer = new FileWriter(new File(certChainFile));) {
-			for (final String cert : certChain.split(",")) {
+			for (final String cert : certChainAuthority.split(",")) {
 				writer.write("-----BEGIN CERTIFICATE-----\n");
 				writer.write(cert);
 				writer.write("\n-----END CERTIFICATE-----\n");
@@ -975,7 +976,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			homunculus.getMyIdentityKeystore().setClientKeyPair(
 					homunculus.getMyIdentityKeystore().getPrivateKeyBase64(homunculus.getMyAliasCertInKeystore()),
 					reply.getCert(), this.aliasBeaconClientInKeystore);
-			certChain = reply.getCa();
+			certChainAuthority = reply.getCa();
 			status = StatusBeaconClient.IDLE;
 			startConnection(this.hostTarget, this.port, false);
 			registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), null);
