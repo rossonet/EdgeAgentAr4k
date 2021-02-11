@@ -48,9 +48,9 @@ class BeaconServerAuthorizationInterceptor implements ServerInterceptor {
 
 	private <ReqT, RespT> void authSslNotFound(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata) {
 		if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
-			BeaconServer.logger.info("session not ok but register call");
+			BeaconServer.logger.debug("session not ok but register call");
 		} else {
-			BeaconServer.logger.info("session not ok");
+			BeaconServer.logger.debug("session not ok");
 			final io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;
 			serverCall.close(status, metadata);
 		}

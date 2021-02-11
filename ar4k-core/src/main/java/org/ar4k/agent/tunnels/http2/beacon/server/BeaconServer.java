@@ -39,6 +39,10 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 
+//TODO da valutare per il cluster beacon server https://grpc.io/blog/grpc-load-balancing/
+
+//TODO da valutare opzione di compressione https://github.com/grpc/grpc-java/tree/master/examples/src/main/java/io/grpc/examples/experimental
+
 public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
