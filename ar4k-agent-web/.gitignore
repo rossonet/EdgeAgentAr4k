@@ -9,6 +9,8 @@ src/main/resources/static
 training-data/*
 *.ks
 target
+pnpm-lock.yaml
+pnpmfile.js
 
 training-data/*
 

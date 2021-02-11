@@ -1,7 +1,3 @@
-// NPM dep!
-//npm add -g pnpm@4.5.0
-
-
 plugins {
 	id 'com.vaadin' version '0.8.0'
 }
@@ -43,6 +39,12 @@ bootJar.doLast { task ->
 }
 
 vaadin {
-	optimizeBundle = false
+        optimizeBundle = true
+        pnpmEnable = true
+        productionMode = true
+}
+
+bootRun.configure {
+    mustRunAfter vaadinBuildFrontend
 }
 

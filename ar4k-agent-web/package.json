@@ -53,7 +53,7 @@
       "webpack-merge": "4.2.2",
       "webpack-dev-server": "3.10.3"
     },
-    "hash": "d98ce786b93dc79723f8e3b19af30fdc067a6e6891d9d8457869044b05dae392"
+    "hash": "a88e5d70b877bd084cd32fc4756c61c5c6aaccf3dd962c6d2bc34bcf0a8496c7"
   },
   "dependencies": {
     "lit-element": "^2.2.1",

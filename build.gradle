@@ -381,6 +381,13 @@ task ar4kBootJarWeb {
 	ar4kBootJarWeb.dependsOn(":ar4k-agent-web:endBootJar")
 }
 
+task webDevelopProcess {
+        group "Vaadin"
+        description 'Run Vaadin with auto reload'
+        webDevelopProcess.dependsOn(":ar4k-agent-web:vaadinBuildFrontend")
+        webDevelopProcess.dependsOn(":ar4k-agent-web:bootRun")
+}
+
 task ar4kDockerContainerQa {
 	group "Ar4k Semantic Router Build"
 	description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
