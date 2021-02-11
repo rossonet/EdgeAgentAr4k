@@ -507,7 +507,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore
 						+ " not found in keystore [" + homunculusTarget + "]");
 			}
-			// logger.warn("CA MASTER BEACON SERVER\n" + caChainPem);
+			logger.trace("CA MASTER BEACON SERVER\n" + caChainPem);
 			KeystoreLoader.writePemCa(this.certChainFileLastPart, caChainPem);
 			KeystoreLoader.writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
 			KeystoreLoader.writePrivateKey(this.aliasBeaconServerInKeystore, homunculusTarget,

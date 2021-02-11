@@ -87,7 +87,13 @@ public class BeaconServerForm extends FormLayout {
 		if (beaconClientWrapper != null) {
 			logger.debug("selected: " + beaconClientWrapper + " host:" + beaconClientWrapper.getHost());
 			save.setVisible(false);
-			update.setVisible(true);
+			if (beaconClientWrapper.isHomunculusClient()) {
+				update.setVisible(false);
+				delete.setVisible(false);
+			} else {
+				update.setVisible(true);
+				delete.setVisible(true);
+			}
 			this.setBeaconClientWrapper(beaconClientWrapper);
 			binder.readBean(this.beaconClientWrapper);
 		} else {

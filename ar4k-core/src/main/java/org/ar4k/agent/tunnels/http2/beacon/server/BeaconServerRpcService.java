@@ -309,8 +309,8 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			final org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply
 					.newBuilder();
 			RegisterReply reply = null;
-			BeaconServer.logger.info("registration request -> " + request);
-			BeaconServer.logger.info("registration SSL channel -> "
+			BeaconServer.logger.debug("registration request -> " + request);
+			BeaconServer.logger.debug("registration SSL channel -> "
 					+ !Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText()));
 			if (!Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText())
 					&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {

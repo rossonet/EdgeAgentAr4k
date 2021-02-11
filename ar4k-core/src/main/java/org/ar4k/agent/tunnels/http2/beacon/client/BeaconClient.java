@@ -99,8 +99,6 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private static CharSequence completitionChar = "?";
 	private static int discoveryPacketMaxSize = 1024;
 
-	private static final boolean TRACE = true;
-
 	private final String tmpBeaconPathDefault = "!/beacon-client-" + UUID.randomUUID().toString();
 
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -126,7 +124,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
 	private String discoveryFilter = "AR4K";
 	private DatagramSocket socketDiscovery = null;
-	private final int pollingFrequency = 800;
+	private final int pollingFrequency = 1500;
 
 	private String aliasBeaconClientInKeystore = "beacon-client";
 	private String hostTarget = null;
@@ -183,7 +181,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			startConnection(this.hostTarget, this.port, true);
 		}
 		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
-		logger.info("starting beacon client monitoring every " + getPollingFreq() + " milliseconds");
+		logger.info("starting beacon client monitoring every " + getPollingFrequency() + " milliseconds");
 		runInstance();
 	}
 
@@ -219,8 +217,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			}
 			tunnels.clear();
 		}
-		if (TRACE)
-			logger.info(homunculus.getAgentUniqueName() + " Client Beacon closed");
+		logger.debug(homunculus.getAgentUniqueName() + " Client Beacon closed");
 	}
 
 	@Override
@@ -247,6 +244,11 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	@Override
+	public String getAliasBeaconClientInKeystore() {
+		return aliasBeaconClientInKeystore;
+	}
+
+	@Override
 	public RpcServiceV1Stub getAsyncStub() {
 		return asyncStub;
 	}
@@ -261,6 +263,21 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	@Override
+	public String getCertChainAuthority() {
+		return certChainAuthority;
+	}
+
+	@Override
+	public String getCertChainFile() {
+		return certChainFile;
+	}
+
+	@Override
+	public String getCertFile() {
+		return certFile;
+	}
+
+	@Override
 	public ConfigReply getConfigFromAgent(String agentId) {
 		try {
 			final Agent a = Agent.newBuilder().setAgentUniqueName(agentId).build();
@@ -272,6 +289,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	@Override
+
+	public String getCsrRequest() {
+		return csrRequest;
+	}
+
+	@Override
 	public String getDiscoveryFilter() {
 		return discoveryFilter;
 	}
@@ -279,6 +302,11 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	@Override
 	public int getDiscoveryPort() {
 		return discoveryPort;
+	}
+
+	@Override
+	public String getHostTarget() {
+		return hostTarget;
 	}
 
 	@Override
@@ -317,16 +345,14 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					request.setMode(TunnelType.SERVER_TO_BYTES_UDP);
 				}
 			}
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName() + " request beacon tunnel " + request.build().getTargeId()
-						+ "/" + config.getNetworkModeRequested() + " from " + request.build().getAgentSource() + " to "
-						+ request.build().getAgentDestination());
+			logger.debug(homunculus.getAgentUniqueName() + " request beacon tunnel " + request.build().getTargeId()
+					+ "/" + config.getNetworkModeRequested() + " from " + request.build().getAgentSource() + " to "
+					+ request.build().getAgentDestination());
 			final ResponseNetworkChannel response = blockingStubTunnel.requestTunnel(request.build());
 			tunnel.setResponseNetworkChannel(response);
 			tunnels.add(tunnel);
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName()
-						+ " request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
+			logger.debug(homunculus.getAgentUniqueName()
+					+ " request beacon tunnel id_target from response of other agent -> " + response.getTargeId());
 			tunnel.init();
 			// logger.info("INIT DONE");
 			return tunnel;
@@ -337,8 +363,18 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	@Override
-	public int getPollingFreq() {
+	public int getPollingFrequency() {
 		return pollingFrequency;
+	}
+
+	@Override
+	public int getPort() {
+		return port;
+	}
+
+	@Override
+	public String getPrivateFile() {
+		return privateFile;
 	}
 
 	@Override
@@ -429,10 +465,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	@Override
 	public List<AgentRequest> listProvisioningRequests() {
 		final Empty empty = Empty.newBuilder().build();
-		final ListAgentsRequestReply reply = blockingStub.listAgentsRequestComplete(empty);
 		final ListAgentsRequestReply replyToDo = blockingStub.listAgentsRequestToDo(empty);
-		List<AgentRequest> requestsList = reply.getRequestsList();
-		requestsList.addAll(replyToDo.getRequestsList());
+		List<AgentRequest> requestsList = replyToDo.getRequestsList();
 		return requestsList;
 	}
 
@@ -451,14 +485,12 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					socketDiscovery.receive(packet);
 					if (packet.getData().length > 0) {
 						final String message = new String(packet.getData()).trim();
-						if (TRACE)
-							logger.info(homunculus.getAgentUniqueName() + " DISCOVERY FLASH: " + message);
+						logger.debug(homunculus.getAgentUniqueName() + " DISCOVERY FLASH: " + message);
 						if (discoveryFilter == null || message.contains(discoveryFilter)) {
 							final String hostBeacon = packet.getAddress().getHostAddress();
 							final int portBeacon = Integer.valueOf(message.split(":")[1]);
-							if (TRACE)
-								logger.info(homunculus.getAgentUniqueName() + " -- Beacon server found on host "
-										+ hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
+							logger.debug(homunculus.getAgentUniqueName() + " -- Beacon server found on host "
+									+ hostBeacon + " port " + String.valueOf(portBeacon + "/TCP --"));
 							startConnection(this.hostTarget, this.port, true);
 						}
 					}
@@ -525,7 +557,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	public synchronized void runConnection(ManagedChannelBuilder<?> channelBuilder, boolean register) {
 		cleanChannel("before new connection");
-		channel = channelBuilder.build();
+		channel = channelBuilder.intercept(new BeaconClientAuthorizationInterceptor()).build();
 		blockingStub = RpcServiceV1Grpc.newBlockingStub(channel);
 		blockingStubTunnel = TunnelServiceV1Grpc.newBlockingStub(channel);
 		asyncStub = RpcServiceV1Grpc.newStub(channel);
@@ -549,7 +581,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 							homunculus.getAgentUniqueName() + " in beacon client " + this.toString() + " update", e);
 				}
 			}
-		}, 10, getPollingFreq(), TimeUnit.MILLISECONDS);
+		}, 10, getPollingFrequency(), TimeUnit.MILLISECONDS);
 		// health
 		timerExecutor.scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -690,8 +722,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private synchronized void actionRegister() {
 		try {
-			logger.info(homunculus.getAgentUniqueName() + " Try registration to beacon server. BEFORE[" + registerStatus
-					+ "/" + getStateConnection() + "]");
+			logger.debug(homunculus.getAgentUniqueName() + " try registration to beacon server. BEFORE["
+					+ registerStatus + "/" + getStateConnection() + "]");
 			registerStatus = registerToBeacon(reservedUniqueName, getDisplayRequestTxt(), csrRequest);
 			Thread.currentThread().setName("bc-" + Homunculus.THREAD_ID);
 		} catch (final Exception e) {
@@ -737,8 +769,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	}
 
 	private synchronized void cleanChannel(String description) {
-		if (TRACE)
-			logger.info(homunculus.getAgentUniqueName() + " Reset beacon client because " + description);
+		logger.debug(homunculus.getAgentUniqueName() + " Reset beacon client because " + description);
 		registerStatus = StatusValue.BAD;
 		status = StatusBeaconClient.IDLE;
 		if (channel != null) {
@@ -754,9 +785,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void closePort(RequestToAgent m) {
 		try {
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName() + " network port close call from beacon "
-						+ m.getTunnelRequest().getTargeId());
+			logger.debug(homunculus.getAgentUniqueName() + " network port close call from beacon "
+					+ m.getTunnelRequest().getTargeId());
 			NetworkTunnel tunnelTarget = null;
 			for (final NetworkTunnel tunnel : tunnels) {
 				if (tunnel.getTunnelId() == m.getTunnelRequest().getTargeId()) {
@@ -835,9 +865,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void execCommand(RequestToAgent m) {
 		try {
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName() + " execute command " + m.getRequestCommand()
-						+ " with executor " + localExecutor.toString());
+			logger.debug(homunculus.getAgentUniqueName() + " execute command " + m.getRequestCommand()
+					+ " with executor " + localExecutor.toString());
 			final String reply = localExecutor.elaborateMessage(m.getRequestCommand());
 			final CommandReplyRequest request = CommandReplyRequest.newBuilder().setAgentDestination(m.getCaller())
 					.setAgentSender(me).setUniqueIdRequest(m.getUniqueIdRequest()).addReplies(reply).build();
@@ -849,9 +878,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private void exposeNewPort(RequestToAgent m) {
 		try {
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName() + " network port required from beacon "
-						+ m.getUniqueIdRequest());
+			logger.debug(
+					homunculus.getAgentUniqueName() + " network port required from beacon " + m.getUniqueIdRequest());
 			NetworkConfig config = null;
 			NetworkTunnel tunnel = null;
 			if (useNettyForTunnel) {
@@ -992,16 +1020,15 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 					.setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest));
 			if (csr != null && !csr.isEmpty()) {
 				requestBuilder.setRequestCsr(csr);
-				if (TRACE)
-					logger.info(homunculus.getAgentUniqueName() + " SENDING CSR: " + csr);
+				logger.debug(homunculus.getAgentUniqueName() + " SENDING CSR: " + csr);
 			}
 			request = requestBuilder.build();
-			logger.info(homunculus.getAgentUniqueName() + " try registration, channel status "
+			logger.debug(homunculus.getAgentUniqueName() + " try registration, channel status "
 					+ (channel != null ? channel.getState(true) : "null channel"));
 			final RegisterReply reply = blockingStub.register(request);
 
 			result = reply.getStatusRegistration().getStatus();
-			logger.info("registration reply [" + result + "] -> " + reply);
+			logger.debug("registration reply [" + result + "] -> " + reply);
 			status = StatusBeaconClient.CONNECTED;
 			// se funziona
 			if (result.equals(StatusValue.GOOD) && (reply.getCert() == null || reply.getCert().isEmpty())) {

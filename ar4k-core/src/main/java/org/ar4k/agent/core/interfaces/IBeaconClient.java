@@ -27,21 +27,37 @@ public interface IBeaconClient {
 
 	String getAgentUniqueName();
 
+	String getAliasBeaconClientInKeystore();
+
 	RpcServiceV1Stub getAsyncStub();
 
 	RpcServiceV1BlockingStub getBlockingStub();
 
+	String getCertChainAuthority();
+
+	String getCertChainFile();
+
+	String getCertFile();
+
 	ConfigReply getConfigFromAgent(String agentId);
+
+	String getCsrRequest();
 
 	String getDiscoveryFilter();
 
 	int getDiscoveryPort();
 
+	String getHostTarget();
+
 	RpcConversation getLocalExecutor();
 
 	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
 
-	int getPollingFreq();
+	int getPollingFrequency();
+
+	int getPort();
+
+	String getPrivateFile();
 
 	StatusValue getRegistrationStatus();
 

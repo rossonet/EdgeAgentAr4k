@@ -1,5 +1,6 @@
 package org.ar4k.agent.web.main;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
@@ -15,17 +17,22 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MainBeaconService implements AutoCloseable {
 
+	@Autowired
+	Homunculus homunculus;
+
 	private final static int SCAN_DELAY = 20000;
 	private final Timer timer = new Timer();
 	private final TimerTask refreshServer;
 
+	private boolean localAgentConfigured = false;
+
 	public MainBeaconService() {
-		createDemoData();
 		refreshServer = createTimerTask();
 		timer.schedule(refreshServer, SCAN_DELAY, SCAN_DELAY);
 	}
@@ -36,6 +43,14 @@ public class MainBeaconService implements AutoCloseable {
 			@Override
 			public void run() {
 				try {
+					try {
+						if (!localAgentConfigured && homunculus != null) {
+							createBaseBeaconClient();
+							localAgentConfigured = true;
+						}
+					} catch (Exception exception) {
+						logger.logException(exception);
+					}
 					refreshAgentsFromBeacon();
 					refreshProvisioningRequestsFromBeacon();
 				} catch (final Exception a) {
@@ -46,7 +61,6 @@ public class MainBeaconService implements AutoCloseable {
 		};
 	}
 
-	@SuppressWarnings("unused")
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MainBeaconService.class.toString());
 
@@ -73,9 +87,11 @@ public class MainBeaconService implements AutoCloseable {
 	private void refreshAgentsFromBeacon() {
 		if (!beaconServers.isEmpty())
 			for (final IBeaconClientScadaWrapper c : beaconServers) {
-				if (c.getBeaconClient() != null && c.getBeaconClient().listAgentsConnectedToBeacon() != null
-						&& !c.getBeaconClient().listAgentsConnectedToBeacon().isEmpty())
-					for (final Agent a : c.getBeaconClient().listAgentsConnectedToBeacon()) {
+				final List<Agent> listAgentsConnectedToBeacon = c.getBeaconClient().listAgentsConnectedToBeacon();
+				logger.trace("listAgentsConnectedToBeacon -> " + listAgentsConnectedToBeacon);
+				if (c.getBeaconClient() != null && listAgentsConnectedToBeacon != null
+						&& !listAgentsConnectedToBeacon.isEmpty())
+					for (final Agent a : listAgentsConnectedToBeacon) {
 						if (agents.keySet().isEmpty() || !agents.keySet().contains(a.getAgentUniqueName())) {
 							agents.put(a.getAgentUniqueName(), new MainAgentWrapper(c.getBeaconClient(), a));
 						}
@@ -86,9 +102,11 @@ public class MainBeaconService implements AutoCloseable {
 	private void refreshProvisioningRequestsFromBeacon() {
 		if (!beaconServers.isEmpty())
 			for (final IBeaconClientScadaWrapper c : beaconServers) {
-				if (c.getBeaconClient() != null && c.getBeaconClient().listProvisioningRequests() != null
-						&& !c.getBeaconClient().listProvisioningRequests().isEmpty())
-					for (final AgentRequest a : c.getBeaconClient().listProvisioningRequests()) {
+				final List<AgentRequest> listProvisioningRequests = c.getBeaconClient().listProvisioningRequests();
+				logger.trace("listProvisioningRequests -> " + listProvisioningRequests);
+				if (c.getBeaconClient() != null && listProvisioningRequests != null
+						&& !listProvisioningRequests.isEmpty())
+					for (final AgentRequest a : listProvisioningRequests) {
 						if (provisioningRequests.keySet().isEmpty()
 								|| !provisioningRequests.keySet().contains(a.getIdRequest())) {
 							provisioningRequests.put(a.getIdRequest(), new BeaconProvisioningAuthorization(a));
@@ -115,19 +133,20 @@ public class MainBeaconService implements AutoCloseable {
 		}
 	}
 
-	public void createDemoData() {
+	public void createBaseBeaconClient() throws MalformedURLException {
 		final IBeaconClientScadaWrapper s = new BeaconClientWrapper();
-		s.setDiscoveryPort(0);
-		s.setDiscoveryFilter("SCADA");
-		s.setAliasBeaconClientInKeystore("scada-web");
-		s.setBeaconCaChainPem("beaconCaChainPem");
-		s.setCertChainFile("certChainFile");
-		s.setCertFile("cert file");
-		s.setPort(11231);
-		s.setHost("127.0.0.1");
-		s.setCompany("Rossonet");
-		s.setPrivateFile("privateFile");
-		s.setContext("Locale");
+		s.setHomunculusClient(true);
+		s.setDiscoveryPort(homunculus.getBeaconClient().getDiscoveryPort());
+		s.setDiscoveryFilter(homunculus.getBeaconClient().getDiscoveryFilter());
+		s.setContext("Local Beacon Client");
+		s.setAliasBeaconClientInKeystore(homunculus.getBeaconClient().getAliasBeaconClientInKeystore());
+		s.setBeaconCaChainPem(homunculus.getBeaconClient().getCertChainAuthority());
+		s.setCertChainFile(homunculus.getBeaconClient().getCertChainFile());
+		s.setCertFile(homunculus.getBeaconClient().getCertFile());
+		s.setCompany("NOT KNOW");
+		s.setHost(homunculus.getBeaconClient().getHostTarget());
+		s.setPort(homunculus.getBeaconClient().getPort());
+		s.setPrivateFile(homunculus.getBeaconClient().getPrivateFile());
 		beaconServers.add(s);
 	}
 

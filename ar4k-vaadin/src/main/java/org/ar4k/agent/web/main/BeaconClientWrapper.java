@@ -32,7 +32,8 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 	private String beaconCaChainPem;
 	private String company;
 	private String context;
-	// private List<String> tags = new ArrayList<String>();
+
+	private boolean homunculusClient = false;
 
 	private IBeaconClient beaconClient;
 
@@ -40,79 +41,65 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 		tryConnection();
 	}
 
-	private void tryConnection() {
-		if (beaconClient != null) {
-			try {
-				beaconClient.shutdown();
-			} catch (final InterruptedException e) {
-				logger.logException(e);
-			}
-		}
-		if (host != null && !host.isEmpty() && port != 0) {
-			if (Homunculus.getApplicationContext() != null
-					&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
-				this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).connectToBeaconService(
-						"http://" + host + ":" + port, beaconCaChainPem, discoveryPort, discoveryFilter, false);
-			} else {
-				logger.warn("no Homunculus found");
-			}
-		}
+	@Override
+	public Integer getAgentsCount() {
+		return beaconClient != null ? beaconClient.listAgentsConnectedToBeacon().size() : 0;
+
+	}
+
+	@Override
+	public String getAgentUniqueName() {
+		return beaconClient.getAgentUniqueName();
+	}
+
+	/**
+	 * @return the aliasBeaconClientInKeystore
+	 */
+	@Override
+	public String getAliasBeaconClientInKeystore() {
+		return aliasBeaconClientInKeystore;
+	}
+
+	/**
+	 * @return the beaconCaChainPem
+	 */
+	@Override
+	public String getBeaconCaChainPem() {
+		return beaconCaChainPem;
 	}
 
 	@Override
 	public IBeaconClient getBeaconClient() {
+		if (homunculusClient && beaconClient == null) {
+			tryConnection();
+		}
 		return beaconClient;
 	}
 
 	/**
-	 * @return the host
+	 * @return the certChainFile
 	 */
 	@Override
-	public String getHost() {
-		return host;
+	public String getCertChainFile() {
+		return certChainFile;
 	}
 
 	/**
-	 * @param host the host to set
+	 * @return the certFile
 	 */
 	@Override
-	public void setHost(String host) {
-		this.host = host;
-		tryConnection();
+	public String getCertFile() {
+		return certFile;
 	}
 
-	/**
-	 * @return the port
-	 */
 	@Override
-	public Integer getPort() {
-		return port;
+	public String getCompany() {
+		return company;
 	}
 
-	/**
-	 * @param port the port to set
-	 */
 	@Override
-	public void setPort(Integer port) {
-		this.port = port;
-		tryConnection();
-	}
-
-	/**
-	 * @return the discoveryPort
-	 */
-	@Override
-	public Integer getDiscoveryPort() {
-		return discoveryPort;
-	}
-
-	/**
-	 * @param discoveryPort the discoveryPort to set
-	 */
-	@Override
-	public void setDiscoveryPort(Integer discoveryPort) {
-		this.discoveryPort = discoveryPort;
-		tryConnection();
+	public String getContext() {
+		return context;
 	}
 
 	/**
@@ -124,12 +111,46 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 	}
 
 	/**
-	 * @param discoveryFilter the discoveryFilter to set
+	 * @return the discoveryPort
 	 */
 	@Override
-	public void setDiscoveryFilter(String discoveryFilter) {
-		this.discoveryFilter = discoveryFilter;
-		tryConnection();
+	public Integer getDiscoveryPort() {
+		return discoveryPort;
+	}
+
+	/**
+	 * @return the host
+	 */
+	@Override
+	public String getHost() {
+		return host;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the port
+	 */
+	@Override
+	public Integer getPort() {
+		return port;
+	}
+
+	/**
+	 * @return the privateFile
+	 */
+	@Override
+	public String getPrivateFile() {
+		return privateFile;
+	}
+
+	@Override
+	public String getRegistrationStatus() {
+		return beaconClient != null ? beaconClient.getRegistrationStatus().toString() : "DISCONNECTED";
+
 	}
 
 	/**
@@ -140,21 +161,16 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 		return rpcConversation;
 	}
 
-	/**
-	 * @param rpcConversation the rpcConversation to set
-	 */
 	@Override
-	public void setRpcConversation(RpcConversation rpcConversation) {
-		this.rpcConversation = rpcConversation;
-		tryConnection();
+	public String getStatus() {
+		return beaconClient != null ? beaconClient.getStateConnection().toString() : "DISCONNECTED";
+
 	}
 
-	/**
-	 * @return the aliasBeaconClientInKeystore
-	 */
 	@Override
-	public String getAliasBeaconClientInKeystore() {
-		return aliasBeaconClientInKeystore;
+	public boolean isFoundBy(String filter) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	/**
@@ -167,28 +183,12 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 	}
 
 	/**
-	 * @return the certFile
+	 * @param beaconCaChainPem the beaconCaChainPem to set
 	 */
 	@Override
-	public String getCertFile() {
-		return certFile;
-	}
-
-	/**
-	 * @param certFile the certFile to set
-	 */
-	@Override
-	public void setCertFile(String certFile) {
-		this.certFile = certFile;
+	public void setBeaconCaChainPem(String beaconCaChainPem) {
+		this.beaconCaChainPem = beaconCaChainPem;
 		tryConnection();
-	}
-
-	/**
-	 * @return the certChainFile
-	 */
-	@Override
-	public String getCertChainFile() {
-		return certChainFile;
 	}
 
 	/**
@@ -201,11 +201,58 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 	}
 
 	/**
-	 * @return the privateFile
+	 * @param certFile the certFile to set
 	 */
 	@Override
-	public String getPrivateFile() {
-		return privateFile;
+	public void setCertFile(String certFile) {
+		this.certFile = certFile;
+		tryConnection();
+	}
+
+	@Override
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	@Override
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	/**
+	 * @param discoveryFilter the discoveryFilter to set
+	 */
+	@Override
+	public void setDiscoveryFilter(String discoveryFilter) {
+		this.discoveryFilter = discoveryFilter;
+		tryConnection();
+	}
+
+	/**
+	 * @param discoveryPort the discoveryPort to set
+	 */
+	@Override
+	public void setDiscoveryPort(Integer discoveryPort) {
+		this.discoveryPort = discoveryPort;
+		tryConnection();
+	}
+
+	/**
+	 * @param host the host to set
+	 */
+	@Override
+	public void setHost(String host) {
+		this.host = host;
+		tryConnection();
+	}
+
+	/**
+	 * @param port the port to set
+	 */
+	@Override
+	public void setPort(Integer port) {
+		this.port = port;
+		tryConnection();
 	}
 
 	/**
@@ -218,51 +265,12 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 	}
 
 	/**
-	 * @return the beaconCaChainPem
+	 * @param rpcConversation the rpcConversation to set
 	 */
 	@Override
-	public String getBeaconCaChainPem() {
-		return beaconCaChainPem;
-	}
-
-	/**
-	 * @param beaconCaChainPem the beaconCaChainPem to set
-	 */
-	@Override
-	public void setBeaconCaChainPem(String beaconCaChainPem) {
-		this.beaconCaChainPem = beaconCaChainPem;
+	public void setRpcConversation(RpcConversation rpcConversation) {
+		this.rpcConversation = rpcConversation;
 		tryConnection();
-	}
-
-	@Override
-	public String getCompany() {
-		return company;
-	}
-
-	@Override
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	@Override
-	public String getContext() {
-		return context;
-	}
-
-	@Override
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	@Override
-	public String getAgentUniqueName() {
-		return beaconClient.getAgentUniqueName();
-	}
-
-	@Override
-	public boolean isFoundBy(String filter) {
-		// TODO Auto-generated method stub
-		return true;
 	}
 
 	@Override
@@ -299,27 +307,40 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 		return builder.toString();
 	}
 
-	@Override
-	public String getId() {
-		return id;
+	private void tryConnection() {
+		if (!homunculusClient) {
+			if (beaconClient != null) {
+				try {
+					beaconClient.shutdown();
+				} catch (final InterruptedException e) {
+					logger.logException(e);
+				}
+			}
+			if (host != null && !host.isEmpty() && port != 0) {
+				if (Homunculus.getApplicationContext() != null
+						&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
+					this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class)
+							.connectToBeaconService("http://" + host + ":" + port, beaconCaChainPem, discoveryPort,
+									discoveryFilter, false);
+				} else {
+					logger.warn("no Homunculus found");
+				}
+			}
+		} else {
+			if (Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
+				this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).getBeaconClient();
+			}
+		}
 	}
 
 	@Override
-	public String getStatus() {
-		return beaconClient != null ? beaconClient.getStateConnection().toString() : "DISCONNECTED";
-
+	public boolean isHomunculusClient() {
+		return homunculusClient;
 	}
 
 	@Override
-	public String getRegistrationStatus() {
-		return beaconClient != null ? beaconClient.getRegistrationStatus().toString() : "DISCONNECTED";
-
-	}
-
-	@Override
-	public Integer getAgentsCount() {
-		return beaconClient != null ? beaconClient.listAgentsConnectedToBeacon().size() : 0;
-
+	public void setHomunculusClient(boolean homunculusClient) {
+		this.homunculusClient = homunculusClient;
 	}
 
 }

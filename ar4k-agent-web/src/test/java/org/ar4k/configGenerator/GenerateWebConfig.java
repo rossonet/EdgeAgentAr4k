@@ -86,6 +86,7 @@ public class GenerateWebConfig {
 		config.author = "Andrea Ambrosini";
 		config.name = "config-web-test";
 		BeaconServiceConfig s0 = new BeaconServiceConfig();
+		s0.acceptAllCerts = false;
 		s0.port = 11231;
 		s0.name = "socket-0";
 		s0.aliasBeaconServerSignMaster = "ca";

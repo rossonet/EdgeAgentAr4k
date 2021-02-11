@@ -165,7 +165,6 @@ public class MainView extends VerticalLayout implements IMainView {
 		final List<AgentMenu> rit = new ArrayList<>();
 		for (BeanDefinition c : classes) {
 			final String classTarget = c.getBeanClassName();
-			// System.out.println("found " + classTarget);
 			AgentMenu aMenu = createMenu(classTarget);
 			aMenu.setMainView(this);
 			rit.add(aMenu);

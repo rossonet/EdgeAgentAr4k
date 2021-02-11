@@ -118,6 +118,7 @@ public interface IBeaconClientScadaWrapper {
 
 	boolean isFoundBy(String filter);
 
+	@Override
 	String toString();
 
 	String getId();
@@ -127,5 +128,9 @@ public interface IBeaconClientScadaWrapper {
 	String getRegistrationStatus();
 
 	Integer getAgentsCount();
+
+	void setHomunculusClient(boolean b);
+
+	boolean isHomunculusClient();
 
 }
