@@ -81,6 +81,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 
@@ -1077,7 +1078,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				final SslContextBuilder sslBuilder = GrpcSslContexts.forClient()
 						.keyManager(new File(ConfigHelper.resolveWorkingString(certFile, true)),
 								new File(ConfigHelper.resolveWorkingString(privateFile, true)))
-						.trustManager(new File(ConfigHelper.resolveWorkingString(this.certChainFile, true)));
+						.trustManager(new File(ConfigHelper.resolveWorkingString(this.certChainFile, true)))
+						.clientAuth(ClientAuth.OPTIONAL);
 				runConnection(NettyChannelBuilder.forAddress(host, port)
 						.sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()), register);
 			} catch (final Exception e) {
