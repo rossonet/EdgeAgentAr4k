@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -69,9 +70,9 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	private int discoveryPort = 0;
 	private String broadcastAddress = "255.255.255.255";
 	private String stringDiscovery = "AR4K";
-	private String certChainFileLastPart = "beacon-ca.pem";
-	private String certFileLastPart = "beacon-cert.pem";
-	private String privateKeyFileLastPart = "beacon.key";
+	private String certChainFileLastPart = "!/beacon-ca.pem";
+	private String certFileLastPart = "!/beacon-cert.pem";
+	private String privateKeyFileLastPart = "!/beacon.key";
 	private String aliasBeaconServerInKeystore = "beacon-server";
 	String caChainPem = null;
 	String filterActiveCommand = null;
@@ -82,12 +83,14 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	Pattern filterActiveCommandPattern = null;
 
-	private String markThread;
+	private String markThread = null;
+
+	private String aliasBeaconServerSignMaster = "ca";
 
 	BeaconServer(Homunculus homunculusTarget, int port, int discoveryPort, String broadcastAddress, boolean acceptCerts,
 			String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
 			String aliasBeaconServerInKeystore, String caChainPem, String filterActiveCommand,
-			String filterBlackListCertRegister) throws UnrecoverableKeyException {
+			String filterBlackListCertRegister, String aliasBeaconServerSignMaster) throws UnrecoverableKeyException {
 		this.homunculus = homunculusTarget;
 		if (aliasBeaconServerInKeystore != null && !aliasBeaconServerInKeystore.isEmpty())
 			this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
@@ -110,6 +113,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			this.filterActiveCommand = filterActiveCommand;
 		if (filterBlackListCertRegister != null && !filterBlackListCertRegister.isEmpty())
 			this.filterBlackListCertRegister = filterBlackListCertRegister;
+		if (aliasBeaconServerSignMaster != null && !aliasBeaconServerSignMaster.isEmpty())
+			this.aliasBeaconServerSignMaster = aliasBeaconServerSignMaster;
 		getBeaconServer(homunculusTarget, port);
 	}
 
@@ -502,6 +507,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				throw new UnrecoverableKeyException("key " + this.aliasBeaconServerInKeystore
 						+ " not found in keystore [" + homunculusTarget + "]");
 			}
+			// logger.warn("CA MASTER BEACON SERVER\n" + caChainPem);
 			KeystoreLoader.writePemCa(this.certChainFileLastPart, caChainPem);
 			KeystoreLoader.writePemCert(this.aliasBeaconServerInKeystore, homunculusTarget, this.certFileLastPart);
 			KeystoreLoader.writePrivateKey(this.aliasBeaconServerInKeystore, homunculusTarget,
@@ -509,8 +515,10 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			try {
 				logger.info("Starting Beacon server");
 				final SslContextBuilder sslContextBuild = GrpcSslContexts
-						.forServer(new File(this.certFileLastPart), new File(this.privateKeyFileLastPart))
-						.trustManager(new File(this.certChainFileLastPart)).clientAuth(ClientAuth.OPTIONAL);
+						.forServer(new File(ConfigHelper.resolveWorkingString(this.certFileLastPart, true)),
+								new File(ConfigHelper.resolveWorkingString(this.privateKeyFileLastPart, true)))
+						.trustManager(new File(ConfigHelper.resolveWorkingString(this.certChainFileLastPart, true)))
+						.clientAuth(ClientAuth.OPTIONAL);
 				final ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
 						.withChildOption(ChannelOption.SO_REUSEADDR, true)
 						.sslContext(GrpcSslContexts.configure(sslContextBuild, SslProvider.OPENSSL).build());
@@ -544,6 +552,14 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	public static long getWaitreplyloopwaittime() {
 		return WAIT_REPLY_LOOP;
+	}
+
+	public String getAliasBeaconServerInKeystore() {
+		return aliasBeaconServerInKeystore;
+	}
+
+	public String getAliasBeaconServerSignMaster() {
+		return aliasBeaconServerSignMaster;
 	}
 
 }

@@ -9,9 +9,9 @@ import javax.net.ssl.SSLSession;
 import io.grpc.Grpc;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
+import io.grpc.ServerCall.Listener;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
-import io.grpc.ServerCall.Listener;
 
 class BeaconServerAuthorizationInterceptor implements ServerInterceptor {
 
@@ -28,8 +28,8 @@ class BeaconServerAuthorizationInterceptor implements ServerInterceptor {
 	}
 
 	@Override
-	public <ReqT, RespT> Listener<ReqT> interceptCall(final ServerCall<ReqT, RespT> serverCall,
-			final Metadata metadata, final ServerCallHandler<ReqT, RespT> serverCallHandler) {
+	public <ReqT, RespT> Listener<ReqT> interceptCall(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata,
+			final ServerCallHandler<ReqT, RespT> serverCallHandler) {
 		try {
 			final SSLSession sslSession = serverCall.getAttributes().get(Grpc.TRANSPORT_ATTR_SSL_SESSION);
 			for (final Certificate i : sslSession.getPeerCertificates()) {
@@ -48,7 +48,7 @@ class BeaconServerAuthorizationInterceptor implements ServerInterceptor {
 
 	private <ReqT, RespT> void authSslNotFound(final ServerCall<ReqT, RespT> serverCall, final Metadata metadata) {
 		if (serverCall.getMethodDescriptor().getFullMethodName().equals("beacon.RpcServiceV1/Register")) {
-			BeaconServer.logger.debug("session not ok but register call");
+			BeaconServer.logger.info("session not ok but register call");
 		} else {
 			BeaconServer.logger.info("session not ok");
 			final io.grpc.Status status = io.grpc.Status.PERMISSION_DENIED;

@@ -91,6 +91,8 @@ public class ConfigHelper {
 
 	private static final String TILDE = "~";
 
+	private static final String DEFAULT_PATH = "!";
+
 	public static final String USER_HOME = System.getProperty("user.home");
 
 	private ConfigHelper() {
@@ -214,7 +216,9 @@ public class ConfigHelper {
 	public static String resolveWorkingString(String input, boolean isFile) {
 		String resultString = null;
 		if (isFile) {
-			resultString = input.replace(TILDE, USER_HOME);
+			resultString = input.replace(DEFAULT_PATH,
+					Homunculus.getApplicationContext().getBean(Homunculus.class).getStarterProperties().getConfPath())
+					.replace(TILDE, USER_HOME);
 		} else {
 			resultString = input;
 		}

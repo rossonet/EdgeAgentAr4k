@@ -539,7 +539,7 @@ public final class KeystoreLoader {
 	}
 
 	public static void writePemCert(String aliasBeaconServer, Homunculus homunculusTarget, String fileTarget) {
-		try (final FileWriter writer = new FileWriter(new File(fileTarget))) {
+		try (final FileWriter writer = new FileWriter(new File(ConfigHelper.resolveWorkingString(fileTarget, true)))) {
 			final String pemTxtBase = homunculusTarget.getMyIdentityKeystore().getCaPem(aliasBeaconServer);
 			writer.write("-----BEGIN CERTIFICATE-----\n");
 			writer.write(pemTxtBase);
@@ -550,11 +550,18 @@ public final class KeystoreLoader {
 	}
 
 	public static void writePemCa(String fileTarget, String certsList) {
-		try (final FileWriter writer = new FileWriter(new File(fileTarget))) {
-			logger.info("path of Beacon trust certificate -> " + new File(fileTarget).getAbsolutePath());
-			for (final String cert : certsList.split(",")) {
+		String realFilePath = ConfigHelper.resolveWorkingString(fileTarget, true);
+		try (final FileWriter writer = new FileWriter(new File(realFilePath))) {
+			logger.info("path of Beacon trust certificate -> " + new File(realFilePath).getAbsolutePath());
+			if (certsList.contains(",")) {
+				for (final String cert : certsList.split(",")) {
+					writer.write("-----BEGIN CERTIFICATE-----\n");
+					writer.write(cert);
+					writer.write("\n-----END CERTIFICATE-----\n");
+				}
+			} else {
 				writer.write("-----BEGIN CERTIFICATE-----\n");
-				writer.write(cert);
+				writer.write(certsList);
 				writer.write("\n-----END CERTIFICATE-----\n");
 			}
 		} catch (final IOException e) {
@@ -564,7 +571,7 @@ public final class KeystoreLoader {
 
 	public static void writePrivateKey(String aliasBeaconServer, Homunculus homunculusTarget, String fileTarget) {
 		final String pk = homunculusTarget.getMyIdentityKeystore().getPrivateKeyBase64(aliasBeaconServer);
-		try (final FileWriter writer = new FileWriter(new File(fileTarget))) {
+		try (final FileWriter writer = new FileWriter(new File(ConfigHelper.resolveWorkingString(fileTarget, true)))) {
 			writer.write("-----BEGIN PRIVATE KEY-----\n");
 			writer.write(pk);
 			writer.write("\n-----END PRIVATE KEY-----\n");

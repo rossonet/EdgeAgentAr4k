@@ -93,7 +93,8 @@ public class BeaconService implements EdgeComponent {
 						.setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
 						.setCertChainFile(configuration.certChainFile).setStringDiscovery(configuration.stringDiscovery)
 						.setBroadcastAddress(configuration.broadcastAddress)
-						.setAcceptCerts(configuration.acceptAllCerts).build();
+						.setAcceptCerts(configuration.acceptAllCerts)
+						.setAliasBeaconServerSignMaster(configuration.aliasBeaconServerSignMaster).build();
 				beaconServer.start();
 			}
 		} catch (IOException e) {

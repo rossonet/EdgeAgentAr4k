@@ -1,7 +1,6 @@
 package org.ar4k.agent.tunnels.http2.beacon.client;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -101,9 +100,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private static final boolean TRACE = true;
 
-	private final String tmpBeaconPathDefault = ConfigHelper.resolveWorkingString(
-			Homunculus.getApplicationContext().getBean(Homunculus.class).getStarterProperties().getConfPath(), true)
-			+ "/beacon-client-" + UUID.randomUUID().toString();
+	private final String tmpBeaconPathDefault = "!/beacon-client-" + UUID.randomUUID().toString();
 
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -169,7 +166,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			this.reservedUniqueName = UUID.randomUUID().toString();
 		// solo ssl
 		if (!Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())) {
-			if (homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
+			if (this.aliasBeaconClientInKeystore != null && !this.aliasBeaconClientInKeystore.isEmpty() && homunculus
+					.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
 				logger.info(homunculus.getAgentUniqueName() + " Certificate with alias '"
 						+ this.aliasBeaconClientInKeystore + "' for Beacon client is present in keystore");
 			} else {
@@ -184,6 +182,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			startConnection(this.hostTarget, this.port, true);
 		}
 		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
+		logger.info("starting beacon client monitoring every " + getPollingFreq() + " milliseconds");
 		runInstance();
 	}
 
@@ -709,7 +708,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 	}
 
-	private void checkProcedure() {
+	private synchronized void checkProcedure() {
 		if (status != StatusBeaconClient.KILLED) {
 			// se non c'è connessione e port (server) è attivo
 			if (channel == null && port != 0 && hostTarget != null && !hostTarget.isEmpty()) {
@@ -875,38 +874,13 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 	}
 
-	private void generateCaFile() {
-		try (final FileWriter writer = new FileWriter(new File(certChainFile));) {
-			for (final String cert : certChainAuthority.split(",")) {
-				writer.write("-----BEGIN CERTIFICATE-----\n");
-				writer.write(cert);
-				writer.write("\n-----END CERTIFICATE-----\n");
-			}
-		} catch (final IOException e) {
-			logger.logException(homunculus.getAgentUniqueName(), e);
-		}
-	}
-
-	private void generateCertFile(String aliasBeaconClient) {
-		try (final FileWriter writer = new FileWriter(new File(certFile))) {
-			final String pemTxt = homunculus.getMyIdentityKeystore().getCaPem(aliasBeaconClient);
-			logger.info(homunculus.getAgentUniqueName() + " SubjectDN\n" + homunculus.getMyIdentityKeystore()
-					.getClientCertificate(aliasBeaconClient).getSubjectDN().getName());
-			writer.write("-----BEGIN CERTIFICATE-----\n");
-			writer.write(pemTxt);
-			writer.write("\n-----END CERTIFICATE-----\n");
-		} catch (final IOException e) {
-			logger.logException(homunculus.getAgentUniqueName(), e);
-		}
-	}
-
 	private void generateFilesCert() {
-		generateCaFile();
+		KeystoreLoader.writePemCa(certChainFile, certChainAuthority);
 		if (homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)) {
-			generateCertFile(this.aliasBeaconClientInKeystore);
+			KeystoreLoader.writePemCert(this.aliasBeaconClientInKeystore, homunculus, certFile);
 			KeystoreLoader.writePrivateKey(aliasBeaconClientInKeystore, homunculus, privateFile);
 		} else {
-			generateCertFile(homunculus.getMyAliasCertInKeystore());
+			KeystoreLoader.writePemCert(homunculus.getMyAliasCertInKeystore(), homunculus, certFile);
 			KeystoreLoader.writePrivateKey(homunculus.getMyAliasCertInKeystore(), homunculus, privateFile);
 		}
 	}
@@ -971,8 +945,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	private StatusValue makeRealConnection(StatusValue result, final RegisterReply reply) {
 		try {
-			if (TRACE)
-				logger.info(homunculus.getAgentUniqueName() + " received signed cert and ca chain");
+			logger.info(homunculus.getAgentUniqueName() + " received signed cert and ca chain");
 			homunculus.getMyIdentityKeystore().setClientKeyPair(
 					homunculus.getMyIdentityKeystore().getPrivateKeyBase64(homunculus.getMyAliasCertInKeystore()),
 					reply.getCert(), this.aliasBeaconClientInKeystore);
@@ -1025,7 +998,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			logger.info(homunculus.getAgentUniqueName() + " try registration, channel status "
 					+ (channel != null ? channel.getState(true) : "null channel"));
 			final RegisterReply reply = blockingStub.register(request);
+
 			result = reply.getStatusRegistration().getStatus();
+			logger.info("registration reply [" + result + "] -> " + reply);
 			status = StatusBeaconClient.CONNECTED;
 			// se funziona
 			if (result.equals(StatusValue.GOOD) && (reply.getCert() == null || reply.getCert().isEmpty())) {
@@ -1035,10 +1010,14 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 				status = StatusBeaconClient.REGISTERED;
 			}
 			// se nuovo certificato
-			if (result.equals(StatusValue.GOOD)
-					&& !homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
-					&& reply.getCert() != null && !reply.getCert().isEmpty()) {
-				result = makeRealConnection(result, reply);
+			if (result.equals(StatusValue.GOOD)) {
+				if (this.aliasBeaconClientInKeystore == null || this.aliasBeaconClientInKeystore.isEmpty()) {
+					this.aliasBeaconClientInKeystore = "new_cert_" + UUID.randomUUID().toString().replace("-", "");
+				}
+				if (!homunculus.getMyIdentityKeystore().listCertificate().contains(this.aliasBeaconClientInKeystore)
+						&& reply.getCert() != null && !reply.getCert().isEmpty()) {
+					result = makeRealConnection(result, reply);
+				}
 			}
 		} catch (final Exception e) {
 			status = StatusBeaconClient.IDLE;
@@ -1096,8 +1075,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			try {
 				generateFilesCert();
 				final SslContextBuilder sslBuilder = GrpcSslContexts.forClient()
-						.keyManager(new File(certFile), new File(privateFile))
-						.trustManager(new File(this.certChainFile));
+						.keyManager(new File(ConfigHelper.resolveWorkingString(certFile, true)),
+								new File(ConfigHelper.resolveWorkingString(privateFile, true)))
+						.trustManager(new File(ConfigHelper.resolveWorkingString(this.certChainFile, true)));
 				runConnection(NettyChannelBuilder.forAddress(host, port)
 						.sslContext(GrpcSslContexts.configure(sslBuilder, SslProvider.OPENSSL).build()), register);
 			} catch (final Exception e) {

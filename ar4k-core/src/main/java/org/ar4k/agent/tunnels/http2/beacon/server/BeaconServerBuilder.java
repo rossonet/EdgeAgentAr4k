@@ -19,6 +19,8 @@ public class BeaconServerBuilder {
 	private String filterActiveCommand = null;
 	private String filterBlackListCertRegister = null;
 
+	private String aliasBeaconServerSignMaster = null;
+
 	public Homunculus getHomunculus() {
 		return homunculus;
 	}
@@ -138,8 +140,17 @@ public class BeaconServerBuilder {
 
 	public BeaconServer build() throws UnrecoverableKeyException {
 		return new BeaconServer(homunculus, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
-				certChainFile, certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem,
-				filterActiveCommand, filterBlackListCertRegister);
+				certChainFile, certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem, filterActiveCommand,
+				filterBlackListCertRegister, aliasBeaconServerSignMaster);
+	}
+
+	public String getAliasBeaconServerSignMaster() {
+		return aliasBeaconServerSignMaster;
+	}
+
+	public BeaconServerBuilder setAliasBeaconServerSignMaster(String aliasBeaconServerSignMaster) {
+		this.aliasBeaconServerSignMaster = aliasBeaconServerSignMaster;
+		return this;
 	}
 
 }

@@ -309,6 +309,9 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			final org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterReply.Builder replyBuilder = RegisterReply
 					.newBuilder();
 			RegisterReply reply = null;
+			BeaconServer.logger.info("registration request -> " + request);
+			BeaconServer.logger.info("registration SSL channel -> "
+					+ !Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText()));
 			if (!Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText())
 					&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {
 				if (this.beaconServer.acceptAllCerts || isCsrApproved(request.getRequestCsr())) {
@@ -459,9 +462,9 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 		final byte[] data = Base64.getDecoder().decode(requestCsr);
 		final PKCS10CertificationRequest csrDecoded = new PKCS10CertificationRequest(data);
 		if (!checkRegexOnX509(csrDecoded.getSubject())) {
-			BeaconServer.logger.debug("SIGN CSR " + csrDecoded.getSubject());
+			BeaconServer.logger.warn("SIGN CSR " + csrDecoded.getSubject());
 			return this.beaconServer.getHomunculus().getMyIdentityKeystore().signCertificateBase64(csrDecoded,
-					requestAlias, BeaconServer.SIGN_TIME, this.beaconServer.getHomunculus().getMyAliasCertInKeystore());
+					requestAlias, BeaconServer.SIGN_TIME, this.beaconServer.getAliasBeaconServerSignMaster());
 		} else
 			BeaconServer.logger.warn("\nNOT SIGN CERT\n" + csrDecoded.getSubject()
 					+ "\nbeacause it matches the blacklist [" + this.beaconServer.filterBlackListCertRegister + "]");
