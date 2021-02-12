@@ -7,6 +7,7 @@ dependencies {
 	compile project(':ar4k-terminal')
 	compile project(':ar4k-hazelcast')
 	compile project(':ar4k-activemq')
+	compile project(':ar4k-jolokia')
 	compile project(':ar4k-pcap')
 	compile project(':ar4k-ai') //compreso in ai-nlp
 	compile project(':ar4k-ai-nlp') 
