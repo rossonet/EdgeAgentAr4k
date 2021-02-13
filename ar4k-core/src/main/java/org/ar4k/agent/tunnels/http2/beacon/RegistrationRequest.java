@@ -44,7 +44,7 @@ public class RegistrationRequest {
 
 	public RegisterRequest getRegisterRequest() {
 		return RegisterRequest.newBuilder().setDisplayKey(consoleKey).setJsonHealth(jsonHealth).setName(name)
-				.setRequestCsr(requestCsr).setTime(time).build();
+				.setRequestCsr(requestCsr).setTime(time).setShortDescription(shortDescription).build();
 	}
 
 }

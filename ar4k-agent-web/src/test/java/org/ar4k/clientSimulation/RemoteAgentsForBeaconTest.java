@@ -101,7 +101,7 @@ public class RemoteAgentsForBeaconTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void clientsForBeaconTests() throws Exception {
 		allNodeSimulatedWithTunnel(true);
 	}
@@ -216,7 +216,7 @@ public class RemoteAgentsForBeaconTest {
 		for (final Homunculus a : testAnimas.values()) {
 			Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 		}
-		Thread.sleep(400000);
+		Thread.sleep(1 * 60 * 60 * 1000);
 	}
 
 }

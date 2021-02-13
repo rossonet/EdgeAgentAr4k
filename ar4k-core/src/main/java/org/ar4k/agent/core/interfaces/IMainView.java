@@ -14,4 +14,6 @@ public interface IMainView {
 
 	Collection<IBeaconProvisioningAuthorization> getProvisioningAuthorizationList(String value);
 
+	void approveProvisioningRequest(IBeaconProvisioningAuthorization beaconProvisioning);
+
 }

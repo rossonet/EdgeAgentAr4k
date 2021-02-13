@@ -37,6 +37,8 @@ import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconDataAddress;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ApproveAgentRequestRequest;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.ApproveAgentRequestRequest.Builder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandRequest;
@@ -63,6 +65,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Timestamp;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelServiceV1Grpc;
@@ -468,6 +471,17 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		final ListAgentsRequestReply replyToDo = blockingStub.listAgentsRequestToDo(empty);
 		List<AgentRequest> requestsList = replyToDo.getRequestsList();
 		return requestsList;
+	}
+
+	@Override
+	public Status approveRemoteAgent(String requestId, String cert, String note) {
+		Builder requestMessage = ApproveAgentRequestRequest.newBuilder().setIdRequest(requestId);
+		if (cert != null && !cert.equals("AUTO"))
+			requestMessage.setCert(cert);
+		if (note != null)
+			requestMessage.setNote(note);
+		final Status statusRequest = blockingStub.approveAgentRequest(requestMessage.build());
+		return statusRequest;
 	}
 
 	// TODO Implementare discovery peer2peer (viene richiesto in brodcast ai nodi
@@ -1017,7 +1031,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 			final long timeRequest = new Date().getTime();
 			final org.ar4k.agent.tunnels.http2.grpc.beacon.RegisterRequest.Builder requestBuilder = RegisterRequest
 					.newBuilder().setJsonHealth(gson.toJson(HardwareHelper.getSystemInfo())).setDisplayKey(displayKey)
-					.setName(uniqueName).setTime(Timestamp.newBuilder().setSeconds(timeRequest));
+					.setShortDescription("request of " + uniqueName).setName(uniqueName)
+					.setTime(Timestamp.newBuilder().setSeconds(timeRequest));
 			if (csr != null && !csr.isEmpty()) {
 				requestBuilder.setRequestCsr(csr);
 				logger.debug(homunculus.getAgentUniqueName() + " SENDING CSR: " + csr);

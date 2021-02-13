@@ -314,13 +314,14 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 					+ !Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText()));
 			if (!Boolean.valueOf(this.beaconServer.getHomunculus().getStarterProperties().getBeaconClearText())
 					&& request.getRequestCsr() != null && !request.getRequestCsr().isEmpty()) {
-				if (this.beaconServer.acceptAllCerts || isCsrApproved(request.getRequestCsr())) {
+				if (this.beaconServer.acceptAllCerts || isCsrApproved(request.getRequestCsr())
+						|| isMyClient(request.getRequestCsr())) {
 					reply = replyBuilder.setStatusRegistration(Status.newBuilder().setStatus(StatusValue.GOOD))
 							.setRegisterCode(uniqueClientNameForBeacon)
 							.setMonitoringFrequency(this.beaconServer.defaultPollTime)
 							.setCert(getFirmedCert(request.getRequestCsr())).setCa(this.beaconServer.caChainPem)
 							.build();
-					this.beaconServer.agents.add(new BeaconAgent(request, reply));
+					registerApprovedProvisioningRequest(request, reply);
 				} else {
 					final RegistrationRequest newRequest = new RegistrationRequest(request);
 					addNewCsrToAgentRequest(newRequest);
@@ -340,6 +341,11 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 		} catch (final Exception a) {
 			BeaconServer.logger.logException(a);
 		}
+	}
+
+	private boolean isMyClient(String csr) {
+		return beaconServer.getHomunculus().getBeaconClient() != null
+				&& csr.equals(beaconServer.getHomunculus().getBeaconClient().getCsrRequest());
 	}
 
 	@Override
@@ -396,6 +402,13 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	}
 
 	private void addNewCsrToAgentRequest(RegistrationRequest newRequest) {
+		boolean isPresent = isPresentRequestInList(newRequest);
+		if (!isPresent) {
+			this.beaconServer.listAgentRequest.add(newRequest);
+		}
+	}
+
+	private boolean isPresentRequestInList(RegistrationRequest newRequest) {
 		boolean isPresent = false;
 		for (RegistrationRequest registeredRequest : this.beaconServer.listAgentRequest) {
 			if (registeredRequest.requestCsr.equals(newRequest.getRegisterRequest().getRequestCsr())) {
@@ -403,9 +416,18 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 				break;
 			}
 		}
-		if (!isPresent) {
-			this.beaconServer.listAgentRequest.add(newRequest);
+		return isPresent;
+	}
+
+	private void registerApprovedProvisioningRequest(RegisterRequest request, RegisterReply reply) {
+		final RegistrationRequest newRequest = new RegistrationRequest(request);
+		for (RegistrationRequest registeredRequest : this.beaconServer.listAgentRequest) {
+			if (registeredRequest.requestCsr.equals(newRequest.getRegisterRequest().getRequestCsr())) {
+				registeredRequest.completed = Timestamp.newBuilder().setSeconds(new Date().getTime()).build();
+				break;
+			}
 		}
+		this.beaconServer.agents.add(new BeaconAgent(request, reply));
 	}
 
 	private boolean checkRegexOnX509(X500Name subject) {

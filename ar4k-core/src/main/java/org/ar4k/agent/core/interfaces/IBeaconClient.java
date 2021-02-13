@@ -17,6 +17,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListStringReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 
 import io.grpc.ConnectivityState;
@@ -104,5 +105,7 @@ public interface IBeaconClient {
 	void shutdown() throws InterruptedException;
 
 	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
+
+	Status approveRemoteAgent(String requestId, String cert, String note);
 
 }

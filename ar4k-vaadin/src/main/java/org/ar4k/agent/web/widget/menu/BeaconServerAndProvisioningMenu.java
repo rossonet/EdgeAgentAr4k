@@ -1,9 +1,11 @@
 package org.ar4k.agent.web.widget.menu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.ar4k.agent.console.BeaconServerForm;
+import org.ar4k.agent.console.ProvisioningServerForm;
 import org.ar4k.agent.core.interfaces.AgentWebMenu;
 import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
@@ -20,7 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 @AgentWebMenu
-public class BeaconServerMenu implements AgentMenu {
+public class BeaconServerAndProvisioningMenu implements AgentMenu {
 
 	private IMainView mainView = null;
 
@@ -31,12 +33,16 @@ public class BeaconServerMenu implements AgentMenu {
 			IBeaconProvisioningAuthorization.class);
 	private BeaconServerForm beaconServerForm = null;
 
+	private ProvisioningServerForm provisioningServerForm = null;
+
 	@Override
 	public void setMainView(IMainView mainView) {
 		this.mainView = mainView;
 		configureFilterServers();
 		this.beaconServerForm = new BeaconServerForm(this);
+		this.provisioningServerForm = new ProvisioningServerForm(this);
 		gridServer.getColumns().forEach(col -> col.setAutoWidth(true));
+		gridProvisioningRequest.getColumns().forEach(col -> col.setAutoWidth(true));
 	}
 
 	// sempre attivo il client web può collegarsi ovunque
@@ -59,6 +65,7 @@ public class BeaconServerMenu implements AgentMenu {
 	private void listBeaconServers() {
 		mainView.hide();
 		gridProvisioningRequest.setVisible(false);
+		provisioningServerForm.setVisible(false);
 		gridServer.setVisible(true);
 		configureFilterServers();
 		serverFilterText.setVisible(true);
@@ -69,6 +76,7 @@ public class BeaconServerMenu implements AgentMenu {
 		mainView.hide();
 		gridServer.setVisible(false);
 		gridProvisioningRequest.setVisible(true);
+		beaconServerForm.setVisible(false);
 		configureFilterProvisioningAuthorization();
 		serverFilterText.setVisible(true);
 		updateListProvisioningAuthorization();
@@ -79,9 +87,11 @@ public class BeaconServerMenu implements AgentMenu {
 		final BeaconClientWrapper beaconClientWrapper = new BeaconClientWrapper();
 		mainView.addClientServer(beaconClientWrapper);
 		beaconServerForm.addBeaconConnection(beaconClientWrapper);
+		provisioningServerForm.setVisible(false);
 		mainView.hide();
 		gridProvisioningRequest.setVisible(false);
 		gridServer.setVisible(true);
+		configureFilterServers();
 		serverFilterText.setVisible(true);
 		beaconServerForm.setVisible(true);
 		beaconServerForm.addClassName("new");
@@ -102,11 +112,22 @@ public class BeaconServerMenu implements AgentMenu {
 	}
 
 	public void updateListBeaconServer() {
+		provisioningServerForm.setVisible(false);
+		configureFilterServers();
 		gridServer.setItems(mainView.getBeaconServersList(serverFilterText.getValue()));
 	}
 
 	public void updateListProvisioningAuthorization() {
-		gridProvisioningRequest.setItems(mainView.getProvisioningAuthorizationList(serverFilterText.getValue()));
+		beaconServerForm.setVisible(false);
+		configureFilterProvisioningAuthorization();
+		final Collection<IBeaconProvisioningAuthorization> provisioningAuthorizationList = mainView
+				.getProvisioningAuthorizationList(serverFilterText.getValue());
+		StringBuilder sb = new StringBuilder();
+		for (IBeaconProvisioningAuthorization i : provisioningAuthorizationList) {
+			sb.append(i.getIdRequest() + " = " + i.getApprovedDataString());
+		}
+		System.out.println("****** list -> " + sb.toString());
+		gridProvisioningRequest.setItems(provisioningAuthorizationList);
 	}
 
 	private void configureGridServer() {
@@ -116,24 +137,31 @@ public class BeaconServerMenu implements AgentMenu {
 	}
 
 	private void configureProvisioningAuthoritation() {
-		gridProvisioningRequest.setColumns("idRequest", "name", "displayKey", "shortDescription",
-				"registrationTimeRequest");
-		gridServer.asSingleSelect().addValueChangeListener(event -> editProvisioningWrapper(event.getValue()));
+		gridProvisioningRequest.setColumns("idRequest", "approved", "name", "displayKey", "shortDescription",
+				"registrationTimeRequestString");
+		gridProvisioningRequest.asSingleSelect()
+				.addValueChangeListener(event -> editProvisioningWrapper(event.getValue()));
 	}
 
-	private void editProvisioningWrapper(IBeaconClientScadaWrapper value) {
-		// TODO Auto-generated method stub
+	private void editProvisioningWrapper(IBeaconProvisioningAuthorization provisioningRecord) {
+		configureFilterProvisioningAuthorization();
+		provisioningServerForm.editBeaconProvisioning(provisioningRecord);
+		provisioningServerForm.setVisible(true);
+		beaconServerForm.setVisible(false);
+		provisioningServerForm.addClassName("editing");
 	}
 
 	public void editBeaconServerWrapper(IBeaconClientScadaWrapper beaconClientWrapper) {
+		configureFilterServers();
 		beaconServerForm.editBeaconConnection(beaconClientWrapper);
 		beaconServerForm.setVisible(true);
+		provisioningServerForm.setVisible(false);
 		beaconServerForm.addClassName("editing");
 	}
 
 	@Override
 	public void setVisibleTrue() {
-		gridServer.setVisible(true);
+		// inutilizzato
 	}
 
 	@Override
@@ -141,7 +169,9 @@ public class BeaconServerMenu implements AgentMenu {
 		List<Component> l = new ArrayList<>();
 		l.add(serverFilterText);
 		l.add(gridServer);
+		l.add(gridProvisioningRequest);
 		l.add(beaconServerForm);
+		l.add(provisioningServerForm);
 		return l;
 	}
 
@@ -162,6 +192,10 @@ public class BeaconServerMenu implements AgentMenu {
 	@Override
 	public Integer getMenuOrderNumber() {
 		return 2000;
+	}
+
+	public void approveBeaconClient(IBeaconProvisioningAuthorization beaconProvisioning) {
+		mainView.approveProvisioningRequest(beaconProvisioning);
 	}
 
 }

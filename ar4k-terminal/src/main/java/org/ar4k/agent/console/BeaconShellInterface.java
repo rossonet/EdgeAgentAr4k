@@ -202,11 +202,20 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		return resolveBeaconClient().listAgentsConnectedToBeacon();
 	}
 
-	@ShellMethod(value = "List provisioning requests opened on Beacon server", group = "Beacon Client Commands")
+	@ShellMethod(value = "List provisioning requests opened on Beacon server", group = "Beacon Client Provisioning Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconClientRunning")
 	public List<AgentRequest> listProvisioningRequests() {
 		return resolveBeaconClient().listProvisioningRequests();
+	}
+
+	@ShellMethod(value = "Approve provisioning request", group = "Beacon Client Provisioning Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testBeaconClientRunning")
+	public String approveProvisioningRequest(@ShellOption(help = "the unique ID of the request") String requestId,
+			@ShellOption(help = "signed cert for approvation. Should be managed by the server with 'AUTO' as value", defaultValue = "AUTO") String cert,
+			@ShellOption(help = "note related", defaultValue = "approved") String note) {
+		return resolveBeaconClient().approveRemoteAgent(requestId, cert, note).toString();
 	}
 
 	@ShellMethod(value = "List Agents connected to the Beacon server with health in JSON", group = "Beacon Client Commands")

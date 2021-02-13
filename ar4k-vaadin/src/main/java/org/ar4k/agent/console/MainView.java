@@ -238,4 +238,9 @@ public class MainView extends VerticalLayout implements IMainView {
 		return mainBeaconService.getProvisioningAuthorizationList(value);
 	}
 
+	@Override
+	public void approveProvisioningRequest(IBeaconProvisioningAuthorization beaconProvisioning) {
+		mainBeaconService.approveRequestProvisioning(beaconProvisioning);
+	}
+
 }

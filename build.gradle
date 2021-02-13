@@ -1,5 +1,5 @@
 group = 'net.rossonet'
-version = '0.9.5'
+version = '0.9.7'
 
 ext {
 	sourceCompatibility = 1.8
@@ -384,6 +384,7 @@ task ar4kBootJarWeb {
 task webDevelopProcess {
         group "Vaadin"
         description 'Run Vaadin with auto reload'
+        //webDevelopProcess.dependsOn(":ar4k-agent-web:clean")
         webDevelopProcess.dependsOn(":ar4k-agent-web:vaadinBuildFrontend")
         webDevelopProcess.dependsOn(":ar4k-agent-web:bootRun")
 }

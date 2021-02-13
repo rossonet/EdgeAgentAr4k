@@ -17,6 +17,7 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,8 +105,7 @@ public class MainBeaconService implements AutoCloseable {
 			for (final IBeaconClientScadaWrapper c : beaconServers) {
 				final List<AgentRequest> listProvisioningRequests = c.getBeaconClient().listProvisioningRequests();
 				logger.trace("listProvisioningRequests -> " + listProvisioningRequests);
-				if (c.getBeaconClient() != null && listProvisioningRequests != null
-						&& !listProvisioningRequests.isEmpty())
+				if (listProvisioningRequests != null && !listProvisioningRequests.isEmpty())
 					for (final AgentRequest a : listProvisioningRequests) {
 						if (provisioningRequests.keySet().isEmpty()
 								|| !provisioningRequests.keySet().contains(a.getIdRequest())) {
@@ -172,6 +172,14 @@ public class MainBeaconService implements AutoCloseable {
 				}
 			}
 			return data;
+		}
+	}
+
+	public void approveRequestProvisioning(IBeaconProvisioningAuthorization beaconProvisioning) {
+		for (final IBeaconClientScadaWrapper c : beaconServers) {
+			final Status status = c.getBeaconClient().approveRemoteAgent(beaconProvisioning.getIdRequest(), "AUTO",
+					null);
+			logger.info("status provisioning request on " + c + " -> " + status);
 		}
 	}
 
