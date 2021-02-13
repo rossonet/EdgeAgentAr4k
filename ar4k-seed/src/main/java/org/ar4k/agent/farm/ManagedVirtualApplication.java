@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.json.JSONObject;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -18,10 +16,6 @@ public interface ManagedVirtualApplication {
 
 	public enum SystemStatus {
 		DESIDERATA, DEPLOY, RUNNING, STOP, REMOVED
-	}
-
-	public enum Provider {
-		DOCKER, KUBERNETES, OPENSHIFT, LOCAL_ACCOUNT, SSH_ACCOUNT
 	}
 
 	public static List<String> getSupportedRecipes(String packageBaseSearch) {
@@ -42,10 +36,6 @@ public interface ManagedVirtualApplication {
 
 	public Map<String, ManagedArchives> getArchives();
 
-	public List<Provider> getSupportedProviders();
-
-	public Map<String, ManagedNetworkInterface> getNetworks();
-
 	public SystemStatus getStatus();
 
 	public SystemStatus start();
@@ -59,7 +49,5 @@ public interface ManagedVirtualApplication {
 	public String getLog();
 
 	public Path getLogPath();
-
-	public String execOnContainer(@Nullable String targetReference, String command, long timeout);
 
 }

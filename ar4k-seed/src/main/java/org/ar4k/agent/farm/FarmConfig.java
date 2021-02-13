@@ -11,9 +11,6 @@ public abstract class FarmConfig extends AbstractServiceConfig {
 	@Parameter(names = "--farmName", description = "the farm unique name")
 	private String farmName;
 
-	@Parameter(names = "--farmType", description = "class name for the farm operator")
-	private String farmType;
-
 	@Override
 	public String getUniqueId() {
 		return farmName;
@@ -21,7 +18,7 @@ public abstract class FarmConfig extends AbstractServiceConfig {
 
 	@Override
 	public int getPriority() {
-		return 80;
+		return 180;
 	}
 
 	@Override
@@ -31,7 +28,7 @@ public abstract class FarmConfig extends AbstractServiceConfig {
 
 	@Override
 	public String toString() {
-		return "FarmConfig [farmName=" + farmName + ", farmType=" + farmType + "]";
+		return "FarmConfig [farmName=" + farmName + "]";
 	}
 
 }

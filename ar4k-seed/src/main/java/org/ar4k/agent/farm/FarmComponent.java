@@ -24,17 +24,11 @@ public abstract class FarmComponent implements EdgeComponent {
 
 	public abstract ConnectionState getConnectionState();
 
-	public abstract List<ManagedVirtualSystem> getManagedSystems();
-
-	public abstract List<ManagedNetworkInterface> getManagedNetworks();
-
 	public abstract List<ManagedArchives> getManagedArchives();
 
 	public abstract List<ManagedHost> getManagedHosts();
 
 	public abstract void pruneSystem();
-
-	public abstract SystemStatus getSystemStatus();
 
 	public FarmComponent(FarmConfig farmConfig) {
 		homunculus = farmConfig.homunculus;

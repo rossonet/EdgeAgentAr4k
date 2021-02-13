@@ -1,9 +1,9 @@
 package org.ar4k.agent.farm.recipes.centos;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualSystem;
-import org.ar4k.agent.farm.recipes.AbstractVirtualSystem;
+import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
+import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
 
-@EdgeContainerizedVirtualSystem
-public class CentOsSystem extends AbstractVirtualSystem {
+@EdgeContainerizedVirtualApplication
+public class CentOsSystem extends AbstractVirtualApplication {
 
 }

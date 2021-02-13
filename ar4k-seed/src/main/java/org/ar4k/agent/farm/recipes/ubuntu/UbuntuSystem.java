@@ -1,9 +1,9 @@
 package org.ar4k.agent.farm.recipes.ubuntu;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualSystem;
-import org.ar4k.agent.farm.recipes.AbstractVirtualSystem;
+import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
+import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
 
-@EdgeContainerizedVirtualSystem
-public class UbuntuSystem extends AbstractVirtualSystem {
+@EdgeContainerizedVirtualApplication
+public class UbuntuSystem extends AbstractVirtualApplication {
 
 }
