@@ -332,6 +332,7 @@ enum DataType {
 service TunnelServiceV1 {
   rpc openNetworkChannel(stream TunnelMessage) returns (stream TunnelMessage) {}
   rpc RequestTunnel(RequestTunnelMessage) returns (ResponseNetworkChannel) {}
+  rpc ProxyHttpRequest(AgentProxyRequest) returns (AgentProxyReply) {} 
 }
 
 enum MessageType {
@@ -395,6 +396,34 @@ message RequestTunnelMessage {
   bool socketReuseAddress = 12;
   int32 socketTrafficClass = 13;
   int32 socketQos = 14;
+}
+
+message AgentProxyRequest {
+  int64 idProxyRequest = 1;
+  Agent agentSource = 2;
+  Agent agentDestination = 3;
+  string destIp = 4;
+  int32 destPort = 5;
+  string header = 6;
+  string payload = 7;
+  int32 socketSoTimeout = 8;
+  bool socketTcpNoDelay = 9;
+  bool socketKeepAlive = 10;
+  int32 socketReceiveBufferSize = 11;
+  bool socketReuseAddress = 12;
+  int32 socketTrafficClass = 13;
+  int32 socketQos = 14;
+}
+
+message AgentProxyReply {
+  int64 idProxyRequest = 1;
+  Agent agentSource = 2;
+  Agent agentDestination = 3;
+  string srcIp = 4;
+  int32 srcPort = 5;
+  string header = 6;
+  string payload = 7;
+  Status status = 8;
 }
 
 enum TunnelType {

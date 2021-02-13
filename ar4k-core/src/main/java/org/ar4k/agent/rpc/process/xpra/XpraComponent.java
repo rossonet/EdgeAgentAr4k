@@ -12,6 +12,7 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.json.JSONObject;
 
+//TODO portare in seed
 public class XpraComponent implements EdgeComponent {
 	public enum ConnectionState {
 		CONNECTED, DISCONNECTED, UNKNOW

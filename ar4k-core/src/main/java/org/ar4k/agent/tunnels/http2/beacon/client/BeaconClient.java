@@ -127,7 +127,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
 	private String discoveryFilter = "AR4K";
 	private DatagramSocket socketDiscovery = null;
-	private final int pollingFrequency = 1500;
+	// TODO implementare check aggiuntivi in fase di interrogazione con frequenze a
+	// numeri primi rispetto alla frequenza base
+	private final int pollingFrequencyRegular = 1500;
 
 	private String aliasBeaconClientInKeystore = "beacon-client";
 	private String hostTarget = null;
@@ -367,7 +369,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	@Override
 	public int getPollingFrequency() {
-		return pollingFrequency;
+		return pollingFrequencyRegular;
 	}
 
 	@Override
@@ -727,11 +729,11 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	public String toString() {
 		return "BeaconClient [tmpBeaconPathDefault=" + tmpBeaconPathDefault + ", status=" + status + ", registerStatus="
 				+ registerStatus + ", reservedUniqueName=" + reservedUniqueName + ", me=" + me + ", discoveryPort="
-				+ discoveryPort + ", discoveryFilter=" + discoveryFilter + ", pollingFrequency=" + pollingFrequency
-				+ ", aliasBeaconClientInKeystore=" + aliasBeaconClientInKeystore + ", hostTarget=" + hostTarget
-				+ ", port=" + port + ", certChainFile=" + certChainFile + ", privateFile=" + privateFile + ", certFile="
-				+ certFile + ", tunnels=" + tunnels + ", certChainAuthority=" + certChainAuthority + ", csrRequest="
-				+ csrRequest + "]";
+				+ discoveryPort + ", discoveryFilter=" + discoveryFilter + ", pollingFrequencyRegular="
+				+ pollingFrequencyRegular + ", aliasBeaconClientInKeystore=" + aliasBeaconClientInKeystore
+				+ ", hostTarget=" + hostTarget + ", port=" + port + ", certChainFile=" + certChainFile
+				+ ", privateFile=" + privateFile + ", certFile=" + certFile + ", tunnels=" + tunnels
+				+ ", certChainAuthority=" + certChainAuthority + ", csrRequest=" + csrRequest + "]";
 	}
 
 	private synchronized void actionRegister() {

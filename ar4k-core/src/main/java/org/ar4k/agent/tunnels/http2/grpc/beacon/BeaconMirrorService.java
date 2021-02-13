@@ -204,6 +204,16 @@ public final class BeaconMirrorService {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_beacon_RequestTunnelMessage_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_AgentProxyRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_AgentProxyRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_beacon_AgentProxyReply_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_beacon_AgentProxyReply_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -334,90 +344,106 @@ public final class BeaconMirrorService {
       "\017socketKeepAlive\030\n \001(\010\022\037\n\027socketReceiveB" +
       "ufferSize\030\013 \001(\005\022\032\n\022socketReuseAddress\030\014 " +
       "\001(\010\022\032\n\022socketTrafficClass\030\r \001(\005\022\021\n\tsocke" +
-      "tQos\030\016 \001(\005*;\n\013StatusValue\022\010\n\004GOOD\020\000\022\007\n\003B" +
-      "AD\020\001\022\t\n\005FAULT\020\002\022\016\n\nWAIT_HUMAN\020\003*l\n\020Homun" +
-      "culusStates\022\010\n\004INIT\020\000\022\014\n\010STAMINAL\020\001\022\016\n\nC" +
-      "ONFIGURED\020\002\022\013\n\007RUNNING\020\003\022\n\n\006KILLED\020\004\022\013\n\007" +
-      "FAULTED\020\005\022\n\n\006STASIS\020\006*\370\001\n\013CommandType\022\035\n" +
-      "\031ELABORATE_MESSAGE_COMMAND\020\000\022\021\n\rLIST_COM" +
-      "MANDS\020\001\022\024\n\020COMPLETE_COMMAND\020\002\022\024\n\020OPEN_PR" +
-      "OXY_SOCKS\020\003\022\017\n\013EXPOSE_PORT\020\004\022\016\n\nCLOSE_PO" +
-      "RT\020\005\022\030\n\024CONNECT_DATA_CHANNEL\020\006\022\025\n\021SET_CO" +
-      "NFIGURATION\020\007\022\025\n\021GET_CONFIGURATION\020\010\022\020\n\014" +
-      "GET_PROVIDES\020\t\022\020\n\014GET_REQUIRED\020\n*\202\001\n\013Log" +
-      "Severity\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n\004INFO" +
-      "\020\310\001\022\013\n\006NOTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005ERROR\020" +
-      "\364\003\022\r\n\010CRITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEMERGEN" +
-      "CY\020\240\006*\266\001\n\010DataType\022\n\n\006STRING\020\000\022\010\n\004CHAR\020\001" +
-      "\022\t\n\005BYTES\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005FLO" +
-      "AT\020\005\022\n\n\006DOUBLE\020\006\022\013\n\007BOOLEAN\020\007\022\r\n\tTIMESTA" +
-      "MP\020\010\022\n\n\006OBJECT\020\t\022\013\n\007UNKNOWN\020\n\022\014\n\010JSONDAT" +
-      "A\020\013\022\016\n\nBASE64DATA\020\014\022\t\n\005MEDIA\020\r*/\n\013Messag" +
-      "eType\022\017\n\013FROM_CLIENT\020\000\022\017\n\013FROM_SERVER\020\001*" +
-      "\227\003\n\rMessageStatus\022\021\n\rchannelActive\020\000\022\023\n\017" +
-      "channelInactive\020\001\022\027\n\023channelReadComplete" +
-      "\020\002\022\025\n\021channelRegistered\020\003\022\027\n\023channelUnre" +
-      "gistered\020\004\022\035\n\031channelWritabilityChanged\020" +
-      "\005\022\023\n\017exceptionCaught\020\006\022\026\n\022userEventTrigg" +
-      "ered\020\007\022\027\n\023channelTransmission\020\010\022\030\n\024beaco" +
-      "nChannelRequest\020\t\022\024\n\020beaconMessageAck\020\n\022" +
-      "!\n\035channelTransmissionCompressed\020\013\022\026\n\022cl" +
-      "oseRequestServer\020\014\022\026\n\022closeRequestClient" +
-      "\020\r\022\030\n\024beaconMessageControl\020\016\022\023\n\017beaconLo" +
-      "calPing\020\017*~\n\nTunnelType\022\027\n\023SERVER_TO_BYT" +
-      "ES_TCP\020\000\022\027\n\023BYTES_TO_CLIENT_TCP\020\001\022\027\n\023SER" +
-      "VER_TO_BYTES_UDP\020\002\022\027\n\023BYTES_TO_CLIENT_UD" +
-      "P\020\003\022\014\n\010SHUTDOWN\020\0042\241\n\n\014RpcServiceV1\022<\n\010Re" +
-      "gister\022\027.beacon.RegisterRequest\032\025.beacon" +
-      ".RegisterReply\"\000\0227\n\017PollingCmdQueue\022\r.be" +
-      "acon.Agent\032\023.beacon.FlowMessage\"\000\022>\n\024Sub" +
-      "scriptionCmdQueue\022\r.beacon.Agent\032\023.beaco" +
-      "n.FlowMessage\"\0000\001\0228\n\017SendChatMessage\022\023.b" +
-      "eacon.ChatMessage\032\016.beacon.Status\"\000\022A\n\020S" +
-      "endCommandReply\022\033.beacon.CommandReplyReq" +
-      "uest\032\016.beacon.Status\"\000\0225\n\nSendHealth\022\025.b" +
-      "eacon.HealthRequest\032\016.beacon.Status\"\000\022/\n" +
-      "\007SendLog\022\022.beacon.LogRequest\032\016.beacon.St" +
-      "atus\"\000\022;\n\rSendException\022\030.beacon.Excepti" +
-      "onRequest\032\016.beacon.Status\"\000\022@\n\021SendConfi" +
-      "gRuntime\022\024.beacon.ConfigReport\032\023.beacon." +
-      "ConfigReply\"\000\0228\n\020GetConfigRuntime\022\r.beac" +
-      "on.Agent\032\023.beacon.ConfigReply\"\000\022>\n\022GetRu" +
-      "ntimeProvides\022\r.beacon.Agent\032\027.beacon.Li" +
-      "stStringReply\"\000\022>\n\022GetRuntimeRequired\022\r." +
-      "beacon.Agent\032\027.beacon.ListStringReply\"\000\022" +
-      "6\n\nListAgents\022\r.beacon.Empty\032\027.beacon.Li" +
-      "stAgentsReply\"\000\022L\n\031ListAgentsRequestComp" +
-      "lete\022\r.beacon.Empty\032\036.beacon.ListAgentsR" +
-      "equestReply\"\000\022H\n\025ListAgentsRequestToDo\022\r" +
-      ".beacon.Empty\032\036.beacon.ListAgentsRequest" +
-      "Reply\"\000\022K\n\023ApproveAgentRequest\022\".beacon." +
-      "ApproveAgentRequestRequest\032\016.beacon.Stat" +
-      "us\"\000\022,\n\tKickAgent\022\r.beacon.Agent\032\016.beaco" +
-      "n.Status\"\000\022T\n\020ElaborateMessage\022\037.beacon." +
-      "ElaborateMessageRequest\032\035.beacon.Elabora" +
-      "teMessageReply\"\000\022H\n\014ListCommands\022\033.beaco" +
-      "n.ListCommandsRequest\032\031.beacon.ListComma" +
-      "ndsReply\"\000\022Q\n\017CompleteCommand\022\036.beacon.C" +
-      "ompleteCommandRequest\032\034.beacon.CompleteC" +
-      "ommandReply\"\0002\230\003\n\rDataServiceV1\022<\n\007Polli" +
-      "ng\022\026.beacon.PollingRequest\032\027.beacon.Flow" +
-      "MessageData\"\000\022E\n\014Subscription\022\030.beacon.S" +
-      "ubscribeRequest\032\027.beacon.FlowMessageData" +
-      "\"\0000\001\0228\n\005Write\022\024.beacon.RequestWrite\032\027.be" +
-      "acon.FlowMessageData\"\000\022F\n\021WriteSubscript" +
-      "ion\022\024.beacon.RequestWrite\032\027.beacon.FlowM" +
-      "essageData\"\000(\001\022@\n\020SendAddressSpace\022\024.bea" +
-      "con.AddressSpace\032\024.beacon.AddressSpace\"\000" +
-      "\022>\n\025GetRemoteAddressSpace\022\r.beacon.Agent" +
-      "\032\024.beacon.AddressSpace\"\0002\254\001\n\017TunnelServi" +
-      "ceV1\022H\n\022openNetworkChannel\022\025.beacon.Tunn" +
-      "elMessage\032\025.beacon.TunnelMessage\"\000(\0010\001\022O" +
-      "\n\rRequestTunnel\022\034.beacon.RequestTunnelMe" +
-      "ssage\032\036.beacon.ResponseNetworkChannel\"\000B" +
-      "H\n(org.ar4k.agent.tunnels.http2.grpc.bea" +
-      "conB\023BeaconMirrorServiceP\001\242\002\004AR4Kb\006proto" +
-      "3"
+      "tQos\030\016 \001(\005\"\363\002\n\021AgentProxyRequest\022\026\n\016idPr" +
+      "oxyRequest\030\001 \001(\003\022\"\n\013agentSource\030\002 \001(\0132\r." +
+      "beacon.Agent\022\'\n\020agentDestination\030\003 \001(\0132\r" +
+      ".beacon.Agent\022\016\n\006destIp\030\004 \001(\t\022\020\n\010destPor" +
+      "t\030\005 \001(\005\022\016\n\006header\030\006 \001(\t\022\017\n\007payload\030\007 \001(\t" +
+      "\022\027\n\017socketSoTimeout\030\010 \001(\005\022\030\n\020socketTcpNo" +
+      "Delay\030\t \001(\010\022\027\n\017socketKeepAlive\030\n \001(\010\022\037\n\027" +
+      "socketReceiveBufferSize\030\013 \001(\005\022\032\n\022socketR" +
+      "euseAddress\030\014 \001(\010\022\032\n\022socketTrafficClass\030" +
+      "\r \001(\005\022\021\n\tsocketQos\030\016 \001(\005\"\327\001\n\017AgentProxyR" +
+      "eply\022\026\n\016idProxyRequest\030\001 \001(\003\022\"\n\013agentSou" +
+      "rce\030\002 \001(\0132\r.beacon.Agent\022\'\n\020agentDestina" +
+      "tion\030\003 \001(\0132\r.beacon.Agent\022\r\n\005srcIp\030\004 \001(\t" +
+      "\022\017\n\007srcPort\030\005 \001(\005\022\016\n\006header\030\006 \001(\t\022\017\n\007pay" +
+      "load\030\007 \001(\t\022\036\n\006status\030\010 \001(\0132\016.beacon.Stat" +
+      "us*;\n\013StatusValue\022\010\n\004GOOD\020\000\022\007\n\003BAD\020\001\022\t\n\005" +
+      "FAULT\020\002\022\016\n\nWAIT_HUMAN\020\003*l\n\020HomunculusSta" +
+      "tes\022\010\n\004INIT\020\000\022\014\n\010STAMINAL\020\001\022\016\n\nCONFIGURE" +
+      "D\020\002\022\013\n\007RUNNING\020\003\022\n\n\006KILLED\020\004\022\013\n\007FAULTED\020" +
+      "\005\022\n\n\006STASIS\020\006*\370\001\n\013CommandType\022\035\n\031ELABORA" +
+      "TE_MESSAGE_COMMAND\020\000\022\021\n\rLIST_COMMANDS\020\001\022" +
+      "\024\n\020COMPLETE_COMMAND\020\002\022\024\n\020OPEN_PROXY_SOCK" +
+      "S\020\003\022\017\n\013EXPOSE_PORT\020\004\022\016\n\nCLOSE_PORT\020\005\022\030\n\024" +
+      "CONNECT_DATA_CHANNEL\020\006\022\025\n\021SET_CONFIGURAT" +
+      "ION\020\007\022\025\n\021GET_CONFIGURATION\020\010\022\020\n\014GET_PROV" +
+      "IDES\020\t\022\020\n\014GET_REQUIRED\020\n*\202\001\n\013LogSeverity" +
+      "\022\013\n\007DEFAULT\020\000\022\t\n\005DEBUG\020d\022\t\n\004INFO\020\310\001\022\013\n\006N" +
+      "OTICE\020\254\002\022\014\n\007WARNING\020\220\003\022\n\n\005ERROR\020\364\003\022\r\n\010CR" +
+      "ITICAL\020\330\004\022\n\n\005ALERT\020\274\005\022\016\n\tEMERGENCY\020\240\006*\266\001" +
+      "\n\010DataType\022\n\n\006STRING\020\000\022\010\n\004CHAR\020\001\022\t\n\005BYTE" +
+      "S\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005FLOAT\020\005\022\n\n\006" +
+      "DOUBLE\020\006\022\013\n\007BOOLEAN\020\007\022\r\n\tTIMESTAMP\020\010\022\n\n\006" +
+      "OBJECT\020\t\022\013\n\007UNKNOWN\020\n\022\014\n\010JSONDATA\020\013\022\016\n\nB" +
+      "ASE64DATA\020\014\022\t\n\005MEDIA\020\r*/\n\013MessageType\022\017\n" +
+      "\013FROM_CLIENT\020\000\022\017\n\013FROM_SERVER\020\001*\227\003\n\rMess" +
+      "ageStatus\022\021\n\rchannelActive\020\000\022\023\n\017channelI" +
+      "nactive\020\001\022\027\n\023channelReadComplete\020\002\022\025\n\021ch" +
+      "annelRegistered\020\003\022\027\n\023channelUnregistered" +
+      "\020\004\022\035\n\031channelWritabilityChanged\020\005\022\023\n\017exc" +
+      "eptionCaught\020\006\022\026\n\022userEventTriggered\020\007\022\027" +
+      "\n\023channelTransmission\020\010\022\030\n\024beaconChannel" +
+      "Request\020\t\022\024\n\020beaconMessageAck\020\n\022!\n\035chann" +
+      "elTransmissionCompressed\020\013\022\026\n\022closeReque" +
+      "stServer\020\014\022\026\n\022closeRequestClient\020\r\022\030\n\024be" +
+      "aconMessageControl\020\016\022\023\n\017beaconLocalPing\020" +
+      "\017*~\n\nTunnelType\022\027\n\023SERVER_TO_BYTES_TCP\020\000" +
+      "\022\027\n\023BYTES_TO_CLIENT_TCP\020\001\022\027\n\023SERVER_TO_B" +
+      "YTES_UDP\020\002\022\027\n\023BYTES_TO_CLIENT_UDP\020\003\022\014\n\010S" +
+      "HUTDOWN\020\0042\241\n\n\014RpcServiceV1\022<\n\010Register\022\027" +
+      ".beacon.RegisterRequest\032\025.beacon.Registe" +
+      "rReply\"\000\0227\n\017PollingCmdQueue\022\r.beacon.Age" +
+      "nt\032\023.beacon.FlowMessage\"\000\022>\n\024Subscriptio" +
+      "nCmdQueue\022\r.beacon.Agent\032\023.beacon.FlowMe" +
+      "ssage\"\0000\001\0228\n\017SendChatMessage\022\023.beacon.Ch" +
+      "atMessage\032\016.beacon.Status\"\000\022A\n\020SendComma" +
+      "ndReply\022\033.beacon.CommandReplyRequest\032\016.b" +
+      "eacon.Status\"\000\0225\n\nSendHealth\022\025.beacon.He" +
+      "althRequest\032\016.beacon.Status\"\000\022/\n\007SendLog" +
+      "\022\022.beacon.LogRequest\032\016.beacon.Status\"\000\022;" +
+      "\n\rSendException\022\030.beacon.ExceptionReques" +
+      "t\032\016.beacon.Status\"\000\022@\n\021SendConfigRuntime" +
+      "\022\024.beacon.ConfigReport\032\023.beacon.ConfigRe" +
+      "ply\"\000\0228\n\020GetConfigRuntime\022\r.beacon.Agent" +
+      "\032\023.beacon.ConfigReply\"\000\022>\n\022GetRuntimePro" +
+      "vides\022\r.beacon.Agent\032\027.beacon.ListString" +
+      "Reply\"\000\022>\n\022GetRuntimeRequired\022\r.beacon.A" +
+      "gent\032\027.beacon.ListStringReply\"\000\0226\n\nListA" +
+      "gents\022\r.beacon.Empty\032\027.beacon.ListAgents" +
+      "Reply\"\000\022L\n\031ListAgentsRequestComplete\022\r.b" +
+      "eacon.Empty\032\036.beacon.ListAgentsRequestRe" +
+      "ply\"\000\022H\n\025ListAgentsRequestToDo\022\r.beacon." +
+      "Empty\032\036.beacon.ListAgentsRequestReply\"\000\022" +
+      "K\n\023ApproveAgentRequest\022\".beacon.ApproveA" +
+      "gentRequestRequest\032\016.beacon.Status\"\000\022,\n\t" +
+      "KickAgent\022\r.beacon.Agent\032\016.beacon.Status" +
+      "\"\000\022T\n\020ElaborateMessage\022\037.beacon.Elaborat" +
+      "eMessageRequest\032\035.beacon.ElaborateMessag" +
+      "eReply\"\000\022H\n\014ListCommands\022\033.beacon.ListCo" +
+      "mmandsRequest\032\031.beacon.ListCommandsReply" +
+      "\"\000\022Q\n\017CompleteCommand\022\036.beacon.CompleteC" +
+      "ommandRequest\032\034.beacon.CompleteCommandRe" +
+      "ply\"\0002\230\003\n\rDataServiceV1\022<\n\007Polling\022\026.bea" +
+      "con.PollingRequest\032\027.beacon.FlowMessageD" +
+      "ata\"\000\022E\n\014Subscription\022\030.beacon.Subscribe" +
+      "Request\032\027.beacon.FlowMessageData\"\0000\001\0228\n\005" +
+      "Write\022\024.beacon.RequestWrite\032\027.beacon.Flo" +
+      "wMessageData\"\000\022F\n\021WriteSubscription\022\024.be" +
+      "acon.RequestWrite\032\027.beacon.FlowMessageDa" +
+      "ta\"\000(\001\022@\n\020SendAddressSpace\022\024.beacon.Addr" +
+      "essSpace\032\024.beacon.AddressSpace\"\000\022>\n\025GetR" +
+      "emoteAddressSpace\022\r.beacon.Agent\032\024.beaco" +
+      "n.AddressSpace\"\0002\366\001\n\017TunnelServiceV1\022H\n\022" +
+      "openNetworkChannel\022\025.beacon.TunnelMessag" +
+      "e\032\025.beacon.TunnelMessage\"\000(\0010\001\022O\n\rReques" +
+      "tTunnel\022\034.beacon.RequestTunnelMessage\032\036." +
+      "beacon.ResponseNetworkChannel\"\000\022H\n\020Proxy" +
+      "HttpRequest\022\031.beacon.AgentProxyRequest\032\027" +
+      ".beacon.AgentProxyReply\"\000BH\n(org.ar4k.ag" +
+      "ent.tunnels.http2.grpc.beaconB\023BeaconMir" +
+      "rorServiceP\001\242\002\004AR4Kb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -659,6 +685,18 @@ public final class BeaconMirrorService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_beacon_RequestTunnelMessage_descriptor,
         new java.lang.String[] { "TargeId", "AgentSource", "AgentDestination", "Mode", "DestIp", "DestPort", "SrcPort", "SocketSoTimeout", "SocketTcpNoDelay", "SocketKeepAlive", "SocketReceiveBufferSize", "SocketReuseAddress", "SocketTrafficClass", "SocketQos", });
+    internal_static_beacon_AgentProxyRequest_descriptor =
+      getDescriptor().getMessageTypes().get(38);
+    internal_static_beacon_AgentProxyRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_AgentProxyRequest_descriptor,
+        new java.lang.String[] { "IdProxyRequest", "AgentSource", "AgentDestination", "DestIp", "DestPort", "Header", "Payload", "SocketSoTimeout", "SocketTcpNoDelay", "SocketKeepAlive", "SocketReceiveBufferSize", "SocketReuseAddress", "SocketTrafficClass", "SocketQos", });
+    internal_static_beacon_AgentProxyReply_descriptor =
+      getDescriptor().getMessageTypes().get(39);
+    internal_static_beacon_AgentProxyReply_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_beacon_AgentProxyReply_descriptor,
+        new java.lang.String[] { "IdProxyRequest", "AgentSource", "AgentDestination", "SrcIp", "SrcPort", "Header", "Payload", "Status", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

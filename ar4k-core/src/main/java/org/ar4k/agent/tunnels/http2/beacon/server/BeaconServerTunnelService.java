@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.BeaconServerNetworkHub;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandType;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestToAgent;
@@ -37,8 +39,7 @@ class BeaconServerTunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplB
 	}
 
 	@Override
-	public void requestTunnel(RequestTunnelMessage request,
-			StreamObserver<ResponseNetworkChannel> responseObserver) {
+	public void requestTunnel(RequestTunnelMessage request, StreamObserver<ResponseNetworkChannel> responseObserver) {
 		BeaconServer.logger.debug("Beacon client require tunnel -> " + request);
 		try {
 			final long tunnelUniqueId = UUID.randomUUID().getMostSignificantBits();
@@ -74,9 +75,16 @@ class BeaconServerTunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplB
 				break;
 			}
 		}
-		final CommandReplyRequest cmdReply = this.beaconServer.waitReply(String.valueOf(idRequest), BeaconServer.DEFAULT_TIMEOUT);
+		final CommandReplyRequest cmdReply = this.beaconServer.waitReply(String.valueOf(idRequest),
+				BeaconServer.DEFAULT_TIMEOUT);
 		final ResponseNetworkChannel channelCreated = cmdReply.getTunnelReply();
 		BeaconServer.logger.debug("Beacon client tunnel reply -> " + channelCreated);
 		return channelCreated;
+	}
+
+	@Override
+	public void proxyHttpRequest(AgentProxyRequest request, StreamObserver<AgentProxyReply> responseObserver) {
+		// TODO Implementare proxy http
+		super.proxyHttpRequest(request, responseObserver);
 	}
 }

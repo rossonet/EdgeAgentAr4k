@@ -5,6 +5,7 @@ import org.ar4k.agent.core.interfaces.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
+//TODO portare in seed
 public class XpraConfig extends AbstractServiceConfig {
 
 	private static final long serialVersionUID = -2924869182396567535L;

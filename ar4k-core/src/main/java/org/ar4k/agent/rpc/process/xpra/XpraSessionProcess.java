@@ -13,6 +13,7 @@ import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.EdgeRpcProcess;
 
 @EdgeRpcProcess
+//TODO portare in seed
 public class XpraSessionProcess implements AgentProcess {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

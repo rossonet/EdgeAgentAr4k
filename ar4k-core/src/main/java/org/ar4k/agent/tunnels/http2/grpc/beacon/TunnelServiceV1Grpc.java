@@ -91,6 +91,38 @@ public final class TunnelServiceV1Grpc {
      return getRequestTunnelMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest,
+      org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> getProxyHttpRequestMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ProxyHttpRequest",
+      requestType = org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest.class,
+      responseType = org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest,
+      org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> getProxyHttpRequestMethod() {
+    io.grpc.MethodDescriptor<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest, org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> getProxyHttpRequestMethod;
+    if ((getProxyHttpRequestMethod = TunnelServiceV1Grpc.getProxyHttpRequestMethod) == null) {
+      synchronized (TunnelServiceV1Grpc.class) {
+        if ((getProxyHttpRequestMethod = TunnelServiceV1Grpc.getProxyHttpRequestMethod) == null) {
+          TunnelServiceV1Grpc.getProxyHttpRequestMethod = getProxyHttpRequestMethod = 
+              io.grpc.MethodDescriptor.<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest, org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "beacon.TunnelServiceV1", "ProxyHttpRequest"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new TunnelServiceV1MethodDescriptorSupplier("ProxyHttpRequest"))
+                  .build();
+          }
+        }
+     }
+     return getProxyHttpRequestMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -132,6 +164,13 @@ public final class TunnelServiceV1Grpc {
       asyncUnimplementedUnaryCall(getRequestTunnelMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void proxyHttpRequest(org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getProxyHttpRequestMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -148,6 +187,13 @@ public final class TunnelServiceV1Grpc {
                 org.ar4k.agent.tunnels.http2.grpc.beacon.RequestTunnelMessage,
                 org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel>(
                   this, METHODID_REQUEST_TUNNEL)))
+          .addMethod(
+            getProxyHttpRequestMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest,
+                org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply>(
+                  this, METHODID_PROXY_HTTP_REQUEST)))
           .build();
     }
   }
@@ -185,6 +231,14 @@ public final class TunnelServiceV1Grpc {
       asyncUnaryCall(
           getChannel().newCall(getRequestTunnelMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void proxyHttpRequest(org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest request,
+        io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getProxyHttpRequestMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -210,6 +264,13 @@ public final class TunnelServiceV1Grpc {
     public org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel requestTunnel(org.ar4k.agent.tunnels.http2.grpc.beacon.RequestTunnelMessage request) {
       return blockingUnaryCall(
           getChannel(), getRequestTunnelMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply proxyHttpRequest(org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getProxyHttpRequestMethod(), getCallOptions(), request);
     }
   }
 
@@ -238,10 +299,19 @@ public final class TunnelServiceV1Grpc {
       return futureUnaryCall(
           getChannel().newCall(getRequestTunnelMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply> proxyHttpRequest(
+        org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getProxyHttpRequestMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REQUEST_TUNNEL = 0;
-  private static final int METHODID_OPEN_NETWORK_CHANNEL = 1;
+  private static final int METHODID_PROXY_HTTP_REQUEST = 1;
+  private static final int METHODID_OPEN_NETWORK_CHANNEL = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -263,6 +333,10 @@ public final class TunnelServiceV1Grpc {
         case METHODID_REQUEST_TUNNEL:
           serviceImpl.requestTunnel((org.ar4k.agent.tunnels.http2.grpc.beacon.RequestTunnelMessage) request,
               (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http2.grpc.beacon.ResponseNetworkChannel>) responseObserver);
+          break;
+        case METHODID_PROXY_HTTP_REQUEST:
+          serviceImpl.proxyHttpRequest((org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyRequest) request,
+              (io.grpc.stub.StreamObserver<org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -330,6 +404,7 @@ public final class TunnelServiceV1Grpc {
               .setSchemaDescriptor(new TunnelServiceV1FileDescriptorSupplier())
               .addMethod(getOpenNetworkChannelMethod())
               .addMethod(getRequestTunnelMethod())
+              .addMethod(getProxyHttpRequestMethod())
               .build();
         }
       }
