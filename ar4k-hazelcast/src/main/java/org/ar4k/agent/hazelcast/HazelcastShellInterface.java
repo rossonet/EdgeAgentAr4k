@@ -47,7 +47,7 @@ import com.hazelcast.core.Member;
 @RequestMapping("/hazelcastInterface")
 
 // TODO mappa le variabili definite in conf al bus e mette a disposizione un bean per accedere a tipi dati in cluster (tipo ecss)
-// TODO implementare BeaconServer multi nodo collegato via Hazelcast.
+// TODO implementare BeaconServerCluster multi nodo collegato via Hazelcast.
 
 public class HazelcastShellInterface extends AbstractShellHelper {
 
