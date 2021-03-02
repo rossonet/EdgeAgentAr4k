@@ -1,16 +1,9 @@
 package org.ar4k.agent.farm.openshift;
 
-import java.util.List;
-
-import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
-import org.ar4k.agent.farm.FarmComponent;
-import org.ar4k.agent.farm.FarmConfig;
-import org.ar4k.agent.farm.ManagedHost;
-import org.ar4k.agent.logger.EdgeLogger;
-import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.farm.kubernetes.KubernetesFarmComponent;
 import org.json.JSONObject;
 
 /**
@@ -18,15 +11,12 @@ import org.json.JSONObject;
  *
  *         farm OpenShift
  */
-public class OpenShiftFarmComponent extends FarmComponent {
+public class OpenShiftFarmComponent extends KubernetesFarmComponent {
 
-	public OpenShiftFarmComponent(FarmConfig farmConfig) {
+	public OpenShiftFarmComponent(OpenShiftFarmConfig farmConfig) {
 		super(farmConfig);
 		// TODO Auto-generated constructor stub
 	}
-
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpenShiftFarmComponent.class.toString());
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
@@ -62,30 +52,6 @@ public class OpenShiftFarmComponent extends FarmComponent {
 	public JSONObject getDescriptionJson() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public ConnectionState getConnectionState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ManagedArchives> getManagedArchives() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ManagedHost> getManagedHosts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void pruneSystem() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

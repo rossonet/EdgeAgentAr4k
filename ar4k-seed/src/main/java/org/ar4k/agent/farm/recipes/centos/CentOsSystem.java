@@ -1,9 +1,0 @@
-package org.ar4k.agent.farm.recipes.centos;
-
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
-
-@EdgeContainerizedVirtualApplication
-public class CentOsSystem extends AbstractVirtualApplication {
-
-}

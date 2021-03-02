@@ -20,6 +20,7 @@ import org.ar4k.agent.farm.docker.DockerFarmConfig;
 import org.ar4k.agent.farm.kubernetes.KubernetesFarmConfig;
 import org.ar4k.agent.farm.local.LocalAccountFarmConfig;
 import org.ar4k.agent.farm.openshift.OpenShiftFarmConfig;
+import org.ar4k.agent.farm.remoteSsh.SshAccountFarmConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -49,6 +50,13 @@ public class FarmShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public void addFarmLocalAccount(@ShellOption(optOut = true) @Valid LocalAccountFarmConfig farm) {
+		getWorkingConfig().pots.add(farm);
+	}
+
+	@ShellMethod(value = "Add a Remote SSH Account Farm", group = "Farmer Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addFarmSshAccount(@ShellOption(optOut = true) @Valid SshAccountFarmConfig farm) {
 		getWorkingConfig().pots.add(farm);
 	}
 

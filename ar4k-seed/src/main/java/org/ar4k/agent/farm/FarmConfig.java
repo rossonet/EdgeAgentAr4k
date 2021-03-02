@@ -1,34 +1,18 @@
 package org.ar4k.agent.farm;
 
-import org.ar4k.agent.config.AbstractServiceConfig;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.beust.jcommander.Parameter;
+import org.ar4k.agent.config.AbstractServiceConfig;
 
 public abstract class FarmConfig extends AbstractServiceConfig {
 
 	private static final long serialVersionUID = -2924869182396567535L;
 
-	@Parameter(names = "--farmName", description = "the farm unique name")
-	private String farmName;
+	private final List<ManagedVirtualApplication> applications = new ArrayList<>();
 
-	@Override
-	public String getUniqueId() {
-		return farmName;
-	}
-
-	@Override
-	public int getPriority() {
-		return 180;
-	}
-
-	@Override
-	public boolean isSpringBean() {
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		return "FarmConfig [farmName=" + farmName + "]";
+	public List<ManagedVirtualApplication> getApplications() {
+		return applications;
 	}
 
 }

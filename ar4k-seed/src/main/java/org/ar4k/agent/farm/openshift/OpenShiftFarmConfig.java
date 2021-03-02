@@ -15,16 +15,21 @@
 package org.ar4k.agent.farm.openshift;
 
 import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.farm.FarmConfig;
+import org.ar4k.agent.farm.kubernetes.KubernetesFarmConfig;
+
+import com.beust.jcommander.Parameter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Configurazione OpenShift farm
  */
-public class OpenShiftFarmConfig extends FarmConfig {
+public class OpenShiftFarmConfig extends KubernetesFarmConfig {
 
 	private static final long serialVersionUID = -864167599161787378L;
+
+	@Parameter(names = "--installRecipe", description = "installRecipe")
+	private String installRecipe;
 
 	/*
 	 * @Parameter(names = "--clusterName", description =
@@ -34,7 +39,7 @@ public class OpenShiftFarmConfig extends FarmConfig {
 
 	@Override
 	public EdgeComponent instantiate() {
-		OpenShiftFarmComponent ss = new OpenShiftFarmComponent(this);
+		final OpenShiftFarmComponent ss = new OpenShiftFarmComponent(this);
 		return ss;
 	}
 

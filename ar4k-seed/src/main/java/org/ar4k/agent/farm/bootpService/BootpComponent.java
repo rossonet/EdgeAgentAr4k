@@ -1,26 +1,26 @@
-package org.ar4k.agent.farm;
+package org.ar4k.agent.farm.bootpService;
 
 import java.io.IOException;
 
+import org.anarres.tftp.server.netty.TftpServer;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
-public abstract class FarmComponent implements EdgeComponent {
-	public enum ConnectionState {
-		CONNECTED, DISCONNECTED, UNKNOW
-	}
+public abstract class BootpComponent implements EdgeComponent {
 
 	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(FarmComponent.class.toString());
+			.getLogger(BootpComponent.class.toString());
 
 	private Homunculus homunculus = null;
 
 	private DataAddress dataspace = null;
 
-	public FarmComponent(FarmConfig farmConfig) {
+	private TftpServer tftpServer; // TODO
+
+	public BootpComponent(BootpConfig farmConfig) {
 		homunculus = farmConfig.homunculus;
 	}
 
