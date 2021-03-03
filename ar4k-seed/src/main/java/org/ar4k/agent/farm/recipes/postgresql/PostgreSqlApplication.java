@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.postgresql;
 
-public class PostgreSqlApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class PostgreSqlApplication extends GeneralApplication {
 
 }

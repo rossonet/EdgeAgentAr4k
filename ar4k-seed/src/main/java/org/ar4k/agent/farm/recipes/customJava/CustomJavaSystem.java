@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.customJava;
 
-public class CustomJavaSystem {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class CustomJavaSystem extends GeneralApplication {
 
 }

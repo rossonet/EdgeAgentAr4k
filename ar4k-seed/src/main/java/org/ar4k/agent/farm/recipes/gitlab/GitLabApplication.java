@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.gitlab;
 
-public class GitLabApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class GitLabApplication extends GeneralApplication {
 
 }

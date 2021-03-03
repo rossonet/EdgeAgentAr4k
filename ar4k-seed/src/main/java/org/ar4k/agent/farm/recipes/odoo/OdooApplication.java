@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.odoo;
 
-public class OdooApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class OdooApplication extends GeneralApplication {
 
 }

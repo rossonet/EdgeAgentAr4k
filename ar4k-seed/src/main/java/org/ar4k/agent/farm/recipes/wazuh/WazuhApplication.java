@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.wazuh;
 
-public class WazuhApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class WazuhApplication extends GeneralApplication {
 
 }

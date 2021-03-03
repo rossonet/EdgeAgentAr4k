@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.jenkins;
 
-public class JenkinsApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class JenkinsApplication extends GeneralApplication {
 
 }

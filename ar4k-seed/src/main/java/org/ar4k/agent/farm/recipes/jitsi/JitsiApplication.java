@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.jitsi;
 
-public class JitsiApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class JitsiApplication extends GeneralApplication {
 
 }

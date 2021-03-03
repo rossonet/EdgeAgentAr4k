@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.ros;
 
-public class RobotOperatingSystemApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class RobotOperatingSystemApplication extends GeneralApplication {
 
 }

@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.mongodb;
 
-public class MongoDbApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class MongoDbApplication extends GeneralApplication {
 
 }

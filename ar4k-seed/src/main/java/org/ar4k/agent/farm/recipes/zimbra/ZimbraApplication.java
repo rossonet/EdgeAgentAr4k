@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.zimbra;
 
-public class ZimbraApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class ZimbraApplication extends GeneralApplication {
 
 }

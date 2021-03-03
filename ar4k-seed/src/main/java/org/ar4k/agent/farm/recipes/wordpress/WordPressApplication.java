@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.wordpress;
 
-public class WordPressApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class WordPressApplication extends GeneralApplication {
 
 }

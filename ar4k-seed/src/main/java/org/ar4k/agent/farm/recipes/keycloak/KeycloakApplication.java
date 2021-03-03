@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.keycloak;
 
-public class KeycloakApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class KeycloakApplication extends GeneralApplication {
 
 }

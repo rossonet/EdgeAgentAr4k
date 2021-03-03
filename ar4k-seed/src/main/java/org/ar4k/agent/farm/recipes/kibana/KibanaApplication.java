@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.kibana;
 
-public class KibanaApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class KibanaApplication extends GeneralApplication {
 
 }

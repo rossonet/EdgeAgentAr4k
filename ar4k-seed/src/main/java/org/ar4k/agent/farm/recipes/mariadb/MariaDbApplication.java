@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.mariadb;
 
-public class MariaDbApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class MariaDbApplication extends GeneralApplication {
 
 }

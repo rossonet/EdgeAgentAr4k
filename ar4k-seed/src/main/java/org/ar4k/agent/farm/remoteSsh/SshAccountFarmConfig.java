@@ -14,6 +14,7 @@
     */
 package org.ar4k.agent.farm.remoteSsh;
 
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.farm.local.LocalAccountFarmConfig;
 
 /*
@@ -24,5 +25,11 @@ import org.ar4k.agent.farm.local.LocalAccountFarmConfig;
 public class SshAccountFarmConfig extends LocalAccountFarmConfig {
 
 	private static final long serialVersionUID = -864197599111784578L;
+
+	@Override
+	public EdgeComponent instantiate() {
+		final SshAccountFarmComponent ss = new SshAccountFarmComponent(this);
+		return ss;
+	}
 
 }

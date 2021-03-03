@@ -1,5 +1,7 @@
 package org.ar4k.agent.farm.recipes.kieWorkbench;
 
-public class KieWorkbenchApplication {
+import org.ar4k.agent.farm.recipes.GeneralApplication;
+
+public class KieWorkbenchApplication extends GeneralApplication {
 
 }
