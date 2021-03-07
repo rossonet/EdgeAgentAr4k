@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.UnrecoverableKeyException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,6 @@ import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
@@ -579,20 +577,6 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			logger.logException(e);
 		}
 		return reply;
-	}
-
-	@ShellMethod(value = "Run Xpra server on local agent", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testBeaconClientRunning")
-	public int runXpraServer(
-			@ShellOption(help = "label to identify the xpra server", defaultValue = "xpra-service") String executorLabel,
-			@ShellOption(help = "the tcp port for the HTML5 console", defaultValue = "0") int port,
-			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd)
-			throws IOException, URISyntaxException {
-		logger.info("Xpra server request -> port:" + port + " cmd:" + cmd);
-		final XpraSessionProcess xpraSessionProcess = resolveBeaconClient().startXpraService(executorLabel, port, cmd);
-		logger.info("Xpra server started on port " + xpraSessionProcess.getTcpPort());
-		return xpraSessionProcess.getTcpPort();
 	}
 
 	@ShellMethod(value = "Connect to remote agent with ssh by Beacon tunnel", group = "Tunnel Commands")

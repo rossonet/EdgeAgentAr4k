@@ -2,7 +2,6 @@ package org.ar4k.agent.farm.web.page;
 
 import org.ar4k.agent.core.interfaces.AgentWebTab;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
 import org.ar4k.agent.web.interfaces.AgentTab;
 
 import com.vaadin.flow.component.Text;
@@ -14,11 +13,7 @@ public class ApplicationServerPage implements AgentTab {
 
 	@Override
 	public boolean isActive(IScadaAgent beaconAgentWrapper) {
-		if (beaconAgentWrapper != null && beaconAgentWrapper.getProvides() != null) {
-			return beaconAgentWrapper.getProvides().contains(AbstractVirtualApplication.class.getCanonicalName());
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override

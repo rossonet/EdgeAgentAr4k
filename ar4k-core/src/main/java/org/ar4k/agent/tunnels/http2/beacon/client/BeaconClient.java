@@ -33,7 +33,6 @@ import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconDataAddress;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
@@ -712,17 +711,6 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	@Override
 	public void shutdown() throws InterruptedException {
 		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-	}
-
-	@Override
-	public XpraSessionProcess startXpraService(String executorLabel, int port, String cmd) {
-		final XpraSessionProcess xpraSessionProcess = new XpraSessionProcess();
-		xpraSessionProcess.setLabel(executorLabel);
-		xpraSessionProcess.setTcpPort(port);
-		xpraSessionProcess.setCommand(cmd);
-		xpraSessionProcess.eval(cmd);
-		getLocalExecutor().getScriptSessions().put(executorLabel, xpraSessionProcess);
-		return xpraSessionProcess;
 	}
 
 	@Override

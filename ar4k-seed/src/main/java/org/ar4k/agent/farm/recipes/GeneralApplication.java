@@ -21,6 +21,13 @@ public abstract class GeneralApplication implements ManagedVirtualApplication {
 	@Parameter(names = "--autoRestart", description = "autorestart app when fails (true/false)", arity = 1)
 	public boolean autoRestart = true;
 
+	@Parameter(names = "--lambdaFunction", description = "run as lambda function (true/false)", arity = 1)
+	public boolean lambdaFunction = true;
+
+	public boolean isLambdaFunction() {
+		return lambdaFunction;
+	}
+
 	@Override
 	public boolean autoRestart() {
 		return autoRestart;

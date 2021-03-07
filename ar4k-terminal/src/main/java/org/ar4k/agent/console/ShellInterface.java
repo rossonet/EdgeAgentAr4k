@@ -17,10 +17,6 @@ package org.ar4k.agent.console;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -29,7 +25,6 @@ import java.security.cert.CertificateEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +55,6 @@ import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
 import org.ar4k.agent.spring.valueProvider.StorageTypeValuesProvider;
 import org.bouncycastle.cms.CMSException;
@@ -678,33 +672,6 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public Map<String, AgentProcess> listProcesses() {
 		return ((RpcConversation) homunculus.getRpc(getSessionId())).getScriptSessions();
-	}
-
-	@ShellMethod(value = "List active Xpra endpoint ipv4", group = "Jobs Runtime Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("sessionOk")
-	public List<String> listXpraServers() {
-		final List<String> result = new ArrayList<>();
-		try {
-			for (final Entry<String, AgentProcess> d : listProcesses().entrySet()) {
-				if (d.getValue().isAlive() && d.getValue() instanceof XpraSessionProcess) {
-					final XpraSessionProcess dataXpra = (XpraSessionProcess) d.getValue();
-					if (dataXpra.getTcpPort() != 0) {
-						for (final NetworkInterface n : Collections.list(NetworkInterface.getNetworkInterfaces())) {
-							for (final InetAddress i : Collections.list(n.getInetAddresses())) {
-								if (i instanceof Inet4Address) {
-									result.add(d.getKey() + " => http://" + i.getHostAddress() + ":"
-											+ String.valueOf(dataXpra.getTcpPort()));
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (final SocketException e) {
-			logger.logException(e);
-		}
-		return result;
 	}
 
 	@ShellMethod(value = "Kill running process", group = "Jobs Runtime Commands")

@@ -18,8 +18,6 @@ import javax.validation.Valid;
 
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.farm.FarmConfig;
-import org.ar4k.agent.farm.docker.DockerFarmConfig;
-import org.ar4k.agent.farm.kubernetes.KubernetesFarmConfig;
 import org.ar4k.agent.farm.local.LocalAccountFarmConfig;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -44,43 +42,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/activeMqInterface")
 public class ActiveMqShellInterface extends AbstractShellHelper {
 
-	@ShellMethod(value = "Add an ActiveMQ application to local account farm")
+	@ShellMethod(value = "Add an ActiveMQ application farm")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addActiveMqToLocalFarm(@ShellOption(optOut = true) @Valid ActiveMqApplicationLocal application
-	// ,@ShellOption(help = "name of the farm", valueProvider =
-	// LocalFarmNameValueProvider.class) String farmName
-	) {
+	public void addActiveMqToLocalFarm(@ShellOption(optOut = true) @Valid ActiveMqApplication application) {
 		for (final ServiceConfig p : getWorkingConfig().pots) {
 			if (p.getName().equals(application.farmName) && p instanceof LocalAccountFarmConfig) {
-				((FarmConfig) p).applications.add(application);
-			}
-		}
-	}
-
-	@ShellMethod(value = "Add an ActiveMQ application to Docker farm")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addActiveMqToDockerFarm(@ShellOption(optOut = true) @Valid ActiveMqApplicationDocker application
-	// ,@ShellOption(help = "name of the farm", valueProvider =
-	// DockerFarmNameValueProvider.class) String farmName
-	) {
-		for (final ServiceConfig p : getWorkingConfig().pots) {
-			if (p.getName().equals(application.farmName) && p instanceof DockerFarmConfig) {
-				((FarmConfig) p).applications.add(application);
-			}
-		}
-	}
-
-	@ShellMethod(value = "Add an ActiveMQ application to Kubernetes farm")
-	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addActiveMqToKubernetesFarm(@ShellOption(optOut = true) @Valid ActiveMqApplicationKubernetes application
-	// ,@ShellOption(help = "name of the farm", valueProvider =
-	// KubernetesFarmNameValueProvider.class) String farmName
-	) {
-		for (final ServiceConfig p : getWorkingConfig().pots) {
-			if (p.getName().equals(application.farmName) && p instanceof KubernetesFarmConfig) {
 				((FarmConfig) p).applications.add(application);
 			}
 		}

@@ -95,7 +95,7 @@ The logs are available in the logs directory of the distribution.
 ### Docker build
 
 ```
-docker build --rm -t ar4k-agent:latest git@github.com:rossonet/EdgeAgentAr4k.git
+docker build --rm -t ar4k-agent:latest https://github.com/rossonet/EdgeAgentAr4k.git
 
 [...]
 

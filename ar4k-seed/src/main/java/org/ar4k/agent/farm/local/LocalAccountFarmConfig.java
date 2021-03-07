@@ -29,7 +29,7 @@ public class LocalAccountFarmConfig extends FarmConfig {
 	@Parameter(names = "--localDirectory", description = "local directory to run applications")
 	public String localDirectory = "./local-runner";
 
-	@Parameter(names = "--useRootAccount", description = "run application as root account (true/false)", arity = 1)
+	@Parameter(names = "--useRootAccount", description = "run farm as root account (true/false). It uses the sudo function", arity = 1)
 	public boolean useRootAccount = false;
 
 	private static final long serialVersionUID = -864167599161787378L;

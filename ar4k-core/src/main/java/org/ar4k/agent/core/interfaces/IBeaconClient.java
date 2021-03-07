@@ -6,7 +6,6 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.client.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
@@ -103,8 +102,6 @@ public interface IBeaconClient {
 	void setReservedUniqueName(String reservedUniqueName);
 
 	void shutdown() throws InterruptedException;
-
-	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
 
 	Status approveRemoteAgent(String requestId, String cert, String note);
 
