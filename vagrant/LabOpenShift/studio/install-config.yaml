@@ -1,0 +1,30 @@
+apiVersion: v1
+baseDomain: org.local
+metadata:
+  name: ar4k
+
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14 
+    hostPrefix: 23 
+  networkType: OpenShiftSDN
+  serviceNetwork: 
+  - 172.30.0.0/16
+
+platform:
+  none: {}
+
+fips: false
+
+pullSecret: '{"auths":{"fake":{"auth": "bar"}}}' 
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa6xa0wkiv+StRkOM6xlo7cQLm2Wu+3AEGkLZPzi5NSm6cgUGkOiptWTJQmdIqrufoJAJTa60n+05yMTbdAL0PYmzieDV/6JbaeGwg46m3XwtTKbiA7aiaGOz/sElquNNxaKrJ81Ydtha9bWwWJmmYd6suuxlTPPMh6caP3+aQ4kXsPkpbdklZaauqGDpFpZkeXnFiFYCK+7D3lxFHTSp/ccqJMAOmjjPVs8pfPPEfIm+hVvNcruw1keoH81W/uxomoBfqtAGVgNYJyvZDUjS7UCPD0TJHeJ6bHv3UzJXIw/Aop6/6iEdx5jRnZdv4QIPhXUQGWVuuOGpZNvm+dm8QFsP7W3o+O5SftWKi/H7C8Arc/Rj7rkVI8SlYh1TCkmweYE193NA4M2ZCLQey8QRGnxJN5I6gL9DRPO/TsAPsEI+xj0i2Hu1pbxtPZvCsxFnG/rARTNkYEtmz6R9xAQw1ongIyE5P86TMRbyDh4yrvMBlRtwm/HGLHKLiAUhesAE= root@console'   

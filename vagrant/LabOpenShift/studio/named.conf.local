@@ -1,0 +1,4 @@
+zone "ar4k.org.local" {
+    type master;
+    file "/etc/named/db.ar4k.org.local";
+};

@@ -1,0 +1,10 @@
+openshift-install
+fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz
+fedora-coreos-32.20200715.3.0-live-kernel-x86_64
+fedora-coreos-32.20200715.3.0-live-initramfs.x86_64.img
+fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz.sig
+oc
+kubectl
+openshift-client-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+openshift-install-linux-4.5.0-0.okd-2020-07-29-070316.tar.gz
+openshift-install-dir
