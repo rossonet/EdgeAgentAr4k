@@ -10,3 +10,4 @@ openshift-install-linux-4*
 openshift-install-dir
 jq
 users.htpasswd
+aws-key.yaml
