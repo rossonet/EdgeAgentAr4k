@@ -1,4 +1,9 @@
-zone "ar4k.org.local" {
+zone "ar4k.org.local" IN {
     type master;
     file "/etc/named/db.ar4k.org.local";
+};
+
+zone "3.69.10.in-addr.arpa" IN {
+    type master;
+    file "/etc/named/db.10.69.3";
 };

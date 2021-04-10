@@ -26,12 +26,15 @@ chmod -R 755 /var/www/html/
 cat $original_directory/named.conf > /etc/named.conf
 cat $original_directory/named.conf.local > /etc/named/named.conf.local
 cat $original_directory/db.ar4k.org.local > /etc/named/db.ar4k.org.local
+cat $original_directory/db.10.69.3 > /etc/named/db.10.69.3
 chgrp named /etc/named.conf
 chgrp named /etc/named/named.conf.local
 chgrp named /etc/named/db.ar4k.org.local
+chgrp named /etc/named/db.10.69.3
 
 systemctl restart named.service
 
 cp $original_directory/iptables /etc/sysconfig/iptables
 chmod go-rwx /etc/sysconfig/iptables
+
 systemctl restart iptables.service
