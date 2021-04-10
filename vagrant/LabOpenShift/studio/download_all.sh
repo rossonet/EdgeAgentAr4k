@@ -24,6 +24,12 @@ wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200
 tar -xzf openshift-client-linux-4.5.0-0.okd-2020-10-15-235428.tar.gz
 tar -xzf openshift-install-linux-4.5.0-0.okd-2020-10-15-235428.tar.gz
 
+
+wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+chmod +x jq
+
+
 ln -s $directory/oc /usr/local/bin/oc
 ln -s $directory/kubectl /usr/local/bin/kubectl
 ln -s $directory/openshift-install /usr/local/bin/openshift-install
+ln -s $directory/jq /usr/local/bin/jq

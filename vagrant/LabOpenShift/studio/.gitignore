@@ -8,3 +8,5 @@ kubectl
 openshift-client-linux-4*
 openshift-install-linux-4*
 openshift-install-dir
+jq
+users.htpasswd
