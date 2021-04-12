@@ -19,6 +19,9 @@ mkdir -p /var/www/html/ipxe
 cp $original_directory/*.ipxe /var/www/html/ipxe/
 cp $original_directory/fedora-coreos-32.20200715.3.0-live-initramfs.x86_64.img /var/www/html/ipxe/initramfs
 cp $original_directory/fedora-coreos-32.20200715.3.0-live-kernel-x86_64 /var/www/html/ipxe/kernel
+cp $original_directory/laboratorio.ks /var/www/html/ipxe/laboratorio.ks
+cp $original_directory/router.ks /var/www/html/ipxe/router.ks
+#cp -v /usr/share/syslinux/{pxelinux.0,menu.c32,ldlinux.c32,libutil.c32} /var/www/html/ipxe/
 
 chown -R apache: /var/www/html/
 chmod -R 755 /var/www/html/
