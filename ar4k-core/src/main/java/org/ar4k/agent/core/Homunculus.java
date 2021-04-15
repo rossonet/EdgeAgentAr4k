@@ -58,6 +58,7 @@ import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
 import org.ar4k.agent.core.interfaces.ServiceComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.mattermost.MatterMostClientAr4k;
 import org.ar4k.agent.core.services.HomunculusService;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
@@ -183,6 +184,8 @@ public class Homunculus
 	private RecordManager recMan = null;
 
 	private String beanName = "homunculus";
+
+	private MatterMostClientAr4k mattermostClient = null;
 
 	private BeaconClient beaconClient = null;
 
@@ -1319,6 +1322,10 @@ public class Homunculus
 
 	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
 		Homunculus.applicationContext = applicationContext;
+	}
+
+	public MatterMostClientAr4k getMattermostClient() {
+		return mattermostClient;
 	}
 
 }
