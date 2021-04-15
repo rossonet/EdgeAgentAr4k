@@ -659,6 +659,16 @@ public class Homunculus
 			System.out.println("       REGISTRATION CODE: " + REGISTRATION_PIN);
 			System.out.println("__________________________________________________\n");
 		}
+		if (starterProperties.getRossonetChatServer() != null && !starterProperties.getRossonetChatServer().isEmpty()) {
+			try {
+				mattermostClient = new MatterMostClientAr4k(starterProperties.getRossonetChatServer(),
+						starterProperties.getRossonetChatUser(), starterProperties.getRossonetChatPassword(),
+						starterProperties.getRossonetChatToken());
+				mattermostClient.reportStatusInLog();
+			} catch (Exception a) {
+				logger.logException("during connection to " + starterProperties.getRossonetChatServer(), a);
+			}
+		}
 	}
 
 	void prepareAgentStasis() {

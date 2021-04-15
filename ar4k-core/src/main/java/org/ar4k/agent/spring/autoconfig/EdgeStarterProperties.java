@@ -64,6 +64,59 @@ public class EdgeStarterProperties {
 	private String logoUrl = "/static/img/ar4k.png";
 	private String showRegistrationCode = "true";
 
+	public String getRossonetChatServer() {
+		return rossonetChatServer;
+	}
+
+	public void setRossonetChatServer(String rossonetChatServer) {
+		this.rossonetChatServer = rossonetChatServer;
+	}
+
+	public String getRossonetChatUser() {
+		return rossonetChatUser;
+	}
+
+	public void setRossonetChatUser(String rossonetChatUser) {
+		this.rossonetChatUser = rossonetChatUser;
+	}
+
+	public String getRossonetChatPassword() {
+		return rossonetChatPassword;
+	}
+
+	public void setRossonetChatPassword(String rossonetChatPassword) {
+		this.rossonetChatPassword = rossonetChatPassword;
+	}
+
+	public String getRossonetChatToken() {
+		return rossonetChatToken;
+	}
+
+	public void setRossonetChatToken(String rossonetChatToken) {
+		this.rossonetChatToken = rossonetChatToken;
+	}
+
+	public String getConsoleOnly() {
+		return consoleOnly;
+	}
+
+	public String getAnimaDatastoreFileName() {
+		return animaDatastoreFileName;
+	}
+
+	public String getTest() {
+		return test;
+	}
+
+	public String getShowRegistrationCode() {
+		return showRegistrationCode;
+	}
+
+	private String rossonetChatServer = "https://mm.rossonet.net";
+	private String rossonetChatUser = null;
+	private String rossonetChatPassword = null;
+	private String rossonetChatToken = null;
+
 	public String getConfPath() {
 		return confPath;
 	}
