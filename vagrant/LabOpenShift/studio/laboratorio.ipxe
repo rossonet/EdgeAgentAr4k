@@ -1,0 +1,9 @@
+#!ipxe
+
+set repo http://mirror.centos.org/centos-8/8/BaseOS/x86_64/os/
+set centos http://mirror.centos.org/centos-8/8/BaseOS/x86_64/os/isolinux
+set imgargs initrd=initrd.img inst.repo=${repo} nomodset ks=http://10.69.3.2:8080/ipxe/laboratorio.ks
+
+kernel ${centos}/vmlinuz ${imgargs}
+initrd ${centos}/initrd.img
+boot

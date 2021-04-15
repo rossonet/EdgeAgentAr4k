@@ -1,0 +1,33 @@
+$ttl 38400
+@	IN	SOA	ns1.ar4k.org.local. gestione_dns.rossonet.net. (
+			2021040703
+			10800
+			3600
+			604800
+			38400 )
+@	IN	NS	ns1.ar4k.org.local.
+
+ns1.ar4k.org.local.	IN 	A	10.69.3.2
+
+bootstrap.ar4k.org.local.     IN      A       10.69.3.30
+
+control-plane1.ar4k.org.local.    IN      A      10.69.3.41
+control-plane2.ar4k.org.local.    IN      A      10.69.3.42
+control-plane3.ar4k.org.local.    IN      A      10.69.3.43
+
+worker1.ar4k.org.local.    IN      A      10.69.3.50
+worker2.ar4k.org.local.    IN      A      10.69.3.51
+worker3.ar4k.org.local.    IN      A      10.69.3.52
+worker4.ar4k.org.local.    IN      A      10.69.3.53
+
+api.ar4k.org.local.    IN	A	10.69.3.2
+api-int.ar4k.org.local.    IN	A	10.69.3.2
+*.apps.ar4k.org.local.    IN	A	10.69.3.2
+etcd-0.ar4k.org.local.    IN    A     10.69.3.41
+etcd-1.ar4k.org.local.    IN    A     10.69.3.42
+etcd-2.ar4k.org.local.    IN    A    10.69.3.43
+oauth-openshift.ar4k.org.local.  IN	A	10.69.3.2
+
+_etcd-server-ssl._tcp.ar4k.org.local.    86400     IN    SRV     0    10    2380    etcd-0.ar4k.org.local.
+_etcd-server-ssl._tcp.ar4k.org.local.    86400     IN    SRV     0    10    2380    etcd-1.ar4k.org.local.
+_etcd-server-ssl._tcp.ar4k.org.local.    86400     IN    SRV     0    10    2380    etcd-2.ar4k.org.local.
