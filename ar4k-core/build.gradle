@@ -3,6 +3,15 @@ description = "core Ar4k Edge Gateway"
 apply plugin: 'com.google.protobuf'
 
 dependencies {
+	compile group: 'com.beust', name: 'jcommander', version: '1.48'
+	compile group: 'org.springframework.shell', name: 'spring-shell-starter', version:'2.0.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+	compile 'io.netty:netty-all:4.1.56.Final'
+	compile("org.springframework.boot:spring-boot-configuration-processor")
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
+	
+	compile project(':mattermost-java-api');
 	compile('org.bouncycastle:bcprov-jdk15on:1.59')
 	compile('org.bouncycastle:bcpkix-jdk15on:1.59')
 	compile 'com.github.oshi:oshi-core:5.4.1'
@@ -54,7 +63,7 @@ dependencies {
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.15'
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.9.0.202009080501-r'
 
-	compile 'net.bis5.mattermost4j:mattermost4j-core:0.22.1'
+	//compile 'net.bis5.mattermost4j:mattermost4j-core:0.22.1'
 
 }
 

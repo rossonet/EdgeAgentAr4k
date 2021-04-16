@@ -31,6 +31,10 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.rossonet.mm.client.model.Channel;
+import org.rossonet.mm.client.model.Post;
+import org.rossonet.mm.client.model.Team;
+import org.rossonet.mm.client.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Import;
@@ -47,10 +51,6 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import net.bis5.mattermost.model.Channel;
-import net.bis5.mattermost.model.Post;
-import net.bis5.mattermost.model.Team;
-import net.bis5.mattermost.model.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
@@ -104,7 +104,7 @@ public class MattermostConnectionAndInteraction {
 			for (Channel c : channels.values()) {
 				System.out.println(
 						c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
-								+ " [" + c.getType().name() + "]");
+								+ " [" + c.getType() + "]");
 			}
 			System.out.println("			users");
 			for (User u : users.values()) {

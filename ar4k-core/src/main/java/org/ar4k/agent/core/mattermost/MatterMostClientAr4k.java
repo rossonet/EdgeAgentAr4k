@@ -9,17 +9,12 @@ import java.util.logging.Level;
 
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.rossonet.mm.MattermostRestClient;
+import org.rossonet.mm.client.model.Channel;
+import org.rossonet.mm.client.model.Post;
+import org.rossonet.mm.client.model.Team;
+import org.rossonet.mm.client.model.User;
 
-import net.bis5.mattermost.client4.ApiResponse;
-import net.bis5.mattermost.client4.MattermostClient;
-import net.bis5.mattermost.model.Channel;
-import net.bis5.mattermost.model.ChannelList;
-import net.bis5.mattermost.model.Post;
-import net.bis5.mattermost.model.PostList;
-import net.bis5.mattermost.model.Team;
-import net.bis5.mattermost.model.TeamList;
-import net.bis5.mattermost.model.User;
-import net.bis5.mattermost.model.UserList;
 
 public class MatterMostClientAr4k {
 
@@ -42,7 +37,7 @@ public class MatterMostClientAr4k {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MatterMostClientAr4k.class.toString());
 
-	private final MattermostClient client;
+	private final MattermostRestClient client;
 
 	private final String rossonetChatServer;
 
