@@ -10,6 +10,8 @@
 
 [TODO](TODO.md)
 
+[CODE STYLE](https://google.github.io/styleguide/javaguide.html)
+
 ## Run as a service
 
 ### Install as local init.d service

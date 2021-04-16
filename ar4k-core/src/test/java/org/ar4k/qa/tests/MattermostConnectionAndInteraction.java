@@ -15,6 +15,7 @@
 package org.ar4k.qa.tests;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.HomunculusSession;
@@ -44,6 +45,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.bis5.mattermost.model.Channel;
+import net.bis5.mattermost.model.Post;
+import net.bis5.mattermost.model.Team;
+import net.bis5.mattermost.model.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
@@ -82,6 +88,36 @@ public class MattermostConnectionAndInteraction {
 	public void checkTestConnection() throws InterruptedException, IOException {
 		Thread.sleep(5000);
 		System.out.println("***************************** " + homunculus.getMattermostClient().getMe());
+		int counter = 0;
+		while (counter++ < 100) {
+			System.out.println("\n--- REPORT STATUS ---");
+			System.out.println("			teams");
+			final Map<String, Team> teams = homunculus.getMattermostClient().getTeams();
+			for (Team t : teams.values()) {
+				System.out.println(t.getDisplayName());
+			}
+			System.out.println("			channels");
+			final Map<String, User> users = homunculus.getMattermostClient().getUsers();
+			final Map<String, Channel> channels = homunculus.getMattermostClient().getChannels();
+			for (Channel c : channels.values()) {
+				System.out.println(
+						c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
+								+ " [" + c.getType().name() + "]");
+			}
+			System.out.println("			users");
+			for (User u : users.values()) {
+				System.out.println(u.getEmail() + " -> " + u.getFirstName() + " " + u.getLastName() + " ["
+						+ u.getNickname() + "]");
+			}
+			System.out.println("			posts");
+			final Map<String, Post> posts = homunculus.getMattermostClient().getPosts();
+			for (Post m : posts.values()) {
+				System.out.println(users.get(m.getUserId()).getUsername() + " -> "
+						+ channels.get(m.getChannelId()).getDisplayName() + " : " + m.getMessage());
+			}
+			Thread.sleep(20000);
+		}
+
 	}
 
 }
