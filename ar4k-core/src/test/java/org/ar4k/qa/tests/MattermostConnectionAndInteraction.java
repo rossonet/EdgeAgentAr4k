@@ -25,6 +25,7 @@ import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -85,6 +86,7 @@ public class MattermostConnectionAndInteraction {
 	};
 
 	@Test
+	@Ignore
 	public void checkTestConnection() throws InterruptedException, IOException {
 		Thread.sleep(5000);
 		System.out.println("***************************** " + homunculus.getMattermostClient().getMe());

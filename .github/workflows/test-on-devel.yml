@@ -3,7 +3,7 @@ name: Test on master branch
 on:
   push:
     branches:
-    - master
+    - devel
 
 jobs:
   build:
