@@ -159,6 +159,9 @@ subprojects {
 	}
 
 	dependencies {
+	        testCompile('org.springframework.boot:spring-boot-starter-test')
+	        testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
+
 		// per annotazioni console
 		/*
 		compile group: 'com.beust', name: 'jcommander', version: '1.48'
