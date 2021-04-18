@@ -37,7 +37,7 @@ public class MatterMostClientAr4k {
 
 	public static final int DELAY_CHECK = 20 * 1000;
 
-	private static final Level LOG_LEVEL = Level.INFO;
+	private static final Level LOG_LEVEL = Level.FINE;
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MatterMostClientAr4k.class.toString());
