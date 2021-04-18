@@ -1,3 +1,0 @@
-[submodule "mattermost-java-api"]
-	path = mattermost-java-api
-	url = https://github.com/rossonet/mattermost-java-api.git

@@ -11,7 +11,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    */
 package org.ar4k.qa.tests;
 
 import java.io.IOException;
@@ -25,17 +25,11 @@ import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.rossonet.mm.MattermostApiException;
-import org.rossonet.mm.client.model.Channel;
-import org.rossonet.mm.client.model.Post;
-import org.rossonet.mm.client.model.Team;
-import org.rossonet.mm.client.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Import;
@@ -52,13 +46,17 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import net.bis5.mattermost.model.Channel;
+import net.bis5.mattermost.model.Post;
+import net.bis5.mattermost.model.Team;
+import net.bis5.mattermost.model.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-	JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-	StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-	FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
-	EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-mattermost.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -87,8 +85,7 @@ public class MattermostConnectionAndInteraction {
 	};
 
 	@Test
-	@Ignore
-	public void checkTestConnection() throws InterruptedException, IOException, MattermostApiException {
+	public void checkTestConnection() throws InterruptedException, IOException {
 		Thread.sleep(5000);
 		System.out.println("***************************** " + homunculus.getMattermostClient().getMe());
 		int counter = 0;
@@ -96,25 +93,25 @@ public class MattermostConnectionAndInteraction {
 			System.out.println("\n--- REPORT STATUS ---");
 			System.out.println("			teams");
 			final Map<String, Team> teams = homunculus.getMattermostClient().getTeams();
-			for (final Team t : teams.values()) {
+			for (Team t : teams.values()) {
 				System.out.println(t.getDisplayName());
 			}
 			System.out.println("			channels");
 			final Map<String, User> users = homunculus.getMattermostClient().getUsers();
 			final Map<String, Channel> channels = homunculus.getMattermostClient().getChannels();
-			for (final Channel c : channels.values()) {
+			for (Channel c : channels.values()) {
 				System.out.println(
 						c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
-						+ " [" + c.getType() + "]");
+								+ " [" + c.getType().name() + "]");
 			}
 			System.out.println("			users");
-			for (final User u : users.values()) {
+			for (User u : users.values()) {
 				System.out.println(u.getEmail() + " -> " + u.getFirstName() + " " + u.getLastName() + " ["
 						+ u.getNickname() + "]");
 			}
 			System.out.println("			posts");
 			final Map<String, Post> posts = homunculus.getMattermostClient().getPosts();
-			for (final Post m : posts.values()) {
+			for (Post m : posts.values()) {
 				System.out.println(users.get(m.getUserId()).getUsername() + " -> "
 						+ channels.get(m.getChannelId()).getDisplayName() + " : " + m.getMessage());
 			}
