@@ -93,16 +93,16 @@ public class MatterMostClientAr4k implements MessageHandler {
 			logger.error("no valid account or token to connect to chat server " + rossonetChatServer);
 		}
 		if (isConnected()) {
+			try {
+				webSocketChannel = new MatterMostWebSocketHandler(new URI(rossonetChatServer.replace("http://", "ws://").replace("https://", "wss://")+API_V4_WEBSOCKET));
+				webSocketChannel.startSession(client.getAuthToken());
+				webSocketChannel.addMessageHandler(this);
+			} catch (final Exception e) {
+				webSocketChannel=null;
+				logger.logException(e);
+			}
 			prepareNewConnection();
 			//System.out.println("*********** getUsers " + client.getUsers().readEntity());
-		}
-		try {
-			webSocketChannel = new MatterMostWebSocketHandler(new URI(rossonetChatServer.replace("http://", "ws://").replace("https://", "wss://")+API_V4_WEBSOCKET));
-			webSocketChannel.startSession(client.getAuthToken());
-			webSocketChannel.addMessageHandler(this);
-		} catch (final Exception e) {
-			webSocketChannel=null;
-			logger.logException(e);
 		}
 		final ReadNewMessageTask readNewMessageTask = new ReadNewMessageTask();
 		timerScheduler.schedule(readNewMessageTask, DELAY_CHECK_POSTS, DELAY_CHECK_POSTS);

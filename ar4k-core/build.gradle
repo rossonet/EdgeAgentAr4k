@@ -63,6 +63,7 @@ dependencies {
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.9.0.202009080501-r'
 
 // non toccare le versioni de non consapevolmente sotto
+	//compile group: 'jakarta.websocket', name: 'jakarta.websocket-api', version: '1.1.2'
 	compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
 	compile group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: '3.0.0'
 	compile group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.0'
@@ -75,6 +76,7 @@ dependencies {
 	compile group: 'org.glassfish.jersey.core', name: 'jersey-common', version: '3.0.0'
 	compile group: 'org.glassfish.jersey.ext', name: 'jersey-entity-filtering', version: '3.0.0'
 	compile group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.9'
+	//compile group: 'org.eclipse.jetty.websocket', name: 'websocket-jetty-client', version: '10.0.2'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
 	// non toccare le versioni de non consapevolmente sopra
 	

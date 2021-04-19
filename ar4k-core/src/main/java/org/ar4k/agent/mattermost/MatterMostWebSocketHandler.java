@@ -4,21 +4,21 @@ import java.net.URI;
 
 import javax.net.ssl.SSLContext;
 import javax.websocket.ClientEndpoint;
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 import org.json.JSONObject;
 
 @ClientEndpoint
-public class MatterMostWebSocketHandler extends javax.websocket.Endpoint{
+public class MatterMostWebSocketHandler {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MatterMostWebSocketHandler.class.toString());
@@ -28,22 +28,24 @@ public class MatterMostWebSocketHandler extends javax.websocket.Endpoint{
 
 	public MatterMostWebSocketHandler(URI endpointURI) {
 		try {
-			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			final ClientManager client = ClientManager.createClient();
+			logger.info("WS TARGET -> ");
 			if (endpointURI.toString().startsWith("wss://")) {
-				final SSLContext sslContext = SSLContext.getInstance("SSL");
-				final ClientEndpointConfig config = (ClientEndpointConfig) ClientEndpointConfig.Builder.create().build()
-						.getUserProperties().put("org.apache.websocket.SSL_CONTEXT", sslContext);
-				container.connectToServer(this,config, endpointURI);
+				logger.info("Mattermost ws in SSL");
+				final SSLContext sslContext = SSLContext.getDefault();
+				final SSLEngineConfigurator sslEngineConfigurator =
+						new SSLEngineConfigurator(sslContext, true, false, false);
+				client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR,
+						sslEngineConfigurator);
+				client.connectToServer(this, endpointURI);
 			} else {
-				container.connectToServer(this, endpointURI);
+				client.connectToServer(this, endpointURI);
 			}
 		} catch (final Exception e) {
 			logger.logException(e);
 		}
 	}
 
-
-	@Override
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason) {
 		this.userSession = null;
@@ -78,9 +80,8 @@ public class MatterMostWebSocketHandler extends javax.websocket.Endpoint{
 		sendMessage(o.toString());
 	}
 
-	@Override
-	public void onOpen(Session session, EndpointConfig config) {
-		// TODO Auto-generated method stub
-
+	@OnOpen
+	public void onOpen(Session session) {
+		this.userSession=session;
 	}
 }
