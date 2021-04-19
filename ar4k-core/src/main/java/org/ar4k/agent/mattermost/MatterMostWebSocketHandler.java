@@ -1,13 +1,18 @@
 package org.ar4k.agent.mattermost;
 
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
-import javax.websocket.ClientEndpoint;
+import javax.websocket.ClientEndpointConfig;
+import javax.websocket.ClientEndpointConfig.Configurator;
 import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler.Whole;
 import javax.websocket.Session;
 
 import org.ar4k.agent.logger.EdgeLogger;
@@ -17,8 +22,8 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.json.JSONObject;
 
-@ClientEndpoint
-public class MatterMostWebSocketHandler {
+//@ClientEndpoint
+public class MatterMostWebSocketHandler extends Endpoint {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(MatterMostWebSocketHandler.class.toString());
@@ -26,47 +31,76 @@ public class MatterMostWebSocketHandler {
 	Session userSession = null;
 	private MessageHandler messageHandler;
 
+	private Whole<String> sessionHandler = new Whole<String>() {
+
+		@Override
+		public void onMessage(String message) {
+			try {
+			if (messageHandler != null) {
+				JSONObject o = new JSONObject(message);
+				messageHandler.handleMessage(o);
+			
+			}
+			} catch (Exception a) {
+				logger.warn("in websocket message ",a);
+			}
+		}
+		
+	};
+
 	public MatterMostWebSocketHandler(URI endpointURI) {
 		try {
 			final ClientManager client = ClientManager.createClient();
-			logger.info("WS TARGET -> ");
+			logger.info("WS TARGET -> " + endpointURI);
+			Configurator clientEndpointConfigurator = new Configurator() {
+				public void beforeRequest(Map<String, List<String>> headers) {
+					headers.remove("Origin");
+					/*
+					 * for (Entry<String, List<String>> line:headers.entrySet()) {
+					 * System.out.println("HEADER -> "+line.getKey()); for (String v:
+					 * line.getValue()) { System.out.println("v: "+v); } }
+					 */
+				}
+
+			};
+			ClientEndpointConfig clientConfigurator = ClientEndpointConfig.Builder.create()
+					.configurator(clientEndpointConfigurator).build();
 			if (endpointURI.toString().startsWith("wss://")) {
-				logger.info("Mattermost ws in SSL");
+			//	logger.info("Mattermost ws in SSL");
 				final SSLContext sslContext = SSLContext.getDefault();
-				final SSLEngineConfigurator sslEngineConfigurator =
-						new SSLEngineConfigurator(sslContext, true, false, false);
-				client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR,
-						sslEngineConfigurator);
-				client.connectToServer(this, endpointURI);
+				final SSLEngineConfigurator sslEngineConfigurator = new SSLEngineConfigurator(sslContext, true, true,
+						true);
+				client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+				client.getProperties().put(ClientProperties.REDIRECT_ENABLED, true);
+				client.getProperties().put(ClientProperties.RETRY_AFTER_SERVICE_UNAVAILABLE, true);
+				// System.out.println("--- "+client.getInstalledExtensions());
+				client.connectToServer(this, clientConfigurator, endpointURI);
 			} else {
-				client.connectToServer(this, endpointURI);
+				client.connectToServer(this, clientConfigurator, endpointURI);
 			}
 		} catch (final Exception e) {
 			logger.logException(e);
 		}
 	}
 
-	@OnClose
+	@Override
 	public void onClose(Session userSession, CloseReason reason) {
+		//System.out.println("-------------- close ws session -> " + reason.getReasonPhrase());
 		this.userSession = null;
 	}
 
-	@OnMessage
-	public void onMessage(String message) {
-		if (this.messageHandler != null)
-			this.messageHandler.handleMessage(message);
-	}
 
 	public void addMessageHandler(MessageHandler msgHandler) {
 		this.messageHandler = msgHandler;
 	}
 
 	public void sendMessage(String message) {
+		//System.out.println("-------------- send message to ws session -> " + message);
 		this.userSession.getAsyncRemote().sendText(message);
 	}
 
 	public static interface MessageHandler {
-		public void handleMessage(String message);
+		public void handleMessage(JSONObject message);
 	}
 
 	public void startSession(String authToken) {
@@ -80,8 +114,10 @@ public class MatterMostWebSocketHandler {
 		sendMessage(o.toString());
 	}
 
-	@OnOpen
-	public void onOpen(Session session) {
-		this.userSession=session;
+	@Override
+	public void onOpen(Session session, EndpointConfig config) {
+		//System.out.println("-------------- new ws session -> " + session.getId());
+		session.addMessageHandler(String.class, sessionHandler);
+		this.userSession = session;
 	}
 }

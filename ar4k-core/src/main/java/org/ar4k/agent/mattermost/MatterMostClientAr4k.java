@@ -24,6 +24,7 @@ import org.ar4k.agent.mattermost.model.Team;
 import org.ar4k.agent.mattermost.model.TeamList;
 import org.ar4k.agent.mattermost.model.User;
 import org.ar4k.agent.mattermost.model.UserList;
+import org.json.JSONObject;
 
 
 @ClientEndpoint
@@ -354,8 +355,8 @@ public class MatterMostClientAr4k implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(String message) {
-		System.out.println("************************** "+message);
+	public void handleMessage(JSONObject message) {
+		System.out.println("************************** "+message.toString(2));
 
 	}
 
