@@ -1,8 +1,6 @@
 package org.ar4k.agent.mattermost;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +28,8 @@ public class MatterMostWebSocketHandler extends Endpoint {
 
 	Session userSession = null;
 	private MessageHandler messageHandler;
+	
+	private boolean active = false;
 
 	private Whole<String> sessionHandler = new Whole<String>() {
 
@@ -39,14 +39,17 @@ public class MatterMostWebSocketHandler extends Endpoint {
 			if (messageHandler != null) {
 				JSONObject o = new JSONObject(message);
 				messageHandler.handleMessage(o);
-			
+				active = true;
 			}
 			} catch (Exception a) {
+				active = false;
 				logger.warn("in websocket message ",a);
 			}
 		}
 		
 	};
+
+
 
 	public MatterMostWebSocketHandler(URI endpointURI) {
 		try {
@@ -75,10 +78,13 @@ public class MatterMostWebSocketHandler extends Endpoint {
 				client.getProperties().put(ClientProperties.RETRY_AFTER_SERVICE_UNAVAILABLE, true);
 				// System.out.println("--- "+client.getInstalledExtensions());
 				client.connectToServer(this, clientConfigurator, endpointURI);
+				active = true;
 			} else {
 				client.connectToServer(this, clientConfigurator, endpointURI);
+				active = true;
 			}
 		} catch (final Exception e) {
+			active = false;
 			logger.logException(e);
 		}
 	}
@@ -87,6 +93,7 @@ public class MatterMostWebSocketHandler extends Endpoint {
 	public void onClose(Session userSession, CloseReason reason) {
 		//System.out.println("-------------- close ws session -> " + reason.getReasonPhrase());
 		this.userSession = null;
+		active = false;
 	}
 
 
@@ -95,8 +102,13 @@ public class MatterMostWebSocketHandler extends Endpoint {
 	}
 
 	public void sendMessage(String message) {
+		try {
 		//System.out.println("-------------- send message to ws session -> " + message);
 		this.userSession.getAsyncRemote().sendText(message);
+		} catch (Exception e) {
+			active = false;
+			logger.logException(e);
+		}
 	}
 
 	public static interface MessageHandler {
@@ -119,5 +131,10 @@ public class MatterMostWebSocketHandler extends Endpoint {
 		//System.out.println("-------------- new ws session -> " + session.getId());
 		session.addMessageHandler(String.class, sessionHandler);
 		this.userSession = session;
+		active = true;
+	}
+
+	public boolean isActive() {
+		return userSession!=null && userSession.isOpen() && active;
 	}
 }

@@ -26,7 +26,6 @@ import org.ar4k.agent.mattermost.model.User;
 import org.ar4k.agent.mattermost.model.UserList;
 import org.json.JSONObject;
 
-
 @ClientEndpoint
 public class MatterMostClientAr4k implements MessageHandler {
 
@@ -45,10 +44,10 @@ public class MatterMostClientAr4k implements MessageHandler {
 	}
 
 	public static final int DELAY_CHECK_POSTS = 40 * 1000;
-	public static final int DELAY_CHECK_TEAMS = 5* 60 * 1000;
-	public static final int DELAY_CHECK_CHANNELS = 2* 60 * 1000;
-	public static final int DELAY_CLEAN_POSTS = 6* 60 * 1000;
-	public static final int DELAY_CHECK_USERS = 7* 60 * 1000;
+	public static final int DELAY_CHECK_TEAMS = 5 * 60 * 1000;
+	public static final int DELAY_CHECK_CHANNELS = 2 * 60 * 1000;
+	public static final int DELAY_CLEAN_POSTS = 11 * 60 * 1000;
+	public static final int DELAY_CHECK_USERS = 7 * 60 * 1000;
 
 	private static final Level LOG_LEVEL = Level.FINE;
 
@@ -57,7 +56,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	private final MattermostClient client;
 
-	private  MatterMostWebSocketHandler webSocketChannel =null;
+	private MatterMostWebSocketHandler webSocketChannel = null;
 
 	private final String rossonetChatServer;
 
@@ -66,7 +65,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	private final Map<String, Post> workedMessages = new HashMap<>();
 
-	private final Map<Long,String> dateForMessages = new HashMap<>();
+	private final Map<Long, String> dateForMessages = new HashMap<>();
 
 	private final Map<String, Team> workedTeams = new HashMap<>();
 
@@ -74,14 +73,15 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	private final Map<String, User> workedUsers = new HashMap<>();
 	private long lastTeamsTime = 0;
-	private long lastUsersTime= 0;
+	private long lastUsersTime = 0;
 	private long lastChannelsTime = 0;
 	private long lastPostsTime = 0;
 	private long lastCleanPostsTime = 0;
-
+	private final MatterMostCallBack callBack;
 
 	public MatterMostClientAr4k(String rossonetChatServer, String rossonetChatUserName, String rossonetChatPassword,
-			String rossonetChatToken) {
+			String rossonetChatToken, MatterMostCallBack callback) {
+		this.callBack = callback;
 		this.rossonetChatServer = rossonetChatServer;
 		client = MattermostClient.builder().url(rossonetChatServer).logLevel(LOG_LEVEL).ignoreUnknownProperties()
 				.build();
@@ -95,18 +95,21 @@ public class MatterMostClientAr4k implements MessageHandler {
 		}
 		if (isConnected()) {
 			try {
-				webSocketChannel = new MatterMostWebSocketHandler(new URI(rossonetChatServer.replace("http://", "ws://").replace("https://", "wss://")+API_V4_WEBSOCKET));
+				webSocketChannel = new MatterMostWebSocketHandler(
+						new URI(rossonetChatServer.replace("http://", "ws://").replace("https://", "wss://")
+								+ API_V4_WEBSOCKET));
 				webSocketChannel.startSession(client.getAuthToken());
 				webSocketChannel.addMessageHandler(this);
 			} catch (final Exception e) {
-				webSocketChannel=null;
+				webSocketChannel = null;
 				logger.logException(e);
 			}
 			prepareNewConnection();
-			//System.out.println("*********** getUsers " + client.getUsers().readEntity());
+			// System.out.println("*********** getUsers " + client.getUsers().readEntity());
 		}
 		final ReadNewMessageTask readNewMessageTask = new ReadNewMessageTask();
 		timerScheduler.schedule(readNewMessageTask, DELAY_CHECK_POSTS, DELAY_CHECK_POSTS);
+		callBack.connectionStarted();
 	}
 
 	private void prepareNewConnection() {
@@ -125,7 +128,6 @@ public class MatterMostClientAr4k implements MessageHandler {
 	public Post getPost(Post postRead) {
 		return client.getPost(postRead.getId()).readEntity();
 	}
-
 
 	private TeamList getTeamsFromRemote() {
 		try {
@@ -161,7 +163,6 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	private PostList listPostsSince(final String channelId, final long fromTime) {
 		try {
-			//final long fromTimeFake = new Date().getTime()-(24*60*60*1000);
 			final ApiResponse<PostList> postsSince = client.getPostsSince(channelId, fromTime);
 			return postsSince.readEntity();
 
@@ -189,37 +190,38 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	private void onNewChannel(Channel channel) {
 		logger.info("new channel configured " + channel);
-		// TODO Auto-generated method stub
+		callBack.onNewChannel(channel);
 
 	}
 
 	private void onNewPost(Post post) {
 		logger.info("new post received " + post);
-		// TODO Auto-generated method stub
+		callBack.onNewPost(post);
 
 	}
 
 	private void onNewTeam(Team team) {
 		logger.info("new team configured " + team);
-		// TODO Auto-generated method stub
-
+		callBack.onNewTeam(team);
 	}
 
 	private void refreshDataFromServer() {
 		final long time = new Date().getTime();
+		if (!(webSocketChannel != null && webSocketChannel.isActive())) {
+			refreshPosts(time);
+		}
 		refreshTeams(time);
 		refreshUsers(time);
 		refreshChannels(time);
-		refreshPosts(time);
 		removeOldMessages(time);
 	}
 
 	private void removeOldMessages(long time) {
-		if (lastCleanPostsTime == 0 || lastCleanPostsTime +  DELAY_CLEAN_POSTS < time) {
-			final  Map<Long, String> toDelete  = new HashMap<>();
+		if (lastCleanPostsTime == 0 || lastCleanPostsTime + DELAY_CLEAN_POSTS < time) {
+			final Map<Long, String> toDelete = new HashMap<>();
 			for (final Entry<Long, String> message : dateForMessages.entrySet()) {
-				if (message.getKey() +DELAY_CLEAN_POSTS< time) {
-					toDelete.put(message.getKey(),message.getValue());
+				if (message.getKey() + DELAY_CLEAN_POSTS < time) {
+					toDelete.put(message.getKey(), message.getValue());
 				}
 			}
 			if (!toDelete.isEmpty()) {
@@ -228,13 +230,13 @@ public class MatterMostClientAr4k implements MessageHandler {
 					dateForMessages.remove(messageToDelete.getKey());
 				}
 			}
-			lastCleanPostsTime=time;
+			lastCleanPostsTime = time;
 		}
 	}
 
 	private void refreshTeams(final long time) {
-		//teams
-		if (lastTeamsTime == 0 || lastTeamsTime +  DELAY_CHECK_TEAMS < time) {
+		// teams
+		if (lastTeamsTime == 0 || lastTeamsTime + DELAY_CHECK_TEAMS < time) {
 			final TeamList allTeams = getTeamsFromRemote();
 			if (allTeams != null) {
 				for (final Team checkedTeam : allTeams) {
@@ -246,14 +248,14 @@ public class MatterMostClientAr4k implements MessageHandler {
 					}
 				}
 			}
-			lastTeamsTime=time;
+			lastTeamsTime = time;
 		}
-		System.out.println("teams -> "+workedTeams);
+		System.out.println("teams -> " + workedTeams);
 	}
 
 	private void refreshUsers(final long time) {
 		// users
-		if (lastUsersTime == 0 || lastUsersTime +  DELAY_CHECK_USERS < time) {
+		if (lastUsersTime == 0 || lastUsersTime + DELAY_CHECK_USERS < time) {
 			final UserList usersFromRemote = getUsersFromRemote();
 			if (usersFromRemote != null) {
 				for (final User checkedUser : usersFromRemote) {
@@ -265,13 +267,13 @@ public class MatterMostClientAr4k implements MessageHandler {
 					}
 				}
 			}
-			lastUsersTime=time;
+			lastUsersTime = time;
 		}
-		System.out.println("users -> "+workedUsers);
+		System.out.println("users -> " + workedUsers);
 	}
 
 	private void refreshChannels(final long time) {
-		if (lastChannelsTime == 0 || lastChannelsTime +  DELAY_CHECK_CHANNELS < time) {
+		if (lastChannelsTime == 0 || lastChannelsTime + DELAY_CHECK_CHANNELS < time) {
 			for (final User checkedUser : workedUsers.values()) {
 				for (final Team teamLooking : workedTeams.values()) {
 					final ChannelList usersChannels = getUsersChannels(teamLooking, checkedUser);
@@ -287,16 +289,15 @@ public class MatterMostClientAr4k implements MessageHandler {
 					}
 				}
 			}
-			lastChannelsTime=time;
+			lastChannelsTime = time;
 		}
-		System.out.println("channels -> "+workedChannels);
+		System.out.println("channels -> " + workedChannels);
 	}
 
 	private void refreshPosts(final long time) {
-		if (lastPostsTime == 0 || lastPostsTime +  DELAY_CHECK_POSTS < time) {
+		if (lastPostsTime == 0 || lastPostsTime + DELAY_CHECK_POSTS < time) {
 			for (final Channel checkedChannel : workedChannels.values()) {
-				final PostList listPostsSince = listPostsSince(checkedChannel.getId(),
-						time - (2 * DELAY_CHECK_POSTS));
+				final PostList listPostsSince = listPostsSince(checkedChannel.getId(), time - (2 * DELAY_CHECK_POSTS));
 				if (listPostsSince != null) {
 					for (final Post checkedPost : listPostsSince.getPosts().values()) {
 						if (!workedMessages.containsKey(checkedPost.getId())) {
@@ -309,9 +310,9 @@ public class MatterMostClientAr4k implements MessageHandler {
 					}
 				}
 			}
-			lastPostsTime=time;
+			lastPostsTime = time;
 		}
-		System.out.println("posts -> "+workedMessages);
+		System.out.println("posts -> " + workedMessages);
 	}
 
 	private ChannelList getUsersChannels(Team team, User user) {
@@ -330,8 +331,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 	}
 
 	private void onNewUser(User checkedUser) {
-		// TODO Auto-generated method stub
-
+		callBack.onNewUser(checkedUser);
 	}
 
 	public Map<String, Channel> getChannels() {
@@ -356,8 +356,140 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	@Override
 	public void handleMessage(JSONObject message) {
-		System.out.println("************************** "+message.toString(2));
+		if (message.has("event")) {
+			switch (message.getString("event")) {
+			case ("added_to_team"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("authentication_challenge"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_converted"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_created"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_deleted"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_member_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("channel_viewed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("config_changed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("delete_team"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("direct_added"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("emoji_added"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("ephemeral_message"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("group_added"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("hello"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("leave_team"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("license_changed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("memberrole_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("new_user"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("plugin_disabled"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("plugin_enabled"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("plugin_statuses_changed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("post_deleted"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("post_edited"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("post_unread"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("posted"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("preference_changed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("preferences_changed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("preferences_deleted"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("reaction_added"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("reaction_removed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("response"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("role_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("status_change"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("typing"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("update_team"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("user_added"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("user_removed"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("user_role_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("user_updated"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			case ("dialog_opened"):
+				//logger.debug("event " + message.getString("event"));
+				break;
+			}
+		} else {
+			logger.info("received web socket message from " + rossonetChatServer + " without event tag");
+			logger.debug("received web socket message " + message.toString(2));
+		}
+	}
 
+	public MatterMostCallBack getCallBack() {
+		return callBack;
 	}
 
 }

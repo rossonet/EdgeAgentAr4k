@@ -41,7 +41,7 @@ public class SshdHomunculusConfig extends AbstractServiceConfig {
 
 	@Override
 	public String toString() {
-		return "SshdHomunculusConfig [port=" + port + ", broadcastAddress=" + broadcastAddress + "]";
+		return "RossonetChatConfig [port=" + port + ", broadcastAddress=" + broadcastAddress + "]";
 	}
 
 }

@@ -66,6 +66,7 @@ import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.mattermost.MatterMostClientAr4k;
+import org.ar4k.agent.mattermost.MatterMostRpcManager;
 import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
@@ -186,6 +187,8 @@ public class Homunculus
 	private String beanName = "homunculus";
 
 	private MatterMostClientAr4k mattermostClient = null;
+
+	private MatterMostRpcManager matterMostRpcManager = null;
 
 	private BeaconClient beaconClient = null;
 
@@ -661,9 +664,14 @@ public class Homunculus
 		}
 		if (starterProperties.getRossonetChatServer() != null && !starterProperties.getRossonetChatServer().isEmpty()) {
 			try {
+				final String sessionId = UUID.randomUUID().toString().replace("-", "") + "_"
+						+ starterProperties.getRossonetChatServer();
+				homunculusSession.registerNewSession(sessionId, sessionId);
+				final RpcConversation rpc = homunculusSession.getRpc(sessionId);
+				matterMostRpcManager = new MatterMostRpcManager(rpc);
 				mattermostClient = new MatterMostClientAr4k(starterProperties.getRossonetChatServer(),
 						starterProperties.getRossonetChatUser(), starterProperties.getRossonetChatPassword(),
-						starterProperties.getRossonetChatToken());
+						starterProperties.getRossonetChatToken(), matterMostRpcManager.getCallBack());
 				mattermostClient.reportStatusInLog();
 			} catch (Exception a) {
 				logger.logException("during connection to " + starterProperties.getRossonetChatServer(), a);
