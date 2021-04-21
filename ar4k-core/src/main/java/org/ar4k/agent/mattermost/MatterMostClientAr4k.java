@@ -106,10 +106,12 @@ public class MatterMostClientAr4k implements MessageHandler {
 			}
 			prepareNewConnection();
 			// System.out.println("*********** getUsers " + client.getUsers().readEntity());
+			final ReadNewMessageTask readNewMessageTask = new ReadNewMessageTask();
+			timerScheduler.schedule(readNewMessageTask, DELAY_CHECK_POSTS, DELAY_CHECK_POSTS);
+			callBack.connectionStarted();
+		} else {
+			logger.error("no session to chat server " + rossonetChatServer);
 		}
-		final ReadNewMessageTask readNewMessageTask = new ReadNewMessageTask();
-		timerScheduler.schedule(readNewMessageTask, DELAY_CHECK_POSTS, DELAY_CHECK_POSTS);
-		callBack.connectionStarted();
 	}
 
 	private void prepareNewConnection() {
@@ -250,7 +252,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 			}
 			lastTeamsTime = time;
 		}
-		System.out.println("teams -> " + workedTeams);
+		//System.out.println("teams -> " + workedTeams);
 	}
 
 	private void refreshUsers(final long time) {
@@ -269,7 +271,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 			}
 			lastUsersTime = time;
 		}
-		System.out.println("users -> " + workedUsers);
+		//System.out.println("users -> " + workedUsers);
 	}
 
 	private void refreshChannels(final long time) {
@@ -291,7 +293,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 			}
 			lastChannelsTime = time;
 		}
-		System.out.println("channels -> " + workedChannels);
+		//System.out.println("channels -> " + workedChannels);
 	}
 
 	private void refreshPosts(final long time) {
@@ -312,7 +314,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 			}
 			lastPostsTime = time;
 		}
-		System.out.println("posts -> " + workedMessages);
+		//System.out.println("posts -> " + workedMessages);
 	}
 
 	private ChannelList getUsersChannels(Team team, User user) {
@@ -359,127 +361,443 @@ public class MatterMostClientAr4k implements MessageHandler {
 		if (message.has("event")) {
 			switch (message.getString("event")) {
 			case ("added_to_team"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh"
+  },
+  "event": "added_to_team",
+  "seq": 13
+}
+			 */
 				break;
 			case ("authentication_challenge"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_converted"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {"channel_id": "agibznfpapdk9ebdwpc399nmey"},
+  "event": "channel_converted",
+  "seq": 25
+}
+			 */
 				break;
 			case ("channel_created"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_deleted"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "delete_at": 1618994491292,
+    "channel_id": "9tjrznnkyjnp8pxa5eokfrui7r"
+  },
+  "event": "channel_deleted",
+  "seq": 34
+}
+			 */
 				break;
 			case ("channel_member_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "agibznfpapdk9ebdwpc399nmey",
+    "omit_users": null
+  },
+  "data": {"channel": "{\"id\":\"agibznfpapdk9ebdwpc399nmey\",\"create_at\":1618994185794,\"update_at\":1618994225026,\"delete_at\":0,\"team_id\":\"hffh7ry3y7nzmq8aasrhxhienh\",\"type\":\"O\",\"display_name\":\"prova\",\"name\":\"prova\",\"header\":\"titolo\",\"purpose\":\"\",\"last_post_at\":1618994197159,\"total_msg_count\":0,\"extra_update_at\":0,\"creator_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"scheme_id\":\"\",\"props\":null,\"group_constrained\":false}"},
+  "event": "channel_updated",
+  "seq": 21
+}
+			 */
 				break;
 			case ("channel_viewed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("config_changed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("delete_team"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("direct_added"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("emoji_added"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("ephemeral_message"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("group_added"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("hello"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {"server_version": "5.30.0.5.31.0.283742429026e2e5404ae708ae1d45ce.false"},
+  "event": "hello",
+  "seq": 0
+}
+			 */
 				break;
 			case ("leave_team"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "yogedfqb8td98pyc1b6iemxtje",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh"
+  },
+  "event": "leave_team",
+  "seq": 38
+}
+			 */
 				break;
 			case ("license_changed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("memberrole_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("new_user"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_disabled"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_enabled"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_statuses_changed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("post_deleted"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "qgsi9rgzzbbwbgms511msjndda",
+    "omit_users": null
+  },
+  "data": {
+    "post": "{\"id\":\"xpu75dkiit878xhc85bjn7mkjw\",\"create_at\":1618995822794,\"update_at\":1618995822794,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"qgsi9rgzzbbwbgms511msjndda\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ggg\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"pending_post_id\":\"\",\"reply_count\":0,\"metadata\":{}}",
+    "delete_by": "yogedfqb8td98pyc1b6iemxtje"
+  },
+  "event": "post_deleted",
+  "seq": 5
+}
+
+			 */
 				break;
 			case ("post_edited"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("post_unread"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+
 				break;
 			case ("posted"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "q9mh7czwdbdp3gq998ghqwz3cc",
+    "omit_users": null
+  },
+  "data": {
+    "channel_display_name": "prova 2",
+    "channel_name": "prova-2",
+    "set_online": true,
+    "image": "true",
+    "otherFile": "true",
+    "post": "{\"id\":\"64arhi7eytdb88fg7x39hkygqa\",\"create_at\":1618993497603,\"update_at\":1618993497603,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"q9mh7czwdbdp3gq998ghqwz3cc\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ecco\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"file_ids\":[\"9p1xa877wfykubyqpcj43itpiw\"],\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993497439\",\"reply_count\":0,\"metadata\":{\"files\":[{\"id\":\"9p1xa877wfykubyqpcj43itpiw\",\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"post_id\":\"64arhi7eytdb88fg7x39hkygqa\",\"create_at\":1618993490541,\"update_at\":1618993490541,\"delete_at\":0,\"name\":\"2.png\",\"extension\":\"png\",\"size\":24978,\"mime_type\":\"image/png\",\"width\":300,\"height\":300,\"has_preview_image\":true,\"mini_preview\":\"/9j/2wCEAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRQBAwQEBQQFCQUFCRQNCw0UFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFP/AABEIABAAEAMBIgACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/APufxZ4o8Raf4l1eDT9Wud6T+ZBDshKxqiFmVlZxhGzjecDv1AFL4Z8S6zfeKNGtn1K/jslkVi00kcyXiuu5QrKfmUcYcDBBBzk4rM8a+DfEepeLNcvLPRrifzJgEmlZWgcbdoYxkEMNm+MqAd3mDOMbhW8JeBfEl78RNG1/VvC66cbKYW7NmKSQxiFEVyQAoVTHwEHy7jgc5r6xqh7C9435fK97f1+dj88TxX1qyU7c/wDetbm9P+HWl2kf/9k=\"}]}}",
+    "sender_name": "@andrea.ambrosini",
+    "team_id": "onne1bty4byoiqonj6fm9ox47y",
+    "channel_type": "O"
+  },
+  "event": "posted",
+  "seq": 5
+}
+			 */
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "q9mh7czwdbdp3gq998ghqwz3cc",
+    "omit_users": null
+  },
+  "data": {
+    "channel_display_name": "prova 2",
+    "channel_name": "prova-2",
+    "set_online": true,
+    "post": "{\"id\":\"1rb8oe9yff8nfe4oijqyyg5sgc\",\"create_at\":1618993433920,\"update_at\":1618993433920,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"q9mh7czwdbdp3gq998ghqwz3cc\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ciao\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993433829\",\"reply_count\":0,\"metadata\":{}}",
+    "sender_name": "@andrea.ambrosini",
+    "team_id": "onne1bty4byoiqonj6fm9ox47y",
+    "channel_type": "O"
+  },
+  "event": "posted",
+  "seq": 3
+}
+			 */
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "r9arzpehfi8tpbchhaktkhssea",
+    "omit_users": null
+  },
+  "data": {
+    "channel_display_name": "@andrea.ambrosini",
+    "channel_name": "ifumy6je6b8jdff5yi7ohokwze__yogedfqb8td98pyc1b6iemxtje",
+    "set_online": true,
+    "post": "{\"id\":\"mg5a67ak5tff3dxztaqizyqeba\",\"create_at\":1618993875456,\"update_at\":1618993875456,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"r9arzpehfi8tpbchhaktkhssea\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ciao 5\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993875375\",\"reply_count\":0,\"metadata\":{}}",
+    "mentions": "[\"ifumy6je6b8jdff5yi7ohokwze\"]",
+    "sender_name": "@andrea.ambrosini",
+    "team_id": "",
+    "channel_type": "D"
+  },
+  "event": "posted",
+  "seq": 12
+}
+
+			 */
 				break;
 			case ("preference_changed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("preferences_changed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("preferences_deleted"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("reaction_added"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("reaction_removed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("response"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("role_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("status_change"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 *  {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "status": "away"
+  },
+  "event": "status_change",
+  "seq": 10
+}
+			 */
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "status": "online"
+  },
+  "event": "status_change",
+  "seq": 1
+t
+			 */
 				break;
 			case ("typing"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "q9mh7czwdbdp3gq998ghqwz3cc",
+    "omit_users": {"yogedfqb8td98pyc1b6iemxtje": true}
+  },
+  "data": {
+    "user_id": "yogedfqb8td98pyc1b6iemxtje",
+    "parent_id": ""
+  },
+  "event": "typing",
+  "seq": 2
+}
+			 */
 				break;
 			case ("update_team"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {"team": "{\"id\":\"hffh7ry3y7nzmq8aasrhxhienh\",\"create_at\":1618993853182,\"update_at\":1618994829951,\"delete_at\":0,\"display_name\":\"team-test-5\",\"name\":\"team-test-2\",\"description\":\"\",\"email\":\"\",\"type\":\"O\",\"company_name\":\"\",\"allowed_domains\":\"\",\"invite_id\":\"\",\"allow_open_invite\":false,\"scheme_id\":null,\"group_constrained\":null}"},
+  "event": "update_team",
+  "seq": 36
+}
+			 */
 				break;
 			case ("user_added"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "ptx9buoqn7y7byy5sw19xiania",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "onne1bty4byoiqonj6fm9ox47y"
+  },
+  "event": "user_added",
+  "seq": 6
+}
+			 */
 				break;
 			case ("user_removed"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "remover_id": "yogedfqb8td98pyc1b6iemxtje",
+    "channel_id": "agibznfpapdk9ebdwpc399nmey"
+  },
+  "event": "user_removed",
+  "seq": 26
+}
+			 */
 				break;
 			case ("user_role_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {
+    "user_id": "ifumy6je6b8jdff5yi7ohokwze",
+    "roles": "system_user"
+  },
+  "event": "user_role_updated",
+  "seq": 6
+}
+			 */
 				break;
 			case ("user_updated"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+			/*
+			 * {
+  "broadcast": {
+    "user_id": "",
+    "team_id": "",
+    "channel_id": "",
+    "omit_users": null
+  },
+  "data": {"user": {
+    "auth_service": "",
+    "timezone": {
+      "manualTimezone": "",
+      "useAutomaticTimezone": "true",
+      "automaticTimezone": "Europe/Rome"
+    },
+    "roles": "system_admin system_user",
+    "last_name": "Ambrosini",
+    "locale": "it",
+    "auth_data": "",
+    "last_picture_update": 1618324151750,
+    "update_at": 1618994616644,
+    "nickname": "",
+    "delete_at": 0,
+    "id": "yogedfqb8td98pyc1b6iemxtje",
+    "position": "primo_maggio",
+    "create_at": 1618250883955,
+    "first_name": "Andrea",
+    "email": "andrea.ambrosini@rossonet.com",
+    "username": "andrea.ambrosini"
+  }},
+  "event": "user_updated",
+  "seq": 35
+}
+
+			 */
 				break;
 			case ("dialog_opened"):
-				//logger.debug("event " + message.getString("event"));
+				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			}
 		} else {

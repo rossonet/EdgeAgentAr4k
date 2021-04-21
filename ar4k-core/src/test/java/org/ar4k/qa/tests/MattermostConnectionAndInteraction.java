@@ -53,10 +53,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-	JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-	StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-	FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
-	EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-mattermost.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -90,31 +90,34 @@ public class MattermostConnectionAndInteraction {
 		Thread.sleep(5000);
 		System.out.println("***************************** " + homunculus.getMattermostClient().getMe());
 		int counter = 0;
+		boolean activeReport = false;
 		while (counter++ < 100) {
-			System.out.println("\n--- REPORT STATUS ---");
-			System.out.println("			teams");
-			final Map<String, Team> teams = homunculus.getMattermostClient().getTeams();
-			for (final Team t : teams.values()) {
-				System.out.println(t.getDisplayName());
-			}
-			System.out.println("			channels");
-			final Map<String, User> users = homunculus.getMattermostClient().getUsers();
-			final Map<String, Channel> channels = homunculus.getMattermostClient().getChannels();
-			for (final Channel c : channels.values()) {
-				System.out.println(
-						c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
-						+ " [" + c.getType().name() + "]");
-			}
-			System.out.println("			users");
-			for (final User u : users.values()) {
-				System.out.println(u.getEmail() + " -> " + u.getFirstName() + " " + u.getLastName() + " ["
-						+ u.getNickname() + "]");
-			}
-			System.out.println("			posts");
-			final Map<String, Post> posts = homunculus.getMattermostClient().getPosts();
-			for (final Post m : posts.values()) {
-				System.out.println(users.get(m.getUserId()).getUsername() + " -> "
-						+ channels.get(m.getChannelId()).getDisplayName() + " : " + m.getMessage());
+			if (activeReport) {
+				System.out.println("\n--- REPORT STATUS ---");
+				System.out.println("			teams");
+				final Map<String, Team> teams = homunculus.getMattermostClient().getTeams();
+				for (final Team t : teams.values()) {
+					System.out.println(t.getDisplayName());
+				}
+				System.out.println("			channels");
+				final Map<String, User> users = homunculus.getMattermostClient().getUsers();
+				final Map<String, Channel> channels = homunculus.getMattermostClient().getChannels();
+				for (final Channel c : channels.values()) {
+					System.out.println(
+							c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
+									+ " [" + c.getType().name() + "]");
+				}
+				System.out.println("			users");
+				for (final User u : users.values()) {
+					System.out.println(u.getEmail() + " -> " + u.getFirstName() + " " + u.getLastName() + " ["
+							+ u.getNickname() + "]");
+				}
+				System.out.println("			posts");
+				final Map<String, Post> posts = homunculus.getMattermostClient().getPosts();
+				for (final Post m : posts.values()) {
+					System.out.println(users.get(m.getUserId()).getUsername() + " -> "
+							+ channels.get(m.getChannelId()).getDisplayName() + " : " + m.getMessage());
+				}
 			}
 			Thread.sleep(20000);
 		}
