@@ -83,7 +83,7 @@ public class MattermostConnectionAndInteraction {
 			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
 		}
 	};
-
+	
 	@Test
 	@Ignore
 	public void checkTestConnection() throws InterruptedException, IOException {

@@ -672,6 +672,7 @@ public class Homunculus
 				mattermostClient = new MatterMostClientAr4k(starterProperties.getRossonetChatServer(),
 						starterProperties.getRossonetChatUser(), starterProperties.getRossonetChatPassword(),
 						starterProperties.getRossonetChatToken(), matterMostRpcManager.getCallBack());
+				matterMostRpcManager.setMattermostClient(mattermostClient);
 				mattermostClient.reportStatusInLog();
 			} catch (Exception a) {
 				logger.logException("during connection to " + starterProperties.getRossonetChatServer(), a);

@@ -21,6 +21,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BeaconClientServerComandTests {
@@ -90,6 +91,7 @@ public class BeaconClientServerComandTests {
   }
 
   @Test
+  @Ignore
   public void oneServerAsClientSocketTestLeftNoSsl() throws Exception {
     oneServerAsClientSocketTestLeft(false);
   }
