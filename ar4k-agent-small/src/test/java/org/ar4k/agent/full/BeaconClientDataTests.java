@@ -241,6 +241,7 @@ public class BeaconClientDataTests {
 	}
 
 	@Test
+	@Ignore
 	public void oneServerAsClientSocketTestLeftNoSsl() throws Exception {
 		oneServerAsClientSocketTestLeft(false);
 	}
