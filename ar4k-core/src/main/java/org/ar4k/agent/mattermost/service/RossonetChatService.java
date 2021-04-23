@@ -8,6 +8,12 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.mattermost.MatterMostCallBack;
+import org.ar4k.agent.mattermost.MatterMostClientAr4k;
+import org.ar4k.agent.mattermost.model.Channel;
+import org.ar4k.agent.mattermost.model.Post;
+import org.ar4k.agent.mattermost.model.Team;
+import org.ar4k.agent.mattermost.model.User;
 import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +24,7 @@ import com.google.gson.GsonBuilder;
  *         Gestore servizio per connessioni rossonet mm.
  *
  */
-public class RossonetChatService implements EdgeComponent {
+public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(RossonetChatService.class.toString());
@@ -29,9 +35,12 @@ public class RossonetChatService implements EdgeComponent {
 
 	private Homunculus homunculus = null;
 
+	// TODO canale per invio messaggi (comprensivo di allegati)
 	private DataAddress dataspace = null;
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
+
+	private MatterMostClientAr4k mattermostClient;
 
 	@Override
 	public RossonetChatConfig getConfiguration() {
@@ -45,7 +54,9 @@ public class RossonetChatService implements EdgeComponent {
 
 	@Override
 	public void init() {
-		//TODO
+		this.mattermostClient = new MatterMostClientAr4k(getConfiguration().mmServer,
+				getConfiguration().username, getConfiguration().password,
+				getConfiguration().token,this);
 
 	}
 
@@ -88,7 +99,37 @@ public class RossonetChatService implements EdgeComponent {
 	@Override
 	public JSONObject getDescriptionJson() {
 		return null;
-		//TODO
+		//TODO descrione come json
+	}
+
+	@Override
+	public void connectionStarted() {
+		// TODO portare su data
+		
+	}
+
+	@Override
+	public void onNewChannel(Channel channel) {
+		// TODO portare su data
+		
+	}
+
+	@Override
+	public void onNewUser(User checkedUser) {
+		// TODO portare su data
+		
+	}
+
+	@Override
+	public void onNewTeam(Team team) {
+		// TODO portare su data
+		
+	}
+
+	@Override
+	public void onNewPost(Post post) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

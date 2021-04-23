@@ -499,37 +499,6 @@ public class MatterMostClientAr4k implements MessageHandler {
 				} catch (JsonProcessingException exception) {
 					logger.logException(exception);
 				}
-
-				/*
-				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
-				 * "q9mh7czwdbdp3gq998ghqwz3cc", "omit_users": null }, "data": {
-				 * "channel_display_name": "prova 2", "channel_name": "prova-2", "set_online":
-				 * true, "image": "true", "otherFile": "true", "post":
-				 * "{\"id\":\"64arhi7eytdb88fg7x39hkygqa\",\"create_at\":1618993497603,\"update_at\":1618993497603,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"q9mh7czwdbdp3gq998ghqwz3cc\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ecco\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"file_ids\":[\"9p1xa877wfykubyqpcj43itpiw\"],\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993497439\",\"reply_count\":0,\"metadata\":{\"files\":[{\"id\":\"9p1xa877wfykubyqpcj43itpiw\",\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"post_id\":\"64arhi7eytdb88fg7x39hkygqa\",\"create_at\":1618993490541,\"update_at\":1618993490541,\"delete_at\":0,\"name\":\"2.png\",\"extension\":\"png\",\"size\":24978,\"mime_type\":\"image/png\",\"width\":300,\"height\":300,\"has_preview_image\":true,\"mini_preview\":\"/9j/2wCEAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRQBAwQEBQQFCQUFCRQNCw0UFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFP/AABEIABAAEAMBIgACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/APufxZ4o8Raf4l1eDT9Wud6T+ZBDshKxqiFmVlZxhGzjecDv1AFL4Z8S6zfeKNGtn1K/jslkVi00kcyXiuu5QrKfmUcYcDBBBzk4rM8a+DfEepeLNcvLPRrifzJgEmlZWgcbdoYxkEMNm+MqAd3mDOMbhW8JeBfEl78RNG1/VvC66cbKYW7NmKSQxiFEVyQAoVTHwEHy7jgc5r6xqh7C9435fK97f1+dj88TxX1qyU7c/wDetbm9P+HWl2kf/9k=\"}]}}",
-				 * "sender_name": "@andrea.ambrosini", "team_id": "onne1bty4byoiqonj6fm9ox47y",
-				 * "channel_type": "O" }, "event": "posted", "seq": 5 }
-				 */
-				/*
-				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
-				 * "q9mh7czwdbdp3gq998ghqwz3cc", "omit_users": null }, "data": {
-				 * "channel_display_name": "prova 2", "channel_name": "prova-2", "set_online":
-				 * true, "post":
-				 * "{\"id\":\"1rb8oe9yff8nfe4oijqyyg5sgc\",\"create_at\":1618993433920,\"update_at\":1618993433920,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"q9mh7czwdbdp3gq998ghqwz3cc\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ciao\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993433829\",\"reply_count\":0,\"metadata\":{}}",
-				 * "sender_name": "@andrea.ambrosini", "team_id": "onne1bty4byoiqonj6fm9ox47y",
-				 * "channel_type": "O" }, "event": "posted", "seq": 3 }
-				 */
-				/*
-				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
-				 * "r9arzpehfi8tpbchhaktkhssea", "omit_users": null }, "data": {
-				 * "channel_display_name": "@andrea.ambrosini", "channel_name":
-				 * "ifumy6je6b8jdff5yi7ohokwze__yogedfqb8td98pyc1b6iemxtje", "set_online": true,
-				 * "post":
-				 * "{\"id\":\"mg5a67ak5tff3dxztaqizyqeba\",\"create_at\":1618993875456,\"update_at\":1618993875456,\"edit_at\":0,\"delete_at\":0,\"is_pinned\":false,\"user_id\":\"yogedfqb8td98pyc1b6iemxtje\",\"channel_id\":\"r9arzpehfi8tpbchhaktkhssea\",\"root_id\":\"\",\"parent_id\":\"\",\"original_id\":\"\",\"message\":\"ciao 5\",\"type\":\"\",\"props\":{\"disable_group_highlight\":true},\"hashtags\":\"\",\"pending_post_id\":\"yogedfqb8td98pyc1b6iemxtje:1618993875375\",\"reply_count\":0,\"metadata\":{}}"
-				 * , "mentions": "[\"ifumy6je6b8jdff5yi7ohokwze\"]", "sender_name":
-				 * "@andrea.ambrosini", "team_id": "", "channel_type": "D" }, "event": "posted",
-				 * "seq": 12 }
-				 * 
-				 */
 				break;
 			case ("preference_changed"):
 				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
