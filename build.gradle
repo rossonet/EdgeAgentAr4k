@@ -99,6 +99,13 @@ subprojects {
 	apply plugin: 'base'
 	apply plugin: 'signing'
 
+	eclipse {
+   		 classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'
 		from javadoc
@@ -562,6 +569,13 @@ test {
 		]
 	}
 	finalizedBy jacocoTestReport
+}
+
+eclipse {
+    classpath {
+        downloadJavadoc = true
+	downloadSources = true
+    }
 }
 
 tasks.eclipse.dependsOn(cleanEclipse)

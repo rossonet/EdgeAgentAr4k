@@ -99,8 +99,8 @@ public final class KeystoreLoader {
 
 	private static final String KEYSTORE_TYPE = "PKCS12";
 
-	public static final String CIPHER = "SHA256withRSA";
-	// static final String CIPHER = "SHA512withRSA";
+	//public static final String CIPHER = "SHA256withRSA";
+	public static final String CIPHER = "SHA1withRSA";
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(KeystoreLoader.class.toString());
@@ -137,6 +137,7 @@ public final class KeystoreLoader {
 		KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
 		loadKeystore(keyStorePath, passwordChar, keyStore);
 		KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
+		//KeyPair keyPair = SelfSignedCertificateGenerator.generateEcKeyPair(256);
 		Period validityPeriod = Period.ofDays(validityDays);
 		SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
 				.setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality).setStateName(state)
@@ -173,6 +174,7 @@ public final class KeystoreLoader {
 			KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
 			loadKeystore(keyStorePath, passwordChar, keyStore);
 			KeyPair keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
+			//KeyPair keyPair = SelfSignedCertificateGenerator.generateEcKeyPair(256);
 			Period validityPeriod = Period.ofDays(validitydays);
 			SelfSignedCertificateBuilder builder = new SelfSignedCertificateBuilder(keyPair).setCommonName(commonName)
 					.setOrganization(organization).setOrganizationalUnit(unit).setLocalityName(locality)
