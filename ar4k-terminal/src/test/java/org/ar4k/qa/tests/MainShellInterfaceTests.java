@@ -96,7 +96,6 @@ public class MainShellInterfaceTests {
 		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		final Map<String, MethodTarget> listCommands = shell.listCommands();
 		System.out.println("commands: " + listCommands);
-		printCheckNow(listCommands);
 		assertTrue(listCommands.containsKey("clear"));
 		assertTrue(listCommands.containsKey("clone-config"));
 		assertTrue(listCommands.containsKey("clone-runtime-config"));
@@ -122,6 +121,7 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("get-selected-config-for-dns-encrypted"));
 		assertTrue(listCommands.containsKey("get-selected-config-json"));
 		assertTrue(listCommands.containsKey("get-selected-config-yaml"));
+		assertTrue(listCommands.containsKey("get-storage-drivers"));
 		assertTrue(listCommands.containsKey("get-threads-info"));
 		assertTrue(listCommands.containsKey("get-unique-name"));
 		assertTrue(listCommands.containsKey("get-users-list"));
@@ -140,7 +140,6 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("list-service"));
 		assertTrue(listCommands.containsKey("list-services-selected-config"));
 		assertTrue(listCommands.containsKey("list-sessions"));
-		assertTrue(listCommands.containsKey("list-xpra-servers"));
 		assertTrue(listCommands.containsKey("load-selected-config-base64"));
 		assertTrue(listCommands.containsKey("load-selected-config-base64crypted"));
 		assertTrue(listCommands.containsKey("load-selected-config-json"));
@@ -167,6 +166,8 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("set-selected-config-as-runtime"));
 		assertTrue(listCommands.containsKey("stacktrace"));
 		assertTrue(listCommands.containsKey("unset-selected-config"));
+		printCheckNow(listCommands);
+		
 	}
 
 	private void printCheckNow(Map<String, MethodTarget> listCommands) {

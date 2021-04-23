@@ -114,7 +114,7 @@ public final class KeystoreLoader {
 
 	public static boolean checkSignatureWithPayload(PublicKey pubKey, PrivateKey privKey)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-		Signature sig = Signature.getInstance("SHA256withRSA");
+		Signature sig = Signature.getInstance(CIPHER);
 		sig.initSign(privKey);
 		byte[] bytesCheck = "1234567890".getBytes();
 		sig.update(bytesCheck);
