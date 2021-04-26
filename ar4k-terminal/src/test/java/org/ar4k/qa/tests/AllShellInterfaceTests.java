@@ -213,8 +213,6 @@ public class AllShellInterfaceTests {
 	    assertTrue(listCommands.containsKey("run-jsr223script"));
 	    assertTrue(listCommands.containsKey("run-ssh-tunnel-local-to-remote-ssh"));
 	    assertTrue(listCommands.containsKey("run-ssh-tunnel-remote-to-local-ssh"));
-	    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-beacon"));
-	    assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-ssh"));
 	    assertTrue(listCommands.containsKey("save-selected-config-base64"));
 	    assertTrue(listCommands.containsKey("save-selected-config-base64crypto"));
 	    assertTrue(listCommands.containsKey("save-selected-config-json"));

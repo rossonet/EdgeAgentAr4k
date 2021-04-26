@@ -230,6 +230,17 @@ public class ShellInterface extends AbstractShellHelper {
 		return "saved";
 	}
 
+	@ShellMethod(value = "Save selected configuration as default config for the agent", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String saveSelectedConfigAsBootstrapConfig() throws IOException {
+		Files.write(
+				Paths.get(homunculus.getStarterProperties().getFileConfig().replaceFirst("^~",
+						System.getProperty("user.home"))),
+				getSelectedConfigBase64().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		return "saved";
+	}
+
 	@ShellMethod("Import configuration from base64 text to selected configuration")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")

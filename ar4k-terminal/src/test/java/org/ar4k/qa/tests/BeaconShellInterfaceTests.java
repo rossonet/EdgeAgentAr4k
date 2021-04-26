@@ -127,8 +127,6 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("run-command-on-remote-agent"));
 		assertTrue(listCommands.containsKey("run-ssh-tunnel-local-to-remote-ssh"));
 		assertTrue(listCommands.containsKey("run-ssh-tunnel-remote-to-local-ssh"));
-		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-beacon"));
-		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-ssh"));
 		assertTrue(listCommands.containsKey("script"));
 		assertTrue(listCommands.containsKey("set-selected-config-on-remote-node"));
 		assertTrue(listCommands.containsKey("stacktrace"));
