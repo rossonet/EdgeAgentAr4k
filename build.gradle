@@ -166,6 +166,7 @@ subprojects {
 	}
 
 	dependencies {
+			compile group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: '3.0.0'
 	        testCompile('org.springframework.boot:spring-boot-starter-test')
 	        testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
 
