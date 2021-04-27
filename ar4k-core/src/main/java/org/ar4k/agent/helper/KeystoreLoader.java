@@ -99,8 +99,8 @@ public final class KeystoreLoader {
 
 	private static final String KEYSTORE_TYPE = "PKCS12";
 
-	//public static final String CIPHER = "SHA256withRSA";
-	public static final String CIPHER = "SHA1withRSA";
+	public static final String CIPHER = "SHA256withRSA";
+	//public static final String CIPHER = "SHA1withRSA";
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(KeystoreLoader.class.toString());
