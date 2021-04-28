@@ -97,7 +97,7 @@ public final class KeystoreLoader {
 
 	private static final String KEY_FACTORY = "RSA";
 
-	private static final String KEYSTORE_TYPE = "PKCS12";
+	private static final String KEYSTORE_TYPE = KeyStore.getDefaultType();//"PKCS12";
 
 	public static final String CIPHER = "SHA256withRSA";
 	//public static final String CIPHER = "SHA1withRSA";
