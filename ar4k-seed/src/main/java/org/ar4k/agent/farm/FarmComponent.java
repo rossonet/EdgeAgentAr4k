@@ -49,4 +49,9 @@ public abstract class FarmComponent implements EdgeComponent {
 		this.homunculus = homunculus;
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }

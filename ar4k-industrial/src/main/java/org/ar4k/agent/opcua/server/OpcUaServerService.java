@@ -107,4 +107,9 @@ public class OpcUaServerService implements EdgeComponent {
 		return new JSONObject();
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }

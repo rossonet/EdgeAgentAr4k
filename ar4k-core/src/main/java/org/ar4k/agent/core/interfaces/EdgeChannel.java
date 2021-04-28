@@ -3,6 +3,7 @@ package org.ar4k.agent.core.interfaces;
 import java.util.List;
 
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.data.DataTree;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;
 import org.joda.time.Instant;
@@ -10,90 +11,94 @@ import org.springframework.integration.channel.AbstractMessageChannel;
 
 public interface EdgeChannel extends AutoCloseable {
 
-	public static enum Type {
-		PUBLISH_SUBSCRIBE, QUEUE, PRIORITY, RENDEZVOUS, DIRECT, EXECUTOR
-	}
-
 	public static enum Status {
-		INIT, WAITING_ENDPOINTS, RUNNING, FAULT, PAUSED, DETROY
+		DETROY, FAULT, INIT, PAUSED, RUNNING, WAITING_ENDPOINTS
 	}
 
-	String getNodeId();
-
-	String getBrowseName();
-
-	String getAbsoluteNameByScope(String scope);
-
-	Class<? extends EdgeChannel> getChannelClass();
-
-	void setBrowseName(String nodeId);
-
-	void setDataType(DataType dataType);
-
-	DataType getDataType();
-
-	void setCreateData(Instant createData);
-
-	Instant getCreateData();
-
-	void setDescription(String description);
-
-	String getDescription();
-
-	Type getChannelType();
-
-	void setChannelType(Type channelType);
-
-	boolean isRemote();
+	public static enum Type {
+		DIRECT, EXECUTOR, PRIORITY, PUBLISH_SUBSCRIBE, QUEUE, RENDEZVOUS
+	}
 
 	int addLogLine(String text);
 
-	int getLogLineSize();
+	void addTag(String tag);
 
 	void clearLog();
 
-	String pollLogLine();
+	String getAbsoluteNameByScope(String scope);
 
-	int getLogQueueSize();
-
-	void setLogQueueSize(int logQueueSize);
-
-	Status getStatus();
+	String getBrowseName();
 
 	AbstractMessageChannel getChannel();
 
-	void setTags(List<String> tags);
+	Class<? extends EdgeChannel> getChannelClass();
 
-	List<String> getTags();
-
-	String getDomainId();
-
-	void setDomainId(String domainId);
-
-	String getNameSpace();
-
-	void setNameSpace(String nameSpace);
-
-	void setFatherOfScope(String scope, EdgeChannel father);
-
-	void removeFatherOfScope(String scope);
-
-	List<EdgeChannel> getChildrenOfScope(String scope);
+	Type getChannelType();
 
 	int getChildrenCountOfScope(String scope);
 
-	EdgeChannel getFatherOfScope(String scope);
+	List<EdgeChannel> getChildrenOfScope(String scope);
+
+	Instant getCreateData();
 
 	DataAddress getDataAddress();
 
-	void setDataAddress(DataAddress dataAddress);
+	DataType getDataType();
 
-	void addTag(String tag);
+	String getDescription();
 
-	DataTree<EdgeChannel> getScopeTreeChildren(String scope, int maxLoop);
+	String getDictionaryRef();
 
 	String getDocumentation();
 
-	String getDictionaryRef();
+	String getDomainId();
+
+	EdgeChannel getFatherOfScope(String scope);
+
+	int getLogLineSize();
+
+	int getLogQueueSize();
+
+	String getNameSpace();
+
+	String getNodeId();
+
+	DataTree<EdgeChannel> getScopeTreeChildren(String scope, int maxLoop);
+
+	Class<? extends DataServiceOwner> getServiceClass();
+
+	String getServiceName();
+
+	Status getStatus();
+
+	List<String> getTags();
+
+	boolean isRemote();
+
+	String pollLogLine();
+
+	void removeFatherOfScope(String scope);
+
+	void setBrowseName(String nodeId);
+
+	void setChannelType(Type channelType);
+
+	void setCreateData(Instant createData);
+
+	void setDataAddress(DataAddress dataAddress);
+
+	void setDataType(DataType dataType);
+
+	void setDescription(String description);
+
+	void setDomainId(String domainId);
+
+	void setFatherOfScope(String scope, EdgeChannel father);
+
+	void setLogQueueSize(int logQueueSize);
+
+	void setNameSpace(String nameSpace);
+
+	void setTags(List<String> tags);
 
 }

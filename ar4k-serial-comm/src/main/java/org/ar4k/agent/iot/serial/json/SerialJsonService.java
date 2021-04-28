@@ -136,7 +136,7 @@ public class SerialJsonService extends SerialService {
 			final IPublishSubscribeChannel newChannel = (IPublishSubscribeChannel) getDataAddress()
 					.createOrGetDataChannel(configuration.getPreChannelName() + tagLabel,
 							IPublishSubscribeChannel.class, "serial port json tag " + tagLabel, channelRoot,
-							homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+							homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 			newChannel.addTag(tagLabel);
 			channelMap.put(tagLabel, newChannel);
 		}
@@ -146,11 +146,11 @@ public class SerialJsonService extends SerialService {
 	private void popolateDataTopics() {
 		exceptionChannel = (IPublishSubscribeChannel) getDataAddress().createOrGetDataChannel(
 				configuration.getBrokenMessage(), IPublishSubscribeChannel.class, "serial port json exception channel",
-				channelRoot, homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+				channelRoot, homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 		elseChannel = (IPublishSubscribeChannel) getDataAddress().createOrGetDataChannel(
 				configuration.getDefaultChannel(), IPublishSubscribeChannel.class,
 				"serial port json message not routed", channelRoot, homunculus.getDataAddress().getDefaultScope(),
-				homunculus.getTags());
+				homunculus.getTags(), this);
 		exceptionChannel.addTag("exception");
 		elseChannel.addTag("not-routed");
 	}

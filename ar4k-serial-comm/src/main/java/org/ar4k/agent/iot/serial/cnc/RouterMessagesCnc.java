@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 
@@ -34,16 +35,42 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 
 	private static final long serialVersionUID = 7183637837535639684L;
 
-	@Parameter(names = "--regExp", description = "regular expression to find")
-	public String regExp = ".*";
-
 	@Parameter(names = "--endpoint", description = "internal queue for the messages found by the regular expression")
 	public String endpoint = null;
 
-	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+	@Parameter(names = "--regExp", description = "regular expression to find")
+	public String regExp = ".*";
 
 	private transient IPublishSubscribeChannel cacheChannel = null;
+
+	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+
 	private transient Pattern pattern = null;
+	private transient final DataServiceOwner serviceOwner;
+
+	public RouterMessagesCnc(DataServiceOwner serviceOwner) {
+		super();
+		this.serviceOwner = serviceOwner;
+	}
+
+	public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
+		if (cacheChannel == null) {
+			final EdgeChannel father = Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress()
+					.createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null,
+							null, homunculus.getTags(), serviceOwner);
+			cacheChannel = (IPublishSubscribeChannel) Homunculus.getApplicationContext().getBean(Homunculus.class)
+					.getDataAddress().createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class,
+							"cache data of the CNC", father,
+							scopeOfChannels != null ? scopeOfChannels : homunculus.getDataAddress().getDefaultScope(),
+							homunculus.getTags(), serviceOwner);
+		}
+		return cacheChannel;
+	}
+
+	public String getElaboratedMessage(String testString) {
+		compilePattern();
+		return testString;
+	}
 
 	public boolean matches(String testString) {
 		compilePattern();
@@ -54,25 +81,6 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 		if (pattern == null) {
 			pattern = Pattern.compile(regExp);
 		}
-	}
-
-	public String getElaboratedMessage(String testString) {
-		compilePattern();
-		return testString;
-	}
-
-	public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
-		if (cacheChannel == null) {
-			final EdgeChannel father = Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress()
-					.createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null,
-							null, homunculus.getTags());
-			cacheChannel = (IPublishSubscribeChannel) Homunculus.getApplicationContext().getBean(Homunculus.class)
-					.getDataAddress().createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class,
-							"cache data of the CNC", father,
-							scopeOfChannels != null ? scopeOfChannels : homunculus.getDataAddress().getDefaultScope(),
-							homunculus.getTags());
-		}
-		return cacheChannel;
 	}
 
 }

@@ -209,4 +209,9 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 		}
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }

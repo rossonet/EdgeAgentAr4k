@@ -1,6 +1,8 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.springframework.integration.channel.RendezvousChannel;
 import org.springframework.messaging.Message;
@@ -8,7 +10,8 @@ import org.springframework.messaging.PollableChannel;
 
 public class IRendezvousChannel extends AbstractChannel implements PollableChannel {
 
-	public IRendezvousChannel() {
+	public IRendezvousChannel(DataServiceOwner serviceOwner) {
+		super(serviceOwner);
 		final RendezvousChannel c = new RendezvousChannel();
 		super.setChannel(c);
 		super.setChannelType(Type.RENDEZVOUS);

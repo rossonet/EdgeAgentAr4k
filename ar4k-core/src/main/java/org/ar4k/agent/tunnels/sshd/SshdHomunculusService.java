@@ -43,57 +43,19 @@ import com.google.gson.GsonBuilder;
 public class SshdHomunculusService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
 		ChannelListener, PortForwardingEventListener {
 
+	private final static Gson gson = new GsonBuilder().create();
+
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(SshdHomunculusService.class.toString());
-
 	// iniettata vedi set/get
 	private SshdHomunculusConfig configuration = null;
-	private SshServer server = null;
-	private final static Gson gson = new GsonBuilder().create();
+	private DataAddress dataspace = null;
 
 	private Homunculus homunculus = null;
 
-	private DataAddress dataspace = null;
+	private SshServer server = null;
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
-
-	@Override
-	public SshdHomunculusConfig getConfiguration() {
-		return configuration;
-	}
-
-	@Override
-	public void setConfiguration(ServiceConfig configuration) {
-		this.configuration = ((SshdHomunculusConfig) configuration);
-	}
-
-	@Override
-	public void init() {
-		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
-		server.setPasswordAuthenticator(passwordAuthenticator);
-		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
-				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
-		server.setPublickeyAuthenticator(publickeyAuthenticator);
-		server.setHost(configuration.broadcastAddress);
-		server.setPort(configuration.port);
-		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-		logger.warn("keys for sshd server generated");
-		final HomunculusShellFactory shellFactory = new HomunculusShellFactory(
-				Homunculus.getApplicationContext().getBean(Homunculus.class), Homunculus.getApplicationContext().getBean(Shell.class));
-		server.setShellFactory(shellFactory);
-		server.addCloseFutureListener(this);
-		server.addSessionListener(this);
-		server.addChannelListener(this);
-		server.addPortForwardingEventListener(this);
-		try {
-			server.start();
-			serviceStatus = ServiceStatus.RUNNING;
-		} catch (final IOException e) {
-			logger.logException(e);
-		}
-
-	}
 
 	@Override
 	public void close() throws IOException {
@@ -101,41 +63,13 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	}
 
 	@Override
-	public void kill() {
-		serviceStatus = ServiceStatus.KILLED;
-		if (server != null)
-			try {
-				server.stop();
-				server.close();
-			} catch (final IOException e) {
-				logger.logException(e);
-			}
-
-	}
-
-	@Override
-	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		return serviceStatus;
-	}
-
-	@Override
-	public Homunculus getHomunculus() {
-		return homunculus;
+	public SshdHomunculusConfig getConfiguration() {
+		return configuration;
 	}
 
 	@Override
 	public DataAddress getDataAddress() {
 		return dataspace;
-	}
-
-	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
-	}
-
-	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
 	}
 
 	@Override
@@ -172,6 +106,58 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	}
 
 	@Override
+	public Homunculus getHomunculus() {
+		return homunculus;
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
+	@Override
+	public void init() {
+		server = SshServer.setUpDefaultServer();
+		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
+		server.setPasswordAuthenticator(passwordAuthenticator);
+		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
+				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
+		server.setPublickeyAuthenticator(publickeyAuthenticator);
+		server.setHost(configuration.broadcastAddress);
+		server.setPort(configuration.port);
+		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+		logger.warn("keys for sshd server generated");
+		final HomunculusShellFactory shellFactory = new HomunculusShellFactory(
+				Homunculus.getApplicationContext().getBean(Homunculus.class),
+				Homunculus.getApplicationContext().getBean(Shell.class));
+		server.setShellFactory(shellFactory);
+		server.addCloseFutureListener(this);
+		server.addSessionListener(this);
+		server.addChannelListener(this);
+		server.addPortForwardingEventListener(this);
+		try {
+			server.start();
+			serviceStatus = ServiceStatus.RUNNING;
+		} catch (final IOException e) {
+			logger.logException(e);
+		}
+
+	}
+
+	@Override
+	public void kill() {
+		serviceStatus = ServiceStatus.KILLED;
+		if (server != null)
+			try {
+				server.stop();
+				server.close();
+			} catch (final IOException e) {
+				logger.logException(e);
+			}
+
+	}
+
+	@Override
 	public void operationComplete(CloseFuture future) {
 		if (serviceStatus.equals(ServiceStatus.RUNNING)) {
 			logger.info("server sshd closed in running state, restart after 60 seconds");
@@ -183,6 +169,26 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 			}
 			init();
 		}
+	}
+
+	@Override
+	public void setConfiguration(ServiceConfig configuration) {
+		this.configuration = ((SshdHomunculusConfig) configuration);
+	}
+
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		dataspace = dataAddress;
+	}
+
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
+	}
+
+	@Override
+	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		return serviceStatus;
 	}
 
 }

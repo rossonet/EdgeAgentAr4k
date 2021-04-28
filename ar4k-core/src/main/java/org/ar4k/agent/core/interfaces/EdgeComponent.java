@@ -2,6 +2,7 @@ package org.ar4k.agent.core.interfaces;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;
@@ -12,7 +13,7 @@ import org.json.JSONObject;
  * @author andrea
  *
  */
-public interface EdgeComponent extends AutoCloseable {
+public interface EdgeComponent extends DataServiceOwner, AutoCloseable {
 
   public static enum ServiceStatus {
     INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
@@ -25,8 +26,6 @@ public interface EdgeComponent extends AutoCloseable {
   void kill();
 
   Homunculus getHomunculus();
-
-  DataAddress getDataAddress();
 
   void setDataAddress(DataAddress dataAddress);
 

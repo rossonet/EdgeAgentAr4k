@@ -76,7 +76,6 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private HandlerStringWriter handlerStringWriter = null;
 
-	// TODO DataAddress
 	private DataAddress dataspace = null;
 
 	private void openSerialPort() {
@@ -169,19 +168,19 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 		readChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointRead(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " read channel", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 		readChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointReadByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " read bytes node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 		writeChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointWrite(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " write node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 		writeChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
 				configuration.getEndpointWriteByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " write bytes node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags());
+				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
 		readChannel.addTag("serial-read");
 		readChannelBytes.addTag("serial-read-bytes");
 		writeChannel.addTag("serial-write");
@@ -261,5 +260,10 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 		final JSONObject end = new JSONObject();
 		end.put("status", toString());
 		return end;
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
 	}
 }

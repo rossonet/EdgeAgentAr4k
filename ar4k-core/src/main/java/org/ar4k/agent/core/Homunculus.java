@@ -53,6 +53,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
@@ -113,95 +114,51 @@ import jdbm.RecordManagerFactory;
 @Scope("singleton")
 @EnableJms
 @EnableConfigurationProperties(EdgeStarterProperties.class)
-public class Homunculus
-		implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware, AutoCloseable {
+public class Homunculus implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware,
+		AutoCloseable, DataServiceOwner {
 
 	public enum HomunculusEvents {
-		BOOTSTRAP, SETCONF, START, STOP, PAUSE, HIBERNATION, EXCEPTION, RESTART, COMPLETE_RELOAD
+		BOOTSTRAP, COMPLETE_RELOAD, EXCEPTION, HIBERNATION, PAUSE, RESTART, SETCONF, START, STOP
 	}
 
 	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
 	// agenti, per la definizione della policy security sul routing public
 	public enum HomunculusRouterType {
-		NONE, PRODUCTION, DEVELOP, ROAD
+		DEVELOP, NONE, PRODUCTION, ROAD
 	}
 
 	public enum HomunculusStates {
-		INIT, STAMINAL, CONFIGURED, RUNNING, KILLED, FAULTED, STASIS
+		CONFIGURED, FAULTED, INIT, KILLED, RUNNING, STAMINAL, STASIS
 	}
-
-	public static final String THREAD_ID = "ar4k-" + (Math.round((new Random().nextDouble() * 9999)));
 
 	public static final String DEFAULT_KS_PATH = "default-new.ks";
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Homunculus.class.toString());
-	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
+	public static final String THREAD_ID = "ar4k-" + (Math.round((new Random().nextDouble() * 9999)));
 
 	// assegnato da Spring tramite setter al boot
 	private static ApplicationContext applicationContext;
-
 	private static final String DB_DATASTORE_NAME = "datastore";
+
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(Homunculus.class.toString());
+
+	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
 
 	private static final int VALIDITY_CERT_DAYS = 365 * 3;
 
+	private boolean afterSpringInitFlag = false;
+
 	private String agentUniqueName = null;
-
-	private Timer timerScheduler = null;
-
-	@Autowired
-	private StateMachine<HomunculusStates, HomunculusEvents> homunculusStateMachine;
-
-	@Autowired
-	private HomunculusSession homunculusSession;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private EdgeStarterProperties starterProperties;
-	// gestione configurazioni
-	// attuale configurazione in runtime
-	private EdgeConfig runtimeConfig = null;
-	// configurazione obbiettivo durante le transizioni
-	private EdgeConfig targetConfig = null;
-	// configurazione iniziale di bootStrap derivata dalle variabili Spring
-	private EdgeConfig bootstrapConfig = null;
-	// configurazione per il reload
-	private EdgeConfig reloadConfig = null;
-	private HomunculusStates stateTarget = HomunculusStates.RUNNING;
-
-	private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
-
-	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
-
-	private Map<String, Object> dataStore = null;
-
-	private Collection<EdgeUserDetails> localUsers = new HashSet<>();
-
-	private RecordManager recMan = null;
+	private BeaconClient beaconClient = null;
 
 	private String beanName = "homunculus";
 
-	private MatterMostClientAr4k mattermostClient = null;
-
-	private MatterMostRpcManager matterMostRpcManager = null;
-
-	private BeaconClient beaconClient = null;
-
-	private DataAddressHomunculus dataAddress = new DataAddressHomunculus(this);
-	private KeystoreConfig myIdentityKeystore = null;
-
-	private String myAliasCertInKeystore = "agent";
-
-	private boolean onApplicationEventFlag = false;
-
-	private boolean afterSpringInitFlag = false;
-
-	private boolean firstStateFired = false;
+	// configurazione iniziale di bootStrap derivata dalle variabili Spring
+	private EdgeConfig bootstrapConfig = null;
 
 	private Comparator<ServiceConfig> comparatorOrderPots = new Comparator<ServiceConfig>() {
 		@Override
@@ -209,8 +166,52 @@ public class Homunculus
 			return Integer.compare(o1.getPriority(), o2.getPriority());
 		}
 	};
+	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
+	private DataAddressHomunculus dataAddress = new DataAddressHomunculus(this);
+	private Map<String, Object> dataStore = null;
+	private boolean firstStateFired = false;
+	@Autowired
+	private HomunculusSession homunculusSession;
+
+	@Autowired
+	private StateMachine<HomunculusStates, HomunculusEvents> homunculusStateMachine;
 
 	private int indexBeaconClient = -1;
+
+	private Collection<EdgeUserDetails> localUsers = new HashSet<>();
+
+	private MatterMostClientAr4k mattermostClient = null;
+
+	private MatterMostRpcManager matterMostRpcManager = null;
+
+	private String myAliasCertInKeystore = "agent";
+
+	private KeystoreConfig myIdentityKeystore = null;
+
+	private boolean onApplicationEventFlag = false;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	private RecordManager recMan = null;
+	// configurazione per il reload
+	private EdgeConfig reloadConfig = null;
+
+	// gestione configurazioni
+	// attuale configurazione in runtime
+	private EdgeConfig runtimeConfig = null;
+
+	@Autowired
+	private EdgeStarterProperties starterProperties;
+
+	private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
+
+	private HomunculusStates stateTarget = HomunculusStates.RUNNING;
+
+	// configurazione obbiettivo durante le transizioni
+	private EdgeConfig targetConfig = null;
+
+	private Timer timerScheduler = null;
 
 	public void clearDataStore() {
 		if (dataStore != null)
@@ -388,6 +389,10 @@ public class Homunculus
 		return logo;
 	}
 
+	public MatterMostClientAr4k getMattermostClient() {
+		return mattermostClient;
+	}
+
 	public String getMyAliasCertInKeystore() {
 		return myAliasCertInKeystore;
 	}
@@ -425,6 +430,11 @@ public class Homunculus
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public String getServiceName() {
+		return "Homunculus";
 	}
 
 	public Session getSession(String sessionId) {
@@ -1341,10 +1351,6 @@ public class Homunculus
 
 	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
 		Homunculus.applicationContext = applicationContext;
-	}
-
-	public MatterMostClientAr4k getMattermostClient() {
-		return mattermostClient;
 	}
 
 }

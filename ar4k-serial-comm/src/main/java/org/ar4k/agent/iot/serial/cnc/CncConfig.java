@@ -42,7 +42,6 @@ public class CncConfig extends SerialConfig {
   public long defaultTimeoutCommand = 5000L;
 
   public CncConfig() {
-    repliesAnalizer.add(new RouterMessagesCnc());
     cronCommands.add(new TriggerCommand());
   }
 
@@ -50,6 +49,7 @@ public class CncConfig extends SerialConfig {
   public CncService instantiate() {
     CncService ss = new CncService();
     ss.setConfiguration(this);
+    repliesAnalizer.add(new RouterMessagesCnc(ss));
     return ss;
   }
 

@@ -47,86 +47,86 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class DataAddressAndMessageTests {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void checkTreeTest() throws InterruptedException, IOException {
-    Thread.sleep(2000L);
-    String scope = "test-scope";
-    INoDataChannel root = new INoDataChannel();
-    root.setBrowseName("root");
-    INoDataChannel a = new INoDataChannel();
-    a.setBrowseName("a");
-    INoDataChannel b = new INoDataChannel();
-    b.setBrowseName("b");
-    INoDataChannel c = new INoDataChannel();
-    c.setBrowseName("c");
-    INoDataChannel a1 = new INoDataChannel();
-    a1.setBrowseName("a1");
-    INoDataChannel a2 = new INoDataChannel();
-    a2.setBrowseName("a2");
-    INoDataChannel a3 = new INoDataChannel();
-    a3.setBrowseName("a3");
-    INoDataChannel b1 = new INoDataChannel();
-    b1.setBrowseName("b1");
-    INoDataChannel b2 = new INoDataChannel();
-    b2.setBrowseName("b2");
-    INoDataChannel b2a = new INoDataChannel();
-    b2a.setBrowseName("b2a");
-    INoDataChannel b2b = new INoDataChannel();
-    b2b.setBrowseName("b2b");
-    INoDataChannel b2c = new INoDataChannel();
-    b2c.setBrowseName("b2c");
-    b2c.setFatherOfScope(scope, b2);
-    b2b.setFatherOfScope(scope, b2);
-    b2a.setFatherOfScope(scope, b2);
-    b1.setFatherOfScope(scope, b);
-    b2.setFatherOfScope(scope, b);
-    a1.setFatherOfScope(scope, a);
-    a2.setFatherOfScope(scope, a);
-    a3.setFatherOfScope(scope, a);
-    a.setFatherOfScope(scope, root);
-    b.setFatherOfScope(scope, root);
-    c.setFatherOfScope(scope, root);
-    System.out.println("\n\nPrint string:");
-    System.out.println(root.getScopeTreeChildren(scope, 10).toString());
-    System.out.println("\n\nPrint json:");
-    System.out.println(root.getScopeTreeChildren(scope, 10).toJson().toString(2));
-    root.close();
-    a.close();
-    b.close();
-    c.close();
-    a1.close();
-    a2.close();
-    a3.close();
-    b1.close();
-    b2.close();
-    b2a.close();
-    b2b.close();
-    b2c.close();
-  }
+	@Test
+	public void checkTreeTest() throws InterruptedException, IOException {
+		Thread.sleep(2000L);
+		String scope = "test-scope";
+		INoDataChannel root = new INoDataChannel(homunculus);
+		root.setBrowseName("root");
+		INoDataChannel a = new INoDataChannel(homunculus);
+		a.setBrowseName("a");
+		INoDataChannel b = new INoDataChannel(homunculus);
+		b.setBrowseName("b");
+		INoDataChannel c = new INoDataChannel(homunculus);
+		c.setBrowseName("c");
+		INoDataChannel a1 = new INoDataChannel(homunculus);
+		a1.setBrowseName("a1");
+		INoDataChannel a2 = new INoDataChannel(homunculus);
+		a2.setBrowseName("a2");
+		INoDataChannel a3 = new INoDataChannel(homunculus);
+		a3.setBrowseName("a3");
+		INoDataChannel b1 = new INoDataChannel(homunculus);
+		b1.setBrowseName("b1");
+		INoDataChannel b2 = new INoDataChannel(homunculus);
+		b2.setBrowseName("b2");
+		INoDataChannel b2a = new INoDataChannel(homunculus);
+		b2a.setBrowseName("b2a");
+		INoDataChannel b2b = new INoDataChannel(homunculus);
+		b2b.setBrowseName("b2b");
+		INoDataChannel b2c = new INoDataChannel(homunculus);
+		b2c.setBrowseName("b2c");
+		b2c.setFatherOfScope(scope, b2);
+		b2b.setFatherOfScope(scope, b2);
+		b2a.setFatherOfScope(scope, b2);
+		b1.setFatherOfScope(scope, b);
+		b2.setFatherOfScope(scope, b);
+		a1.setFatherOfScope(scope, a);
+		a2.setFatherOfScope(scope, a);
+		a3.setFatherOfScope(scope, a);
+		a.setFatherOfScope(scope, root);
+		b.setFatherOfScope(scope, root);
+		c.setFatherOfScope(scope, root);
+		System.out.println("\n\nPrint string:");
+		System.out.println(root.getScopeTreeChildren(scope, 10).toString());
+		System.out.println("\n\nPrint json:");
+		System.out.println(root.getScopeTreeChildren(scope, 10).toJson().toString(2));
+		root.close();
+		a.close();
+		b.close();
+		c.close();
+		a1.close();
+		a2.close();
+		a3.close();
+		b1.close();
+		b2.close();
+		b2a.close();
+		b2b.close();
+		b2c.close();
+	}
 }

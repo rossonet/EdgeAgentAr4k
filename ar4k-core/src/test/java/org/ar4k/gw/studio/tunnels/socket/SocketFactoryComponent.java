@@ -29,66 +29,71 @@ import org.json.JSONObject;
 // TODO TEST SocketFactory Tunnel
 public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
 
-  SocketFactoryConfig configuration = null;
+	SocketFactoryConfig configuration = null;
 
-  @Override
-  public void init() {
-    socketFactory = new BaseSocketFactory(configuration);
-  }
+	@Override
+	public void init() {
+		socketFactory = new BaseSocketFactory(configuration);
+	}
 
-  @Override
-  public void kill() {
-    socketFactory = null;
-  }
+	@Override
+	public void kill() {
+		socketFactory = null;
+	}
 
-  @Override
-  public SocketFactoryConfig getConfiguration() {
-    return configuration;
-  }
+	@Override
+	public SocketFactoryConfig getConfiguration() {
+		return configuration;
+	}
 
-  public void setConfiguration(SocketFactoryConfig configuration) {
-    this.configuration = configuration;
-  }
+	public void setConfiguration(SocketFactoryConfig configuration) {
+		this.configuration = configuration;
+	}
 
-  @Override
-  public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+	@Override
+	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
 
-    return null;
-  }
+		return null;
+	}
 
-  @Override
-  public Homunculus getHomunculus() {
-    // Auto-generated method stub
-    return null;
-  }
+	@Override
+	public Homunculus getHomunculus() {
+		// Auto-generated method stub
+		return null;
+	}
 
-  @Override
-  public DataAddress getDataAddress() {
-    // Auto-generated method stub
-    return null;
-  }
+	@Override
+	public DataAddress getDataAddress() {
+		// Auto-generated method stub
+		return null;
+	}
 
-  @Override
-  public void setDataAddress(DataAddress dataAddress) {
-    // Auto-generated method stub
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		// Auto-generated method stub
 
-  }
+	}
 
-  @Override
-  public void setHomunculus(Homunculus homunculus) {
-    // Auto-generated method stub
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		// Auto-generated method stub
 
-  }
+	}
 
-  @Override
-  public void setConfiguration(ServiceConfig configuration) {
-    // Auto-generated method stub
+	@Override
+	public void setConfiguration(ServiceConfig configuration) {
+		// Auto-generated method stub
 
-  }
+	}
 
-  @Override
-  public JSONObject getDescriptionJson() {
-    // Auto-generated method stub
-    return null;
-  }
+	@Override
+	public JSONObject getDescriptionJson() {
+		// Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
 }

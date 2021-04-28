@@ -96,7 +96,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ShellMethod(value = "List all managed slaves", group = "Data Manager Commands")
 	@ManagedOperation
 	public Collection<DataAddress> listSlaveDataAddress() {
-		return homunculus.getDataAddress().getSlaves();
+		return homunculus.getDataAddress().getSlaveDataAddress();
 	}
 
 	@ShellMethod(value = "get details of a single channel", group = "Data Manager Commands")
@@ -122,7 +122,8 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
 		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
 			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
-		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass()
+				.equals(IPublishSubscribeChannel.class))
 			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
 		else
 			logger.error("can't send message to " + channelId);
@@ -144,7 +145,8 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
 		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
 			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
-		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass()
+				.equals(IPublishSubscribeChannel.class))
 			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).subscribe(this);
 		else
 			logger.error(channelId + " is not subscribable");
@@ -174,7 +176,8 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
 		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
 			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
-		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPublishSubscribeChannel.class))
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass()
+				.equals(IPublishSubscribeChannel.class))
 			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).unsubscribe(this);
 		else
 			logger.error(channelId + " is not subscribable");
@@ -184,24 +187,24 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public void addDataDirectChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class, description, (String) null,
-				null, tags);
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IDirectChannel.class, description,
+				(String) null, null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Add a executor data channel to the address space", group = "Data Manager Commands")
 	@ManagedOperation
 	public void addDataExecutorChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class, description, (String) null,
-				null, tags);
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IExecutorChannel.class, description,
+				(String) null, null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Add a priority data channel to the address space", group = "Data Manager Commands")
 	@ManagedOperation
 	public void addDataPriorityChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class, description, (String) null,
-				null, tags);
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IPriorityChannel.class, description,
+				(String) null, null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Add a publish/subscribe  data channel to the address space", group = "Data Manager Commands")
@@ -209,7 +212,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	public void addDataPubSubChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
 		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IPublishSubscribeChannel.class, description,
-				(String) null, null, tags);
+				(String) null, null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Add a queue data channel to the address space", group = "Data Manager Commands")
@@ -217,15 +220,15 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	public void addDataQueueChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
 		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IQueueChannel.class, description, (String) null,
-				null, tags);
+				null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Add a rendezvous data channel to the address space", group = "Data Manager Commands")
 	@ManagedOperation
 	public void addDataRendezvousChannel(@ShellOption(help = "node name") String dataChannel,
 			@ShellOption(help = "description") String description, @ShellOption(help = "tags") List<String> tags) {
-		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class, description, (String) null,
-				null, tags);
+		homunculus.getDataAddress().createOrGetDataChannel(dataChannel, IRendezvousChannel.class, description,
+				(String) null, null, tags, homunculus);
 	}
 
 	@ShellMethod(value = "Remove data channel from the address space", group = "Data Manager Commands")

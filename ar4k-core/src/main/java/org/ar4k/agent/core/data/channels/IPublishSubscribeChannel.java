@@ -1,6 +1,8 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.support.management.SubscribableChannelManagement;
@@ -11,7 +13,8 @@ import org.springframework.messaging.SubscribableChannel;
 public class IPublishSubscribeChannel extends AbstractChannel
 		implements SubscribableChannel, SubscribableChannelManagement {
 
-	public IPublishSubscribeChannel() {
+	public IPublishSubscribeChannel(DataServiceOwner serviceOwner) {
+		super(serviceOwner);
 		final PublishSubscribeChannel c = new PublishSubscribeChannel();
 		super.setChannel(c);
 		super.setChannelType(Type.PUBLISH_SUBSCRIBE);

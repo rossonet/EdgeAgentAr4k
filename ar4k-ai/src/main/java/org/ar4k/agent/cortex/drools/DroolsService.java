@@ -379,4 +379,9 @@ public class DroolsService implements EdgeComponent {
 		return null;
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }

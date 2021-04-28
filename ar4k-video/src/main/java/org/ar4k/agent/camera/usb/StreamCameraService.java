@@ -99,13 +99,13 @@ public class StreamCameraService implements EdgeComponent {
 				"video " + configuration.description, channelRoot,
 				configuration.getScopeOfChannels() != null ? configuration.getScopeOfChannels()
 						: homunculus.getDataAddress().getDefaultScope(),
-				homunculus.getTags());
+				homunculus.getTags(), this);
 		globalMotionDetectQueue = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(
 				configuration.getGlobalMotionDetectQueue(), IPublishSubscribeChannel.class,
 				"video " + configuration.description, channelRoot,
 				configuration.getScopeOfChannels() != null ? configuration.getScopeOfChannels()
 						: homunculus.getDataAddress().getDefaultScope(),
-				homunculus.getTags());
+				homunculus.getTags(), this);
 		globalImageQueue.addTag("video");
 		globalImageQueue.setDescription("video camera stream of BufferedImage");
 		globalMotionDetectQueue.addTag("detect");
@@ -297,5 +297,10 @@ public class StreamCameraService implements EdgeComponent {
 	public JSONObject getDescriptionJson() {
 		final Gson gson = new GsonBuilder().create();
 		return new JSONObject(gson.toJsonTree(configuration).getAsString());
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
 	}
 }

@@ -88,11 +88,11 @@ public class DataStoreTests {
       Thread.sleep(2000L);
     }
     String stringa = UUID.randomUUID().toString();
-    boolean primo = true;
+    boolean first = true;
     for (int i = 0; i < 10000; i++) {
-      if (primo) {
+      if (first) {
         homunculus.setContextData(stringa, UUID.randomUUID().toString());
-        primo = false;
+        first = false;
       } else {
         homunculus.setContextData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
       }

@@ -161,5 +161,10 @@ public class ActiveMqService implements EdgeComponent {
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
 
 }

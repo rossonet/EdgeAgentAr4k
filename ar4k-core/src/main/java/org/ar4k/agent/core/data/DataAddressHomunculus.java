@@ -15,6 +15,7 @@ import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.messages.HealthMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -53,13 +54,13 @@ public class DataAddressHomunculus extends DataAddress {
 
 	private boolean active = true;
 
-	private Set<DataAddress> slaves = new HashSet<>();
+	private Set<EdgeComponent> slaves = new HashSet<>();
 
 	@Override
 	public Collection<EdgeChannel> getDataChannels() {
 		final Collection<EdgeChannel> myData = super.getDataChannels();
-		for (final DataAddress slave : slaves) {
-			myData.addAll(slave.getDataChannels());
+		for (final EdgeComponent slave : slaves) {
+			myData.addAll(slave.getDataAddress().getDataChannels());
 		}
 		return myData;
 	}
@@ -67,15 +68,15 @@ public class DataAddressHomunculus extends DataAddress {
 	@Override
 	public void callAddressSpaceRefresh(EdgeChannel nodeUpdated) {
 		super.callAddressSpaceRefresh(nodeUpdated);
-		for (final DataAddress slave : slaves) {
-			slave.callAddressSpaceRefresh(nodeUpdated);
+		for (final EdgeComponent slave : slaves) {
+			slave.getDataAddress().callAddressSpaceRefresh(nodeUpdated);
 		}
 	}
 
 	@Override
 	public void clearDataChannels() {
-		for (final DataAddress slave : slaves) {
-			slave.clearDataChannels();
+		for (final EdgeComponent slave : slaves) {
+			slave.getDataAddress().clearDataChannels();
 		}
 		super.clearDataChannels();
 	}
@@ -83,8 +84,8 @@ public class DataAddressHomunculus extends DataAddress {
 	@Override
 	public Collection<String> listChannels() {
 		final Collection<String> myData = super.listChannels();
-		for (final DataAddress slave : slaves) {
-			myData.addAll(slave.listChannels());
+		for (final EdgeComponent slave : slaves) {
+			myData.addAll(slave.getDataAddress().listChannels());
 		}
 		return myData;
 	}
@@ -93,8 +94,8 @@ public class DataAddressHomunculus extends DataAddress {
 	public void close() throws Exception {
 		active = false;
 		timer.cancel();
-		for (final DataAddress slave : slaves) {
-			slave.close();
+		for (final EdgeComponent slave : slaves) {
+			slave.getDataAddress().close();
 		}
 		super.close();
 	}
@@ -105,25 +106,25 @@ public class DataAddressHomunculus extends DataAddress {
 		tagList.add(DIRECTORY_TAG);
 		tagList.addAll(homunculus.getTags());
 		final EdgeChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
-				(String) null, null, tagList);
+				(String) null, null, tagList, homunculus);
 		tagList.add(LOGGER_TAG);
 		createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel,
-				getDefaultScope(), tagList);
+				getDefaultScope(), tagList, homunculus);
 		tagList.remove(LOGGER_TAG);
 		tagList.add(HEALTH_TAG);
 		createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
-				systemChannel, getDefaultScope(), tagList);
+				systemChannel, getDefaultScope(), tagList, homunculus);
 		tagList.remove(HEALTH_TAG);
 		tagList.add(COMMAND_TAG);
 		createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope(),
-				tagList);
+				tagList, homunculus);
 		// start health regular messages
 		repeatedTask.setHomunculus(homunculus);
 		timer.scheduleAtFixedRate(repeatedTask, delay, period);
 	}
 
-	public void registerSlave(DataAddress a) {
-		slaves.add(a);
+	public void registerSlave(EdgeComponent pot) {
+		slaves.add(pot);
 	}
 
 	public void removeSlave(DataAddress a) {
@@ -169,7 +170,11 @@ public class DataAddressHomunculus extends DataAddress {
 		}
 	};
 
-	public Set<DataAddress> getSlaves() {
-		return slaves;
+	public Set<DataAddress> getSlaveDataAddress() {
+		Set<DataAddress> result = new HashSet<>();
+		for (EdgeComponent e : slaves) {
+			result.add(e.getDataAddress());
+		}
+		return result;
 	}
 }

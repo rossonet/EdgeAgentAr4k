@@ -143,4 +143,9 @@ public class BeaconService implements EdgeComponent {
 		return ServiceStatus.RUNNING;
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }

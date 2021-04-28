@@ -107,12 +107,13 @@ public class DataAddress implements AutoCloseable {
 	}
 
 	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,
-			String description, String father, String scope, Collection<String> tags) {
-		return createOrGetDataChannel(nodeId, channelType, description, getChannel(father), scope, tags);
+			String description, String father, String scope, Collection<String> tags, DataServiceOwner serviceOwner) {
+		return createOrGetDataChannel(nodeId, channelType, description, getChannel(father), scope, tags, serviceOwner);
 	}
 
 	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,
-			String description, EdgeChannel father, String scope, Collection<String> tags) {
+			String description, EdgeChannel father, String scope, Collection<String> tags,
+			DataServiceOwner serviceOwner) {
 		EdgeChannel returnChannel = null;
 		if (getChannel(nodeId) != null) {
 			returnChannel = getChannel(nodeId);
@@ -127,9 +128,9 @@ public class DataAddress implements AutoCloseable {
 				if (channelType == null) {
 					channelType = INoDataChannel.class;
 				}
-				final Constructor<?> ctor = channelType.getConstructor();
+				final Constructor<?> ctor = channelType.getConstructor(DataServiceOwner.class);
 				logger.info("create channel " + nodeId + " of type " + channelType);
-				returnChannel = (EdgeChannel) ctor.newInstance();
+				returnChannel = (EdgeChannel) ctor.newInstance(serviceOwner);
 				returnChannel.setBrowseName(nodeId);
 				returnChannel.setDescription(description);
 				this.dataChannels.add(returnChannel);
@@ -192,8 +193,8 @@ public class DataAddress implements AutoCloseable {
 
 	public Collection<String> listSpringIntegrationChannels() {
 		final Collection<String> result = new ArrayList<>();
-		for (final Entry<String, MessageChannel> s : Homunculus.getApplicationContext().getBeansOfType(MessageChannel.class)
-				.entrySet()) {
+		for (final Entry<String, MessageChannel> s : Homunculus.getApplicationContext()
+				.getBeansOfType(MessageChannel.class).entrySet()) {
 			result.add(s.getKey() + " -> " + s.getValue());
 		}
 		return result;

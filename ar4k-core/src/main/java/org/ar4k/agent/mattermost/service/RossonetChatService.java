@@ -54,9 +54,8 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	@Override
 	public void init() {
-		this.mattermostClient = new MatterMostClientAr4k(getConfiguration().mmServer,
-				getConfiguration().username, getConfiguration().password,
-				getConfiguration().token,this);
+		this.mattermostClient = new MatterMostClientAr4k(getConfiguration().mmServer, getConfiguration().username,
+				getConfiguration().password, getConfiguration().token, this);
 
 	}
 
@@ -67,7 +66,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	@Override
 	public void kill() {
-		//TODO
+		// TODO
 
 	}
 
@@ -99,37 +98,42 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 	@Override
 	public JSONObject getDescriptionJson() {
 		return null;
-		//TODO descrione come json
+		// TODO descrione come json
 	}
 
 	@Override
 	public void connectionStarted() {
 		// TODO portare su data
-		
+
 	}
 
 	@Override
 	public void onNewChannel(Channel channel) {
 		// TODO portare su data
-		
+
 	}
 
 	@Override
 	public void onNewUser(User checkedUser) {
 		// TODO portare su data
-		
+
 	}
 
 	@Override
 	public void onNewTeam(Team team) {
 		// TODO portare su data
-		
+
 	}
 
 	@Override
 	public void onNewPost(Post post) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
 	}
 
 }

@@ -26,74 +26,65 @@ import com.beust.jcommander.Parameter;
 
 public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Closeable {
 
-	protected static transient final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton()
-			.getLoggerFactory().getLogger(AbstractChannel.class.toString());
-
-	@Parameter(names = "--nodeId", description = "nodeId for the channel", required = true)
-	private String nodeId = UUID.randomUUID().toString();
+	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(AbstractChannel.class.toString());
 
 	@Parameter(names = "--browseName", description = "browse name for the channel", required = true)
 	private String browseName = null;
 
-	@Parameter(names = "--domainId", description = "unique global domain for the data")
-	private String domainId = "AR4K";
+	private AbstractMessageChannel channel = null;
 
-	@Parameter(names = "--namespace", description = "namespace for the data")
-	private String nameSpace = "default";
-
-	@Parameter(names = "--tags", description = "tags for the channel")
-	private List<String> tags = new ArrayList<>();
-
-	@Parameter(names = "--description", description = "description for this node", required = false)
-	private String description = null;
-
-	@Parameter(names = "--documentation", description = "documentation url", required = false)
-	private String documentation = null;
-
-	@Parameter(names = "--dictionaryRef", description = "urn of semantic dictionary", required = false)
-	private String dictionaryRef = null;
+	private Type channelTypeRequest = null;
 
 	private Instant createData = Instant.now();
+
+	private DataAddress dataAddress = null;
 
 	@Parameter(names = "--dataType", description = "data type for the channel", validateWith = DataTypeValidator.class)
 	private DataType dataType = DataType.STRING;
 
-	@Parameter(names = "--logQueueSize", description = "size of queue for the logs")
-	private int logQueueSize = 50;
+	@Parameter(names = "--description", description = "description for this node", required = false)
+	private String description = null;
 
-	private Queue<String> lastLogs = new ConcurrentLinkedQueue<>();
+	@Parameter(names = "--dictionaryRef", description = "urn of semantic dictionary", required = false)
+	private String dictionaryRef = null;
+
+	@Parameter(names = "--documentation", description = "documentation url", required = false)
+	private String documentation = null;
+
+	@Parameter(names = "--domainId", description = "unique global domain for the data")
+	private String domainId = "AR4K";
 
 	private boolean isRemote = false;
 
-	private transient DataAddress dataAddress = null;
+	private Queue<String> lastLogs = new ConcurrentLinkedQueue<>();
 
-	private transient AbstractMessageChannel channel = null;
+	@Parameter(names = "--logQueueSize", description = "size of queue for the logs")
+	private int logQueueSize = 50;
 
-	private Type channelTypeRequest = null;
+	@Parameter(names = "--namespace", description = "namespace for the data")
+	private String nameSpace = "default";
+
+	@Parameter(names = "--nodeId", description = "nodeId for the channel", required = true)
+	private String nodeId = UUID.randomUUID().toString();
+
+	private Map<String, List<EdgeChannel>> scopeChildren = new HashMap<>();
+
+	private Map<String, EdgeChannel> scopeFather = new HashMap<>();
+
+	private final String serviceName;
+
+	private final Class<? extends DataServiceOwner> serviceOwnerClass;
 
 	private Status status = Status.INIT;
 
-	private Map<String, List<EdgeChannel>> scopeChildren = new HashMap<>();
-	private Map<String, EdgeChannel> scopeFather = new HashMap<>();
+	@Parameter(names = "--tags", description = "tags for the channel")
+	private List<String> tags = new ArrayList<>();
 
-	@Override
-	public String getBrowseName() {
-		return browseName;
-	}
-
-	@Override
-	public void setBrowseName(String browseName) {
-		this.browseName = browseName;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public void setDescription(String description) {
-		this.description = description;
+	public AbstractChannel(DataServiceOwner serviceOwnerClass) {
+		this.serviceName = serviceOwnerClass.getServiceName();
+		this.serviceOwnerClass = serviceOwnerClass.getClass();
+		this.dataAddress = serviceOwnerClass.getDataAddress();
 	}
 
 	@Override
@@ -106,139 +97,13 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public String pollLogLine() {
-		return lastLogs.poll();
-	}
-
-	@Override
-	public int getLogLineSize() {
-		return lastLogs.size();
-	}
-
-	@Override
-	public void clearLog() {
-		lastLogs.clear();
-	}
-
-	@Override
-	public Instant getCreateData() {
-		return createData;
-	}
-
-	@Override
-	public void setCreateData(Instant createData) {
-		this.createData = createData;
-	}
-
-	@Override
-	public DataType getDataType() {
-		return dataType;
-	}
-
-	@Override
-	public void setDataType(DataType dataType) {
-		this.dataType = dataType;
-	}
-
-	@Override
-	public Type getChannelType() {
-		return channelTypeRequest;
-	}
-
-	@Override
-	public void setChannelType(Type channelType) {
-		this.channelTypeRequest = channelType;
-	}
-
-	@Override
-	public boolean isRemote() {
-		return isRemote;
-	}
-
-	@Override
-	public int getLogQueueSize() {
-		return logQueueSize;
-	}
-
-	@Override
-	public void setLogQueueSize(int logQueueSize) {
-		this.logQueueSize = logQueueSize;
-	}
-
-	@Override
-	public Status getStatus() {
-		return status;
-	}
-
-	@Override
-	public AbstractMessageChannel getChannel() {
-		return channel;
-	}
-
-	@Override
-	public List<String> getTags() {
-		return tags;
-	}
-
-	@Override
-	public void setTags(List<String> tags) {
-		this.tags = tags;
-	}
-
-	@Override
 	public void addTag(String tag) {
 		tags.add(tag);
 	}
 
 	@Override
-	public String getDomainId() {
-		return domainId;
-	}
-
-	@Override
-	public void setDomainId(String domainId) {
-		this.domainId = domainId;
-	}
-
-	@Override
-	public String getNameSpace() {
-		return nameSpace;
-	}
-
-	@Override
-	public void setNameSpace(String nameSpace) {
-		this.nameSpace = nameSpace;
-	}
-
-	protected void setStatus(Status status) {
-		this.status = status;
-	}
-
-	protected void setChannel(AbstractMessageChannel channel) {
-		this.channel = channel;
-	}
-
-	private void startFunction() {
-		setStatus(Status.WAITING_ENDPOINTS);
-		if (getChannel() != null) {
-			getChannel().setBeanName(getBrowseName());
-			getChannel().setComponentName(getBrowseName());
-			((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
-					.registerSingleton(getBrowseName(), getChannel());
-		}
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
-		}
-		setStatus(Status.RUNNING);
-	}
-
-	private void stopFunction() {
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
-		}
-		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory())
-				.destroySingleton(getBrowseName());
-		setStatus(Status.DETROY);
+	public void clearLog() {
+		lastLogs.clear();
 	}
 
 	@Override
@@ -263,23 +128,35 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public void setFatherOfScope(String scope, EdgeChannel father) {
-		scopeFather.put(scope, father);
-		((AbstractChannel) father).addChildOfScope(scope, this);
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
+	public String getAbsoluteNameByScope(String scope) {
+		final StringBuilder reply = new StringBuilder();
+		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
+			if (scopeFather.get(scope).getAbsoluteNameByScope(scope) != null) {
+				reply.append(scopeFather.get(scope).getAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
+			}
 		}
+		reply.append(getBrowseName());
+		return reply.toString();
 	}
 
-	private void addChildOfScope(String scope, EdgeChannel child) {
-		logger.info("add child " + child.getBrowseName() + " to " + getBrowseName() + " for scope " + scope);
-		if (!scopeChildren.containsKey(scope)) {
-			scopeChildren.put(scope, new ArrayList<>());
-		}
-		scopeChildren.get(scope).add(child);
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
-		}
+	@Override
+	public String getBrowseName() {
+		return browseName;
+	}
+
+	@Override
+	public AbstractMessageChannel getChannel() {
+		return channel;
+	}
+
+	@Override
+	public Type getChannelType() {
+		return channelTypeRequest;
+	}
+
+	@Override
+	public int getChildrenCountOfScope(String scope) {
+		return scopeChildren.get(scope) != null ? scopeChildren.get(scope).size() : 0;
 	}
 
 	@Override
@@ -288,41 +165,8 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public int getChildrenCountOfScope(String scope) {
-		return scopeChildren.get(scope) != null ? scopeChildren.get(scope).size() : 0;
-	}
-
-	private void removeChildrenOfScope(String scope) {
-		scopeChildren.remove(scope);
-	}
-
-	@Override
-	public void removeFatherOfScope(String scope) {
-		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
-			((AbstractChannel) scopeFather.get(scope)).removeChildrenOfScope(scope);
-			scopeFather.remove(scope);
-			if (dataAddress != null) {
-				dataAddress.callAddressSpaceRefresh(this);
-			}
-		}
-	}
-
-	@Override
-	public EdgeChannel getFatherOfScope(String scope) {
-		return scopeFather.get(scope);
-	}
-
-	@Override
-	public String getAbsoluteNameByScope(String scope) {
-		final StringBuilder reply = new StringBuilder();
-		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
-			if (scopeFather.get(scope).getAbsoluteNameByScope(scope) != null) {
-				reply.append(
-						scopeFather.get(scope).getAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
-			}
-		}
-		reply.append(getBrowseName());
-		return reply.toString();
+	public Instant getCreateData() {
+		return createData;
 	}
 
 	@Override
@@ -331,9 +175,53 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		startFunction();
-		this.dataAddress = dataAddress;
+	public DataType getDataType() {
+		return dataType;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getDictionaryRef() {
+		return dictionaryRef;
+	}
+
+	@Override
+	public String getDocumentation() {
+		return documentation;
+	}
+
+	@Override
+	public String getDomainId() {
+		return domainId;
+	}
+
+	@Override
+	public EdgeChannel getFatherOfScope(String scope) {
+		return scopeFather.get(scope);
+	}
+
+	@Override
+	public int getLogLineSize() {
+		return lastLogs.size();
+	}
+
+	@Override
+	public int getLogQueueSize() {
+		return logQueueSize;
+	}
+
+	@Override
+	public String getNameSpace() {
+		return nameSpace;
+	}
+
+	@Override
+	public String getNodeId() {
+		return nodeId;
 	}
 
 	@Override
@@ -352,11 +240,128 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
+	public Class<? extends DataServiceOwner> getServiceClass() {
+		return serviceOwnerClass;
+	}
+
+	@Override
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	@Override
+	public Status getStatus() {
+		return status;
+	}
+
+	@Override
+	public List<String> getTags() {
+		return tags;
+	}
+
+	@Override
+	public boolean isRemote() {
+		return isRemote;
+	}
+
+	@Override
+	public String pollLogLine() {
+		return lastLogs.poll();
+	}
+
+	@Override
+	public void removeFatherOfScope(String scope) {
+		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
+			((AbstractChannel) scopeFather.get(scope)).removeChildrenOfScope(scope);
+			scopeFather.remove(scope);
+			if (dataAddress != null) {
+				dataAddress.callAddressSpaceRefresh(this);
+			}
+		}
+	}
+
+	@Override
+	public void setBrowseName(String browseName) {
+		this.browseName = browseName;
+	}
+
+	@Override
+	public void setChannelType(Type channelType) {
+		this.channelTypeRequest = channelType;
+	}
+
+	@Override
+	public void setCreateData(Instant createData) {
+		this.createData = createData;
+	}
+
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		startFunction();
+		this.dataAddress = dataAddress;
+	}
+
+	@Override
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setDictionaryRef(String dictionaryRef) {
+		this.dictionaryRef = dictionaryRef;
+	}
+
+	public void setDocumentation(String documentation) {
+		this.documentation = documentation;
+	}
+
+	@Override
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
+	}
+
+	@Override
+	public void setFatherOfScope(String scope, EdgeChannel father) {
+		scopeFather.put(scope, father);
+		((AbstractChannel) father).addChildOfScope(scope, this);
+		if (dataAddress != null) {
+			dataAddress.callAddressSpaceRefresh(this);
+		}
+	}
+
+	@Override
+	public void setLogQueueSize(int logQueueSize) {
+		this.logQueueSize = logQueueSize;
+	}
+
+	@Override
+	public void setNameSpace(String nameSpace) {
+		this.nameSpace = nameSpace;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	@Override
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+
+	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("AbstractChannel [logQueueSize=").append(logQueueSize).append(", ");
 		if (nodeId != null)
 			builder.append("nodeId=").append(nodeId).append(", ");
+		if (serviceName != null)
+			builder.append("serviceName=").append(serviceName).append(", ");
+		if (serviceOwnerClass != null)
+			builder.append("serviceClass=").append(serviceOwnerClass.getCanonicalName()).append(", ");
 		if (browseName != null)
 			builder.append("browseName=").append(browseName).append(", ");
 		if (nameSpace != null)
@@ -386,30 +391,49 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		return builder.toString();
 	}
 
-	@Override
-	public String getNodeId() {
-		return nodeId;
+	protected void setChannel(AbstractMessageChannel channel) {
+		this.channel = channel;
 	}
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+	protected void setStatus(Status status) {
+		this.status = status;
 	}
 
-	@Override
-	public String getDocumentation() {
-		return documentation;
+	private void addChildOfScope(String scope, EdgeChannel child) {
+		logger.info("add child " + child.getBrowseName() + " to " + getBrowseName() + " for scope " + scope);
+		if (!scopeChildren.containsKey(scope)) {
+			scopeChildren.put(scope, new ArrayList<>());
+		}
+		scopeChildren.get(scope).add(child);
+		if (dataAddress != null) {
+			dataAddress.callAddressSpaceRefresh(this);
+		}
 	}
 
-	public void setDocumentation(String documentation) {
-		this.documentation = documentation;
+	private void removeChildrenOfScope(String scope) {
+		scopeChildren.remove(scope);
 	}
 
-	@Override
-	public String getDictionaryRef() {
-		return dictionaryRef;
+	private void startFunction() {
+		setStatus(Status.WAITING_ENDPOINTS);
+		if (getChannel() != null) {
+			getChannel().setBeanName(getBrowseName());
+			getChannel().setComponentName(getBrowseName());
+			((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+					.registerSingleton(getBrowseName(), getChannel());
+		}
+		if (dataAddress != null) {
+			dataAddress.callAddressSpaceRefresh(this);
+		}
+		setStatus(Status.RUNNING);
 	}
 
-	public void setDictionaryRef(String dictionaryRef) {
-		this.dictionaryRef = dictionaryRef;
+	private void stopFunction() {
+		if (dataAddress != null) {
+			dataAddress.callAddressSpaceRefresh(this);
+		}
+		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Homunculus.getApplicationContext())
+				.getBeanFactory()).destroySingleton(getBrowseName());
+		setStatus(Status.DETROY);
 	}
 }

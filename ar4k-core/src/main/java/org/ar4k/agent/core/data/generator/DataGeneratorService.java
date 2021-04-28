@@ -49,33 +49,6 @@ import org.springframework.messaging.SubscribableChannel;
  */
 public class DataGeneratorService implements EdgeComponent {
 
-	public class PoolDataTask extends TimerTask {
-
-		private final PollableChannel dataChannel;
-		private final NextGenerator dataNodeSimulator;
-		private final long delay;
-
-		public PoolDataTask(PollableChannel dataChannel, NextGenerator dataNodeSimulator, long delay) {
-			this.dataChannel = dataChannel;
-			this.dataNodeSimulator = dataNodeSimulator;
-			this.delay = delay / 2;
-		}
-
-		@Override
-		public void run() {
-			// System.out.println("*** polling");
-			try {
-				final Message<?> receive = dataChannel.receive(delay);
-				if (receive != null) {
-					((ReceiverData) dataNodeSimulator).setValue(receive.getPayload());
-				}
-			} catch (final Exception aa) {
-				logger.logException(aa);
-			}
-		}
-
-	}
-
 	public class FireSimulationTask extends TimerTask {
 
 		private final EdgeChannel dataChannel;
@@ -87,8 +60,13 @@ public class DataGeneratorService implements EdgeComponent {
 		}
 
 		@Override
+		public boolean cancel() {
+			logger.info("FireSimulationTask stopping");
+			return super.cancel();
+		}
+
+		@Override
 		public void run() {
-			// System.out.println("*** call nextValue()");
 			try {
 				if (dataNodeSimulator != null) {
 					final List<Message<?>> nextValue = dataNodeSimulator.getNextValue();
@@ -109,13 +87,32 @@ public class DataGeneratorService implements EdgeComponent {
 			} catch (final Exception aa) {
 				logger.logException("type: " + dataNodeSimulator.getClass().getName(), aa);
 			}
-			// System.out.println("%%% end call nextValue()");
+		}
+
+	}
+
+	public class PoolDataTask extends TimerTask {
+
+		private final PollableChannel dataChannel;
+		private final NextGenerator dataNodeSimulator;
+		private final long delay;
+
+		public PoolDataTask(PollableChannel dataChannel, NextGenerator dataNodeSimulator, long delay) {
+			this.dataChannel = dataChannel;
+			this.dataNodeSimulator = dataNodeSimulator;
+			this.delay = delay / 2;
 		}
 
 		@Override
-		public boolean cancel() {
-			logger.info("FireSimulationTask stopping");
-			return super.cancel();
+		public void run() {
+			try {
+				final Message<?> receive = dataChannel.receive(delay);
+				if (receive != null) {
+					((ReceiverData) dataNodeSimulator).setValue(receive.getPayload());
+				}
+			} catch (final Exception aa) {
+				logger.logException(aa);
+			}
 		}
 
 	}
@@ -126,17 +123,61 @@ public class DataGeneratorService implements EdgeComponent {
 	// iniettata vedi set/get
 	private DataGeneratorConfig configuration = null;
 
-	private Homunculus homunculus = null;
-	private Timer timerSimulation = new Timer();
 	private DataAddress dataspace = null;
-
+	private Homunculus homunculus = null;
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
 	private Map<EdgeChannel, NextGenerator> simulatedDatas = new HashMap<>();
 
+	private Timer timerSimulation = new Timer();
+
+	@Override
+	public void close() throws IOException {
+		kill();
+	}
+
 	@Override
 	public DataGeneratorConfig getConfiguration() {
 		return configuration;
+	}
+
+	@Override
+	public DataAddress getDataAddress() {
+		return dataspace;
+	}
+
+	@Override
+	public JSONObject getDescriptionJson() {
+		// TODO completare output json descrizione simulatore
+		return new JSONObject();
+	}
+
+	@Override
+	public Homunculus getHomunculus() {
+		return homunculus;
+	}
+
+	@Override
+	public String getServiceName() {
+		return "data-generator";
+	}
+
+	@Override
+	public void init() {
+		for (final SingleDataGeneratorPointConfig single : configuration.datas) {
+			addNodeSimulated(single);
+		}
+	}
+
+	@Override
+	public void kill() {
+		logger.info("start killing timer DataGeneratorService");
+		if (timerSimulation != null) {
+			timerSimulation.cancel();
+			timerSimulation.purge();
+			timerSimulation = null;
+		}
+		serviceStatus = ServiceStatus.KILLED;
 	}
 
 	@Override
@@ -145,10 +186,18 @@ public class DataGeneratorService implements EdgeComponent {
 	}
 
 	@Override
-	public void init() {
-		for (final SingleDataGeneratorPointConfig single : configuration.datas) {
-			addNodeSimulated(single);
-		}
+	public void setDataAddress(DataAddress dataAddress) {
+		dataspace = dataAddress;
+	}
+
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
+	}
+
+	@Override
+	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		return serviceStatus;
 	}
 
 	private void addNodeSimulated(SingleDataGeneratorPointConfig single) {
@@ -238,7 +287,7 @@ public class DataGeneratorService implements EdgeComponent {
 
 		}
 		final EdgeChannel dataChannel = homunculus.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
-				single.description, (String) null, (String) null, single.tags);
+				single.description, (String) null, (String) null, single.tags, this);
 		dataChannel.setDomainId(single.domainId);
 		dataChannel.setNameSpace(single.namespace);
 		simulatedDatas.put(dataChannel, dataNodeSimulator);
@@ -253,53 +302,6 @@ public class DataGeneratorService implements EdgeComponent {
 						single.frequency, single.frequency);
 			}
 		}
-	}
-
-	@Override
-	public void close() throws IOException {
-		kill();
-	}
-
-	@Override
-	public void kill() {
-		logger.info("start killing timer DataGeneratorService");
-		if (timerSimulation != null) {
-			timerSimulation.cancel();
-			timerSimulation.purge();
-			timerSimulation = null;
-		}
-		serviceStatus = ServiceStatus.KILLED;
-	}
-
-	@Override
-	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		return serviceStatus;
-	}
-
-	@Override
-	public Homunculus getHomunculus() {
-		return homunculus;
-	}
-
-	@Override
-	public DataAddress getDataAddress() {
-		return dataspace;
-	}
-
-	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
-	}
-
-	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// TODO completare output json descrizione simulatore
-		return new JSONObject();
 	}
 
 }

@@ -87,4 +87,9 @@ public class PcapSnifferService implements EdgeComponent {
 		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
+	}
+
 }
