@@ -101,6 +101,7 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("add-beacon-service"));
 		assertTrue(listCommands.containsKey("add-ssh-tunnel-local-port-to-remote"));
 		assertTrue(listCommands.containsKey("add-ssh-tunnel-remote-port-to-locale"));
+		assertTrue(listCommands.containsKey("approve-provisioning-request"));
 		assertTrue(listCommands.containsKey("clear"));
 		assertTrue(listCommands.containsKey("complete-reload-remote-agent"));
 		assertTrue(listCommands.containsKey("connect-to-agent-on-standard-ssh"));
@@ -117,6 +118,7 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("list-beacon-registrations"));
 		assertTrue(listCommands.containsKey("list-beacon-tunnels"));
 		assertTrue(listCommands.containsKey("list-commands-on-remote-agent"));
+		assertTrue(listCommands.containsKey("list-provisioning-requests"));
 		assertTrue(listCommands.containsKey("list-ssh-tunnels"));
 		assertTrue(listCommands.containsKey("quit"));
 		assertTrue(listCommands.containsKey("remove-ssh-tunnels"));
@@ -125,9 +127,6 @@ public class BeaconShellInterfaceTests {
 		assertTrue(listCommands.containsKey("run-command-on-remote-agent"));
 		assertTrue(listCommands.containsKey("run-ssh-tunnel-local-to-remote-ssh"));
 		assertTrue(listCommands.containsKey("run-ssh-tunnel-remote-to-local-ssh"));
-		assertTrue(listCommands.containsKey("run-xpra-server"));
-		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-beacon"));
-		assertTrue(listCommands.containsKey("run-xpra-server-on-agent-and-connect-to-via-ssh"));
 		assertTrue(listCommands.containsKey("script"));
 		assertTrue(listCommands.containsKey("set-selected-config-on-remote-node"));
 		assertTrue(listCommands.containsKey("stacktrace"));

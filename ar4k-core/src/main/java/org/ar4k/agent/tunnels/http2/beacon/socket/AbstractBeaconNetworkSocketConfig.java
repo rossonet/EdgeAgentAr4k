@@ -9,6 +9,16 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestToAgent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestTunnelMessage;
 import org.joda.time.Instant;
 
+//TODO revisione tunnel on grpc 
+
+// https://github.com/ejona86/grpc-java/blob/29728aeb003ced3c190197c176563643be22bef1/examples/src/main/java/io/grpc/examples/grpcproxy/GrpcProxy.java
+
+// https://github.com/bbottema/java-socks-proxy-server
+
+// https://github.com/CtheSky/JSocks
+
+// https://github.com/hsupu/netty-socks
+
 public abstract class AbstractBeaconNetworkSocketConfig implements NetworkConfig {
 
 	private static final long serialVersionUID = 552608909268206460L;

@@ -6,84 +6,103 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
-import org.ar4k.agent.tunnels.http2.beacon.RemoteBeaconRpcExecutor;
+import org.ar4k.agent.tunnels.http2.beacon.client.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ConfigReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ElaborateMessageReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListCommandsReply;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.ListStringReply;
-import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1BlockingStub;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.RpcServiceV1Grpc.RpcServiceV1Stub;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 
 import io.grpc.ConnectivityState;
 
 public interface IBeaconClient {
 
-	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
-
-	XpraSessionProcess startXpraService(String executorLabel, int port, String cmd);
-
-	List<Agent> listAgentsConnectedToBeacon();
-
-	void shutdown() throws InterruptedException;
-
-	ConnectivityState getStateConnection();
-
-	int getPollingFreq();
-
-	void sendLoggerLine(String message, String level);
-
-	void sendException(Exception message);
+	void closeNetworkTunnel(long targetId);
 
 	String getAgentUniqueName();
+
+	String getAliasBeaconClientInKeystore();
 
 	RpcServiceV1Stub getAsyncStub();
 
 	RpcServiceV1BlockingStub getBlockingStub();
 
-	ListCommandsReply listCommadsOnAgent(String agentId);
+	String getCertChainAuthority();
 
-	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
+	String getCertChainFile();
+
+	String getCertFile();
 
 	ConfigReply getConfigFromAgent(String agentId);
 
-	List<NetworkTunnel> getTunnels();
+	String getCsrRequest();
 
-	void removeTunnel(NetworkTunnel toRemove);
+	String getDiscoveryFilter();
+
+	int getDiscoveryPort();
+
+	String getHostTarget();
+
+	RpcConversation getLocalExecutor();
 
 	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
+
+	int getPollingFrequency();
+
+	int getPort();
+
+	String getPrivateFile();
+
+	StatusValue getRegistrationStatus();
+
+	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
+
+	List<RemoteBeaconRpcExecutor> getRemoteExecutors();
+
+	String getReservedUniqueName();
+
+	ListStringReply getRuntimeProvides(String agentId);
+
+	ListStringReply getRuntimeRequired(String agentId);
+
+	ConnectivityState getStateConnection();
+
+	List<NetworkTunnel> getTunnels();
+
+	List<Agent> listAgentsConnectedToBeacon();
+
+	ListCommandsReply listCommadsOnAgent(String agentId);
+
+	List<AgentRequest> listProvisioningRequests();
+
+	void removeTunnel(NetworkTunnel toRemove);
 
 	ElaborateMessageReply runCommadsOnAgent(String agentId, String command);
 
 	CompleteCommandReply runCompletitionOnAgent(String agentUniqueName, String command);
 
-	List<RemoteBeaconRpcExecutor> getRemoteExecutors();
+	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
 
-	void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors);
+	void sendException(Exception message);
 
-	int getDiscoveryPort();
-
-	void setDiscoveryPort(int discoveryPort);
-
-	String getDiscoveryFilter();
+	void sendLoggerLine(String message, String level);
 
 	void setDiscoveryFilter(String discoveryFilter);
 
-	String getReservedUniqueName();
+	void setDiscoveryPort(int discoveryPort);
+
+	void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors);
 
 	void setReservedUniqueName(String reservedUniqueName);
 
-	StatusValue getRegistrationStatus();
+	void shutdown() throws InterruptedException;
 
-	RpcConversation getLocalExecutor();
-
-	void closeNetworkTunnel(long targetId);
-
-	ListStringReply getRuntimeProvides(String agentId);
-
-	ListStringReply getRuntimeRequired(String agentId);
+	Status approveRemoteAgent(String requestId, String cert, String note);
 
 }

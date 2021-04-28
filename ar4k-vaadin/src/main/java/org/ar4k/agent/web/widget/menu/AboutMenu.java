@@ -22,7 +22,7 @@ public class AboutMenu implements AgentMenu {
 	@Override
 	public void setMainView(IMainView mainView) {
 		this.mainView = mainView;
-		aboutMenu.setSrc("https://www.rossonet.net/");
+		aboutMenu.setSrc("https://app.rossonet.net/");
 		Style style = aboutMenu.getStyle();
 		style.set("padding", "3px");
 		style.set("border", "0px");

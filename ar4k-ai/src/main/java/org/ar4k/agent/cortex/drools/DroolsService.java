@@ -256,7 +256,7 @@ public class DroolsService implements EdgeComponent {
 	private void popolateNlp() {
 		if (configuration.isOpenNlpEnable()) {
 			logger.info("starting NLP");
-			// TODO inserire ogetti per NLP
+			// TODO inserire oggetti per NLP
 		}
 	}
 

@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.che;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class EclipseCheApplication extends AbstractVirtualApplication {
+public class EclipseCheApplication extends GeneralApplication {
 
 }

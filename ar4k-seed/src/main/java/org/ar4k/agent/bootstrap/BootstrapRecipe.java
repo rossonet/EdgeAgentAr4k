@@ -206,4 +206,14 @@ public abstract class BootstrapRecipe implements AutoCloseable {
 		return sb.toString();
 	}
 
+	public void saveConfiguration(String seedConfigFile) {
+		// TODO Save seed configuration to file
+
+	}
+
+	public void loadConfiguration(String seedConfigFile) {
+		// TODO Load seed configuration from file
+
+	}
+
 }

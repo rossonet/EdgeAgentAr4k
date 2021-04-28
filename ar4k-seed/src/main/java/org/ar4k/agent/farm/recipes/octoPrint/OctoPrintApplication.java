@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.octoPrint;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class OctoPrintApplication extends AbstractVirtualApplication {
+public class OctoPrintApplication extends GeneralApplication {
 
 }

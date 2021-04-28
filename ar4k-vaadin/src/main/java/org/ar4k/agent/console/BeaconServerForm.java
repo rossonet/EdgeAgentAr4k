@@ -6,8 +6,8 @@ import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.web.scada.BeaconClientWrapper;
-import org.ar4k.agent.web.widget.menu.BeaconServerMenu;
+import org.ar4k.agent.web.main.BeaconClientWrapper;
+import org.ar4k.agent.web.widget.menu.BeaconServerAndProvisioningMenu;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -66,11 +66,11 @@ public class BeaconServerForm extends FormLayout {
 
 	private IBeaconClientScadaWrapper beaconClientWrapper;
 
-	private final BeaconServerMenu beaconServerMenu;
+	private final BeaconServerAndProvisioningMenu beaconServerAndProvisioningMenu;
 
-	public BeaconServerForm(BeaconServerMenu beaconServerMenu) {
-		this.beaconServerMenu = beaconServerMenu;
-		this.mainView = beaconServerMenu.getMainView();
+	public BeaconServerForm(BeaconServerAndProvisioningMenu beaconServerAndProvisioningMenu) {
+		this.beaconServerAndProvisioningMenu = beaconServerAndProvisioningMenu;
+		this.mainView = beaconServerAndProvisioningMenu.getMainView();
 		addClassName("contact-form");
 		add(host, port, discoveryPort, discoveryFilter, aliasBeaconClientInKeystore, certFile, certChainFile,
 				privateFile, beaconCaChainPem, company, context, createButtons());
@@ -87,7 +87,13 @@ public class BeaconServerForm extends FormLayout {
 		if (beaconClientWrapper != null) {
 			logger.debug("selected: " + beaconClientWrapper + " host:" + beaconClientWrapper.getHost());
 			save.setVisible(false);
-			update.setVisible(true);
+			if (beaconClientWrapper.isHomunculusClient()) {
+				update.setVisible(false);
+				delete.setVisible(false);
+			} else {
+				update.setVisible(true);
+				delete.setVisible(true);
+			}
 			this.setBeaconClientWrapper(beaconClientWrapper);
 			binder.readBean(this.beaconClientWrapper);
 		} else {
@@ -176,7 +182,7 @@ public class BeaconServerForm extends FormLayout {
 
 		SaveEvent(BeaconServerForm source, IBeaconClientScadaWrapper beaconClientWrapper, IMainView mainView) {
 			super(source, beaconClientWrapper);
-			beaconServerMenu.updateListBeaconServer();
+			beaconServerAndProvisioningMenu.updateListBeaconServer();
 		}
 	}
 
@@ -186,7 +192,7 @@ public class BeaconServerForm extends FormLayout {
 
 		DeleteEvent(BeaconServerForm source, IBeaconClientScadaWrapper beaconClientWrapper, IMainView mainView) {
 			super(source, beaconClientWrapper);
-			beaconServerMenu.updateListBeaconServer();
+			beaconServerAndProvisioningMenu.updateListBeaconServer();
 		}
 
 	}

@@ -11,6 +11,10 @@ import java.util.Scanner;
 
 public final class IOUtils {
 
+	private IOUtils() {
+		throw new UnsupportedOperationException("Just for static usage");
+	}
+
 	public static String toString(Reader reader) {
 		@SuppressWarnings("resource")
 		final Scanner s = new Scanner(reader).useDelimiter("\\A");

@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.ros;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class RobotOperatingSystemApplication extends AbstractVirtualApplication {
+public class RobotOperatingSystemApplication extends GeneralApplication {
 
 }

@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.ar4k.agent.core.interfaces.AgentWebMenu;
 import org.ar4k.agent.core.interfaces.IMainView;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
 import org.ar4k.agent.web.interfaces.AgentMenu;
 
 import com.vaadin.flow.component.Component;
@@ -35,12 +33,7 @@ public class FarmMenu implements AgentMenu {
 	@Override
 	public boolean isActive() {
 		boolean result = false;
-		for (IScadaAgent beaconAgentWrapper : mainView.getAllAgents()) {
-			if (beaconAgentWrapper.getProvides().contains(AbstractVirtualApplication.class.getCanonicalName())) {
-				result = true;
-				break;
-			}
-		}
+
 		return result;
 	}
 

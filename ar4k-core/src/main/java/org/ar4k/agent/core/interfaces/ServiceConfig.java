@@ -12,20 +12,20 @@ import java.util.List;
  */
 public interface ServiceConfig extends ConfigSeed {
 
-	EdgeComponent instantiate();
-
-	boolean isSpringBean();
-
-	int getPriority();
-
-	int getWatchDogInterval();
-
 	int getMaxRestartRetries();
 
-	int getWatchDogTimeout();
+	int getPriority();
 
 	List<String> getProvides();
 
 	List<String> getRequired();
+
+	int getWatchDogInterval();
+
+	int getWatchDogTimeout();
+
+	EdgeComponent instantiate();
+
+	boolean isSpringBean();
 
 }

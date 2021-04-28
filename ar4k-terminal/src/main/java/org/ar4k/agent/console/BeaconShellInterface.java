@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.UnrecoverableKeyException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,11 +43,11 @@ import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
-import org.ar4k.agent.rpc.process.xpra.XpraSessionProcess;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconClient;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
 import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
@@ -144,7 +143,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			@ShellOption(help = "accept all certificate (true) or managed by sign flow (false)", defaultValue = "true") boolean acceptAllCerts,
 			@ShellOption(help = "the discovery message txt. It is filtered by the client", defaultValue = "AR4K-BEACON-CONSOLE") String discoveryMessage)
 			throws IOException, UnrecoverableKeyException {
-		tmpServer = new BeaconServer.Builder().setHomunculus(homunculus).setPort(port).setDiscoveryPort(discoveryPort)
+		tmpServer = new BeaconServerBuilder().setHomunculus(homunculus).setPort(port).setDiscoveryPort(discoveryPort)
 				.setStringDiscovery(discoveryMessage).setBroadcastAddress(discoveryAddress)
 				.setAcceptCerts(acceptAllCerts).build();
 		tmpServer.start();
@@ -164,7 +163,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconServerRunning")
 	public List<BeaconAgent> listBeaconAgentsConnected() {
-		return tmpServer.getAgentLabelRegisterReplies();
+		return tmpServer.getAgentRegistered();
 	}
 
 	@ShellMethod(value = "List tunnels running to the Beacon server", group = "Beacon Server Commands")
@@ -199,6 +198,22 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ShellMethodAvailability("testBeaconClientRunning")
 	public List<Agent> listBeaconAgents() {
 		return resolveBeaconClient().listAgentsConnectedToBeacon();
+	}
+
+	@ShellMethod(value = "List provisioning requests opened on Beacon server", group = "Beacon Client Provisioning Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testBeaconClientRunning")
+	public List<AgentRequest> listProvisioningRequests() {
+		return resolveBeaconClient().listProvisioningRequests();
+	}
+
+	@ShellMethod(value = "Approve provisioning request", group = "Beacon Client Provisioning Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testBeaconClientRunning")
+	public String approveProvisioningRequest(@ShellOption(help = "the unique ID of the request") String requestId,
+			@ShellOption(help = "signed cert for approvation. Should be managed by the server with 'AUTO' as value", defaultValue = "AUTO") String cert,
+			@ShellOption(help = "note related", defaultValue = "approved") String note) {
+		return resolveBeaconClient().approveRemoteAgent(requestId, cert, note).toString();
 	}
 
 	@ShellMethod(value = "List Agents connected to the Beacon server with health in JSON", group = "Beacon Client Commands")
@@ -354,117 +369,12 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 		return result.toString();
 	}
 
-	@ShellMethod(value = "Run Xpra server on remote agent and connect to it via beacon by web client", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testBeaconClientRunning")
-	public String runXpraServerOnAgentAndConnectToViaBeacon(
-			@ShellOption(help = "the unique ID of the remote agent", valueProvider = Ar4kRemoteAgentProvider.class) String uniqueId,
-			@ShellOption(help = "xpra web port", defaultValue = "0") int port,
-			@ShellOption(help = "local port to expose xpra web", defaultValue = "0") int localPort,
-			@ShellOption(help = "label to identify the xpra server on remote host", defaultValue = "xpra") String executorLabel,
-			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd)
-			throws Exception {
-		localPort = runRemoteXpraAndGetTunnel(uniqueId, port, localPort, executorLabel);
-		Thread.sleep(5000L);
-		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-			Desktop.getDesktop().browse(new URI("http://127.0.0.1:" + localPort));
-		}
-		return "xpra " + "attach " + "tcp:127.0.0.1:" + localPort + "\nhttp://127.0.0.1:" + localPort;
-	}
-
-	private int runRemoteXpraAndGetTunnel(String uniqueId, int port, int localPort, String executorLabel) {
-		final String command = "run-xpra-server --executor-label " + executorLabel + " --port " + port;
-		final String returnStartingXpra = runCommandOnRemoteAgent(uniqueId, command);
-		final int remoteXpraPort = Integer.valueOf(returnStartingXpra.replace("\n", ""));
-		if (localPort == 0) {
-			localPort = NetworkHelper.findAvailablePort(14600);
-		}
-		final NetworkConfig remoteConfig = new BeaconNetworkClassicConfig("beacon-xpra-" + remoteXpraPort,
-				"tunnel xpra", NetworkMode.CLIENT, NetworkProtocol.TCP, "127.0.0.1", remoteXpraPort, localPort);
-		resolveBeaconClient().getNewNetworkTunnel(uniqueId, remoteConfig);
-		logger.info("REMOTE XPRA " + returnStartingXpra);
-		return localPort;
-	}
-
 	private static int getRandomNumberInRange(int min, int max) {
 		if (min >= max) {
 			throw new IllegalArgumentException("max must be greater than min");
 		}
 		final Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
-	}
-
-	@ShellMethod(value = "Run Xpra server on remote agent and connect to it via ssh by web client", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testBeaconClientRunning")
-	public String runXpraServerOnAgentAndConnectToViaSsh(
-			@ShellOption(help = "the unique ID of the remote agent", valueProvider = Ar4kRemoteAgentProvider.class) String uniqueId,
-			@ShellOption(help = "label to identify the xpra server on remote host") String executorLabel,
-			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd,
-			@ShellOption(help = "ssh tunnel server host") String sshTargetHost,
-			@ShellOption(help = "ssh tunnel server port", defaultValue = "22") int sshTargetPort,
-			@ShellOption(help = "ssh tunnel server username") String sshTargetUserName,
-			@ShellOption(help = "ssh tunnel server password", defaultValue = "") String sshTargetPassword,
-			@ShellOption(help = "path of private key", defaultValue = "~/.ssh/id_rsa") String keyFile)
-			throws Exception {
-		final String returnSessions = runCommandOnRemoteAgent(uniqueId, "list-sessions");
-		logger.info("REMOTE SESSIONS " + returnSessions);
-		final String command = "run-xpra-server";
-		final String returnStartingXpra = runCommandOnRemoteAgent(uniqueId, command);
-		logger.info("REMOTE XPRA " + returnStartingXpra);
-		final int remoteXpraPort = Integer.valueOf(returnStartingXpra.replace("\n", ""));
-		final String commandListXpra = "list-xpra-servers";
-		final String returnListXpra = runCommandOnRemoteAgent(uniqueId, commandListXpra);
-		logger.info("REMOTE XPRA LIST " + returnListXpra);
-		final int localPort = NetworkHelper.findAvailablePort(14500);
-		final String commandFindFreePort = "netstat -lant | grep tcp\\  | grep LISTEN\n";
-		final String replyFindPortFreeOnServer = SshShellInterface.execCommandOnRemoteSshHost(keyFile,
-				sshTargetUserName, sshTargetPassword, sshTargetHost, sshTargetPort, commandFindFreePort);
-		logger.info("REMOTE PORT SSH REPLY " + commandFindFreePort);
-		int serverSshPort = 0;
-		int counterLoop = 0;
-		while (replyFindPortFreeOnServer.contains(String.valueOf(serverSshPort)) && counterLoop < 50) {
-			counterLoop++;
-			serverSshPort = getRandomNumberInRange(40000, 50000);
-			logger.info("try ssh port " + serverSshPort);
-		}
-		if (serverSshPort != 0) {
-			final String remotePortCommand = "run-ssh-tunnel-remote-to-local-ssh "
-					+ ((keyFile != null && !keyFile.isEmpty()) ? "--authkey " + keyFile : "")
-					+ " --bindHost 127.0.0.1 --bindPort " + serverSshPort + " --host " + sshTargetHost + " --port "
-					+ sshTargetPort
-					+ ((sshTargetPassword != null && !sshTargetPassword.isEmpty()) ? " --password " + sshTargetPassword
-							: "")
-					+ " --redirectPort " + remoteXpraPort + " --redirectServer 127.0.0.1 --username "
-					+ sshTargetUserName + " --name " + remoteXpraPort + "_" + serverSshPort + " --dataAddressPrefix "
-					+ remoteXpraPort + "_" + serverSshPort;
-			logger.info("RUN CMD SSH REMOTE -> " + remotePortCommand);
-			final String returnSshTunnelRemoteToLocalSsh = runCommandOnRemoteAgent(uniqueId, remotePortCommand);
-			logger.info("SSH REMOTE REPLY " + returnSshTunnelRemoteToLocalSsh);
-			final SshLocalConfig sshLocalConfig = new SshLocalConfig();
-			if (keyFile != null && !keyFile.isEmpty()) {
-				sshLocalConfig.authkey = keyFile;
-			}
-			sshLocalConfig.username = sshTargetUserName;
-			sshLocalConfig.host = sshTargetHost;
-			sshLocalConfig.port = sshTargetPort;
-			if (sshTargetPassword != null && !sshTargetPassword.isEmpty()) {
-				sshLocalConfig.password = sshTargetPassword;
-			}
-			sshLocalConfig.bindHost = "127.0.0.1";
-			sshLocalConfig.bindPort = localPort;
-			sshLocalConfig.redirectServer = "127.0.0.1";
-			sshLocalConfig.redirectPort = serverSshPort;
-			logger.info("RUN CMD SSH LOCALE -> " + remotePortCommand);
-			sshShellInterface.runSshTunnelLocalToRemoteSsh(sshLocalConfig);
-			Thread.sleep(5000L);
-			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-				Desktop.getDesktop().browse(new URI("http://127.0.0.1:" + localPort));
-			}
-			return "xpra " + "attach " + "tcp:127.0.0.1:" + localPort + "\nhttp://127.0.0.1:" + localPort;
-		} else {
-			return "port not found on ssh server";
-		}
 	}
 
 	@ShellMethod(value = "Create a tunnel from this machine to the remote one using a ssh bridge", group = "Tunnel Commands")
@@ -562,20 +472,6 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 			logger.logException(e);
 		}
 		return reply;
-	}
-
-	@ShellMethod(value = "Run Xpra server on local agent", group = "Tunnel Commands")
-	@ManagedOperation
-	@ShellMethodAvailability("testBeaconClientRunning")
-	public int runXpraServer(
-			@ShellOption(help = "label to identify the xpra server", defaultValue = "xpra-service") String executorLabel,
-			@ShellOption(help = "the tcp port for the HTML5 console", defaultValue = "0") int port,
-			@ShellOption(help = "the command to start in the X server", defaultValue = "xterm") String cmd)
-			throws IOException, URISyntaxException {
-		logger.info("Xpra server request -> port:" + port + " cmd:" + cmd);
-		final XpraSessionProcess xpraSessionProcess = resolveBeaconClient().startXpraService(executorLabel, port, cmd);
-		logger.info("Xpra server started on port " + xpraSessionProcess.getTcpPort());
-		return xpraSessionProcess.getTcpPort();
 	}
 
 	@ShellMethod(value = "Connect to remote agent with ssh by Beacon tunnel", group = "Tunnel Commands")

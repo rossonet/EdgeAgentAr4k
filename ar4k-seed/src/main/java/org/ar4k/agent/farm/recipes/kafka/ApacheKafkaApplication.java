@@ -1,9 +1,13 @@
 package org.ar4k.agent.farm.recipes.kafka;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class ApacheKafkaApplication extends AbstractVirtualApplication {
+// https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html
+
+// https://kafka.apache.org/documentation.html
+
+// https://cloudblogs.microsoft.com/opensource/2018/07/09/how-to-data-processing-apache-kafka-spark/
+
+public class ApacheKafkaApplication extends GeneralApplication {
 
 }

@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.mariadb;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class MariaDbApplication extends AbstractVirtualApplication {
+public class MariaDbApplication extends GeneralApplication {
 
 }

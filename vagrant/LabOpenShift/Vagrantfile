@@ -3,17 +3,17 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
   config.vm.box = "fedora/33-cloud-base"
-  config.vm.box_version = "33.20201019.0"
   config.vm.hostname = "node-openshift"
   config.vm.provision "Set System Locale", privileged: true, type: "shell", inline: "timedatectl set-timezone Europe/Rome && localectl set-x11-keymap it pc105s intl"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
-    vb.cpus = 6
-    vb.memory = "12288"
+    vb.cpus = 4
+    vb.memory = "10240"
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
     vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+    vb.customize ["modifyvm", :id, "--pae", "off"]
   end
   
   config.vm.provision "shell" do |shell|

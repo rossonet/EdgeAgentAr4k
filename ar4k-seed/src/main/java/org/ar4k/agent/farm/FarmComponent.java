@@ -1,12 +1,10 @@
 package org.ar4k.agent.farm;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
@@ -21,20 +19,6 @@ public abstract class FarmComponent implements EdgeComponent {
 	private Homunculus homunculus = null;
 
 	private DataAddress dataspace = null;
-
-	public abstract ConnectionState getConnectionState();
-
-	public abstract List<ManagedVirtualSystem> getManagedSystems();
-
-	public abstract List<ManagedNetworkInterface> getManagedNetworks();
-
-	public abstract List<ManagedArchives> getManagedArchives();
-
-	public abstract List<ManagedHost> getManagedHosts();
-
-	public abstract void pruneSystem();
-
-	public abstract SystemStatus getSystemStatus();
 
 	public FarmComponent(FarmConfig farmConfig) {
 		homunculus = farmConfig.homunculus;

@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.jenkins;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class JenkinsApplication extends AbstractVirtualApplication {
+public class JenkinsApplication extends GeneralApplication {
 
 }

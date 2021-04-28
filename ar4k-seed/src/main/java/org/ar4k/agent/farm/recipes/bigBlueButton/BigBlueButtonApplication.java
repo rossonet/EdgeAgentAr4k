@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.bigBlueButton;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class BigBlueButtonApplication extends AbstractVirtualApplication {
+public class BigBlueButtonApplication extends GeneralApplication {
 
 }

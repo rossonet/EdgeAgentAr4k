@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 
 public interface IBeaconServer {
@@ -29,7 +30,7 @@ public interface IBeaconServer {
 
 	void setDefaultPollTime(int defaultPollTime);
 
-	List<BeaconAgent> getAgentLabelRegisterReplies();
+	List<BeaconAgent> getAgentRegistered();
 
 	void sendFlashUdp();
 
@@ -56,5 +57,9 @@ public interface IBeaconServer {
 	String getPrivateKeyFile();
 
 	void clearOldData();
+
+	List<AgentRequest> listAgentRequests();
+
+	void approveCsrRequest(String csr);
 
 }

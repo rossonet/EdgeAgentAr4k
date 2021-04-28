@@ -13,10 +13,10 @@ public interface ServiceComponent<S extends EdgeComponent> extends AutoCloseable
 
   S getPot();
 
+  boolean isRunning();
+
   void start();
 
   void stop();
-
-  boolean isRunning();
 
 }

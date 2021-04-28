@@ -55,7 +55,12 @@ import com.pi4j.platform.PlatformManager;
 import com.pi4j.system.NetworkInfo;
 import com.pi4j.system.SystemInfo;
 
+import oshi.hardware.Display;
+import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.hardware.NetworkIF;
+import oshi.hardware.PowerSource;
+import oshi.hardware.UsbDevice;
 import oshi.software.os.OperatingSystem;
 
 /*
@@ -66,15 +71,63 @@ import oshi.software.os.OperatingSystem;
  */
 public class HardwareHelper {
 
+	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(HardwareHelper.class.toString());
+
+	public static final boolean DEBUG_FREEZE_HAL = false;
+
+	private static final int BUFFER_SIZE = 512;
+
 	private HardwareHelper() {
 		throw new UnsupportedOperationException("Just for static usage");
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HardwareHelper.class.toString());
+	public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
+		final long result = 0L;
+		FileOutputStream fileOutputStream = null;
+		ReadableByteChannel readableByteChannel = null;
+		FileChannel fileChannel = null;
+		try {
+			readableByteChannel = Channels.newChannel(new URL(url).openStream());
+			fileOutputStream = new FileOutputStream(filename);
+			fileChannel = fileOutputStream.getChannel();
+			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+			fileOutputStream.flush();
+		} finally {
+			if (fileChannel != null)
+				fileChannel.close();
+			if (fileOutputStream != null)
+				fileOutputStream.close();
+		}
+		return result;
+	}
 
-	public static final boolean debugFreezeHal = false;
-	private static final int BUFFER_SIZE = 512;
+	public static void extractTarGz(String path, InputStream in) throws IOException {
+		final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
+		try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+			TarArchiveEntry entry = null;
+			while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+				/** If the entry is a directory, create the directory. **/
+				if (entry.isDirectory()) {
+					final File f = new File(path + "/" + entry.getName());
+					final boolean created = f.mkdirs();
+					if (!created) {
+						throw new EdgeException("Unable to create directory " + f.getAbsolutePath()
+								+ ", during extraction of archive contents.");
+					}
+				} else {
+					int count;
+					final byte data[] = new byte[BUFFER_SIZE];
+					final FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
+					try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
+						while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+							dest.write(data, 0, count);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public static HardwareInfoData getSystemInfo() throws IOException, InterruptedException, ParseException {
 		final HardwareInfoData dato = new HardwareInfoData();
@@ -102,57 +155,45 @@ public class HardwareHelper {
 			rootFs.setChilds(childs);
 			fileSystem.add(rootFs);
 		}
-		// System.out.println("check1");
 		dato.setHardwareFilelistroots(fileSystem);
 		final HardwareAbstractionLayer hal = si.getHardware();
-		if (debugFreezeHal) {
-			// System.out.println("check1.1");
+		if (DEBUG_FREEZE_HAL) {
 			try {
 				dato.setHardwareComputersystem(hal.getComputerSystem());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.2");
 			try {
-				dato.setHardwareDisk(hal.getDiskStores());
+				dato.setHardwareDisk(hal.getDiskStores().toArray(new HWDiskStore[0]));
 			} catch (final Exception re) {
 			}
-			;
-			// System.out.println("check1.3");
 			try {
-				dato.setHardwareDislay(hal.getDisplays());
+				dato.setHardwareDislay(hal.getDisplays().toArray(new Display[0]));
 			} catch (final Exception re) {
 			}
-			;
-			// System.out.println("check1.4");
 			try {
 				dato.setHardwareMemorytotal(hal.getMemory().getTotal());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.5");
 			try {
 				dato.setHardwareMemoryavailable(hal.getMemory().getAvailable());
 			} catch (final Exception re) {
 			}
 			try {
-				dato.setHardwareSwaptotal(hal.getMemory().getSwapTotal());
+				dato.setHardwareSwaptotal(hal.getMemory().getVirtualMemory().getSwapTotal());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.6");
 			try {
-				dato.setHardwareSwapused(hal.getMemory().getSwapUsed());
+				dato.setHardwareSwapused(hal.getMemory().getVirtualMemory().getSwapUsed());
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.7");
 			try {
-				dato.setHardwareNetwork(hal.getNetworkIFs());
+				dato.setHardwareNetwork(hal.getNetworkIFs().toArray(new NetworkIF[0]));
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.8");
 			try {
-				dato.setHardwarePower(hal.getPowerSources());
+				dato.setHardwarePower(hal.getPowerSources().toArray(new PowerSource[0]));
 			} catch (final Exception re) {
 			}
-			// System.out.println("check1.9");
 			try {
 				dato.setHardwareProcessor(hal.getProcessor());
 			} catch (final Exception re) {
@@ -162,7 +203,7 @@ public class HardwareHelper {
 			} catch (final Exception re) {
 			}
 			try {
-				dato.setHardwareUsb(hal.getUsbDevices(true));
+				dato.setHardwareUsb(hal.getUsbDevices(true).toArray(new UsbDevice[0]));
 			} catch (final Exception re) {
 			}
 		}
@@ -286,7 +327,6 @@ public class HardwareHelper {
 			dato.setPiOSFirmwareDate(SystemInfo.getOsFirmwareDate());
 		} catch (final Exception ex) {
 		}
-		// System.out.println("check3");
 		try {
 			dato.setPiJavaVendor(SystemInfo.getJavaVendor());
 			dato.setPiJavaVendorURL(SystemInfo.getJavaVendorUrl());
@@ -390,35 +430,6 @@ public class HardwareHelper {
 		}
 	}
 
-	private static String readAll(Reader rd) throws IOException {
-		final StringBuilder sb = new StringBuilder();
-		int cp;
-		while ((cp = rd.read()) != -1) {
-			sb.append((char) cp);
-		}
-		return sb.toString();
-	}
-
-	public static long downloadFileFromUrl(String filename, String url) throws MalformedURLException, IOException {
-		final long result = 0L;
-		FileOutputStream fileOutputStream = null;
-		ReadableByteChannel readableByteChannel = null;
-		FileChannel fileChannel = null;
-		try {
-			readableByteChannel = Channels.newChannel(new URL(url).openStream());
-			fileOutputStream = new FileOutputStream(filename);
-			fileChannel = fileOutputStream.getChannel();
-			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-			fileOutputStream.flush();
-		} finally {
-			if (fileChannel != null)
-				fileChannel.close();
-			if (fileOutputStream != null)
-				fileOutputStream.close();
-		}
-		return result;
-	}
-
 	public static String resolveFileFromDns(final String hostPart, final String domainPart, final int retry)
 			throws TextParseException, UnknownHostException {
 		final StringBuilder resultString = new StringBuilder();
@@ -461,30 +472,12 @@ public class HardwareHelper {
 		}
 	}
 
-	public static void extractTarGz(String path, InputStream in) throws IOException {
-		final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
-		try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
-			TarArchiveEntry entry = null;
-			while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
-				/** If the entry is a directory, create the directory. **/
-				if (entry.isDirectory()) {
-					final File f = new File(path + "/" + entry.getName());
-					final boolean created = f.mkdirs();
-					if (!created) {
-						throw new EdgeException("Unable to create directory " + f.getAbsolutePath()
-								+ ", during extraction of archive contents.");
-					}
-				} else {
-					int count;
-					final byte data[] = new byte[BUFFER_SIZE];
-					final FileOutputStream fos = new FileOutputStream(path + "/" + entry.getName(), false);
-					try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
-						while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-							dest.write(data, 0, count);
-						}
-					}
-				}
-			}
+	private static String readAll(Reader rd) throws IOException {
+		final StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
 		}
+		return sb.toString();
 	}
 }

@@ -9,8 +9,13 @@ src/main/resources/static
 training-data/*
 *.ks
 target
-
+pnpm-lock.yaml
+pnpmfile.js
+scada
 training-data/*
+tmp1
+tmp2
+tmp3
 
 ### OUTPUT ###
 spring-shell.log

@@ -10,8 +10,8 @@ ${AnsiColor.RED}
  |_.__/ \__, | |_| \_\___/|___/___/\___/|_| |_|\___|\__|  
         |___/                                             
 
-${AnsiColor.YELLOW}DRUIDO
-${AnsiColor.GREEN}Robot and domotic agent
+${AnsiColor.YELLOW}WEB APPLICATION TEST
+${AnsiColor.GREEN}test Vaadin web interface application
 
 ${AnsiColor.DEFAULT}
 Type ${AnsiColor.RED}help${AnsiColor.DEFAULT} to list the available commands

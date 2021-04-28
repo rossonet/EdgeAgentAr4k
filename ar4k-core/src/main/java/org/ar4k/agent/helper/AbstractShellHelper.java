@@ -72,31 +72,39 @@ public abstract class AbstractShellHelper {
 	@Autowired
 	protected SessionRegistry sessionRegistry;
 
+	protected void addConfig(EdgeConfig config) {
+		((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);
+	}
+
+	protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {
+		EdgeUserDetails u = new EdgeUserDetails();
+		u.setUsername(username);
+		u.setPassword(passwordEncoder.encode(password));
+		List<SimpleGrantedAuthority> a = new ArrayList<>();
+		for (String p : authorities.split(",")) {
+			SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
+			a.add(g);
+		}
+		u.setAuthorities(a);
+		homunculus.getLocalUsers().add(u);
+		return true;
+	}
+
+	protected Map<String, EdgeConfig> getConfigs() {
+		return ((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations();
+	}
+
 	protected String getSessionId() {
 		List<SessionInformation> ss = sessionRegistry
 				.getAllSessions(SecurityContextHolder.getContext().getAuthentication(), false);
 		return ss.isEmpty() ? null : ss.get(0).getSessionId();
 	}
 
-	protected Availability testOk() {
-		return Boolean.valueOf(flagTestOk) ? Availability.available()
-				: Availability.unavailable("test command not available in this configuration");
-	}
-
-	protected Availability sessionOk() {
-		return getSessionId() != null ? Availability.available()
-				: Availability.unavailable("you must login in the system before");
-	}
-
-	protected Availability sessionOkOrStatusInit() {
-		return (getSessionId() != null || homunculus.getState().equals(HomunculusStates.INIT)
-				|| homunculus.getState().equals(HomunculusStates.STAMINAL)) ? Availability.available()
-						: Availability.unavailable("you must login in the system or to be in INIT status");
-	}
-
-	protected Availability sessionFalse() {
-		return getSessionId() == null ? Availability.available()
-				: Availability.unavailable("you have a valide session. Logout from the system before");
+	protected EdgeConfig getWorkingConfig() {
+		if (getSessionId() != null) {
+			return ((RpcConversation) homunculus.getRpc(getSessionId())).getWorkingConfig();
+		} else
+			return null;
 	}
 
 	protected Availability isUnix() {
@@ -112,11 +120,19 @@ public abstract class AbstractShellHelper {
 				: Availability.unavailable("this command must run on unix system in a valid session (after login)");
 	}
 
-	protected Availability testSelectedConfigOk() {
-		Availability result = Availability.unavailable("you have to login in the agent before");
-		if (getSessionId() != null) {
-			result = getWorkingConfig() != null ? Availability.available()
-					: Availability.unavailable("you have to select a config before");
+	protected boolean removeUser(String username) {
+		boolean result = false;
+		EdgeUserDetails t = null;
+		for (EdgeUserDetails u : homunculus.getLocalUsers()) {
+			if (u.getUsername().equals(username)) {
+				t = u;
+				break;
+			}
+		}
+		if (t != null) {
+			homunculus.getLocalUsers().remove(t);
+			t = null;
+			result = true;
 		}
 		return result;
 	}
@@ -138,11 +154,20 @@ public abstract class AbstractShellHelper {
 		return ok ? Availability.available() : Availability.unavailable(message);
 	}
 
-	protected EdgeConfig getWorkingConfig() {
-		if (getSessionId() != null) {
-			return ((RpcConversation) homunculus.getRpc(getSessionId())).getWorkingConfig();
-		} else
-			return null;
+	protected Availability sessionFalse() {
+		return getSessionId() == null ? Availability.available()
+				: Availability.unavailable("you have a valide session. Logout from the system before");
+	}
+
+	protected Availability sessionOk() {
+		return getSessionId() != null ? Availability.available()
+				: Availability.unavailable("you must login in the system before");
+	}
+
+	protected Availability sessionOkOrStatusInit() {
+		return (getSessionId() != null || homunculus.getState().equals(HomunculusStates.INIT)
+				|| homunculus.getState().equals(HomunculusStates.STAMINAL)) ? Availability.available()
+						: Availability.unavailable("you must login in the system or to be in INIT status");
 	}
 
 	protected void setWorkingConfig(EdgeConfig config) {
@@ -156,11 +181,8 @@ public abstract class AbstractShellHelper {
 			((RpcConversation) homunculus.getRpc(getSessionId())).setWorkingConfig(null);
 	}
 
-	protected Availability testRuntimeConfigOk() {
-		return (homunculus.getRuntimeConfig() != null && getSessionId() != null) ? Availability.available()
-				: homunculus.getRuntimeConfig() != null
-						? Availability.unavailable("you have to configure a runtime config before")
-						: Availability.unavailable("you must login in the system or to be in INIT status");
+	protected Availability testIsRunningOk() {
+		return homunculus.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
 	}
 
 	protected Availability testListConfigOk() {
@@ -172,47 +194,52 @@ public abstract class AbstractShellHelper {
 		return result;
 	}
 
-	protected Map<String, EdgeConfig> getConfigs() {
-		return ((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations();
+	protected Availability testOk() {
+		return Boolean.valueOf(flagTestOk) ? Availability.available()
+				: Availability.unavailable("test command not available in this configuration");
 	}
 
-	protected void addConfig(EdgeConfig config) {
-		((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);
+	protected Availability testRuntimeConfigOk() {
+		return (homunculus.getRuntimeConfig() != null && getSessionId() != null) ? Availability.available()
+				: homunculus.getRuntimeConfig() != null
+						? Availability.unavailable("you have to configure a runtime config before")
+						: Availability.unavailable("you must login in the system or to be in INIT status");
 	}
 
-	protected Availability testIsRunningOk() {
-		return homunculus.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
-	}
-
-	protected boolean addUser(String username, String password, String authorities, PasswordEncoder passwordEncoder) {
-		EdgeUserDetails u = new EdgeUserDetails();
-		u.setUsername(username);
-		u.setPassword(passwordEncoder.encode(password));
-		List<SimpleGrantedAuthority> a = new ArrayList<>();
-		for (String p : authorities.split(",")) {
-			SimpleGrantedAuthority g = new SimpleGrantedAuthority(p);
-			a.add(g);
-		}
-		u.setAuthorities(a);
-		homunculus.getLocalUsers().add(u);
-		return true;
-	}
-
-	protected boolean removeUser(String username) {
-		boolean result = false;
-		EdgeUserDetails t = null;
-		for (EdgeUserDetails u : homunculus.getLocalUsers()) {
-			if (u.getUsername().equals(username)) {
-				t = u;
-				break;
-			}
-		}
-		if (t != null) {
-			homunculus.getLocalUsers().remove(t);
-			t = null;
-			result = true;
+	protected Availability testSelectedConfigOk() {
+		Availability result = Availability.unavailable("you have to login in the agent before");
+		if (getSessionId() != null) {
+			result = getWorkingConfig() != null ? Availability.available()
+					: Availability.unavailable("you have to select a config before");
 		}
 		return result;
+	}
+
+	public static void printOnTerminal(AnsiColor ansiColor, String message) {
+		try {
+			Terminal terminal = TerminalBuilder.builder().build();
+			terminal.writer().println(AnsiOutput.toString(ansiColor, message, AnsiColor.DEFAULT));
+			terminal.flush();
+		} catch (Exception e) {
+			logger.logException(e);
+		}
+	}
+
+	public static String readStringParameterOnTerminal(String request) {
+		try {
+			Terminal terminal = TerminalBuilder.builder().build();
+			terminal.writer().print(AnsiOutput.toString(AnsiColor.RED, request + ": ", AnsiColor.DEFAULT));
+			terminal.flush();
+			LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).build();
+			String result = null;
+			do {
+				result = lineReader.readLine();
+			} while (result == null);
+			return result;
+		} catch (Exception e) {
+			logger.logException(e);
+			return null;
+		}
 	}
 
 	protected static EdgeConfig cloneConfigHelper(String newName, String newPrompt, EdgeConfig target)
@@ -245,22 +272,6 @@ public abstract class AbstractShellHelper {
 			}
 		}
 		return ritorno;
-	}
-
-	private static BigInteger fib(long nth) {
-		nth = nth - 1;
-		long count = 0;
-		BigInteger first = BigInteger.ZERO;
-		BigInteger second = BigInteger.ONE;
-
-		BigInteger third = null;
-		while (count < nth) {
-			third = new BigInteger(first.add(second).toString());
-			first = new BigInteger(second.toString());
-			second = new BigInteger(third.toString());
-			count++;
-		}
-		return third;
 	}
 
 	protected static String readFromFile(String filename, String endStringFilter)
@@ -306,31 +317,20 @@ public abstract class AbstractShellHelper {
 		}
 	}
 
-	public static String readStringParameterOnTerminal(String request) {
-		try {
-			Terminal terminal = TerminalBuilder.builder().build();
-			terminal.writer().print(AnsiOutput.toString(AnsiColor.RED, request + ": ", AnsiColor.DEFAULT));
-			terminal.flush();
-			LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).build();
-			String result = null;
-			do {
-				result = lineReader.readLine();
-			} while (result == null);
-			return result;
-		} catch (Exception e) {
-			logger.logException(e);
-			return null;
-		}
-	}
+	private static BigInteger fib(long nth) {
+		nth = nth - 1;
+		long count = 0;
+		BigInteger first = BigInteger.ZERO;
+		BigInteger second = BigInteger.ONE;
 
-	public static void printOnTerminal(AnsiColor ansiColor, String message) {
-		try {
-			Terminal terminal = TerminalBuilder.builder().build();
-			terminal.writer().println(AnsiOutput.toString(ansiColor, message, AnsiColor.DEFAULT));
-			terminal.flush();
-		} catch (Exception e) {
-			logger.logException(e);
+		BigInteger third = null;
+		while (count < nth) {
+			third = new BigInteger(first.add(second).toString());
+			first = new BigInteger(second.toString());
+			second = new BigInteger(third.toString());
+			count++;
 		}
+		return third;
 	}
 
 }

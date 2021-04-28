@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.customJava;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualSystem;
-import org.ar4k.agent.farm.recipes.AbstractVirtualSystem;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualSystem
-public class CustomJavaSystem extends AbstractVirtualSystem {
+public class CustomJavaSystem extends GeneralApplication {
 
 }

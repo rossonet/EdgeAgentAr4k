@@ -1,9 +1,7 @@
 package org.ar4k.agent.farm.recipes.mongodb;
 
-import org.ar4k.agent.farm.EdgeContainerizedVirtualApplication;
-import org.ar4k.agent.farm.recipes.AbstractVirtualApplication;
+import org.ar4k.agent.farm.recipes.GeneralApplication;
 
-@EdgeContainerizedVirtualApplication
-public class MongoDbApplication extends AbstractVirtualApplication {
+public class MongoDbApplication extends GeneralApplication {
 
 }

@@ -1,3 +1,7 @@
+plugins {
+	id 'com.vaadin' version '0.8.0'
+}
+
 apply plugin: "docker"
 
 description = "Test platform. Agente gestione robot Druido"
@@ -7,6 +11,7 @@ dependencies {
 	compile project(':ar4k-terminal')
 	compile project(':ar4k-hazelcast')
 	compile project(':ar4k-activemq')
+	//compile project(':ar4k-jolokia') //TODO verifcare la build con Jolokia e Web
 	compile project(':ar4k-pcap')
 	compile project(':ar4k-ai') //compreso in ai-nlp
 	compile project(':ar4k-ai-nlp') 
@@ -39,5 +44,15 @@ task buildDocker(type: Docker, dependsOn: bootJar) {
 
 bootJar.doLast { task ->
 	ant.checksum file: task.archivePath
+}
+
+vaadin {
+        optimizeBundle = true
+        pnpmEnable = true
+        productionMode = true
+}
+
+bootRun.configure {
+    mustRunAfter vaadinBuildFrontend
 }
 

@@ -38,6 +38,59 @@ public class NetworkHelper {
     throw new UnsupportedOperationException("Just for static usage");
   }
 
+  public static boolean checkLocalPortAvailable(int port) {
+    boolean portTaken = false;
+    ServerSocket socket = null;
+    try {
+      socket = new ServerSocket(port);
+      socket.setReuseAddress(true);
+    } catch (IOException e) {
+      logger.logException(e);
+      portTaken = true;
+    } finally {
+      if (socket != null)
+        try {
+          socket.close();
+        } catch (IOException e) {
+          logger.logException(e);
+        }
+    }
+    return !portTaken;
+  }
+
+  public static int findAvailablePort(int defaultPort) {
+    try {
+      ServerSocket socket = new ServerSocket(0);
+      socket.setReuseAddress(true);
+      int port = socket.getLocalPort();
+      socket.close();
+      return port;
+    } catch (IOException ex) {
+      logger.logException(ex);
+      return defaultPort;
+    }
+  }
+
+  public static String getFirstMacAddressAsString() {
+    try {
+      InetAddress ip = InetAddress.getLocalHost();
+      NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+      if (network != null) {
+        byte[] mac = network.getHardwareAddress();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mac.length; i++) {
+          sb.append(String.format("%02X%s", mac[i], ""));
+        }
+        return sb.toString().toLowerCase();
+      } else {
+        return "xxxxxx";
+      }
+    } catch (Exception e) {
+      logger.info("searching mac of localhost\n" + EdgeLogger.stackTraceToString(e, 5));
+      return "xxxxxx";
+    }
+  }
+
   /*
    * @return the local hostname, if possible. Failure results in "localhost".
    */
@@ -88,59 +141,6 @@ public class NetworkHelper {
       logger.logException(e);
     }
     return hostnames;
-  }
-
-  public static int findAvailablePort(int defaultPort) {
-    try {
-      ServerSocket socket = new ServerSocket(0);
-      socket.setReuseAddress(true);
-      int port = socket.getLocalPort();
-      socket.close();
-      return port;
-    } catch (IOException ex) {
-      logger.logException(ex);
-      return defaultPort;
-    }
-  }
-
-  public static boolean checkLocalPortAvailable(int port) {
-    boolean portTaken = false;
-    ServerSocket socket = null;
-    try {
-      socket = new ServerSocket(port);
-      socket.setReuseAddress(true);
-    } catch (IOException e) {
-      logger.logException(e);
-      portTaken = true;
-    } finally {
-      if (socket != null)
-        try {
-          socket.close();
-        } catch (IOException e) {
-          logger.logException(e);
-        }
-    }
-    return !portTaken;
-  }
-
-  public static String getFirstMacAddressAsString() {
-    try {
-      InetAddress ip = InetAddress.getLocalHost();
-      NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-      if (network != null) {
-        byte[] mac = network.getHardwareAddress();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < mac.length; i++) {
-          sb.append(String.format("%02X%s", mac[i], ""));
-        }
-        return sb.toString().toLowerCase();
-      } else {
-        return "xxxxxx";
-      }
-    } catch (Exception e) {
-      logger.info("searching mac of localhost\n" + EdgeLogger.stackTraceToString(e, 5));
-      return "xxxxxx";
-    }
   }
 
 }

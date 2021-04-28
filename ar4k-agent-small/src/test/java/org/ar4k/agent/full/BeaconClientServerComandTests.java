@@ -12,15 +12,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentSmall;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
-import org.ar4k.agent.keystore.KeystoreLoader;
+import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BeaconClientServerComandTests {
@@ -135,7 +136,7 @@ public class BeaconClientServerComandTests {
 
     testAnimas.put(SERVER_LABEL,
         executor
-            .submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
+            .submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log", keyStoreServer.getAbsolutePath(),
                 1124, baseArgs, serverConfig, serverAliasInKeystore, serverAliasInKeystore, "https://127.0.0.1:22116"))
             .get());
     Thread.sleep(15000);
