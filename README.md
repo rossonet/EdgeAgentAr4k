@@ -3,6 +3,7 @@
 ![Test on master branch](https://github.com/rossonet/EdgeAgentAr4k/workflows/Test%20on%20master%20branch/badge.svg)
 ![Build docs and publish on web.rossonet.net](https://github.com/rossonet/EdgeAgentAr4k/workflows/Build%20docs%20and%20publish%20on%20web.rossonet.net/badge.svg)
 ![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/workflows/Publish%20on%20Maven%20Central/badge.svg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k?ref=badge_shield)
 
 ## Reference
 
@@ -107,3 +108,7 @@ docker run -ti --rm ar4k-agent:latest
 
 [https://www.rossonet.net](https://www.rossonet.net)
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k?ref=badge_large)
