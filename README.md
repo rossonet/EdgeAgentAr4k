@@ -5,7 +5,6 @@
 [![Build docs and publish on web.rossonet.net](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/docs-on-master.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/docs-on-master.yml)
 [![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k?ref=badge_shield)
-[![CodeQL](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/codeql-analysis.yml)
 
 ## Reference
 
