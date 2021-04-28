@@ -27,7 +27,7 @@ import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.farm.FarmShellInterface;
 import org.ar4k.agent.farm.bootpService.BootpShellInterface;
-import org.ar4k.agent.farm.recipes.activemq.ActiveMqShellInterface;
+import org.ar4k.agent.farm.recipes.activemq.ActiveMqRecipeShellInterface;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
@@ -62,7 +62,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
 		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
-		ActiveMqShellInterface.class, BootstrapShellInterface.class, FarmShellInterface.class,
+		ActiveMqRecipeShellInterface.class, BootstrapShellInterface.class, FarmShellInterface.class,
 		BootpShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration

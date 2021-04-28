@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 @ShellCommandGroup("Farmer Commands")
 @ShellComponent
 @RestController
-@RequestMapping("/activeMqInterface")
-public class ActiveMqShellInterface extends AbstractShellHelper {
+@RequestMapping("/activeMqRecipeShellInterface")
+public class ActiveMqRecipeShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Add an ActiveMQ application farm")
 	@ManagedOperation

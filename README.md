@@ -1,8 +1,9 @@
 # Ar4k Edge Agent by Rossonet
 
-![Test on master branch](https://github.com/rossonet/EdgeAgentAr4k/workflows/Test%20on%20master%20branch/badge.svg)
-![Build docs and publish on web.rossonet.net](https://github.com/rossonet/EdgeAgentAr4k/workflows/Build%20docs%20and%20publish%20on%20web.rossonet.net/badge.svg)
-![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/workflows/Publish%20on%20Maven%20Central/badge.svg)
+[![Test on master branch](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/test-on-master.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/test-on-master.yml)
+[![Test on devel branch](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/test-on-devel.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/test-on-devel.yml)
+[![Build docs and publish on web.rossonet.net](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/docs-on-master.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/docs-on-master.yml)
+[![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml)
 
 ## Reference
 
