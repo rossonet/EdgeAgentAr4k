@@ -26,13 +26,13 @@ import org.springframework.util.StringUtils;
  */
 @SpringBootApplication
 @ComponentScan("org.ar4k.agent")
-public class Ar4kAgent {
+public class Ar4kAgentQa {
 	static final boolean running = true;
 
 	public static void main(String[] args) {
 		final String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
 		final String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
-		SpringApplication.run(Ar4kAgent.class, fullArgs);
+		SpringApplication.run(Ar4kAgentQa.class, fullArgs);
 	}
 
 }

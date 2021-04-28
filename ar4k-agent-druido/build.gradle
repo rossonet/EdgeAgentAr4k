@@ -46,3 +46,13 @@ bootJar.doLast { task ->
 	ant.checksum file: task.archivePath
 }
 
+vaadin {
+        optimizeBundle = true
+        pnpmEnable = true
+        productionMode = true
+}
+
+bootRun.configure {
+    mustRunAfter vaadinBuildFrontend
+}
+

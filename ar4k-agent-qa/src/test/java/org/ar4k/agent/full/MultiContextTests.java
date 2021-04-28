@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentQa;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.junit.After;
@@ -57,11 +57,11 @@ public class MultiContextTests {
     addArgs.add("--ar4k.threadSleep=500");
     addArgs.add("--ar4k.logoUrl=/static/img/ar4k.png");
     testAnimas.add(
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log", "a.ks", 1124, addArgs)).get());
+        executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log", "a.ks", 1124, addArgs)).get());
     testAnimas.add(
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log", "b.ks", 1125, addArgs)).get());
+        executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "b.log", "b.ks", 1125, addArgs)).get());
     testAnimas.add(
-        executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log", "c.ks", 1126, addArgs)).get());
+        executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "c.log", "c.ks", 1126, addArgs)).get());
     Thread.sleep(20000);
     for (Homunculus a : testAnimas) {
       Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.STAMINAL);

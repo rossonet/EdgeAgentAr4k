@@ -33,14 +33,14 @@ import org.springframework.util.StringUtils;
  */
 @SpringBootApplication
 @ComponentScan("org.ar4k.agent")
-public class Ar4kAgent {
+public class Ar4kAgentWeb {
 
 	static final boolean running = true;
 
 	public static void main(String[] args) {
 		final String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
 		final String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
-		final SpringApplication app = new SpringApplication(Ar4kAgent.class);
+		final SpringApplication app = new SpringApplication(Ar4kAgentWeb.class);
 		// app.setWebApplicationType(WebApplicationType.SERVLET);
 		app.run(fullArgs);
 		final EdgeUserDetails u = new EdgeUserDetails();

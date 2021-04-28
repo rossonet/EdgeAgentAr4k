@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentWeb;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
@@ -203,15 +203,15 @@ public class RemoteAgentsForBeaconTest {
 		final EdgeConfig clientTwoConfig = new EdgeConfig();
 		final EdgeConfig clientThreeConfig = new EdgeConfig();
 		testAnimas.put(CLIENT3_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentWeb.class, executor, "a.log",
 						keyStoreClient3.getAbsolutePath(), 1124, baseArgsClientThree, clientThreeConfig,
 						client3AliasInKeystore, signClient3AliasInKeystore, "https://localhost:11231")).get());
 		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentWeb.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClientTwo, clientTwoConfig,
 						client2AliasInKeystore, signClient2AliasInKeystore, "https://localhost:11231")).get());
 		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentWeb.class, executor, "c.log",
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, "https://localhost:11231")).get());
 		for (final Homunculus a : testAnimas.values()) {

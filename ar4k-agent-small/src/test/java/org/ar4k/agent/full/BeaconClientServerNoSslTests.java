@@ -37,7 +37,7 @@ import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentSmall;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
@@ -386,15 +386,15 @@ public class BeaconClientServerNoSslTests {
 		final EdgeConfig config1 = null;
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 						keyStoreServer.getAbsolutePath(), 1124, baseArgsServer, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClient2, config2, client2AliasInKeystore,
 						client2AliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "c.log",
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClient1, config1, client1AliasInKeystore,
 						client1AliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(5000);
@@ -496,7 +496,7 @@ public class BeaconClientServerNoSslTests {
 			testAnimas.remove(SERVER_LABEL);
 			Thread.sleep(5000);
 			testAnimas.put(SERVER_LABEL,
-					executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+					executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 							keyStoreServer.getAbsolutePath(), 1124, baseArgsServer, serverConfig, serverAliasInKeystore,
 							serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		}

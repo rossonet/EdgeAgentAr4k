@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentQa;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
@@ -343,15 +343,15 @@ public class RemoteControlOverSsh {
 
 		testAnimas
 				.put(SERVER_LABEL,
-						executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+						executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log",
 								keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
 								signServerAliasInKeystore, null)).get());
 		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClientTwo, clientTwoConfig,
 						client2AliasInKeystore, signClient2AliasInKeystore, null)).get());
 		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "c.log",
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, null)).get());
 		Thread.sleep(15000);

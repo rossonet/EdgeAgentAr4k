@@ -37,7 +37,7 @@ import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentQa;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
@@ -290,15 +290,15 @@ public class RemoteControlOverBeaconRegistrationAndApprove {
 		serverConfig.pots.add(beaconServiceConfig);
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log",
 						keyStoreMaster.getAbsolutePath(), 1124, baseArgs, serverConfig, masterAliasInKeystore,
 						masterAliasInKeystore, "https://localhost:32676")).get());
 		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClientTwo, clientTwoConfig,
 						client2AliasInKeystore, signClient2AliasInKeystore, "https://localhost:32676")).get());
 		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "c.log",
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgsClientOne, clientOneConfig,
 						client1AliasInKeystore, signClient1AliasInKeystore, "https://localhost:32676")).get());
 		for (final Homunculus a : testAnimas.values()) {

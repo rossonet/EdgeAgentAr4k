@@ -23,7 +23,7 @@ import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkMode;
 import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.console.Ar4kAgent;
+import org.ar4k.agent.console.Ar4kAgentSmall;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
 import org.ar4k.agent.helper.ContextCreationHelper;
@@ -148,15 +148,15 @@ public class BeaconClientDataTests {
 		final EdgeConfig config1 = null;
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT2_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "b.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgs, config2, client2AliasInKeystore,
 						client2AliasInKeystore, "https://127.0.0.1:22116")).get());
 		testAnimas.put(CLIENT1_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "c.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "c.log",
 						keyStoreClient1.getAbsolutePath(), 1126, baseArgs, config1, client1AliasInKeystore,
 						client1AliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(20000);
@@ -210,7 +210,7 @@ public class BeaconClientDataTests {
 		serverConfig.pots.add(beaconServiceConfig);
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(20000);
@@ -292,7 +292,7 @@ public class BeaconClientDataTests {
 		serverConfig.pots.add(beaconServiceConfig);
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(15000);
@@ -428,7 +428,7 @@ public class BeaconClientDataTests {
 		serverConfig.pots.add(beaconServiceConfig);
 
 		testAnimas.put(SERVER_LABEL,
-				executor.submit(new ContextCreationHelper(Ar4kAgent.class, executor, "a.log",
+				executor.submit(new ContextCreationHelper(Ar4kAgentSmall.class, executor, "a.log",
 						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
 						serverAliasInKeystore, "https://127.0.0.1:22116")).get());
 		Thread.sleep(15000);

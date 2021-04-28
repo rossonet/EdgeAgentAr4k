@@ -98,13 +98,14 @@ subprojects {
 	apply plugin: "maven-publish"
 	apply plugin: 'base'
 	apply plugin: 'signing'
+	apply plugin: 'jacoco'
 
 	eclipse {
-   		 classpath {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
+   		classpath {
+        		downloadJavadoc = true
+        		downloadSources = true
+    		}
+	}
 
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'
@@ -236,8 +237,8 @@ subprojects {
 		compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
 		// non toccare le versioni de non consapevolmente sopra
 		compile group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: '3.0.0'
-	    testCompile('org.springframework.boot:spring-boot-starter-test')
-	    testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
+	        testCompile('org.springframework.boot:spring-boot-starter-test')
+	        testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
 
 		// per annotazioni console
 		/*
@@ -318,6 +319,13 @@ subprojects {
 		doLast{ println ("You can find the fat jar of ${project.name} in ${jar.archivePath}") }
 	}
 
+	jacocoTestReport {
+    		reports {
+        		xml.enabled true
+        		html.enabled false
+    		}
+	}
+
 	javadoc{
 		destinationDir = file("${rootProject.buildDir}/docs/javadoc/${project.name}/")
 		failOnError=true
@@ -367,6 +375,8 @@ subprojects {
 		delete fileTree(projectDir) { include '*.ar4k.conf' }
 		delete fileTree(projectDir) { include '*.ar4k.conf.crypto' }
 	}
+
+	
 }
 
 
@@ -667,5 +677,21 @@ eclipse {
 	downloadSources = true
     }
 }
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+}
+
 
 tasks.eclipse.dependsOn(cleanEclipse)
