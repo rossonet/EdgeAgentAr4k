@@ -6,6 +6,7 @@
 [![Publish on Maven Central](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml/badge.svg)](https://github.com/rossonet/EdgeAgentAr4k/actions/workflows/publish-on-maven.yml)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frossonet%2FEdgeAgentAr4k?ref=badge_shield)
 [![Codecov](https://codecov.io/gh/rossonet/EdgeAgentAr4k/branch/devel/graph/badge.svg?token=LW8YNNLV4V)](https://codecov.io/gh/rossonet/EdgeAgentAr4k)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3f2fd1b5f5c5421fa1102047c8b7e54f)](https://www.codacy.com/gh/rossonet/EdgeAgentAr4k/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rossonet/EdgeAgentAr4k&amp;utm_campaign=Badge_Grade)
 
 ## Reference
 
