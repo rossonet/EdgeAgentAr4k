@@ -26,7 +26,10 @@ import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.HardwareHelper;
@@ -186,6 +189,9 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
 		logger.info("starting beacon client monitoring every " + getPollingFrequency() + " milliseconds");
+		final EdgeChannel status = this.beaconDataAddress.createOrGetDataChannel("beacon_client_status",
+				IPublishSubscribeChannel.class, "status of matermost connection", (String) null, (String) null, null,
+				this);
 		runInstance();
 	}
 
@@ -1150,6 +1156,16 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	public static void setUseNettyForTunnel(boolean useNettyForTunnel) {
 		BeaconClient.useNettyForTunnel = useNettyForTunnel;
+	}
+
+	@Override
+	public DataAddress getDataAddress() {
+		return beaconDataAddress;
+	}
+
+	@Override
+	public String getServiceName() {
+		return "beacon-client";
 	}
 
 }

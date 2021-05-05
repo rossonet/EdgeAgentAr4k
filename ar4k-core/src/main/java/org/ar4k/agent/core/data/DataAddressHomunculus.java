@@ -10,7 +10,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.messages.HealthMessage;
@@ -41,7 +40,7 @@ public class DataAddressHomunculus extends DataAddress {
 	private static final String COMMAND_TAG = "command-rpc";
 
 	public DataAddressHomunculus(Homunculus homunculus) {
-		super(homunculus);
+		super(homunculus, homunculus);
 	}
 
 	// task per health
@@ -105,8 +104,8 @@ public class DataAddressHomunculus extends DataAddress {
 		tagList.add(SYSTEM_TAG);
 		tagList.add(DIRECTORY_TAG);
 		tagList.addAll(homunculus.getTags());
-		final EdgeChannel systemChannel = createOrGetDataChannel("system", INoDataChannel.class, "local JVM system",
-				(String) null, null, tagList, homunculus);
+		final EdgeChannel systemChannel = createOrGetDataChannel("system", IPublishSubscribeChannel.class,
+				"local JVM system", getDefaultScope(), getDefaultScope(), tagList, homunculus);
 		tagList.add(LOGGER_TAG);
 		createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel,
 				getDefaultScope(), tagList, homunculus);

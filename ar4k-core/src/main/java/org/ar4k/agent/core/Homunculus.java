@@ -434,7 +434,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 
 	@Override
 	public String getServiceName() {
-		return "Homunculus";
+		return "homunculus";
 	}
 
 	public Session getSession(String sessionId) {

@@ -79,7 +79,7 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 			pot = (EdgeComponent) method.invoke(serviceConfig);
 			pot.setConfiguration(serviceConfig);
 			pot.setHomunculus(homunculus);
-			pot.setDataAddress(new DataAddress(homunculus));
+			pot.setDataAddress(new DataAddress(homunculus, pot));
 			if (pot.getDataAddress() != null) {
 				homunculus.getDataAddress().registerSlave(pot);
 			}

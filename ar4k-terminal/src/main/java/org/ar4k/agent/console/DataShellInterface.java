@@ -15,11 +15,14 @@
 package org.ar4k.agent.console;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataChannelFilter;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
 import org.ar4k.agent.core.data.channels.IPriorityChannel;
@@ -29,6 +32,7 @@ import org.ar4k.agent.core.data.channels.IRendezvousChannel;
 import org.ar4k.agent.core.data.generator.DataGeneratorConfig;
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig;
 import org.ar4k.agent.core.data.messages.StringMessage;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.messaging.Message;
@@ -41,6 +45,10 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -93,16 +101,42 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 		return homunculus.getDataAddress().listChannels();
 	}
 
+	@ShellMethod(value = "Search with a filter in data channels", group = "Data Manager Commands")
+	@ManagedOperation
+	public Collection<String> searchDataChannels(String filter) {
+		Collection<String> result = new HashSet<>();
+		DataChannelFilter objFilter = new DataChannelFilter(filter);
+		for (EdgeChannel c : homunculus.getDataAddress().getDataChannels(objFilter)) {
+			result.add(c.getBrowseName() + " [" + c.getDescription() + "] " + c.getChannelType() + " " + c.getStatus());
+		}
+		return result;
+	}
+
 	@ShellMethod(value = "List all managed slaves", group = "Data Manager Commands")
 	@ManagedOperation
 	public Collection<DataAddress> listSlaveDataAddress() {
 		return homunculus.getDataAddress().getSlaveDataAddress();
 	}
 
-	@ShellMethod(value = "get details of a single channel", group = "Data Manager Commands")
+	@ShellMethod(value = "Get details of a single channel", group = "Data Manager Commands")
 	@ManagedOperation
 	public String getDataChannelDetails(@ShellOption(help = "channel id (nodeId)") String channelId) {
 		return homunculus.getDataAddress().getChannel(channelId).toString();
+	}
+
+	@ShellMethod(value = "Get Spring Metrics", group = "Data Manager Commands")
+	@ManagedOperation
+	public String getMetrics() {
+		MeterRegistry m = Homunculus.getApplicationContext().getBean(MeterRegistry.class);
+		StringBuilder sb = new StringBuilder();
+		for (Meter d : m.getMeters()) {
+			sb.append(d.getId() + " -> ");
+			for (Measurement s : d.measure()) {
+				sb.append(s.toString() + " ");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	@ShellMethod(value = "Send a message to a channel", group = "Data Manager Commands")

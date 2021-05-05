@@ -372,7 +372,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 		if (message.has("event")) {
 			switch (message.getString("event")) {
 			case ("added_to_team"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "ifumy6je6b8jdff5yi7ohokwze", "team_id": "",
 				 * "channel_id": "", "omit_users": null }, "data": { "user_id":
@@ -381,10 +381,10 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("authentication_challenge"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_converted"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
 				 * "channel_id": "", "omit_users": null }, "data": {"channel_id":
@@ -392,10 +392,10 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("channel_created"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_deleted"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
 				 * "channel_id": "", "omit_users": null }, "data": { "delete_at": 1618994491292,
@@ -404,10 +404,10 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("channel_member_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("channel_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
 				 * "agibznfpapdk9ebdwpc399nmey", "omit_users": null }, "data": {"channel":
@@ -416,28 +416,28 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("channel_viewed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("config_changed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("delete_team"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("direct_added"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("emoji_added"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("ephemeral_message"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("group_added"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("hello"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "ifumy6je6b8jdff5yi7ohokwze", "team_id": "",
 				 * "channel_id": "", "omit_users": null }, "data": {"server_version":
@@ -446,7 +446,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("leave_team"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
 				 * "channel_id": "", "omit_users": null }, "data": { "user_id":
@@ -455,25 +455,25 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("license_changed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("memberrole_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("new_user"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_disabled"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_enabled"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("plugin_statuses_changed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("post_deleted"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
 				 * "qgsi9rgzzbbwbgms511msjndda", "omit_users": null }, "data": { "post":
@@ -484,14 +484,14 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("post_edited"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("post_unread"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 
 				break;
 			case ("posted"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				final String postInString = message.getJSONObject("data").getString("post");
 				try {
 					ObjectMapper mapper = new ObjectMapper();
@@ -503,28 +503,28 @@ public class MatterMostClientAr4k implements MessageHandler {
 				}
 				break;
 			case ("preference_changed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("preferences_changed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("preferences_deleted"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("reaction_added"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("reaction_removed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("response"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("role_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			case ("status_change"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "ifumy6je6b8jdff5yi7ohokwze", "team_id": "",
 				 * "channel_id": "", "omit_users": null }, "data": { "user_id":
@@ -539,7 +539,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("typing"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
 				 * "q9mh7czwdbdp3gq998ghqwz3cc", "omit_users": {"yogedfqb8td98pyc1b6iemxtje":
@@ -548,7 +548,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("update_team"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "hffh7ry3y7nzmq8aasrhxhienh",
 				 * "channel_id": "", "omit_users": null }, "data": {"team":
@@ -557,7 +557,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("user_added"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id":
 				 * "ptx9buoqn7y7byy5sw19xiania", "omit_users": null }, "data": { "user_id":
@@ -566,7 +566,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("user_removed"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "ifumy6je6b8jdff5yi7ohokwze", "team_id": "",
 				 * "channel_id": "", "omit_users": null }, "data": { "remover_id":
@@ -575,7 +575,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("user_role_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "ifumy6je6b8jdff5yi7ohokwze", "team_id": "",
 				 * "channel_id": "", "omit_users": null }, "data": { "user_id":
@@ -584,7 +584,7 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("user_updated"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				/*
 				 * { "broadcast": { "user_id": "", "team_id": "", "channel_id": "",
 				 * "omit_users": null }, "data": {"user": { "auth_service": "", "timezone": {
@@ -600,11 +600,11 @@ public class MatterMostClientAr4k implements MessageHandler {
 				 */
 				break;
 			case ("dialog_opened"):
-				logger.info("event " + message.getString("event") + " -> " + message.toString(2));
+				logger.debug("event " + message.getString("event") + " -> " + message.toString(2));
 				break;
 			}
 		} else {
-			logger.info("received web socket message from " + rossonetChatServer + " without event tag");
+			logger.debug("received web socket message from " + rossonetChatServer + " without event tag");
 			logger.debug("received web socket message " + message.toString(2));
 		}
 	}

@@ -28,7 +28,7 @@ public class MatterMostWebSocketHandler extends Endpoint {
 
 	Session userSession = null;
 	private MessageHandler messageHandler;
-	
+
 	private boolean active = false;
 
 	private Whole<String> sessionHandler = new Whole<String>() {
@@ -36,20 +36,18 @@ public class MatterMostWebSocketHandler extends Endpoint {
 		@Override
 		public void onMessage(String message) {
 			try {
-			if (messageHandler != null) {
-				JSONObject o = new JSONObject(message);
-				messageHandler.handleMessage(o);
-				active = true;
-			}
+				if (messageHandler != null) {
+					JSONObject o = new JSONObject(message);
+					messageHandler.handleMessage(o);
+					active = true;
+				}
 			} catch (Exception a) {
 				active = false;
-				logger.warn("in websocket message ",a);
+				logger.warn("in websocket message ", a);
 			}
 		}
-		
+
 	};
-
-
 
 	public MatterMostWebSocketHandler(URI endpointURI) {
 		try {
@@ -69,7 +67,7 @@ public class MatterMostWebSocketHandler extends Endpoint {
 			ClientEndpointConfig clientConfigurator = ClientEndpointConfig.Builder.create()
 					.configurator(clientEndpointConfigurator).build();
 			if (endpointURI.toString().startsWith("wss://")) {
-			//	logger.info("Mattermost ws in SSL");
+				// logger.info("Mattermost ws in SSL");
 				final SSLContext sslContext = SSLContext.getDefault();
 				final SSLEngineConfigurator sslEngineConfigurator = new SSLEngineConfigurator(sslContext, true, true,
 						true);
@@ -91,11 +89,11 @@ public class MatterMostWebSocketHandler extends Endpoint {
 
 	@Override
 	public void onClose(Session userSession, CloseReason reason) {
-		//System.out.println("-------------- close ws session -> " + reason.getReasonPhrase());
+		// System.out.println("-------------- close ws session -> " +
+		// reason.getReasonPhrase());
 		this.userSession = null;
 		active = false;
 	}
-
 
 	public void addMessageHandler(MessageHandler msgHandler) {
 		this.messageHandler = msgHandler;
@@ -103,8 +101,9 @@ public class MatterMostWebSocketHandler extends Endpoint {
 
 	public void sendMessage(String message) {
 		try {
-		//System.out.println("-------------- send message to ws session -> " + message);
-		this.userSession.getAsyncRemote().sendText(message);
+			// System.out.println("-------------- send message to ws session -> " +
+			// message);
+			this.userSession.getAsyncRemote().sendText(message);
 		} catch (Exception e) {
 			active = false;
 			logger.logException(e);
@@ -122,19 +121,19 @@ public class MatterMostWebSocketHandler extends Endpoint {
 		final JSONObject data = new JSONObject();
 		data.put("token", authToken);
 		o.put("data", data);
-		System.out.println("SEND WSS: " + o.toString());
+		// System.out.println("SEND WSS: " + o.toString());
 		sendMessage(o.toString());
 	}
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		//System.out.println("-------------- new ws session -> " + session.getId());
+		// System.out.println("-------------- new ws session -> " + session.getId());
 		session.addMessageHandler(String.class, sessionHandler);
 		this.userSession = session;
 		active = true;
 	}
 
 	public boolean isActive() {
-		return userSession!=null && userSession.isOpen() && active;
+		return userSession != null && userSession.isOpen() && active;
 	}
 }

@@ -19,6 +19,8 @@ import java.security.UnrecoverableKeyException;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -85,6 +87,7 @@ public class BeaconService implements EdgeComponent {
 
 	@Override
 	public synchronized void init() {
+		setDataspace();
 		try {
 			if (beaconServer == null) {
 				beaconServer = new BeaconServerBuilder().setHomunculus(homunculus).setPort(configuration.port)
@@ -102,6 +105,11 @@ public class BeaconService implements EdgeComponent {
 		} catch (UnrecoverableKeyException e) {
 			logger.warn(e.getMessage());
 		}
+	}
+
+	private void setDataspace() {
+		final EdgeChannel status = dataAddress.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+				"status of beacon server", (String) null, (String) null, null, this);
 	}
 
 	@Override

@@ -24,9 +24,12 @@ public class DataAddress implements AutoCloseable {
 
 	protected final Homunculus homunculus;
 
-	public DataAddress(Homunculus homunculus) {
+	protected DataServiceOwner serviceOwner;
+
+	public DataAddress(Homunculus homunculus, DataServiceOwner serviceOwner) {
 		dataChannels.clear();
 		this.homunculus = homunculus;
+		this.serviceOwner = serviceOwner;
 	}
 
 	protected final Collection<EdgeChannel> dataChannels = new HashSet<>();
@@ -111,9 +114,10 @@ public class DataAddress implements AutoCloseable {
 		return createOrGetDataChannel(nodeId, channelType, description, getChannel(father), scope, tags, serviceOwner);
 	}
 
-	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,
+	public EdgeChannel createOrGetDataChannel(String nodePartialId, Class<? extends EdgeChannel> channelType,
 			String description, EdgeChannel father, String scope, Collection<String> tags,
 			DataServiceOwner serviceOwner) {
+		String nodeId = serviceOwner.getServiceName() + levelSeparator + nodePartialId;
 		EdgeChannel returnChannel = null;
 		if (getChannel(nodeId) != null) {
 			returnChannel = getChannel(nodeId);
@@ -184,9 +188,7 @@ public class DataAddress implements AutoCloseable {
 	public Collection<String> listChannels() {
 		final Collection<String> result = new ArrayList<>();
 		for (final EdgeChannel c : getDataChannels()) {
-			result.add(c.getBrowseName() + " [" + c.getDescription() + "] "
-					+ (c.getChannel() != null ? c.getChannel().getBeanName() : c.getStatus())
-					+ (c.getChannel() != null ? " -> " + c.getChannel().getFullChannelName() : ""));
+			result.add(c.getBrowseName() + " [" + c.getDescription() + "] " + c.getChannelType() + " " + c.getStatus());
 		}
 		return result;
 	}
@@ -224,14 +226,14 @@ public class DataAddress implements AutoCloseable {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		builder.append("DataAddress [");
-		if (homunculus != null)
-			builder.append("anima=").append(homunculus.getAgentUniqueName()).append(", ");
-		if (defaultScope != null)
-			builder.append("defaultScope=").append(defaultScope).append(", ");
-		if (levelSeparator != null)
-			builder.append("levelSeparator=").append(levelSeparator).append(", ");
+		builder.append("serviceOwner=");
+		builder.append(serviceOwner);
+		builder.append(", defaultScope=");
+		builder.append(defaultScope);
+		builder.append(", levelSeparator=");
+		builder.append(levelSeparator);
 		builder.append("]");
 		return builder.toString();
 	}

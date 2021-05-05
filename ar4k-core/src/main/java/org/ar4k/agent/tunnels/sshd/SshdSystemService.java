@@ -120,12 +120,12 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	}
 
 	private void setDataspace() {
-		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
 				"requested command on ssh", (String) null, (String) null, null, this);
-		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
 				"reply command to ssh", (String) null, (String) null, null, this);
-		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
-				"reply command to ssh", (String) null, (String) null, null, this);
+		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+				"status of ssh connection", (String) null, (String) null, null, this);
 	}
 
 	@Override

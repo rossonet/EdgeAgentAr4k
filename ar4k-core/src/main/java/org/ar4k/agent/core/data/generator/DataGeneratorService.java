@@ -41,6 +41,8 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 
+import io.micrometer.core.instrument.MeterRegistry;
+
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
@@ -286,8 +288,8 @@ public class DataGeneratorService implements EdgeComponent {
 			break;
 
 		}
-		final EdgeChannel dataChannel = dataspace.createOrGetDataChannel(single.nodeId, typeChannel,
-				single.description, (String) null, (String) null, single.tags, this);
+		final EdgeChannel dataChannel = dataspace.createOrGetDataChannel(single.nodeId, typeChannel, single.description,
+				(String) null, (String) null, single.tags, this);
 		dataChannel.setDomainId(single.domainId);
 		dataChannel.setNameSpace(single.namespace);
 		simulatedDatas.put(dataChannel, dataNodeSimulator);

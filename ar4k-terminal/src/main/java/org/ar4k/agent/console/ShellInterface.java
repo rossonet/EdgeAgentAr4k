@@ -19,7 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -41,6 +40,13 @@ import javax.management.IntrospectionException;
 import javax.management.ReflectionException;
 import javax.validation.Valid;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs2.provider.ftp.FtpFileProvider;
+import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs2.provider.sftp.SftpFileProvider;
+import org.apache.commons.vfs2.provider.webdav4.Webdav4FileProvider;
+import org.apache.commons.vfs2.provider.webdav4s.Webdav4sFileProvider;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusEvents;
@@ -87,20 +93,6 @@ import com.google.gson.GsonBuilder;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
-
-import org.apache.commons.vfs2.CacheStrategy;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.ftp.FtpFileProvider;
-import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs2.provider.sftp.SftpFileProvider;
-import org.apache.commons.vfs2.provider.webdav4.Webdav4FileProvider;
-import org.apache.commons.vfs2.provider.webdav4s.Webdav4sFileProvider;
 
 /**
  * Interfaccia da linea di comando principale.
@@ -271,7 +263,8 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Publish selected config to remote server in base64 format", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
-	public String saveSelectedConfigToRemote(@ShellOption(help = "file URI with authentication") String fileURL) throws IOException {
+	public String saveSelectedConfigToRemote(@ShellOption(help = "file URI with authentication") String fileURL)
+			throws IOException {
 		DefaultFileSystemManager fsManager = new DefaultFileSystemManager();
 		fsManager.addProvider("webdav", new Webdav4FileProvider());
 		fsManager.addProvider("webdavs", new Webdav4sFileProvider());
@@ -470,7 +463,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod("List configs in runtime session")
 	@ManagedOperation
 	@ShellMethodAvailability("testListConfigOk")
-	public String listConfig() {
+	public String listConfigs() {
 		String risposta = "";
 		for (final Entry<String, EdgeConfig> configurazione : getConfigs().entrySet()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN, configurazione.getValue().uniqueId.toString(),
@@ -605,7 +598,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "List runtime services", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testIsRunningOk")
-	public String listService() {
+	public String listServices() {
 		String risposta = "";
 		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN,

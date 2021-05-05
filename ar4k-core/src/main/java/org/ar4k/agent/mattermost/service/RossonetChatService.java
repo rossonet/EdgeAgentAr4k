@@ -62,12 +62,12 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 	}
 
 	private void setDataspace() {
-		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
 				"requested command on ssh", (String) null, (String) null, null, this);
-		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
 				"reply command to ssh", (String) null, (String) null, null, this);
-		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
-				"reply command to ssh", (String) null, (String) null, null, this);
+		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+				"status of matermost connection", (String) null, (String) null, null, this);
 
 	}
 
@@ -146,6 +146,17 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RossonetChatService [configuration=");
+		builder.append(configuration);
+		builder.append(", serviceStatus=");
+		builder.append(serviceStatus);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

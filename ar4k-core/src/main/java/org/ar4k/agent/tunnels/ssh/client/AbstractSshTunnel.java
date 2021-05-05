@@ -40,8 +40,8 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	@Override
 	public void init() {
-		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
-				"reply command to ssh", (String) null, (String) null, null, this);
+		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+				"status of ssh connection", (String) null, (String) null, null, this);
 	}
 
 	@Override

@@ -21,6 +21,11 @@ public class DataChannelFilter {
 		this.filters = filters;
 	}
 
+	public DataChannelFilter(String filter) {
+		// TODO Completare costruttore filtro da stringa
+		filters = null;
+	}
+
 	public List<FilterLine> getFilters() {
 		return filters;
 	}

@@ -9,7 +9,7 @@ public class BeaconDataAddress extends DataAddress {
 	private final BeaconClient beaconClient;
 
 	public BeaconDataAddress(BeaconClient beaconClient, Homunculus homunculus) {
-		super(homunculus);
+		super(homunculus, beaconClient);
 		this.beaconClient = beaconClient;
 	}
 
