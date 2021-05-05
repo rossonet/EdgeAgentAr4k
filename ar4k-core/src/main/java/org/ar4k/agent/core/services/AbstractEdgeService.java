@@ -51,6 +51,7 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 	private class WatchDogTask extends TimerTask {
 		@Override
 		public void run() {
+			Thread.currentThread().setName("wg " + pot.getServiceName());
 			getUpdateFromPot();
 		}
 	}
@@ -133,6 +134,7 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 			@Override
 			public void run() {
 				try {
+					Thread.currentThread().setName("init " + pot.getServiceName());
 					pot.init();
 				} catch (Exception e) {
 					logger.logException("in service " + pot.getConfiguration() + " init", e);

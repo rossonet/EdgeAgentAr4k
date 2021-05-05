@@ -3,6 +3,8 @@ package org.ar4k.agent.tunnels.ssh.client;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -28,13 +30,19 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	protected AbstractSshConfig configuration = null;
 
-	protected DataAddress dataSpace;
+	protected DataAddress dataspace;
 
 	protected Homunculus homunculus;
 
 	private JSch jsch = null;
 
 	private Session session = null;
+
+	@Override
+	public void init() {
+		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"reply command to ssh", (String) null, (String) null, null, this);
+	}
 
 	@Override
 	public void close() {
@@ -48,7 +56,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	@Override
 	public DataAddress getDataAddress() {
-		return dataSpace;
+		return dataspace;
 	}
 
 	@Override
@@ -90,7 +98,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	@Override
 	public void setDataAddress(DataAddress dataAddress) {
-		dataSpace = dataAddress;
+		dataspace = dataAddress;
 	}
 
 	@Override

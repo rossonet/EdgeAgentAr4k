@@ -30,6 +30,7 @@ public class SshRemoteTunnel extends AbstractSshTunnel {
 
 	@Override
 	public void init() {
+		super.init();
 		startTunnel();
 	}
 

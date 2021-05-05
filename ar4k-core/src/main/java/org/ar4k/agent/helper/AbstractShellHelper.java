@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
@@ -71,6 +72,9 @@ public abstract class AbstractShellHelper {
 
 	@Autowired
 	protected SessionRegistry sessionRegistry;
+	
+	@Autowired
+	protected ResourceLoader resourceLoader;
 
 	protected void addConfig(EdgeConfig config) {
 		((RpcConversation) homunculus.getRpc(getSessionId())).getConfigurations().put(config.getName(), config);

@@ -216,8 +216,10 @@ subprojects {
 		//script engine groovy-jsr223
 		compile 'org.codehaus.groovy:groovy-all:2.5.14'
 		compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.5.14'
-		compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+		compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 		compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+		compile group: 'org.apache.commons', name: 'commons-vfs2', version: '2.8.0'
+		compile group: 'org.apache.commons', name: 'commons-vfs2-jackrabbit2', version: '2.8.0'
 		compile group: 'commons-codec', name: 'commons-codec', version: '1.15'
 		compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.9.0.202009080501-r'
 		// non toccare le versioni de non consapevolmente sotto
@@ -471,6 +473,13 @@ task ar4kBootJarSmall {
 	description 'Build Ar4k Semantic Router as a single fat jar. This is the small version.'
 	ar4kBootJarSmall.dependsOn(":ar4k-agent-small:bootJar")
 	ar4kBootJarSmall.dependsOn(":ar4k-agent-small:endBootJar")
+}
+
+task ar4kBootJarWatson {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the Watson version.'
+	ar4kBootJarWatson.dependsOn(":ar4k-agent-watson:bootJar")
+	ar4kBootJarWatson.dependsOn(":ar4k-agent-watson:endBootJar")
 }
 
 task ar4kDockerContainerSmall {

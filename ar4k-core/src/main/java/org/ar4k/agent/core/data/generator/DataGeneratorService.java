@@ -286,7 +286,7 @@ public class DataGeneratorService implements EdgeComponent {
 			break;
 
 		}
-		final EdgeChannel dataChannel = homunculus.getDataAddress().createOrGetDataChannel(single.nodeId, typeChannel,
+		final EdgeChannel dataChannel = dataspace.createOrGetDataChannel(single.nodeId, typeChannel,
 				single.description, (String) null, (String) null, single.tags, this);
 		dataChannel.setDomainId(single.domainId);
 		dataChannel.setNameSpace(single.namespace);

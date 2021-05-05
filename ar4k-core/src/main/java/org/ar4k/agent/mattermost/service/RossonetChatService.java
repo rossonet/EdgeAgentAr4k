@@ -3,6 +3,8 @@ package org.ar4k.agent.mattermost.service;
 import java.io.IOException;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -35,7 +37,6 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	private Homunculus homunculus = null;
 
-	// TODO canale per invio messaggi (comprensivo di allegati)
 	private DataAddress dataspace = null;
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
@@ -54,8 +55,19 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	@Override
 	public void init() {
+		setDataspace();
 		this.mattermostClient = new MatterMostClientAr4k(getConfiguration().mmServer, getConfiguration().username,
 				getConfiguration().password, getConfiguration().token, this);
+
+	}
+
+	private void setDataspace() {
+		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"requested command on ssh", (String) null, (String) null, null, this);
+		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"reply command to ssh", (String) null, (String) null, null, this);
+		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"reply command to ssh", (String) null, (String) null, null, this);
 
 	}
 

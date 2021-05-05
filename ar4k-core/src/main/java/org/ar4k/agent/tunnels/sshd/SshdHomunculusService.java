@@ -22,6 +22,8 @@ import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -117,6 +119,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 
 	@Override
 	public void init() {
+		setDataspace();
 		server = SshServer.setUpDefaultServer();
 		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
 		server.setPasswordAuthenticator(passwordAuthenticator);
@@ -142,6 +145,15 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 			logger.logException(e);
 		}
 
+	}
+
+	private void setDataspace() {
+		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"requested command on ssh", (String) null, (String) null, null, this);
+		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"reply command to ssh", (String) null, (String) null, null, this);
+		final EdgeChannel status = dataspace.createOrGetDataChannel(null, IPublishSubscribeChannel.class,
+				"reply command to ssh", (String) null, (String) null, null, this);
 	}
 
 	@Override

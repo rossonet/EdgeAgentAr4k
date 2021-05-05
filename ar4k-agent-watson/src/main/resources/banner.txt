@@ -1,0 +1,29 @@
+${AnsiColor.WHITE}
+ 
+    
+                __------__
+              /~          ~\
+             |    //^\\//^\|
+           /~~\  ||  o| |o|:~\
+          | |6   ||___|_|_||:|
+           \__.  /      o  \/'
+            |   (       O   )
+   /~~~~\    `\  \         /
+  | |~~\ |     )  ~------~`\
+ /' |  | |   /     ____ /~~~)\
+(_/'   | | |     /'    |    ( |
+       | | |     \    /   __)/ \
+       \  \ \      \/    /' \   `\
+         \  \|\        /   | |\___|
+           \ |  \____/     | |
+           /^~>  \        _/ <
+          |  |         \       \
+          |  | \        \        \
+          -^-\  \       |        )
+               `\_______/^\______/
+
+
+
+You can use the ${AnsiColor.RED}TAB completation${AnsiColor.DEFAULT};
+${AnsiColor.RED}the CTRL-R${AnsiColor.DEFAULT} to invoke the reverse-i-search in the history and
+you can run a sequence of commands saved in a file.

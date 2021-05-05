@@ -14,11 +14,15 @@
     */
 package org.ar4k.agent.console;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateEncodingException;
@@ -53,6 +57,7 @@ import org.ar4k.agent.helper.NetworkHelper;
 import org.ar4k.agent.helper.ReflectionUtils;
 import org.ar4k.agent.helper.UserSpaceByteSystemCommandHelper;
 import org.ar4k.agent.logger.EdgeLogger;
+import org.ar4k.agent.mattermost.service.RossonetChatConfig;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
 import org.ar4k.agent.spring.EdgeUserDetails;
@@ -61,6 +66,7 @@ import org.bouncycastle.cms.CMSException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
+import org.springframework.core.io.Resource;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -81,6 +87,20 @@ import com.google.gson.GsonBuilder;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
+
+import org.apache.commons.vfs2.CacheStrategy;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs2.provider.ftp.FtpFileProvider;
+import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs2.provider.sftp.SftpFileProvider;
+import org.apache.commons.vfs2.provider.webdav4.Webdav4FileProvider;
+import org.apache.commons.vfs2.provider.webdav4s.Webdav4sFileProvider;
 
 /**
  * Interfaccia da linea di comando principale.
@@ -194,6 +214,13 @@ public class ShellInterface extends AbstractShellHelper {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
+	@ShellMethod(value = "Add Mothermost service to the selected configuration", group = "Matermost Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addMathermostChatService(@ShellOption(optOut = true) @Valid RossonetChatConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
+
 	@ShellMethod("View the selected configuration in base64 text")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
@@ -238,6 +265,35 @@ public class ShellInterface extends AbstractShellHelper {
 				Paths.get(homunculus.getStarterProperties().getFileConfig().replaceFirst("^~",
 						System.getProperty("user.home"))),
 				getSelectedConfigBase64().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		return "saved";
+	}
+
+	@ShellMethod(value = "Publish selected config to remote server in base64 format", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String saveSelectedConfigToRemote(@ShellOption(help = "file URI with authentication") String fileURL) throws IOException {
+		DefaultFileSystemManager fsManager = new DefaultFileSystemManager();
+		fsManager.addProvider("webdav", new Webdav4FileProvider());
+		fsManager.addProvider("webdavs", new Webdav4sFileProvider());
+		fsManager.addProvider("ftp", new FtpFileProvider());
+		fsManager.addProvider("sftp", new SftpFileProvider());
+		fsManager.addProvider("file", new DefaultLocalFileProvider());
+		fsManager.init();
+		FileObject fo = fsManager.resolveFile(fileURL);
+		OutputStream out = fo.getContent().getOutputStream();
+		out.write(getSelectedConfigBase64().getBytes());
+		out.flush();
+		out.close();
+		fsManager.close();
+		return "saved";
+	}
+
+	@ShellMethod(value = "Save application properties template on default bootstrap location", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	public String saveApplicationPropertiesTemplateAsBootstrap() throws Exception {
+		final Resource fileSource = resourceLoader.getResource("classpath:application.properties");
+		Files.copy(fileSource.getInputStream(), new File("application.properties").toPath(),
+				StandardCopyOption.REPLACE_EXISTING);
 		return "saved";
 	}
 
@@ -554,7 +610,7 @@ public class ShellInterface extends AbstractShellHelper {
 		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
 			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN,
 					servizio.getPot().getConfiguration().getUniqueId().toString(), AnsiColor.DEFAULT, " - ",
-					servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED, servizio.getPot(),
+					servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED, servizio.toString(),
 					AnsiColor.DEFAULT, "]\n");
 		}
 		return risposta;
