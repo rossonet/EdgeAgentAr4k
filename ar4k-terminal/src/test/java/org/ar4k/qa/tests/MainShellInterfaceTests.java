@@ -96,6 +96,8 @@ public class MainShellInterfaceTests {
 		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		final Map<String, MethodTarget> listCommands = shell.listCommands();
 		System.out.println("commands: " + listCommands);
+		printCheckNow(listCommands);
+		assertTrue(listCommands.containsKey("add-mathermost-chat-service"));
 		assertTrue(listCommands.containsKey("clear"));
 		assertTrue(listCommands.containsKey("clone-config"));
 		assertTrue(listCommands.containsKey("clone-runtime-config"));
@@ -133,15 +135,17 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("import-selected-config-json"));
 		assertTrue(listCommands.containsKey("import-selected-config-yaml"));
 		assertTrue(listCommands.containsKey("kill-process"));
-		assertTrue(listCommands.containsKey("list-config"));
+		assertTrue(listCommands.containsKey("list-configs"));
 		assertTrue(listCommands.containsKey("list-jmx-endpoints"));
 		assertTrue(listCommands.containsKey("list-jsr223script-engines-in-runtime"));
 		assertTrue(listCommands.containsKey("list-processes"));
-		assertTrue(listCommands.containsKey("list-service"));
+		assertTrue(listCommands.containsKey("list-services"));
 		assertTrue(listCommands.containsKey("list-services-selected-config"));
 		assertTrue(listCommands.containsKey("list-sessions"));
 		assertTrue(listCommands.containsKey("load-selected-config-base64"));
 		assertTrue(listCommands.containsKey("load-selected-config-base64crypted"));
+		assertTrue(listCommands.containsKey("load-selected-config-from-json-string"));
+		assertTrue(listCommands.containsKey("load-selected-config-from-yaml-string"));
 		assertTrue(listCommands.containsKey("load-selected-config-json"));
 		assertTrue(listCommands.containsKey("load-selected-config-yaml"));
 		assertTrue(listCommands.containsKey("login"));
@@ -153,9 +157,12 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("restart"));
 		assertTrue(listCommands.containsKey("run-command-line"));
 		assertTrue(listCommands.containsKey("run-jsr223script"));
+		assertTrue(listCommands.containsKey("save-application-properties-template-as-bootstrap"));
+		assertTrue(listCommands.containsKey("save-selected-config-as-bootstrap-config"));
 		assertTrue(listCommands.containsKey("save-selected-config-base64"));
 		assertTrue(listCommands.containsKey("save-selected-config-base64crypto"));
 		assertTrue(listCommands.containsKey("save-selected-config-json"));
+		assertTrue(listCommands.containsKey("save-selected-config-to-remote"));
 		assertTrue(listCommands.containsKey("save-selected-config-yaml"));
 		assertTrue(listCommands.containsKey("script"));
 		assertTrue(listCommands.containsKey("select-config"));
@@ -166,8 +173,6 @@ public class MainShellInterfaceTests {
 		assertTrue(listCommands.containsKey("set-selected-config-as-runtime"));
 		assertTrue(listCommands.containsKey("stacktrace"));
 		assertTrue(listCommands.containsKey("unset-selected-config"));
-		printCheckNow(listCommands);
-		
 	}
 
 	private void printCheckNow(Map<String, MethodTarget> listCommands) {
