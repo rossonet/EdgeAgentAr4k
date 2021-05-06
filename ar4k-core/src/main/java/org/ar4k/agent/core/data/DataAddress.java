@@ -229,7 +229,7 @@ public class DataAddress implements AutoCloseable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("DataAddress [");
 		builder.append("serviceOwner=");
-		builder.append(serviceOwner);
+		builder.append(serviceOwner.getServiceName());
 		builder.append(", defaultScope=");
 		builder.append(defaultScope);
 		builder.append(", levelSeparator=");
