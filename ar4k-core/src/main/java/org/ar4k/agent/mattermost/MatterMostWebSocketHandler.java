@@ -20,7 +20,6 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.json.JSONObject;
 
-//@ClientEndpoint
 public class MatterMostWebSocketHandler extends Endpoint {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

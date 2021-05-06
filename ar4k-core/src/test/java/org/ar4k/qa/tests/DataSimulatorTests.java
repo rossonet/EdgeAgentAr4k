@@ -155,7 +155,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
@@ -198,7 +199,9 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestBooleanData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestBooleanData"))
+				.subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(10000);
@@ -247,7 +250,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
@@ -299,7 +303,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IDirectChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IDirectChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
@@ -345,7 +350,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IDirectChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IDirectChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
@@ -398,7 +404,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);
@@ -459,8 +466,11 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestDataGood")).subscribe(this);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestDataBad")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestDataGood"))
+				.subscribe(this);
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestDataBad"))
+				.subscribe(this);
 		final List<FilterLine> filters = new ArrayList<>();
 		final FilterLine tagLine = new FilterLine(Operator.AND, Label.TAG, Lists.list("prova", "single-point", "good"),
 				Operator.AND);
@@ -506,7 +516,7 @@ public class DataSimulatorTests implements MessageHandler {
 		messages.clear();
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		Thread.sleep(40000);
 		homunculus.sendEvent(HomunculusEvents.STOP);
 		for (final Integer checkValue : Lists.newArrayList(5014, 5016, 5018, 5020, 5022, 5024, 5026, 5028, 5030, 5032,
@@ -558,7 +568,8 @@ public class DataSimulatorTests implements MessageHandler {
 		Thread.sleep(3000);
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("TestData")).subscribe(this);
+		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
 		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
 		Thread.sleep(20000);

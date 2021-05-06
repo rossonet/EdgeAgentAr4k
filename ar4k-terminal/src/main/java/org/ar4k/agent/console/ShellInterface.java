@@ -428,6 +428,14 @@ public class ShellInterface extends AbstractShellHelper {
 		importSelectedConfigJson(config);
 	}
 
+	@ShellMethod("Load selected configuration from a json string parameter")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionOk")
+	public void loadSelectedConfigFromJsonString(@ShellOption(help = "json config") String config)
+			throws IOException, ClassNotFoundException {
+		importSelectedConfigJson(config);
+	}
+
 	@ShellMethod("Load selected configuration from a yaml text file")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
@@ -435,6 +443,14 @@ public class ShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "file in where the configuration is saved. The system will add .conf.yaml.ar4k to the string") String filename)
 			throws IOException, ClassNotFoundException {
 		final String config = readFromFile(filename, ".conf.yaml.ar4k");
+		importSelectedConfigYaml(config);
+	}
+
+	@ShellMethod("Load selected configuration from a yaml string parameter")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionOk")
+	public void loadSelectedConfigFromYamlString(@ShellOption(help = "json config") String config)
+			throws IOException, ClassNotFoundException {
 		importSelectedConfigYaml(config);
 	}
 
