@@ -1,15 +1,21 @@
 package org.ar4k.agent.mattermost.service;
 
 import java.io.IOException;
+import java.util.Arrays;
+
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.ChatMessage;
+import org.ar4k.agent.core.data.messages.JSONMessage;
+import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.mattermost.ChatPayload;
 import org.ar4k.agent.mattermost.MatterMostCallBack;
 import org.ar4k.agent.mattermost.MatterMostClientAr4k;
 import org.ar4k.agent.mattermost.model.Channel;
@@ -17,6 +23,10 @@ import org.ar4k.agent.mattermost.model.Post;
 import org.ar4k.agent.mattermost.model.Team;
 import org.ar4k.agent.mattermost.model.User;
 import org.json.JSONObject;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHandler;
+import org.springframework.messaging.SubscribableChannel;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,14 +36,14 @@ import com.google.gson.GsonBuilder;
  *         Gestore servizio per connessioni rossonet mm.
  *
  */
-public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
+public class RossonetChatService implements EdgeComponent, MatterMostCallBack, MessageHandler {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(RossonetChatService.class.toString());
 
+	private final static Gson gson = new GsonBuilder().create();
 	// iniettata vedi set/get
 	private RossonetChatConfig configuration = null;
-	private final static Gson gson = new GsonBuilder().create();
 
 	private Homunculus homunculus = null;
 
@@ -41,7 +51,19 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
-	private MatterMostClientAr4k mattermostClient;
+	private MatterMostClientAr4k mattermostClient = null;
+
+	private EdgeChannel requestCommandChannel = null;
+
+	private EdgeChannel statusChannel = null;
+
+	private EdgeChannel newUserChannel = null;
+
+	private EdgeChannel newChannelChannel = null;
+
+	private EdgeChannel newTeamChannel = null;
+
+	private EdgeChannel writeCommandChannel = null;
 
 	@Override
 	public RossonetChatConfig getConfiguration() {
@@ -62,12 +84,21 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 	}
 
 	private void setDataspace() {
-		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"requested command on ssh", (String) null, (String) null, null, this);
-		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
-				"reply command to ssh", (String) null, (String) null, null, this);
-		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of matermost connection", (String) null, (String) null, null, this);
+		newUserChannel = dataspace.createOrGetDataChannel("user", IPublishSubscribeChannel.class,
+				"new users registered or changed", (String) null, (String) null, Arrays.asList("new_user"), this);
+		newChannelChannel = dataspace.createOrGetDataChannel("channel", IPublishSubscribeChannel.class,
+				"new channel registered or changed", (String) null, (String) null, Arrays.asList("new_channel"), this);
+		newTeamChannel = dataspace.createOrGetDataChannel("team", IPublishSubscribeChannel.class,
+				"new team registered or changed", (String) null, (String) null, Arrays.asList("new_team"), this);
+		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
+				"new messages received from remote", (String) null, (String) null,
+				Arrays.asList("request", "received", "new_post", "new_message"), this);
+		writeCommandChannel = dataspace.createOrGetDataChannel("write", IPublishSubscribeChannel.class,
+				"command queue to send message to remote", (String) null, (String) null, Arrays.asList("send", "write"),
+				this);
+		((SubscribableChannel) writeCommandChannel.getChannel()).subscribe(this);
+		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+				"status of matermost connection", (String) null, (String) null, Arrays.asList("status", "text"), this);
 
 	}
 
@@ -78,12 +109,30 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	@Override
 	public void kill() {
-		// TODO
-
+		serviceStatus = ServiceStatus.KILLED;
+		if (this.mattermostClient != null) {
+			try {
+				mattermostClient.close();
+			} catch (Exception exception) {
+				logger.logException(exception);
+			}
+		}
 	}
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		if (mattermostClient != null && mattermostClient.isConnected()) {
+			serviceStatus = ServiceStatus.RUNNING;
+		} else {
+			if (!serviceStatus.equals(ServiceStatus.INIT) && !serviceStatus.equals(ServiceStatus.KILLED)) {
+				serviceStatus = ServiceStatus.FAULT;
+			}
+		}
+		if (statusChannel != null && serviceStatus != null) {
+			final StringMessage message = new StringMessage();
+			message.setPayload(serviceStatus.toString());
+			statusChannel.getChannel().send(message);
+		}
 		return serviceStatus;
 	}
 
@@ -109,38 +158,110 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 
 	@Override
 	public JSONObject getDescriptionJson() {
-		return null;
-		// TODO descrione come json
+		JSONObject json = new JSONObject(gson.toJson(configuration));
+		json.put("status", serviceStatus.toString());
+		return json;
 	}
 
 	@Override
 	public void connectionStarted() {
-		// TODO portare su data
-
+		serviceStatus = ServiceStatus.RUNNING;
 	}
 
 	@Override
 	public void onNewChannel(Channel channel) {
-		// TODO portare su data
-
+		if (newChannelChannel != null) {
+			ChatPayload payload = new ChatPayload();
+			payload.setId(channel.getId());
+			payload.setChannelId(channel.getId());
+			payload.setCreatorId(channel.getCreatorId());
+			payload.setCreateAt(channel.getCreateAt());
+			payload.setUpdateAt(channel.getUpdateAt());
+			payload.setDeleteAt(channel.getDeleteAt());
+			payload.setDisplayName(channel.getDisplayName());
+			payload.setHeader(channel.getHeader());
+			payload.setName(channel.getName());
+			payload.setPurpose(channel.getPurpose());
+			payload.setSchemeId(channel.getSchemeId());
+			payload.setTeamId(channel.getTeamId());
+			payload.setType(channel.getType() != null ? channel.getType().toString() : "NaN");
+			ChatMessage message = new ChatMessage();
+			message.setPayload(payload);
+			newChannelChannel.getChannel().send(message);
+		}
 	}
 
 	@Override
 	public void onNewUser(User checkedUser) {
-		// TODO portare su data
+		if (newUserChannel != null) {
+			ChatPayload payload = new ChatPayload();
+			payload.setId(checkedUser.getId());
+			payload.setUserId(checkedUser.getId());
+			payload.setFirstName(checkedUser.getFirstName());
+			payload.setLastName(checkedUser.getLastName());
+			payload.setCreateAt(checkedUser.getCreateAt());
+			payload.setUpdateAt(checkedUser.getUpdateAt());
+			payload.setDeleteAt(checkedUser.getDeleteAt());
+			payload.setAuthData(checkedUser.getAuthData());
+			payload.setlocale(checkedUser.getLocale());
+			payload.setNickname(checkedUser.getNickname());
+			payload.setUsername(checkedUser.getUsername());
+			payload.setBotDescription(checkedUser.getBotDescription());
+			payload.setEmail(checkedUser.getEmail());
+			payload.setPosition(checkedUser.getPosition());
+			payload.setRoles(checkedUser.getRoles());
+			ChatMessage message = new ChatMessage();
+			message.setPayload(payload);
+			newUserChannel.getChannel().send(message);
+		}
 
 	}
 
 	@Override
 	public void onNewTeam(Team team) {
-		// TODO portare su data
-
+		if (newTeamChannel != null) {
+			ChatPayload payload = new ChatPayload();
+			payload.setId(team.getId());
+			payload.setTeamId(team.getId());
+			payload.setCompanyName(team.getCompanyName());
+			payload.setCreateAt(team.getCreateAt());
+			payload.setUpdateAt(team.getUpdateAt());
+			payload.setDeleteAt(team.getDeleteAt());
+			payload.setDisplayName(team.getDisplayName());
+			payload.setDescription(team.getDescription());
+			payload.setName(team.getName());
+			payload.setEmail(team.getEmail());
+			payload.setSchemeId(team.getSchemeId());
+			payload.setAllowedDomains(team.getAllowedDomains());
+			payload.setInviteId(team.getInviteId());
+			payload.setType(team.getType() != null ? team.getType().toString() : "NaN");
+			ChatMessage message = new ChatMessage();
+			message.setPayload(payload);
+			newTeamChannel.getChannel().send(message);
+		}
 	}
 
 	@Override
 	public void onNewPost(Post post) {
-		// TODO Auto-generated method stub
-
+		if (requestCommandChannel != null) {
+			ChatPayload payload = new ChatPayload();
+			payload.setId(post.getId());
+			payload.setMessage(post.getMessage());
+			payload.setCreateAt(post.getCreateAt());
+			payload.setEditAt(post.getEditAt());
+			payload.setUpdateAt(post.getUpdateAt());
+			payload.setDeleteAt(post.getDeleteAt());
+			payload.setChannelId(post.getChannelId());
+			payload.setUserId(post.getUserId());
+			payload.setRootId(post.getRootId());
+			payload.setParentId(post.getParentId());
+			payload.setOriginalId(post.getOriginalId());
+			payload.setHashtags(post.getHashtags());
+			payload.setType(post.getType() != null ? post.getType().toString() : "NaN");
+			ChatMessage message = new ChatMessage();
+			message.setPayload(payload);
+			requestCommandChannel.getChannel().send(message);
+		}
 	}
 
 	@Override
@@ -157,6 +278,28 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack {
 		builder.append(serviceStatus);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	@Override
+	public void handleMessage(Message<?> message) {
+		if (message instanceof ChatMessage) {
+			if (mattermostClient != null) {
+				final ChatPayload cm = ((ChatMessage) message).getPayload();
+				mattermostClient.sendPost(cm.getChannelId(), cm.getMessage());
+			} else {
+				logger.error("try to send message without connection " + message.getPayload());
+			}
+		} else if (message instanceof JSONMessage) {
+			if (mattermostClient != null) {
+				final JSONObject json = ((JSONMessage) message).getPayload();
+				mattermostClient.sendPost(json.getString("channelId"), json.getString("message"));
+			} else {
+				logger.error("try to send message without connection " + message.getPayload());
+			}
+		} else {
+			logger.error("received bad message type in write queue " + message.getPayload());
+		}
+
 	}
 
 }

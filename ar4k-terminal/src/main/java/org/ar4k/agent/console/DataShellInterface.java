@@ -32,10 +32,12 @@ import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.channels.IRendezvousChannel;
 import org.ar4k.agent.core.data.generator.DataGeneratorConfig;
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig;
+import org.ar4k.agent.core.data.messages.JSONMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.StringUtils;
+import org.json.JSONObject;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -148,6 +150,30 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 			@ShellOption(help = "timeout for blocking call") int timeout) {
 		final StringMessage messageObject = new StringMessage();
 		messageObject.setPayload(message);
+		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
+			((IPriorityChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))
+			((IQueueChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IRendezvousChannel.class))
+			((IRendezvousChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IDirectChannel.class))
+			((IDirectChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IExecutorChannel.class))
+			((IExecutorChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass()
+				.equals(IPublishSubscribeChannel.class))
+			((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
+		else
+			logger.error("can't send message to " + channelId);
+	}
+
+	@ShellMethod(value = "Send a message to a channel in json format", group = "Data Manager Commands")
+	@ManagedOperation
+	public void sendToDataChannelJson(@ShellOption(help = "channel id (nodeId)") String channelId,
+			@ShellOption(help = "message to send (json format)") String message,
+			@ShellOption(help = "timeout for blocking call") int timeout) {
+		final JSONMessage messageObject = new JSONMessage();
+		messageObject.setPayload(new JSONObject(message));
 		if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IPriorityChannel.class))
 			((IPriorityChannel) homunculus.getDataAddress().getChannel(channelId)).send(messageObject, timeout);
 		else if (homunculus.getDataAddress().getChannel(channelId).getChannelClass().equals(IQueueChannel.class))

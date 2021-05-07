@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ClientEndpoint
-public class MatterMostClientAr4k implements MessageHandler {
+public class MatterMostClientAr4k implements MessageHandler, AutoCloseable {
 
 	private static final String API_V4_WEBSOCKET = "/api/v4/websocket";
 
@@ -613,6 +613,14 @@ public class MatterMostClientAr4k implements MessageHandler {
 
 	public boolean isDirectChannel(String channelId) {
 		return workedChannels.get(channelId).getType().equals(ChannelType.Direct);
+	}
+
+	@Override
+	public void close() throws Exception {
+		if (client != null) {
+			client.close();
+		}
+
 	}
 
 }
