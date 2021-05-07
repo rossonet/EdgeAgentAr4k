@@ -14,6 +14,7 @@
     */
 package org.ar4k.agent.console;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig;
 import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.helper.StringUtils;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -103,9 +105,9 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 
 	@ShellMethod(value = "Search with a filter in data channels", group = "Data Manager Commands")
 	@ManagedOperation
-	public Collection<String> searchDataChannels(String filter) {
+	public Collection<String> searchDataChannels(String filter) throws IOException {
 		Collection<String> result = new HashSet<>();
-		DataChannelFilter objFilter = new DataChannelFilter(filter);
+		DataChannelFilter objFilter = StringUtils.dataChannelFilterFromString(filter);
 		for (EdgeChannel c : homunculus.getDataAddress().getDataChannels(objFilter)) {
 			result.add(c.getBrowseName() + " [" + c.getDescription() + "] " + c.getChannelType() + " " + c.getStatus());
 		}

@@ -20,7 +20,7 @@ public class DataFilterParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		OPERATOR=1, LABEL=2, QUOTA=3, IN=4, OPEN_PAR=5, CLOSE_PAR=6, COMMA=7, 
-		TEXT=8, SPACES=9;
+		TEXT=8, NUMBER=9, SPACES=10;
 	public static final int
 		RULE_start = 0, RULE_array_comparator = 1, RULE_single_check = 2, RULE_filter_query = 3;
 	public static final String[] ruleNames = {
@@ -32,7 +32,7 @@ public class DataFilterParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "OPERATOR", "LABEL", "QUOTA", "IN", "OPEN_PAR", "CLOSE_PAR", "COMMA", 
-		"TEXT", "SPACES"
+		"TEXT", "NUMBER", "SPACES"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -314,17 +314,17 @@ public class DataFilterParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\13\'\4\2\t\2\4\3"+
-		"\t\3\4\4\t\4\4\5\t\5\3\2\3\2\5\2\r\n\2\3\3\3\3\3\3\3\3\3\3\7\3\24\n\3"+
-		"\f\3\16\3\27\13\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\7\5\"\n\5\f\5\16"+
-		"\5%\13\5\3\5\4\25#\2\6\2\4\6\b\2\2%\2\f\3\2\2\2\4\16\3\2\2\2\6\32\3\2"+
-		"\2\2\b\37\3\2\2\2\n\r\5\b\5\2\13\r\3\2\2\2\f\n\3\2\2\2\f\13\3\2\2\2\r"+
-		"\3\3\2\2\2\16\17\7\3\2\2\17\20\7\7\2\2\20\25\7\n\2\2\21\22\7\t\2\2\22"+
-		"\24\7\n\2\2\23\21\3\2\2\2\24\27\3\2\2\2\25\26\3\2\2\2\25\23\3\2\2\2\26"+
-		"\30\3\2\2\2\27\25\3\2\2\2\30\31\7\b\2\2\31\5\3\2\2\2\32\33\7\3\2\2\33"+
-		"\34\7\4\2\2\34\35\7\6\2\2\35\36\5\4\3\2\36\7\3\2\2\2\37#\5\6\4\2 \"\5"+
-		"\6\4\2! \3\2\2\2\"%\3\2\2\2#$\3\2\2\2#!\3\2\2\2$\t\3\2\2\2%#\3\2\2\2\5"+
-		"\f\25#";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\f\'\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\3\2\3\2\5\2\r\n\2\3\3\3\3\3\3\3\3\3\3\7\3\24\n\3\f"+
+		"\3\16\3\27\13\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\7\5\"\n\5\f\5\16\5"+
+		"%\13\5\3\5\4\25#\2\6\2\4\6\b\2\2%\2\f\3\2\2\2\4\16\3\2\2\2\6\32\3\2\2"+
+		"\2\b\37\3\2\2\2\n\r\5\b\5\2\13\r\3\2\2\2\f\n\3\2\2\2\f\13\3\2\2\2\r\3"+
+		"\3\2\2\2\16\17\7\3\2\2\17\20\7\7\2\2\20\25\7\n\2\2\21\22\7\t\2\2\22\24"+
+		"\7\n\2\2\23\21\3\2\2\2\24\27\3\2\2\2\25\26\3\2\2\2\25\23\3\2\2\2\26\30"+
+		"\3\2\2\2\27\25\3\2\2\2\30\31\7\b\2\2\31\5\3\2\2\2\32\33\7\3\2\2\33\34"+
+		"\7\4\2\2\34\35\7\6\2\2\35\36\5\4\3\2\36\7\3\2\2\2\37#\5\6\4\2 \"\5\6\4"+
+		"\2! \3\2\2\2\"%\3\2\2\2#$\3\2\2\2#!\3\2\2\2$\t\3\2\2\2%#\3\2\2\2\5\f\25"+
+		"#";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
