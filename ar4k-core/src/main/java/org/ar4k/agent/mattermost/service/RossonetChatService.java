@@ -2,6 +2,8 @@ package org.ar4k.agent.mattermost.service;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
@@ -13,6 +15,7 @@ import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.mattermost.ChatPayload;
@@ -85,20 +88,27 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	private void setDataspace() {
 		newUserChannel = dataspace.createOrGetDataChannel("user", IPublishSubscribeChannel.class,
-				"new users registered or changed", (String) null, (String) null, Arrays.asList("new_user"), this);
+				"new users registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("new_user"), getConfiguration().getTags()), this);
 		newChannelChannel = dataspace.createOrGetDataChannel("channel", IPublishSubscribeChannel.class,
-				"new channel registered or changed", (String) null, (String) null, Arrays.asList("new_channel"), this);
+				"new channel registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("new_channel"), getConfiguration().getTags()), this);
 		newTeamChannel = dataspace.createOrGetDataChannel("team", IPublishSubscribeChannel.class,
-				"new team registered or changed", (String) null, (String) null, Arrays.asList("new_team"), this);
+				"new team registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("new_team"), getConfiguration().getTags()), this);
 		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"new messages received from remote", (String) null, (String) null,
-				Arrays.asList("request", "received", "new_post", "new_message"), this);
+				"new messages received from remote", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("request", "received", "new_post", "new_message"),
+						getConfiguration().getTags()),
+				this);
 		writeCommandChannel = dataspace.createOrGetDataChannel("write", IPublishSubscribeChannel.class,
-				"command queue to send message to remote", (String) null, (String) null, Arrays.asList("send", "write"),
+				"command queue to send message to remote", homunculus.getDataAddress().getSystemChannel(),
+				(String) null, ConfigHelper.mergeTags(Arrays.asList("send", "write"), getConfiguration().getTags()),
 				this);
 		((SubscribableChannel) writeCommandChannel.getChannel()).subscribe(this);
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of matermost connection", (String) null, (String) null, Arrays.asList("status", "text"), this);
+				"status of matermost connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("status", "text"), getConfiguration().getTags()), this);
 
 	}
 

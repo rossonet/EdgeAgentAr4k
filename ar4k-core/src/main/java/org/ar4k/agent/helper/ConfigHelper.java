@@ -16,6 +16,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.UUID;
 
@@ -280,6 +281,13 @@ public class ConfigHelper {
 	public static String toYaml(ConfigSeed workingConfig) {
 		final Yaml yaml = new Yaml();
 		return yaml.dump(workingConfig);
+	}
+
+	public static Collection<String> mergeTags(Collection<String> additionalData, Collection<String> tags) {
+		HashSet<String> merge = new HashSet<>();
+		merge.addAll(tags);
+		merge.addAll(additionalData);
+		return merge;
 	}
 
 }

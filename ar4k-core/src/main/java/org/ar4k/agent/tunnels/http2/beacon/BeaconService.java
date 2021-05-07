@@ -16,6 +16,7 @@ package org.ar4k.agent.tunnels.http2.beacon;
 
 import java.io.IOException;
 import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
@@ -25,6 +26,7 @@ import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
@@ -112,7 +114,8 @@ public class BeaconService implements EdgeComponent {
 
 	private void setDataspace() {
 		statusChannel = dataAddress.createOrGetDataChannel("statusChannel", IPublishSubscribeChannel.class,
-				"statusChannel of beacon server", (String) null, (String) null, null, this);
+				"statusChannel of beacon server", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("beacon-service", "status"), getConfiguration().getTags()), this);
 	}
 
 	@Override

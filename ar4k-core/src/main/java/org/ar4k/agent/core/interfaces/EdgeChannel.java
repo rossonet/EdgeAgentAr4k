@@ -68,6 +68,8 @@ public interface EdgeChannel extends AutoCloseable {
 
 	String getServiceName();
 
+	String getBaseName();
+
 	Status getStatus();
 
 	List<String> getTags();
@@ -99,5 +101,7 @@ public interface EdgeChannel extends AutoCloseable {
 	void setNameSpace(String nameSpace);
 
 	void setTags(List<String> tags);
+
+	void setBaseName(String nodePartialId);
 
 }

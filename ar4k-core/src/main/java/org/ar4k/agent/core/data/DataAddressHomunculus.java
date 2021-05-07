@@ -55,6 +55,8 @@ public class DataAddressHomunculus extends DataAddress {
 
 	private Set<EdgeComponent> slaves = new HashSet<>();
 
+	private EdgeChannel systemChannel = null;
+
 	@Override
 	public Collection<EdgeChannel> getDataChannels() {
 		final Collection<EdgeChannel> myData = super.getDataChannels();
@@ -103,9 +105,10 @@ public class DataAddressHomunculus extends DataAddress {
 		final List<String> tagList = new ArrayList<String>();
 		tagList.add(SYSTEM_TAG);
 		tagList.add(DIRECTORY_TAG);
+		tagList.add("homunculus");
 		tagList.addAll(homunculus.getTags());
-		final EdgeChannel systemChannel = createOrGetDataChannel("system", IPublishSubscribeChannel.class,
-				"local JVM system", getDefaultScope(), getDefaultScope(), tagList, homunculus);
+		systemChannel = createOrGetDataChannel("system", IPublishSubscribeChannel.class, "local JVM system",
+				getDefaultScope(), getDefaultScope(), tagList, homunculus);
 		tagList.add(LOGGER_TAG);
 		createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel,
 				getDefaultScope(), tagList, homunculus);
@@ -175,5 +178,9 @@ public class DataAddressHomunculus extends DataAddress {
 			result.add(e.getDataAddress());
 		}
 		return result;
+	}
+
+	public EdgeChannel getSystemChannel() {
+		return systemChannel;
 	}
 }

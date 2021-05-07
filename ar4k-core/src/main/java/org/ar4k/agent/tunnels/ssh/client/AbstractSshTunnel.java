@@ -1,6 +1,8 @@
 
 package org.ar4k.agent.tunnels.ssh.client;
 
+import java.util.Arrays;
+
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
@@ -9,6 +11,7 @@ import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
+import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.json.JSONObject;
@@ -44,7 +47,8 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	@Override
 	public void init() {
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of ssh connection", (String) null, (String) null, null, this);
+				"status of ssh connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("ssh-tunnel", "status"), getConfiguration().getTags()), this);
 	}
 
 	@Override

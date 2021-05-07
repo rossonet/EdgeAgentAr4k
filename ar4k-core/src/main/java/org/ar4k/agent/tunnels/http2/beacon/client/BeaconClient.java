@@ -192,7 +192,8 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
 		logger.info("starting beacon client monitoring every " + getPollingFrequency() + " milliseconds");
 		statusChannel = this.beaconDataAddress.createOrGetDataChannel("beacon_client_status",
-				IPublishSubscribeChannel.class, "status of matermost connection", (String) null, (String) null, null,
+				IPublishSubscribeChannel.class, "status of matermost connection",
+				homunculus.getDataAddress().getSystemChannel(), (String) null, Arrays.asList("beacon-client", "status"),
 				this);
 		runInstance();
 	}

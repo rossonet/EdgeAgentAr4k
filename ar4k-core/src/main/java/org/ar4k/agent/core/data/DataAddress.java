@@ -35,7 +35,7 @@ public class DataAddress implements AutoCloseable {
 
 	protected final Collection<EdgeChannel> dataChannels = new HashSet<>();
 
-	protected String defaultScope = "ar4k-ai";
+	protected String defaultScope = "ar4k-system";
 	protected String levelSeparator = "/";
 
 	protected transient Set<DataAddressChange> callbacks = new HashSet<>();
@@ -142,6 +142,9 @@ public class DataAddress implements AutoCloseable {
 				returnChannel.setDataAddress(this);
 				if (father != null) {
 					returnChannel.setFatherOfScope(scope, father);
+				} else if (homunculus.getDataAddress() != null
+						&& homunculus.getDataAddress().getSystemChannel() != null) {
+					returnChannel.setFatherOfScope(scope, homunculus.getDataAddress().getSystemChannel());
 				}
 				logger.info(returnChannel.getBrowseName() + " [" + returnChannel.getDescription() + "] started");
 				for (final DataAddressChange target : callbacks) {
@@ -156,6 +159,7 @@ public class DataAddress implements AutoCloseable {
 				returnChannel.addTag(t);
 			}
 		}
+		returnChannel.setBaseName(nodePartialId);
 		return returnChannel;
 	}
 

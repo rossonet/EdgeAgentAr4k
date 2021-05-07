@@ -12,7 +12,7 @@ single_check: OPERATOR LABEL IN array_comparator ;
 filter_query: single_check (single_check)*? ;
 
 OPERATOR : ( O R  | A N D | A N D LOWER_LINE N O T  | O R LOWER_LINE N O T );
-LABEL : ( T A G | D O M A I N | N A M E LOWER_LINE S P A C E | S T A T U S | S E R V I C E LOWER_LINE N A M E | S E R V I C E LOWER_LINE C L A S S ) ;
+LABEL : ( T A G | D O M A I N | N A M E LOWER_LINE S P A C E | S T A T U S | S E R V I C E LOWER_LINE N A M E | S E R V I C E LOWER_LINE C L A S S | B A S E LOWER_LINE N A M E) ;
 
 QUOTA:		'\'' ;
 IN:			I N ;

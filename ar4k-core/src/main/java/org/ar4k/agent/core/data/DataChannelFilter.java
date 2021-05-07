@@ -12,7 +12,7 @@ public class DataChannelFilter {
 	}
 
 	public enum Label {
-		TAG, DOMAIN, NAME_SPACE, STATUS, SERVICE_NAME, SERVICE_CLASS
+		TAG, DOMAIN, NAME_SPACE, STATUS, SERVICE_NAME, SERVICE_CLASS, BASE_NAME
 	}
 
 	private final List<FilterLine> filters;
@@ -45,6 +45,9 @@ public class DataChannelFilter {
 				break;
 			case SERVICE_NAME:
 				comparedValues.add(channel.getServiceName());
+				break;
+			case BASE_NAME:
+				comparedValues.add(channel.getBaseName());
 				break;
 			case SERVICE_CLASS:
 				comparedValues.add(channel.getServiceClass().getCanonicalName());

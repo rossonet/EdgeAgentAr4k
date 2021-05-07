@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,11 +157,15 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 
 	private void setDataspace() {
 		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"requested command on ssh", (String) null, (String) null, null, this);
+				"requested command on ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "request"), getConfiguration().getTags()),
+				this);
 		replyCommandChannel = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
-				"reply command to ssh", (String) null, (String) null, null, this);
+				"reply command to ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "reply"), getConfiguration().getTags()), this);
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of ssh connection", (String) null, (String) null, null, this);
+				"status of ssh connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "status"), getConfiguration().getTags()), this);
 	}
 
 	@Override

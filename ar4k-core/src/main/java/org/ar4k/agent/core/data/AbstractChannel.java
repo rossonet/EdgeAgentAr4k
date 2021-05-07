@@ -75,6 +75,8 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 
 	private final String serviceName;
 
+	private String baseName;
+
 	private final Class<? extends DataServiceOwner> serviceOwnerClass;
 
 	private Status status = Status.INIT;
@@ -287,6 +289,16 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
+	public String getBaseName() {
+		return baseName;
+	}
+
+	@Override
+	public void setBaseName(String baseName) {
+		this.baseName = baseName;
+	}
+
+	@Override
 	public void setChannelType(Type channelType) {
 		this.channelTypeRequest = channelType;
 	}
@@ -327,6 +339,9 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 
 	@Override
 	public void setFatherOfScope(String scope, EdgeChannel father) {
+		if (scope == null) {
+			scope = dataAddress.getDefaultScope();
+		}
 		scopeFather.put(scope, father);
 		((AbstractChannel) father).addChildOfScope(scope, this);
 		if (dataAddress != null) {
@@ -359,6 +374,8 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		builder.append("AbstractChannel [logQueueSize=").append(logQueueSize).append(", ");
 		if (nodeId != null)
 			builder.append("nodeId=").append(nodeId).append(", ");
+		if (baseName != null)
+			builder.append("baseName=").append(baseName).append(", ");
 		if (serviceName != null)
 			builder.append("serviceName=").append(serviceName).append(", ");
 		if (serviceOwnerClass != null)
