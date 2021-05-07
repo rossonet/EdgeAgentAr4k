@@ -1,9 +1,14 @@
+plugins {
+    id 'antlr'
+}
+
 description = "core Ar4k Edge Gateway"
 
 apply plugin: 'com.google.protobuf'
 
 dependencies {
-	
+	antlr "org.antlr:antlr4:4.5"
+	compile "org.antlr:antlr4:4.5"
 }
 
 protobuf {
@@ -28,4 +33,8 @@ protobuf {
 
 bootJar {
 	enabled = false
+}
+
+generateGrammarSource {
+    outputDirectory = file("src/main/java/org/ar4k/grammar")
 }

@@ -35,4 +35,19 @@ public final class FilterLine {
 		return filterGlobalOperator;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("FilterLine [filterGlobalOperator=");
+		builder.append(filterGlobalOperator);
+		builder.append(", filterOperator=");
+		builder.append(filterOperator);
+		builder.append(", filterLabel=");
+		builder.append(filterLabel);
+		builder.append(", filterValues=");
+		builder.append(filterValues);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
