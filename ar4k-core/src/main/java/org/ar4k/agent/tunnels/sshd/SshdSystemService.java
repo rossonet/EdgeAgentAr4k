@@ -31,6 +31,7 @@ import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
@@ -77,6 +78,12 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
+	private EdgeChannel requestCommandChannel = null;
+
+	private EdgeChannel replyCommandChannel = null;
+
+	private EdgeChannel statusChannel = null;
+
 	@Override
 	public SshdSystemConfig getConfiguration() {
 		return configuration;
@@ -120,11 +127,11 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	}
 
 	private void setDataspace() {
-		final EdgeChannel requestCommand = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
+		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
 				"requested command on ssh", (String) null, (String) null, null, this);
-		final EdgeChannel replyCommand = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
+		replyCommandChannel = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
 				"reply command to ssh", (String) null, (String) null, null, this);
-		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
 				"status of ssh connection", (String) null, (String) null, null, this);
 	}
 
@@ -147,6 +154,9 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		final StringMessage message = new StringMessage();
+		message.setPayload(serviceStatus.toString());
+		statusChannel.getChannel().send(message);
 		return serviceStatus;
 	}
 

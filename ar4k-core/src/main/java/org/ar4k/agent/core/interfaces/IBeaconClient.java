@@ -6,7 +6,6 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.tunnels.http2.beacon.client.RemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;

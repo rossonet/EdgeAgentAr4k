@@ -15,7 +15,7 @@ public class MatterMostRpcManager implements MatterMostCallBack {
 
 	private final RpcConversation rpc;
 	private MatterMostClientAr4k mattermostClient = null;
-	private boolean activeConnestion = false;
+	private boolean activeConnection = false;
 	private String myUserId = null;
 	private String myNickname = null;
 
@@ -29,7 +29,7 @@ public class MatterMostRpcManager implements MatterMostCallBack {
 
 	@Override
 	public void connectionStarted() {
-		this.activeConnestion = true;
+		this.activeConnection = true;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class MatterMostRpcManager implements MatterMostCallBack {
 					mattermostClient.sendPost(channelId, reply);
 				} else {
 					if (message.startsWith("@" + this.myNickname)) {
-						final int count = this.myNickname.length()+2;
+						final int count = this.myNickname.length() + 2;
 						final String cleanCommand = message.substring(count);
 						final String reply = rpc.elaborateMessage(cleanCommand);
 						mattermostClient.sendPost(channelId, reply);
@@ -75,6 +75,10 @@ public class MatterMostRpcManager implements MatterMostCallBack {
 		this.mattermostClient = mattermostClient;
 		this.myUserId = mattermostClient.getMe().getId();
 		this.myNickname = mattermostClient.getMe().getUsername();
+	}
+
+	public boolean isActiveConnection() {
+		return activeConnection;
 	}
 
 }

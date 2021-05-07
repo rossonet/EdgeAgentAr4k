@@ -18,8 +18,8 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.interfaces.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 
 import com.beust.jcommander.Parameter;

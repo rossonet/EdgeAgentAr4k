@@ -53,7 +53,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
-import org.ar4k.agent.core.data.DataServiceOwner;
+import org.ar4k.agent.core.interfaces.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.interfaces.IBeaconServer;
@@ -584,7 +584,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		if (components != null)
 			builder.append("components=").append(components).append(", ");
 		if (dataStore != null)
-			builder.append("dataStore=").append(dataStore).append(", ");
+			builder.append("dataStore_size=").append(dataStore != null ? dataStore.size() : 0).append(", ");
 		if (localUsers != null)
 			builder.append("localUsers=").append(localUsers).append(", ");
 		if (beanName != null)

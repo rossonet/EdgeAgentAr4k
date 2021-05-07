@@ -3,7 +3,6 @@ package org.ar4k.agent.core.interfaces;
 import java.io.Serializable;
 import java.util.List;
 
-import org.ar4k.agent.config.EdgeConfig;
 import org.joda.time.Instant;
 
 /**
@@ -17,16 +16,16 @@ import org.joda.time.Instant;
  */
 public interface ConfigSeed extends Serializable, Cloneable {
 
-  String getName();
+	String getName();
 
-  String getDescription();
+	String getDescription();
 
-  List<String> getTags();
+	List<String> getTags();
 
-  Instant getCreationDate();
+	Instant getCreationDate();
 
-  Instant getLastUpdateDate();
+	Instant getLastUpdateDate();
 
-  String getUniqueId();
+	String getUniqueId();
 
 }

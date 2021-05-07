@@ -11,6 +11,7 @@ import java.util.Set;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.interfaces.DataAddressChange;
+import org.ar4k.agent.core.interfaces.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeManagedNamespace;
 import org.ar4k.agent.logger.EdgeLogger;

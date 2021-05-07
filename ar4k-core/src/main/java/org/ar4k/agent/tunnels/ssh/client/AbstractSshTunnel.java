@@ -4,6 +4,7 @@ package org.ar4k.agent.tunnels.ssh.client;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
@@ -38,9 +39,11 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	private Session session = null;
 
+	private EdgeChannel statusChannel = null;
+
 	@Override
 	public void init() {
-		final EdgeChannel status = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
+		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
 				"status of ssh connection", (String) null, (String) null, null, this);
 	}
 
@@ -113,7 +116,10 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	@Override
 	public synchronized ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		final StringMessage message = new StringMessage();
 		if (isTunnelOk() && session != null && session.isConnected()) {
+			message.setPayload(ServiceStatus.RUNNING.toString());
+			statusChannel.getChannel().send(message);
 			return ServiceStatus.RUNNING;
 		} else {
 			if (session != null) {
@@ -124,6 +130,8 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 				jsch = null;
 			}
 			this.init();
+			message.setPayload(ServiceStatus.STARTING.toString());
+			statusChannel.getChannel().send(message);
 			return ServiceStatus.STARTING;
 		}
 	}

@@ -28,6 +28,7 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.interfaces.ConfigSeed;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.core.interfaces.IBeaconClient;
@@ -143,6 +144,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 	private final BeaconDataAddress beaconDataAddress;
 	private String certChainAuthority = null;
 	private String csrRequest = null;
+	private EdgeChannel statusChannel = null;
 
 	BeaconClient(Homunculus homunculus, RpcConversation rpcConversation, String host, int port, int discoveryPort,
 			String discoveryFilter, String uniqueName, String certChainFile, String certFile, String privateFile,
@@ -189,7 +191,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		}
 		this.beaconDataAddress = new BeaconDataAddress(this, homunculus);
 		logger.info("starting beacon client monitoring every " + getPollingFrequency() + " milliseconds");
-		final EdgeChannel status = this.beaconDataAddress.createOrGetDataChannel("beacon_client_status",
+		statusChannel = this.beaconDataAddress.createOrGetDataChannel("beacon_client_status",
 				IPublishSubscribeChannel.class, "status of matermost connection", (String) null, (String) null, null,
 				this);
 		runInstance();
@@ -444,7 +446,14 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 
 	@Override
 	public ConnectivityState getStateConnection() {
-		return channel != null ? channel.getState(true) : ConnectivityState.SHUTDOWN;
+		final ConnectivityState connectivityState = channel != null ? channel.getState(true)
+				: ConnectivityState.SHUTDOWN;
+		if (statusChannel != null && connectivityState != null) {
+			final StringMessage message = new StringMessage();
+			message.setPayload(connectivityState.toString());
+			statusChannel.getChannel().send(message);
+		}
+		return connectivityState;
 	}
 
 	@Override

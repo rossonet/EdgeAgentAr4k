@@ -2,7 +2,6 @@ package org.ar4k.agent.core.interfaces;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.json.JSONObject;

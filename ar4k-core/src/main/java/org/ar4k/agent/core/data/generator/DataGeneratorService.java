@@ -41,8 +41,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 
-import io.micrometer.core.instrument.MeterRegistry;
-
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *

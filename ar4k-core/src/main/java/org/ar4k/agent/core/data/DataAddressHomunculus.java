@@ -126,7 +126,7 @@ public class DataAddressHomunculus extends DataAddress {
 		slaves.add(pot);
 	}
 
-	public void removeSlave(DataAddress a) {
+	public void removeSlave(EdgeComponent a) {
 		slaves.remove(a);
 	}
 
