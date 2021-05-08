@@ -22,10 +22,12 @@ public class WatsonConfig extends AbstractServiceConfig {
 	public String url = "https://api.eu-de.assistant.watson.cloud.ibm.com";
 	@Parameter(names = "--assitantId", description = "Watson assitantId")
 	public String assitantId = null;
-	@Parameter(names = "--channelInput", description = "Query to find the input channel")
+	@Parameter(names = "--channelInput", description = "query to find the input channel")
 	public String channelInput = null;
-	@Parameter(names = "--channelOutput", description = "Query to find the output channel")
+	@Parameter(names = "--channelOutput", description = "query to find the output channel")
 	public String channelOutput = null;
+	@Parameter(names = "--actionTag", description = "symbol to call an action from Watson")
+	public String actionTag = "!action!";
 
 	@Override
 	public EdgeComponent instantiate() {

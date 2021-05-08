@@ -683,7 +683,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 						starterProperties.getRossonetChatUser(), starterProperties.getRossonetChatPassword(),
 						starterProperties.getRossonetChatToken(), matterMostRpcManager.getCallBack());
 				matterMostRpcManager.setMattermostClient(mattermostClient);
-				mattermostClient.reportStatusInLog();
+				logger.info(starterProperties.getRossonetChatServer() + " connected:" + mattermostClient.isConnected());
 			} catch (Exception a) {
 				logger.logException("during connection to " + starterProperties.getRossonetChatServer(), a);
 			}
@@ -1351,6 +1351,10 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 
 	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
 		Homunculus.applicationContext = applicationContext;
+	}
+
+	public HomunculusSession getHomunculusSession() {
+		return homunculusSession;
 	}
 
 }

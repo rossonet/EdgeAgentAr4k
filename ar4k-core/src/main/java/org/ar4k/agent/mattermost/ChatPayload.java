@@ -39,6 +39,8 @@ public class ChatPayload implements Serializable {
 	private long updateAt;
 	private String userId;
 	private String username;
+	private boolean directMessage = false;
+	private boolean mentioned = false;
 
 	public String getAllowedDomains() {
 		return allowedDomains;
@@ -343,6 +345,10 @@ public class ChatPayload implements Serializable {
 		builder.append(updateAt);
 		builder.append(", deleteAt=");
 		builder.append(deleteAt);
+		builder.append(", mentioned=");
+		builder.append(mentioned);
+		builder.append(", directMessage=");
+		builder.append(directMessage);
 		builder.append(", ");
 		if (channelId != null) {
 			builder.append("channelId=");
@@ -480,6 +486,22 @@ public class ChatPayload implements Serializable {
 		}
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public void setDirectMessage(boolean directMessage) {
+		this.directMessage = directMessage;
+	}
+
+	public void setMentioned(boolean mentioned) {
+		this.mentioned = mentioned;
+	}
+
+	public boolean isDirectMessage() {
+		return directMessage;
+	}
+
+	public boolean isMentioned() {
+		return mentioned;
 	}
 
 }

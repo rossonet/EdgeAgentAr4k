@@ -66,6 +66,10 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	private EdgeChannel writeCommandChannel = null;
 
+	private String myUserId = null;
+
+	private String myNickname = null;
+
 	@Override
 	public RossonetChatConfig getConfiguration() {
 		return configuration;
@@ -81,7 +85,8 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 		setDataspace();
 		this.mattermostClient = new MatterMostClientAr4k(getConfiguration().mmServer, getConfiguration().username,
 				getConfiguration().password, getConfiguration().token, this);
-
+		this.myUserId = mattermostClient.getMe().getId();
+		this.myNickname = mattermostClient.getMe().getUsername();
 	}
 
 	private void setDataspace() {
@@ -251,7 +256,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	@Override
 	public void onNewPost(Post post) {
-		if (requestCommandChannel != null) {
+		if (requestCommandChannel != null && myUserId != null && !post.getUserId().equals(myUserId)) {
 			ChatPayload payload = new ChatPayload();
 			payload.setId(post.getId());
 			payload.setMessage(post.getMessage());
@@ -260,12 +265,30 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			payload.setUpdateAt(post.getUpdateAt());
 			payload.setDeleteAt(post.getDeleteAt());
 			payload.setChannelId(post.getChannelId());
+			if (mattermostClient.getChannels().containsKey(post.getChannelId())) {
+				final Channel channel = mattermostClient.getChannels().get(post.getChannelId());
+				payload.setDisplayName(channel.getDisplayName());
+				payload.setName(channel.getName());
+			}
 			payload.setUserId(post.getUserId());
+			if (mattermostClient.getUsers().containsKey(post.getUserId())) {
+				payload.setNickname((mattermostClient.getUsers().get(post.getUserId()).getNickname()));
+			}
 			payload.setRootId(post.getRootId());
 			payload.setParentId(post.getParentId());
 			payload.setOriginalId(post.getOriginalId());
 			payload.setHashtags(post.getHashtags());
 			payload.setType(post.getType() != null ? post.getType().toString() : "NaN");
+			if (mattermostClient.isDirectChannel(post.getChannelId())) {
+				payload.setDirectMessage(true);
+			} else {
+				payload.setDirectMessage(false);
+			}
+			if (post.getMessage().contains("@" + this.myNickname)) {
+				payload.setMentioned(true);
+			} else {
+				payload.setMentioned(false);
+			}
 			ChatMessage message = new ChatMessage();
 			message.setPayload(payload);
 			requestCommandChannel.getChannel().send(message);

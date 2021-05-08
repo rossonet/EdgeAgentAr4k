@@ -6,6 +6,8 @@ import java.util.List;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
 
 public class DataChannelFilter {
+	
+	//TODO verificare bene i filtri con una serie di test
 
 	public enum Operator {
 		OR, AND, AND_NOT, OR_NOT

@@ -465,14 +465,20 @@ public class ShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
 	public void removeServiceSelectedConfig(@ShellOption(help = "service name to delete") String serviceName) {
-		for (final ConfigSeed a : getWorkingConfig().pots) {
-			try {
+		try {
+			ConfigSeed selectedConfigSeed = null;
+			for (final ConfigSeed a : getWorkingConfig().pots) {
 				if (a.getName() != null && a.getName().equals(serviceName)) {
-					getWorkingConfig().pots.remove(a);
+					selectedConfigSeed = a;
 				}
-			} catch (final Exception ee) {
-				logger.logException(ee);
 			}
+			if (selectedConfigSeed != null) {
+				getWorkingConfig().pots.remove(selectedConfigSeed);
+			} else {
+				logger.warn("service " + serviceName + " not found");
+			}
+		} catch (final Exception ee) {
+			logger.logException(ee);
 		}
 	}
 

@@ -21,6 +21,7 @@ import org.ar4k.agent.helper.StringUtils;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.mattermost.ChatPayload;
+import org.ar4k.agent.rpc.RpcExecutor;
 import org.json.JSONObject;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -63,6 +64,7 @@ public class WatsonService implements EdgeComponent, MessageHandler {
 
 	private Assistant assistant = null;
 	private Map<String, MessageContextStateless> sessions = new HashMap<>();
+	private Map<String, RpcExecutor> rpcSessions = new HashMap<>();
 
 	@Override
 	public void close() throws IOException {
@@ -163,43 +165,74 @@ public class WatsonService implements EdgeComponent, MessageHandler {
 
 	@Override
 	public void handleMessage(Message<?> message) throws MessagingException {
-		if (message instanceof ChatMessage) {
-			if (assistant != null) {
-				final ChatPayload cm = ((ChatMessage) message).getPayload();
-				sendMessageToWatson(cm);
+		try {
+			if (message instanceof ChatMessage) {
+				if (assistant != null) {
+					final ChatPayload cm = ((ChatMessage) message).getPayload();
+					sendMessageToWatson(cm);
+				} else {
+					logger.error("try to send message without connection " + message.getPayload());
+				}
 			} else {
-				logger.error("try to send message without connection " + message.getPayload());
+				logger.error("received bad message type in write queue " + message.getPayload());
 			}
-		} else {
-			logger.error("received bad message type in write queue " + message.getPayload());
+		} catch (Exception a) {
+			logger.logException(a);
 		}
 	}
 
 	private void sendMessageToWatson(ChatPayload cm) {
-		MessageInputStateless input = new MessageInputStateless.Builder().messageType("text").text(cm.getMessage())
-				.build();
-		Builder optionsBuilder = new MessageStatelessOptions.Builder().assistantId(getConfiguration().assitantId)
-				.input(input);
-		if (sessions.containsKey(cm.getChannelId())) {
-			optionsBuilder.context(sessions.get(cm.getChannelId()));
+		if (cm.isDirectMessage() || cm.isMentioned()) {
+			MessageInputStateless input = new MessageInputStateless.Builder().messageType("text")
+					.text(cm.getMessage().replace("\n", "").replace("\r", "")).build();
+			Builder optionsBuilder = new MessageStatelessOptions.Builder().assistantId(getConfiguration().assitantId)
+					.input(input);
+			if (sessions.containsKey(cm.getUserId())) {
+				optionsBuilder.context(sessions.get(cm.getUserId()));
+			}
+			MessageResponseStateless response = assistant.messageStateless(optionsBuilder.build()).execute()
+					.getResult();
+			sessions.put(cm.getUserId(), response.getContext());
+			sendReplyToCaller(cm.getUserId(), cm.getChannelId(), response);
+		} else {
+			logger.info("not reply to message not direct and in where I'm not metioned");
 		}
-		MessageResponseStateless response = assistant.messageStateless(optionsBuilder.build()).execute().getResult();
-		sessions.put(cm.getChannelId(), response.getContext());
-		sendReplyToWatson(cm.getChannelId(), response);
 	}
 
-	private void sendReplyToWatson(String channelId, MessageResponseStateless response) {
+	private void sendReplyToCaller(String userId, String channelId, MessageResponseStateless response) {
 		final ChatPayload cp = new ChatPayload();
 		cp.setChannelId(channelId);
 		StringBuilder stringReply = new StringBuilder();
+		logger.debug("watson reply -> " + response.toString());
 		for (RuntimeResponseGeneric l : response.getOutput().getGeneric()) {
-			stringReply.append(l.text() + "\n");
+			if (l.text() != null) {
+				if (l.text().startsWith(getConfiguration().actionTag)) {
+					runAction(userId, l.text().substring(getConfiguration().actionTag.length() + 1), stringReply);
+				} else {
+					stringReply.append(l.text() + "\n");
+				}
+			}
 		}
 		cp.setMessage(stringReply.toString());
 		final ChatMessage cm = new ChatMessage();
 		cm.setPayload(cp);
 		for (EdgeChannel oc : outputChannels) {
 			oc.getChannel().send(cm);
+		}
+	}
+
+	private void runAction(String userId, String command, StringBuilder stringReply) {
+		try {
+			logger.info("RUN ACTION REQUIRED BY WATSON -> " + command);
+			if (!rpcSessions.containsKey(userId)) {
+				final String sessionId = "watson-" + userId;
+				homunculus.getHomunculusSession().registerNewSession(sessionId, sessionId);
+				rpcSessions.put(userId, homunculus.getRpc(sessionId));
+			}
+			stringReply.append(rpcSessions.get(userId).elaborateMessage(command) + "\n");
+		} catch (Exception e) {
+			logger.logException(e);
+			stringReply.append("EXCEPTION WITH COMMAND " + command + "\n" + EdgeLogger.stackTraceToString(e));
 		}
 	}
 

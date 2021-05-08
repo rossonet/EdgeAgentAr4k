@@ -183,10 +183,6 @@ public class MatterMostClientAr4k implements MessageHandler, AutoCloseable {
 		return client.getPing().readEntity();
 	}
 
-	public void reportStatusInLog() {
-		logger.info(rossonetChatServer + " connected:" + isConnected());
-	}
-
 	public Post sendPost(final String channelId, String message) {
 		final Post post = new Post();
 		post.setMessage(message);
@@ -196,19 +192,19 @@ public class MatterMostClientAr4k implements MessageHandler, AutoCloseable {
 	}
 
 	private void onNewChannel(Channel channel) {
-		logger.info("new channel configured " + channel);
+		logger.debug("new channel configured " + channel);
 		callBack.onNewChannel(channel);
 
 	}
 
 	private void onNewPost(Post post) {
-		logger.info("new post received " + post);
+		logger.debug("new post received " + post);
 		callBack.onNewPost(post);
 
 	}
 
 	private void onNewTeam(Team team) {
-		logger.info("new team configured " + team);
+		logger.debug("new team configured " + team);
 		callBack.onNewTeam(team);
 	}
 
