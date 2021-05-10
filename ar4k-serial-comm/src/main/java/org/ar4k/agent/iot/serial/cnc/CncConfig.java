@@ -28,29 +28,29 @@ import com.beust.jcommander.Parameter;
  */
 public class CncConfig extends SerialConfig {
 
-  private static final long serialVersionUID = -117482035560530235L;
+	private static final long serialVersionUID = -117482035560530235L;
 
-  // mappa con espressione regolare il testo dei messaggi della console su
-  // particolari code
-  @Parameter(names = "--replies", description = "List of triggered message to route to differents channels")
-  public List<RouterMessagesCnc> repliesAnalizer = new ArrayList<>();
+	// mappa con espressione regolare il testo dei messaggi della console su
+	// particolari code
+	@Parameter(names = "--replies", description = "List of triggered message to route to differents channels")
+	public List<RouterMessagesCnc> repliesAnalizer = new ArrayList<>();
 
-  @Parameter(names = "--cronCommands", description = "List of commands send in loop")
-  public List<TriggerCommand> cronCommands = new ArrayList<>();
+	@Parameter(names = "--cronCommands", description = "List of commands send in loop")
+	public List<TriggerCommand> cronCommands = new ArrayList<>();
 
-  @Parameter(names = "--defaultTimeoutCommand", description = "Default timeout for the command sent to the CNC")
-  public long defaultTimeoutCommand = 5000L;
+	@Parameter(names = "--defaultTimeoutCommand", description = "Default timeout for the command sent to the CNC")
+	public long defaultTimeoutCommand = 5000L;
 
-  public CncConfig() {
-    cronCommands.add(new TriggerCommand());
-  }
+	public CncConfig() {
+		cronCommands.add(new TriggerCommand());
+	}
 
-  @Override
-  public CncService instantiate() {
-    CncService ss = new CncService();
-    ss.setConfiguration(this);
-    repliesAnalizer.add(new RouterMessagesCnc(ss));
-    return ss;
-  }
+	@Override
+	public CncService instantiate() {
+		CncService ss = new CncService();
+		ss.setConfiguration(this);
+		repliesAnalizer.add(new RouterMessagesCnc(ss));
+		return ss;
+	}
 
 }

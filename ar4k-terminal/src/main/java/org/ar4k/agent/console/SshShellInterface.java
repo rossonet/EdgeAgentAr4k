@@ -55,128 +55,126 @@ import com.jcraft.jsch.Session;
 
 @ShellCommandGroup("Tunnel Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=sshInterface", description = "Ar4k Agent Ssh Tunnel", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshInterface")
 @RestController
 @RequestMapping("/sshInterface")
 public class SshShellInterface extends AbstractShellHelper {
 
-  protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(SshShellInterface.class.toString());
+	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+			.getLogger(SshShellInterface.class.toString());
 
-  private Map<String, AbstractSshTunnel> tunnels = new HashMap<>();
+	private Map<String, AbstractSshTunnel> tunnels = new HashMap<>();
 
-  @ShellMethod(value = "Add a ssh endpoint to the selected configuration that transports a local port to a remote one", group = "Tunnel Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSshTunnelLocalPortToRemote(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a ssh endpoint to the selected configuration that transports a local port to a remote one", group = "Tunnel Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addSshTunnelLocalPortToRemote(@ShellOption(optOut = true) @Valid SshLocalConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "Add a ssh endpoint to the selected configuration that trasport a remote port to a local one", group = "Tunnel Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSshTunnelRemotePortToLocale(@ShellOption(optOut = true) @Valid SshRemoteConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a ssh endpoint to the selected configuration that trasport a remote port to a local one", group = "Tunnel Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addSshTunnelRemotePortToLocale(@ShellOption(optOut = true) @Valid SshRemoteConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "run ssh tunnel that trasport a remote port to a local one", group = "Tunnel Commands")
-  @ManagedOperation
-  public String runSshTunnelRemoteToLocalSsh(@ShellOption(optOut = true) @Valid SshRemoteConfig sshRemoteConfig) {
-    try {
-      SshRemoteTunnel tunnelSsh = sshRemoteConfig.instantiate();
-      tunnelSsh.setHomunculus(homunculus);
-      tunnelSsh.init();
-      tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
-      logger.info("runned tunnel ssh remote " + tunnelSsh);
-      return tunnelSsh.toString();
-    } catch (Exception a) {
-      return EdgeLogger.stackTraceToString(a);
-    }
-  }
+	@ShellMethod(value = "run ssh tunnel that trasport a remote port to a local one", group = "Tunnel Commands")
+	@ManagedOperation
+	public String runSshTunnelRemoteToLocalSsh(@ShellOption(optOut = true) @Valid SshRemoteConfig sshRemoteConfig) {
+		try {
+			SshRemoteTunnel tunnelSsh = sshRemoteConfig.instantiate();
+			tunnelSsh.setHomunculus(homunculus);
+			tunnelSsh.init();
+			tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
+			logger.info("runned tunnel ssh remote " + tunnelSsh);
+			return tunnelSsh.toString();
+		} catch (Exception a) {
+			return EdgeLogger.stackTraceToString(a);
+		}
+	}
 
-  @ShellMethod(value = "run ssh tunnel that trasport a local port to a remote one", group = "Tunnel Commands")
-  @ManagedOperation
-  public String runSshTunnelLocalToRemoteSsh(@ShellOption(optOut = true) @Valid SshLocalConfig sshLocalConfig) {
-    try {
-      SshLocalTunnel tunnelSsh = sshLocalConfig.instantiate();
-      tunnelSsh.setHomunculus(homunculus);
-      tunnelSsh.init();
-      tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
-      logger.info("runned tunnel ssh local " + tunnelSsh);
-      return tunnelSsh.toString();
-    } catch (Exception a) {
-      return EdgeLogger.stackTraceToString(a);
-    }
-  }
+	@ShellMethod(value = "run ssh tunnel that trasport a local port to a remote one", group = "Tunnel Commands")
+	@ManagedOperation
+	public String runSshTunnelLocalToRemoteSsh(@ShellOption(optOut = true) @Valid SshLocalConfig sshLocalConfig) {
+		try {
+			SshLocalTunnel tunnelSsh = sshLocalConfig.instantiate();
+			tunnelSsh.setHomunculus(homunculus);
+			tunnelSsh.init();
+			tunnels.put(UUID.randomUUID().toString(), tunnelSsh);
+			logger.info("runned tunnel ssh local " + tunnelSsh);
+			return tunnelSsh.toString();
+		} catch (Exception a) {
+			return EdgeLogger.stackTraceToString(a);
+		}
+	}
 
-  @ShellMethod(value = "List ssh tunnels", group = "Tunnel Commands")
-  @ManagedOperation
-  public String listSshTunnels() {
-    StringBuilder sb = new StringBuilder();
-    for (Entry<String, AbstractSshTunnel> a : tunnels.entrySet()) {
-      sb.append(a.getKey() + " -> " + a.getValue().toString());
-    }
-    return sb.toString();
-  }
+	@ShellMethod(value = "List ssh tunnels", group = "Tunnel Commands")
+	@ManagedOperation
+	public String listSshTunnels() {
+		StringBuilder sb = new StringBuilder();
+		for (Entry<String, AbstractSshTunnel> a : tunnels.entrySet()) {
+			sb.append(a.getKey() + " -> " + a.getValue().toString());
+		}
+		return sb.toString();
+	}
 
-  @ShellMethod(value = "Kill a tunnel", group = "Tunnel Commands")
-  @ManagedOperation
-  public void removeSshTunnels(@ShellOption(help = "tunnelId") String tunnelId) {
-    tunnels.get(tunnelId).kill();
-    tunnels.remove(tunnelId);
-  }
+	@ShellMethod(value = "Kill a tunnel", group = "Tunnel Commands")
+	@ManagedOperation
+	public void removeSshTunnels(@ShellOption(help = "tunnelId") String tunnelId) {
+		tunnels.get(tunnelId).kill();
+		tunnels.remove(tunnelId);
+	}
 
-  public static String execCommandOnRemoteSshHost(String authkey, String username, String password, String host,
-      int port, String command) throws IOException, JSchException {
-    JSch jsch = new JSch();
-    if (authkey != null && !authkey.isEmpty())
-      logger.info("auth ssh using key file: " + authkey);
-    jsch.addIdentity(authkey);
-    Session session = jsch.getSession(username, host, port);
-    SSHUserInfo ui = new SSHUserInfo();
-    if (password != null && !password.isEmpty())
-      ui.setPassword(password);
-    ui.setTrust(true);
-    session.setUserInfo(ui);
-    session.setDaemonThread(true);
-    session.connect();
-    Channel channel = session.openChannel("exec");
-    ((ChannelExec) channel).setCommand(command);
-    // X Forwarding
-    // channel.setXForwarding(true);
-    // channel.setInputStream(System.in);
-    channel.setInputStream(null);
-    // channel.setOutputStream(System.out);
-    // FileOutputStream fos=new FileOutputStream("/tmp/stderr");
-    // ((ChannelExec)channel).setErrStream(fos);
-    ((ChannelExec) channel).setErrStream(System.err);
-    InputStream in = channel.getInputStream();
-    channel.connect();
-    StringBuilder outBuff = new StringBuilder();
-    byte[] tmp = new byte[1024];
-    while (true) {
-      while (in.available() > 0) {
-        int i = in.read(tmp, 0, 1024);
-        if (i < 0)
-          break;
-        outBuff.append(new String(tmp, 0, i));
-      }
-      if (channel.isClosed()) {
-        if (in.available() > 0)
-          continue;
-        logger.info("exit-status ssh: " + channel.getExitStatus());
-        break;
-      }
-      try {
-        Thread.sleep(1000);
-      } catch (Exception ee) {
-      }
-    }
-    channel.disconnect();
-    session.disconnect();
-    logger.info("ssh on " + host + " return " + outBuff.toString());
-    return outBuff.toString();
-  }
+	public static String execCommandOnRemoteSshHost(String authkey, String username, String password, String host,
+			int port, String command) throws IOException, JSchException {
+		JSch jsch = new JSch();
+		if (authkey != null && !authkey.isEmpty())
+			logger.info("auth ssh using key file: " + authkey);
+		jsch.addIdentity(authkey);
+		Session session = jsch.getSession(username, host, port);
+		SSHUserInfo ui = new SSHUserInfo();
+		if (password != null && !password.isEmpty())
+			ui.setPassword(password);
+		ui.setTrust(true);
+		session.setUserInfo(ui);
+		session.setDaemonThread(true);
+		session.connect();
+		Channel channel = session.openChannel("exec");
+		((ChannelExec) channel).setCommand(command);
+		// X Forwarding
+		// channel.setXForwarding(true);
+		// channel.setInputStream(System.in);
+		channel.setInputStream(null);
+		// channel.setOutputStream(System.out);
+		// FileOutputStream fos=new FileOutputStream("/tmp/stderr");
+		// ((ChannelExec)channel).setErrStream(fos);
+		((ChannelExec) channel).setErrStream(System.err);
+		InputStream in = channel.getInputStream();
+		channel.connect();
+		StringBuilder outBuff = new StringBuilder();
+		byte[] tmp = new byte[1024];
+		while (true) {
+			while (in.available() > 0) {
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0)
+					break;
+				outBuff.append(new String(tmp, 0, i));
+			}
+			if (channel.isClosed()) {
+				if (in.available() > 0)
+					continue;
+				logger.info("exit-status ssh: " + channel.getExitStatus());
+				break;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (Exception ee) {
+			}
+		}
+		channel.disconnect();
+		session.disconnect();
+		logger.info("ssh on " + host + " return " + outBuff.toString());
+		return outBuff.toString();
+	}
 
 }

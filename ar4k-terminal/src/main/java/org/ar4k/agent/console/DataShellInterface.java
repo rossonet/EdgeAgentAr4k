@@ -62,8 +62,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 
 @ShellCommandGroup("Data Manager Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=dataInterface", description = "Ar4k Agent Data Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "dataInterface")
 @RestController
 @RequestMapping("/dataInterface")
 public class DataShellInterface extends AbstractShellHelper implements MessageHandler {

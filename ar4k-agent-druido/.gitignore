@@ -29,6 +29,7 @@ maven
 *.conf.base64.ar4k
 *.conf.json.ar4k
 *.keystore
+target
 
 ### STS ###
 .apt_generated

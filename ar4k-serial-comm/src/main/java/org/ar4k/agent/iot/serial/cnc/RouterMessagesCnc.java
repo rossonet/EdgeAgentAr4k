@@ -15,12 +15,14 @@
 package org.ar4k.agent.iot.serial.cnc;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
-import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.interfaces.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.helper.ConfigHelper;
 
 import com.beust.jcommander.Parameter;
 
@@ -41,9 +43,9 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 	@Parameter(names = "--regExp", description = "regular expression to find")
 	public String regExp = ".*";
 
-	private transient IPublishSubscribeChannel cacheChannel = null;
+	public String uuid = UUID.randomUUID().toString();
 
-	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+	private transient IPublishSubscribeChannel cacheChannel = null;
 
 	private transient Pattern pattern = null;
 	private transient final DataServiceOwner serviceOwner;
@@ -55,14 +57,16 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 
 	public IPublishSubscribeChannel getAr4kChannel(String fatherOfChannels, String scopeOfChannels) {
 		if (cacheChannel == null) {
-			final EdgeChannel father = Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress()
-					.createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class, "CNC root node", (String) null,
-							null, homunculus.getTags(), serviceOwner);
-			cacheChannel = (IPublishSubscribeChannel) Homunculus.getApplicationContext().getBean(Homunculus.class)
-					.getDataAddress().createOrGetDataChannel(endpoint, IPublishSubscribeChannel.class,
-							"cache data of the CNC", father,
-							scopeOfChannels != null ? scopeOfChannels : homunculus.getDataAddress().getDefaultScope(),
-							homunculus.getTags(), serviceOwner);
+			final EdgeChannel father = serviceOwner.getDataAddress().createOrGetDataChannel(endpoint,
+					IPublishSubscribeChannel.class, "CNC root node", fatherOfChannels, scopeOfChannels,
+					ConfigHelper.mergeTags(Arrays.asList("cnc-root", "cnc-father"),
+							((CncService) serviceOwner).getConfiguration().getTags()),
+					serviceOwner);
+			cacheChannel = (IPublishSubscribeChannel) serviceOwner.getDataAddress().createOrGetDataChannel(endpoint,
+					IPublishSubscribeChannel.class, "cache data of the CNC", father, scopeOfChannels,
+					ConfigHelper.mergeTags(Arrays.asList("cnc-root", "cnc-father"),
+							((CncService) serviceOwner).getConfiguration().getTags()),
+					serviceOwner);
 		}
 		return cacheChannel;
 	}
@@ -81,6 +85,28 @@ public class RouterMessagesCnc implements Serializable, compilePattern {
 		if (pattern == null) {
 			pattern = Pattern.compile(regExp);
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RouterMessagesCnc [");
+		if (endpoint != null) {
+			builder.append("endpoint=");
+			builder.append(endpoint);
+			builder.append(", ");
+		}
+		if (regExp != null) {
+			builder.append("regExp=");
+			builder.append(regExp);
+			builder.append(", ");
+		}
+		if (uuid != null) {
+			builder.append("uuid=");
+			builder.append(uuid);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

@@ -17,15 +17,13 @@ import org.springframework.shell.standard.ShellOption;
 
 @ShellCommandGroup("CNC Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=marlinInterface", description = "Ar4k Agent Marlin Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "marlinInterface")
 public class MarlinShellInterface extends AbstractShellHelper {
 
-  @ShellMethod(value = "Add a 3D printer with Marlin firmware to the selected configuration", group = "CNC Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a 3D printer with Marlin firmware to the selected configuration", group = "CNC Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addMarlinService(@ShellOption(optOut = true) @Valid MarlinConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
 }

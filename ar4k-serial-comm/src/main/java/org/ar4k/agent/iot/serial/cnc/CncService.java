@@ -88,11 +88,7 @@ public class CncService extends SerialService {
 				final MessageHeaders headersStringMessage = new MessageHeaders(headersMapString);
 				messageToString.setHeaders(headersStringMessage);
 				messageToString.setPayload(messageTxt);
-				// TODO DataAddress
-				// IPublishSubscribeChannel channel =
-				// testRoute.getAr4kChannel(configuration.getFatherOfChannels(),
-				// configuration.scopeOfChannels);
-				// channel.send(messageToString);
+				testRoute.getAr4kChannel(null, null).send(messageToString);
 			}
 		}
 	}

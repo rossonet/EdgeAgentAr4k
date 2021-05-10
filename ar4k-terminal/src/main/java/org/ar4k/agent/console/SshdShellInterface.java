@@ -49,97 +49,95 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Ssh Server Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=sshdInterface", description = "Ar4k Agent SSHD RCP Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "sshdInterface")
 @RestController
 @RequestMapping("/sshdInterface")
 public class SshdShellInterface extends AbstractShellHelper {
-  @Autowired
-  Shell shell;
+	@Autowired
+	Shell shell;
 
-  SshServer server = null;
+	SshServer server = null;
 
-  @SuppressWarnings("unused")
-  private Availability testClientUsed() {
-    return server == null ? Availability.available()
-        : Availability.unavailable("the sshd server is running, please terminate before");
-  }
+	@SuppressWarnings("unused")
+	private Availability testClientUsed() {
+		return server == null ? Availability.available()
+				: Availability.unavailable("the sshd server is running, please terminate before");
+	}
 
-  @SuppressWarnings("unused")
-  private Availability testClientFree() {
-    return server != null ? Availability.available() : Availability.unavailable("the sshd server is not running");
-  }
+	@SuppressWarnings("unused")
+	private Availability testClientFree() {
+		return server != null ? Availability.available() : Availability.unavailable("the sshd server is not running");
+	}
 
-  @ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the agent RPC", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the agent RPC", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addSshdManagerToSelectedConfig(@ShellOption(optOut = true) @Valid SshdHomunculusConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the system shell", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSshdManagerSystemToSelectedConfig(@ShellOption(optOut = true) @Valid SshdSystemConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a sshd remote management server to the selected configuration that replies with the system shell", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addSshdManagerSystemToSelectedConfig(@ShellOption(optOut = true) @Valid SshdSystemConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "Start SSHD remote management server that use local bash process", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testClientUsed")
-  public void startSshdRemoteSystemShell(
-      @ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
-      @ShellOption(help = "the sshd server port", defaultValue = "6666") int port) {
-    server = SshServer.setUpDefaultServer();
-    server.setHost(host);
-    server.setPort(port);
-    server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-    ProcessShellFactory shellFactory = new HomunculusProcessShellFactory(new String[] { "/bin/bash", "-i", "-l" });
-    server.setShellFactory(shellFactory);
-    try {
-      server.start();
-    } catch (IOException e) {
-      logger.logException(e);
-    }
-  }
+	@ShellMethod(value = "Start SSHD remote management server that use local bash process", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testClientUsed")
+	public void startSshdRemoteSystemShell(
+			@ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
+			@ShellOption(help = "the sshd server port", defaultValue = "6666") int port) {
+		server = SshServer.setUpDefaultServer();
+		server.setHost(host);
+		server.setPort(port);
+		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+		ProcessShellFactory shellFactory = new HomunculusProcessShellFactory(new String[] { "/bin/bash", "-i", "-l" });
+		server.setShellFactory(shellFactory);
+		try {
+			server.start();
+		} catch (IOException e) {
+			logger.logException(e);
+		}
+	}
 
-  @ShellMethod(value = "Start SSHD remote management server that use Homunculus shell", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testClientUsed")
-  public void startSshdRemoteHomunculus(
-      @ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
-      @ShellOption(help = "the sshd server port", defaultValue = "6666") int port) {
-    server = SshServer.setUpDefaultServer();
-    server.setHost(host);
-    server.setPort(port);
-    server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-    HomunculusShellFactory shellFactory = new HomunculusShellFactory(Homunculus.getApplicationContext().getBean(Homunculus.class),
-        this.shell);
-    server.setShellFactory(shellFactory);
-    try {
-      server.start();
-    } catch (IOException e) {
-      logger.logException(e);
-    }
-  }
+	@ShellMethod(value = "Start SSHD remote management server that use Homunculus shell", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testClientUsed")
+	public void startSshdRemoteHomunculus(
+			@ShellOption(help = "the sshd server host", defaultValue = "0.0.0.0") String host,
+			@ShellOption(help = "the sshd server port", defaultValue = "6666") int port) {
+		server = SshServer.setUpDefaultServer();
+		server.setHost(host);
+		server.setPort(port);
+		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+		HomunculusShellFactory shellFactory = new HomunculusShellFactory(
+				Homunculus.getApplicationContext().getBean(Homunculus.class), this.shell);
+		server.setShellFactory(shellFactory);
+		try {
+			server.start();
+		} catch (IOException e) {
+			logger.logException(e);
+		}
+	}
 
-  @ShellMethod(value = "List active SSHD remote management connections", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testClientFree")
-  public List<AbstractSession> listSshdRemoteManager() {
-    return server.getActiveSessions();
-  }
+	@ShellMethod(value = "List active SSHD remote management connections", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testClientFree")
+	public List<AbstractSession> listSshdRemoteManager() {
+		return server.getActiveSessions();
+	}
 
-  @ShellMethod(value = "Stop SSHD remote management connection", group = "Ssh Server Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testClientFree")
-  public void stopSshdRemoteManager() {
-    try {
-      server.stop();
-    } catch (IOException e) {
-      logger.logException(e);
-    }
-    server = null;
-  }
+	@ShellMethod(value = "Stop SSHD remote management connection", group = "Ssh Server Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testClientFree")
+	public void stopSshdRemoteManager() {
+		try {
+			server.stop();
+		} catch (IOException e) {
+			logger.logException(e);
+		}
+		server = null;
+	}
 
 }

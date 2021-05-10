@@ -102,8 +102,6 @@ import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
 
 @ShellCommandGroup("Configure Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=mainInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "mainInterface")
 @RestController
 @RequestMapping("/homunculus")
 public class ShellInterface extends AbstractShellHelper {
@@ -331,6 +329,14 @@ public class ShellInterface extends AbstractShellHelper {
 		return "saved";
 	}
 
+	@ShellMethod("Modify service in selected configuration")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String selectModifyService(@ShellOption(help = "service name to modify") String serviceName) {
+		modifyService(serviceName);
+		return "selected";
+	}
+
 	@ShellMethod("Import the selected configuration from base64 text crypted")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
@@ -551,6 +557,14 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public String unsetSelectedConfig() {
 		setWorkingConfig(null);
+		return "unseted";
+	}
+
+	@ShellMethod("Unset the selected service")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedServiceOk")
+	public String unsetSelectedService() {
+		modifyService(null);
 		return "unseted";
 	}
 

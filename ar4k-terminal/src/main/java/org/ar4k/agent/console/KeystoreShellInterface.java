@@ -58,8 +58,6 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Keytools Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=keytoolsInterface", description = "Ar4k Agent keytools interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "keytoolsInterface")
 @RestController
 @RequestMapping("/keytoolsInterface")
 public class KeystoreShellInterface extends AbstractShellHelper {

@@ -40,8 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("OPC UA Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=opcUaInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "opcUaInterface")
 @RestController
 @RequestMapping("/opcUaInterface")
 public class OpcUaShellInterface extends AbstractShellHelper {

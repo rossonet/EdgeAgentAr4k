@@ -122,11 +122,11 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	@Override
 	public void kill() {
-		homunculus.getDataAddress().removeDataChannel(writeChannelBytes, true);
-		homunculus.getDataAddress().removeDataChannel(writeChannel, true);
-		homunculus.getDataAddress().removeDataChannel(readChannelBytes, true);
-		homunculus.getDataAddress().removeDataChannel(readChannel, true);
-		homunculus.getDataAddress().removeDataChannel(channelRoot, true);
+		dataspace.removeDataChannel(writeChannelBytes, true);
+		dataspace.removeDataChannel(writeChannel, true);
+		dataspace.removeDataChannel(readChannelBytes, true);
+		dataspace.removeDataChannel(readChannel, true);
+		dataspace.removeDataChannel(channelRoot, true);
 		if (comPort != null) {
 			comPort.closePort();
 			comPort = null;
@@ -165,22 +165,20 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private void popolateDataTopics() {
 		openSerialPort();
-		readChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
-				configuration.getEndpointRead(), IPublishSubscribeChannel.class,
-				"serial port " + comPort.getSystemPortName() + " read channel", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
-		readChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
+		readChannel = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(configuration.getEndpointRead(),
+				IPublishSubscribeChannel.class, "serial port " + comPort.getSystemPortName() + " read channel",
+				channelRoot, homunculus.getDataAddress().getDefaultScope(), getConfiguration().getTags(), this);
+		readChannelBytes = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(
 				configuration.getEndpointReadByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " read bytes node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
-		writeChannel = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
-				configuration.getEndpointWrite(), IPublishSubscribeChannel.class,
-				"serial port " + comPort.getSystemPortName() + " write node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
-		writeChannelBytes = (IPublishSubscribeChannel) homunculus.getDataAddress().createOrGetDataChannel(
+				homunculus.getDataAddress().getDefaultScope(), getConfiguration().getTags(), this);
+		writeChannel = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(configuration.getEndpointWrite(),
+				IPublishSubscribeChannel.class, "serial port " + comPort.getSystemPortName() + " write node",
+				channelRoot, homunculus.getDataAddress().getDefaultScope(), getConfiguration().getTags(), this);
+		writeChannelBytes = (IPublishSubscribeChannel) dataspace.createOrGetDataChannel(
 				configuration.getEndpointWriteByte(), IPublishSubscribeChannel.class,
 				"serial port " + comPort.getSystemPortName() + " write bytes node", channelRoot,
-				homunculus.getDataAddress().getDefaultScope(), homunculus.getTags(), this);
+				homunculus.getDataAddress().getDefaultScope(), getConfiguration().getTags(), this);
 		readChannel.addTag("serial-read");
 		readChannelBytes.addTag("serial-read-bytes");
 		writeChannel.addTag("serial-write");

@@ -83,8 +83,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShellCommandGroup("Beacon Server Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=beaconInterface", description = "Ar4k Agent Beacon Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "beaconInterface")
 @RestController
 @RequestMapping("/beaconInterface")
 public class BeaconShellInterface extends AbstractShellHelper implements AutoCloseable {

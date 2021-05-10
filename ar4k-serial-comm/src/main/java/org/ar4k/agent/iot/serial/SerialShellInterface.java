@@ -41,52 +41,51 @@ import com.google.gson.GsonBuilder;
 
 @ShellCommandGroup("Serial Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=serialInterface", description = "Ar4k Agent Main Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "serialInterface")
 @RestController
 @RequestMapping("/serialInterface")
 public class SerialShellInterface extends AbstractShellHelper {
 
-  private SerialJsonService serialService = null;
+	private SerialJsonService serialService = null;
 
-  protected Availability testSerialServiceNull() {
-    return serialService == null ? Availability.available()
-        : Availability.unavailable("a Serial service exists with status " + serialService);
-  }
+	protected Availability testSerialServiceNull() {
+		return serialService == null ? Availability.available()
+				: Availability.unavailable("a Serial service exists with status " + serialService);
+	}
 
-  protected Availability testSerialServiceRunning() {
-    return serialService != null ? Availability.available() : Availability.unavailable("no serial service are running");
-  }
+	protected Availability testSerialServiceRunning() {
+		return serialService != null ? Availability.available()
+				: Availability.unavailable("no serial service are running");
+	}
 
-  @ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
-  @ManagedOperation
-  public String listSerialPorts() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(SerialService.getSerialDevice());
-  }
+	@ShellMethod(value = "List serial ports attached to this host", group = "Serial Commands")
+	@ManagedOperation
+	public String listSerialPorts() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		return gson.toJson(SerialService.getSerialDevice());
+	}
 
-  @ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a serial interface service to the selected configuration", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addSerialService(@ShellOption(optOut = true) @Valid SerialConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "Create Serial service", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSerialServiceNull")
-  public void createSerialService(@ShellOption(optOut = true) @Valid SerialConfig configuration) {
-    serialService = new SerialJsonService();
-    serialService.setConfiguration(configuration);
-    serialService.init();
-  }
+	@ShellMethod(value = "Create Serial service", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSerialServiceNull")
+	public void createSerialService(@ShellOption(optOut = true) @Valid SerialConfig configuration) {
+		serialService = new SerialJsonService();
+		serialService.setConfiguration(configuration);
+		serialService.init();
+	}
 
-  @ShellMethod(value = "Stop serial instance", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSerialServiceRunning")
-  public void serialInstanceStop() {
-    serialService.kill();
-    serialService = null;
-  }
+	@ShellMethod(value = "Stop serial instance", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSerialServiceRunning")
+	public void serialInstanceStop() {
+		serialService.kill();
+		serialService = null;
+	}
 
 }

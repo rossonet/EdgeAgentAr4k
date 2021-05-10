@@ -3,7 +3,6 @@
  */
 package org.ar4k.agent.iot.serial.marlin;
 
-import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.iot.serial.cnc.CncConfig;
 import org.ar4k.agent.iot.serial.cnc.RouterMessagesCnc;
 import org.ar4k.agent.iot.serial.cnc.TriggerCommand;
@@ -32,9 +31,6 @@ public class MarlinConfig extends CncConfig {
 	public String endpointListSdFiles = null;
 	@Parameter(names = "--endpointPrintTime", description = "internal channel for consumer print time data")
 	public String endpointPrintTime = null;
-
-	@Parameter(names = "--internalDirectoryChannel", description = "internal directory for multi node bind with regex")
-	public IDirectChannel bindDirectoryChannel = null;
 
 	@Override
 	public MarlinService instantiate() {

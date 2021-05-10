@@ -32,6 +32,7 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.spring.EdgeUserDetails;
@@ -72,7 +73,7 @@ public abstract class AbstractShellHelper {
 
 	@Autowired
 	protected SessionRegistry sessionRegistry;
-	
+
 	@Autowired
 	protected ResourceLoader resourceLoader;
 
@@ -107,6 +108,13 @@ public abstract class AbstractShellHelper {
 	protected EdgeConfig getWorkingConfig() {
 		if (getSessionId() != null) {
 			return ((RpcConversation) homunculus.getRpc(getSessionId())).getWorkingConfig();
+		} else
+			return null;
+	}
+
+	protected ServiceConfig getWorkingService() {
+		if (getWorkingConfig() != null) {
+			return ((RpcConversation) homunculus.getRpc(getSessionId())).getWorkingService();
 		} else
 			return null;
 	}
@@ -185,6 +193,15 @@ public abstract class AbstractShellHelper {
 			((RpcConversation) homunculus.getRpc(getSessionId())).setWorkingConfig(null);
 	}
 
+	protected void modifyService(String serviceName) {
+		final RpcConversation rpcConversation = (RpcConversation) homunculus.getRpc(getSessionId());
+		if (serviceName != null && rpcConversation != null && rpcConversation.getWorkingConfig() != null) {
+			rpcConversation.setModifyService(serviceName);
+		} else if (serviceName == null && rpcConversation != null) {
+			rpcConversation.setModifyService(null);
+		}
+	}
+
 	protected Availability testIsRunningOk() {
 		return homunculus.isRunning() ? Availability.available() : Availability.unavailable("anima is not running");
 	}
@@ -215,6 +232,15 @@ public abstract class AbstractShellHelper {
 		if (getSessionId() != null) {
 			result = getWorkingConfig() != null ? Availability.available()
 					: Availability.unavailable("you have to select a config before");
+		}
+		return result;
+	}
+
+	protected Availability testSelectedServiceOk() {
+		Availability result = Availability.unavailable("you have to login in the agent before");
+		if (getSessionId() != null) {
+			result = getWorkingService() != null ? Availability.available()
+					: Availability.unavailable("you have to select a service before");
 		}
 		return result;
 	}

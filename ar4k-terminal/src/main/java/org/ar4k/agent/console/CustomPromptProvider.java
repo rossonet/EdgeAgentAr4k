@@ -18,6 +18,7 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
@@ -37,36 +38,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomPromptProvider implements PromptProvider {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  @Autowired
-  private HomunculusSession homunculusSession;
+	@Autowired
+	private HomunculusSession homunculusSession;
 
-  @Override
-  public AttributedString getPrompt() {
-    EdgeConfig wc = null;
-    Authentication a = SecurityContextHolder.getContext().getAuthentication();
-    if (a != null) {
-      SessionInformation session = homunculusSession.getAllSessions(a, false).get(0);
-      wc = ((RpcConversation) homunculus.getRpc(session.getSessionId())).getWorkingConfig();
-    }
-    AnsiColor colore = AnsiColor.BLUE;
-    String testo = "AGENT:> ";
-    if (homunculus.getState() != null) {
-      testo = homunculus.getState().toString() + ":> ";
-      if (wc != null) {
-        colore = wc.promptColor;
-        testo = "-" + homunculus.getState().toString() + "- " + wc.prompt + ":# ";
-      }
-    }
-    AttributedString prompt = null;
-    if (a != null) {
-      prompt = new AttributedString(
-          AnsiOutput.toString(colore, "[", AnsiColor.YELLOW, a.getName(), colore, "] " + testo, AnsiColor.DEFAULT));
-    } else {
-      prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
-    }
-    return prompt;
-  }
+	@Override
+	public AttributedString getPrompt() {
+		EdgeConfig wc = null;
+		ServiceConfig ws = null;
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		if (a != null) {
+			SessionInformation session = homunculusSession.getAllSessions(a, false).get(0);
+			wc = ((RpcConversation) homunculus.getRpc(session.getSessionId())).getWorkingConfig();
+			ws = ((RpcConversation) homunculus.getRpc(session.getSessionId())).getWorkingService();
+		}
+		AnsiColor colore = AnsiColor.BLUE;
+		String testo = "AGENT:> ";
+		if (homunculus.getState() != null) {
+			testo = homunculus.getState().toString() + ":> ";
+			if (wc != null) {
+				colore = wc.promptColor;
+				testo = "-" + homunculus.getState().toString() + "- " + wc.prompt
+						+ (ws == null ? ":# " : "[" + ws.getName() + "]:#");
+			}
+		}
+		AttributedString prompt = null;
+		if (a != null) {
+			prompt = new AttributedString(AnsiOutput.toString(colore, "[", AnsiColor.YELLOW, a.getName(), colore,
+					"] " + testo, AnsiColor.DEFAULT));
+		} else {
+			prompt = new AttributedString(AnsiOutput.toString(colore, testo, AnsiColor.DEFAULT));
+		}
+		return prompt;
+	}
 }

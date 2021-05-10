@@ -15,6 +15,7 @@
 package org.ar4k.agent.iot.serial.cnc;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import com.beust.jcommander.Parameter;
 
@@ -26,30 +27,32 @@ import com.beust.jcommander.Parameter;
  */
 public class TriggerCommand implements Serializable {
 
-  private static final long serialVersionUID = 970930400109105077L;
+	private static final long serialVersionUID = 970930400109105077L;
 
-  private transient byte[] cacheCommandByte = null;
+	private transient byte[] cacheCommandByte = null;
 
-  @Parameter(names = "--command", description = "Command to send")
-  public String command = "M115\n";
+	@Parameter(names = "--command", description = "Command to send")
+	public String command = "M115\n";
 
-  @Parameter(names = "--timer", description = "timer moltiplicator")
-  public int timer = 120;
+	@Parameter(names = "--timer", description = "timer moltiplicator")
+	public int timer = 120;
 
-  public byte[] getBytesCommand() {
-    createCache();
-    return cacheCommandByte;
-  }
+	public String uuid = UUID.randomUUID().toString();
 
-  private void createCache() {
-    if (cacheCommandByte == null) {
-      cacheCommandByte = command.getBytes();
-    }
-  }
+	public byte[] getBytesCommand() {
+		createCache();
+		return cacheCommandByte;
+	}
 
-  public long getSizeBytesCommand() {
-    createCache();
-    return cacheCommandByte.length;
-  }
+	private void createCache() {
+		if (cacheCommandByte == null) {
+			cacheCommandByte = command.getBytes();
+		}
+	}
+
+	public long getSizeBytesCommand() {
+		createCache();
+		return cacheCommandByte.length;
+	}
 
 }

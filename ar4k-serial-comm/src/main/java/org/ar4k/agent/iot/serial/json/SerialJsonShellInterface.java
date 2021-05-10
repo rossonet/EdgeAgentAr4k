@@ -18,44 +18,42 @@ import org.springframework.shell.standard.ShellOption;
 
 @ShellCommandGroup("Serial Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=iotSerialInterface", description = "Ar4k Agent IoT Serial Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "iotSerialInterface")
 public class SerialJsonShellInterface extends AbstractShellHelper {
 
-  private SerialJsonService serialServiceJson = null;
+	private SerialJsonService serialServiceJson = null;
 
-  protected Availability testSerialServiceJsonNull() {
-    return serialServiceJson == null ? Availability.available()
-        : Availability.unavailable("a Serial JSON test service exists with status " + serialServiceJson);
-  }
+	protected Availability testSerialServiceJsonNull() {
+		return serialServiceJson == null ? Availability.available()
+				: Availability.unavailable("a Serial JSON test service exists with status " + serialServiceJson);
+	}
 
-  protected Availability testSerialServiceRunning() {
-    return serialServiceJson != null ? Availability.available()
-        : Availability.unavailable("no serial JSON service are running");
-  }
+	protected Availability testSerialServiceRunning() {
+		return serialServiceJson != null ? Availability.available()
+				: Availability.unavailable("no serial JSON service are running");
+	}
 
-  @ShellMethod(value = "Add a serial interface with json semantic", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addJsonSerialService(@ShellOption(optOut = true) @Valid SerialJsonConfig service) {
-    getWorkingConfig().pots.add(service);
-  }
+	@ShellMethod(value = "Add a serial interface with json semantic", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addJsonSerialService(@ShellOption(optOut = true) @Valid SerialJsonConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
-  @ShellMethod(value = "Create Serial JSON service", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSerialServiceJsonNull")
-  public void createSerialJsonService(@ShellOption(optOut = true) @Valid SerialJsonConfig configuration) {
-    serialServiceJson = new SerialJsonService();
-    serialServiceJson.setConfiguration(configuration);
-    serialServiceJson.init();
-  }
+	@ShellMethod(value = "Create Serial JSON service", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSerialServiceJsonNull")
+	public void createSerialJsonService(@ShellOption(optOut = true) @Valid SerialJsonConfig configuration) {
+		serialServiceJson = new SerialJsonService();
+		serialServiceJson.setConfiguration(configuration);
+		serialServiceJson.init();
+	}
 
-  @ShellMethod(value = "Stop serial json instance", group = "Serial Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSerialServiceRunning")
-  public void serialInstanceJsonStop() {
-    serialServiceJson.kill();
-    serialServiceJson = null;
-  }
+	@ShellMethod(value = "Stop serial json instance", group = "Serial Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSerialServiceRunning")
+	public void serialInstanceJsonStop() {
+		serialServiceJson.kill();
+		serialServiceJson = null;
+	}
 
 }
