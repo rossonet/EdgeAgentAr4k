@@ -85,7 +85,7 @@ public class CncShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Add message cnc config")
 	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
+	@ShellMethodAvailability("sessionCncOk")
 	public void cncAddRouterMessage(@ShellOption(optOut = true) @Valid RouterMessagesCnc messageService) {
 		((CncConfig) getWorkingService()).repliesAnalizer.add(messageService);
 	}
@@ -119,7 +119,7 @@ public class CncShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Add regular query cnc config")
 	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
+	@ShellMethodAvailability("sessionCncOk")
 	public void cncAddCronQuery(@ShellOption(optOut = true) @Valid TriggerCommand trigger) {
 		((CncConfig) getWorkingService()).cronCommands.add(trigger);
 	}

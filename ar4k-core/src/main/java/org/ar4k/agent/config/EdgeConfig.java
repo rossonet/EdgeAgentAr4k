@@ -38,6 +38,8 @@ import com.beust.jcommander.Parameter;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
+
+// TODO: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente
 public class EdgeConfig implements ConfigSeed {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
@@ -192,18 +194,183 @@ public class EdgeConfig implements ConfigSeed {
 
 	@Override
 	public String toString() {
-		return "EdgeConfig [creationDate=" + creationDate + ", lastUpdate=" + lastUpdate + ", uniqueId=" + uniqueId
-				+ ", name=" + name + ", nextConfigDns=" + nextConfigDns + ", nextConfigWeb=" + nextConfigWeb
-				+ ", nextConfigFile=" + nextConfigFile + ", nextConfigReload=" + nextConfigReload
-				+ ", configCheckPeriod=" + configCheckPeriod + ", prompt=" + prompt + ", promptColor=" + promptColor
-				+ ", description=" + description + ", beaconServer=" + beaconServer + ", beaconServerCertChain="
-				+ beaconServerCertChain + ", beaconDiscoveryPort=" + beaconDiscoveryPort + ", dataCenter=" + dataCenter
-				+ ", version=" + version + ", subVersion=" + subVersion + ", tagVersion=" + tagVersion + ", author="
-				+ author + ", project=" + project + ", license=" + license + ", tags=" + tags + ", contexts=" + contexts
-				+ ", groups=" + groups + ", targetRunLevel=" + targetRunLevel + ", preScript=" + preScript
-				+ ", postScript=" + postScript + ", preScriptLanguage=" + preScriptLanguage + ", postScriptLanguage="
-				+ postScriptLanguage + ", initializeKeystore=" + initializeKeystore + ", sshdAuthorizedKeysPath="
-				+ sshdAuthorizedKeysPath + ", routerType=" + routerType + ", logoUrl=" + logoUrl + ", pots=" + pots
-				+ "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("EdgeConfig [");
+		if (creationDate != null) {
+			builder.append("creationDate=");
+			builder.append(creationDate);
+			builder.append(", ");
+		}
+		if (lastUpdate != null) {
+			builder.append("lastUpdate=");
+			builder.append(lastUpdate);
+			builder.append(", ");
+		}
+		if (uniqueId != null) {
+			builder.append("uniqueId=");
+			builder.append(uniqueId);
+			builder.append(", ");
+		}
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (nextConfigDns != null) {
+			builder.append("nextConfigDns=");
+			builder.append(nextConfigDns);
+			builder.append(", ");
+		}
+		if (nextConfigWeb != null) {
+			builder.append("nextConfigWeb=");
+			builder.append(nextConfigWeb);
+			builder.append(", ");
+		}
+		if (nextConfigFile != null) {
+			builder.append("nextConfigFile=");
+			builder.append(nextConfigFile);
+			builder.append(", ");
+		}
+		if (nextConfigReload != null) {
+			builder.append("nextConfigReload=");
+			builder.append(nextConfigReload);
+			builder.append(", ");
+		}
+		if (configCheckPeriod != null) {
+			builder.append("configCheckPeriod=");
+			builder.append(configCheckPeriod);
+			builder.append(", ");
+		}
+		if (prompt != null) {
+			builder.append("prompt=");
+			builder.append(prompt);
+			builder.append(", ");
+		}
+		if (promptColor != null) {
+			builder.append("promptColor=");
+			builder.append(promptColor);
+			builder.append(", ");
+		}
+		if (description != null) {
+			builder.append("description=");
+			builder.append(description);
+			builder.append(", ");
+		}
+		if (beaconServer != null) {
+			builder.append("beaconServer=");
+			builder.append(beaconServer);
+			builder.append(", ");
+		}
+		if (beaconServerCertChain != null) {
+			builder.append("beaconServerCertChain=");
+			builder.append(beaconServerCertChain);
+			builder.append(", ");
+		}
+		builder.append("beaconDiscoveryPort=");
+		builder.append(beaconDiscoveryPort);
+		builder.append(", ");
+		if (beaconDiscoveryFilterString != null) {
+			builder.append("beaconDiscoveryFilterString=");
+			builder.append(beaconDiscoveryFilterString);
+			builder.append(", ");
+		}
+		if (dataCenter != null) {
+			builder.append("dataCenter=");
+			builder.append(dataCenter);
+			builder.append(", ");
+		}
+		builder.append("version=");
+		builder.append(version);
+		builder.append(", subVersion=");
+		builder.append(subVersion);
+		builder.append(", ");
+		if (tagVersion != null) {
+			builder.append("tagVersion=");
+			builder.append(tagVersion);
+			builder.append(", ");
+		}
+		if (author != null) {
+			builder.append("author=");
+			builder.append(author);
+			builder.append(", ");
+		}
+		if (project != null) {
+			builder.append("project=");
+			builder.append(project);
+			builder.append(", ");
+		}
+		if (license != null) {
+			builder.append("license=");
+			builder.append(license);
+			builder.append(", ");
+		}
+		if (tags != null) {
+			builder.append("tags=");
+			builder.append(tags);
+			builder.append(", ");
+		}
+		if (contexts != null) {
+			builder.append("contexts=");
+			builder.append(contexts);
+			builder.append(", ");
+		}
+		if (groups != null) {
+			builder.append("groups=");
+			builder.append(groups);
+			builder.append(", ");
+		}
+		if (targetRunLevel != null) {
+			builder.append("targetRunLevel=");
+			builder.append(targetRunLevel);
+			builder.append(", ");
+		}
+		if (preScript != null) {
+			builder.append("preScript=");
+			builder.append(preScript);
+			builder.append(", ");
+		}
+		if (postScript != null) {
+			builder.append("postScript=");
+			builder.append(postScript);
+			builder.append(", ");
+		}
+		if (preScriptLanguage != null) {
+			builder.append("preScriptLanguage=");
+			builder.append(preScriptLanguage);
+			builder.append(", ");
+		}
+		if (postScriptLanguage != null) {
+			builder.append("postScriptLanguage=");
+			builder.append(postScriptLanguage);
+			builder.append(", ");
+		}
+		builder.append("initializeKeystore=");
+		builder.append(initializeKeystore);
+		builder.append(", ");
+		if (sshdAuthorizedKeysPath != null) {
+			builder.append("sshdAuthorizedKeysPath=");
+			builder.append(sshdAuthorizedKeysPath);
+			builder.append(", ");
+		}
+		if (routerType != null) {
+			builder.append("routerType=");
+			builder.append(routerType);
+			builder.append(", ");
+		}
+		builder.append("updateFileConfig=");
+		builder.append(updateFileConfig);
+		builder.append(", ");
+		if (logoUrl != null) {
+			builder.append("logoUrl=");
+			builder.append(logoUrl);
+			builder.append(", ");
+		}
+		if (pots != null) {
+			builder.append("pots=");
+			builder.append(pots);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
+
 }

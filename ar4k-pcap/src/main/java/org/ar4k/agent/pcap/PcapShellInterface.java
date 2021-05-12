@@ -18,12 +18,18 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.apache.commons.codec.binary.Hex;
 import org.ar4k.agent.helper.AbstractShellHelper;
+import org.ar4k.agent.pcap.service.PcapReader;
+import org.ar4k.agent.pcap.service.PcapSnifferConfig;
+import org.ar4k.agent.pcap.service.PcapWriter;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
@@ -41,9 +47,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,13 +62,24 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  */
 
-// TODO fornisce bean per sniffare a comando e riportare i dati sulle code ( eventualmenti lavorati con un plugin come mib)
-
 @ShellCommandGroup("Pcap Commands")
 @ShellComponent
 @RestController
 @RequestMapping("/pcapInterface")
 public class PcapShellInterface extends AbstractShellHelper {
+
+	protected Availability sessionPcapOk() {
+		return (sessionOk().equals(Availability.available()) && getWorkingService() instanceof PcapSnifferConfig)
+				? Availability.available()
+				: Availability.unavailable("you must select a Pcap configuration service");
+	}
+
+	@ShellMethod(value = "Add a Pcap interface service to the selected configuration", group = "Pcap Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addCncService(@ShellOption(optOut = true) @Valid PcapSnifferConfig service) {
+		getWorkingConfig().pots.add(service);
+	}
 
 	@ShellMethod(value = "Send a register pcap file from a network interface", group = "Pcap Commands")
 	@ManagedOperation
@@ -229,6 +248,74 @@ public class PcapShellInterface extends AbstractShellHelper {
 		} catch (PcapNativeException | NotOpenException | InterruptedException e) {
 			logger.logException(e);
 		}
+	}
+
+	@ShellMethod(value = "List reader pcap rules")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public Collection<String> pcapListReaderRules() {
+		Collection<String> result = new HashSet<>();
+		for (final PcapReader rp : ((PcapSnifferConfig) getWorkingService()).readers) {
+			result.add(rp.toString());
+		}
+		return result;
+	}
+
+	@ShellMethod(value = "Remove reader pcap rule")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public void pcapRemoveReaderRule(@ShellOption(help = "reader rule uuid") String uuid) {
+		PcapReader target = null;
+		final Collection<PcapReader> pcapReaders = ((PcapSnifferConfig) getWorkingService()).readers;
+		for (final PcapReader rp : pcapReaders) {
+			if (rp.uuid.equals(uuid)) {
+				target = rp;
+			}
+		}
+		if (target != null) {
+			pcapReaders.remove(target);
+		}
+	}
+
+	@ShellMethod(value = "Add reader pcap rule")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public void pcapAddReaderRule(@ShellOption(optOut = true) @Valid PcapReader readerRule) {
+		((PcapSnifferConfig) getWorkingService()).readers.add(readerRule);
+	}
+
+	@ShellMethod(value = "List writer pcap rules")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public Collection<String> pcapListWriterRules() {
+		Collection<String> result = new HashSet<>();
+		for (final PcapWriter wp : ((PcapSnifferConfig) getWorkingService()).writers) {
+			result.add(wp.toString());
+		}
+		return result;
+	}
+
+	@ShellMethod(value = "Remove writer pcap rule")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public void pcapRemoveWriterRule(@ShellOption(help = "reader rule uuid") String uuid) {
+		PcapWriter target = null;
+		final Collection<PcapWriter> pcapWriters = ((PcapSnifferConfig) getWorkingService()).writers;
+		for (final PcapWriter pw : pcapWriters) {
+			if (pw.uuid.equals(uuid)) {
+				target = pw;
+			}
+		}
+		if (target != null) {
+			pcapWriters.remove(target);
+		}
+	}
+
+	@ShellMethod(value = "Add writer pcap rule")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionPcapOk")
+	public void pcapAddWriterRule(@ShellOption(optOut = true) @Valid PcapWriter writerRule) {
+		((PcapSnifferConfig) getWorkingService()).writers.add(writerRule);
 	}
 
 }

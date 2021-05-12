@@ -66,7 +66,7 @@ public class Pcap {
     char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm' };
     for (char test : files) {
       String nomeFile = "example/" + test + ".pcap";
-      pcapShellInterface.analyzePcapFile(nomeFile, "org.ar4k.agent.pcap.BasePacketAnalyzer");
+      pcapShellInterface.analyzePcapFile(nomeFile, "org.ar4k.agent.pcap.BaseLoggerPacketAnalyzer");
     }
   }
 
