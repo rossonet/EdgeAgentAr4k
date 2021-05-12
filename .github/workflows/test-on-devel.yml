@@ -72,8 +72,7 @@ jobs:
       run: ./gradlew codeCoverageReport -Dorg.gradle.jvmargs="-Xms1024m -Xmx4096m" -Dorg.gradle.daemon=false -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} -Psigning.keyId=F6113733 -Psigning.secretKeyRingFile=/home/runner/.gnupg/private.key --stacktrace --info
     - name: Upload to Codecov
       run: bash <(curl -s https://codecov.io/bash)
-    - name: Upload to Codacy
+    - name: Upload to Codacy - TODO -
       env:
         CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
-        CODACY_ORGANIZATION_PROVIDER: GitHub
-      run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/reports/jacoco/report.xml
+      #run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/reports/jacoco/report.xml
