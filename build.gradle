@@ -1,14 +1,3 @@
-group = 'net.rossonet'
-version = '0.9.7'
-
-ext {
-	sourceCompatibility = 1.8
-	springStatemachineVersion = '2.2.0.RELEASE'
-	springBootVersion = '2.4.2.RELEASE'
-	ossrhPassword = System.getenv('OSSRH_PASSWORD')
-	springGradleBootVersion = '2.4.2'
-}
-
 buildscript {
     ext {
 		springGradleBootVersion = '2.4.2'
@@ -26,7 +15,20 @@ buildscript {
 	}
 }
 
+plugins {
+  id "org.sonarqube" version "3.2.0"
+}
 
+group = 'net.rossonet'
+version = '0.9.7'
+
+ext {
+	sourceCompatibility = 1.8
+	springStatemachineVersion = '2.2.0.RELEASE'
+	springBootVersion = '2.4.2.RELEASE'
+	ossrhPassword = System.getenv('OSSRH_PASSWORD')
+	springGradleBootVersion = '2.4.2'
+}
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -40,6 +42,13 @@ apply plugin: 'base'
 apply plugin: "nebula.rpm"
 apply plugin: 'nebula.deb'
 
+sonarqube {
+  properties {
+    property "sonar.projectKey", "rossonet_EdgeAgentAr4k"
+    property "sonar.organization", "rossonet"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
 
 oomphIde {
 	repoEclipseLatest()
@@ -61,15 +70,6 @@ repositories {
 
 
 subprojects {
-	version = rootProject.version
-	group = rootProject.group
-	sourceCompatibility = rootProject.ext.sourceCompatibility
-
-	ext {
-		springStatemachineVersion = rootProject.ext.springStatemachineVersion
-		springBootVersion = rootProject.ext.springBootVersion
-	}
-
 	buildscript {
 		ext {
 			springStatemachineVersion = rootProject.ext.springStatemachineVersion
@@ -87,6 +87,15 @@ subprojects {
 			classpath 'de.undercouch:gradle-download-task:4.1.1'
 			classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
 		}
+	}
+	
+	version = rootProject.version
+	group = rootProject.group
+	sourceCompatibility = rootProject.ext.sourceCompatibility
+
+	ext {
+		springStatemachineVersion = rootProject.ext.springStatemachineVersion
+		springBootVersion = rootProject.ext.springBootVersion
 	}
 
 	apply plugin: 'java'
@@ -377,8 +386,6 @@ subprojects {
 		delete fileTree(projectDir) { include '*.ar4k.conf' }
 		delete fileTree(projectDir) { include '*.ar4k.conf.crypto' }
 	}
-
-	
 }
 
 
