@@ -11,10 +11,24 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 8
+      - name: Clone sub repos
+        env:
+          GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+        run: |
+          eval "$(ssh-agent -s)"
+          git submodule init
+          git submodule update
+      - name: Print env
+        run: echo $GITHUB_ACTOR
+      - name: Configure GPG Key
+        run: |
+          mkdir -p ~/.gnupg/
+          printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
+          gpg --import --batch ~/.gnupg/private.key
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -31,4 +45,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
         run: ./gradlew build sonarqube --info
