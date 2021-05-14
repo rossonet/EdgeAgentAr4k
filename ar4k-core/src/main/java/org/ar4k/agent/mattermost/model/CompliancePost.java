@@ -39,7 +39,7 @@ public class CompliancePost {
   private String postParentId;
   private String postOriginalId;
   private String postMessage;
-  private String postType; // XXX shuld be enum
+  private String postType; // should be enum
   private String postProps;
   private String postHashtags;
   private String postFileIds;

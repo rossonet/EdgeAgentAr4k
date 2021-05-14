@@ -39,11 +39,11 @@ public class TeamMember {
   private String roles;
   @JsonProperty("delete_at")
   private long deleteAt;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server  what ver? */
   private boolean schemeUser;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server  what ver? */
   private boolean schemeAdmin;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server  what ver? */
   private String explicitRoles;
   /* @since Mattermost Server 5.12 */
   private boolean schemeGuest;

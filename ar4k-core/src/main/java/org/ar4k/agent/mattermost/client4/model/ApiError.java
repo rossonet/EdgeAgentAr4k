@@ -27,7 +27,7 @@ public class ApiError {
   @JsonProperty("message")
   private String message;
   @JsonProperty("detailed_error")
-  private String detailedError; // XXX UNDOCUMENTED IN api.mattermost.com/v4
+  private String detailedError; // UNDOCUMENTED IN api.mattermost.com/v4
   @JsonProperty("request_id")
   private String requestId;
   @JsonProperty("status_code")

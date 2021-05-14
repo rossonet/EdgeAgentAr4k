@@ -76,7 +76,7 @@ public class PcapShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Add a Pcap interface service to the selected configuration", group = "Pcap Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
-	public void addCncService(@ShellOption(optOut = true) @Valid PcapSnifferConfig service) {
+	public void addPcapService(@ShellOption(optOut = true) @Valid PcapSnifferConfig service) {
 		getWorkingConfig().pots.add(service);
 	}
 

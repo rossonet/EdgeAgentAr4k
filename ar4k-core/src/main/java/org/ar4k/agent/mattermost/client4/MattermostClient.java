@@ -751,7 +751,6 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<byte[]> getProfileImage(String userId, String etag) {
-		// XXX byte[]で返すの微妙・・・というかreadEntityでこけない?
 		return doApiGet(getUserProfileImageRoute(userId), etag, byte[].class);
 	}
 
@@ -911,7 +910,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<TeamUnreadList> getTeamUnreadForUser(String userId, String teamIdToExclude) {
 		String optional = "";
-		if (teamIdToExclude != null) { // TODO use StringUtils.isNotEmpty
+		if (teamIdToExclude != null) { //  use StringUtils.isNotEmpty
 			try {
 				optional = String.format("?exclude_team=%s",
 						URLEncoder.encode(teamIdToExclude, StandardCharsets.UTF_8.displayName()));
@@ -1190,7 +1189,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<byte[]> importTeam(byte[] data, int filesize, String importFrom,
 			String fileName, String teamId) {
-		// FIXME
+		// not used
 		throw new UnsupportedOperationException();
 	}
 
@@ -1437,7 +1436,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId,
 			Pager pager) {
-		// TODO teamId length validation
+		// teamId length validation
 		final String query = new QueryBuilder().set("in_team", teamId).toString();
 		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null,
 				PostList.class);
@@ -1446,7 +1445,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId,
 			Pager pager) {
-		// TODO channelId length validation
+		// channelId length validation
 		final String query = new QueryBuilder().set("in_channel", channelId).toString();
 		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null,
 				PostList.class);
@@ -1804,7 +1803,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Object> downloadComplianceReport(String reportId) {
-		throw new UnsupportedOperationException("not impl"); // FIXME
+		throw new UnsupportedOperationException("not impl"); // not implemented
 	}
 
 	// Cluster Section

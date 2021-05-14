@@ -24,7 +24,7 @@ public class LdapSettings {
   private boolean enable;
   private String ldapServer;
   private int ldapPort;
-  private String connectionSecurity; // XXX ConnectionSecurity?
+  private String connectionSecurity; //  ConnectionSecurity?
   private String baseDn;
   private String bindUsername;
   private String bindPassword;

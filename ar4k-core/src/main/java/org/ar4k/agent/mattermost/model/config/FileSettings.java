@@ -22,7 +22,7 @@ package org.ar4k.agent.mattermost.model.config;
 public class FileSettings {
   private boolean enableFileAttachments;
   private long maxFileSize;
-  private String driverName; // XXX ImageDriver ?
+  private String driverName; //  ImageDriver ?
   private String directory;
   private boolean enablePublicLink;
   private String publicLinkSalt;

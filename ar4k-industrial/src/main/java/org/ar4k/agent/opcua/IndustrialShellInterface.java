@@ -38,11 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-@ShellCommandGroup("OPC UA Commands")
+@ShellCommandGroup("Industrial Commands")
 @ShellComponent
 @RestController
 @RequestMapping("/industrialInterface")
-public class OpcUaShellInterface extends AbstractShellHelper {
+public class IndustrialShellInterface extends AbstractShellHelper {
 
 	OpcUaServerService opcUaServer = null;
 

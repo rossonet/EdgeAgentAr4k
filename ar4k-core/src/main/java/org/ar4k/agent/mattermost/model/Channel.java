@@ -63,9 +63,9 @@ public class Channel {
   private long extraUpdateAt;
   @JsonProperty("creator_id")
   private String creatorId;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server what ver? */
   private String schemeId;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server what ver? */
   private Map<String, Object> props;
   /* @since Mattermost Server 5.10 */
   private boolean groupConstrained;

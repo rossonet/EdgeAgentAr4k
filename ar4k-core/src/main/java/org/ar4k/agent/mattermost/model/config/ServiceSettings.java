@@ -69,7 +69,7 @@ public class ServiceSettings {
 	private WebServerMode webServerMode;
 	private boolean enableCustomEmoji;
 	private RestrictEmojiCreation restrictCustomEmojiCreation;
-	private PermissionsDeletePost restrictPostDelete; // XXX really?
+	private PermissionsDeletePost restrictPostDelete; //  really?
 	private AllowEditPost allowEditPost;
 	private int postEditTimeLimit;
 	private long timeBetweenUserTypingUpdatesMilliseconds;
@@ -196,7 +196,7 @@ public class ServiceSettings {
 	private boolean allowCookiesForSubdomains;
 	/* @since Mattermost 4.8 */
 	private String websocketUrl;
-	/* @since Mattermost Server XXX what ver? */
+	/* @since Mattermost Server  what ver? */
 	private boolean enableEmailInvitations;
 	/* @since Mattermost Server 5.0 */
 	private boolean enableApiTeamDeletion;

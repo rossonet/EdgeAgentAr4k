@@ -25,7 +25,7 @@ public class ScheduledTask {
   @JsonProperty("name")
   private String name;
   @JsonProperty("interval")
-  private String interval; // XXX time.Duration
+  private String interval; // time.Duration
   @JsonProperty("recurring")
   private boolean recurring;
 

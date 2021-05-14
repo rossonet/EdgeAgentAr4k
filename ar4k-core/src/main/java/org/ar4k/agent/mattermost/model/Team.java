@@ -50,7 +50,7 @@ public class Team {
   private boolean allowOpenInvite;
   /* @since Mattermost Server 4.9 */
   private long lastTeamIconUpdate;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server  what ver? */
   private String schemeId;
   /* @since Mattermost Server 5.10 */
   private boolean groupConstrained;

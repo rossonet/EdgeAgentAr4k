@@ -42,7 +42,7 @@ public class IncomingWebhook {
   private String description;
   private String username;
   private String iconUrl;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server what ver? */
   private boolean channelLocked;
 
   @java.lang.SuppressWarnings("all")

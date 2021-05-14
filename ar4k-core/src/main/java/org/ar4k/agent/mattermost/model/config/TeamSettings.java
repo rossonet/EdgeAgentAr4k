@@ -31,7 +31,7 @@ public class TeamSettings {
   private boolean enableTeamCreation;
   private boolean enableUserCreation;
   private boolean enableOpenServer;
-  /* @since Mattermost Server XXX what ver? */
+  /* @since Mattermost Server  what ver? */
   private boolean enableUserDeactivate;
   private String restrictCreationToDomains;
   private boolean enableCustomBrand;
