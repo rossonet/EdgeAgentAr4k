@@ -716,5 +716,8 @@ task codeCoverageReport(type: JacocoReport) {
     }
 }
 
+bootJar {
+    enabled = false
+}
 
 tasks.eclipse.dependsOn(cleanEclipse)
