@@ -21,9 +21,6 @@ public class PcapSnifferConfig extends AbstractServiceConfig {
 	@Parameter(names = "--readers", description = "List of pcap acquisition points", variableArity = true)
 	public Collection<PcapReader> readers = new HashSet<>();
 
-	@Parameter(names = "--writers", description = "List of pcap writer points", variableArity = true)
-	public Collection<PcapWriter> writers = new HashSet<>();
-
 	@Override
 	public PcapSnifferService instantiate() {
 		PcapSnifferService ss = new PcapSnifferService();

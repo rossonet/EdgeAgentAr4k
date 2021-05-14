@@ -29,7 +29,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.pcap.service.PcapReader;
 import org.ar4k.agent.pcap.service.PcapSnifferConfig;
-import org.ar4k.agent.pcap.service.PcapWriter;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
@@ -282,40 +281,6 @@ public class PcapShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionPcapOk")
 	public void pcapAddReaderRule(@ShellOption(optOut = true) @Valid PcapReader readerRule) {
 		((PcapSnifferConfig) getWorkingService()).readers.add(readerRule);
-	}
-
-	@ShellMethod(value = "List writer pcap rules")
-	@ManagedOperation
-	@ShellMethodAvailability("sessionPcapOk")
-	public Collection<String> pcapListWriterRules() {
-		Collection<String> result = new HashSet<>();
-		for (final PcapWriter wp : ((PcapSnifferConfig) getWorkingService()).writers) {
-			result.add(wp.toString());
-		}
-		return result;
-	}
-
-	@ShellMethod(value = "Remove writer pcap rule")
-	@ManagedOperation
-	@ShellMethodAvailability("sessionPcapOk")
-	public void pcapRemoveWriterRule(@ShellOption(help = "reader rule uuid") String uuid) {
-		PcapWriter target = null;
-		final Collection<PcapWriter> pcapWriters = ((PcapSnifferConfig) getWorkingService()).writers;
-		for (final PcapWriter pw : pcapWriters) {
-			if (pw.uuid.equals(uuid)) {
-				target = pw;
-			}
-		}
-		if (target != null) {
-			pcapWriters.remove(target);
-		}
-	}
-
-	@ShellMethod(value = "Add writer pcap rule")
-	@ManagedOperation
-	@ShellMethodAvailability("sessionPcapOk")
-	public void pcapAddWriterRule(@ShellOption(optOut = true) @Valid PcapWriter writerRule) {
-		((PcapSnifferConfig) getWorkingService()).writers.add(writerRule);
 	}
 
 }

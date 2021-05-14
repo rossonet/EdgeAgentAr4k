@@ -18,10 +18,8 @@ import org.ar4k.agent.pcap.message.PcapPayload;
 import org.ar4k.agent.pcap.message.PcapPayload.PacketType;
 import org.json.JSONObject;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
-import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.Pcaps;
@@ -31,9 +29,6 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,15 +47,11 @@ public class PcapSnifferService implements EdgeComponent {
 	private DataAddress dataspace;
 
 	private Map<PcapReader, IPublishSubscribeChannel> readerChannels = new HashMap<>();
-	private Map<PcapWriter, IPublishSubscribeChannel> writeChannels = new HashMap<>();
 
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
 	@Override
 	public void init() {
-		for (PcapWriter writer : configuration.writers) {
-			createChannelwriter(writer);
-		}
 		for (PcapReader reader : configuration.readers) {
 			createChannelReader(reader);
 		}
@@ -99,7 +90,7 @@ public class PcapSnifferService implements EdgeComponent {
 			handle.setFilter(runningFilter, BpfCompileMode.OPTIMIZE);
 			handle.loop(-1, listener);
 			handle.close();
-		} catch (PcapNativeException | InterruptedException | NotOpenException e) {
+		} catch (Exception e) {
 			if (handle != null)
 				handle.close();
 			logger.logException(e);
@@ -143,43 +134,6 @@ public class PcapSnifferService implements EdgeComponent {
 		return message;
 	}
 
-	private void createChannelwriter(PcapWriter writer) {
-		IPublishSubscribeChannel writeChannel = (IPublishSubscribeChannel) (getDataAddress().createOrGetDataChannel(
-				writer.channel, IPublishSubscribeChannel.class, "pcap writer on " + writer.interfaceName, (String) null,
-				null, ConfigHelper.mergeTags(Arrays.asList("pcap", writer.interfaceName.replace("/", "-")),
-						getConfiguration().getTags()),
-				this));
-		try {
-			final PcapNetworkInterface nif = Pcaps.getDevByName(writer.interfaceName);
-			final int timeout = 10000;
-			final int snapLen = 65536;
-			final PromiscuousMode mode = PromiscuousMode.NONPROMISCUOUS;
-			writeChannels.put(writer, writeChannel);
-			final MessageHandler writeHandler = new MessageHandler() {
-				@Override
-				public void handleMessage(Message<?> message) throws MessagingException {
-					if (message instanceof PcapMessage) {
-						try {
-							sendByInterface((PcapMessage) message, nif.openLive(snapLen, mode, timeout));
-						} catch (Exception exception) {
-							logger.logException(exception);
-						}
-					}
-				}
-
-			};
-			writeChannel.subscribe(writeHandler);
-		} catch (PcapNativeException ee) {
-			logger.logException(ee);
-		}
-	}
-
-	private void sendByInterface(PcapMessage message, PcapHandle handleSender)
-			throws PcapNativeException, NotOpenException {
-		Packet packet = null;// TODO
-		handleSender.sendPacket(packet);
-	}
-
 	@Override
 	public void setConfiguration(ServiceConfig configuration) {
 		this.configuration = (PcapSnifferConfig) configuration;
@@ -189,9 +143,6 @@ public class PcapSnifferService implements EdgeComponent {
 	public void close() throws Exception {
 		for (IPublishSubscribeChannel rc : readerChannels.values()) {
 			rc.close();
-		}
-		for (IPublishSubscribeChannel wc : writeChannels.values()) {
-			wc.close();
 		}
 	}
 
