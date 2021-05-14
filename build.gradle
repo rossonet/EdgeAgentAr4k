@@ -48,6 +48,7 @@ sonarqube {
     property "sonar.organization", "rossonet"
     property "sonar.host.url", "https://sonarcloud.io"
   }
+  skipProject = true
 }
 
 oomphIde {
@@ -360,6 +361,12 @@ subprojects {
 			}
 		}
 	}
+
+	sonarqube {
+        	properties {
+            		property "sonar.sources", "src"
+        	}
+    	}
 
 	clean {
 		println("starting clean in ${projectDir}")
