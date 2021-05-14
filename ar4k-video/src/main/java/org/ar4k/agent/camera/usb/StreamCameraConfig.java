@@ -26,173 +26,173 @@ import com.beust.jcommander.Parameter;
  */
 public class StreamCameraConfig extends AbstractServiceConfig {
 
-  private static final long serialVersionUID = -864167271161787678L;
+	private static final long serialVersionUID = -864167271161787678L;
 
-  @Parameter(names = "--cameraId", description = "usb port of the camera")
-  private String cameraId = "/dev/video0";
-  @Parameter(names = "--workingSize", description = "set working size for camera")
-  private String workingSize = "640x480";
-  @Parameter(names = "--ipCamName", description = "name of camera for ipCam")
-  private String ipCamName = "laboratorio";
-  @Parameter(names = "--ipCamPath", description = "ipCam path of image remote")
-  private String ipCamPath = "http://admin:xxxxx@192.168.0.100/tmpfs/auto.jpg";
-  @Parameter(names = "--ipCamMode", description = "ipCam mode. Should be PULL or PUSH")
-  private String ipCamMode = "PULL";
-  @Parameter(names = "--vlcjDriverPath", description = "vlc extra path")
-  private String vlcjDriverPath = "rtsp://192.168.1.189:554/ch01.264?ptype=udp";
-  @Parameter(names = "--vlcjName", description = "vlc name for the camera")
-  private String vlcjName = "esterno";
-  @Parameter(names = "--driver", description = "driver for the camera system")
-  private String driver = "VlcjDriver";
-  @Parameter(names = "--globalMotionDetectQueue", description = "queue of motion detection, if null the function is disabled")
-  private String globalMotionDetectQueue = "trigger-global";
-  @Parameter(names = "--globalMotionDetectinterval", description = "global motion detection interval (ms)")
-  private Integer globalMotionDetectinterval = 500;
-  @Parameter(names = "--globalImageQueue", description = "queue of image")
-  private String globalImageQueue = "image-global";
-  @Parameter(names = "--globalImageinterval", description = "global update image interval for every thread (ms)")
-  private Integer globalImageinterval = 1000;
-  @Parameter(names = "--globalThreads", description = "global number of threads for capturing")
-  private Integer globalThreads = 1000;
-  @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
-  private String fatherOfChannels = "video";
-  @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
-  private String scopeOfChannels = null;
+	@Parameter(names = "--cameraId", description = "usb port of the camera")
+	private String cameraId = "/dev/video0";
+	@Parameter(names = "--workingSize", description = "set working size for camera")
+	private String workingSize = "640x480";
+	@Parameter(names = "--ipCamName", description = "name of camera for ipCam")
+	private String ipCamName = "laboratorio";
+	@Parameter(names = "--ipCamPath", description = "ipCam path of image remote")
+	private String ipCamPath = "http://admin:xxxxx@192.168.0.100/tmpfs/auto.jpg";
+	@Parameter(names = "--ipCamMode", description = "ipCam mode. Should be PULL or PUSH")
+	private String ipCamMode = "PULL";
+	@Parameter(names = "--vlcjDriverPath", description = "vlc extra path")
+	private String vlcjDriverPath = "rtsp://192.168.1.189:554/ch01.264?ptype=udp";
+	@Parameter(names = "--vlcjName", description = "vlc name for the camera")
+	private String vlcjName = "esterno";
+	@Parameter(names = "--driver", description = "driver for the camera system")
+	private String driver = "VlcjDriver";
+	@Parameter(names = "--globalMotionDetectQueue", description = "queue of motion detection, if null the function is disabled")
+	private String globalMotionDetectQueue = "trigger-global";
+	@Parameter(names = "--globalMotionDetectinterval", description = "global motion detection interval (ms)")
+	private Integer globalMotionDetectinterval = 500;
+	@Parameter(names = "--globalImageQueue", description = "queue of image")
+	private String globalImageQueue = "image-global";
+	@Parameter(names = "--globalImageinterval", description = "global update image interval for every thread (ms)")
+	private Integer globalImageinterval = 1000;
+	@Parameter(names = "--globalThreads", description = "global number of threads for capturing")
+	private Integer globalThreads = 1000;
+	@Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
+	private String fatherOfChannels = "video";
+	@Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
+	private String scopeOfChannels = null;
 
-  @Override
-  public EdgeComponent instantiate() {
-    StreamCameraService ss = new StreamCameraService();
-    ss.setConfiguration(this);
-    return ss;
-  }
+	@Override
+	public EdgeComponent instantiate() {
+		StreamCameraService ss = new StreamCameraService();
+		ss.setConfiguration(this);
+		return ss;
+	}
 
-  @Override
-  public int getPriority() {
-    return 8;
-  }
+	@Override
+	public int getPriority() {
+		return 8;
+	}
 
-  @Override
-  public boolean isSpringBean() {
-    return false;
-  }
+	@Override
+	public boolean isSpringBean() {
+		return false;
+	}
 
-  public String getDriver() {
-    return driver;
-  }
+	public String getDriver() {
+		return driver;
+	}
 
-  public void setDriver(String driver) {
-    this.driver = driver;
-  }
+	public void setDriver(String driver) {
+		this.driver = driver;
+	}
 
-  public String getCameraId() {
-    return cameraId;
-  }
+	public String getCameraId() {
+		return cameraId;
+	}
 
-  public void setCameraId(String cameraId) {
-    this.cameraId = cameraId;
-  }
+	public void setCameraId(String cameraId) {
+		this.cameraId = cameraId;
+	}
 
-  public String getWorkingSize() {
-    return workingSize;
-  }
+	public String getWorkingSize() {
+		return workingSize;
+	}
 
-  public void setWorkingSize(String workingSize) {
-    this.workingSize = workingSize;
-  }
+	public void setWorkingSize(String workingSize) {
+		this.workingSize = workingSize;
+	}
 
-  public String getIpCamName() {
-    return ipCamName;
-  }
+	public String getIpCamName() {
+		return ipCamName;
+	}
 
-  public void setIpCamName(String ipCamName) {
-    this.ipCamName = ipCamName;
-  }
+	public void setIpCamName(String ipCamName) {
+		this.ipCamName = ipCamName;
+	}
 
-  public String getIpCamPath() {
-    return ipCamPath;
-  }
+	public String getIpCamPath() {
+		return ipCamPath;
+	}
 
-  public void setIpCamPath(String ipCamPath) {
-    this.ipCamPath = ipCamPath;
-  }
+	public void setIpCamPath(String ipCamPath) {
+		this.ipCamPath = ipCamPath;
+	}
 
-  public String getIpCamMode() {
-    return ipCamMode;
-  }
+	public String getIpCamMode() {
+		return ipCamMode;
+	}
 
-  public void setIpCamMode(String ipCamMode) {
-    this.ipCamMode = ipCamMode;
-  }
+	public void setIpCamMode(String ipCamMode) {
+		this.ipCamMode = ipCamMode;
+	}
 
-  public String getGlobalMotionDetectQueue() {
-    return globalMotionDetectQueue;
-  }
+	public String getGlobalMotionDetectQueue() {
+		return globalMotionDetectQueue;
+	}
 
-  public void setGlobalMotionDetectQueue(String globalMotionDetectQueue) {
-    this.globalMotionDetectQueue = globalMotionDetectQueue;
-  }
+	public void setGlobalMotionDetectQueue(String globalMotionDetectQueue) {
+		this.globalMotionDetectQueue = globalMotionDetectQueue;
+	}
 
-  public Integer getGlobalMotionDetectinterval() {
-    return globalMotionDetectinterval;
-  }
+	public Integer getGlobalMotionDetectinterval() {
+		return globalMotionDetectinterval;
+	}
 
-  public void setGlobalMotionDetectinterval(Integer globalMotionDetectinterval) {
-    this.globalMotionDetectinterval = globalMotionDetectinterval;
-  }
+	public void setGlobalMotionDetectinterval(Integer globalMotionDetectinterval) {
+		this.globalMotionDetectinterval = globalMotionDetectinterval;
+	}
 
-  public String getVlcjDriverPath() {
-    return vlcjDriverPath;
-  }
+	public String getVlcjDriverPath() {
+		return vlcjDriverPath;
+	}
 
-  public void setVlcjDriverPath(String vlcjDriverPath) {
-    this.vlcjDriverPath = vlcjDriverPath;
-  }
+	public void setVlcjDriverPath(String vlcjDriverPath) {
+		this.vlcjDriverPath = vlcjDriverPath;
+	}
 
-  public String getVlcjName() {
-    return vlcjName;
-  }
+	public String getVlcjName() {
+		return vlcjName;
+	}
 
-  public void setVlcjName(String vlcjName) {
-    this.vlcjName = vlcjName;
-  }
+	public void setVlcjName(String vlcjName) {
+		this.vlcjName = vlcjName;
+	}
 
-  public String getGlobalImageQueue() {
-    return globalImageQueue;
-  }
+	public String getGlobalImageQueue() {
+		return globalImageQueue;
+	}
 
-  public void setGlobalImageQueue(String globalImageQueue) {
-    this.globalImageQueue = globalImageQueue;
-  }
+	public void setGlobalImageQueue(String globalImageQueue) {
+		this.globalImageQueue = globalImageQueue;
+	}
 
-  public Integer getGlobalImageinterval() {
-    return globalImageinterval;
-  }
+	public Integer getGlobalImageinterval() {
+		return globalImageinterval;
+	}
 
-  public void setGlobalImageinterval(Integer globalImageinterval) {
-    this.globalImageinterval = globalImageinterval;
-  }
+	public void setGlobalImageinterval(Integer globalImageinterval) {
+		this.globalImageinterval = globalImageinterval;
+	}
 
-  public Integer getGlobalThreads() {
-    return globalThreads;
-  }
+	public Integer getGlobalThreads() {
+		return globalThreads;
+	}
 
-  public void setGlobalThreads(Integer globalThread) {
-    this.globalThreads = globalThread;
-  }
+	public void setGlobalThreads(Integer globalThread) {
+		this.globalThreads = globalThread;
+	}
 
-  public String getFatherOfChannels() {
-    return fatherOfChannels;
-  }
+	public String getFatherOfChannels() {
+		return fatherOfChannels;
+	}
 
-  public void setFatherOfChannels(String fatherOfChannels) {
-    this.fatherOfChannels = fatherOfChannels;
-  }
+	public void setFatherOfChannels(String fatherOfChannels) {
+		this.fatherOfChannels = fatherOfChannels;
+	}
 
-  public String getScopeOfChannels() {
-    return scopeOfChannels;
-  }
+	public String getScopeOfChannels() {
+		return scopeOfChannels;
+	}
 
-  public void setScopeOfChannels(String scopeOfChannels) {
-    this.scopeOfChannels = scopeOfChannels;
-  }
+	public void setScopeOfChannels(String scopeOfChannels) {
+		this.scopeOfChannels = scopeOfChannels;
+	}
 }

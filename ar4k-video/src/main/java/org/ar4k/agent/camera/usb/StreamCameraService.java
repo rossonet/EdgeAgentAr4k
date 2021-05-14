@@ -75,6 +75,8 @@ public class StreamCameraService implements EdgeComponent {
 
 	private DataAddress dataspace;
 
+	private ServiceStatus serviceStatus = ServiceStatus.INIT;
+
 	private class VideoCapture implements Runnable {
 		@Override
 		public void run() {
@@ -175,6 +177,7 @@ public class StreamCameraService implements EdgeComponent {
 						configuration.getGlobalImageinterval(), TimeUnit.MILLISECONDS);
 			}
 		}
+		serviceStatus = ServiceStatus.RUNNING;
 	}
 
 	public String getName() {
@@ -269,8 +272,7 @@ public class StreamCameraService implements EdgeComponent {
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		// TODO implementare updateAndGetStatus di UsbCameraService
-		return null;
+		return serviceStatus;
 	}
 
 	@Override
