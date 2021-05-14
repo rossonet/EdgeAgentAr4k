@@ -34,14 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Interfaccia da linea di comando per configurazione della connessione
- *         OPC UA.
+ *         OPC UA e MQTT
  *
  */
 
 @ShellCommandGroup("OPC UA Commands")
 @ShellComponent
 @RestController
-@RequestMapping("/opcUaInterface")
+@RequestMapping("/industrialInterface")
 public class OpcUaShellInterface extends AbstractShellHelper {
 
 	OpcUaServerService opcUaServer = null;
