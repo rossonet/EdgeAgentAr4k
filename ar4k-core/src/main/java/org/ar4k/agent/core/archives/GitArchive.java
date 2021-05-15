@@ -68,7 +68,7 @@ public class GitArchive implements ManagedArchives {
 
 	@Override
 	public String getLog() {
-		// TODO Auto-generated method stub
+		// TODO completare l'implementazione archivio su git con i log
 		return null;
 	}
 

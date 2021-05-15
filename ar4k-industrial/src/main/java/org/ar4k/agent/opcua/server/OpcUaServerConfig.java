@@ -3,10 +3,10 @@ package org.ar4k.agent.opcua.server;
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.opcua.CryptoModeValidator;
-import org.ar4k.agent.opcua.Enumerator.CryptoMode;
-import org.ar4k.agent.opcua.Enumerator.SecurityMode;
-import org.ar4k.agent.opcua.SecurityModeValidator;
+import org.ar4k.agent.industrial.CryptoModeValidator;
+import org.ar4k.agent.industrial.SecurityModeValidator;
+import org.ar4k.agent.industrial.Enumerator.CryptoMode;
+import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 
 import com.beust.jcommander.Parameter;
 

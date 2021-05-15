@@ -13,10 +13,6 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestToAgent;
 import org.joda.time.Instant;
 import org.json.JSONObject;
 
-//TODO Beacon Agent to Agent per unire due server Beacon in modalità distribuita e cluster ( namespace unico? )
-//TODO Beacon Agent to Agent deve avere funzioni di gestione della sicurezza dei dati sottoscritti con logica sui certificati
-// unisce oggetti con livelli di sicurezza pari o diversa in termine di utilizzo dei comandi (ShellScript) e dati.
-// attenzione al deny of service. Ci deve essere un controllo sulla frequenza di sottoscrizione e di esecuzione dei comandi
 public class BeaconAgent implements AutoCloseable {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

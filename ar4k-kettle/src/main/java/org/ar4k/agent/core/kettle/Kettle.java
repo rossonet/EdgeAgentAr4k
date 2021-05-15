@@ -25,7 +25,7 @@ import org.pentaho.di.repository.RepositoryElementMetaInterface;
 import org.pentaho.di.repository.RepositoryMeta;
 import org.pentaho.di.repository.filerep.KettleFileRepositoryMeta;
 
-// TODO servizio che esegue job da repository pre configurati (da zip file o connessione db) e permetta tramite coda di messaggi la manipolazione e il running
+// TODO servizio che mette a disposizione della console job da repository pre configurati (da zip file). Utilizzare l'interfaccia ManagedArchives per implementare i file systems
 
 public class Kettle {
 
@@ -42,12 +42,6 @@ public class Kettle {
   private String username;
   private String password;
   private String directoryFind;
-  // static expose = ['EndpointType.JAX_WS'];
-  // @WebMethod( operationName="schedulerRun" )
-  // @WebResult( name="risultato" )
-  // def String schedulerRun(@WebParam(name = "valore") String valore) {
-  // static expose = ['jmx']
-  // public static final String STRING_LOG = "LogService";
 
   public String getRepoConfFile() {
     return repoConfFile;

@@ -1,4 +1,4 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.industrial;
 
 public class Enumerator {
 

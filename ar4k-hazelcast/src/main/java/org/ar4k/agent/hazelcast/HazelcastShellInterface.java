@@ -41,63 +41,60 @@ import com.hazelcast.core.Member;
 
 @ShellCommandGroup("Hazelcast Commands")
 @ShellComponent
-//@EnableMBeanExport
-//@ManagedResource(objectName = "bean:name=hazelcastInterface", description = "Ar4k Agent Hazelcast Interface", log = true, logFile = "ar4k.log", currencyTimeLimit = 15, persistPolicy = "OnUpdate", persistPeriod = 200, persistLocation = "ar4k", persistName = "hazelcastInterface")
 @RestController
 @RequestMapping("/hazelcastInterface")
 
-// TODO mappa le variabili definite in conf al bus e mette a disposizione un bean per accedere a tipi dati in cluster (tipo ecss)
-// TODO implementare BeaconServerCluster multi nodo collegato via Hazelcast.
+// TODO implementare comandi in console per gestire mappe dati serializzate in json dei servizi hazelcast attivi
 
 public class HazelcastShellInterface extends AbstractShellHelper {
 
-  HazelcastComponent hazelcastInstance = null;
+	HazelcastComponent hazelcastInstance = null;
 
-  protected Availability testHazelCastNodeNull() {
-    return hazelcastInstance == null ? Availability.available()
-        : Availability.unavailable("a Hazelcast node exists with status " + hazelcastInstance);
-  }
+	protected Availability testHazelCastNodeNull() {
+		return hazelcastInstance == null ? Availability.available()
+				: Availability.unavailable("a Hazelcast node exists with status " + hazelcastInstance);
+	}
 
-  protected Availability testHazelcastNodeRunning() {
-    return hazelcastInstance != null ? Availability.available()
-        : Availability.unavailable("no Hazelcast client are running");
-  }
+	protected Availability testHazelcastNodeRunning() {
+		return hazelcastInstance != null ? Availability.available()
+				: Availability.unavailable("no Hazelcast client are running");
+	}
 
-  @ShellMethod(value = "Create Hazelcast", group = "Hazelcast Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testHazelCastNodeNull")
-  public void hazelcastJoin(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
-    hazelcastInstance = new HazelcastComponent(tribe);
-    hazelcastInstance.init();
-  }
+	@ShellMethod(value = "Create Hazelcast", group = "Hazelcast Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testHazelCastNodeNull")
+	public void hazelcastJoin(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
+		hazelcastInstance = new HazelcastComponent(tribe);
+		hazelcastInstance.init();
+	}
 
-  @ShellMethod(value = "Get status of Hazelcast istance", group = "Hazelcast Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testHazelcastNodeRunning")
-  public String hazelcastStatus() {
-    return hazelcastInstance.toString();
-  }
+	@ShellMethod(value = "Get status of Hazelcast istance", group = "Hazelcast Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testHazelcastNodeRunning")
+	public String hazelcastStatus() {
+		return hazelcastInstance.toString();
+	}
 
-  @ShellMethod(value = "List nodes joined to the cluster", group = "Hazelcast Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testHazelcastNodeRunning")
-  public Set<Member> hazelcastList() {
-    return hazelcastInstance.createOrGetHazelcastInstance().getCluster().getMembers();
-  }
+	@ShellMethod(value = "List nodes joined to the cluster", group = "Hazelcast Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testHazelcastNodeRunning")
+	public Set<Member> hazelcastList() {
+		return hazelcastInstance.createOrGetHazelcastInstance().getCluster().getMembers();
+	}
 
-  @ShellMethod(value = "Stop Hazelcast instance", group = "Hazelcast Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testHazelcastNodeRunning")
-  public void hazelcastStop() {
-    hazelcastInstance.kill();
-    hazelcastInstance = null;
-  }
+	@ShellMethod(value = "Stop Hazelcast instance", group = "Hazelcast Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testHazelcastNodeRunning")
+	public void hazelcastStop() {
+		hazelcastInstance.kill();
+		hazelcastInstance = null;
+	}
 
-  @ShellMethod(value = "Add tribe config to the selected configuration", group = "Hazelcast Commands")
-  @ManagedOperation
-  @ShellMethodAvailability("testSelectedConfigOk")
-  public void addHazelcast(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
-    getWorkingConfig().pots.add(tribe);
-  }
+	@ShellMethod(value = "Add Hazelcast config to the selected configuration", group = "Hazelcast Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public void addHazelcast(@ShellOption(optOut = true) @Valid HazelcastConfig tribe) {
+		getWorkingConfig().pots.add(tribe);
+	}
 
 }

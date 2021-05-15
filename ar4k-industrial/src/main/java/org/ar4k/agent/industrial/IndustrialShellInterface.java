@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.industrial;
 
 import javax.validation.Valid;
 
@@ -37,6 +37,14 @@ import org.springframework.web.bind.annotation.RestController;
  *         OPC UA e MQTT
  *
  */
+
+//TODO valutare implementazione 4Diac Forte
+//TODO integrazione con UNIPI AXON S105
+
+//TODO implementare comandi di navigazione OPCUA client (discovery, list nodeid)
+
+//TODO implementare gestione eventi OPCUA con presa visione e conferma
+
 
 @ShellCommandGroup("Industrial Commands")
 @ShellComponent

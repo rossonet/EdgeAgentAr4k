@@ -20,169 +20,169 @@ public class BeaconServerCluster implements Runnable, AutoCloseable, IBeaconServ
 
 	@Override
 	public void start() throws IOException {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public void blockUntilShutdown() throws InterruptedException {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public String getStatus() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<TunnelRunnerBeaconServer> getTunnels() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isStopped() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int getPort() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getDefaultPollTime() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setDefaultPollTime(int defaultPollTime) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public List<BeaconAgent> getAgentRegistered() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void sendFlashUdp() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public int getDefaultBeaconFlashMoltiplicator() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setDefaultBeaconFlashMoltiplicator(int defaultBeaconFlashMoltiplicator) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public int getDiscoveryPort() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setDiscoveryPort(int discoveryPort) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public String getBroadcastAddress() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setBroadcastAddress(String broadcastAddress) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public String getStringDiscovery() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setStringDiscovery(String stringDiscovery) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean isAcceptAllCerts() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getCertChainFile() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getPrivateKeyFile() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void clearOldData() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public List<AgentRequest> listAgentRequests() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void approveCsrRequest(String csr) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public void close() throws Exception {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 

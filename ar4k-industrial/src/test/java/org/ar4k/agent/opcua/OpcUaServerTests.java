@@ -31,6 +31,7 @@ import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.Channel
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.DataGeneratorMode;
 import org.ar4k.agent.core.data.generator.SingleDataGeneratorPointConfig.DataType;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.industrial.IndustrialShellInterface;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;

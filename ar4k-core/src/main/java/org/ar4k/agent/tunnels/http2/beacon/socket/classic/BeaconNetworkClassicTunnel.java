@@ -63,125 +63,125 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 		if (TRACE_LOG_IN_INFO)
 			logger.info(me.getAgentUniqueName() + " created BeaconNetworkTunnel tunnel id {} role {}", tunnelId,
 					myRoleMode);
-		// TODO Auto-generated constructor stub
+		// TODO Completare e rivedere classe BeaconNetworkClassicTunnel
 	}
 
 	public void nextAction() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	public boolean isActiveTunnel() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int getWaitingPackagesCount() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	@Override
 	public void beaconObserverComplete(long targetId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	public StreamObserver<TunnelMessage> openNetworkChannel(BeaconClassicEndpointFromObserver fromBeaconServer) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	public Map<Long, CachedChunkClassic> getOutputCachedDataBase64ByMessageId() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	public String reportDetails() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	public long getLastAckSent(long sessionId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return 0;
 	}
 
 	public Map<Long, CachedChunkClassic> getOutputCachedMessages(long sessionId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	public void sendExceptionMessage(long sessionId, long tunnelId, long messageId, Exception clientEx) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	public void confirmPacketReceived(long sessionId, long messageAckId, long messageAckReceivedId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	public void exceptionPacketReceived(long sessionId, long messageAckId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	public boolean isActive(long sessionId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 
 	public ServerSocket getOrCreateServerSocketChannel(long sessionId) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	public Socket getOrCreateClientHandler(long sessionId) {
 		return null;
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	@Override
 	public void close() throws Exception {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	@Override
 	public NetworkReceiver getNetworkReceiver() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public long getPacketSend() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void selfCheckIfNeeded() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 	}
 
 	@Override
 	public void setResponseNetworkChannel(ResponseNetworkChannel response) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 	}
 
 	public void incrementPacketError() {

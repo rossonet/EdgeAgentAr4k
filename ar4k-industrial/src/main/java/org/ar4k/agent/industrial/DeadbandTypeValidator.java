@@ -1,8 +1,8 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.industrial;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.opcua.Enumerator.DeadbandType;
+import org.ar4k.agent.industrial.Enumerator.DeadbandType;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

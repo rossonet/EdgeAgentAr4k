@@ -22,9 +22,9 @@ import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.industrial.IndustrialShellInterface;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
-import org.ar4k.agent.opcua.IndustrialShellInterface;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;

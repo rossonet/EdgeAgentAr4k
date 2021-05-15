@@ -45,7 +45,8 @@ public class HazelcastComponent implements EdgeComponent {
 	private final Set<ExternalMessageHandler> subscriberTopicsFromExternal = new HashSet<>();
 	private final Set<InternalMessageHandler> subscriberTopicsFromInternal = new HashSet<>();
 
-	// TODO DataAddress
+	// TODO Permettere la creazione di canali brodcast tra i nodi coinvolti nel
+	// cluster
 	private DataAddress dataspace = null;
 
 	public HazelcastComponent(Homunculus homunculus, HazelcastConfig tribeConfig) {

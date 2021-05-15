@@ -16,10 +16,10 @@ package org.ar4k.agent.opcua.client;
 
 import java.io.Serializable;
 
-import org.ar4k.agent.opcua.DataChangeTriggerValidator;
-import org.ar4k.agent.opcua.DeadbandTypeValidator;
-import org.ar4k.agent.opcua.Enumerator.DataChangeTrigger;
-import org.ar4k.agent.opcua.Enumerator.DeadbandType;
+import org.ar4k.agent.industrial.DataChangeTriggerValidator;
+import org.ar4k.agent.industrial.DeadbandTypeValidator;
+import org.ar4k.agent.industrial.Enumerator.DataChangeTrigger;
+import org.ar4k.agent.industrial.Enumerator.DeadbandType;
 
 import com.beust.jcommander.Parameter;
 
