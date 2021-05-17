@@ -2,20 +2,24 @@ package org.ar4k.agent.industrial;
 
 public class Enumerator {
 
-  public enum SecurityMode {
-    signAndEncrypt, sign, none
-  }
+	public enum SecurityMode {
+		signAndEncrypt, sign, none
+	}
 
-  public enum CryptoMode {
-    basic256Sha256, basic256, basic128Rsa15, none
-  }
+	public enum AuthMode {
+		password, certificate, none
+	}
 
-  public enum DeadbandType {
-    none, absolute, percent
-  }
+	public enum CryptoMode {
+		Basic256Sha256, Basic256, Basic128Rsa15, Aes128_Sha256_RsaOaep, Aes256_Sha256_RsaPss, none
+	}
 
-  public enum DataChangeTrigger {
-    status, statusOrValue, statusOrValueOrTimestamp
-  }
+	public enum DeadbandType {
+		none, absolute, percent
+	}
+
+	public enum DataChangeTrigger {
+		status, statusOrValue, statusOrValueOrTimestamp
+	}
 
 }

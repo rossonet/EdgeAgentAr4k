@@ -15,11 +15,14 @@
 package org.ar4k.agent.opcua.client;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
-import org.ar4k.agent.industrial.DataChangeTriggerValidator;
-import org.ar4k.agent.industrial.DeadbandTypeValidator;
 import org.ar4k.agent.industrial.Enumerator.DataChangeTrigger;
 import org.ar4k.agent.industrial.Enumerator.DeadbandType;
+import org.ar4k.agent.industrial.validators.DataChangeTriggerValidator;
+import org.ar4k.agent.industrial.validators.DeadbandTypeValidator;
 
 import com.beust.jcommander.Parameter;
 
@@ -30,39 +33,102 @@ import com.beust.jcommander.Parameter;
  */
 public class OpcUaClientNode implements Serializable {
 
-  private static final long serialVersionUID = 970930410169105077L;
+	private static final long serialVersionUID = 970930410169105077L;
 
-  @Parameter(names = "--nodeRegEx", description = "Node ID or a regEx to find a list of nodes")
-  public String nodeRegEx = null;
+	@Parameter(names = "--nodeRegEx", description = "Node ID or a regEx to find a list of nodes")
+	public String nodeRegEx = null;
 
-  @Parameter(names = "--polltime", description = "frequency for update")
-  public int polltime = 1000;
+	@Parameter(names = "--samplingInterval", description = "sampling interval")
+	public int samplingInterval = 1000;
 
-  @Parameter(names = "--deadbandValue", description = "deadband value")
-  public double deadbandValue = 0;
+	@Parameter(names = "--publishInterval", description = "publish interval")
+	public int publishInterval = 2000;
 
-  @Parameter(names = "--queueSize", description = "queue size")
-  public int queueSize = 10;
+	@Parameter(names = "--deadbandValue", description = "deadband value")
+	public double deadbandValue = 0;
 
-  @Parameter(names = "--discardOldest", description = "discard oldest")
-  public boolean discardOldest = true;
+	@Parameter(names = "--queueSize", description = "queue size")
+	public int queueSize = 10;
 
-  @Parameter(names = "--deadbandType", description = "dead band type for the node", validateWith = DeadbandTypeValidator.class)
-  public DeadbandType deadbandType = DeadbandType.none;
+	@Parameter(names = "--discardOldest", description = "discard oldest")
+	public boolean discardOldest = true;
 
-  @Parameter(names = "--dataChangeTrigger", description = "data change trigger type for the node", validateWith = DataChangeTriggerValidator.class)
-  public DataChangeTrigger dataChangeTrigger = DataChangeTrigger.statusOrValueOrTimestamp;
+	@Parameter(names = "--deadbandType", description = "dead band type for the node", validateWith = DeadbandTypeValidator.class)
+	public DeadbandType deadbandType = DeadbandType.none;
 
-  @Parameter(names = "--internalTargetChannel", description = "internal channel to send the update from the node")
-  public String readChannel = null;
+	@Parameter(names = "--dataChangeTrigger", description = "data change trigger type for the node", validateWith = DataChangeTriggerValidator.class)
+	public DataChangeTrigger dataChangeTrigger = DataChangeTrigger.statusOrValueOrTimestamp;
 
-  @Parameter(names = "--internalWriteInputChannel", description = "internal channel to write the data in the node")
-  public String writeChannel = null;
+	@Parameter(names = "--internalTargetChannel", description = "internal channel to send the update from the node")
+	public String readChannel = null;
 
-  @Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
-  public String fatherOfChannels = null;
+	@Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
+	public String fatherOfChannels = null;
 
-  @Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
-  public String scopeOfChannels = null;
+	@Parameter(names = "--scopeOfChannels", description = "scope for the parent channel. If null take the default of the address space")
+	public String scopeOfChannels = null;
+
+	@Parameter(names = "--tags", description = "channel tags (multi selection)", variableArity = true, required = false)
+	public Collection<String> tags = new ArrayList<>();
+
+	public String uuid = UUID.randomUUID().toString();
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("OpcUaClientNode [");
+		if (nodeRegEx != null) {
+			builder.append("nodeRegEx=");
+			builder.append(nodeRegEx);
+			builder.append(", ");
+		}
+		builder.append("samplingInterval=");
+		builder.append(samplingInterval);
+		builder.append(", publishInterval=");
+		builder.append(publishInterval);
+		builder.append(", deadbandValue=");
+		builder.append(deadbandValue);
+		builder.append(", queueSize=");
+		builder.append(queueSize);
+		builder.append(", discardOldest=");
+		builder.append(discardOldest);
+		builder.append(", ");
+		if (deadbandType != null) {
+			builder.append("deadbandType=");
+			builder.append(deadbandType);
+			builder.append(", ");
+		}
+		if (dataChangeTrigger != null) {
+			builder.append("dataChangeTrigger=");
+			builder.append(dataChangeTrigger);
+			builder.append(", ");
+		}
+		if (readChannel != null) {
+			builder.append("readChannel=");
+			builder.append(readChannel);
+			builder.append(", ");
+		}
+		if (fatherOfChannels != null) {
+			builder.append("fatherOfChannels=");
+			builder.append(fatherOfChannels);
+			builder.append(", ");
+		}
+		if (scopeOfChannels != null) {
+			builder.append("scopeOfChannels=");
+			builder.append(scopeOfChannels);
+			builder.append(", ");
+		}
+		if (tags != null) {
+			builder.append("tags=");
+			builder.append(tags);
+			builder.append(", ");
+		}
+		if (uuid != null) {
+			builder.append("uuid=");
+			builder.append(uuid);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

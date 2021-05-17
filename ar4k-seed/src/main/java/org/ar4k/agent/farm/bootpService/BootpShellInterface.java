@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
+//TODO completare server distribuzioni configurazioni bootd
+
 @ShellCommandGroup("Bootp Commands")
 @ShellComponent
 @RestController

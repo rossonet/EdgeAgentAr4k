@@ -14,10 +14,15 @@
     */
 package org.ar4k.agent.industrial;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
+import org.ar4k.agent.opcua.client.OpcUaClientNode;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.opcua.server.OpcUaServerService;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -39,18 +44,24 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 //TODO valutare implementazione 4Diac Forte
+
 //TODO integrazione con UNIPI AXON S105
 
 //TODO implementare comandi di navigazione OPCUA client (discovery, list nodeid)
 
 //TODO implementare gestione eventi OPCUA con presa visione e conferma
 
-
 @ShellCommandGroup("Industrial Commands")
 @ShellComponent
 @RestController
 @RequestMapping("/industrialInterface")
 public class IndustrialShellInterface extends AbstractShellHelper {
+
+	protected Availability sessionClientOpcOk() {
+		return (sessionOk().equals(Availability.available()) && getWorkingService() instanceof OpcUaClientConfig)
+				? Availability.available()
+				: Availability.unavailable("you must select a OPCUA client configuration service");
+	}
 
 	OpcUaServerService opcUaServer = null;
 
@@ -94,6 +105,40 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	public void serverOpcUaStop() throws Exception {
 		opcUaServer.kill();
 		opcUaServer = null;
+	}
+
+	@ShellMethod(value = "List nodes in opcua client config", group = "OPC UA Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionClientOpcOk")
+	public Collection<String> opcClientListNodes() {
+		Collection<String> result = new HashSet<>();
+		for (final OpcUaClientNode singleSubscription : ((OpcUaClientConfig) getWorkingService()).subscriptions) {
+			result.add(singleSubscription.toString());
+		}
+		return result;
+	}
+
+	@ShellMethod(value = "Remove node in opcua client config", group = "OPC UA Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionClientOpcOk")
+	public void opcUaClientRemoveNode(@ShellOption(help = "trigger cnc uuid") String uuid) {
+		OpcUaClientNode target = null;
+		final List<OpcUaClientNode> nodes = ((OpcUaClientConfig) getWorkingService()).subscriptions;
+		for (final OpcUaClientNode n : nodes) {
+			if (n.uuid.equals(uuid)) {
+				target = n;
+			}
+		}
+		if (target != null) {
+			nodes.remove(target);
+		}
+	}
+
+	@ShellMethod(value = "Add node to opcua client config", group = "OPC UA Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionClientOpcOk")
+	public void opcUaClientAddNode(@ShellOption(optOut = true) @Valid OpcUaClientNode node) {
+		((OpcUaClientConfig) getWorkingService()).subscriptions.add(node);
 	}
 
 }
