@@ -1,0 +1,25 @@
+activemq
+apacheZeppelin
+spark
+bigBlueButton
+apache che
+etherpad
+gitlab
+jenkins
+jitsi
+kafka
+keycloak
+kibana
+kieWorkbench
+mariadb
+mongodb
+octoPrint
+odoo
+postgresql
+ros (Robot Operating System)
+wazuh
+wordpress
+xpra
+zabbix
+zimbra
+
