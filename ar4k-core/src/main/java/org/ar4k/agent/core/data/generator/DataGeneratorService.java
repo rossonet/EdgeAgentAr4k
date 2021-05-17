@@ -36,13 +36,9 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -147,14 +143,6 @@ public class DataGeneratorService implements EdgeComponent {
 	@Override
 	public DataAddress getDataAddress() {
 		return dataspace;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		final Gson gson = new GsonBuilder().create();
-		JSONObject o = new JSONObject(gson.toJsonTree(configuration).getAsString());
-		o.put("status", serviceStatus.toString());
-		return o;
 	}
 
 	@Override

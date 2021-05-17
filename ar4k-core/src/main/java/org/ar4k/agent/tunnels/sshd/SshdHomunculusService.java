@@ -45,7 +45,7 @@ import com.google.gson.GsonBuilder;
  *
  */
 public class SshdHomunculusService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
-		ChannelListener, PortForwardingEventListener {
+ChannelListener, PortForwardingEventListener {
 
 	private final static Gson gson = new GsonBuilder().create();
 
@@ -82,7 +82,6 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 		return dataspace;
 	}
 
-	@Override
 	public JSONObject getDescriptionJson() {
 		final Map<String, String> data = new HashMap<>();
 		if (server != null) {

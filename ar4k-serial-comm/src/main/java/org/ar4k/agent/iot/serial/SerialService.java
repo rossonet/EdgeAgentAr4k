@@ -29,7 +29,6 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.springframework.messaging.MessageHeaders;
 
 import com.fazecast.jSerialComm.SerialPort;
@@ -251,13 +250,6 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 	@Override
 	public void setDataAddress(DataAddress dataAddress) {
 		this.dataspace = dataAddress;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		final JSONObject end = new JSONObject();
-		end.put("status", toString());
-		return end;
 	}
 
 	@Override

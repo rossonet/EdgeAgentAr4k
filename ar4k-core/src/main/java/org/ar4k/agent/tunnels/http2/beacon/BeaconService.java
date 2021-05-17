@@ -11,7 +11,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
+ */
 package org.ar4k.agent.tunnels.http2.beacon;
 
 import java.io.IOException;
@@ -31,10 +31,6 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -80,12 +76,6 @@ public class BeaconService implements EdgeComponent {
 	}
 
 	@Override
-	public JSONObject getDescriptionJson() {
-		Gson gson = new GsonBuilder().create();
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
-	}
-
-	@Override
 	public Homunculus getHomunculus() {
 		return homunculus;
 	}
@@ -105,9 +95,9 @@ public class BeaconService implements EdgeComponent {
 						.setAliasBeaconServerSignMaster(configuration.aliasBeaconServerSignMaster).build();
 				beaconServer.start();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			logger.logException(e);
-		} catch (UnrecoverableKeyException e) {
+		} catch (final UnrecoverableKeyException e) {
 			logger.warn(e.getMessage());
 		}
 	}

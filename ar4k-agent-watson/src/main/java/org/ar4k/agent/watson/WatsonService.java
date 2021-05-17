@@ -22,7 +22,6 @@ import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.mattermost.ChatPayload;
 import org.ar4k.agent.rpc.RpcExecutor;
-import org.json.JSONObject;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
@@ -79,12 +78,6 @@ public class WatsonService implements EdgeComponent, MessageHandler {
 	@Override
 	public DataAddress getDataAddress() {
 		return dataspace;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// TODO descrizione json
-		return null;
 	}
 
 	@Override

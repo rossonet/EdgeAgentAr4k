@@ -11,7 +11,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
+ */
 package org.ar4k.gw.studio.tunnels.socket.proxy;
 
 import org.ar4k.agent.core.Homunculus;
@@ -19,7 +19,6 @@ import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.gw.studio.tunnels.socket.AbstractSocketFactoryComponent;
-import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -28,7 +27,6 @@ import org.json.JSONObject;
  *
  */
 
-//TODO TEST scrivere SocketFactoryProxy
 public class SocketFactoryProxy extends AbstractSocketFactoryComponent {
 	SocketFactoryProxyConfig configuration = null;
 
@@ -85,12 +83,6 @@ public class SocketFactoryProxy extends AbstractSocketFactoryComponent {
 	public void setConfiguration(ServiceConfig configuration) {
 		// Auto-generated method stub
 
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// Auto-generated method stub
-		return null;
 	}
 
 	@Override

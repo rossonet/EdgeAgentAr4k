@@ -14,10 +14,7 @@ import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
@@ -64,12 +61,6 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	@Override
 	public DataAddress getDataAddress() {
 		return dataspace;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		final Gson gson = new GsonBuilder().create();
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
 	@Override

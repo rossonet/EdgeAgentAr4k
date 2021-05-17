@@ -4,36 +4,33 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
-import org.json.JSONObject;
 
 /**
  * interfaccia da implementare per un servizio gestito
- * 
+ *
  * @author andrea
  *
  */
 public interface EdgeComponent extends DataServiceOwner, AutoCloseable {
 
-  public static enum ServiceStatus {
-    INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
-  }
+	public static enum ServiceStatus {
+		INIT, STARTING, STAMINAL, RUNNING, STOPPED, KILLED, FAULT
+	}
 
-  ServiceStatus updateAndGetStatus() throws ServiceWatchDogException;
+	ServiceStatus updateAndGetStatus() throws ServiceWatchDogException;
 
-  void init() throws ServiceInitException;
+	void init() throws ServiceInitException;
 
-  void kill();
+	void kill();
 
-  Homunculus getHomunculus();
+	Homunculus getHomunculus();
 
-  void setDataAddress(DataAddress dataAddress);
+	void setDataAddress(DataAddress dataAddress);
 
-  void setHomunculus(Homunculus homunculus);
+	void setHomunculus(Homunculus homunculus);
 
-  ServiceConfig getConfiguration();
+	ServiceConfig getConfiguration();
 
-  void setConfiguration(ServiceConfig configuration);
-
-  JSONObject getDescriptionJson();
+	void setConfiguration(ServiceConfig configuration);
 
 }

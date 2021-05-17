@@ -16,7 +16,6 @@ package org.ar4k.agent.industrial.validators;
 
 import java.util.EnumSet;
 
-import org.ar4k.agent.industrial.Enumerator;
 import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 
 import com.beust.jcommander.IParameterValidator;

@@ -21,7 +21,6 @@ import org.ar4k.agent.cortex.drools.internals.GlobalLoggerUtils;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -371,12 +370,6 @@ public class DroolsService implements EdgeComponent {
 	@Override
 	public void setConfiguration(ServiceConfig configuration) {
 		this.configuration = (DroolsConfig) configuration;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// TODO Auto-generated method getDescriptionJson
-		return null;
 	}
 
 	@Override
