@@ -8,7 +8,6 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -99,12 +98,6 @@ public class OpcUaServerService implements EdgeComponent {
 	@Override
 	public void setConfiguration(ServiceConfig configuration) {
 		this.configuration = (OpcUaServerConfig) configuration;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// TODO OPCUA Auto-generated method stub
-		return new JSONObject();
 	}
 
 	@Override

@@ -126,7 +126,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 		if (this.mattermostClient != null) {
 			try {
 				mattermostClient.close();
-			} catch (Exception exception) {
+			} catch (final Exception exception) {
 				logger.logException(exception);
 			}
 		}
@@ -170,13 +170,6 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	}
 
 	@Override
-	public JSONObject getDescriptionJson() {
-		JSONObject json = new JSONObject(gson.toJson(configuration));
-		json.put("status", serviceStatus.toString());
-		return json;
-	}
-
-	@Override
 	public void connectionStarted() {
 		serviceStatus = ServiceStatus.RUNNING;
 	}
@@ -184,7 +177,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	@Override
 	public void onNewChannel(Channel channel) {
 		if (newChannelChannel != null) {
-			ChatPayload payload = new ChatPayload();
+			final ChatPayload payload = new ChatPayload();
 			payload.setId(channel.getId());
 			payload.setChannelId(channel.getId());
 			payload.setCreatorId(channel.getCreatorId());
@@ -198,7 +191,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			payload.setSchemeId(channel.getSchemeId());
 			payload.setTeamId(channel.getTeamId());
 			payload.setType(channel.getType() != null ? channel.getType().toString() : "NaN");
-			ChatMessage message = new ChatMessage();
+			final ChatMessage message = new ChatMessage();
 			message.setPayload(payload);
 			newChannelChannel.getChannel().send(message);
 		}
@@ -207,7 +200,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	@Override
 	public void onNewUser(User checkedUser) {
 		if (newUserChannel != null) {
-			ChatPayload payload = new ChatPayload();
+			final ChatPayload payload = new ChatPayload();
 			payload.setId(checkedUser.getId());
 			payload.setUserId(checkedUser.getId());
 			payload.setFirstName(checkedUser.getFirstName());
@@ -223,7 +216,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			payload.setEmail(checkedUser.getEmail());
 			payload.setPosition(checkedUser.getPosition());
 			payload.setRoles(checkedUser.getRoles());
-			ChatMessage message = new ChatMessage();
+			final ChatMessage message = new ChatMessage();
 			message.setPayload(payload);
 			newUserChannel.getChannel().send(message);
 		}
@@ -233,7 +226,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	@Override
 	public void onNewTeam(Team team) {
 		if (newTeamChannel != null) {
-			ChatPayload payload = new ChatPayload();
+			final ChatPayload payload = new ChatPayload();
 			payload.setId(team.getId());
 			payload.setTeamId(team.getId());
 			payload.setCompanyName(team.getCompanyName());
@@ -248,7 +241,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			payload.setAllowedDomains(team.getAllowedDomains());
 			payload.setInviteId(team.getInviteId());
 			payload.setType(team.getType() != null ? team.getType().toString() : "NaN");
-			ChatMessage message = new ChatMessage();
+			final ChatMessage message = new ChatMessage();
 			message.setPayload(payload);
 			newTeamChannel.getChannel().send(message);
 		}
@@ -257,7 +250,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	@Override
 	public void onNewPost(Post post) {
 		if (requestCommandChannel != null && myUserId != null && !post.getUserId().equals(myUserId)) {
-			ChatPayload payload = new ChatPayload();
+			final ChatPayload payload = new ChatPayload();
 			payload.setId(post.getId());
 			payload.setMessage(post.getMessage());
 			payload.setCreateAt(post.getCreateAt());
@@ -289,7 +282,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			} else {
 				payload.setMentioned(false);
 			}
-			ChatMessage message = new ChatMessage();
+			final ChatMessage message = new ChatMessage();
 			message.setPayload(payload);
 			requestCommandChannel.getChannel().send(message);
 		}
@@ -302,7 +295,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("RossonetChatService [configuration=");
 		builder.append(configuration);
 		builder.append(", serviceStatus=");

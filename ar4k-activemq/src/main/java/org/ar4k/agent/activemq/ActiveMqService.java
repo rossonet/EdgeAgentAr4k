@@ -12,7 +12,6 @@ import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -114,12 +113,6 @@ public class ActiveMqService implements EdgeComponent {
 	@Override
 	public void setConfiguration(ServiceConfig configuration) {
 		this.configuration = (ActiveMqConfig) configuration;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// TODO ACTIVEMQ descrizione servizio in json
-		return null;
 	}
 
 	public ActiveMqBroker getBroker() {

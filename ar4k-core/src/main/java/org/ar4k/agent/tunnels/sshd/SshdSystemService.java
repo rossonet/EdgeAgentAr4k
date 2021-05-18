@@ -53,7 +53,7 @@ import com.google.gson.GsonBuilder;
  *
  **/
 public class SshdSystemService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
-		ChannelListener, PortForwardingEventListener {
+ChannelListener, PortForwardingEventListener {
 
 	@Override
 	public void establishingExplicitTunnel(Session session, SshdSocketAddress local, SshdSocketAddress remote,
@@ -184,7 +184,6 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 		this.homunculus = homunculus;
 	}
 
-	@Override
 	public JSONObject getDescriptionJson() {
 		final Map<String, String> data = new HashMap<>();
 		if (server != null) {

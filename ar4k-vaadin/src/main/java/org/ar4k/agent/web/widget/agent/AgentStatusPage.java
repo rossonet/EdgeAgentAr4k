@@ -6,7 +6,6 @@ import java.util.List;
 import org.ar4k.agent.core.interfaces.AgentWebTab;
 import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.web.interfaces.AgentTab;
-import org.ar4k.agent.web.widget.agent.AgentStatusPage.StatusDataLineString;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;

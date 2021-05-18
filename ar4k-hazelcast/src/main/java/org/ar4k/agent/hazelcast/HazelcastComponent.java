@@ -11,11 +11,8 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.config.JoinConfig;
@@ -28,8 +25,6 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.cp.lock.FencedLock;
 
 public class HazelcastComponent implements EdgeComponent {
-
-	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(HazelcastComponent.class.toString());
@@ -206,11 +201,6 @@ public class HazelcastComponent implements EdgeComponent {
 	@Override
 	public void setHomunculus(Homunculus homunculus) {
 		this.homunculus = homunculus;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
 	@Override

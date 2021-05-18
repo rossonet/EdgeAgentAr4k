@@ -29,7 +29,6 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.json.JSONObject;
 import org.springframework.messaging.MessageHeaders;
 
 import com.github.sarxos.webcam.Webcam;
@@ -40,8 +39,6 @@ import com.github.sarxos.webcam.ds.ipcam.IpCamMode;
 import com.github.sarxos.webcam.ds.javacv.JavaCvDriver;
 import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 import com.github.sarxos.webcam.ds.vlcj.VlcjDriver;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import uk.co.caprica.vlcj.medialist.MediaListItem;
 
@@ -293,12 +290,6 @@ public class StreamCameraService implements EdgeComponent {
 	@Override
 	public void setHomunculus(Homunculus homunculus) {
 		this.homunculus = homunculus;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		final Gson gson = new GsonBuilder().create();
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
 	@Override

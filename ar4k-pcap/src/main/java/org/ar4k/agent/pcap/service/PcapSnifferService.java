@@ -16,7 +16,6 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.pcap.message.PcapMessage;
 import org.ar4k.agent.pcap.message.PcapPayload;
 import org.ar4k.agent.pcap.message.PcapPayload.PacketType;
-import org.json.JSONObject;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapHandle;
@@ -29,9 +28,6 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -183,12 +179,6 @@ public class PcapSnifferService implements EdgeComponent {
 	@Override
 	public ServiceConfig getConfiguration() {
 		return configuration;
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		final Gson gson = new GsonBuilder().create();
-		return new JSONObject(gson.toJsonTree(configuration).getAsString());
 	}
 
 	@Override

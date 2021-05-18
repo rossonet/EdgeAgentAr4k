@@ -11,14 +11,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
+ */
 package org.ar4k.gw.studio.tunnels.socket;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
-import org.json.JSONObject;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -26,7 +25,7 @@ import org.json.JSONObject;
  *         Gestore servizio per connessioni socket.
  *
  */
-// TODO TEST SocketFactory Tunnel
+
 public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
 
 	SocketFactoryConfig configuration = null;
@@ -84,12 +83,6 @@ public class SocketFactoryComponent extends AbstractSocketFactoryComponent {
 	public void setConfiguration(ServiceConfig configuration) {
 		// Auto-generated method stub
 
-	}
-
-	@Override
-	public JSONObject getDescriptionJson() {
-		// Auto-generated method stub
-		return null;
 	}
 
 	@Override
