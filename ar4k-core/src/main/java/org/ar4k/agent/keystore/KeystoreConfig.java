@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyPair;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -124,6 +125,17 @@ public class KeystoreConfig implements ConfigSeed {
 		PrivateKey ritorno = null;
 		try {
 			ritorno = KeystoreLoader.getPrivateKey(alias, filePath(), keystorePassword);
+		} catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
+				| IOException e) {
+			throw new EdgeException("problem with keystore", e);
+		}
+		return ritorno;
+	}
+
+	public KeyPair getKeyPair(String alias) {
+		KeyPair ritorno = null;
+		try {
+			ritorno = KeystoreLoader.getClientKeyPair(alias, filePath(), keystorePassword);
 		} catch (UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException | KeyStoreException
 				| IOException e) {
 			throw new EdgeException("problem with keystore", e);

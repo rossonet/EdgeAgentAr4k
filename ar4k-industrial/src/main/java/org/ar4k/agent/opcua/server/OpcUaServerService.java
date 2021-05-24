@@ -47,7 +47,7 @@ public class OpcUaServerService implements EdgeComponent {
 			try {
 				server = new Ar4kOpcUaServer(configuration);
 				server.startup();
-				dataAddress.addManagedNamespace(server.getNamespace());
+				dataAddress.addCallbackOnChange(server.getNamespace());
 			} catch (final Exception e) {
 				logger.logException(e);
 			}

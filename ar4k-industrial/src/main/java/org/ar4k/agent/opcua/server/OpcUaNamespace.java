@@ -7,7 +7,8 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import java.util.List;
 import java.util.UUID;
 
-import org.ar4k.agent.core.interfaces.EdgeManagedNamespace;
+import org.ar4k.agent.core.interfaces.DataAddressChange;
+import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
 import org.eclipse.milo.opcua.sdk.server.api.DataItem;
@@ -28,7 +29,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNamespace {
+public class OpcUaNamespace extends ManagedNamespace implements DataAddressChange {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,7 +49,6 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 		dictionaryManager = new DataTypeDictionaryManager(getNodeContext(), configuration.namespaceUri);
 	}
 
-	@Override
 	public void onStartup() {
 
 		dictionaryManager.startup();
@@ -109,7 +109,6 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 		}
 	}
 
-	@Override
 	public void onShutdown() {
 		dictionaryManager.shutdown();
 		subscriptionModel.shutdown();
@@ -145,6 +144,24 @@ public class OpcUaNamespace extends ManagedNamespace implements EdgeManagedNames
 
 	public OpcUaServerConfig getConfiguration() {
 		return configuration;
+	}
+
+	@Override
+	public void onDataAddressUpdate(EdgeChannel updatedChannel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onDataAddressCreate(EdgeChannel createdChannel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onDataAddressDelete(String deletedChannel) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

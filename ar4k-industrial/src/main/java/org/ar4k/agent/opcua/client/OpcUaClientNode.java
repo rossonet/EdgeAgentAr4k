@@ -38,6 +38,9 @@ public class OpcUaClientNode implements Serializable {
 	@Parameter(names = "--nodeRegEx", description = "Node ID or a regEx to find a list of nodes")
 	public String nodeRegEx = null;
 
+	@Parameter(names = "--group", description = "the subscription group")
+	public String group = "default-group";
+
 	@Parameter(names = "--samplingInterval", description = "sampling interval")
 	public int samplingInterval = 1000;
 

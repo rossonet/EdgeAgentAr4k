@@ -13,7 +13,6 @@ import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.core.interfaces.DataAddressChange;
 import org.ar4k.agent.core.interfaces.DataServiceOwner;
 import org.ar4k.agent.core.interfaces.EdgeChannel;
-import org.ar4k.agent.core.interfaces.EdgeManagedNamespace;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.messaging.MessageChannel;
@@ -38,9 +37,7 @@ public class DataAddress implements AutoCloseable {
 	protected String defaultScope = "ar4k-system";
 	protected String levelSeparator = "/";
 
-	protected transient Set<DataAddressChange> callbacks = new HashSet<>();
-
-	protected transient Set<EdgeManagedNamespace> managedNameSpace = new HashSet<>();
+	protected Set<DataAddressChange> callbacks = new HashSet<>();
 
 	public Collection<EdgeChannel> getDataChannels() {
 		return dataChannels;
@@ -52,15 +49,6 @@ public class DataAddress implements AutoCloseable {
 			result.addAll(c.getTags());
 		}
 		return result;
-	}
-
-	private void initializeExternalNameSpace(EdgeManagedNamespace nameSpace) {
-		// TODO chiamate per configurare i managed name spaces
-	}
-
-	private void updateExternalNameSpace(EdgeManagedNamespace nameSpace) {
-		// TODO chiamate per configurare i managed name spaces
-
 	}
 
 	public Collection<EdgeChannel> getDataChannels(DataChannelFilter filter) {
@@ -88,9 +76,6 @@ public class DataAddress implements AutoCloseable {
 		for (final DataAddressChange target : callbacks) {
 			target.onDataAddressUpdate(nodeUpdated);
 		}
-		for (final EdgeManagedNamespace nameSpace : managedNameSpace) {
-			updateExternalNameSpace(nameSpace);
-		}
 	}
 
 	public void addCallbackOnChange(DataAddressChange callback) {
@@ -99,15 +84,6 @@ public class DataAddress implements AutoCloseable {
 
 	public void removeCallbackOnChange(DataAddressChange callback) {
 		callbacks.remove(callback);
-	}
-
-	public void addManagedNamespace(EdgeManagedNamespace managedObject) {
-		managedNameSpace.add(managedObject);
-		initializeExternalNameSpace(managedObject);
-	}
-
-	public void removeManagedNamespace(EdgeManagedNamespace managedObject) {
-		managedNameSpace.remove(managedObject);
 	}
 
 	public EdgeChannel createOrGetDataChannel(String nodeId, Class<? extends EdgeChannel> channelType,

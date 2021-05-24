@@ -125,6 +125,7 @@ public class SshShellInterface extends AbstractShellHelper {
 		tunnels.remove(tunnelId);
 	}
 
+	// TODO implementare comando di shell per lanciare comandi ssh
 	public static String execCommandOnRemoteSshHost(String authkey, String username, String password, String host,
 			int port, String command) throws IOException, JSchException {
 		JSch jsch = new JSch();

@@ -16,9 +16,11 @@ package org.ar4k.agent.opcua.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.industrial.Enumerator.AuthMode;
 import org.ar4k.agent.industrial.Enumerator.CryptoMode;
 import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.industrial.validators.AuthModeValidator;
@@ -49,34 +51,34 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
 	public CryptoMode cryptoMode = CryptoMode.none;
 
 	@Parameter(names = "--acknowledgeTimeout", description = "the timeout, in milliseconds, to wait for an Acknowledge message in response to the client's Hello message.")
-	private String acknowledgeTimeout = "5000";
+	public String acknowledgeTimeout = "5000";
 
 	@Parameter(names = "--channelLifetime", description = "the secure channel lifetime to request, in milliseconds")
-	private String channelLifetime = "60000";
+	public String channelLifetime = "60000";
 
 	@Parameter(names = "--connectTimeout", description = "the timeout, in milliseconds, when opening a socket connection to a remote host")
-	private String connectTimeout = "5000";
+	public String connectTimeout = "5000";
 
 	@Parameter(names = "--keepAliveTimeout", description = "the timeout for the keep alive message in milliseconds")
-	private String keepAliveTimeout = "5000";
+	public String keepAliveTimeout = "5000";
 
 	@Parameter(names = "--maxChunkCount", description = "the maximum number of chunks in any request Message. A value of zero indicates that the server has no limit")
-	private String maxChunkCount = "0";
+	public String maxChunkCount = "0";
 
 	@Parameter(names = "--maxMessageSize", description = "the maximum size for any request message. The maximum size for any request Message. The client shall abort the message with a Bad_RequestTooLarge StatusCode if a request message exceeds this value. The message size is calculated using the unencrypted message body. A value of zero indicates that the Server has no limit")
-	private String maxMessageSize = "0";
+	public String maxMessageSize = "0";
 
 	@Parameter(names = "--requestTimeout", description = "the custom request timeout to use in milliseconds")
-	private String requestTimeout = "60000";
+	public String requestTimeout = "60000";
 
 	@Parameter(names = "--maxChunkSize", description = "the max size for a single chunk trasmitted from the server. Must be greater than or equal to 8196")
-	private String maxChunkSize = "8196";
+	public String maxChunkSize = "8196";
 
 	@Parameter(names = "--sessionTimeout", description = "the timeout for the session in milliseconds")
-	private String sessionTimeout = "120000";
+	public String sessionTimeout = "120000";
 
 	@Parameter(names = "--authMode", description = "authentication method used to connect to the server. Must be none, password or certificate", validateWith = AuthModeValidator.class)
-	private String authMode = "none";
+	public AuthMode authMode = AuthMode.none;
 
 	@Parameter(names = "--username", description = "username for the connection")
 	public String username = null;
@@ -87,8 +89,17 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
 	@Parameter(names = "--aliasCryptoCertificateInKeystore", description = "alias for certificate in keystore for the crypto channel")
 	public String aliasCryptoCertificateInKeystore = null;
 
+	@Parameter(names = "--cryptoServerCertificate", description = "PEM Certificate of the server for crypto channel")
+	public String cryptoServerCertificate = null;
+
+	@Parameter(names = "--cryptoServerChain", description = "PEM chain of the server for crypto channel. Multi certificate can be split by comma")
+	public String cryptoServerChain = null;
+
 	@Parameter(names = "--aliasAuthCertificateInKeystore", description = "alias for certificate in keystore for authentication")
 	public String aliasAuthCertificateInKeystore = null;
+
+	@Parameter(names = "--clientName", description = "connection client name")
+	public String clientName = "ar4k-client-" + UUID.randomUUID();
 
 	@Parameter(names = "--subscriptions", description = "List of node to subscribe", variableArity = true)
 	public List<OpcUaClientNode> subscriptions = new ArrayList<>();
@@ -189,9 +200,9 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
 			builder.append(username);
 			builder.append(", ");
 		}
-		if (password != null) {
-			builder.append("password=");
-			builder.append(password);
+		if (clientName != null) {
+			builder.append("clientName=");
+			builder.append(clientName);
 			builder.append(", ");
 		}
 		if (aliasCryptoCertificateInKeystore != null) {
