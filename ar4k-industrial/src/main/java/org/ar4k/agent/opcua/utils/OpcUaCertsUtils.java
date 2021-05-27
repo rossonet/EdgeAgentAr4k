@@ -22,7 +22,7 @@ import org.ar4k.agent.keystore.SelfSignedCertificateBuilder;
 import org.ar4k.agent.keystore.SelfSignedCertificateGenerator;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.opcua.client.OpcUaClientService;
+import org.ar4k.agent.opcua.OpcUaClientService;
 import org.eclipse.milo.opcua.sdk.server.util.HostnameUtil;
 
 /**

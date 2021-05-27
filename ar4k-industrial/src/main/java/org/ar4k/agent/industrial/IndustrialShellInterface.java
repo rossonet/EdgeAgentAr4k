@@ -35,9 +35,9 @@ import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.industrial.validators.AuthModeValuesProvider;
 import org.ar4k.agent.industrial.validators.CryptoModeValuesProvider;
 import org.ar4k.agent.industrial.validators.SecurityModeValuesProvider;
+import org.ar4k.agent.opcua.OpcUaClientService;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
-import org.ar4k.agent.opcua.client.OpcUaClientNode;
-import org.ar4k.agent.opcua.client.OpcUaClientService;
+import org.ar4k.agent.opcua.client.OpcUaClientNodeConfig;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.opcua.server.OpcUaServerService;
 import org.ar4k.agent.opcua.utils.OpcUaCertsUtils;
@@ -151,7 +151,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionClientOpcOk")
 	public Collection<String> opcClientListNodes() {
 		Collection<String> result = new HashSet<>();
-		for (final OpcUaClientNode singleSubscription : ((OpcUaClientConfig) getWorkingService()).subscriptions) {
+		for (final OpcUaClientNodeConfig singleSubscription : ((OpcUaClientConfig) getWorkingService()).subscriptions) {
 			result.add(singleSubscription.toString());
 		}
 		return result;
@@ -161,9 +161,9 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("sessionClientOpcOk")
 	public void opcUaClientRemoveNode(@ShellOption(help = "trigger cnc uuid") String uuid) {
-		OpcUaClientNode target = null;
-		final List<OpcUaClientNode> nodes = ((OpcUaClientConfig) getWorkingService()).subscriptions;
-		for (final OpcUaClientNode n : nodes) {
+		OpcUaClientNodeConfig target = null;
+		final List<OpcUaClientNodeConfig> nodes = ((OpcUaClientConfig) getWorkingService()).subscriptions;
+		for (final OpcUaClientNodeConfig n : nodes) {
 			if (n.uuid.equals(uuid)) {
 				target = n;
 			}
@@ -176,7 +176,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Add node to opcua client config", group = "OPC UA Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionClientOpcOk")
-	public void opcUaClientAddNode(@ShellOption(optOut = true) @Valid OpcUaClientNode node) {
+	public void opcUaClientAddNode(@ShellOption(optOut = true) @Valid OpcUaClientNodeConfig node) {
 		((OpcUaClientConfig) getWorkingService()).subscriptions.add(node);
 	}
 

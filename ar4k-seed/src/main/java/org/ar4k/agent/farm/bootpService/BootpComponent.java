@@ -18,7 +18,7 @@ public abstract class BootpComponent implements EdgeComponent {
 
 	private DataAddress dataspace = null;
 
-	private TftpServer tftpServer; // TODO
+	private TftpServer tftpServer; // TODO implementare server sftp
 
 	public BootpComponent(BootpConfig farmConfig) {
 		homunculus = farmConfig.homunculus;

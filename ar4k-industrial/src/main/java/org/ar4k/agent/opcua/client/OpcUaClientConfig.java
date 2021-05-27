@@ -26,6 +26,7 @@ import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.industrial.validators.AuthModeValidator;
 import org.ar4k.agent.industrial.validators.CryptoModeValidator;
 import org.ar4k.agent.industrial.validators.SecurityModeValidator;
+import org.ar4k.agent.opcua.OpcUaClientService;
 
 import com.beust.jcommander.Parameter;
 
@@ -102,7 +103,7 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
 	public String clientName = "ar4k-client-" + UUID.randomUUID();
 
 	@Parameter(names = "--subscriptions", description = "List of node to subscribe", variableArity = true)
-	public List<OpcUaClientNode> subscriptions = new ArrayList<>();
+	public List<OpcUaClientNodeConfig> subscriptions = new ArrayList<>();
 
 	@Override
 	public EdgeComponent instantiate() {
