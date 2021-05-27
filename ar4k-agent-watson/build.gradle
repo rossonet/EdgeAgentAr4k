@@ -6,6 +6,7 @@ dependencies {
 	compile project(':ar4k-core')
 	compile project(':ar4k-terminal')
 	compile project(':ar4k-watson')
+	compile project(':ar4k-industrial')
 }
 
 bootJar {

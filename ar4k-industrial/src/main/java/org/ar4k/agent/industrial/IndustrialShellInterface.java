@@ -25,44 +25,47 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
-import org.ar4k.agent.opcua.client.OpcUaTreeDataNode;
+import org.ar4k.agent.industrial.Enumerator.AuthMode;
+import org.ar4k.agent.industrial.Enumerator.CryptoMode;
+import org.ar4k.agent.industrial.Enumerator.SecurityMode;
+import org.ar4k.agent.industrial.validators.AuthModeValuesProvider;
+import org.ar4k.agent.industrial.validators.CryptoModeValuesProvider;
+import org.ar4k.agent.industrial.validators.SecurityModeValuesProvider;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.ar4k.agent.opcua.client.OpcUaClientNode;
 import org.ar4k.agent.opcua.client.OpcUaClientService;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.opcua.server.OpcUaServerService;
+import org.ar4k.agent.opcua.utils.OpcUaCertsUtils;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.UsernameProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
-import org.eclipse.milo.opcua.sdk.core.nodes.Node;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UByte;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.ULong;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.eclipse.milo.opcua.stack.core.types.structured.BrowseDescription;
 import org.eclipse.milo.opcua.stack.core.types.structured.BrowseResult;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
-import org.json.JSONObject;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -85,8 +88,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 //TODO integrazione con UNIPI AXON S105
 
-//TODO implementare comandi di navigazione OPCUA client (discovery, list nodeid)
-
 //TODO implementare gestione eventi OPCUA con presa visione e conferma
 
 @ShellCommandGroup("Industrial Commands")
@@ -105,13 +106,13 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 
 	protected Availability testActiveOpcNull() {
 		return opcUaServer == null ? Availability.available()
-				: Availability.unavailable("a ActiveMQ broker exists with name "
+				: Availability.unavailable("a OPC UA Server exists with name "
 						+ opcUaServer.getServer().getServer().getDiagnosticsSummary());
 	}
 
 	protected Availability testActiveOpcRunning() {
 		return opcUaServer != null ? Availability.available()
-				: Availability.unavailable("activeMQ broker is not running");
+				: Availability.unavailable("Opc UA server is not running");
 	}
 
 	@ShellMethod(value = "Add a OPCUA service client to the selected configuration", group = "OPC UA Commands")
@@ -179,20 +180,102 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 		((OpcUaClientConfig) getWorkingService()).subscriptions.add(node);
 	}
 
+	@ShellMethod(value = "Discovery OPC UA server as object", group = "OPC UA Commands")
+	@ManagedOperation
+	public Map<String, Object> discoveryOpcUaAsObject(@ShellOption(help = "OPC Server endpoint") String endpointString,
+			// @ShellOption(help = "change endpoint url with the discovery one. Needed if
+			// the name resolution not working") Boolean rewriteEndpoint,
+			@ShellOption(help = "authentication method", valueProvider = AuthModeValuesProvider.class, defaultValue = "none") AuthMode authType,
+			@ShellOption(help = "OPC Server crypto alghoritm", valueProvider = SecurityModeValuesProvider.class, defaultValue = "none") SecurityMode securityMode,
+			@ShellOption(help = "OPC Server crypto mode", valueProvider = CryptoModeValuesProvider.class, defaultValue = "none") CryptoMode cryptoMode,
+			@ShellOption(help = "OPC Server username", defaultValue = "") String user,
+			@ShellOption(help = "OPC Server password", defaultValue = "") String password,
+			@ShellOption(help = "OPC Server certificate authority to validate the server", defaultValue = "") String cryptoCa,
+			@ShellOption(help = "OPC Server certificate for crypto channel", defaultValue = "") String cryptoCrt,
+			@ShellOption(help = "OPC Server private key for crypto channel", defaultValue = "") String cryptoKey,
+			@ShellOption(help = "OPC Server certificate for authentication", defaultValue = "") String crt,
+			@ShellOption(help = "OPC Server private key for authentication", defaultValue = "") String key,
+			@ShellOption(help = "show all details", defaultValue = "false") boolean advancedView) {
+		return discoverOpcUaServers(endpointString, null, 0, null, false, authType, securityMode, cryptoMode, user,
+				password, cryptoCa, cryptoCrt, cryptoKey, crt, key, "ar4k-agent-opcua",
+				"urn:rossonet:client:opc-ua:client", advancedView);
+	}
+
+	@ShellMethod(value = "Browse OPC UA server namespace as object", group = "OPC UA Commands")
+	@ManagedOperation
+	public Map<String, Object> browseOpcUaAsObject(@ShellOption(help = "OPC Server endpoint") String endpointString,
+			@ShellOption(help = "change endpoint url with the discovery one. Needed if the name resolution not working", defaultValue = "false") Boolean rewriteEndpoint,
+			@ShellOption(help = "authentication method", valueProvider = AuthModeValuesProvider.class, defaultValue = "none") AuthMode authType,
+			@ShellOption(help = "OPC Server crypto alghoritm", valueProvider = SecurityModeValuesProvider.class, defaultValue = "none") SecurityMode securityMode,
+			@ShellOption(help = "OPC Server crypto mode", valueProvider = CryptoModeValuesProvider.class, defaultValue = "none") CryptoMode cryptoMode,
+			@ShellOption(help = "OPC Server username", defaultValue = "") String user,
+			@ShellOption(help = "OPC Server password", defaultValue = "") String password,
+			@ShellOption(help = "OPC Server certificate authority to validate the server", defaultValue = "") String cryptoCa,
+			@ShellOption(help = "OPC Server certificate for crypto channel", defaultValue = "") String cryptoCrt,
+			@ShellOption(help = "OPC Server private key for crypto channel", defaultValue = "") String cryptoKey,
+			@ShellOption(help = "OPC Server certificate for authentication", defaultValue = "") String crt,
+			@ShellOption(help = "OPC Server private key for authentication", defaultValue = "") String key,
+			@ShellOption(help = "base node to start the browse", defaultValue = "") String baseNodeId,
+			@ShellOption(help = "deep of thequery", defaultValue = "20") int deep) {
+		return browseOpcUaNodes(endpointString, null, 0, null, rewriteEndpoint, authType, securityMode, cryptoMode,
+				user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, "ar4k-agent-opcua",
+				"urn:rossonet:client:opc-ua:client", baseNodeId, deep);
+	}
+
+	@ShellMethod(value = "Get OPC UA node info and value", group = "OPC UA Commands")
+	@ManagedOperation
+	public Map<String, Object> getOpcUaNodeAsObject(@ShellOption(help = "OPC Server endpoint") String endpointString,
+			@ShellOption(help = "change endpoint url with the discovery one. Needed if the name resolution not working", defaultValue = "false") Boolean rewriteEndpoint,
+			@ShellOption(help = "authentication method", valueProvider = AuthModeValuesProvider.class, defaultValue = "none") AuthMode authType,
+			@ShellOption(help = "OPC Server crypto alghoritm", valueProvider = SecurityModeValuesProvider.class, defaultValue = "none") SecurityMode securityMode,
+			@ShellOption(help = "OPC Server crypto mode", valueProvider = CryptoModeValuesProvider.class, defaultValue = "none") CryptoMode cryptoMode,
+			@ShellOption(help = "OPC Server username", defaultValue = "") String user,
+			@ShellOption(help = "OPC Server password", defaultValue = "") String password,
+			@ShellOption(help = "OPC Server certificate authority to validate the server", defaultValue = "") String cryptoCa,
+			@ShellOption(help = "OPC Server certificate for crypto channel", defaultValue = "") String cryptoCrt,
+			@ShellOption(help = "OPC Server private key for crypto channel", defaultValue = "") String cryptoKey,
+			@ShellOption(help = "OPC Server certificate for authentication", defaultValue = "") String crt,
+			@ShellOption(help = "OPC Server private key for authentication", defaultValue = "") String key,
+			@ShellOption(help = "node to get") String node) {
+		return getOpcUaNodeInfo(endpointString, null, 0, null, rewriteEndpoint, authType, securityMode, cryptoMode,
+				user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, "ar4k-agent-opcua",
+				"urn:rossonet:client:opc-ua:client", node);
+	}
+
+	@ShellMethod(value = "Write value to OPC UA node", group = "OPC UA Commands")
+	@ManagedOperation
+	public Map<String, Object> writeOpcUaNodeAsObject(@ShellOption(help = "OPC Server endpoint") String endpointString,
+			@ShellOption(help = "change endpoint url with the discovery one. Needed if the name resolution not working", defaultValue = "false") Boolean rewriteEndpoint,
+			@ShellOption(help = "authentication method", valueProvider = AuthModeValuesProvider.class, defaultValue = "none") AuthMode authType,
+			@ShellOption(help = "OPC Server crypto alghoritm", valueProvider = SecurityModeValuesProvider.class, defaultValue = "none") SecurityMode securityMode,
+			@ShellOption(help = "OPC Server crypto mode", valueProvider = CryptoModeValuesProvider.class, defaultValue = "none") CryptoMode cryptoMode,
+			@ShellOption(help = "OPC Server username", defaultValue = "") String user,
+			@ShellOption(help = "OPC Server password", defaultValue = "") String password,
+			@ShellOption(help = "OPC Server certificate authority to validate the server", defaultValue = "") String cryptoCa,
+			@ShellOption(help = "OPC Server certificate for crypto channel", defaultValue = "") String cryptoCrt,
+			@ShellOption(help = "OPC Server private key for crypto channel", defaultValue = "") String cryptoKey,
+			@ShellOption(help = "OPC Server certificate for authentication", defaultValue = "") String crt,
+			@ShellOption(help = "OPC Server private key for authentication", defaultValue = "") String key,
+			@ShellOption(help = "node to write to") String node, @ShellOption(help = "value to write") String value) {
+		return writeToOpcUaNodeInfo(endpointString, null, 0, null, rewriteEndpoint, authType, securityMode, cryptoMode,
+				user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, "ar4k-agent-opcua",
+				"urn:rossonet:client:opc-ua:client", node, value);
+	}
+
 	private Map<String, Object> browseOpcUaNodes(String endpointString, String hostname, Integer port,
-			String serverPath, Boolean rewriteEndpoint, String authType, String securityMode, String cryptoMode,
-			String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey, String crt, String key,
-			String clientName, String clientUrn, int baseNodeNamespaceIndex, String baseNodeIdentifier, int maxdeep) {
+			String serverPath, Boolean rewriteEndpoint, AuthMode authType, SecurityMode securityMode,
+			CryptoMode cryptoMode, String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey,
+			String crt, String key, String clientName, String clientUrn, String baseNodeIdentifier, int maxdeep) {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			OpcUaClient client = createClient(endpointString, hostname, port, serverPath, rewriteEndpoint, authType,
 					securityMode, cryptoMode, user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, clientName,
 					clientUrn);
 			if (client != null) {
-				if (baseNodeIdentifier == null) {
-					browseNode(maxdeep, resultMap, client, Identifiers.RootFolder);
+				if (baseNodeIdentifier == null || baseNodeIdentifier.isEmpty()) {
+					resultMap = browseNode(maxdeep, client, Identifiers.RootFolder);
 				} else {
-					browseNode(maxdeep, resultMap, client, new NodeId(baseNodeNamespaceIndex, baseNodeIdentifier));
+					resultMap = browseNode(maxdeep, client, NodeId.parse(baseNodeIdentifier));
 				}
 			}
 		} catch (Exception ex) {
@@ -201,33 +284,130 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 		return resultMap;
 	}
 
+	private Map<String, Object> getOpcUaNodeInfo(String endpointString, String hostname, Integer port,
+			String serverPath, Boolean rewriteEndpoint, AuthMode authType, SecurityMode securityMode,
+			CryptoMode cryptoMode, String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey,
+			String crt, String key, String clientName, String clientUrn, String nodeIdentifier) {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			OpcUaClient client = createClient(endpointString, hostname, port, serverPath, rewriteEndpoint, authType,
+					securityMode, cryptoMode, user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, clientName,
+					clientUrn);
+			if (client != null) {
+				UaNode node = client.getAddressSpace().getNode(NodeId.parse(nodeIdentifier));
+				resultMap.put("nodeId", node.getNodeId());
+				resultMap.put("node browse name", node.getBrowseName());
+				resultMap.put("node description", node.getDescription());
+				resultMap.put("node display name", node.getDisplayName());
+				resultMap.put("node class", node.getNodeClass());
+				resultMap.put("node user write mask", node.getUserWriteMask());
+				resultMap.put("node write mask", node.getWriteMask());
+				resultMap.put("node childs", browseNode(1, client, node.getNodeId()));
+				resultMap.put("node value", client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get());
+			}
+		} catch (Exception ex) {
+			logger.logException(ex);
+		}
+		return resultMap;
+	}
+
+	private Map<String, Object> writeToOpcUaNodeInfo(String endpointString, String hostname, Integer port,
+			String serverPath, Boolean rewriteEndpoint, AuthMode authType, SecurityMode securityMode,
+			CryptoMode cryptoMode, String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey,
+			String crt, String key, String clientName, String clientUrn, String nodeIdentifier, String value) {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			OpcUaClient client = createClient(endpointString, hostname, port, serverPath, rewriteEndpoint, authType,
+					securityMode, cryptoMode, user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, clientName,
+					clientUrn);
+			if (client != null) {
+				UaNode node = client.getAddressSpace().getNode(NodeId.parse(nodeIdentifier));
+				resultMap.put("nodeId", node.getNodeId());
+				resultMap.put("node browse name", node.getBrowseName());
+				resultMap.put("node description", node.getDescription());
+				resultMap.put("node display name", node.getDisplayName());
+				resultMap.put("node class", node.getNodeClass());
+				resultMap.put("node user write mask", node.getUserWriteMask());
+				resultMap.put("node write mask", node.getWriteMask());
+				resultMap.put("node childs", browseNode(1, client, node.getNodeId()));
+				final DataValue originalRead = client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get();
+				resultMap.put("node value before", originalRead);
+				Object originalValue = originalRead.getValue().getValue();
+				Object convertedValue = null;
+				if (originalValue instanceof String) {
+					convertedValue = value;
+				} else if (originalValue instanceof Integer) {
+					convertedValue = Integer.parseInt(value);
+				} else if (originalValue instanceof Boolean) {
+					convertedValue = Boolean.parseBoolean(value);
+				} else if (originalValue instanceof Double) {
+					convertedValue = Double.parseDouble(value);
+				} else if (originalValue instanceof Boolean) {
+					convertedValue = Boolean.parseBoolean(value);
+				} else if (originalValue instanceof Float) {
+					convertedValue = Float.parseFloat(value);
+				} else if (originalValue instanceof java.util.UUID) {
+					convertedValue = value;
+				} else if (originalValue instanceof Short) {
+					convertedValue = Short.parseShort(value);
+				} else if (originalValue instanceof Long) {
+					convertedValue = Long.parseLong(value);
+				} else if (originalValue instanceof Byte) {
+					convertedValue = Byte.parseByte(value);
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UByte) {
+					convertedValue = UByte.valueOf(Byte.parseByte(value));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.ByteString) {
+					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.ByteString(
+							value.getBytes("UTF8"));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.DateTime) {
+					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.DateTime(
+							Long.parseLong(value));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort) {
+					convertedValue = UShort.valueOf(Short.parseShort(value));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger) {
+					convertedValue = UInteger.valueOf(Integer.parseInt(value));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.ULong) {
+					convertedValue = ULong.valueOf(Long.parseLong(value));
+				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement) {
+					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement(value);
+				} else {
+					convertedValue = value;
+				}
+				resultMap.put("write status",
+						client.writeValue(node.getNodeId(), new DataValue(new Variant(convertedValue))).get());
+			}
+		} catch (Exception ex) {
+			logger.logException(ex);
+		}
+		return resultMap;
+	}
+
 	private Map<String, Object> browseNode(int maxDeep, OpcUaClient client, NodeId browseRoot) {
-		Map<String, Object> newLevel = new HashMap<>();
 		BrowseDescription browse = new BrowseDescription(browseRoot, BrowseDirection.Forward, Identifiers.References,
 				true, uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
 				uint(BrowseResultMask.All.getValue()));
+		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			BrowseResult browseResult = client.browse(browse).get();
-
 			List<ReferenceDescription> references = toList(browseResult.getReferences());
-
 			for (ReferenceDescription rd : references) {
-				logger.info("{} Node={}", indent, rd.getBrowseName().getName());
-
-				// recursively browse to children
-				rd.getNodeId().toNodeId(client.getNamespaceTable())
-						.ifPresent(nodeId -> browseNode(maxDeep - 1, client, nodeId));
+				logger.debug("found -> " + rd.getNodeId().toParseableString());
+				resultMap.put(rd.getNodeId().toParseableString(), rd.getBrowseName().getName());
+				if (maxDeep > 0 && rd.getNodeId().toNodeId(client.getNamespaceTable()).isPresent()) {
+					resultMap.put(rd.getNodeId().toParseableString(),
+							browseNode(maxDeep - 1, client, rd.getNodeId().toNodeId(client.getNamespaceTable()).get()));
+				}
 			}
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (Exception e) {
 			logger.error("Browsing nodeId={} failed: {}", browseRoot, e.getMessage(), e);
 		}
-		return newLevel;
+		return resultMap;
 	}
 
 	private Map<String, Object> discoverOpcUaServers(String endpointString, String hostname, Integer port,
-			String serverPath, Boolean rewriteEndpoint, String authType, String securityMode, String cryptoMode,
-			String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey, String crt, String key,
-			String clientName, String clientUrn, boolean advancedView) {
+			String serverPath, Boolean rewriteEndpoint, AuthMode authType, SecurityMode securityMode,
+			CryptoMode cryptoMode, String user, String password, String cryptoCa, String cryptoCrt, String cryptoKey,
+			String crt, String key, String clientName, String clientUrn, boolean advancedView) {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			OpcUaClient client = null;
@@ -321,7 +501,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	}
 
 	private OpcUaClient createClient(String endpointString, String hostname, Integer port, String serverPath,
-			Boolean rewriteEndpoint, String authType, String securityMode, String cryptoMode, String user,
+			Boolean rewriteEndpoint, AuthMode authType, SecurityMode securityMode, CryptoMode cryptoMode, String user,
 			String password, String cryptoCa, String cryptoCrt, String cryptoKey, String crt, String key,
 			String clientName, String clientUrn) {
 		String securityPolicyTarget = null;
@@ -336,21 +516,21 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 			endpointString = "opc.tcp://" + hostname + ":" + String.valueOf(port) + serverPath;
 		}
 		switch (cryptoMode) {
-		case "none":
+		case none:
 			securityPolicyTarget = SecurityPolicy.None.getUri();
 			cryptoCrt = null;
 			cryptoKey = null;
-			securityMode = "none";
+			securityMode = SecurityMode.none;
 			break;
-		case "basic128Rsa15":
+		case Basic128Rsa15:
 			useCert = true;
 			securityPolicyTarget = SecurityPolicy.Basic128Rsa15.getUri();
 			break;
-		case "basic256":
+		case Basic256:
 			useCert = true;
 			securityPolicyTarget = SecurityPolicy.Basic256.getUri();
 			break;
-		case "basic256Sha256":
+		case Basic256Sha256:
 			useCert = true;
 			securityPolicyTarget = SecurityPolicy.Basic256Sha256.getUri();
 			break;
@@ -360,19 +540,18 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 		}
 		boolean certAuth = false;
 		switch (securityMode) {
-		case "none":
+		case none:
 			securityModeTarget = "None";
 			securityPolicyTarget = SecurityPolicy.None.getUri();
 			cryptoCrt = null;
 			cryptoKey = null;
-			cryptoMode = "none";
 			useCert = false;
 			break;
-		case "sign":
+		case sign:
 			securityModeTarget = "Sign";
 			useCert = true;
 			break;
-		case "signAndEncrypt":
+		case signAndEncrypt:
 			securityModeTarget = "SignAndEncrypt";
 			useCert = true;
 			break;
@@ -393,40 +572,35 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 		}
 		List<EndpointDescription> endpoints = null;
 		try {
-			logger.info("try to list the endpoints at " + endpointString);
 			endpoints = DiscoveryClient.getEndpoints(endpointString).get();
-		} catch (InterruptedException | ExecutionException e1) {
+		} catch (Exception e1) {
 			logger.logException(e1);
 		}
 		List<EndpointDescription> targetsEndPoint = new ArrayList<>();
 		if (endpoints != null) {
-			logger.info("looking for a endpoint with the specific features");
 			int count = 0;
 			for (EndpointDescription e : endpoints) {
 				count++;
-
 				if (e.getSecurityMode().toString().equals(securityModeTarget)
 						&& e.getSecurityPolicyUri().equals(securityPolicyTarget)) {
 					targetsEndPoint.add(e);
-					logger.info("ENDPOINT FOUND:\n" + e.toString());
 				} else {
-					logger.warn("THE ENDPOINT " + count + " IS NOT GOOD:\n" + e.toString());
+					logger.debug("THE ENDPOINT " + count + " IS NOT COMPLIANCE -> " + e.toString());
 				}
 			}
 		}
 		if (targetsEndPoint != null && !targetsEndPoint.isEmpty()) {
 			for (EndpointDescription e : targetsEndPoint) {
 				try {
-					KeyStoreLoader loader = null;
-					AuthKeyStoreLoader authLoader = null;
+					OpcUaCertsUtils loader = null;
+					OpcUaCertsUtils authLoader = null;
 					if (useCert) {
-						loader = new KeyStoreLoader();
+						loader = new OpcUaCertsUtils();
 						if (cryptoKey != null && !cryptoKey.isEmpty() && cryptoCrt != null && !cryptoCrt.isEmpty()) {
 							loader.setClientKeyPair(cryptoKey, cryptoCrt);
-							logger.info("use key/crt in conf");
 						} else {
 							loader.create();
-							logger.info("generate key/crt");
+							logger.debug("generate key/crt");
 						}
 					}
 					if (authType.equals("password") || certAuth) {
@@ -434,7 +608,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 							idp = new UsernameProvider(user, password);
 						}
 						if (certAuth) {
-							authLoader = new AuthKeyStoreLoader();
+							authLoader = new OpcUaCertsUtils();
 							authLoader.setClientKeyPair(key, crt);
 							idp = new X509IdentityProvider(authLoader.getClientCertificate(),
 									authLoader.getPrivateKey());

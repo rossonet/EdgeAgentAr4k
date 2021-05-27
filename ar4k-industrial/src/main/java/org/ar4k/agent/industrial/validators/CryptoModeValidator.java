@@ -15,16 +15,16 @@ import com.beust.jcommander.ParameterException;
 */
 public class CryptoModeValidator implements IParameterValidator {
 
-  @Override
-  public void validate(String name, String value) throws ParameterException {
-    try {
-      CryptoMode.valueOf(value);
-    } catch (java.lang.IllegalArgumentException aa) {
-      StringBuilder b = new StringBuilder();
-      EnumSet.allOf(CryptoMode.class).forEach(v -> {
-        b.append(v.toString() + " ");
-      });
-      throw new ParameterException("Parameter " + name + " should be in " + b.toString());
-    }
-  }
+	@Override
+	public void validate(String name, String value) throws ParameterException {
+		try {
+			CryptoMode.valueOf(value);
+		} catch (java.lang.IllegalArgumentException aa) {
+			StringBuilder b = new StringBuilder();
+			EnumSet.allOf(CryptoMode.class).forEach(v -> {
+				b.append(v.toString() + " ");
+			});
+			throw new ParameterException("Parameter " + name + " should be in " + b.toString());
+		}
+	}
 }
