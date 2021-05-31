@@ -645,6 +645,29 @@ public class ShellInterface extends AbstractShellHelper {
 		return risposta;
 	}
 
+	@ShellMethod(value = "Stop runtime service", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testIsRunningOk")
+	public void stopService() {
+		// TODO implementare lo spegnimento di un servizio
+	}
+
+	@ShellMethod(value = "Start runtime service", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testIsRunningOk")
+	public void startServices() {
+		// TODO implementare l'accensione di un servizio
+	}
+
+	@ShellMethod(value = "Get details of a runtime service", group = "Agent Life Cycle Commands")
+	@ManagedOperation
+	@ShellMethodAvailability("testIsRunningOk")
+	public String getServiceDetails() {
+		String risposta = "";
+		// TODO implementare la visulizzazione dei dettagli di un servizio
+		return risposta;
+	}
+
 	@ShellMethod(value = "Clone runtime config in the runtime list with a new id, name and prompt", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testRuntimeConfigOk")
