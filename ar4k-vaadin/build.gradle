@@ -5,7 +5,7 @@ dependencies {
 	compile group: 'com.vaadin', name: 'vaadin-material-theme'//, version: '5.0.2'
 	compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.4.7'
 	compile group: 'com.vaadin', name: 'vaadin-icons-flow'//, version: '4.0.0'
-	compile group: 'com.vaadin', name: 'vaadin-grid-flow'//, version: '4..11'
+	compile group: 'com.vaadin', name: 'vaadin-grid-flow'//, version: '20.0.0'
 	compile group: 'com.vaadin', name: 'vaadin-app-layout-flow'//, version: '4.0.0'
 	compile group: 'com.vaadin', name: 'vaadin-split-layout-flow'//, version: '4.0.0'
 	compile group: 'com.vaadin', name: 'flow-client'//, version: '4.0.8'
