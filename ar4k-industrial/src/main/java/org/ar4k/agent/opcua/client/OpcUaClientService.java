@@ -1,4 +1,4 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.opcua.client;
 
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
@@ -22,7 +22,6 @@ import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;

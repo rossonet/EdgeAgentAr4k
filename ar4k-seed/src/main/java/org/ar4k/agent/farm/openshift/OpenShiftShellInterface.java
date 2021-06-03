@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TODO completare gestione modulo da OpenShift
+//TODO completare gestione modulo da OpenShift con creazione cluster via bootp
 
 @ShellCommandGroup("OpenShift Commands")
 @ShellComponent

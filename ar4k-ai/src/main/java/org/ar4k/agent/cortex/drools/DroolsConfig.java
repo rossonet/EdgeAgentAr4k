@@ -17,6 +17,7 @@ import com.beust.jcommander.Parameter;
  *         Configurazione Drools collegata all'agente.
  */
 public class DroolsConfig extends AbstractServiceConfig {
+	//TODO completare servizio implementazioni regole Drools sui dati e comandi
 
 	private static final long serialVersionUID = -5184060109145099045L;
 	@Parameter(names = "--aiName", description = "unique name for the AI")

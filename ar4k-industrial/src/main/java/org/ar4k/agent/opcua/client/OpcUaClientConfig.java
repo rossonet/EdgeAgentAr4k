@@ -26,7 +26,6 @@ import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.industrial.validators.AuthModeValidator;
 import org.ar4k.agent.industrial.validators.CryptoModeValidator;
 import org.ar4k.agent.industrial.validators.SecurityModeValidator;
-import org.ar4k.agent.opcua.OpcUaClientService;
 
 import com.beust.jcommander.Parameter;
 
