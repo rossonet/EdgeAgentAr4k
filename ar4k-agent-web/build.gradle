@@ -1,5 +1,5 @@
 plugins {
-	id 'com.vaadin' version '0.8.0'
+    id 'com.vaadin' version '0.14.6.0'
 }
 
 apply plugin: "docker"
@@ -45,6 +45,7 @@ vaadin {
 }
 
 bootRun.configure {
+	mustRunAfter vaadinPrepareFrontend
     mustRunAfter vaadinBuildFrontend
 }
 

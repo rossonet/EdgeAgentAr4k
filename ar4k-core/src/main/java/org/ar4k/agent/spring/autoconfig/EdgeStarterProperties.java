@@ -42,7 +42,7 @@ public class EdgeStarterProperties {
 	private String beaconDiscoveryPort = "33666";
 	private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
 	private String consoleOnly = "false";
-	private String defaultWebPage = "/ar4k-console";
+	private String defaultWebPage = "/app/ar4k-console";
 	private String dnsConfig = "";
 	private String dnsConfigOrder = "1";
 	private String dnsKeystore = "";

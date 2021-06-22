@@ -41,7 +41,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
-@Route("ar4k-console")
+@Route(value = "ar4k-console", absolute = true)
 @Theme(value = Material.class, variant = Material.DARK)
 @PageTitle("Ar4k Console")
 @StyleSheet("frontend://edge.css")
