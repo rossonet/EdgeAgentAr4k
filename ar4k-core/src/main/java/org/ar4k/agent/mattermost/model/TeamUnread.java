@@ -16,97 +16,99 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Unread count in team.
- * 
- * @author Takayuki Maruyama
- */
 public class TeamUnread {
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("msg_count")
-  private String msgCount;
-  @JsonProperty("mention_count")
-  private String mentionCount;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("msg_count")
+	private String msgCount;
+	@JsonProperty("mention_count")
+	private String mentionCount;
 
-  @java.lang.SuppressWarnings("all")
-  public TeamUnread() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public TeamUnread() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getMsgCount() {
-    return this.msgCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getMsgCount() {
+		return this.msgCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getMentionCount() {
-    return this.mentionCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getMentionCount() {
+		return this.mentionCount;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("msg_count")
-  @java.lang.SuppressWarnings("all")
-  public void setMsgCount(final String msgCount) {
-    this.msgCount = msgCount;
-  }
+	@JsonProperty("msg_count")
+	@java.lang.SuppressWarnings("all")
+	public void setMsgCount(final String msgCount) {
+		this.msgCount = msgCount;
+	}
 
-  @JsonProperty("mention_count")
-  @java.lang.SuppressWarnings("all")
-  public void setMentionCount(final String mentionCount) {
-    this.mentionCount = mentionCount;
-  }
+	@JsonProperty("mention_count")
+	@java.lang.SuppressWarnings("all")
+	public void setMentionCount(final String mentionCount) {
+		this.mentionCount = mentionCount;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TeamUnread)) return false;
-    final TeamUnread other = (TeamUnread) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$msgCount = this.getMsgCount();
-    final java.lang.Object other$msgCount = other.getMsgCount();
-    if (this$msgCount == null ? other$msgCount != null : !this$msgCount.equals(other$msgCount)) return false;
-    final java.lang.Object this$mentionCount = this.getMentionCount();
-    final java.lang.Object other$mentionCount = other.getMentionCount();
-    if (this$mentionCount == null ? other$mentionCount != null : !this$mentionCount.equals(other$mentionCount)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof TeamUnread))
+			return false;
+		final TeamUnread other = (TeamUnread) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$msgCount = this.getMsgCount();
+		final java.lang.Object other$msgCount = other.getMsgCount();
+		if (this$msgCount == null ? other$msgCount != null : !this$msgCount.equals(other$msgCount))
+			return false;
+		final java.lang.Object this$mentionCount = this.getMentionCount();
+		final java.lang.Object other$mentionCount = other.getMentionCount();
+		if (this$mentionCount == null ? other$mentionCount != null : !this$mentionCount.equals(other$mentionCount))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof TeamUnread;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof TeamUnread;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $msgCount = this.getMsgCount();
-    result = result * PRIME + ($msgCount == null ? 43 : $msgCount.hashCode());
-    final java.lang.Object $mentionCount = this.getMentionCount();
-    result = result * PRIME + ($mentionCount == null ? 43 : $mentionCount.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $msgCount = this.getMsgCount();
+		result = result * PRIME + ($msgCount == null ? 43 : $msgCount.hashCode());
+		final java.lang.Object $mentionCount = this.getMentionCount();
+		result = result * PRIME + ($mentionCount == null ? 43 : $mentionCount.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "TeamUnread(teamId=" + this.getTeamId() + ", msgCount=" + this.getMsgCount() + ", mentionCount=" + this.getMentionCount() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "TeamUnread(teamId=" + this.getTeamId() + ", msgCount=" + this.getMsgCount() + ", mentionCount="
+				+ this.getMentionCount() + ")";
+	}
 }

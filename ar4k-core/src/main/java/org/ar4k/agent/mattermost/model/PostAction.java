@@ -17,430 +17,455 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Post action.
- * 
- * @author Takayuki Maruyama
- */
 public class PostAction {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("name")
-  private String name;
-  @JsonProperty("integration")
-  private PostActionIntegration integration;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("name")
+	private String name;
+	@JsonProperty("integration")
+	private PostActionIntegration integration;
 
+	public static class PostActionIntegration {
+		@JsonProperty("url")
+		private String url;
+		@JsonProperty("context")
+		private Map<String, String> context;
 
-  public static class PostActionIntegration {
-    @JsonProperty("url")
-    private String url;
-    @JsonProperty("context")
-    private Map<String, String> context;
+		@java.lang.SuppressWarnings("all")
+		public PostActionIntegration() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public PostActionIntegration() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getUrl() {
+			return this.url;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getUrl() {
-      return this.url;
-    }
+		@java.lang.SuppressWarnings("all")
+		public Map<String, String> getContext() {
+			return this.context;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public Map<String, String> getContext() {
-      return this.context;
-    }
+		@JsonProperty("url")
+		@java.lang.SuppressWarnings("all")
+		public void setUrl(final String url) {
+			this.url = url;
+		}
 
-    @JsonProperty("url")
-    @java.lang.SuppressWarnings("all")
-    public void setUrl(final String url) {
-      this.url = url;
-    }
+		@JsonProperty("context")
+		@java.lang.SuppressWarnings("all")
+		public void setContext(final Map<String, String> context) {
+			this.context = context;
+		}
 
-    @JsonProperty("context")
-    @java.lang.SuppressWarnings("all")
-    public void setContext(final Map<String, String> context) {
-      this.context = context;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public boolean equals(final java.lang.Object o) {
+			if (o == this)
+				return true;
+			if (!(o instanceof PostAction.PostActionIntegration))
+				return false;
+			final PostAction.PostActionIntegration other = (PostAction.PostActionIntegration) o;
+			if (!other.canEqual((java.lang.Object) this))
+				return false;
+			final java.lang.Object this$url = this.getUrl();
+			final java.lang.Object other$url = other.getUrl();
+			if (this$url == null ? other$url != null : !this$url.equals(other$url))
+				return false;
+			final java.lang.Object this$context = this.getContext();
+			final java.lang.Object other$context = other.getContext();
+			if (this$context == null ? other$context != null : !this$context.equals(other$context))
+				return false;
+			return true;
+		}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public boolean equals(final java.lang.Object o) {
-      if (o == this) return true;
-      if (!(o instanceof PostAction.PostActionIntegration)) return false;
-      final PostAction.PostActionIntegration other = (PostAction.PostActionIntegration) o;
-      if (!other.canEqual((java.lang.Object) this)) return false;
-      final java.lang.Object this$url = this.getUrl();
-      final java.lang.Object other$url = other.getUrl();
-      if (this$url == null ? other$url != null : !this$url.equals(other$url)) return false;
-      final java.lang.Object this$context = this.getContext();
-      final java.lang.Object other$context = other.getContext();
-      if (this$context == null ? other$context != null : !this$context.equals(other$context)) return false;
-      return true;
-    }
+		@java.lang.SuppressWarnings("all")
+		protected boolean canEqual(final java.lang.Object other) {
+			return other instanceof PostAction.PostActionIntegration;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    protected boolean canEqual(final java.lang.Object other) {
-      return other instanceof PostAction.PostActionIntegration;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public int hashCode() {
+			final int PRIME = 59;
+			int result = 1;
+			final java.lang.Object $url = this.getUrl();
+			result = result * PRIME + ($url == null ? 43 : $url.hashCode());
+			final java.lang.Object $context = this.getContext();
+			result = result * PRIME + ($context == null ? 43 : $context.hashCode());
+			return result;
+		}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final java.lang.Object $url = this.getUrl();
-      result = result * PRIME + ($url == null ? 43 : $url.hashCode());
-      final java.lang.Object $context = this.getContext();
-      result = result * PRIME + ($context == null ? 43 : $context.hashCode());
-      return result;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "PostAction.PostActionIntegration(url=" + this.getUrl() + ", context=" + this.getContext() + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "PostAction.PostActionIntegration(url=" + this.getUrl() + ", context=" + this.getContext() + ")";
-    }
-  }
+	public static class PostActionIntegrationRequest {
+		@JsonProperty("user_id")
+		private String userId;
+		/* @since Mattermost Server 5.3 */
+		@JsonProperty("post_id")
+		private String postId;
+		/* @since Mattermost Server 5.3 */
+		@JsonProperty("type")
+		private String type;
+		/* @since Mattermost Server 5.3 */
+		@JsonProperty("data_source")
+		private String dataSource;
+		/* @since Mattermost Server 5.4 */
+		@JsonProperty("channel_id")
+		private String channelId;
+		/* @since Mattermost Server 5.4 */
+		@JsonProperty("team_id")
+		private String teamId;
+		/* @since Mattermost Server 5.6 */
+		@JsonProperty("trigger_id")
+		private String triggerId;
+		@JsonProperty("context")
+		private Map<String, String> context;
 
+		@java.lang.SuppressWarnings("all")
+		public PostActionIntegrationRequest() {
+		}
 
-  public static class PostActionIntegrationRequest {
-    @JsonProperty("user_id")
-    private String userId;
-    /* @since Mattermost Server 5.3 */
-    @JsonProperty("post_id")
-    private String postId;
-    /* @since Mattermost Server 5.3 */
-    @JsonProperty("type")
-    private String type;
-    /* @since Mattermost Server 5.3 */
-    @JsonProperty("data_source")
-    private String dataSource;
-    /* @since Mattermost Server 5.4 */
-    @JsonProperty("channel_id")
-    private String channelId;
-    /* @since Mattermost Server 5.4 */
-    @JsonProperty("team_id")
-    private String teamId;
-    /* @since Mattermost Server 5.6 */
-    @JsonProperty("trigger_id")
-    private String triggerId;
-    @JsonProperty("context")
-    private Map<String, String> context;
+		@java.lang.SuppressWarnings("all")
+		public String getUserId() {
+			return this.userId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public PostActionIntegrationRequest() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getPostId() {
+			return this.postId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getUserId() {
-      return this.userId;
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getType() {
+			return this.type;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getPostId() {
-      return this.postId;
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getDataSource() {
+			return this.dataSource;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getType() {
-      return this.type;
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getChannelId() {
+			return this.channelId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getDataSource() {
-      return this.dataSource;
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getTeamId() {
+			return this.teamId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getChannelId() {
-      return this.channelId;
-    }
+		@java.lang.SuppressWarnings("all")
+		public String getTriggerId() {
+			return this.triggerId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getTeamId() {
-      return this.teamId;
-    }
+		@java.lang.SuppressWarnings("all")
+		public Map<String, String> getContext() {
+			return this.context;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getTriggerId() {
-      return this.triggerId;
-    }
+		@JsonProperty("user_id")
+		@java.lang.SuppressWarnings("all")
+		public void setUserId(final String userId) {
+			this.userId = userId;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public Map<String, String> getContext() {
-      return this.context;
-    }
+		@JsonProperty("post_id")
+		@java.lang.SuppressWarnings("all")
+		public void setPostId(final String postId) {
+			this.postId = postId;
+		}
 
-    @JsonProperty("user_id")
-    @java.lang.SuppressWarnings("all")
-    public void setUserId(final String userId) {
-      this.userId = userId;
-    }
+		@JsonProperty("type")
+		@java.lang.SuppressWarnings("all")
+		public void setType(final String type) {
+			this.type = type;
+		}
 
-    @JsonProperty("post_id")
-    @java.lang.SuppressWarnings("all")
-    public void setPostId(final String postId) {
-      this.postId = postId;
-    }
+		@JsonProperty("data_source")
+		@java.lang.SuppressWarnings("all")
+		public void setDataSource(final String dataSource) {
+			this.dataSource = dataSource;
+		}
 
-    @JsonProperty("type")
-    @java.lang.SuppressWarnings("all")
-    public void setType(final String type) {
-      this.type = type;
-    }
+		@JsonProperty("channel_id")
+		@java.lang.SuppressWarnings("all")
+		public void setChannelId(final String channelId) {
+			this.channelId = channelId;
+		}
 
-    @JsonProperty("data_source")
-    @java.lang.SuppressWarnings("all")
-    public void setDataSource(final String dataSource) {
-      this.dataSource = dataSource;
-    }
+		@JsonProperty("team_id")
+		@java.lang.SuppressWarnings("all")
+		public void setTeamId(final String teamId) {
+			this.teamId = teamId;
+		}
 
-    @JsonProperty("channel_id")
-    @java.lang.SuppressWarnings("all")
-    public void setChannelId(final String channelId) {
-      this.channelId = channelId;
-    }
+		@JsonProperty("trigger_id")
+		@java.lang.SuppressWarnings("all")
+		public void setTriggerId(final String triggerId) {
+			this.triggerId = triggerId;
+		}
 
-    @JsonProperty("team_id")
-    @java.lang.SuppressWarnings("all")
-    public void setTeamId(final String teamId) {
-      this.teamId = teamId;
-    }
+		@JsonProperty("context")
+		@java.lang.SuppressWarnings("all")
+		public void setContext(final Map<String, String> context) {
+			this.context = context;
+		}
 
-    @JsonProperty("trigger_id")
-    @java.lang.SuppressWarnings("all")
-    public void setTriggerId(final String triggerId) {
-      this.triggerId = triggerId;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public boolean equals(final java.lang.Object o) {
+			if (o == this)
+				return true;
+			if (!(o instanceof PostAction.PostActionIntegrationRequest))
+				return false;
+			final PostAction.PostActionIntegrationRequest other = (PostAction.PostActionIntegrationRequest) o;
+			if (!other.canEqual((java.lang.Object) this))
+				return false;
+			final java.lang.Object this$userId = this.getUserId();
+			final java.lang.Object other$userId = other.getUserId();
+			if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+				return false;
+			final java.lang.Object this$postId = this.getPostId();
+			final java.lang.Object other$postId = other.getPostId();
+			if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId))
+				return false;
+			final java.lang.Object this$type = this.getType();
+			final java.lang.Object other$type = other.getType();
+			if (this$type == null ? other$type != null : !this$type.equals(other$type))
+				return false;
+			final java.lang.Object this$dataSource = this.getDataSource();
+			final java.lang.Object other$dataSource = other.getDataSource();
+			if (this$dataSource == null ? other$dataSource != null : !this$dataSource.equals(other$dataSource))
+				return false;
+			final java.lang.Object this$channelId = this.getChannelId();
+			final java.lang.Object other$channelId = other.getChannelId();
+			if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+				return false;
+			final java.lang.Object this$teamId = this.getTeamId();
+			final java.lang.Object other$teamId = other.getTeamId();
+			if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+				return false;
+			final java.lang.Object this$triggerId = this.getTriggerId();
+			final java.lang.Object other$triggerId = other.getTriggerId();
+			if (this$triggerId == null ? other$triggerId != null : !this$triggerId.equals(other$triggerId))
+				return false;
+			final java.lang.Object this$context = this.getContext();
+			final java.lang.Object other$context = other.getContext();
+			if (this$context == null ? other$context != null : !this$context.equals(other$context))
+				return false;
+			return true;
+		}
 
-    @JsonProperty("context")
-    @java.lang.SuppressWarnings("all")
-    public void setContext(final Map<String, String> context) {
-      this.context = context;
-    }
+		@java.lang.SuppressWarnings("all")
+		protected boolean canEqual(final java.lang.Object other) {
+			return other instanceof PostAction.PostActionIntegrationRequest;
+		}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public boolean equals(final java.lang.Object o) {
-      if (o == this) return true;
-      if (!(o instanceof PostAction.PostActionIntegrationRequest)) return false;
-      final PostAction.PostActionIntegrationRequest other = (PostAction.PostActionIntegrationRequest) o;
-      if (!other.canEqual((java.lang.Object) this)) return false;
-      final java.lang.Object this$userId = this.getUserId();
-      final java.lang.Object other$userId = other.getUserId();
-      if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-      final java.lang.Object this$postId = this.getPostId();
-      final java.lang.Object other$postId = other.getPostId();
-      if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId)) return false;
-      final java.lang.Object this$type = this.getType();
-      final java.lang.Object other$type = other.getType();
-      if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-      final java.lang.Object this$dataSource = this.getDataSource();
-      final java.lang.Object other$dataSource = other.getDataSource();
-      if (this$dataSource == null ? other$dataSource != null : !this$dataSource.equals(other$dataSource)) return false;
-      final java.lang.Object this$channelId = this.getChannelId();
-      final java.lang.Object other$channelId = other.getChannelId();
-      if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-      final java.lang.Object this$teamId = this.getTeamId();
-      final java.lang.Object other$teamId = other.getTeamId();
-      if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-      final java.lang.Object this$triggerId = this.getTriggerId();
-      final java.lang.Object other$triggerId = other.getTriggerId();
-      if (this$triggerId == null ? other$triggerId != null : !this$triggerId.equals(other$triggerId)) return false;
-      final java.lang.Object this$context = this.getContext();
-      final java.lang.Object other$context = other.getContext();
-      if (this$context == null ? other$context != null : !this$context.equals(other$context)) return false;
-      return true;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public int hashCode() {
+			final int PRIME = 59;
+			int result = 1;
+			final java.lang.Object $userId = this.getUserId();
+			result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+			final java.lang.Object $postId = this.getPostId();
+			result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
+			final java.lang.Object $type = this.getType();
+			result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+			final java.lang.Object $dataSource = this.getDataSource();
+			result = result * PRIME + ($dataSource == null ? 43 : $dataSource.hashCode());
+			final java.lang.Object $channelId = this.getChannelId();
+			result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+			final java.lang.Object $teamId = this.getTeamId();
+			result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+			final java.lang.Object $triggerId = this.getTriggerId();
+			result = result * PRIME + ($triggerId == null ? 43 : $triggerId.hashCode());
+			final java.lang.Object $context = this.getContext();
+			result = result * PRIME + ($context == null ? 43 : $context.hashCode());
+			return result;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    protected boolean canEqual(final java.lang.Object other) {
-      return other instanceof PostAction.PostActionIntegrationRequest;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "PostAction.PostActionIntegrationRequest(userId=" + this.getUserId() + ", postId=" + this.getPostId()
+					+ ", type=" + this.getType() + ", dataSource=" + this.getDataSource() + ", channelId="
+					+ this.getChannelId() + ", teamId=" + this.getTeamId() + ", triggerId=" + this.getTriggerId()
+					+ ", context=" + this.getContext() + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final java.lang.Object $userId = this.getUserId();
-      result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-      final java.lang.Object $postId = this.getPostId();
-      result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
-      final java.lang.Object $type = this.getType();
-      result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-      final java.lang.Object $dataSource = this.getDataSource();
-      result = result * PRIME + ($dataSource == null ? 43 : $dataSource.hashCode());
-      final java.lang.Object $channelId = this.getChannelId();
-      result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-      final java.lang.Object $teamId = this.getTeamId();
-      result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-      final java.lang.Object $triggerId = this.getTriggerId();
-      result = result * PRIME + ($triggerId == null ? 43 : $triggerId.hashCode());
-      final java.lang.Object $context = this.getContext();
-      result = result * PRIME + ($context == null ? 43 : $context.hashCode());
-      return result;
-    }
+	public static class PostActionIntegrationResponse {
+		@JsonProperty("update")
+		private Post update;
+		@JsonProperty("ephemeral_text")
+		private String ephemeralText;
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "PostAction.PostActionIntegrationRequest(userId=" + this.getUserId() + ", postId=" + this.getPostId() + ", type=" + this.getType() + ", dataSource=" + this.getDataSource() + ", channelId=" + this.getChannelId() + ", teamId=" + this.getTeamId() + ", triggerId=" + this.getTriggerId() + ", context=" + this.getContext() + ")";
-    }
-  }
+		@java.lang.SuppressWarnings("all")
+		public PostActionIntegrationResponse() {
+		}
 
+		@java.lang.SuppressWarnings("all")
+		public Post getUpdate() {
+			return this.update;
+		}
 
-  public static class PostActionIntegrationResponse {
-    @JsonProperty("update")
-    private Post update;
-    @JsonProperty("ephemeral_text")
-    private String ephemeralText;
+		@java.lang.SuppressWarnings("all")
+		public String getEphemeralText() {
+			return this.ephemeralText;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public PostActionIntegrationResponse() {
-    }
+		@JsonProperty("update")
+		@java.lang.SuppressWarnings("all")
+		public void setUpdate(final Post update) {
+			this.update = update;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public Post getUpdate() {
-      return this.update;
-    }
+		@JsonProperty("ephemeral_text")
+		@java.lang.SuppressWarnings("all")
+		public void setEphemeralText(final String ephemeralText) {
+			this.ephemeralText = ephemeralText;
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public String getEphemeralText() {
-      return this.ephemeralText;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public boolean equals(final java.lang.Object o) {
+			if (o == this)
+				return true;
+			if (!(o instanceof PostAction.PostActionIntegrationResponse))
+				return false;
+			final PostAction.PostActionIntegrationResponse other = (PostAction.PostActionIntegrationResponse) o;
+			if (!other.canEqual((java.lang.Object) this))
+				return false;
+			final java.lang.Object this$update = this.getUpdate();
+			final java.lang.Object other$update = other.getUpdate();
+			if (this$update == null ? other$update != null : !this$update.equals(other$update))
+				return false;
+			final java.lang.Object this$ephemeralText = this.getEphemeralText();
+			final java.lang.Object other$ephemeralText = other.getEphemeralText();
+			if (this$ephemeralText == null ? other$ephemeralText != null
+					: !this$ephemeralText.equals(other$ephemeralText))
+				return false;
+			return true;
+		}
 
-    @JsonProperty("update")
-    @java.lang.SuppressWarnings("all")
-    public void setUpdate(final Post update) {
-      this.update = update;
-    }
+		@java.lang.SuppressWarnings("all")
+		protected boolean canEqual(final java.lang.Object other) {
+			return other instanceof PostAction.PostActionIntegrationResponse;
+		}
 
-    @JsonProperty("ephemeral_text")
-    @java.lang.SuppressWarnings("all")
-    public void setEphemeralText(final String ephemeralText) {
-      this.ephemeralText = ephemeralText;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public int hashCode() {
+			final int PRIME = 59;
+			int result = 1;
+			final java.lang.Object $update = this.getUpdate();
+			result = result * PRIME + ($update == null ? 43 : $update.hashCode());
+			final java.lang.Object $ephemeralText = this.getEphemeralText();
+			result = result * PRIME + ($ephemeralText == null ? 43 : $ephemeralText.hashCode());
+			return result;
+		}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public boolean equals(final java.lang.Object o) {
-      if (o == this) return true;
-      if (!(o instanceof PostAction.PostActionIntegrationResponse)) return false;
-      final PostAction.PostActionIntegrationResponse other = (PostAction.PostActionIntegrationResponse) o;
-      if (!other.canEqual((java.lang.Object) this)) return false;
-      final java.lang.Object this$update = this.getUpdate();
-      final java.lang.Object other$update = other.getUpdate();
-      if (this$update == null ? other$update != null : !this$update.equals(other$update)) return false;
-      final java.lang.Object this$ephemeralText = this.getEphemeralText();
-      final java.lang.Object other$ephemeralText = other.getEphemeralText();
-      if (this$ephemeralText == null ? other$ephemeralText != null : !this$ephemeralText.equals(other$ephemeralText)) return false;
-      return true;
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "PostAction.PostActionIntegrationResponse(update=" + this.getUpdate() + ", ephemeralText="
+					+ this.getEphemeralText() + ")";
+		}
+	}
 
-    @java.lang.SuppressWarnings("all")
-    protected boolean canEqual(final java.lang.Object other) {
-      return other instanceof PostAction.PostActionIntegrationResponse;
-    }
+	@java.lang.SuppressWarnings("all")
+	public PostAction() {
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final java.lang.Object $update = this.getUpdate();
-      result = result * PRIME + ($update == null ? 43 : $update.hashCode());
-      final java.lang.Object $ephemeralText = this.getEphemeralText();
-      result = result * PRIME + ($ephemeralText == null ? 43 : $ephemeralText.hashCode());
-      return result;
-    }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "PostAction.PostActionIntegrationResponse(update=" + this.getUpdate() + ", ephemeralText=" + this.getEphemeralText() + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PostAction() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PostActionIntegration getIntegration() {
+		return this.integration;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@JsonProperty("name")
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PostActionIntegration getIntegration() {
-    return this.integration;
-  }
+	@JsonProperty("integration")
+	@java.lang.SuppressWarnings("all")
+	public void setIntegration(final PostActionIntegration integration) {
+		this.integration = integration;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PostAction))
+			return false;
+		final PostAction other = (PostAction) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		final java.lang.Object this$integration = this.getIntegration();
+		final java.lang.Object other$integration = other.getIntegration();
+		if (this$integration == null ? other$integration != null : !this$integration.equals(other$integration))
+			return false;
+		return true;
+	}
 
-  @JsonProperty("name")
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PostAction;
+	}
 
-  @JsonProperty("integration")
-  @java.lang.SuppressWarnings("all")
-  public void setIntegration(final PostActionIntegration integration) {
-    this.integration = integration;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		final java.lang.Object $integration = this.getIntegration();
+		result = result * PRIME + ($integration == null ? 43 : $integration.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PostAction)) return false;
-    final PostAction other = (PostAction) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final java.lang.Object this$integration = this.getIntegration();
-    final java.lang.Object other$integration = other.getIntegration();
-    if (this$integration == null ? other$integration != null : !this$integration.equals(other$integration)) return false;
-    return true;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PostAction;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    final java.lang.Object $integration = this.getIntegration();
-    result = result * PRIME + ($integration == null ? 43 : $integration.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PostAction(id=" + this.getId() + ", name=" + this.getName() + ", integration=" + this.getIntegration() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PostAction(id=" + this.getId() + ", name=" + this.getName() + ", integration=" + this.getIntegration()
+				+ ")";
+	}
 }

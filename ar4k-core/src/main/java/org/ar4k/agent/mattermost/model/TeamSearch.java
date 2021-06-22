@@ -16,61 +16,60 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Team search condition.
- * 
- * @author Takayuki Maruyama
- */
 public class TeamSearch {
-  @JsonProperty("term")
-  private String term;
+	@JsonProperty("term")
+	private String term;
 
-  @java.lang.SuppressWarnings("all")
-  public TeamSearch() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public TeamSearch() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTerm() {
-    return this.term;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTerm() {
+		return this.term;
+	}
 
-  @JsonProperty("term")
-  @java.lang.SuppressWarnings("all")
-  public void setTerm(final String term) {
-    this.term = term;
-  }
+	@JsonProperty("term")
+	@java.lang.SuppressWarnings("all")
+	public void setTerm(final String term) {
+		this.term = term;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TeamSearch)) return false;
-    final TeamSearch other = (TeamSearch) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$term = this.getTerm();
-    final java.lang.Object other$term = other.getTerm();
-    if (this$term == null ? other$term != null : !this$term.equals(other$term)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof TeamSearch))
+			return false;
+		final TeamSearch other = (TeamSearch) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$term = this.getTerm();
+		final java.lang.Object other$term = other.getTerm();
+		if (this$term == null ? other$term != null : !this$term.equals(other$term))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof TeamSearch;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof TeamSearch;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $term = this.getTerm();
-    result = result * PRIME + ($term == null ? 43 : $term.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $term = this.getTerm();
+		result = result * PRIME + ($term == null ? 43 : $term.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "TeamSearch(term=" + this.getTerm() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "TeamSearch(term=" + this.getTerm() + ")";
+	}
 }

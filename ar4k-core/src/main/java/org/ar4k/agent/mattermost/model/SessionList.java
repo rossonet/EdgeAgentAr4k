@@ -16,13 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link Session}.
- * 
- * @author Takayuki Maruyama
- */
 public class SessionList extends ArrayList<Session> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

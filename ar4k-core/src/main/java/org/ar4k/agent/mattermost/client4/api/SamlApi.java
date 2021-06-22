@@ -20,54 +20,22 @@ import java.nio.file.Path;
 import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.model.SamlCertificateStatus;
 
-/**
- * SAML API.
- * 
- * @author Takayuki Maruyama
- */
 public interface SamlApi {
 
-  /**
-   * returns metadata for the SAML configuration.
-   */
-  ApiResponse<Path> getSamlMetadata() throws IOException;
+	ApiResponse<Path> getSamlMetadata() throws IOException;
 
-  /**
-   * will upload an IDP certificate for SAML and set the config to use it.
-   */
-  ApiResponse<Boolean> uploadSamlIdpCertificate(Path dataFile, String fileName);
+	ApiResponse<Boolean> uploadSamlIdpCertificate(Path dataFile, String fileName);
 
-  /**
-   * will upload a public certificate for SAML and set the config to use it.
-   */
-  ApiResponse<Boolean> uploadSamlPublicCertificate(Path dataFile, String fileName);
+	ApiResponse<Boolean> uploadSamlPublicCertificate(Path dataFile, String fileName);
 
-  /**
-   * will upload a private key for SAML and set the config to use it.
-   */
-  ApiResponse<Boolean> uploadSamlPrivateCertificate(Path dataFile, String fileName);
+	ApiResponse<Boolean> uploadSamlPrivateCertificate(Path dataFile, String fileName);
 
-  /**
-   * deletes the SAML IDP certificate from the server and updates the config to not use it and
-   * disable SAML.
-   */
-  ApiResponse<Boolean> deleteSamlIdpCertificate();
+	ApiResponse<Boolean> deleteSamlIdpCertificate();
 
-  /**
-   * deletes the saml IDP certificate from the server and updates the config to not use it and
-   * disable SAML.
-   */
-  ApiResponse<Boolean> deleteSamlPublicCertificate();
+	ApiResponse<Boolean> deleteSamlPublicCertificate();
 
-  /**
-   * deletes the SAML IDP certificate from the server and updates the config to not use it and
-   * disable SAML.
-   */
-  ApiResponse<Boolean> deleteSamlPrivateCertificate();
+	ApiResponse<Boolean> deleteSamlPrivateCertificate();
 
-  /**
-   * returns metadata for the SAML configuration.
-   */
-  ApiResponse<SamlCertificateStatus> getSamlCertificateStatus();
+	ApiResponse<SamlCertificateStatus> getSamlCertificateStatus();
 
 }

@@ -24,108 +24,103 @@ import java.io.IOException;
 
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * API status.
- * 
- * @author Takayuki Maruyama
- */
 public class ApiStatus {
-  @JsonProperty("status")
-  private ApiStatus.Status status;
-  @JsonProperty("SUCCESS")
-  private boolean success;
+	@JsonProperty("status")
+	private ApiStatus.Status status;
+	@JsonProperty("SUCCESS")
+	private boolean success;
 
+	@JsonSerialize(using = HasCodeSerializer.class)
+	@JsonDeserialize(using = ChannelTypeDeserializer.class)
+	public enum Status implements HasCode<Status> {
+		OK, FAIL;
 
-  @JsonSerialize(using = HasCodeSerializer.class)
-  @JsonDeserialize(using = ChannelTypeDeserializer.class)
-  public enum Status implements HasCode<Status> {
-    OK, FAIL;
+		@Override
+		public String getCode() {
+			return name();
+		}
 
-    @Override
-    public String getCode() {
-      return name();
-    }
+		public static Status of(String code) {
+			for (Status status : Status.values()) {
+				if (status.name().equals(code)) {
+					return status;
+				}
+			}
+			return null;
+		}
+	}
 
-    /**
-     * Get an enum constant for provided {@code code}.
-     */
-    public static Status of(String code) {
-      for (Status status : Status.values()) {
-        if (status.name().equals(code)) {
-          return status;
-        }
-      }
-      return null;
-    }
-  }
+	public static class ChannelTypeDeserializer extends JsonDeserializer<Status> {
+		@Override
+		public Status deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			return Status.of(p.getText());
+		}
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public ApiStatus() {
+	}
 
-  public static class ChannelTypeDeserializer extends JsonDeserializer<Status> {
-    @Override
-    public Status deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      return Status.of(p.getText());
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public ApiStatus.Status getStatus() {
+		return this.status;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public ApiStatus() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isSuccess() {
+		return this.success;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public ApiStatus.Status getStatus() {
-    return this.status;
-  }
+	@JsonProperty("status")
+	@java.lang.SuppressWarnings("all")
+	public void setStatus(final ApiStatus.Status status) {
+		this.status = status;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isSuccess() {
-    return this.success;
-  }
+	@JsonProperty("SUCCESS")
+	@java.lang.SuppressWarnings("all")
+	public void setSuccess(final boolean success) {
+		this.success = success;
+	}
 
-  @JsonProperty("status")
-  @java.lang.SuppressWarnings("all")
-  public void setStatus(final ApiStatus.Status status) {
-    this.status = status;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ApiStatus))
+			return false;
+		final ApiStatus other = (ApiStatus) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.isSuccess() != other.isSuccess())
+			return false;
+		final java.lang.Object this$status = this.getStatus();
+		final java.lang.Object other$status = other.getStatus();
+		if (this$status == null ? other$status != null : !this$status.equals(other$status))
+			return false;
+		return true;
+	}
 
-  @JsonProperty("SUCCESS")
-  @java.lang.SuppressWarnings("all")
-  public void setSuccess(final boolean success) {
-    this.success = success;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ApiStatus;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ApiStatus)) return false;
-    final ApiStatus other = (ApiStatus) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.isSuccess() != other.isSuccess()) return false;
-    final java.lang.Object this$status = this.getStatus();
-    final java.lang.Object other$status = other.getStatus();
-    if (this$status == null ? other$status != null : !this$status.equals(other$status)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isSuccess() ? 79 : 97);
+		final java.lang.Object $status = this.getStatus();
+		result = result * PRIME + ($status == null ? 43 : $status.hashCode());
+		return result;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ApiStatus;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isSuccess() ? 79 : 97);
-    final java.lang.Object $status = this.getStatus();
-    result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ApiStatus(status=" + this.getStatus() + ", success=" + this.isSuccess() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ApiStatus(status=" + this.getStatus() + ", success=" + this.isSuccess() + ")";
+	}
 }

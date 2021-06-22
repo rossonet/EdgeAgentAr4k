@@ -16,11 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link UserAccessToken}.
- */
 public class UserAccessTokenList extends ArrayList<UserAccessToken> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

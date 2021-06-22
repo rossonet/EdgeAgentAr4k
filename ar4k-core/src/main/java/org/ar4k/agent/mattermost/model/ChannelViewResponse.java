@@ -16,80 +16,81 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.Map;
 
-/**
- * ChannelView API call response.
- * 
- * @author Takayuki Maruyama
- * @since Mattermost Server 4.3
- */
 public class ChannelViewResponse {
-  private String status;
-  private Map<String, Long> lastViewedAtTimes;
+	private String status;
+	private Map<String, Long> lastViewedAtTimes;
 
-  public boolean isOk() {
-    return "ok".equalsIgnoreCase(status);
-  }
+	public boolean isOk() {
+		return "ok".equalsIgnoreCase(status);
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelViewResponse() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelViewResponse() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getStatus() {
-    return this.status;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getStatus() {
+		return this.status;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Long> getLastViewedAtTimes() {
-    return this.lastViewedAtTimes;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Long> getLastViewedAtTimes() {
+		return this.lastViewedAtTimes;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setStatus(final String status) {
-    this.status = status;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setStatus(final String status) {
+		this.status = status;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setLastViewedAtTimes(final Map<String, Long> lastViewedAtTimes) {
-    this.lastViewedAtTimes = lastViewedAtTimes;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setLastViewedAtTimes(final Map<String, Long> lastViewedAtTimes) {
+		this.lastViewedAtTimes = lastViewedAtTimes;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelViewResponse)) return false;
-    final ChannelViewResponse other = (ChannelViewResponse) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$status = this.getStatus();
-    final java.lang.Object other$status = other.getStatus();
-    if (this$status == null ? other$status != null : !this$status.equals(other$status)) return false;
-    final java.lang.Object this$lastViewedAtTimes = this.getLastViewedAtTimes();
-    final java.lang.Object other$lastViewedAtTimes = other.getLastViewedAtTimes();
-    if (this$lastViewedAtTimes == null ? other$lastViewedAtTimes != null : !this$lastViewedAtTimes.equals(other$lastViewedAtTimes)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelViewResponse))
+			return false;
+		final ChannelViewResponse other = (ChannelViewResponse) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$status = this.getStatus();
+		final java.lang.Object other$status = other.getStatus();
+		if (this$status == null ? other$status != null : !this$status.equals(other$status))
+			return false;
+		final java.lang.Object this$lastViewedAtTimes = this.getLastViewedAtTimes();
+		final java.lang.Object other$lastViewedAtTimes = other.getLastViewedAtTimes();
+		if (this$lastViewedAtTimes == null ? other$lastViewedAtTimes != null
+				: !this$lastViewedAtTimes.equals(other$lastViewedAtTimes))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelViewResponse;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelViewResponse;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $status = this.getStatus();
-    result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-    final java.lang.Object $lastViewedAtTimes = this.getLastViewedAtTimes();
-    result = result * PRIME + ($lastViewedAtTimes == null ? 43 : $lastViewedAtTimes.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $status = this.getStatus();
+		result = result * PRIME + ($status == null ? 43 : $status.hashCode());
+		final java.lang.Object $lastViewedAtTimes = this.getLastViewedAtTimes();
+		result = result * PRIME + ($lastViewedAtTimes == null ? 43 : $lastViewedAtTimes.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelViewResponse(status=" + this.getStatus() + ", lastViewedAtTimes=" + this.getLastViewedAtTimes() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelViewResponse(status=" + this.getStatus() + ", lastViewedAtTimes=" + this.getLastViewedAtTimes()
+				+ ")";
+	}
 }

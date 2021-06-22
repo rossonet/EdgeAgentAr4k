@@ -16,145 +16,151 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Emoji.
- * 
- * @author Takayuki Maruyama
- */
 public class Emoji {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("update_at")
-  private long updateAt;
-  @JsonProperty("delete_at")
-  private long deleteAt;
-  @JsonProperty("creator_id")
-  private String creatorId;
-  @JsonProperty("name")
-  private String name;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("update_at")
+	private long updateAt;
+	@JsonProperty("delete_at")
+	private long deleteAt;
+	@JsonProperty("creator_id")
+	private String creatorId;
+	@JsonProperty("name")
+	private String name;
 
-  @java.lang.SuppressWarnings("all")
-  public Emoji() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Emoji() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getUpdateAt() {
-    return this.updateAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getUpdateAt() {
+		return this.updateAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getDeleteAt() {
-    return this.deleteAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getDeleteAt() {
+		return this.deleteAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCreatorId() {
-    return this.creatorId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCreatorId() {
+		return this.creatorId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("update_at")
-  @java.lang.SuppressWarnings("all")
-  public void setUpdateAt(final long updateAt) {
-    this.updateAt = updateAt;
-  }
+	@JsonProperty("update_at")
+	@java.lang.SuppressWarnings("all")
+	public void setUpdateAt(final long updateAt) {
+		this.updateAt = updateAt;
+	}
 
-  @JsonProperty("delete_at")
-  @java.lang.SuppressWarnings("all")
-  public void setDeleteAt(final long deleteAt) {
-    this.deleteAt = deleteAt;
-  }
+	@JsonProperty("delete_at")
+	@java.lang.SuppressWarnings("all")
+	public void setDeleteAt(final long deleteAt) {
+		this.deleteAt = deleteAt;
+	}
 
-  @JsonProperty("creator_id")
-  @java.lang.SuppressWarnings("all")
-  public void setCreatorId(final String creatorId) {
-    this.creatorId = creatorId;
-  }
+	@JsonProperty("creator_id")
+	@java.lang.SuppressWarnings("all")
+	public void setCreatorId(final String creatorId) {
+		this.creatorId = creatorId;
+	}
 
-  @JsonProperty("name")
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@JsonProperty("name")
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Emoji)) return false;
-    final Emoji other = (Emoji) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    if (this.getUpdateAt() != other.getUpdateAt()) return false;
-    if (this.getDeleteAt() != other.getDeleteAt()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$creatorId = this.getCreatorId();
-    final java.lang.Object other$creatorId = other.getCreatorId();
-    if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Emoji))
+			return false;
+		final Emoji other = (Emoji) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		if (this.getUpdateAt() != other.getUpdateAt())
+			return false;
+		if (this.getDeleteAt() != other.getDeleteAt())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$creatorId = this.getCreatorId();
+		final java.lang.Object other$creatorId = other.getCreatorId();
+		if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Emoji;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Emoji;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final long $updateAt = this.getUpdateAt();
-    result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
-    final long $deleteAt = this.getDeleteAt();
-    result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $creatorId = this.getCreatorId();
-    result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final long $updateAt = this.getUpdateAt();
+		result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
+		final long $deleteAt = this.getDeleteAt();
+		result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $creatorId = this.getCreatorId();
+		result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Emoji(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", creatorId=" + this.getCreatorId() + ", name=" + this.getName() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Emoji(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt()
+				+ ", deleteAt=" + this.getDeleteAt() + ", creatorId=" + this.getCreatorId() + ", name=" + this.getName()
+				+ ")";
+	}
 }

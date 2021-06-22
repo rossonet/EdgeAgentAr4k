@@ -19,38 +19,18 @@ import org.ar4k.agent.mattermost.client4.Pager;
 import org.ar4k.agent.mattermost.model.Compliance;
 import org.ar4k.agent.mattermost.model.Compliances;
 
-/**
- * Compliance API.
- * 
- * @author Takayuki Maruyama
- */
 public interface ComplianceApi {
 
-  /**
-   * creates a compliance report.
-   */
-  ApiResponse<Compliance> createComplianceReport(Compliance report);
+	ApiResponse<Compliance> createComplianceReport(Compliance report);
 
-  /**
-   * returns list of compliance reports.
-   */
-  default ApiResponse<Compliances> getComplianceReports() {
-    return getComplianceReports(Pager.defaultPager());
-  }
+	default ApiResponse<Compliances> getComplianceReports() {
+		return getComplianceReports(Pager.defaultPager());
+	}
 
-  /**
-   * returns list of compliance reports.
-   */
-  ApiResponse<Compliances> getComplianceReports(Pager pager);
+	ApiResponse<Compliances> getComplianceReports(Pager pager);
 
-  /**
-   * returns a compliance report.
-   */
-  ApiResponse<Compliance> getComplianceReport(String reportId);
+	ApiResponse<Compliance> getComplianceReport(String reportId);
 
-  /**
-   * returns a full compliance report as a file.
-   */
-  ApiResponse<Object> downloadComplianceReport(String reportId);
+	ApiResponse<Object> downloadComplianceReport(String reportId);
 
 }

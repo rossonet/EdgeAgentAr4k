@@ -17,79 +17,79 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/**
- * File upload response.
- * 
- * @author Takayuki Maruyama
- */
 public class FileUploadResponse {
-  @JsonProperty("file_infos")
-  private List<FileInfo> fileInfos;
-  @JsonProperty("client_ids")
-  private List<String> clientIds;
+	@JsonProperty("file_infos")
+	private List<FileInfo> fileInfos;
+	@JsonProperty("client_ids")
+	private List<String> clientIds;
 
-  @java.lang.SuppressWarnings("all")
-  public FileUploadResponse() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public FileUploadResponse() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<FileInfo> getFileInfos() {
-    return this.fileInfos;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<FileInfo> getFileInfos() {
+		return this.fileInfos;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<String> getClientIds() {
-    return this.clientIds;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<String> getClientIds() {
+		return this.clientIds;
+	}
 
-  @JsonProperty("file_infos")
-  @java.lang.SuppressWarnings("all")
-  public void setFileInfos(final List<FileInfo> fileInfos) {
-    this.fileInfos = fileInfos;
-  }
+	@JsonProperty("file_infos")
+	@java.lang.SuppressWarnings("all")
+	public void setFileInfos(final List<FileInfo> fileInfos) {
+		this.fileInfos = fileInfos;
+	}
 
-  @JsonProperty("client_ids")
-  @java.lang.SuppressWarnings("all")
-  public void setClientIds(final List<String> clientIds) {
-    this.clientIds = clientIds;
-  }
+	@JsonProperty("client_ids")
+	@java.lang.SuppressWarnings("all")
+	public void setClientIds(final List<String> clientIds) {
+		this.clientIds = clientIds;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof FileUploadResponse)) return false;
-    final FileUploadResponse other = (FileUploadResponse) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$fileInfos = this.getFileInfos();
-    final java.lang.Object other$fileInfos = other.getFileInfos();
-    if (this$fileInfos == null ? other$fileInfos != null : !this$fileInfos.equals(other$fileInfos)) return false;
-    final java.lang.Object this$clientIds = this.getClientIds();
-    final java.lang.Object other$clientIds = other.getClientIds();
-    if (this$clientIds == null ? other$clientIds != null : !this$clientIds.equals(other$clientIds)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof FileUploadResponse))
+			return false;
+		final FileUploadResponse other = (FileUploadResponse) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$fileInfos = this.getFileInfos();
+		final java.lang.Object other$fileInfos = other.getFileInfos();
+		if (this$fileInfos == null ? other$fileInfos != null : !this$fileInfos.equals(other$fileInfos))
+			return false;
+		final java.lang.Object this$clientIds = this.getClientIds();
+		final java.lang.Object other$clientIds = other.getClientIds();
+		if (this$clientIds == null ? other$clientIds != null : !this$clientIds.equals(other$clientIds))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof FileUploadResponse;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof FileUploadResponse;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $fileInfos = this.getFileInfos();
-    result = result * PRIME + ($fileInfos == null ? 43 : $fileInfos.hashCode());
-    final java.lang.Object $clientIds = this.getClientIds();
-    result = result * PRIME + ($clientIds == null ? 43 : $clientIds.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $fileInfos = this.getFileInfos();
+		result = result * PRIME + ($fileInfos == null ? 43 : $fileInfos.hashCode());
+		final java.lang.Object $clientIds = this.getClientIds();
+		result = result * PRIME + ($clientIds == null ? 43 : $clientIds.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "FileUploadResponse(fileInfos=" + this.getFileInfos() + ", clientIds=" + this.getClientIds() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "FileUploadResponse(fileInfos=" + this.getFileInfos() + ", clientIds=" + this.getClientIds() + ")";
+	}
 }

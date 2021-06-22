@@ -32,9 +32,6 @@ public abstract class ApiResponse<T> {
 		return response.readEntity(ApiError.class);
 	}
 
-	/**
-	 * If remote api returns error response, this method also return {@code false}.
-	 */
 	public boolean hasError() {
 		response.bufferEntity();
 		try {
@@ -56,11 +53,6 @@ public abstract class ApiResponse<T> {
 	protected static final String STATUS = "status";
 	protected static final String STATUS_OK = "ok";
 
-	/**
-	 * a convenience function for checking the standard OK response from the web service.
-	 *
-	 * @return The api response contains {@code true} when status OK, otherwise {@code false}.
-	 */
 	public ApiResponse<Boolean> checkStatusOk() {
 		final Response rawResponse = getRawResponse();
 		rawResponse.bufferEntity();
@@ -96,7 +88,6 @@ public abstract class ApiResponse<T> {
 		return new SimpleResponse<>(response, data);
 	}
 
-
 	private static class EntityResponse<T> extends ApiResponse<T> {
 		private final Class<T> entityClass;
 
@@ -111,7 +102,6 @@ public abstract class ApiResponse<T> {
 		}
 	}
 
-
 	private static class GenericResponse<T> extends ApiResponse<T> {
 		private final GenericType<T> genericType;
 
@@ -125,7 +115,6 @@ public abstract class ApiResponse<T> {
 			return response.readEntity(genericType);
 		}
 	}
-
 
 	private static class SimpleResponse<T> extends ApiResponse<T> {
 		private final T data;

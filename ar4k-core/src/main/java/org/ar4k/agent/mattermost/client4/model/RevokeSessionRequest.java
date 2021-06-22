@@ -16,88 +16,81 @@ package org.ar4k.agent.mattermost.client4.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Revoke session request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#revokeSession(String, String)
- * @author Takayuki Maruyama
- */
 public final class RevokeSessionRequest {
-  @JsonProperty("session_id")
-  private final String sessionId;
+	@JsonProperty("session_id")
+	private final String sessionId;
 
-  @java.lang.SuppressWarnings("all")
-  RevokeSessionRequest(final String sessionId) {
-    this.sessionId = sessionId;
-  }
+	@java.lang.SuppressWarnings("all")
+	RevokeSessionRequest(final String sessionId) {
+		this.sessionId = sessionId;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class RevokeSessionRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String sessionId;
 
-  @java.lang.SuppressWarnings("all")
-  public static class RevokeSessionRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String sessionId;
+		@java.lang.SuppressWarnings("all")
+		RevokeSessionRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    RevokeSessionRequestBuilder() {
-    }
+		@JsonProperty("session_id")
+		@java.lang.SuppressWarnings("all")
+		public RevokeSessionRequest.RevokeSessionRequestBuilder sessionId(final String sessionId) {
+			this.sessionId = sessionId;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("session_id")
-    @java.lang.SuppressWarnings("all")
-    public RevokeSessionRequest.RevokeSessionRequestBuilder sessionId(final String sessionId) {
-      this.sessionId = sessionId;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public RevokeSessionRequest build() {
+			return new RevokeSessionRequest(this.sessionId);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public RevokeSessionRequest build() {
-      return new RevokeSessionRequest(this.sessionId);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "RevokeSessionRequest.RevokeSessionRequestBuilder(sessionId=" + this.sessionId + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "RevokeSessionRequest.RevokeSessionRequestBuilder(sessionId=" + this.sessionId + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static RevokeSessionRequest.RevokeSessionRequestBuilder builder() {
+		return new RevokeSessionRequest.RevokeSessionRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static RevokeSessionRequest.RevokeSessionRequestBuilder builder() {
-    return new RevokeSessionRequest.RevokeSessionRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getSessionId() {
+		return this.sessionId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getSessionId() {
-    return this.sessionId;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof RevokeSessionRequest))
+			return false;
+		final RevokeSessionRequest other = (RevokeSessionRequest) o;
+		final java.lang.Object this$sessionId = this.getSessionId();
+		final java.lang.Object other$sessionId = other.getSessionId();
+		if (this$sessionId == null ? other$sessionId != null : !this$sessionId.equals(other$sessionId))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof RevokeSessionRequest)) return false;
-    final RevokeSessionRequest other = (RevokeSessionRequest) o;
-    final java.lang.Object this$sessionId = this.getSessionId();
-    final java.lang.Object other$sessionId = other.getSessionId();
-    if (this$sessionId == null ? other$sessionId != null : !this$sessionId.equals(other$sessionId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $sessionId = this.getSessionId();
+		result = result * PRIME + ($sessionId == null ? 43 : $sessionId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $sessionId = this.getSessionId();
-    result = result * PRIME + ($sessionId == null ? 43 : $sessionId.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "RevokeSessionRequest(sessionId=" + this.getSessionId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "RevokeSessionRequest(sessionId=" + this.getSessionId() + ")";
+	}
 }

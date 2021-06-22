@@ -16,164 +16,171 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Cluster info.
- * 
- * @author Takayuki Maruyama
- */
 public class ClusterInfo {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("version")
-  private String version;
-  @JsonProperty("config_hash")
-  private String configHash;
-  @JsonProperty("internode_url")
-  private String interNodeUrl;
-  @JsonProperty("hostname")
-  private String hostname;
-  @JsonProperty("last_ping")
-  private long lastPing;
-  @JsonProperty("is_alive")
-  private boolean isAlive;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("version")
+	private String version;
+	@JsonProperty("config_hash")
+	private String configHash;
+	@JsonProperty("internode_url")
+	private String interNodeUrl;
+	@JsonProperty("hostname")
+	private String hostname;
+	@JsonProperty("last_ping")
+	private long lastPing;
+	@JsonProperty("is_alive")
+	private boolean isAlive;
 
-  @java.lang.SuppressWarnings("all")
-  public ClusterInfo() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ClusterInfo() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getVersion() {
-    return this.version;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getVersion() {
+		return this.version;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getConfigHash() {
-    return this.configHash;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getConfigHash() {
+		return this.configHash;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getInterNodeUrl() {
-    return this.interNodeUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getInterNodeUrl() {
+		return this.interNodeUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getHostname() {
-    return this.hostname;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getHostname() {
+		return this.hostname;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getLastPing() {
-    return this.lastPing;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getLastPing() {
+		return this.lastPing;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isAlive() {
-    return this.isAlive;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isAlive() {
+		return this.isAlive;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("version")
-  @java.lang.SuppressWarnings("all")
-  public void setVersion(final String version) {
-    this.version = version;
-  }
+	@JsonProperty("version")
+	@java.lang.SuppressWarnings("all")
+	public void setVersion(final String version) {
+		this.version = version;
+	}
 
-  @JsonProperty("config_hash")
-  @java.lang.SuppressWarnings("all")
-  public void setConfigHash(final String configHash) {
-    this.configHash = configHash;
-  }
+	@JsonProperty("config_hash")
+	@java.lang.SuppressWarnings("all")
+	public void setConfigHash(final String configHash) {
+		this.configHash = configHash;
+	}
 
-  @JsonProperty("internode_url")
-  @java.lang.SuppressWarnings("all")
-  public void setInterNodeUrl(final String interNodeUrl) {
-    this.interNodeUrl = interNodeUrl;
-  }
+	@JsonProperty("internode_url")
+	@java.lang.SuppressWarnings("all")
+	public void setInterNodeUrl(final String interNodeUrl) {
+		this.interNodeUrl = interNodeUrl;
+	}
 
-  @JsonProperty("hostname")
-  @java.lang.SuppressWarnings("all")
-  public void setHostname(final String hostname) {
-    this.hostname = hostname;
-  }
+	@JsonProperty("hostname")
+	@java.lang.SuppressWarnings("all")
+	public void setHostname(final String hostname) {
+		this.hostname = hostname;
+	}
 
-  @JsonProperty("last_ping")
-  @java.lang.SuppressWarnings("all")
-  public void setLastPing(final long lastPing) {
-    this.lastPing = lastPing;
-  }
+	@JsonProperty("last_ping")
+	@java.lang.SuppressWarnings("all")
+	public void setLastPing(final long lastPing) {
+		this.lastPing = lastPing;
+	}
 
-  @JsonProperty("is_alive")
-  @java.lang.SuppressWarnings("all")
-  public void setAlive(final boolean isAlive) {
-    this.isAlive = isAlive;
-  }
+	@JsonProperty("is_alive")
+	@java.lang.SuppressWarnings("all")
+	public void setAlive(final boolean isAlive) {
+		this.isAlive = isAlive;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ClusterInfo)) return false;
-    final ClusterInfo other = (ClusterInfo) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getLastPing() != other.getLastPing()) return false;
-    if (this.isAlive() != other.isAlive()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$version = this.getVersion();
-    final java.lang.Object other$version = other.getVersion();
-    if (this$version == null ? other$version != null : !this$version.equals(other$version)) return false;
-    final java.lang.Object this$configHash = this.getConfigHash();
-    final java.lang.Object other$configHash = other.getConfigHash();
-    if (this$configHash == null ? other$configHash != null : !this$configHash.equals(other$configHash)) return false;
-    final java.lang.Object this$interNodeUrl = this.getInterNodeUrl();
-    final java.lang.Object other$interNodeUrl = other.getInterNodeUrl();
-    if (this$interNodeUrl == null ? other$interNodeUrl != null : !this$interNodeUrl.equals(other$interNodeUrl)) return false;
-    final java.lang.Object this$hostname = this.getHostname();
-    final java.lang.Object other$hostname = other.getHostname();
-    if (this$hostname == null ? other$hostname != null : !this$hostname.equals(other$hostname)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ClusterInfo))
+			return false;
+		final ClusterInfo other = (ClusterInfo) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getLastPing() != other.getLastPing())
+			return false;
+		if (this.isAlive() != other.isAlive())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$version = this.getVersion();
+		final java.lang.Object other$version = other.getVersion();
+		if (this$version == null ? other$version != null : !this$version.equals(other$version))
+			return false;
+		final java.lang.Object this$configHash = this.getConfigHash();
+		final java.lang.Object other$configHash = other.getConfigHash();
+		if (this$configHash == null ? other$configHash != null : !this$configHash.equals(other$configHash))
+			return false;
+		final java.lang.Object this$interNodeUrl = this.getInterNodeUrl();
+		final java.lang.Object other$interNodeUrl = other.getInterNodeUrl();
+		if (this$interNodeUrl == null ? other$interNodeUrl != null : !this$interNodeUrl.equals(other$interNodeUrl))
+			return false;
+		final java.lang.Object this$hostname = this.getHostname();
+		final java.lang.Object other$hostname = other.getHostname();
+		if (this$hostname == null ? other$hostname != null : !this$hostname.equals(other$hostname))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ClusterInfo;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ClusterInfo;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $lastPing = this.getLastPing();
-    result = result * PRIME + (int) ($lastPing >>> 32 ^ $lastPing);
-    result = result * PRIME + (this.isAlive() ? 79 : 97);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $version = this.getVersion();
-    result = result * PRIME + ($version == null ? 43 : $version.hashCode());
-    final java.lang.Object $configHash = this.getConfigHash();
-    result = result * PRIME + ($configHash == null ? 43 : $configHash.hashCode());
-    final java.lang.Object $interNodeUrl = this.getInterNodeUrl();
-    result = result * PRIME + ($interNodeUrl == null ? 43 : $interNodeUrl.hashCode());
-    final java.lang.Object $hostname = this.getHostname();
-    result = result * PRIME + ($hostname == null ? 43 : $hostname.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $lastPing = this.getLastPing();
+		result = result * PRIME + (int) ($lastPing >>> 32 ^ $lastPing);
+		result = result * PRIME + (this.isAlive() ? 79 : 97);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $version = this.getVersion();
+		result = result * PRIME + ($version == null ? 43 : $version.hashCode());
+		final java.lang.Object $configHash = this.getConfigHash();
+		result = result * PRIME + ($configHash == null ? 43 : $configHash.hashCode());
+		final java.lang.Object $interNodeUrl = this.getInterNodeUrl();
+		result = result * PRIME + ($interNodeUrl == null ? 43 : $interNodeUrl.hashCode());
+		final java.lang.Object $hostname = this.getHostname();
+		result = result * PRIME + ($hostname == null ? 43 : $hostname.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ClusterInfo(id=" + this.getId() + ", version=" + this.getVersion() + ", configHash=" + this.getConfigHash() + ", interNodeUrl=" + this.getInterNodeUrl() + ", hostname=" + this.getHostname() + ", lastPing=" + this.getLastPing() + ", isAlive=" + this.isAlive() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ClusterInfo(id=" + this.getId() + ", version=" + this.getVersion() + ", configHash="
+				+ this.getConfigHash() + ", interNodeUrl=" + this.getInterNodeUrl() + ", hostname=" + this.getHostname()
+				+ ", lastPing=" + this.getLastPing() + ", isAlive=" + this.isAlive() + ")";
+	}
 }

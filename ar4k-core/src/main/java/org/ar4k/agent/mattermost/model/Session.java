@@ -18,232 +18,244 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Session.
- * 
- * @author Takayuki Maruyama
- */
 public class Session {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("token")
-  private String token;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("expires_at")
-  private long expiresAt;
-  @JsonProperty("last_activity_at")
-  private long lastActivityAt;
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("device_id")
-  private String deviceId;
-  @JsonProperty("roles")
-  private String roles;
-  @JsonProperty("is_oauth")
-  private boolean isOAuth;
-  @JsonProperty("props")
-  private Map<String, String> props;
-  @JsonProperty("team_members")
-  private List<TeamMember> teamMembers;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("token")
+	private String token;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("expires_at")
+	private long expiresAt;
+	@JsonProperty("last_activity_at")
+	private long lastActivityAt;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("device_id")
+	private String deviceId;
+	@JsonProperty("roles")
+	private String roles;
+	@JsonProperty("is_oauth")
+	private boolean isOAuth;
+	@JsonProperty("props")
+	private Map<String, String> props;
+	@JsonProperty("team_members")
+	private List<TeamMember> teamMembers;
 
-  @java.lang.SuppressWarnings("all")
-  public Session() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Session() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getToken() {
-    return this.token;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getToken() {
+		return this.token;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getExpiresAt() {
-    return this.expiresAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getExpiresAt() {
+		return this.expiresAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getLastActivityAt() {
-    return this.lastActivityAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getLastActivityAt() {
+		return this.lastActivityAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDeviceId() {
-    return this.deviceId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDeviceId() {
+		return this.deviceId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getRoles() {
-    return this.roles;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getRoles() {
+		return this.roles;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isOAuth() {
-    return this.isOAuth;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isOAuth() {
+		return this.isOAuth;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getProps() {
-    return this.props;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getProps() {
+		return this.props;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<TeamMember> getTeamMembers() {
-    return this.teamMembers;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<TeamMember> getTeamMembers() {
+		return this.teamMembers;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("token")
-  @java.lang.SuppressWarnings("all")
-  public void setToken(final String token) {
-    this.token = token;
-  }
+	@JsonProperty("token")
+	@java.lang.SuppressWarnings("all")
+	public void setToken(final String token) {
+		this.token = token;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("expires_at")
-  @java.lang.SuppressWarnings("all")
-  public void setExpiresAt(final long expiresAt) {
-    this.expiresAt = expiresAt;
-  }
+	@JsonProperty("expires_at")
+	@java.lang.SuppressWarnings("all")
+	public void setExpiresAt(final long expiresAt) {
+		this.expiresAt = expiresAt;
+	}
 
-  @JsonProperty("last_activity_at")
-  @java.lang.SuppressWarnings("all")
-  public void setLastActivityAt(final long lastActivityAt) {
-    this.lastActivityAt = lastActivityAt;
-  }
+	@JsonProperty("last_activity_at")
+	@java.lang.SuppressWarnings("all")
+	public void setLastActivityAt(final long lastActivityAt) {
+		this.lastActivityAt = lastActivityAt;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("device_id")
-  @java.lang.SuppressWarnings("all")
-  public void setDeviceId(final String deviceId) {
-    this.deviceId = deviceId;
-  }
+	@JsonProperty("device_id")
+	@java.lang.SuppressWarnings("all")
+	public void setDeviceId(final String deviceId) {
+		this.deviceId = deviceId;
+	}
 
-  @JsonProperty("roles")
-  @java.lang.SuppressWarnings("all")
-  public void setRoles(final String roles) {
-    this.roles = roles;
-  }
+	@JsonProperty("roles")
+	@java.lang.SuppressWarnings("all")
+	public void setRoles(final String roles) {
+		this.roles = roles;
+	}
 
-  @JsonProperty("is_oauth")
-  @java.lang.SuppressWarnings("all")
-  public void setOAuth(final boolean isOAuth) {
-    this.isOAuth = isOAuth;
-  }
+	@JsonProperty("is_oauth")
+	@java.lang.SuppressWarnings("all")
+	public void setOAuth(final boolean isOAuth) {
+		this.isOAuth = isOAuth;
+	}
 
-  @JsonProperty("props")
-  @java.lang.SuppressWarnings("all")
-  public void setProps(final Map<String, String> props) {
-    this.props = props;
-  }
+	@JsonProperty("props")
+	@java.lang.SuppressWarnings("all")
+	public void setProps(final Map<String, String> props) {
+		this.props = props;
+	}
 
-  @JsonProperty("team_members")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamMembers(final List<TeamMember> teamMembers) {
-    this.teamMembers = teamMembers;
-  }
+	@JsonProperty("team_members")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamMembers(final List<TeamMember> teamMembers) {
+		this.teamMembers = teamMembers;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Session)) return false;
-    final Session other = (Session) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    if (this.getExpiresAt() != other.getExpiresAt()) return false;
-    if (this.getLastActivityAt() != other.getLastActivityAt()) return false;
-    if (this.isOAuth() != other.isOAuth()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$token = this.getToken();
-    final java.lang.Object other$token = other.getToken();
-    if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$deviceId = this.getDeviceId();
-    final java.lang.Object other$deviceId = other.getDeviceId();
-    if (this$deviceId == null ? other$deviceId != null : !this$deviceId.equals(other$deviceId)) return false;
-    final java.lang.Object this$roles = this.getRoles();
-    final java.lang.Object other$roles = other.getRoles();
-    if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles)) return false;
-    final java.lang.Object this$props = this.getProps();
-    final java.lang.Object other$props = other.getProps();
-    if (this$props == null ? other$props != null : !this$props.equals(other$props)) return false;
-    final java.lang.Object this$teamMembers = this.getTeamMembers();
-    final java.lang.Object other$teamMembers = other.getTeamMembers();
-    if (this$teamMembers == null ? other$teamMembers != null : !this$teamMembers.equals(other$teamMembers)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Session))
+			return false;
+		final Session other = (Session) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		if (this.getExpiresAt() != other.getExpiresAt())
+			return false;
+		if (this.getLastActivityAt() != other.getLastActivityAt())
+			return false;
+		if (this.isOAuth() != other.isOAuth())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$token = this.getToken();
+		final java.lang.Object other$token = other.getToken();
+		if (this$token == null ? other$token != null : !this$token.equals(other$token))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$deviceId = this.getDeviceId();
+		final java.lang.Object other$deviceId = other.getDeviceId();
+		if (this$deviceId == null ? other$deviceId != null : !this$deviceId.equals(other$deviceId))
+			return false;
+		final java.lang.Object this$roles = this.getRoles();
+		final java.lang.Object other$roles = other.getRoles();
+		if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles))
+			return false;
+		final java.lang.Object this$props = this.getProps();
+		final java.lang.Object other$props = other.getProps();
+		if (this$props == null ? other$props != null : !this$props.equals(other$props))
+			return false;
+		final java.lang.Object this$teamMembers = this.getTeamMembers();
+		final java.lang.Object other$teamMembers = other.getTeamMembers();
+		if (this$teamMembers == null ? other$teamMembers != null : !this$teamMembers.equals(other$teamMembers))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Session;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Session;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final long $expiresAt = this.getExpiresAt();
-    result = result * PRIME + (int) ($expiresAt >>> 32 ^ $expiresAt);
-    final long $lastActivityAt = this.getLastActivityAt();
-    result = result * PRIME + (int) ($lastActivityAt >>> 32 ^ $lastActivityAt);
-    result = result * PRIME + (this.isOAuth() ? 79 : 97);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $token = this.getToken();
-    result = result * PRIME + ($token == null ? 43 : $token.hashCode());
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $deviceId = this.getDeviceId();
-    result = result * PRIME + ($deviceId == null ? 43 : $deviceId.hashCode());
-    final java.lang.Object $roles = this.getRoles();
-    result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
-    final java.lang.Object $props = this.getProps();
-    result = result * PRIME + ($props == null ? 43 : $props.hashCode());
-    final java.lang.Object $teamMembers = this.getTeamMembers();
-    result = result * PRIME + ($teamMembers == null ? 43 : $teamMembers.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final long $expiresAt = this.getExpiresAt();
+		result = result * PRIME + (int) ($expiresAt >>> 32 ^ $expiresAt);
+		final long $lastActivityAt = this.getLastActivityAt();
+		result = result * PRIME + (int) ($lastActivityAt >>> 32 ^ $lastActivityAt);
+		result = result * PRIME + (this.isOAuth() ? 79 : 97);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $token = this.getToken();
+		result = result * PRIME + ($token == null ? 43 : $token.hashCode());
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $deviceId = this.getDeviceId();
+		result = result * PRIME + ($deviceId == null ? 43 : $deviceId.hashCode());
+		final java.lang.Object $roles = this.getRoles();
+		result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
+		final java.lang.Object $props = this.getProps();
+		result = result * PRIME + ($props == null ? 43 : $props.hashCode());
+		final java.lang.Object $teamMembers = this.getTeamMembers();
+		result = result * PRIME + ($teamMembers == null ? 43 : $teamMembers.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Session(id=" + this.getId() + ", token=" + this.getToken() + ", createAt=" + this.getCreateAt() + ", expiresAt=" + this.getExpiresAt() + ", lastActivityAt=" + this.getLastActivityAt() + ", userId=" + this.getUserId() + ", deviceId=" + this.getDeviceId() + ", roles=" + this.getRoles() + ", isOAuth=" + this.isOAuth() + ", props=" + this.getProps() + ", teamMembers=" + this.getTeamMembers() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Session(id=" + this.getId() + ", token=" + this.getToken() + ", createAt=" + this.getCreateAt()
+				+ ", expiresAt=" + this.getExpiresAt() + ", lastActivityAt=" + this.getLastActivityAt() + ", userId="
+				+ this.getUserId() + ", deviceId=" + this.getDeviceId() + ", roles=" + this.getRoles() + ", isOAuth="
+				+ this.isOAuth() + ", props=" + this.getProps() + ", teamMembers=" + this.getTeamMembers() + ")";
+	}
 }

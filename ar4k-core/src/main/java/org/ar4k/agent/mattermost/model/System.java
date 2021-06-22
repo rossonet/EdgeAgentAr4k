@@ -17,73 +17,78 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class System {
-  @JsonProperty("name")
-  private String name;
-  @JsonProperty("value")
-  private String value;
+	@JsonProperty("name")
+	private String name;
+	@JsonProperty("value")
+	private String value;
 
-  @java.lang.SuppressWarnings("all")
-  public System() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public System() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getValue() {
-    return this.value;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getValue() {
+		return this.value;
+	}
 
-  @JsonProperty("name")
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@JsonProperty("name")
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @JsonProperty("value")
-  @java.lang.SuppressWarnings("all")
-  public void setValue(final String value) {
-    this.value = value;
-  }
+	@JsonProperty("value")
+	@java.lang.SuppressWarnings("all")
+	public void setValue(final String value) {
+		this.value = value;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof System)) return false;
-    final System other = (System) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final java.lang.Object this$value = this.getValue();
-    final java.lang.Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof System))
+			return false;
+		final System other = (System) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		final java.lang.Object this$value = this.getValue();
+		final java.lang.Object other$value = other.getValue();
+		if (this$value == null ? other$value != null : !this$value.equals(other$value))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof System;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof System;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    final java.lang.Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		final java.lang.Object $value = this.getValue();
+		result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "System(name=" + this.getName() + ", value=" + this.getValue() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "System(name=" + this.getName() + ", value=" + this.getValue() + ")";
+	}
 }

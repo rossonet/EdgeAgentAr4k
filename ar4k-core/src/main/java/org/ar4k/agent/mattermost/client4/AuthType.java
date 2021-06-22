@@ -16,14 +16,10 @@ package org.ar4k.agent.mattermost.client4;
 
 import org.ar4k.agent.mattermost.model.HasCode;
 
-/**
- * API Authentication type.
- *
- * @author Takayuki Maruyama
- */
 public enum AuthType implements HasCode<AuthType> {
 
 	TOKEN("token"), BEARER("Bearer");
+
 	private final String code;
 
 	private AuthType(String code) {

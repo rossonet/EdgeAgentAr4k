@@ -16,88 +16,81 @@ package org.ar4k.agent.mattermost.client4.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Deauthorize OAuth app request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.OAuthApi#deauthorizeOAuthApp(String)
- * @author Takayuki Maruyama
- */
 public final class DeauthorizeOAuthAppRequest {
-  @JsonProperty("client_id")
-  private final String clientId;
+	@JsonProperty("client_id")
+	private final String clientId;
 
-  @java.lang.SuppressWarnings("all")
-  DeauthorizeOAuthAppRequest(final String clientId) {
-    this.clientId = clientId;
-  }
+	@java.lang.SuppressWarnings("all")
+	DeauthorizeOAuthAppRequest(final String clientId) {
+		this.clientId = clientId;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class DeauthorizeOAuthAppRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String clientId;
 
-  @java.lang.SuppressWarnings("all")
-  public static class DeauthorizeOAuthAppRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String clientId;
+		@java.lang.SuppressWarnings("all")
+		DeauthorizeOAuthAppRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    DeauthorizeOAuthAppRequestBuilder() {
-    }
+		@JsonProperty("client_id")
+		@java.lang.SuppressWarnings("all")
+		public DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder clientId(final String clientId) {
+			this.clientId = clientId;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("client_id")
-    @java.lang.SuppressWarnings("all")
-    public DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder clientId(final String clientId) {
-      this.clientId = clientId;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public DeauthorizeOAuthAppRequest build() {
+			return new DeauthorizeOAuthAppRequest(this.clientId);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public DeauthorizeOAuthAppRequest build() {
-      return new DeauthorizeOAuthAppRequest(this.clientId);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder(clientId=" + this.clientId + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder(clientId=" + this.clientId + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder builder() {
+		return new DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder builder() {
-    return new DeauthorizeOAuthAppRequest.DeauthorizeOAuthAppRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getClientId() {
+		return this.clientId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getClientId() {
-    return this.clientId;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof DeauthorizeOAuthAppRequest))
+			return false;
+		final DeauthorizeOAuthAppRequest other = (DeauthorizeOAuthAppRequest) o;
+		final java.lang.Object this$clientId = this.getClientId();
+		final java.lang.Object other$clientId = other.getClientId();
+		if (this$clientId == null ? other$clientId != null : !this$clientId.equals(other$clientId))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof DeauthorizeOAuthAppRequest)) return false;
-    final DeauthorizeOAuthAppRequest other = (DeauthorizeOAuthAppRequest) o;
-    final java.lang.Object this$clientId = this.getClientId();
-    final java.lang.Object other$clientId = other.getClientId();
-    if (this$clientId == null ? other$clientId != null : !this$clientId.equals(other$clientId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $clientId = this.getClientId();
+		result = result * PRIME + ($clientId == null ? 43 : $clientId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $clientId = this.getClientId();
-    result = result * PRIME + ($clientId == null ? 43 : $clientId.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "DeauthorizeOAuthAppRequest(clientId=" + this.getClientId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "DeauthorizeOAuthAppRequest(clientId=" + this.getClientId() + ")";
+	}
 }

@@ -14,57 +14,58 @@
  */
 package org.ar4k.agent.mattermost.model;
 
-/**
- * Plugin's webapp info.
- */
 public class PluginWebapp {
-  private String bundlePath;
+	private String bundlePath;
 
-  @java.lang.SuppressWarnings("all")
-  public PluginWebapp() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PluginWebapp() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getBundlePath() {
-    return this.bundlePath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getBundlePath() {
+		return this.bundlePath;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setBundlePath(final String bundlePath) {
-    this.bundlePath = bundlePath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setBundlePath(final String bundlePath) {
+		this.bundlePath = bundlePath;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PluginWebapp)) return false;
-    final PluginWebapp other = (PluginWebapp) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$bundlePath = this.getBundlePath();
-    final java.lang.Object other$bundlePath = other.getBundlePath();
-    if (this$bundlePath == null ? other$bundlePath != null : !this$bundlePath.equals(other$bundlePath)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PluginWebapp))
+			return false;
+		final PluginWebapp other = (PluginWebapp) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$bundlePath = this.getBundlePath();
+		final java.lang.Object other$bundlePath = other.getBundlePath();
+		if (this$bundlePath == null ? other$bundlePath != null : !this$bundlePath.equals(other$bundlePath))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PluginWebapp;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PluginWebapp;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $bundlePath = this.getBundlePath();
-    result = result * PRIME + ($bundlePath == null ? 43 : $bundlePath.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $bundlePath = this.getBundlePath();
+		result = result * PRIME + ($bundlePath == null ? 43 : $bundlePath.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PluginWebapp(bundlePath=" + this.getBundlePath() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PluginWebapp(bundlePath=" + this.getBundlePath() + ")";
+	}
 }

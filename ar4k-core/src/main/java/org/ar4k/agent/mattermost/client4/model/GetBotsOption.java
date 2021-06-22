@@ -14,106 +14,100 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Options for get bots.
- * 
- * @author Takayuki Maruyama
- */
 public final class GetBotsOption {
-  private final boolean includeDeleted;
-  private final boolean onlyOrphaned;
+	private final boolean includeDeleted;
+	private final boolean onlyOrphaned;
 
-  public static GetBotsOption defaultInstance() {
-    return new GetBotsOption(false, false);
-  }
+	public static GetBotsOption defaultInstance() {
+		return new GetBotsOption(false, false);
+	}
 
-  @java.lang.SuppressWarnings("all")
-  GetBotsOption(final boolean includeDeleted, final boolean onlyOrphaned) {
-    this.includeDeleted = includeDeleted;
-    this.onlyOrphaned = onlyOrphaned;
-  }
+	@java.lang.SuppressWarnings("all")
+	GetBotsOption(final boolean includeDeleted, final boolean onlyOrphaned) {
+		this.includeDeleted = includeDeleted;
+		this.onlyOrphaned = onlyOrphaned;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class GetBotsOptionBuilder {
+		@java.lang.SuppressWarnings("all")
+		private boolean includeDeleted;
+		@java.lang.SuppressWarnings("all")
+		private boolean onlyOrphaned;
 
-  @java.lang.SuppressWarnings("all")
-  public static class GetBotsOptionBuilder {
-    @java.lang.SuppressWarnings("all")
-    private boolean includeDeleted;
-    @java.lang.SuppressWarnings("all")
-    private boolean onlyOrphaned;
+		@java.lang.SuppressWarnings("all")
+		GetBotsOptionBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    GetBotsOptionBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public GetBotsOption.GetBotsOptionBuilder includeDeleted(final boolean includeDeleted) {
+			this.includeDeleted = includeDeleted;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public GetBotsOption.GetBotsOptionBuilder includeDeleted(final boolean includeDeleted) {
-      this.includeDeleted = includeDeleted;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public GetBotsOption.GetBotsOptionBuilder onlyOrphaned(final boolean onlyOrphaned) {
+			this.onlyOrphaned = onlyOrphaned;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public GetBotsOption.GetBotsOptionBuilder onlyOrphaned(final boolean onlyOrphaned) {
-      this.onlyOrphaned = onlyOrphaned;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public GetBotsOption build() {
+			return new GetBotsOption(this.includeDeleted, this.onlyOrphaned);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public GetBotsOption build() {
-      return new GetBotsOption(this.includeDeleted, this.onlyOrphaned);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "GetBotsOption.GetBotsOptionBuilder(includeDeleted=" + this.includeDeleted + ", onlyOrphaned="
+					+ this.onlyOrphaned + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "GetBotsOption.GetBotsOptionBuilder(includeDeleted=" + this.includeDeleted + ", onlyOrphaned=" + this.onlyOrphaned + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static GetBotsOption.GetBotsOptionBuilder builder() {
+		return new GetBotsOption.GetBotsOptionBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static GetBotsOption.GetBotsOptionBuilder builder() {
-    return new GetBotsOption.GetBotsOptionBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isIncludeDeleted() {
+		return this.includeDeleted;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isIncludeDeleted() {
-    return this.includeDeleted;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isOnlyOrphaned() {
+		return this.onlyOrphaned;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isOnlyOrphaned() {
-    return this.onlyOrphaned;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof GetBotsOption))
+			return false;
+		final GetBotsOption other = (GetBotsOption) o;
+		if (this.isIncludeDeleted() != other.isIncludeDeleted())
+			return false;
+		if (this.isOnlyOrphaned() != other.isOnlyOrphaned())
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof GetBotsOption)) return false;
-    final GetBotsOption other = (GetBotsOption) o;
-    if (this.isIncludeDeleted() != other.isIncludeDeleted()) return false;
-    if (this.isOnlyOrphaned() != other.isOnlyOrphaned()) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isIncludeDeleted() ? 79 : 97);
+		result = result * PRIME + (this.isOnlyOrphaned() ? 79 : 97);
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isIncludeDeleted() ? 79 : 97);
-    result = result * PRIME + (this.isOnlyOrphaned() ? 79 : 97);
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "GetBotsOption(includeDeleted=" + this.isIncludeDeleted() + ", onlyOrphaned=" + this.isOnlyOrphaned() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "GetBotsOption(includeDeleted=" + this.isIncludeDeleted() + ", onlyOrphaned=" + this.isOnlyOrphaned()
+				+ ")";
+	}
 }

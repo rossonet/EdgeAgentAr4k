@@ -14,52 +14,52 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Search tokens request payload.
- */
 public final class SearchTokensRequest {
-  private final String term;
+	private final String term;
 
-  @java.lang.SuppressWarnings("all")
-  private SearchTokensRequest(final String term) {
-    this.term = term;
-  }
+	@java.lang.SuppressWarnings("all")
+	private SearchTokensRequest(final String term) {
+		this.term = term;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static SearchTokensRequest of(final String term) {
-    return new SearchTokensRequest(term);
-  }
+	@java.lang.SuppressWarnings("all")
+	public static SearchTokensRequest of(final String term) {
+		return new SearchTokensRequest(term);
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTerm() {
-    return this.term;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTerm() {
+		return this.term;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SearchTokensRequest)) return false;
-    final SearchTokensRequest other = (SearchTokensRequest) o;
-    final java.lang.Object this$term = this.getTerm();
-    final java.lang.Object other$term = other.getTerm();
-    if (this$term == null ? other$term != null : !this$term.equals(other$term)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SearchTokensRequest))
+			return false;
+		final SearchTokensRequest other = (SearchTokensRequest) o;
+		final java.lang.Object this$term = this.getTerm();
+		final java.lang.Object other$term = other.getTerm();
+		if (this$term == null ? other$term != null : !this$term.equals(other$term))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $term = this.getTerm();
-    result = result * PRIME + ($term == null ? 43 : $term.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $term = this.getTerm();
+		result = result * PRIME + ($term == null ? 43 : $term.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SearchTokensRequest(term=" + this.getTerm() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SearchTokensRequest(term=" + this.getTerm() + ")";
+	}
 }

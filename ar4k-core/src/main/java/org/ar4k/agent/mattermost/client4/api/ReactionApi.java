@@ -18,27 +18,13 @@ import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.model.Reaction;
 import org.ar4k.agent.mattermost.model.ReactionList;
 
-/**
- * Reaction API.
- * 
- * @author Takayuki Maruyama
- */
+
 public interface ReactionApi {
 
-  /**
-   * saves an emoji reaction for a post. Returns the saved reaction if successful, otherwise an
-   * error will be returned.
-   */
   ApiResponse<Reaction> saveReaction(Reaction reaction);
 
-  /**
-   * returns a list of reactions to a post.
-   */
   ApiResponse<ReactionList> getReactions(String postId);
 
-  /**
-   * deletes reaction of a user in a post.
-   */
   ApiResponse<Boolean> deleteReaction(Reaction reaction);
 
 }

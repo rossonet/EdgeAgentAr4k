@@ -16,13 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.HashMap;
 
-/**
- * push response.
- * 
- * @author Takayuki Maruyama
- */
 public class PushResponse extends HashMap<String, String> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

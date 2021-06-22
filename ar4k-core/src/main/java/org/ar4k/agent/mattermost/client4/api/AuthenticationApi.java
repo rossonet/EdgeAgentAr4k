@@ -19,42 +19,17 @@ import org.ar4k.agent.mattermost.client4.model.SwitchAccountTypeResult;
 import org.ar4k.agent.mattermost.model.SwitchRequest;
 import org.ar4k.agent.mattermost.model.User;
 
-/**
- * Authentication API.
- * 
- * @author Takayuki Maruyama
- */
 public interface AuthenticationApi {
 
-  /**
-   * authenticates a user by user id and password.
-   */
-  ApiResponse<User> loginById(String id, String password);
+	ApiResponse<User> loginById(String id, String password);
 
-  /**
-   * authenticates a user by login id, which can be username, email, or some sort of SSO identifier
-   * based on server configuration, and a password.
-   */
-  ApiResponse<User> login(String loginId, String password);
+	ApiResponse<User> login(String loginId, String password);
 
-  /**
-   * authenticates a user by LDAP id and password.
-   */
-  ApiResponse<User> loginByLdap(String loginId, String password);
+	ApiResponse<User> loginByLdap(String loginId, String password);
 
-  /**
-   * authenticates a user by login id (username, email or some sort of SSO identifier based on
-   * configuration), password and attaches a device id to the session.
-   */
-  ApiResponse<User> loginWithDevice(String loginId, String password, String deviceId);
+	ApiResponse<User> loginWithDevice(String loginId, String password, String deviceId);
 
-  /**
-   * terminates the current user's session.
-   */
-  ApiResponse<Boolean> logout();
+	ApiResponse<Boolean> logout();
 
-  /**
-   * changes a user's login type from one type to another.
-   */
-  ApiResponse<SwitchAccountTypeResult> switchAccountType(SwitchRequest switchRequest);
+	ApiResponse<SwitchAccountTypeResult> switchAccountType(SwitchRequest switchRequest);
 }

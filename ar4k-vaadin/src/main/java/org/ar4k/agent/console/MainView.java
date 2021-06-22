@@ -41,9 +41,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
-@Route("")
+@Route("ar4k-console")
 @Theme(value = Material.class, variant = Material.DARK)
-@PageTitle("Rossonet Ar4k Console")
+@PageTitle("Ar4k Console")
 @StyleSheet("frontend://edge.css")
 public class MainView extends VerticalLayout implements IMainView {
 

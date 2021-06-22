@@ -14,105 +14,110 @@
  */
 package org.ar4k.agent.mattermost.model;
 
-/**
- * Team invite information.
- */
 public class TeamInviteInfo {
-  private String id;
-  private String name;
-  private String displayName;
-  private String description;
+	private String id;
+	private String name;
+	private String displayName;
+	private String description;
 
-  @java.lang.SuppressWarnings("all")
-  public TeamInviteInfo() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public TeamInviteInfo() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDisplayName() {
-    return this.displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDisplayName() {
+		return this.displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDescription() {
-    return this.description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDescription() {
+		return this.description;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setDescription(final String description) {
+		this.description = description;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TeamInviteInfo)) return false;
-    final TeamInviteInfo other = (TeamInviteInfo) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final java.lang.Object this$displayName = this.getDisplayName();
-    final java.lang.Object other$displayName = other.getDisplayName();
-    if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName)) return false;
-    final java.lang.Object this$description = this.getDescription();
-    final java.lang.Object other$description = other.getDescription();
-    if (this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof TeamInviteInfo))
+			return false;
+		final TeamInviteInfo other = (TeamInviteInfo) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		final java.lang.Object this$displayName = this.getDisplayName();
+		final java.lang.Object other$displayName = other.getDisplayName();
+		if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+			return false;
+		final java.lang.Object this$description = this.getDescription();
+		final java.lang.Object other$description = other.getDescription();
+		if (this$description == null ? other$description != null : !this$description.equals(other$description))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof TeamInviteInfo;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof TeamInviteInfo;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    final java.lang.Object $displayName = this.getDisplayName();
-    result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
-    final java.lang.Object $description = this.getDescription();
-    result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		final java.lang.Object $displayName = this.getDisplayName();
+		result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+		final java.lang.Object $description = this.getDescription();
+		result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "TeamInviteInfo(id=" + this.getId() + ", name=" + this.getName() + ", displayName=" + this.getDisplayName() + ", description=" + this.getDescription() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "TeamInviteInfo(id=" + this.getId() + ", name=" + this.getName() + ", displayName="
+				+ this.getDisplayName() + ", description=" + this.getDescription() + ")";
+	}
 }

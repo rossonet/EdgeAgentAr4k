@@ -25,11 +25,6 @@ import org.ar4k.agent.mattermost.model.config.consts.PermissionsDeletePost;
 import org.ar4k.agent.mattermost.model.config.consts.RestrictEmojiCreation;
 import org.ar4k.agent.mattermost.model.config.consts.WebServerMode;
 
-/**
- * Service settings.
- * 
- * @author Takayuki Maruyama
- */
 @SuppressWarnings("deprecation")
 public class ServiceSettings {
 	private String siteUrl;
@@ -69,7 +64,7 @@ public class ServiceSettings {
 	private WebServerMode webServerMode;
 	private boolean enableCustomEmoji;
 	private RestrictEmojiCreation restrictCustomEmojiCreation;
-	private PermissionsDeletePost restrictPostDelete; //  really?
+	private PermissionsDeletePost restrictPostDelete; // really?
 	private AllowEditPost allowEditPost;
 	private int postEditTimeLimit;
 	private long timeBetweenUserTypingUpdatesMilliseconds;
@@ -106,26 +101,11 @@ public class ServiceSettings {
 	/* @since Mattermost Server 5.10 */
 	private boolean disableBotsWhenOwnerIsDeactivated = true;
 
-	/**
-	 * Set the image proxy type.
-	 * 
-	 * @deprecated Changed to
-	 *             {@link ImageProxySettings#setImageProxyType(ImageProxyType)} for
-	 *             Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public void setImageProxyType(ImageProxyType imageProxyType) {
 		this.imageProxyType = imageProxyType;
 	}
 
-	/**
-	 * Get the image proxy type.
-	 * 
-	 * @deprecated Changed to {@link ImageProxySettings#getImageProxyType()} for
-	 *             Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public ImageProxyType getImageProxyType() {
 		return imageProxyType;
@@ -134,27 +114,11 @@ public class ServiceSettings {
 	/* @since Mattermost Server 4.7 */
 	private String imageProxyOptions;
 
-	/**
-	 * Set the image proxy options.
-	 * 
-	 * @deprecated Changed to
-	 *             {@link ImageProxySettings#setRemoteImageProxyOptions(String)} for
-	 *             Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public void setImageProxyOptions(String imageProxyOptions) {
 		this.imageProxyOptions = imageProxyOptions;
 	}
 
-	/**
-	 * Get the image proxy options.
-	 * 
-	 * @deprecated Changed to
-	 *             {@link ImageProxySettings#getRemoteImageProxyOptions()} for
-	 *             Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public String getImageProxyOptions() {
 		return imageProxyOptions;
@@ -163,26 +127,11 @@ public class ServiceSettings {
 	/* @since Mattermost Server 4.7 */
 	private String imageProxyUrl;
 
-	/**
-	 * Set the image proxy url.
-	 * 
-	 * @deprecated Changed to
-	 *             {@link ImageProxySettings#setRemoteImageProxyUrl(String)} for
-	 *             Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public void setImageProxyUrl(String imageProxyUrl) {
 		this.imageProxyUrl = imageProxyUrl;
 	}
 
-	/**
-	 * Get the image proxy url.
-	 * 
-	 * @deprecated Changed to {@link ImageProxySettings#getRemoteImageProxyUrl()}
-	 *             for Mattermost Server 5.8+
-	 * @since Mattermost Server 4.7
-	 */
 	@Deprecated
 	public String getImageProxyUrl() {
 		return imageProxyUrl;
@@ -196,7 +145,7 @@ public class ServiceSettings {
 	private boolean allowCookiesForSubdomains;
 	/* @since Mattermost 4.8 */
 	private String websocketUrl;
-	/* @since Mattermost Server  what ver? */
+	/* @since Mattermost Server what ver? */
 	private boolean enableEmailInvitations;
 	/* @since Mattermost Server 5.0 */
 	private boolean enableApiTeamDeletion;
@@ -247,43 +196,21 @@ public class ServiceSettings {
 	/* @since Mattermost Server 5.22 */
 	private ChannelSidebarOrganization experimentalChannelSidebarOrganization = ChannelSidebarOrganization.DISABLED;
 
-	/**
-	 * This method should not use.
-	 * 
-	 * @deprecated This is typo. Please use {@link #getGoroutineHealthThreshold()}
-	 */
 	@Deprecated
 	public int getGoroutineHealthThreshould() {
 		return getGoroutineHealthThreshold();
 	}
 
-	/**
-	 * This method should not use.
-	 * 
-	 * @deprecated This is typo. Please use
-	 *             {@link #setGoroutineHealthThreshold(int)}
-	 */
 	@Deprecated
 	public void setGoroutineHealthThreshould(int goroutineHealthThresould) {
 		setGoroutineHealthThreshold(goroutineHealthThresould);
 	}
 
-	/**
-	 * This method should not use.
-	 * 
-	 * @deprecated This is typo. Please use {@link #isEnableUserAccessTokens()}
-	 */
 	@Deprecated
 	public boolean isEnableUserAccessToken() {
 		return isEnableUserAccessTokens();
 	}
 
-	/**
-	 * This method should not use.
-	 * 
-	 * @deprecated This is typo. Please use
-	 *             {@link #setEnableUserAccessToken(boolean)}
-	 */
 	@Deprecated
 	public void setEnableUserAccessToken(boolean enableUserAccessToken) {
 		setEnableUserAccessTokens(enableUserAccessToken);

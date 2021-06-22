@@ -16,9 +16,9 @@ package org.ar4k.agent.mattermost.client4.model;
 
 public enum AnalyticsCategory {
 
-  STANDARD, POST_COUNTS_DAY, USER_COUNTS_WITH_POSTS_DAY, EXTRA_COUNTS;
+	STANDARD, POST_COUNTS_DAY, USER_COUNTS_WITH_POSTS_DAY, EXTRA_COUNTS;
 
-  public String getCode() {
-    return name().toLowerCase();
-  }
+	public String getCode() {
+		return name().toLowerCase();
+	}
 }

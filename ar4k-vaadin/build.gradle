@@ -2,13 +2,14 @@ dependencies {
 	compile project(':ar4k-core')
 	compile project(':ar4k-ai')
 	compile project(':ar4k-seed')
-	compile group: 'com.vaadin', name: 'vaadin-material-theme'//, version: '5.0.2'
+	compile group: 'com.vaadin', name: 'vaadin-material-theme'
 	compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.4.7'
-	compile group: 'com.vaadin', name: 'vaadin-icons-flow'//, version: '4.0.0'
-	compile group: 'com.vaadin', name: 'vaadin-grid-flow'//, version: '4..11'
-	compile group: 'com.vaadin', name: 'vaadin-app-layout-flow'//, version: '4.0.0'
-	compile group: 'com.vaadin', name: 'vaadin-split-layout-flow'//, version: '4.0.0'
-	compile group: 'com.vaadin', name: 'flow-client'//, version: '4.0.8'
+	compile group: 'com.vaadin', name: 'vaadin-icons-flow'
+	compile group: 'com.vaadin', name: 'vaadin-grid-flow'
+	compile group: 'com.vaadin', name: 'vaadin-app-layout-flow'
+	compile group: 'com.vaadin', name: 'vaadin-split-layout-flow'
+	compile group: 'com.vaadin', name: 'flow-client'
+	compile group: 'com.vaadin', name: 'vaadin-upload-flow'
 	compile group: 'com.flowingcode.addons', name: 'xterm-console', version: '1.0.2'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.1'
 	compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'

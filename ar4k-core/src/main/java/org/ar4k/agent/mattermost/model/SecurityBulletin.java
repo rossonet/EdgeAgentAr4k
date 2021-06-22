@@ -16,79 +16,80 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Security bulletin.
- * 
- * @author Takayuki Maruyama
- */
 public class SecurityBulletin {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("applies_to_version")
-  private String appliesToVersion;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("applies_to_version")
+	private String appliesToVersion;
 
-  @java.lang.SuppressWarnings("all")
-  public SecurityBulletin() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public SecurityBulletin() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAppliesToVersion() {
-    return this.appliesToVersion;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAppliesToVersion() {
+		return this.appliesToVersion;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("applies_to_version")
-  @java.lang.SuppressWarnings("all")
-  public void setAppliesToVersion(final String appliesToVersion) {
-    this.appliesToVersion = appliesToVersion;
-  }
+	@JsonProperty("applies_to_version")
+	@java.lang.SuppressWarnings("all")
+	public void setAppliesToVersion(final String appliesToVersion) {
+		this.appliesToVersion = appliesToVersion;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SecurityBulletin)) return false;
-    final SecurityBulletin other = (SecurityBulletin) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$appliesToVersion = this.getAppliesToVersion();
-    final java.lang.Object other$appliesToVersion = other.getAppliesToVersion();
-    if (this$appliesToVersion == null ? other$appliesToVersion != null : !this$appliesToVersion.equals(other$appliesToVersion)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SecurityBulletin))
+			return false;
+		final SecurityBulletin other = (SecurityBulletin) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$appliesToVersion = this.getAppliesToVersion();
+		final java.lang.Object other$appliesToVersion = other.getAppliesToVersion();
+		if (this$appliesToVersion == null ? other$appliesToVersion != null
+				: !this$appliesToVersion.equals(other$appliesToVersion))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof SecurityBulletin;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof SecurityBulletin;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $appliesToVersion = this.getAppliesToVersion();
-    result = result * PRIME + ($appliesToVersion == null ? 43 : $appliesToVersion.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $appliesToVersion = this.getAppliesToVersion();
+		result = result * PRIME + ($appliesToVersion == null ? 43 : $appliesToVersion.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SecurityBulletin(id=" + this.getId() + ", appliesToVersion=" + this.getAppliesToVersion() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SecurityBulletin(id=" + this.getId() + ", appliesToVersion=" + this.getAppliesToVersion() + ")";
+	}
 }

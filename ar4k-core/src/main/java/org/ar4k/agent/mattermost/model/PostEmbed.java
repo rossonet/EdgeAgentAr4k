@@ -16,91 +16,92 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.Map;
 
-/**
- * Post embed.
- * 
- * @since Mattermost Server 5.8
- */
 public class PostEmbed {
-  private PostEmbedType type;
-  private String url;
-  private Map<String, Object> data;
+	private PostEmbedType type;
+	private String url;
+	private Map<String, Object> data;
 
-  @java.lang.SuppressWarnings("all")
-  public PostEmbed() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PostEmbed() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PostEmbedType getType() {
-    return this.type;
-  }
+	@java.lang.SuppressWarnings("all")
+	public PostEmbedType getType() {
+		return this.type;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUrl() {
-    return this.url;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUrl() {
+		return this.url;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Object> getData() {
-    return this.data;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Object> getData() {
+		return this.data;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setType(final PostEmbedType type) {
-    this.type = type;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setType(final PostEmbedType type) {
+		this.type = type;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setUrl(final String url) {
-    this.url = url;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setUrl(final String url) {
+		this.url = url;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setData(final Map<String, Object> data) {
-    this.data = data;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setData(final Map<String, Object> data) {
+		this.data = data;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PostEmbed)) return false;
-    final PostEmbed other = (PostEmbed) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$type = this.getType();
-    final java.lang.Object other$type = other.getType();
-    if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-    final java.lang.Object this$url = this.getUrl();
-    final java.lang.Object other$url = other.getUrl();
-    if (this$url == null ? other$url != null : !this$url.equals(other$url)) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PostEmbed))
+			return false;
+		final PostEmbed other = (PostEmbed) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$type = this.getType();
+		final java.lang.Object other$type = other.getType();
+		if (this$type == null ? other$type != null : !this$type.equals(other$type))
+			return false;
+		final java.lang.Object this$url = this.getUrl();
+		final java.lang.Object other$url = other.getUrl();
+		if (this$url == null ? other$url != null : !this$url.equals(other$url))
+			return false;
+		final java.lang.Object this$data = this.getData();
+		final java.lang.Object other$data = other.getData();
+		if (this$data == null ? other$data != null : !this$data.equals(other$data))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PostEmbed;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PostEmbed;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $type = this.getType();
-    result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-    final java.lang.Object $url = this.getUrl();
-    result = result * PRIME + ($url == null ? 43 : $url.hashCode());
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $type = this.getType();
+		result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+		final java.lang.Object $url = this.getUrl();
+		result = result * PRIME + ($url == null ? 43 : $url.hashCode());
+		final java.lang.Object $data = this.getData();
+		result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PostEmbed(type=" + this.getType() + ", url=" + this.getUrl() + ", data=" + this.getData() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PostEmbed(type=" + this.getType() + ", url=" + this.getUrl() + ", data=" + this.getData() + ")";
+	}
 }

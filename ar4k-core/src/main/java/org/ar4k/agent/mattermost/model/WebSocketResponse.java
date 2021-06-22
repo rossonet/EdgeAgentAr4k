@@ -17,113 +17,116 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Websocket response payload.
- * 
- * @author Takayuki Maruyama
- */
 public class WebSocketResponse {
-  @JsonProperty("status")
-  private String status;
-  @JsonProperty("seq_reply")
-  private long seqReply;
-  @JsonProperty("data")
-  private Map<String, String> data;
-  @JsonProperty("error")
-  private AppError error;
+	@JsonProperty("status")
+	private String status;
+	@JsonProperty("seq_reply")
+	private long seqReply;
+	@JsonProperty("data")
+	private Map<String, String> data;
+	@JsonProperty("error")
+	private AppError error;
 
-  @java.lang.SuppressWarnings("all")
-  public WebSocketResponse() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public WebSocketResponse() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getStatus() {
-    return this.status;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getStatus() {
+		return this.status;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getSeqReply() {
-    return this.seqReply;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getSeqReply() {
+		return this.seqReply;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getData() {
-    return this.data;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getData() {
+		return this.data;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public AppError getError() {
-    return this.error;
-  }
+	@java.lang.SuppressWarnings("all")
+	public AppError getError() {
+		return this.error;
+	}
 
-  @JsonProperty("status")
-  @java.lang.SuppressWarnings("all")
-  public void setStatus(final String status) {
-    this.status = status;
-  }
+	@JsonProperty("status")
+	@java.lang.SuppressWarnings("all")
+	public void setStatus(final String status) {
+		this.status = status;
+	}
 
-  @JsonProperty("seq_reply")
-  @java.lang.SuppressWarnings("all")
-  public void setSeqReply(final long seqReply) {
-    this.seqReply = seqReply;
-  }
+	@JsonProperty("seq_reply")
+	@java.lang.SuppressWarnings("all")
+	public void setSeqReply(final long seqReply) {
+		this.seqReply = seqReply;
+	}
 
-  @JsonProperty("data")
-  @java.lang.SuppressWarnings("all")
-  public void setData(final Map<String, String> data) {
-    this.data = data;
-  }
+	@JsonProperty("data")
+	@java.lang.SuppressWarnings("all")
+	public void setData(final Map<String, String> data) {
+		this.data = data;
+	}
 
-  @JsonProperty("error")
-  @java.lang.SuppressWarnings("all")
-  public void setError(final AppError error) {
-    this.error = error;
-  }
+	@JsonProperty("error")
+	@java.lang.SuppressWarnings("all")
+	public void setError(final AppError error) {
+		this.error = error;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof WebSocketResponse)) return false;
-    final WebSocketResponse other = (WebSocketResponse) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getSeqReply() != other.getSeqReply()) return false;
-    final java.lang.Object this$status = this.getStatus();
-    final java.lang.Object other$status = other.getStatus();
-    if (this$status == null ? other$status != null : !this$status.equals(other$status)) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    final java.lang.Object this$error = this.getError();
-    final java.lang.Object other$error = other.getError();
-    if (this$error == null ? other$error != null : !this$error.equals(other$error)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof WebSocketResponse))
+			return false;
+		final WebSocketResponse other = (WebSocketResponse) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getSeqReply() != other.getSeqReply())
+			return false;
+		final java.lang.Object this$status = this.getStatus();
+		final java.lang.Object other$status = other.getStatus();
+		if (this$status == null ? other$status != null : !this$status.equals(other$status))
+			return false;
+		final java.lang.Object this$data = this.getData();
+		final java.lang.Object other$data = other.getData();
+		if (this$data == null ? other$data != null : !this$data.equals(other$data))
+			return false;
+		final java.lang.Object this$error = this.getError();
+		final java.lang.Object other$error = other.getError();
+		if (this$error == null ? other$error != null : !this$error.equals(other$error))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof WebSocketResponse;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof WebSocketResponse;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $seqReply = this.getSeqReply();
-    result = result * PRIME + (int) ($seqReply >>> 32 ^ $seqReply);
-    final java.lang.Object $status = this.getStatus();
-    result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
-    final java.lang.Object $error = this.getError();
-    result = result * PRIME + ($error == null ? 43 : $error.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $seqReply = this.getSeqReply();
+		result = result * PRIME + (int) ($seqReply >>> 32 ^ $seqReply);
+		final java.lang.Object $status = this.getStatus();
+		result = result * PRIME + ($status == null ? 43 : $status.hashCode());
+		final java.lang.Object $data = this.getData();
+		result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+		final java.lang.Object $error = this.getError();
+		result = result * PRIME + ($error == null ? 43 : $error.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "WebSocketResponse(status=" + this.getStatus() + ", seqReply=" + this.getSeqReply() + ", data=" + this.getData() + ", error=" + this.getError() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "WebSocketResponse(status=" + this.getStatus() + ", seqReply=" + this.getSeqReply() + ", data="
+				+ this.getData() + ", error=" + this.getError() + ")";
+	}
 }

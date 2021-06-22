@@ -17,64 +17,63 @@ package org.ar4k.agent.mattermost.model;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * List of {@link Compliance}.
- * 
- * @author Takayuki Maruyama
- */
 public class Compliances implements Iterable<Compliance> {
-  private List<Compliance> compliances;
+	private List<Compliance> compliances;
 
-  @Override
-  public Iterator<Compliance> iterator() {
-    return compliances.iterator();
-  }
+	@Override
+	public Iterator<Compliance> iterator() {
+		return compliances.iterator();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Compliances() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Compliances() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<Compliance> getCompliances() {
-    return this.compliances;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<Compliance> getCompliances() {
+		return this.compliances;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setCompliances(final List<Compliance> compliances) {
-    this.compliances = compliances;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setCompliances(final List<Compliance> compliances) {
+		this.compliances = compliances;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Compliances)) return false;
-    final Compliances other = (Compliances) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$compliances = this.getCompliances();
-    final java.lang.Object other$compliances = other.getCompliances();
-    if (this$compliances == null ? other$compliances != null : !this$compliances.equals(other$compliances)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Compliances))
+			return false;
+		final Compliances other = (Compliances) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$compliances = this.getCompliances();
+		final java.lang.Object other$compliances = other.getCompliances();
+		if (this$compliances == null ? other$compliances != null : !this$compliances.equals(other$compliances))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Compliances;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Compliances;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $compliances = this.getCompliances();
-    result = result * PRIME + ($compliances == null ? 43 : $compliances.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $compliances = this.getCompliances();
+		result = result * PRIME + ($compliances == null ? 43 : $compliances.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Compliances(compliances=" + this.getCompliances() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Compliances(compliances=" + this.getCompliances() + ")";
+	}
 }

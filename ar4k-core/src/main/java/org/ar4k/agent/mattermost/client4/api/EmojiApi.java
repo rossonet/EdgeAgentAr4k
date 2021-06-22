@@ -23,77 +23,32 @@ import org.ar4k.agent.mattermost.client4.model.SearchEmojiRequest;
 import org.ar4k.agent.mattermost.model.Emoji;
 import org.ar4k.agent.mattermost.model.EmojiList;
 
-/**
- * Emoji API.
- * 
- * @author Takayuki Maruyama
- */
 public interface EmojiApi {
 
-  /**
-   * will save an emoji to the server if the current user has permission to do so. If successful,
-   * the provided emoji will be returned with its Id field filled in. Otherwise, an error will be
-   * returned.
-   */
-  ApiResponse<Emoji> createEmoji(Emoji emoji, Path imageFile);
+	ApiResponse<Emoji> createEmoji(Emoji emoji, Path imageFile);
 
-  /**
-   * returns a list of custom emoji in the system.
-   */
-  default ApiResponse<EmojiList> getEmojiList() {
-    return getEmojiList(Pager.defaultPager());
-  }
+	default ApiResponse<EmojiList> getEmojiList() {
+		return getEmojiList(Pager.defaultPager());
+	}
 
-  /**
-   * returns a list of custom emoji in the system.
-   * 
-   * @param pager add in Mattermost Server 4.1, in older version, ignore.
-   */
-  ApiResponse<EmojiList> getEmojiList(Pager pager);
+	ApiResponse<EmojiList> getEmojiList(Pager pager);
 
-  /**
-   * returns a list of custom emoji in the system sorted by name.
-   */
-  default ApiResponse<EmojiList> getEmojiListSorted() {
-    return getEmojiListSorted(Pager.defaultPager());
-  }
+	default ApiResponse<EmojiList> getEmojiListSorted() {
+		return getEmojiListSorted(Pager.defaultPager());
+	}
 
-  /**
-   * returns a list of custom emoji in the system sorted by name.
-   * 
-   * @param pager
-   * @since Mattermost Server 4.7
-   */
-  ApiResponse<EmojiList> getEmojiListSorted(Pager pager);
+	ApiResponse<EmojiList> getEmojiListSorted(Pager pager);
 
-  /**
-   * delete an custom emoji on the provided emoji id string.
-   */
-  ApiResponse<Boolean> deleteEmoji(String emojiId);
+	ApiResponse<Boolean> deleteEmoji(String emojiId);
 
-  /**
-   * returns a custom emoji in the system on the provided emoji id string.
-   */
-  ApiResponse<Emoji> getEmoji(String emojiId);
+	ApiResponse<Emoji> getEmoji(String emojiId);
 
-  /**
-   * returns the emoji image.
-   */
-  ApiResponse<Path> getEmojiImage(String emojiId) throws IOException;
+	ApiResponse<Path> getEmojiImage(String emojiId) throws IOException;
 
-  /**
-   * get a custom emoji by name.
-   */
-  ApiResponse<Emoji> getEmojiByName(String emojiName);
+	ApiResponse<Emoji> getEmojiByName(String emojiName);
 
-  /**
-   * search custom emoji based on request.
-   */
-  ApiResponse<EmojiList> searchEmoji(SearchEmojiRequest searchRequest);
+	ApiResponse<EmojiList> searchEmoji(SearchEmojiRequest searchRequest);
 
-  /**
-   * get a list of custom emoji that name starts with or matching provided name.
-   */
-  ApiResponse<EmojiList> autocompleteEmoji(String name);
+	ApiResponse<EmojiList> autocompleteEmoji(String name);
 
 }

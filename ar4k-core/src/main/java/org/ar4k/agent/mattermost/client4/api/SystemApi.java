@@ -22,92 +22,50 @@ import org.ar4k.agent.mattermost.client4.model.AnalyticsCategory;
 import org.ar4k.agent.mattermost.model.AnalyticsRows;
 import org.ar4k.agent.mattermost.model.Config;
 
-/**
- * System API.
- * 
- * @author Takayuki Maruyama
- */
 public interface SystemApi {
 
-  /**
-   * will ping the server and to see if it is up and running.
-   */
-  ApiResponse<Boolean> getPing();
+	ApiResponse<Boolean> getPing();
 
-  /**
-   * will attempt to connect to the configured SMTP server.
-   */
-  ApiResponse<Boolean> testEmail();
+	ApiResponse<Boolean> testEmail();
 
-  /**
-   * will retrieve the server config with some sanitized items.
-   */
-  ApiResponse<Config> getConfig();
+	ApiResponse<Config> getConfig();
 
-  /**
-   * will reload the server configuration.
-   */
-  ApiResponse<Boolean> reloadConfig();
+	ApiResponse<Boolean> reloadConfig();
 
-  /**
-   * will retrieve the parts of the server configuration needed by the client, formatted in the old
-   * format.
-   */
-  default ApiResponse<Map<String, String>> getOldClientConfig() {
-    return getOldClientConfig(null);
-  }
+	default ApiResponse<Map<String, String>> getOldClientConfig() {
+		return getOldClientConfig(null);
+	}
 
-  /**
-   * will retrieve the parts of the server configuration needed by the client, formatted in the old
-   * format.
-   */
-  ApiResponse<Map<String, String>> getOldClientConfig(String etag);
+	ApiResponse<Map<String, String>> getOldClientConfig(String etag);
 
-  /**
-   * will retrieve the parts of the server license needed by the client, formatted in the old
-   * format.
-   */
-  default ApiResponse<Map<String, String>> getOldClientLicense() {
-    return getOldClientLicense(null);
-  }
+	default ApiResponse<Map<String, String>> getOldClientLicense() {
+		return getOldClientLicense(null);
+	}
 
-  /**
-   * will retrieve the parts of the server license needed by the client, formatted in the old
-   * format.
-   */
-  ApiResponse<Map<String, String>> getOldClientLicense(String etag);
+	ApiResponse<Map<String, String>> getOldClientLicense(String etag);
 
-  /**
-   * will recycle the connections. Discard current connection and get new one.
-   */
-  ApiResponse<Boolean> databaseRecycle();
+	ApiResponse<Boolean> databaseRecycle();
 
-  /**
-   * will purge the cache and can affect the performance while is cleaning.
-   */
-  ApiResponse<Boolean> invalidateCaches();
+	ApiResponse<Boolean> invalidateCaches();
 
-  /**
-   * will update the server configuration.
-   */
-  ApiResponse<Config> updateConfig(Config config);
+	ApiResponse<Config> updateConfig(Config config);
 
-  default ApiResponse<AnalyticsRows> getAnalytics() {
-    return getAnalytics(AnalyticsCategory.STANDARD);
-  }
+	default ApiResponse<AnalyticsRows> getAnalytics() {
+		return getAnalytics(AnalyticsCategory.STANDARD);
+	}
 
-  default ApiResponse<AnalyticsRows> getAnalytics(AnalyticsCategory category) {
-    return getAnalytics(category, null);
-  }
+	default ApiResponse<AnalyticsRows> getAnalytics(AnalyticsCategory category) {
+		return getAnalytics(category, null);
+	}
 
-  default ApiResponse<AnalyticsRows> getAnalytics(String teamId) {
-    return getAnalytics(AnalyticsCategory.STANDARD, teamId);
-  }
+	default ApiResponse<AnalyticsRows> getAnalytics(String teamId) {
+		return getAnalytics(AnalyticsCategory.STANDARD, teamId);
+	}
 
-  ApiResponse<AnalyticsRows> getAnalytics(AnalyticsCategory category, String teamId);
+	ApiResponse<AnalyticsRows> getAnalytics(AnalyticsCategory category, String teamId);
 
-  ApiResponse<Boolean> uploadLicenseFile(Path licenseFile);
+	ApiResponse<Boolean> uploadLicenseFile(Path licenseFile);
 
-  ApiResponse<Boolean> removeLicense();
+	ApiResponse<Boolean> removeLicense();
 
 }

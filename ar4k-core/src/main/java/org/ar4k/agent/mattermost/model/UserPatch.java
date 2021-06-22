@@ -16,219 +16,232 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.Map;
 
-/**
- * User patch.
- * 
- * @author Takayuki Maruyama
- */
 public class UserPatch {
-  private String username;
-  private String nickname;
-  private String firstName;
-  private String lastName;
-  private String position;
-  private String email;
-  private Map<String, String> props;
-  private Map<String, String> notifyProps;
-  private String locale;
-  private String password;
-  private Map<String, String> timezone;
+	private String username;
+	private String nickname;
+	private String firstName;
+	private String lastName;
+	private String position;
+	private String email;
+	private Map<String, String> props;
+	private Map<String, String> notifyProps;
+	private String locale;
+	private String password;
+	private Map<String, String> timezone;
 
-  @java.lang.SuppressWarnings("all")
-  public UserPatch() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public UserPatch() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUsername() {
-    return this.username;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUsername() {
+		return this.username;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getNickname() {
-    return this.nickname;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getNickname() {
+		return this.nickname;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getFirstName() {
-    return this.firstName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getFirstName() {
+		return this.firstName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getLastName() {
-    return this.lastName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getLastName() {
+		return this.lastName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPosition() {
-    return this.position;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPosition() {
+		return this.position;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getEmail() {
-    return this.email;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getEmail() {
+		return this.email;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getProps() {
-    return this.props;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getProps() {
+		return this.props;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getNotifyProps() {
-    return this.notifyProps;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getNotifyProps() {
+		return this.notifyProps;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getLocale() {
-    return this.locale;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getLocale() {
+		return this.locale;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPassword() {
-    return this.password;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPassword() {
+		return this.password;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getTimezone() {
-    return this.timezone;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getTimezone() {
+		return this.timezone;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setUsername(final String username) {
-    this.username = username;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setUsername(final String username) {
+		this.username = username;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setNickname(final String nickname) {
-    this.nickname = nickname;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setNickname(final String nickname) {
+		this.nickname = nickname;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setFirstName(final String firstName) {
-    this.firstName = firstName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setFirstName(final String firstName) {
+		this.firstName = firstName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setLastName(final String lastName) {
-    this.lastName = lastName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setLastName(final String lastName) {
+		this.lastName = lastName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setPosition(final String position) {
-    this.position = position;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setPosition(final String position) {
+		this.position = position;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setEmail(final String email) {
-    this.email = email;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setEmail(final String email) {
+		this.email = email;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setProps(final Map<String, String> props) {
-    this.props = props;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setProps(final Map<String, String> props) {
+		this.props = props;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setNotifyProps(final Map<String, String> notifyProps) {
-    this.notifyProps = notifyProps;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setNotifyProps(final Map<String, String> notifyProps) {
+		this.notifyProps = notifyProps;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setLocale(final String locale) {
-    this.locale = locale;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setLocale(final String locale) {
+		this.locale = locale;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setPassword(final String password) {
-    this.password = password;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setPassword(final String password) {
+		this.password = password;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setTimezone(final Map<String, String> timezone) {
-    this.timezone = timezone;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setTimezone(final Map<String, String> timezone) {
+		this.timezone = timezone;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UserPatch)) return false;
-    final UserPatch other = (UserPatch) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$username = this.getUsername();
-    final java.lang.Object other$username = other.getUsername();
-    if (this$username == null ? other$username != null : !this$username.equals(other$username)) return false;
-    final java.lang.Object this$nickname = this.getNickname();
-    final java.lang.Object other$nickname = other.getNickname();
-    if (this$nickname == null ? other$nickname != null : !this$nickname.equals(other$nickname)) return false;
-    final java.lang.Object this$firstName = this.getFirstName();
-    final java.lang.Object other$firstName = other.getFirstName();
-    if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName)) return false;
-    final java.lang.Object this$lastName = this.getLastName();
-    final java.lang.Object other$lastName = other.getLastName();
-    if (this$lastName == null ? other$lastName != null : !this$lastName.equals(other$lastName)) return false;
-    final java.lang.Object this$position = this.getPosition();
-    final java.lang.Object other$position = other.getPosition();
-    if (this$position == null ? other$position != null : !this$position.equals(other$position)) return false;
-    final java.lang.Object this$email = this.getEmail();
-    final java.lang.Object other$email = other.getEmail();
-    if (this$email == null ? other$email != null : !this$email.equals(other$email)) return false;
-    final java.lang.Object this$props = this.getProps();
-    final java.lang.Object other$props = other.getProps();
-    if (this$props == null ? other$props != null : !this$props.equals(other$props)) return false;
-    final java.lang.Object this$notifyProps = this.getNotifyProps();
-    final java.lang.Object other$notifyProps = other.getNotifyProps();
-    if (this$notifyProps == null ? other$notifyProps != null : !this$notifyProps.equals(other$notifyProps)) return false;
-    final java.lang.Object this$locale = this.getLocale();
-    final java.lang.Object other$locale = other.getLocale();
-    if (this$locale == null ? other$locale != null : !this$locale.equals(other$locale)) return false;
-    final java.lang.Object this$password = this.getPassword();
-    final java.lang.Object other$password = other.getPassword();
-    if (this$password == null ? other$password != null : !this$password.equals(other$password)) return false;
-    final java.lang.Object this$timezone = this.getTimezone();
-    final java.lang.Object other$timezone = other.getTimezone();
-    if (this$timezone == null ? other$timezone != null : !this$timezone.equals(other$timezone)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UserPatch))
+			return false;
+		final UserPatch other = (UserPatch) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$username = this.getUsername();
+		final java.lang.Object other$username = other.getUsername();
+		if (this$username == null ? other$username != null : !this$username.equals(other$username))
+			return false;
+		final java.lang.Object this$nickname = this.getNickname();
+		final java.lang.Object other$nickname = other.getNickname();
+		if (this$nickname == null ? other$nickname != null : !this$nickname.equals(other$nickname))
+			return false;
+		final java.lang.Object this$firstName = this.getFirstName();
+		final java.lang.Object other$firstName = other.getFirstName();
+		if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName))
+			return false;
+		final java.lang.Object this$lastName = this.getLastName();
+		final java.lang.Object other$lastName = other.getLastName();
+		if (this$lastName == null ? other$lastName != null : !this$lastName.equals(other$lastName))
+			return false;
+		final java.lang.Object this$position = this.getPosition();
+		final java.lang.Object other$position = other.getPosition();
+		if (this$position == null ? other$position != null : !this$position.equals(other$position))
+			return false;
+		final java.lang.Object this$email = this.getEmail();
+		final java.lang.Object other$email = other.getEmail();
+		if (this$email == null ? other$email != null : !this$email.equals(other$email))
+			return false;
+		final java.lang.Object this$props = this.getProps();
+		final java.lang.Object other$props = other.getProps();
+		if (this$props == null ? other$props != null : !this$props.equals(other$props))
+			return false;
+		final java.lang.Object this$notifyProps = this.getNotifyProps();
+		final java.lang.Object other$notifyProps = other.getNotifyProps();
+		if (this$notifyProps == null ? other$notifyProps != null : !this$notifyProps.equals(other$notifyProps))
+			return false;
+		final java.lang.Object this$locale = this.getLocale();
+		final java.lang.Object other$locale = other.getLocale();
+		if (this$locale == null ? other$locale != null : !this$locale.equals(other$locale))
+			return false;
+		final java.lang.Object this$password = this.getPassword();
+		final java.lang.Object other$password = other.getPassword();
+		if (this$password == null ? other$password != null : !this$password.equals(other$password))
+			return false;
+		final java.lang.Object this$timezone = this.getTimezone();
+		final java.lang.Object other$timezone = other.getTimezone();
+		if (this$timezone == null ? other$timezone != null : !this$timezone.equals(other$timezone))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof UserPatch;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof UserPatch;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $username = this.getUsername();
-    result = result * PRIME + ($username == null ? 43 : $username.hashCode());
-    final java.lang.Object $nickname = this.getNickname();
-    result = result * PRIME + ($nickname == null ? 43 : $nickname.hashCode());
-    final java.lang.Object $firstName = this.getFirstName();
-    result = result * PRIME + ($firstName == null ? 43 : $firstName.hashCode());
-    final java.lang.Object $lastName = this.getLastName();
-    result = result * PRIME + ($lastName == null ? 43 : $lastName.hashCode());
-    final java.lang.Object $position = this.getPosition();
-    result = result * PRIME + ($position == null ? 43 : $position.hashCode());
-    final java.lang.Object $email = this.getEmail();
-    result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-    final java.lang.Object $props = this.getProps();
-    result = result * PRIME + ($props == null ? 43 : $props.hashCode());
-    final java.lang.Object $notifyProps = this.getNotifyProps();
-    result = result * PRIME + ($notifyProps == null ? 43 : $notifyProps.hashCode());
-    final java.lang.Object $locale = this.getLocale();
-    result = result * PRIME + ($locale == null ? 43 : $locale.hashCode());
-    final java.lang.Object $password = this.getPassword();
-    result = result * PRIME + ($password == null ? 43 : $password.hashCode());
-    final java.lang.Object $timezone = this.getTimezone();
-    result = result * PRIME + ($timezone == null ? 43 : $timezone.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $username = this.getUsername();
+		result = result * PRIME + ($username == null ? 43 : $username.hashCode());
+		final java.lang.Object $nickname = this.getNickname();
+		result = result * PRIME + ($nickname == null ? 43 : $nickname.hashCode());
+		final java.lang.Object $firstName = this.getFirstName();
+		result = result * PRIME + ($firstName == null ? 43 : $firstName.hashCode());
+		final java.lang.Object $lastName = this.getLastName();
+		result = result * PRIME + ($lastName == null ? 43 : $lastName.hashCode());
+		final java.lang.Object $position = this.getPosition();
+		result = result * PRIME + ($position == null ? 43 : $position.hashCode());
+		final java.lang.Object $email = this.getEmail();
+		result = result * PRIME + ($email == null ? 43 : $email.hashCode());
+		final java.lang.Object $props = this.getProps();
+		result = result * PRIME + ($props == null ? 43 : $props.hashCode());
+		final java.lang.Object $notifyProps = this.getNotifyProps();
+		result = result * PRIME + ($notifyProps == null ? 43 : $notifyProps.hashCode());
+		final java.lang.Object $locale = this.getLocale();
+		result = result * PRIME + ($locale == null ? 43 : $locale.hashCode());
+		final java.lang.Object $password = this.getPassword();
+		result = result * PRIME + ($password == null ? 43 : $password.hashCode());
+		final java.lang.Object $timezone = this.getTimezone();
+		result = result * PRIME + ($timezone == null ? 43 : $timezone.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UserPatch(username=" + this.getUsername() + ", nickname=" + this.getNickname() + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", position=" + this.getPosition() + ", email=" + this.getEmail() + ", props=" + this.getProps() + ", notifyProps=" + this.getNotifyProps() + ", locale=" + this.getLocale() + ", password=" + this.getPassword() + ", timezone=" + this.getTimezone() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UserPatch(username=" + this.getUsername() + ", nickname=" + this.getNickname() + ", firstName="
+				+ this.getFirstName() + ", lastName=" + this.getLastName() + ", position=" + this.getPosition()
+				+ ", email=" + this.getEmail() + ", props=" + this.getProps() + ", notifyProps=" + this.getNotifyProps()
+				+ ", locale=" + this.getLocale() + ", password=" + this.getPassword() + ", timezone="
+				+ this.getTimezone() + ")";
+	}
 }

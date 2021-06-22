@@ -16,70 +16,58 @@ package org.ar4k.agent.mattermost.client4.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Search posts request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.PostApi#searchPosts(String, String, boolean)
- * @author Takayuki Maruyama
- */
 public class SearchPostsRequest {
-  @JsonProperty("terms")
-  private String terms;
-  @JsonProperty("is_or_search")
-  private boolean isOrSearch;
+	@JsonProperty("terms")
+	private String terms;
+	@JsonProperty("is_or_search")
+	private boolean isOrSearch;
 
-  @java.lang.SuppressWarnings("all")
-  SearchPostsRequest(final String terms, final boolean isOrSearch) {
-    this.terms = terms;
-    this.isOrSearch = isOrSearch;
-  }
+	@java.lang.SuppressWarnings("all")
+	SearchPostsRequest(final String terms, final boolean isOrSearch) {
+		this.terms = terms;
+		this.isOrSearch = isOrSearch;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class SearchPostsRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String terms;
+		@java.lang.SuppressWarnings("all")
+		private boolean isOrSearch;
 
-  @java.lang.SuppressWarnings("all")
-  public static class SearchPostsRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String terms;
-    @java.lang.SuppressWarnings("all")
-    private boolean isOrSearch;
+		@java.lang.SuppressWarnings("all")
+		SearchPostsRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    SearchPostsRequestBuilder() {
-    }
+		@JsonProperty("terms")
+		@java.lang.SuppressWarnings("all")
+		public SearchPostsRequest.SearchPostsRequestBuilder terms(final String terms) {
+			this.terms = terms;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("terms")
-    @java.lang.SuppressWarnings("all")
-    public SearchPostsRequest.SearchPostsRequestBuilder terms(final String terms) {
-      this.terms = terms;
-      return this;
-    }
+		@JsonProperty("is_or_search")
+		@java.lang.SuppressWarnings("all")
+		public SearchPostsRequest.SearchPostsRequestBuilder isOrSearch(final boolean isOrSearch) {
+			this.isOrSearch = isOrSearch;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("is_or_search")
-    @java.lang.SuppressWarnings("all")
-    public SearchPostsRequest.SearchPostsRequestBuilder isOrSearch(final boolean isOrSearch) {
-      this.isOrSearch = isOrSearch;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public SearchPostsRequest build() {
+			return new SearchPostsRequest(this.terms, this.isOrSearch);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public SearchPostsRequest build() {
-      return new SearchPostsRequest(this.terms, this.isOrSearch);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "SearchPostsRequest.SearchPostsRequestBuilder(terms=" + this.terms + ", isOrSearch="
+					+ this.isOrSearch + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "SearchPostsRequest.SearchPostsRequestBuilder(terms=" + this.terms + ", isOrSearch=" + this.isOrSearch + ")";
-    }
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public static SearchPostsRequest.SearchPostsRequestBuilder builder() {
-    return new SearchPostsRequest.SearchPostsRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public static SearchPostsRequest.SearchPostsRequestBuilder builder() {
+		return new SearchPostsRequest.SearchPostsRequestBuilder();
+	}
 }

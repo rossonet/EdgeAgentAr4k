@@ -19,166 +19,173 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
-/**
- * Initial load payload.
- * 
- * @author Takayuki Maruyama
- */
 public class InitialLoad {
-  @JsonProperty("user")
-  private User user;
-  @JsonProperty("team_members")
-  private List<TeamMember> teamMembers;
-  @JsonProperty("teams")
-  private List<Team> teams;
-  @JsonProperty("preferences")
-  private Preferences preferences;
-  @JsonProperty("client_cfg")
-  private Map<String, String> clientCfg;
-  @JsonProperty("license_cfg")
-  private Map<String, String> licenseCfg;
-  @JsonProperty("no_accounts")
-  private boolean noAccounts;
+	@JsonProperty("user")
+	private User user;
+	@JsonProperty("team_members")
+	private List<TeamMember> teamMembers;
+	@JsonProperty("teams")
+	private List<Team> teams;
+	@JsonProperty("preferences")
+	private Preferences preferences;
+	@JsonProperty("client_cfg")
+	private Map<String, String> clientCfg;
+	@JsonProperty("license_cfg")
+	private Map<String, String> licenseCfg;
+	@JsonProperty("no_accounts")
+	private boolean noAccounts;
 
-  @java.lang.SuppressWarnings("all")
-  public InitialLoad() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public InitialLoad() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public User getUser() {
-    return this.user;
-  }
+	@java.lang.SuppressWarnings("all")
+	public User getUser() {
+		return this.user;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<TeamMember> getTeamMembers() {
-    return this.teamMembers;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<TeamMember> getTeamMembers() {
+		return this.teamMembers;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<Team> getTeams() {
-    return this.teams;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<Team> getTeams() {
+		return this.teams;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Preferences getPreferences() {
-    return this.preferences;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Preferences getPreferences() {
+		return this.preferences;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getClientCfg() {
-    return this.clientCfg;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getClientCfg() {
+		return this.clientCfg;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getLicenseCfg() {
-    return this.licenseCfg;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getLicenseCfg() {
+		return this.licenseCfg;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isNoAccounts() {
-    return this.noAccounts;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isNoAccounts() {
+		return this.noAccounts;
+	}
 
-  @JsonProperty("user")
-  @java.lang.SuppressWarnings("all")
-  public void setUser(final User user) {
-    this.user = user;
-  }
+	@JsonProperty("user")
+	@java.lang.SuppressWarnings("all")
+	public void setUser(final User user) {
+		this.user = user;
+	}
 
-  @JsonProperty("team_members")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamMembers(final List<TeamMember> teamMembers) {
-    this.teamMembers = teamMembers;
-  }
+	@JsonProperty("team_members")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamMembers(final List<TeamMember> teamMembers) {
+		this.teamMembers = teamMembers;
+	}
 
-  @JsonProperty("teams")
-  @java.lang.SuppressWarnings("all")
-  public void setTeams(final List<Team> teams) {
-    this.teams = teams;
-  }
+	@JsonProperty("teams")
+	@java.lang.SuppressWarnings("all")
+	public void setTeams(final List<Team> teams) {
+		this.teams = teams;
+	}
 
-  @JsonProperty("preferences")
-  @java.lang.SuppressWarnings("all")
-  public void setPreferences(final Preferences preferences) {
-    this.preferences = preferences;
-  }
+	@JsonProperty("preferences")
+	@java.lang.SuppressWarnings("all")
+	public void setPreferences(final Preferences preferences) {
+		this.preferences = preferences;
+	}
 
-  @JsonProperty("client_cfg")
-  @java.lang.SuppressWarnings("all")
-  public void setClientCfg(final Map<String, String> clientCfg) {
-    this.clientCfg = clientCfg;
-  }
+	@JsonProperty("client_cfg")
+	@java.lang.SuppressWarnings("all")
+	public void setClientCfg(final Map<String, String> clientCfg) {
+		this.clientCfg = clientCfg;
+	}
 
-  @JsonProperty("license_cfg")
-  @java.lang.SuppressWarnings("all")
-  public void setLicenseCfg(final Map<String, String> licenseCfg) {
-    this.licenseCfg = licenseCfg;
-  }
+	@JsonProperty("license_cfg")
+	@java.lang.SuppressWarnings("all")
+	public void setLicenseCfg(final Map<String, String> licenseCfg) {
+		this.licenseCfg = licenseCfg;
+	}
 
-  @JsonProperty("no_accounts")
-  @java.lang.SuppressWarnings("all")
-  public void setNoAccounts(final boolean noAccounts) {
-    this.noAccounts = noAccounts;
-  }
+	@JsonProperty("no_accounts")
+	@java.lang.SuppressWarnings("all")
+	public void setNoAccounts(final boolean noAccounts) {
+		this.noAccounts = noAccounts;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof InitialLoad)) return false;
-    final InitialLoad other = (InitialLoad) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.isNoAccounts() != other.isNoAccounts()) return false;
-    final java.lang.Object this$user = this.getUser();
-    final java.lang.Object other$user = other.getUser();
-    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-    final java.lang.Object this$teamMembers = this.getTeamMembers();
-    final java.lang.Object other$teamMembers = other.getTeamMembers();
-    if (this$teamMembers == null ? other$teamMembers != null : !this$teamMembers.equals(other$teamMembers)) return false;
-    final java.lang.Object this$teams = this.getTeams();
-    final java.lang.Object other$teams = other.getTeams();
-    if (this$teams == null ? other$teams != null : !this$teams.equals(other$teams)) return false;
-    final java.lang.Object this$preferences = this.getPreferences();
-    final java.lang.Object other$preferences = other.getPreferences();
-    if (this$preferences == null ? other$preferences != null : !this$preferences.equals(other$preferences)) return false;
-    final java.lang.Object this$clientCfg = this.getClientCfg();
-    final java.lang.Object other$clientCfg = other.getClientCfg();
-    if (this$clientCfg == null ? other$clientCfg != null : !this$clientCfg.equals(other$clientCfg)) return false;
-    final java.lang.Object this$licenseCfg = this.getLicenseCfg();
-    final java.lang.Object other$licenseCfg = other.getLicenseCfg();
-    if (this$licenseCfg == null ? other$licenseCfg != null : !this$licenseCfg.equals(other$licenseCfg)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof InitialLoad))
+			return false;
+		final InitialLoad other = (InitialLoad) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.isNoAccounts() != other.isNoAccounts())
+			return false;
+		final java.lang.Object this$user = this.getUser();
+		final java.lang.Object other$user = other.getUser();
+		if (this$user == null ? other$user != null : !this$user.equals(other$user))
+			return false;
+		final java.lang.Object this$teamMembers = this.getTeamMembers();
+		final java.lang.Object other$teamMembers = other.getTeamMembers();
+		if (this$teamMembers == null ? other$teamMembers != null : !this$teamMembers.equals(other$teamMembers))
+			return false;
+		final java.lang.Object this$teams = this.getTeams();
+		final java.lang.Object other$teams = other.getTeams();
+		if (this$teams == null ? other$teams != null : !this$teams.equals(other$teams))
+			return false;
+		final java.lang.Object this$preferences = this.getPreferences();
+		final java.lang.Object other$preferences = other.getPreferences();
+		if (this$preferences == null ? other$preferences != null : !this$preferences.equals(other$preferences))
+			return false;
+		final java.lang.Object this$clientCfg = this.getClientCfg();
+		final java.lang.Object other$clientCfg = other.getClientCfg();
+		if (this$clientCfg == null ? other$clientCfg != null : !this$clientCfg.equals(other$clientCfg))
+			return false;
+		final java.lang.Object this$licenseCfg = this.getLicenseCfg();
+		final java.lang.Object other$licenseCfg = other.getLicenseCfg();
+		if (this$licenseCfg == null ? other$licenseCfg != null : !this$licenseCfg.equals(other$licenseCfg))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof InitialLoad;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof InitialLoad;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isNoAccounts() ? 79 : 97);
-    final java.lang.Object $user = this.getUser();
-    result = result * PRIME + ($user == null ? 43 : $user.hashCode());
-    final java.lang.Object $teamMembers = this.getTeamMembers();
-    result = result * PRIME + ($teamMembers == null ? 43 : $teamMembers.hashCode());
-    final java.lang.Object $teams = this.getTeams();
-    result = result * PRIME + ($teams == null ? 43 : $teams.hashCode());
-    final java.lang.Object $preferences = this.getPreferences();
-    result = result * PRIME + ($preferences == null ? 43 : $preferences.hashCode());
-    final java.lang.Object $clientCfg = this.getClientCfg();
-    result = result * PRIME + ($clientCfg == null ? 43 : $clientCfg.hashCode());
-    final java.lang.Object $licenseCfg = this.getLicenseCfg();
-    result = result * PRIME + ($licenseCfg == null ? 43 : $licenseCfg.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isNoAccounts() ? 79 : 97);
+		final java.lang.Object $user = this.getUser();
+		result = result * PRIME + ($user == null ? 43 : $user.hashCode());
+		final java.lang.Object $teamMembers = this.getTeamMembers();
+		result = result * PRIME + ($teamMembers == null ? 43 : $teamMembers.hashCode());
+		final java.lang.Object $teams = this.getTeams();
+		result = result * PRIME + ($teams == null ? 43 : $teams.hashCode());
+		final java.lang.Object $preferences = this.getPreferences();
+		result = result * PRIME + ($preferences == null ? 43 : $preferences.hashCode());
+		final java.lang.Object $clientCfg = this.getClientCfg();
+		result = result * PRIME + ($clientCfg == null ? 43 : $clientCfg.hashCode());
+		final java.lang.Object $licenseCfg = this.getLicenseCfg();
+		result = result * PRIME + ($licenseCfg == null ? 43 : $licenseCfg.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "InitialLoad(user=" + this.getUser() + ", teamMembers=" + this.getTeamMembers() + ", teams=" + this.getTeams() + ", preferences=" + this.getPreferences() + ", clientCfg=" + this.getClientCfg() + ", licenseCfg=" + this.getLicenseCfg() + ", noAccounts=" + this.isNoAccounts() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "InitialLoad(user=" + this.getUser() + ", teamMembers=" + this.getTeamMembers() + ", teams="
+				+ this.getTeams() + ", preferences=" + this.getPreferences() + ", clientCfg=" + this.getClientCfg()
+				+ ", licenseCfg=" + this.getLicenseCfg() + ", noAccounts=" + this.isNoAccounts() + ")";
+	}
 }

@@ -16,115 +16,118 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Channel patch.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelPatch {
-  @JsonProperty("display_name")
-  private String displayName;
-  @JsonProperty("name")
-  private String name;
-  @JsonProperty("header")
-  private String header;
-  @JsonProperty("purpose")
-  private String purpose;
+	@JsonProperty("display_name")
+	private String displayName;
+	@JsonProperty("name")
+	private String name;
+	@JsonProperty("header")
+	private String header;
+	@JsonProperty("purpose")
+	private String purpose;
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelPatch() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelPatch() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDisplayName() {
-    return this.displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDisplayName() {
+		return this.displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getHeader() {
-    return this.header;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getHeader() {
+		return this.header;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPurpose() {
-    return this.purpose;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPurpose() {
+		return this.purpose;
+	}
 
-  @JsonProperty("display_name")
-  @java.lang.SuppressWarnings("all")
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+	@JsonProperty("display_name")
+	@java.lang.SuppressWarnings("all")
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-  @JsonProperty("name")
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@JsonProperty("name")
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @JsonProperty("header")
-  @java.lang.SuppressWarnings("all")
-  public void setHeader(final String header) {
-    this.header = header;
-  }
+	@JsonProperty("header")
+	@java.lang.SuppressWarnings("all")
+	public void setHeader(final String header) {
+		this.header = header;
+	}
 
-  @JsonProperty("purpose")
-  @java.lang.SuppressWarnings("all")
-  public void setPurpose(final String purpose) {
-    this.purpose = purpose;
-  }
+	@JsonProperty("purpose")
+	@java.lang.SuppressWarnings("all")
+	public void setPurpose(final String purpose) {
+		this.purpose = purpose;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelPatch)) return false;
-    final ChannelPatch other = (ChannelPatch) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$displayName = this.getDisplayName();
-    final java.lang.Object other$displayName = other.getDisplayName();
-    if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final java.lang.Object this$header = this.getHeader();
-    final java.lang.Object other$header = other.getHeader();
-    if (this$header == null ? other$header != null : !this$header.equals(other$header)) return false;
-    final java.lang.Object this$purpose = this.getPurpose();
-    final java.lang.Object other$purpose = other.getPurpose();
-    if (this$purpose == null ? other$purpose != null : !this$purpose.equals(other$purpose)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelPatch))
+			return false;
+		final ChannelPatch other = (ChannelPatch) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$displayName = this.getDisplayName();
+		final java.lang.Object other$displayName = other.getDisplayName();
+		if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		final java.lang.Object this$header = this.getHeader();
+		final java.lang.Object other$header = other.getHeader();
+		if (this$header == null ? other$header != null : !this$header.equals(other$header))
+			return false;
+		final java.lang.Object this$purpose = this.getPurpose();
+		final java.lang.Object other$purpose = other.getPurpose();
+		if (this$purpose == null ? other$purpose != null : !this$purpose.equals(other$purpose))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelPatch;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelPatch;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $displayName = this.getDisplayName();
-    result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    final java.lang.Object $header = this.getHeader();
-    result = result * PRIME + ($header == null ? 43 : $header.hashCode());
-    final java.lang.Object $purpose = this.getPurpose();
-    result = result * PRIME + ($purpose == null ? 43 : $purpose.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $displayName = this.getDisplayName();
+		result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		final java.lang.Object $header = this.getHeader();
+		result = result * PRIME + ($header == null ? 43 : $header.hashCode());
+		final java.lang.Object $purpose = this.getPurpose();
+		result = result * PRIME + ($purpose == null ? 43 : $purpose.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelPatch(displayName=" + this.getDisplayName() + ", name=" + this.getName() + ", header=" + this.getHeader() + ", purpose=" + this.getPurpose() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelPatch(displayName=" + this.getDisplayName() + ", name=" + this.getName() + ", header="
+				+ this.getHeader() + ", purpose=" + this.getPurpose() + ")";
+	}
 }

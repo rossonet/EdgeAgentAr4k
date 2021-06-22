@@ -17,60 +17,60 @@ package org.ar4k.agent.mattermost.model;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Post search results.
- * 
- * @since {@code matches} field added in Mattermost Server 5.1 (E20)
- */
 public class PostSearchResults extends PostList {
-  private Map<String, List<String>> matches;
+	private Map<String, List<String>> matches;
 
-  @java.lang.SuppressWarnings("all")
-  public PostSearchResults() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PostSearchResults() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, List<String>> getMatches() {
-    return this.matches;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, List<String>> getMatches() {
+		return this.matches;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setMatches(final Map<String, List<String>> matches) {
-    this.matches = matches;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setMatches(final Map<String, List<String>> matches) {
+		this.matches = matches;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PostSearchResults(matches=" + this.getMatches() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PostSearchResults(matches=" + this.getMatches() + ")";
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PostSearchResults)) return false;
-    final PostSearchResults other = (PostSearchResults) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (!super.equals(o)) return false;
-    final java.lang.Object this$matches = this.getMatches();
-    final java.lang.Object other$matches = other.getMatches();
-    if (this$matches == null ? other$matches != null : !this$matches.equals(other$matches)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PostSearchResults))
+			return false;
+		final PostSearchResults other = (PostSearchResults) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (!super.equals(o))
+			return false;
+		final java.lang.Object this$matches = this.getMatches();
+		final java.lang.Object other$matches = other.getMatches();
+		if (this$matches == null ? other$matches != null : !this$matches.equals(other$matches))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PostSearchResults;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PostSearchResults;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = super.hashCode();
-    final java.lang.Object $matches = this.getMatches();
-    result = result * PRIME + ($matches == null ? 43 : $matches.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = super.hashCode();
+		final java.lang.Object $matches = this.getMatches();
+		result = result * PRIME + ($matches == null ? 43 : $matches.hashCode());
+		return result;
+	}
 }

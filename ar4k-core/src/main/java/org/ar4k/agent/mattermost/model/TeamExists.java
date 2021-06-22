@@ -16,58 +16,57 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Team exists.
- * 
- * @author Takayuki Maruyama
- */
 public class TeamExists {
-  @JsonProperty("exists")
-  private boolean exists;
+	@JsonProperty("exists")
+	private boolean exists;
 
-  @java.lang.SuppressWarnings("all")
-  public TeamExists() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public TeamExists() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isExists() {
-    return this.exists;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isExists() {
+		return this.exists;
+	}
 
-  @JsonProperty("exists")
-  @java.lang.SuppressWarnings("all")
-  public void setExists(final boolean exists) {
-    this.exists = exists;
-  }
+	@JsonProperty("exists")
+	@java.lang.SuppressWarnings("all")
+	public void setExists(final boolean exists) {
+		this.exists = exists;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TeamExists)) return false;
-    final TeamExists other = (TeamExists) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.isExists() != other.isExists()) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof TeamExists))
+			return false;
+		final TeamExists other = (TeamExists) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.isExists() != other.isExists())
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof TeamExists;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof TeamExists;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isExists() ? 79 : 97);
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isExists() ? 79 : 97);
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "TeamExists(exists=" + this.isExists() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "TeamExists(exists=" + this.isExists() + ")";
+	}
 }

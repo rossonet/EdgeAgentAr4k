@@ -16,13 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link Preference}.
- * 
- * @author Takayuki Maruyama
- */
 public class Preferences extends ArrayList<Preference> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

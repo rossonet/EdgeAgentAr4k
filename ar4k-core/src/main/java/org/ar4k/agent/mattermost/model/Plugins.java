@@ -14,67 +14,70 @@
  */
 package org.ar4k.agent.mattermost.model;
 
-/**
- * Active / Inactive plugins.
- */
 public class Plugins {
-  private PluginManifest[] active;
-  private PluginManifest[] inactive;
+	private PluginManifest[] active;
+	private PluginManifest[] inactive;
 
-  @java.lang.SuppressWarnings("all")
-  public Plugins() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Plugins() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PluginManifest[] getActive() {
-    return this.active;
-  }
+	@java.lang.SuppressWarnings("all")
+	public PluginManifest[] getActive() {
+		return this.active;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PluginManifest[] getInactive() {
-    return this.inactive;
-  }
+	@java.lang.SuppressWarnings("all")
+	public PluginManifest[] getInactive() {
+		return this.inactive;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setActive(final PluginManifest[] active) {
-    this.active = active;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setActive(final PluginManifest[] active) {
+		this.active = active;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setInactive(final PluginManifest[] inactive) {
-    this.inactive = inactive;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setInactive(final PluginManifest[] inactive) {
+		this.inactive = inactive;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Plugins)) return false;
-    final Plugins other = (Plugins) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (!java.util.Arrays.deepEquals(this.getActive(), other.getActive())) return false;
-    if (!java.util.Arrays.deepEquals(this.getInactive(), other.getInactive())) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Plugins))
+			return false;
+		final Plugins other = (Plugins) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (!java.util.Arrays.deepEquals(this.getActive(), other.getActive()))
+			return false;
+		if (!java.util.Arrays.deepEquals(this.getInactive(), other.getInactive()))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Plugins;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Plugins;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + java.util.Arrays.deepHashCode(this.getActive());
-    result = result * PRIME + java.util.Arrays.deepHashCode(this.getInactive());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + java.util.Arrays.deepHashCode(this.getActive());
+		result = result * PRIME + java.util.Arrays.deepHashCode(this.getInactive());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Plugins(active=" + java.util.Arrays.deepToString(this.getActive()) + ", inactive=" + java.util.Arrays.deepToString(this.getInactive()) + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Plugins(active=" + java.util.Arrays.deepToString(this.getActive()) + ", inactive="
+				+ java.util.Arrays.deepToString(this.getInactive()) + ")";
+	}
 }

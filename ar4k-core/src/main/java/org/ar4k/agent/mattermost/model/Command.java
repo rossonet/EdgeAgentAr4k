@@ -16,351 +16,372 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Command.
- * 
- * @author Takayuki Maruyama
- */
 public class Command {
-  /**
-   * The convenience constructor for create new slash command.
-   */
-  public Command(String creatorId, String teamId, String url, CommandMethod method, String trigger) {
-    this.creatorId = creatorId;
-    this.teamId = teamId;
-    this.url = url;
-    this.method = method;
-    this.trigger = trigger;
-  }
 
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("token")
-  private String token;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("update_at")
-  private long updateAt;
-  @JsonProperty("delete_at")
-  private long deleteAt;
-  @JsonProperty("creator_id")
-  private String creatorId;
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("trigger")
-  private String trigger;
-  @JsonProperty("method")
-  private CommandMethod method;
-  @JsonProperty("username")
-  private String userName;
-  @JsonProperty("icon_url")
-  private String iconUrl;
-  @JsonProperty("auto_complete")
-  private boolean autoComplete;
-  @JsonProperty("auto_complete_desc")
-  private String autoCompleteDesc;
-  @JsonProperty("auto_complete_hint")
-  private String autoCompleteHint;
-  @JsonProperty("display_name")
-  private String displayName;
-  @JsonProperty("description")
-  private String description;
-  @JsonProperty("url")
-  private String url;
+	public Command(String creatorId, String teamId, String url, CommandMethod method, String trigger) {
+		this.creatorId = creatorId;
+		this.teamId = teamId;
+		this.url = url;
+		this.method = method;
+		this.trigger = trigger;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("token")
+	private String token;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("update_at")
+	private long updateAt;
+	@JsonProperty("delete_at")
+	private long deleteAt;
+	@JsonProperty("creator_id")
+	private String creatorId;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("trigger")
+	private String trigger;
+	@JsonProperty("method")
+	private CommandMethod method;
+	@JsonProperty("username")
+	private String userName;
+	@JsonProperty("icon_url")
+	private String iconUrl;
+	@JsonProperty("auto_complete")
+	private boolean autoComplete;
+	@JsonProperty("auto_complete_desc")
+	private String autoCompleteDesc;
+	@JsonProperty("auto_complete_hint")
+	private String autoCompleteHint;
+	@JsonProperty("display_name")
+	private String displayName;
+	@JsonProperty("description")
+	private String description;
+	@JsonProperty("url")
+	private String url;
 
-  @java.lang.SuppressWarnings("all")
-  public String getToken() {
-    return this.token;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getToken() {
+		return this.token;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getUpdateAt() {
-    return this.updateAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getDeleteAt() {
-    return this.deleteAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getUpdateAt() {
+		return this.updateAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCreatorId() {
-    return this.creatorId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getDeleteAt() {
+		return this.deleteAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCreatorId() {
+		return this.creatorId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTrigger() {
-    return this.trigger;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public CommandMethod getMethod() {
-    return this.method;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTrigger() {
+		return this.trigger;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserName() {
-    return this.userName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public CommandMethod getMethod() {
+		return this.method;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getIconUrl() {
-    return this.iconUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserName() {
+		return this.userName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isAutoComplete() {
-    return this.autoComplete;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getIconUrl() {
+		return this.iconUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAutoCompleteDesc() {
-    return this.autoCompleteDesc;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isAutoComplete() {
+		return this.autoComplete;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAutoCompleteHint() {
-    return this.autoCompleteHint;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAutoCompleteDesc() {
+		return this.autoCompleteDesc;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDisplayName() {
-    return this.displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAutoCompleteHint() {
+		return this.autoCompleteHint;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDescription() {
-    return this.description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDisplayName() {
+		return this.displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUrl() {
-    return this.url;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDescription() {
+		return this.description;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUrl() {
+		return this.url;
+	}
 
-  @JsonProperty("token")
-  @java.lang.SuppressWarnings("all")
-  public void setToken(final String token) {
-    this.token = token;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("token")
+	@java.lang.SuppressWarnings("all")
+	public void setToken(final String token) {
+		this.token = token;
+	}
 
-  @JsonProperty("update_at")
-  @java.lang.SuppressWarnings("all")
-  public void setUpdateAt(final long updateAt) {
-    this.updateAt = updateAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("delete_at")
-  @java.lang.SuppressWarnings("all")
-  public void setDeleteAt(final long deleteAt) {
-    this.deleteAt = deleteAt;
-  }
+	@JsonProperty("update_at")
+	@java.lang.SuppressWarnings("all")
+	public void setUpdateAt(final long updateAt) {
+		this.updateAt = updateAt;
+	}
 
-  @JsonProperty("creator_id")
-  @java.lang.SuppressWarnings("all")
-  public void setCreatorId(final String creatorId) {
-    this.creatorId = creatorId;
-  }
+	@JsonProperty("delete_at")
+	@java.lang.SuppressWarnings("all")
+	public void setDeleteAt(final long deleteAt) {
+		this.deleteAt = deleteAt;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("creator_id")
+	@java.lang.SuppressWarnings("all")
+	public void setCreatorId(final String creatorId) {
+		this.creatorId = creatorId;
+	}
 
-  @JsonProperty("trigger")
-  @java.lang.SuppressWarnings("all")
-  public void setTrigger(final String trigger) {
-    this.trigger = trigger;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("method")
-  @java.lang.SuppressWarnings("all")
-  public void setMethod(final CommandMethod method) {
-    this.method = method;
-  }
+	@JsonProperty("trigger")
+	@java.lang.SuppressWarnings("all")
+	public void setTrigger(final String trigger) {
+		this.trigger = trigger;
+	}
 
-  @JsonProperty("username")
-  @java.lang.SuppressWarnings("all")
-  public void setUserName(final String userName) {
-    this.userName = userName;
-  }
+	@JsonProperty("method")
+	@java.lang.SuppressWarnings("all")
+	public void setMethod(final CommandMethod method) {
+		this.method = method;
+	}
 
-  @JsonProperty("icon_url")
-  @java.lang.SuppressWarnings("all")
-  public void setIconUrl(final String iconUrl) {
-    this.iconUrl = iconUrl;
-  }
+	@JsonProperty("username")
+	@java.lang.SuppressWarnings("all")
+	public void setUserName(final String userName) {
+		this.userName = userName;
+	}
 
-  @JsonProperty("auto_complete")
-  @java.lang.SuppressWarnings("all")
-  public void setAutoComplete(final boolean autoComplete) {
-    this.autoComplete = autoComplete;
-  }
+	@JsonProperty("icon_url")
+	@java.lang.SuppressWarnings("all")
+	public void setIconUrl(final String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
 
-  @JsonProperty("auto_complete_desc")
-  @java.lang.SuppressWarnings("all")
-  public void setAutoCompleteDesc(final String autoCompleteDesc) {
-    this.autoCompleteDesc = autoCompleteDesc;
-  }
+	@JsonProperty("auto_complete")
+	@java.lang.SuppressWarnings("all")
+	public void setAutoComplete(final boolean autoComplete) {
+		this.autoComplete = autoComplete;
+	}
 
-  @JsonProperty("auto_complete_hint")
-  @java.lang.SuppressWarnings("all")
-  public void setAutoCompleteHint(final String autoCompleteHint) {
-    this.autoCompleteHint = autoCompleteHint;
-  }
+	@JsonProperty("auto_complete_desc")
+	@java.lang.SuppressWarnings("all")
+	public void setAutoCompleteDesc(final String autoCompleteDesc) {
+		this.autoCompleteDesc = autoCompleteDesc;
+	}
 
-  @JsonProperty("display_name")
-  @java.lang.SuppressWarnings("all")
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+	@JsonProperty("auto_complete_hint")
+	@java.lang.SuppressWarnings("all")
+	public void setAutoCompleteHint(final String autoCompleteHint) {
+		this.autoCompleteHint = autoCompleteHint;
+	}
 
-  @JsonProperty("description")
-  @java.lang.SuppressWarnings("all")
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+	@JsonProperty("display_name")
+	@java.lang.SuppressWarnings("all")
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-  @JsonProperty("url")
-  @java.lang.SuppressWarnings("all")
-  public void setUrl(final String url) {
-    this.url = url;
-  }
+	@JsonProperty("description")
+	@java.lang.SuppressWarnings("all")
+	public void setDescription(final String description) {
+		this.description = description;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Command)) return false;
-    final Command other = (Command) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    if (this.getUpdateAt() != other.getUpdateAt()) return false;
-    if (this.getDeleteAt() != other.getDeleteAt()) return false;
-    if (this.isAutoComplete() != other.isAutoComplete()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$token = this.getToken();
-    final java.lang.Object other$token = other.getToken();
-    if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
-    final java.lang.Object this$creatorId = this.getCreatorId();
-    final java.lang.Object other$creatorId = other.getCreatorId();
-    if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$trigger = this.getTrigger();
-    final java.lang.Object other$trigger = other.getTrigger();
-    if (this$trigger == null ? other$trigger != null : !this$trigger.equals(other$trigger)) return false;
-    final java.lang.Object this$method = this.getMethod();
-    final java.lang.Object other$method = other.getMethod();
-    if (this$method == null ? other$method != null : !this$method.equals(other$method)) return false;
-    final java.lang.Object this$userName = this.getUserName();
-    final java.lang.Object other$userName = other.getUserName();
-    if (this$userName == null ? other$userName != null : !this$userName.equals(other$userName)) return false;
-    final java.lang.Object this$iconUrl = this.getIconUrl();
-    final java.lang.Object other$iconUrl = other.getIconUrl();
-    if (this$iconUrl == null ? other$iconUrl != null : !this$iconUrl.equals(other$iconUrl)) return false;
-    final java.lang.Object this$autoCompleteDesc = this.getAutoCompleteDesc();
-    final java.lang.Object other$autoCompleteDesc = other.getAutoCompleteDesc();
-    if (this$autoCompleteDesc == null ? other$autoCompleteDesc != null : !this$autoCompleteDesc.equals(other$autoCompleteDesc)) return false;
-    final java.lang.Object this$autoCompleteHint = this.getAutoCompleteHint();
-    final java.lang.Object other$autoCompleteHint = other.getAutoCompleteHint();
-    if (this$autoCompleteHint == null ? other$autoCompleteHint != null : !this$autoCompleteHint.equals(other$autoCompleteHint)) return false;
-    final java.lang.Object this$displayName = this.getDisplayName();
-    final java.lang.Object other$displayName = other.getDisplayName();
-    if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName)) return false;
-    final java.lang.Object this$description = this.getDescription();
-    final java.lang.Object other$description = other.getDescription();
-    if (this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
-    final java.lang.Object this$url = this.getUrl();
-    final java.lang.Object other$url = other.getUrl();
-    if (this$url == null ? other$url != null : !this$url.equals(other$url)) return false;
-    return true;
-  }
+	@JsonProperty("url")
+	@java.lang.SuppressWarnings("all")
+	public void setUrl(final String url) {
+		this.url = url;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Command;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Command))
+			return false;
+		final Command other = (Command) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		if (this.getUpdateAt() != other.getUpdateAt())
+			return false;
+		if (this.getDeleteAt() != other.getDeleteAt())
+			return false;
+		if (this.isAutoComplete() != other.isAutoComplete())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$token = this.getToken();
+		final java.lang.Object other$token = other.getToken();
+		if (this$token == null ? other$token != null : !this$token.equals(other$token))
+			return false;
+		final java.lang.Object this$creatorId = this.getCreatorId();
+		final java.lang.Object other$creatorId = other.getCreatorId();
+		if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$trigger = this.getTrigger();
+		final java.lang.Object other$trigger = other.getTrigger();
+		if (this$trigger == null ? other$trigger != null : !this$trigger.equals(other$trigger))
+			return false;
+		final java.lang.Object this$method = this.getMethod();
+		final java.lang.Object other$method = other.getMethod();
+		if (this$method == null ? other$method != null : !this$method.equals(other$method))
+			return false;
+		final java.lang.Object this$userName = this.getUserName();
+		final java.lang.Object other$userName = other.getUserName();
+		if (this$userName == null ? other$userName != null : !this$userName.equals(other$userName))
+			return false;
+		final java.lang.Object this$iconUrl = this.getIconUrl();
+		final java.lang.Object other$iconUrl = other.getIconUrl();
+		if (this$iconUrl == null ? other$iconUrl != null : !this$iconUrl.equals(other$iconUrl))
+			return false;
+		final java.lang.Object this$autoCompleteDesc = this.getAutoCompleteDesc();
+		final java.lang.Object other$autoCompleteDesc = other.getAutoCompleteDesc();
+		if (this$autoCompleteDesc == null ? other$autoCompleteDesc != null
+				: !this$autoCompleteDesc.equals(other$autoCompleteDesc))
+			return false;
+		final java.lang.Object this$autoCompleteHint = this.getAutoCompleteHint();
+		final java.lang.Object other$autoCompleteHint = other.getAutoCompleteHint();
+		if (this$autoCompleteHint == null ? other$autoCompleteHint != null
+				: !this$autoCompleteHint.equals(other$autoCompleteHint))
+			return false;
+		final java.lang.Object this$displayName = this.getDisplayName();
+		final java.lang.Object other$displayName = other.getDisplayName();
+		if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+			return false;
+		final java.lang.Object this$description = this.getDescription();
+		final java.lang.Object other$description = other.getDescription();
+		if (this$description == null ? other$description != null : !this$description.equals(other$description))
+			return false;
+		final java.lang.Object this$url = this.getUrl();
+		final java.lang.Object other$url = other.getUrl();
+		if (this$url == null ? other$url != null : !this$url.equals(other$url))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final long $updateAt = this.getUpdateAt();
-    result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
-    final long $deleteAt = this.getDeleteAt();
-    result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
-    result = result * PRIME + (this.isAutoComplete() ? 79 : 97);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $token = this.getToken();
-    result = result * PRIME + ($token == null ? 43 : $token.hashCode());
-    final java.lang.Object $creatorId = this.getCreatorId();
-    result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $trigger = this.getTrigger();
-    result = result * PRIME + ($trigger == null ? 43 : $trigger.hashCode());
-    final java.lang.Object $method = this.getMethod();
-    result = result * PRIME + ($method == null ? 43 : $method.hashCode());
-    final java.lang.Object $userName = this.getUserName();
-    result = result * PRIME + ($userName == null ? 43 : $userName.hashCode());
-    final java.lang.Object $iconUrl = this.getIconUrl();
-    result = result * PRIME + ($iconUrl == null ? 43 : $iconUrl.hashCode());
-    final java.lang.Object $autoCompleteDesc = this.getAutoCompleteDesc();
-    result = result * PRIME + ($autoCompleteDesc == null ? 43 : $autoCompleteDesc.hashCode());
-    final java.lang.Object $autoCompleteHint = this.getAutoCompleteHint();
-    result = result * PRIME + ($autoCompleteHint == null ? 43 : $autoCompleteHint.hashCode());
-    final java.lang.Object $displayName = this.getDisplayName();
-    result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
-    final java.lang.Object $description = this.getDescription();
-    result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-    final java.lang.Object $url = this.getUrl();
-    result = result * PRIME + ($url == null ? 43 : $url.hashCode());
-    return result;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Command;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Command(id=" + this.getId() + ", token=" + this.getToken() + ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", creatorId=" + this.getCreatorId() + ", teamId=" + this.getTeamId() + ", trigger=" + this.getTrigger() + ", method=" + this.getMethod() + ", userName=" + this.getUserName() + ", iconUrl=" + this.getIconUrl() + ", autoComplete=" + this.isAutoComplete() + ", autoCompleteDesc=" + this.getAutoCompleteDesc() + ", autoCompleteHint=" + this.getAutoCompleteHint() + ", displayName=" + this.getDisplayName() + ", description=" + this.getDescription() + ", url=" + this.getUrl() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final long $updateAt = this.getUpdateAt();
+		result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
+		final long $deleteAt = this.getDeleteAt();
+		result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
+		result = result * PRIME + (this.isAutoComplete() ? 79 : 97);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $token = this.getToken();
+		result = result * PRIME + ($token == null ? 43 : $token.hashCode());
+		final java.lang.Object $creatorId = this.getCreatorId();
+		result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $trigger = this.getTrigger();
+		result = result * PRIME + ($trigger == null ? 43 : $trigger.hashCode());
+		final java.lang.Object $method = this.getMethod();
+		result = result * PRIME + ($method == null ? 43 : $method.hashCode());
+		final java.lang.Object $userName = this.getUserName();
+		result = result * PRIME + ($userName == null ? 43 : $userName.hashCode());
+		final java.lang.Object $iconUrl = this.getIconUrl();
+		result = result * PRIME + ($iconUrl == null ? 43 : $iconUrl.hashCode());
+		final java.lang.Object $autoCompleteDesc = this.getAutoCompleteDesc();
+		result = result * PRIME + ($autoCompleteDesc == null ? 43 : $autoCompleteDesc.hashCode());
+		final java.lang.Object $autoCompleteHint = this.getAutoCompleteHint();
+		result = result * PRIME + ($autoCompleteHint == null ? 43 : $autoCompleteHint.hashCode());
+		final java.lang.Object $displayName = this.getDisplayName();
+		result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+		final java.lang.Object $description = this.getDescription();
+		result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+		final java.lang.Object $url = this.getUrl();
+		result = result * PRIME + ($url == null ? 43 : $url.hashCode());
+		return result;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Command() {
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Command(id=" + this.getId() + ", token=" + this.getToken() + ", createAt=" + this.getCreateAt()
+				+ ", updateAt=" + this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", creatorId="
+				+ this.getCreatorId() + ", teamId=" + this.getTeamId() + ", trigger=" + this.getTrigger() + ", method="
+				+ this.getMethod() + ", userName=" + this.getUserName() + ", iconUrl=" + this.getIconUrl()
+				+ ", autoComplete=" + this.isAutoComplete() + ", autoCompleteDesc=" + this.getAutoCompleteDesc()
+				+ ", autoCompleteHint=" + this.getAutoCompleteHint() + ", displayName=" + this.getDisplayName()
+				+ ", description=" + this.getDescription() + ", url=" + this.getUrl() + ")";
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public Command() {
+	}
 }

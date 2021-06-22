@@ -24,47 +24,38 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.CommandResponseType.CommandResponseTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of {@link CommandResponse}.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = CommandResponseTypeDeserializer.class)
 public enum CommandResponseType implements HasCode<CommandResponseType> {
-  InChannel("in_channel"), Ephemeral("ephemeral");
-  private final String code;
+	InChannel("in_channel"), Ephemeral("ephemeral");
 
-  CommandResponseType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	CommandResponseType(String code) {
+		this.code = code;
+	}
 
-  /**
-   * Get an enum constant for {@code code}.
-   */
-  public static CommandResponseType of(String code) {
-    for (CommandResponseType type : CommandResponseType.values()) {
-      if (type.getCode().equals(code)) {
-        return type;
-      }
-    }
-    return null;
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  public static class CommandResponseTypeDeserializer
-      extends JsonDeserializer<CommandResponseType> {
+	public static CommandResponseType of(String code) {
+		for (CommandResponseType type : CommandResponseType.values()) {
+			if (type.getCode().equals(code)) {
+				return type;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public CommandResponseType deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException {
-      String code = p.getText();
-      return CommandResponseType.of(code);
-    }
-  }
+	public static class CommandResponseTypeDeserializer extends JsonDeserializer<CommandResponseType> {
+
+		@Override
+		public CommandResponseType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return CommandResponseType.of(code);
+		}
+	}
 
 }

@@ -19,36 +19,16 @@ import org.ar4k.agent.mattermost.model.Preference;
 import org.ar4k.agent.mattermost.model.PreferenceCategory;
 import org.ar4k.agent.mattermost.model.Preferences;
 
-/**
- * Preferences API.
- * 
- * @author Takayuki Maruyama
- */
 public interface PreferencesApi {
 
-  /**
-   * returns the user's preferences.
-   */
-  ApiResponse<Preferences> getPreferences(String userId);
+	ApiResponse<Preferences> getPreferences(String userId);
 
-  /**
-   * saves the user's preferences.
-   */
-  ApiResponse<Boolean> updatePreferences(String userId, Preferences perferences);
+	ApiResponse<Boolean> updatePreferences(String userId, Preferences perferences);
 
-  /**
-   * deletes the user's preferences.
-   */
-  ApiResponse<Boolean> deletePreferences(String userId, Preferences preferences);
+	ApiResponse<Boolean> deletePreferences(String userId, Preferences preferences);
 
-  /**
-   * returns the user's preferences from the provided category string.
-   */
-  ApiResponse<Preferences> getPreferencesByCategory(String userId, PreferenceCategory category);
+	ApiResponse<Preferences> getPreferencesByCategory(String userId, PreferenceCategory category);
 
-  /**
-   * returns the user's preferences from the provided category and preference name string.
-   */
-  ApiResponse<Preference> getPreferenceByCategoryAndName(String userId, PreferenceCategory category,
-      String preferenceName);
+	ApiResponse<Preference> getPreferenceByCategoryAndName(String userId, PreferenceCategory category,
+			String preferenceName);
 }

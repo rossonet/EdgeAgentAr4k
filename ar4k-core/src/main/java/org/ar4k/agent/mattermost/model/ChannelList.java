@@ -16,12 +16,7 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link Channel}.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelList extends ArrayList<Channel> {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

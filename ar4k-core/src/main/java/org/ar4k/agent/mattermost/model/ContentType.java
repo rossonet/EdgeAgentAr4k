@@ -25,37 +25,32 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.ContentType.ContentTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of content-type.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = ContentTypeDeserializer.class)
 public enum ContentType implements HasCode<ContentType> {
-  FORM("application/x-www-form-urlencoded"), JSON("application/json");
-  private final String code;
+	FORM("application/x-www-form-urlencoded"), JSON("application/json");
 
-  public static ContentType of(String code) {
-    return Arrays.stream(values()).filter(c -> c.getCode().equals(code)).findFirst().orElse(null);
-  }
+	private final String code;
 
+	public static ContentType of(String code) {
+		return Arrays.stream(values()).filter(c -> c.getCode().equals(code)).findFirst().orElse(null);
+	}
 
-  static class ContentTypeDeserializer extends JsonDeserializer<ContentType> {
-    @Override
-    public ContentType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getValueAsString();
-      return of(jsonValue);
-    }
-  }
+	static class ContentTypeDeserializer extends JsonDeserializer<ContentType> {
+		@Override
+		public ContentType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getValueAsString();
+			return of(jsonValue);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  private ContentType(final String code) {
-    this.code = code;
-  }
+	@java.lang.SuppressWarnings("all")
+	private ContentType(final String code) {
+		this.code = code;
+	}
 }

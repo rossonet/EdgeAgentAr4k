@@ -14,86 +14,79 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Send password reset email request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#sendPasswordResetEmail(String)
- * @author Takayuki Maruyama
- */
 public final class SendPasswordResetEmailRequest {
-  private final String email;
+	private final String email;
 
-  @java.lang.SuppressWarnings("all")
-  SendPasswordResetEmailRequest(final String email) {
-    this.email = email;
-  }
+	@java.lang.SuppressWarnings("all")
+	SendPasswordResetEmailRequest(final String email) {
+		this.email = email;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class SendPasswordResetEmailRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String email;
 
-  @java.lang.SuppressWarnings("all")
-  public static class SendPasswordResetEmailRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String email;
+		@java.lang.SuppressWarnings("all")
+		SendPasswordResetEmailRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    SendPasswordResetEmailRequestBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder email(final String email) {
+			this.email = email;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder email(final String email) {
-      this.email = email;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public SendPasswordResetEmailRequest build() {
+			return new SendPasswordResetEmailRequest(this.email);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public SendPasswordResetEmailRequest build() {
-      return new SendPasswordResetEmailRequest(this.email);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder(email=" + this.email + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder(email=" + this.email + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder builder() {
+		return new SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder builder() {
-    return new SendPasswordResetEmailRequest.SendPasswordResetEmailRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getEmail() {
+		return this.email;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getEmail() {
-    return this.email;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SendPasswordResetEmailRequest))
+			return false;
+		final SendPasswordResetEmailRequest other = (SendPasswordResetEmailRequest) o;
+		final java.lang.Object this$email = this.getEmail();
+		final java.lang.Object other$email = other.getEmail();
+		if (this$email == null ? other$email != null : !this$email.equals(other$email))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SendPasswordResetEmailRequest)) return false;
-    final SendPasswordResetEmailRequest other = (SendPasswordResetEmailRequest) o;
-    final java.lang.Object this$email = this.getEmail();
-    final java.lang.Object other$email = other.getEmail();
-    if (this$email == null ? other$email != null : !this$email.equals(other$email)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $email = this.getEmail();
+		result = result * PRIME + ($email == null ? 43 : $email.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $email = this.getEmail();
-    result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SendPasswordResetEmailRequest(email=" + this.getEmail() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SendPasswordResetEmailRequest(email=" + this.getEmail() + ")";
+	}
 }

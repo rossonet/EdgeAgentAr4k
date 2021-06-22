@@ -25,41 +25,36 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.ComplianceType.ComplianceTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of compliance report.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = ComplianceTypeDeserializer.class)
 public enum ComplianceType implements HasCode<ComplianceType> {
 
-  Daily("daily"), Adhoc("adhoc");
-  private final String code;
+	Daily("daily"), Adhoc("adhoc");
 
-  ComplianceType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	ComplianceType(String code) {
+		this.code = code;
+	}
 
-  public static ComplianceType of(String code) {
-    return Arrays.asList(ComplianceType.values()).stream().filter(t -> t.getCode().equals(code))
-        .findFirst().orElse(null);
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  public static class ComplianceTypeDeserializer extends JsonDeserializer<ComplianceType> {
+	public static ComplianceType of(String code) {
+		return Arrays.asList(ComplianceType.values()).stream().filter(t -> t.getCode().equals(code)).findFirst()
+				.orElse(null);
+	}
 
-    @Override
-    public ComplianceType deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException {
-      String code = p.getText();
-      return ComplianceType.of(code);
-    }
+	public static class ComplianceTypeDeserializer extends JsonDeserializer<ComplianceType> {
 
-  }
+		@Override
+		public ComplianceType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return ComplianceType.of(code);
+		}
+
+	}
 
 }

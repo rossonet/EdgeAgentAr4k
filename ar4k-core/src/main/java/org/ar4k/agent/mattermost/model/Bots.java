@@ -16,14 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * The list of {@link Bot}.
- * 
- * @author Takayuki Maruyama
- * @since Mattermost Server 5.10
- */
 public class Bots extends ArrayList<Bot> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

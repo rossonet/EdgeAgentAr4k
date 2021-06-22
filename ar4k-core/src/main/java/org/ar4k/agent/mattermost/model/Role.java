@@ -14,23 +14,19 @@
  */
 package org.ar4k.agent.mattermost.model;
 
-/**
- * Built-in role definitions.
- * 
- * @author Takayuki Maruyama
- */
 public enum Role {
-  SYSTEM_USER, SYSTEM_ADMIN, SYSTEM_POST_ALL, SYSTEM_POST_ALL_PUBLIC, SYSTEM_USER_ACCESS_TOKEN,  //
-  TEAM_USER, TEAM_ADMIN, TEAM_POST_ALL, TEAM_POST_ALL_PUBLIC,  //
-  CHANNEL_USER, CHANNEL_ADMIN;
-  private final String roleName;
+	SYSTEM_USER, SYSTEM_ADMIN, SYSTEM_POST_ALL, SYSTEM_POST_ALL_PUBLIC, SYSTEM_USER_ACCESS_TOKEN, //
+	TEAM_USER, TEAM_ADMIN, TEAM_POST_ALL, TEAM_POST_ALL_PUBLIC, //
+	CHANNEL_USER, CHANNEL_ADMIN;
 
-  Role() {
-    this.roleName = name().toLowerCase();
-  }
+	private final String roleName;
 
-  @java.lang.SuppressWarnings("all")
-  public String getRoleName() {
-    return this.roleName;
-  }
+	Role() {
+		this.roleName = name().toLowerCase();
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getRoleName() {
+		return this.roleName;
+	}
 }

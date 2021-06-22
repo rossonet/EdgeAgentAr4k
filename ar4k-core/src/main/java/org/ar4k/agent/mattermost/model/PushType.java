@@ -25,36 +25,31 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.PushType.PushTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of push notification.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = PushTypeDeserializer.class)
 public enum PushType implements HasCode<PushType> {
-  MESSAGE("message"), CLEAR("clear");
-  private final String code;
+	MESSAGE("message"), CLEAR("clear");
 
-  private PushType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  public static PushType of(String code) {
-    return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(null);
-  }
+	private PushType(String code) {
+		this.code = code;
+	}
 
+	public static PushType of(String code) {
+		return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(null);
+	}
 
-  static class PushTypeDeserializer extends JsonDeserializer<PushType> {
-    @Override
-    public PushType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return of(jsonValue);
-    }
-  }
+	static class PushTypeDeserializer extends JsonDeserializer<PushType> {
+		@Override
+		public PushType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return of(jsonValue);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

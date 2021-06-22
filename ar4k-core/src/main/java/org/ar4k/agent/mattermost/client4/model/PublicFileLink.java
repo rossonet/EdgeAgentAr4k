@@ -14,57 +14,58 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * The public file link.
- */
 public class PublicFileLink {
-  private String link;
+	private String link;
 
-  @java.lang.SuppressWarnings("all")
-  public PublicFileLink() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PublicFileLink() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getLink() {
-    return this.link;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getLink() {
+		return this.link;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setLink(final String link) {
-    this.link = link;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setLink(final String link) {
+		this.link = link;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PublicFileLink)) return false;
-    final PublicFileLink other = (PublicFileLink) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$link = this.getLink();
-    final java.lang.Object other$link = other.getLink();
-    if (this$link == null ? other$link != null : !this$link.equals(other$link)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PublicFileLink))
+			return false;
+		final PublicFileLink other = (PublicFileLink) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$link = this.getLink();
+		final java.lang.Object other$link = other.getLink();
+		if (this$link == null ? other$link != null : !this$link.equals(other$link))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PublicFileLink;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PublicFileLink;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $link = this.getLink();
-    result = result * PRIME + ($link == null ? 43 : $link.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $link = this.getLink();
+		result = result * PRIME + ($link == null ? 43 : $link.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PublicFileLink(link=" + this.getLink() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PublicFileLink(link=" + this.getLink() + ")";
+	}
 }

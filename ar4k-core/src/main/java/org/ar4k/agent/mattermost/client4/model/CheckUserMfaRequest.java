@@ -14,85 +14,79 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Check user MFA request payload.
- * 
- * @author Takayuki Maruyama
- */
 public final class CheckUserMfaRequest {
-  private final String loginId;
+	private final String loginId;
 
-  @java.lang.SuppressWarnings("all")
-  CheckUserMfaRequest(final String loginId) {
-    this.loginId = loginId;
-  }
+	@java.lang.SuppressWarnings("all")
+	CheckUserMfaRequest(final String loginId) {
+		this.loginId = loginId;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class CheckUserMfaRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String loginId;
 
-  @java.lang.SuppressWarnings("all")
-  public static class CheckUserMfaRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String loginId;
+		@java.lang.SuppressWarnings("all")
+		CheckUserMfaRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    CheckUserMfaRequestBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public CheckUserMfaRequest.CheckUserMfaRequestBuilder loginId(final String loginId) {
+			this.loginId = loginId;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public CheckUserMfaRequest.CheckUserMfaRequestBuilder loginId(final String loginId) {
-      this.loginId = loginId;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public CheckUserMfaRequest build() {
+			return new CheckUserMfaRequest(this.loginId);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public CheckUserMfaRequest build() {
-      return new CheckUserMfaRequest(this.loginId);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "CheckUserMfaRequest.CheckUserMfaRequestBuilder(loginId=" + this.loginId + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "CheckUserMfaRequest.CheckUserMfaRequestBuilder(loginId=" + this.loginId + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static CheckUserMfaRequest.CheckUserMfaRequestBuilder builder() {
+		return new CheckUserMfaRequest.CheckUserMfaRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static CheckUserMfaRequest.CheckUserMfaRequestBuilder builder() {
-    return new CheckUserMfaRequest.CheckUserMfaRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getLoginId() {
+		return this.loginId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getLoginId() {
-    return this.loginId;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof CheckUserMfaRequest))
+			return false;
+		final CheckUserMfaRequest other = (CheckUserMfaRequest) o;
+		final java.lang.Object this$loginId = this.getLoginId();
+		final java.lang.Object other$loginId = other.getLoginId();
+		if (this$loginId == null ? other$loginId != null : !this$loginId.equals(other$loginId))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof CheckUserMfaRequest)) return false;
-    final CheckUserMfaRequest other = (CheckUserMfaRequest) o;
-    final java.lang.Object this$loginId = this.getLoginId();
-    final java.lang.Object other$loginId = other.getLoginId();
-    if (this$loginId == null ? other$loginId != null : !this$loginId.equals(other$loginId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $loginId = this.getLoginId();
+		result = result * PRIME + ($loginId == null ? 43 : $loginId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $loginId = this.getLoginId();
-    result = result * PRIME + ($loginId == null ? 43 : $loginId.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "CheckUserMfaRequest(loginId=" + this.getLoginId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "CheckUserMfaRequest(loginId=" + this.getLoginId() + ")";
+	}
 }

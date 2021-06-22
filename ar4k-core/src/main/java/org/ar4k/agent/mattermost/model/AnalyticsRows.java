@@ -16,11 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link AnalyticsRow}.
- */
 public class AnalyticsRows extends ArrayList<AnalyticsRow> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

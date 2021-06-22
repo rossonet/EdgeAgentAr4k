@@ -16,79 +16,79 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Data related to channel.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelData {
-  @JsonProperty("channel")
-  private Channel channel;
-  @JsonProperty("member")
-  private ChannelMember member;
+	@JsonProperty("channel")
+	private Channel channel;
+	@JsonProperty("member")
+	private ChannelMember member;
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelData() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelData() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Channel getChannel() {
-    return this.channel;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Channel getChannel() {
+		return this.channel;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelMember getMember() {
-    return this.member;
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelMember getMember() {
+		return this.member;
+	}
 
-  @JsonProperty("channel")
-  @java.lang.SuppressWarnings("all")
-  public void setChannel(final Channel channel) {
-    this.channel = channel;
-  }
+	@JsonProperty("channel")
+	@java.lang.SuppressWarnings("all")
+	public void setChannel(final Channel channel) {
+		this.channel = channel;
+	}
 
-  @JsonProperty("member")
-  @java.lang.SuppressWarnings("all")
-  public void setMember(final ChannelMember member) {
-    this.member = member;
-  }
+	@JsonProperty("member")
+	@java.lang.SuppressWarnings("all")
+	public void setMember(final ChannelMember member) {
+		this.member = member;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelData)) return false;
-    final ChannelData other = (ChannelData) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$channel = this.getChannel();
-    final java.lang.Object other$channel = other.getChannel();
-    if (this$channel == null ? other$channel != null : !this$channel.equals(other$channel)) return false;
-    final java.lang.Object this$member = this.getMember();
-    final java.lang.Object other$member = other.getMember();
-    if (this$member == null ? other$member != null : !this$member.equals(other$member)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelData))
+			return false;
+		final ChannelData other = (ChannelData) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$channel = this.getChannel();
+		final java.lang.Object other$channel = other.getChannel();
+		if (this$channel == null ? other$channel != null : !this$channel.equals(other$channel))
+			return false;
+		final java.lang.Object this$member = this.getMember();
+		final java.lang.Object other$member = other.getMember();
+		if (this$member == null ? other$member != null : !this$member.equals(other$member))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelData;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelData;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $channel = this.getChannel();
-    result = result * PRIME + ($channel == null ? 43 : $channel.hashCode());
-    final java.lang.Object $member = this.getMember();
-    result = result * PRIME + ($member == null ? 43 : $member.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $channel = this.getChannel();
+		result = result * PRIME + ($channel == null ? 43 : $channel.hashCode());
+		final java.lang.Object $member = this.getMember();
+		result = result * PRIME + ($member == null ? 43 : $member.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelData(channel=" + this.getChannel() + ", member=" + this.getMember() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelData(channel=" + this.getChannel() + ", member=" + this.getMember() + ")";
+	}
 }

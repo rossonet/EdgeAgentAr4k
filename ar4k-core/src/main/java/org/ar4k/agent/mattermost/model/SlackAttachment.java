@@ -17,347 +17,368 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/**
- * Slack attachment payload.
- * 
- * @author Takayuki Maruyama
- */
 public class SlackAttachment {
-  @JsonProperty("id")
-  private long id;
-  @JsonProperty("fallback")
-  private String fallback;
-  @JsonProperty("color")
-  private String color;
-  @JsonProperty("pretext")
-  private String pretext;
-  @JsonProperty("author_name")
-  private String authorName;
-  @JsonProperty("author_link")
-  private String authorLink;
-  @JsonProperty("author_icon")
-  private String authorIcon;
-  @JsonProperty("title")
-  private String title;
-  @JsonProperty("title_link")
-  private String titleLink;
-  @JsonProperty("text")
-  private String text;
-  @JsonProperty("fields")
-  private List<SlackAttachmentField> fields;
-  @JsonProperty("image_url")
-  private String imageUrl;
-  @JsonProperty("thumb_url")
-  private String thumbUrl;
-  @JsonProperty("footer")
-  private String footer;
-  @JsonProperty("footer_icon")
-  private String footerIcon;
-  @JsonProperty("ts")
-  private Object timestamp; // This is either a string of an int64
-  @JsonProperty("actions")
-  private List<PostAction> actions;
+	@JsonProperty("id")
+	private long id;
+	@JsonProperty("fallback")
+	private String fallback;
+	@JsonProperty("color")
+	private String color;
+	@JsonProperty("pretext")
+	private String pretext;
+	@JsonProperty("author_name")
+	private String authorName;
+	@JsonProperty("author_link")
+	private String authorLink;
+	@JsonProperty("author_icon")
+	private String authorIcon;
+	@JsonProperty("title")
+	private String title;
+	@JsonProperty("title_link")
+	private String titleLink;
+	@JsonProperty("text")
+	private String text;
+	@JsonProperty("fields")
+	private List<SlackAttachmentField> fields;
+	@JsonProperty("image_url")
+	private String imageUrl;
+	@JsonProperty("thumb_url")
+	private String thumbUrl;
+	@JsonProperty("footer")
+	private String footer;
+	@JsonProperty("footer_icon")
+	private String footerIcon;
+	@JsonProperty("ts")
+	private Object timestamp; // This is either a string of an int64
+	@JsonProperty("actions")
+	private List<PostAction> actions;
 
-  @java.lang.SuppressWarnings("all")
-  public SlackAttachment() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public SlackAttachment() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getFallback() {
-    return this.fallback;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getFallback() {
+		return this.fallback;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getColor() {
-    return this.color;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getColor() {
+		return this.color;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPretext() {
-    return this.pretext;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPretext() {
+		return this.pretext;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAuthorName() {
-    return this.authorName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAuthorName() {
+		return this.authorName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAuthorLink() {
-    return this.authorLink;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAuthorLink() {
+		return this.authorLink;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAuthorIcon() {
-    return this.authorIcon;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAuthorIcon() {
+		return this.authorIcon;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTitle() {
-    return this.title;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTitle() {
+		return this.title;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTitleLink() {
-    return this.titleLink;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTitleLink() {
+		return this.titleLink;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getText() {
-    return this.text;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getText() {
+		return this.text;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<SlackAttachmentField> getFields() {
-    return this.fields;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<SlackAttachmentField> getFields() {
+		return this.fields;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getImageUrl() {
-    return this.imageUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getImageUrl() {
+		return this.imageUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getThumbUrl() {
-    return this.thumbUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getThumbUrl() {
+		return this.thumbUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getFooter() {
-    return this.footer;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getFooter() {
+		return this.footer;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getFooterIcon() {
-    return this.footerIcon;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getFooterIcon() {
+		return this.footerIcon;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Object getTimestamp() {
-    return this.timestamp;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Object getTimestamp() {
+		return this.timestamp;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<PostAction> getActions() {
-    return this.actions;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<PostAction> getActions() {
+		return this.actions;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final long id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final long id) {
+		this.id = id;
+	}
 
-  @JsonProperty("fallback")
-  @java.lang.SuppressWarnings("all")
-  public void setFallback(final String fallback) {
-    this.fallback = fallback;
-  }
+	@JsonProperty("fallback")
+	@java.lang.SuppressWarnings("all")
+	public void setFallback(final String fallback) {
+		this.fallback = fallback;
+	}
 
-  @JsonProperty("color")
-  @java.lang.SuppressWarnings("all")
-  public void setColor(final String color) {
-    this.color = color;
-  }
+	@JsonProperty("color")
+	@java.lang.SuppressWarnings("all")
+	public void setColor(final String color) {
+		this.color = color;
+	}
 
-  @JsonProperty("pretext")
-  @java.lang.SuppressWarnings("all")
-  public void setPretext(final String pretext) {
-    this.pretext = pretext;
-  }
+	@JsonProperty("pretext")
+	@java.lang.SuppressWarnings("all")
+	public void setPretext(final String pretext) {
+		this.pretext = pretext;
+	}
 
-  @JsonProperty("author_name")
-  @java.lang.SuppressWarnings("all")
-  public void setAuthorName(final String authorName) {
-    this.authorName = authorName;
-  }
+	@JsonProperty("author_name")
+	@java.lang.SuppressWarnings("all")
+	public void setAuthorName(final String authorName) {
+		this.authorName = authorName;
+	}
 
-  @JsonProperty("author_link")
-  @java.lang.SuppressWarnings("all")
-  public void setAuthorLink(final String authorLink) {
-    this.authorLink = authorLink;
-  }
+	@JsonProperty("author_link")
+	@java.lang.SuppressWarnings("all")
+	public void setAuthorLink(final String authorLink) {
+		this.authorLink = authorLink;
+	}
 
-  @JsonProperty("author_icon")
-  @java.lang.SuppressWarnings("all")
-  public void setAuthorIcon(final String authorIcon) {
-    this.authorIcon = authorIcon;
-  }
+	@JsonProperty("author_icon")
+	@java.lang.SuppressWarnings("all")
+	public void setAuthorIcon(final String authorIcon) {
+		this.authorIcon = authorIcon;
+	}
 
-  @JsonProperty("title")
-  @java.lang.SuppressWarnings("all")
-  public void setTitle(final String title) {
-    this.title = title;
-  }
+	@JsonProperty("title")
+	@java.lang.SuppressWarnings("all")
+	public void setTitle(final String title) {
+		this.title = title;
+	}
 
-  @JsonProperty("title_link")
-  @java.lang.SuppressWarnings("all")
-  public void setTitleLink(final String titleLink) {
-    this.titleLink = titleLink;
-  }
+	@JsonProperty("title_link")
+	@java.lang.SuppressWarnings("all")
+	public void setTitleLink(final String titleLink) {
+		this.titleLink = titleLink;
+	}
 
-  @JsonProperty("text")
-  @java.lang.SuppressWarnings("all")
-  public void setText(final String text) {
-    this.text = text;
-  }
+	@JsonProperty("text")
+	@java.lang.SuppressWarnings("all")
+	public void setText(final String text) {
+		this.text = text;
+	}
 
-  @JsonProperty("fields")
-  @java.lang.SuppressWarnings("all")
-  public void setFields(final List<SlackAttachmentField> fields) {
-    this.fields = fields;
-  }
+	@JsonProperty("fields")
+	@java.lang.SuppressWarnings("all")
+	public void setFields(final List<SlackAttachmentField> fields) {
+		this.fields = fields;
+	}
 
-  @JsonProperty("image_url")
-  @java.lang.SuppressWarnings("all")
-  public void setImageUrl(final String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+	@JsonProperty("image_url")
+	@java.lang.SuppressWarnings("all")
+	public void setImageUrl(final String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
-  @JsonProperty("thumb_url")
-  @java.lang.SuppressWarnings("all")
-  public void setThumbUrl(final String thumbUrl) {
-    this.thumbUrl = thumbUrl;
-  }
+	@JsonProperty("thumb_url")
+	@java.lang.SuppressWarnings("all")
+	public void setThumbUrl(final String thumbUrl) {
+		this.thumbUrl = thumbUrl;
+	}
 
-  @JsonProperty("footer")
-  @java.lang.SuppressWarnings("all")
-  public void setFooter(final String footer) {
-    this.footer = footer;
-  }
+	@JsonProperty("footer")
+	@java.lang.SuppressWarnings("all")
+	public void setFooter(final String footer) {
+		this.footer = footer;
+	}
 
-  @JsonProperty("footer_icon")
-  @java.lang.SuppressWarnings("all")
-  public void setFooterIcon(final String footerIcon) {
-    this.footerIcon = footerIcon;
-  }
+	@JsonProperty("footer_icon")
+	@java.lang.SuppressWarnings("all")
+	public void setFooterIcon(final String footerIcon) {
+		this.footerIcon = footerIcon;
+	}
 
-  @JsonProperty("ts")
-  @java.lang.SuppressWarnings("all")
-  public void setTimestamp(final Object timestamp) {
-    this.timestamp = timestamp;
-  }
+	@JsonProperty("ts")
+	@java.lang.SuppressWarnings("all")
+	public void setTimestamp(final Object timestamp) {
+		this.timestamp = timestamp;
+	}
 
-  @JsonProperty("actions")
-  @java.lang.SuppressWarnings("all")
-  public void setActions(final List<PostAction> actions) {
-    this.actions = actions;
-  }
+	@JsonProperty("actions")
+	@java.lang.SuppressWarnings("all")
+	public void setActions(final List<PostAction> actions) {
+		this.actions = actions;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SlackAttachment)) return false;
-    final SlackAttachment other = (SlackAttachment) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getId() != other.getId()) return false;
-    final java.lang.Object this$fallback = this.getFallback();
-    final java.lang.Object other$fallback = other.getFallback();
-    if (this$fallback == null ? other$fallback != null : !this$fallback.equals(other$fallback)) return false;
-    final java.lang.Object this$color = this.getColor();
-    final java.lang.Object other$color = other.getColor();
-    if (this$color == null ? other$color != null : !this$color.equals(other$color)) return false;
-    final java.lang.Object this$pretext = this.getPretext();
-    final java.lang.Object other$pretext = other.getPretext();
-    if (this$pretext == null ? other$pretext != null : !this$pretext.equals(other$pretext)) return false;
-    final java.lang.Object this$authorName = this.getAuthorName();
-    final java.lang.Object other$authorName = other.getAuthorName();
-    if (this$authorName == null ? other$authorName != null : !this$authorName.equals(other$authorName)) return false;
-    final java.lang.Object this$authorLink = this.getAuthorLink();
-    final java.lang.Object other$authorLink = other.getAuthorLink();
-    if (this$authorLink == null ? other$authorLink != null : !this$authorLink.equals(other$authorLink)) return false;
-    final java.lang.Object this$authorIcon = this.getAuthorIcon();
-    final java.lang.Object other$authorIcon = other.getAuthorIcon();
-    if (this$authorIcon == null ? other$authorIcon != null : !this$authorIcon.equals(other$authorIcon)) return false;
-    final java.lang.Object this$title = this.getTitle();
-    final java.lang.Object other$title = other.getTitle();
-    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-    final java.lang.Object this$titleLink = this.getTitleLink();
-    final java.lang.Object other$titleLink = other.getTitleLink();
-    if (this$titleLink == null ? other$titleLink != null : !this$titleLink.equals(other$titleLink)) return false;
-    final java.lang.Object this$text = this.getText();
-    final java.lang.Object other$text = other.getText();
-    if (this$text == null ? other$text != null : !this$text.equals(other$text)) return false;
-    final java.lang.Object this$fields = this.getFields();
-    final java.lang.Object other$fields = other.getFields();
-    if (this$fields == null ? other$fields != null : !this$fields.equals(other$fields)) return false;
-    final java.lang.Object this$imageUrl = this.getImageUrl();
-    final java.lang.Object other$imageUrl = other.getImageUrl();
-    if (this$imageUrl == null ? other$imageUrl != null : !this$imageUrl.equals(other$imageUrl)) return false;
-    final java.lang.Object this$thumbUrl = this.getThumbUrl();
-    final java.lang.Object other$thumbUrl = other.getThumbUrl();
-    if (this$thumbUrl == null ? other$thumbUrl != null : !this$thumbUrl.equals(other$thumbUrl)) return false;
-    final java.lang.Object this$footer = this.getFooter();
-    final java.lang.Object other$footer = other.getFooter();
-    if (this$footer == null ? other$footer != null : !this$footer.equals(other$footer)) return false;
-    final java.lang.Object this$footerIcon = this.getFooterIcon();
-    final java.lang.Object other$footerIcon = other.getFooterIcon();
-    if (this$footerIcon == null ? other$footerIcon != null : !this$footerIcon.equals(other$footerIcon)) return false;
-    final java.lang.Object this$timestamp = this.getTimestamp();
-    final java.lang.Object other$timestamp = other.getTimestamp();
-    if (this$timestamp == null ? other$timestamp != null : !this$timestamp.equals(other$timestamp)) return false;
-    final java.lang.Object this$actions = this.getActions();
-    final java.lang.Object other$actions = other.getActions();
-    if (this$actions == null ? other$actions != null : !this$actions.equals(other$actions)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SlackAttachment))
+			return false;
+		final SlackAttachment other = (SlackAttachment) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getId() != other.getId())
+			return false;
+		final java.lang.Object this$fallback = this.getFallback();
+		final java.lang.Object other$fallback = other.getFallback();
+		if (this$fallback == null ? other$fallback != null : !this$fallback.equals(other$fallback))
+			return false;
+		final java.lang.Object this$color = this.getColor();
+		final java.lang.Object other$color = other.getColor();
+		if (this$color == null ? other$color != null : !this$color.equals(other$color))
+			return false;
+		final java.lang.Object this$pretext = this.getPretext();
+		final java.lang.Object other$pretext = other.getPretext();
+		if (this$pretext == null ? other$pretext != null : !this$pretext.equals(other$pretext))
+			return false;
+		final java.lang.Object this$authorName = this.getAuthorName();
+		final java.lang.Object other$authorName = other.getAuthorName();
+		if (this$authorName == null ? other$authorName != null : !this$authorName.equals(other$authorName))
+			return false;
+		final java.lang.Object this$authorLink = this.getAuthorLink();
+		final java.lang.Object other$authorLink = other.getAuthorLink();
+		if (this$authorLink == null ? other$authorLink != null : !this$authorLink.equals(other$authorLink))
+			return false;
+		final java.lang.Object this$authorIcon = this.getAuthorIcon();
+		final java.lang.Object other$authorIcon = other.getAuthorIcon();
+		if (this$authorIcon == null ? other$authorIcon != null : !this$authorIcon.equals(other$authorIcon))
+			return false;
+		final java.lang.Object this$title = this.getTitle();
+		final java.lang.Object other$title = other.getTitle();
+		if (this$title == null ? other$title != null : !this$title.equals(other$title))
+			return false;
+		final java.lang.Object this$titleLink = this.getTitleLink();
+		final java.lang.Object other$titleLink = other.getTitleLink();
+		if (this$titleLink == null ? other$titleLink != null : !this$titleLink.equals(other$titleLink))
+			return false;
+		final java.lang.Object this$text = this.getText();
+		final java.lang.Object other$text = other.getText();
+		if (this$text == null ? other$text != null : !this$text.equals(other$text))
+			return false;
+		final java.lang.Object this$fields = this.getFields();
+		final java.lang.Object other$fields = other.getFields();
+		if (this$fields == null ? other$fields != null : !this$fields.equals(other$fields))
+			return false;
+		final java.lang.Object this$imageUrl = this.getImageUrl();
+		final java.lang.Object other$imageUrl = other.getImageUrl();
+		if (this$imageUrl == null ? other$imageUrl != null : !this$imageUrl.equals(other$imageUrl))
+			return false;
+		final java.lang.Object this$thumbUrl = this.getThumbUrl();
+		final java.lang.Object other$thumbUrl = other.getThumbUrl();
+		if (this$thumbUrl == null ? other$thumbUrl != null : !this$thumbUrl.equals(other$thumbUrl))
+			return false;
+		final java.lang.Object this$footer = this.getFooter();
+		final java.lang.Object other$footer = other.getFooter();
+		if (this$footer == null ? other$footer != null : !this$footer.equals(other$footer))
+			return false;
+		final java.lang.Object this$footerIcon = this.getFooterIcon();
+		final java.lang.Object other$footerIcon = other.getFooterIcon();
+		if (this$footerIcon == null ? other$footerIcon != null : !this$footerIcon.equals(other$footerIcon))
+			return false;
+		final java.lang.Object this$timestamp = this.getTimestamp();
+		final java.lang.Object other$timestamp = other.getTimestamp();
+		if (this$timestamp == null ? other$timestamp != null : !this$timestamp.equals(other$timestamp))
+			return false;
+		final java.lang.Object this$actions = this.getActions();
+		final java.lang.Object other$actions = other.getActions();
+		if (this$actions == null ? other$actions != null : !this$actions.equals(other$actions))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof SlackAttachment;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof SlackAttachment;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $id = this.getId();
-    result = result * PRIME + (int) ($id >>> 32 ^ $id);
-    final java.lang.Object $fallback = this.getFallback();
-    result = result * PRIME + ($fallback == null ? 43 : $fallback.hashCode());
-    final java.lang.Object $color = this.getColor();
-    result = result * PRIME + ($color == null ? 43 : $color.hashCode());
-    final java.lang.Object $pretext = this.getPretext();
-    result = result * PRIME + ($pretext == null ? 43 : $pretext.hashCode());
-    final java.lang.Object $authorName = this.getAuthorName();
-    result = result * PRIME + ($authorName == null ? 43 : $authorName.hashCode());
-    final java.lang.Object $authorLink = this.getAuthorLink();
-    result = result * PRIME + ($authorLink == null ? 43 : $authorLink.hashCode());
-    final java.lang.Object $authorIcon = this.getAuthorIcon();
-    result = result * PRIME + ($authorIcon == null ? 43 : $authorIcon.hashCode());
-    final java.lang.Object $title = this.getTitle();
-    result = result * PRIME + ($title == null ? 43 : $title.hashCode());
-    final java.lang.Object $titleLink = this.getTitleLink();
-    result = result * PRIME + ($titleLink == null ? 43 : $titleLink.hashCode());
-    final java.lang.Object $text = this.getText();
-    result = result * PRIME + ($text == null ? 43 : $text.hashCode());
-    final java.lang.Object $fields = this.getFields();
-    result = result * PRIME + ($fields == null ? 43 : $fields.hashCode());
-    final java.lang.Object $imageUrl = this.getImageUrl();
-    result = result * PRIME + ($imageUrl == null ? 43 : $imageUrl.hashCode());
-    final java.lang.Object $thumbUrl = this.getThumbUrl();
-    result = result * PRIME + ($thumbUrl == null ? 43 : $thumbUrl.hashCode());
-    final java.lang.Object $footer = this.getFooter();
-    result = result * PRIME + ($footer == null ? 43 : $footer.hashCode());
-    final java.lang.Object $footerIcon = this.getFooterIcon();
-    result = result * PRIME + ($footerIcon == null ? 43 : $footerIcon.hashCode());
-    final java.lang.Object $timestamp = this.getTimestamp();
-    result = result * PRIME + ($timestamp == null ? 43 : $timestamp.hashCode());
-    final java.lang.Object $actions = this.getActions();
-    result = result * PRIME + ($actions == null ? 43 : $actions.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $id = this.getId();
+		result = result * PRIME + (int) ($id >>> 32 ^ $id);
+		final java.lang.Object $fallback = this.getFallback();
+		result = result * PRIME + ($fallback == null ? 43 : $fallback.hashCode());
+		final java.lang.Object $color = this.getColor();
+		result = result * PRIME + ($color == null ? 43 : $color.hashCode());
+		final java.lang.Object $pretext = this.getPretext();
+		result = result * PRIME + ($pretext == null ? 43 : $pretext.hashCode());
+		final java.lang.Object $authorName = this.getAuthorName();
+		result = result * PRIME + ($authorName == null ? 43 : $authorName.hashCode());
+		final java.lang.Object $authorLink = this.getAuthorLink();
+		result = result * PRIME + ($authorLink == null ? 43 : $authorLink.hashCode());
+		final java.lang.Object $authorIcon = this.getAuthorIcon();
+		result = result * PRIME + ($authorIcon == null ? 43 : $authorIcon.hashCode());
+		final java.lang.Object $title = this.getTitle();
+		result = result * PRIME + ($title == null ? 43 : $title.hashCode());
+		final java.lang.Object $titleLink = this.getTitleLink();
+		result = result * PRIME + ($titleLink == null ? 43 : $titleLink.hashCode());
+		final java.lang.Object $text = this.getText();
+		result = result * PRIME + ($text == null ? 43 : $text.hashCode());
+		final java.lang.Object $fields = this.getFields();
+		result = result * PRIME + ($fields == null ? 43 : $fields.hashCode());
+		final java.lang.Object $imageUrl = this.getImageUrl();
+		result = result * PRIME + ($imageUrl == null ? 43 : $imageUrl.hashCode());
+		final java.lang.Object $thumbUrl = this.getThumbUrl();
+		result = result * PRIME + ($thumbUrl == null ? 43 : $thumbUrl.hashCode());
+		final java.lang.Object $footer = this.getFooter();
+		result = result * PRIME + ($footer == null ? 43 : $footer.hashCode());
+		final java.lang.Object $footerIcon = this.getFooterIcon();
+		result = result * PRIME + ($footerIcon == null ? 43 : $footerIcon.hashCode());
+		final java.lang.Object $timestamp = this.getTimestamp();
+		result = result * PRIME + ($timestamp == null ? 43 : $timestamp.hashCode());
+		final java.lang.Object $actions = this.getActions();
+		result = result * PRIME + ($actions == null ? 43 : $actions.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SlackAttachment(id=" + this.getId() + ", fallback=" + this.getFallback() + ", color=" + this.getColor() + ", pretext=" + this.getPretext() + ", authorName=" + this.getAuthorName() + ", authorLink=" + this.getAuthorLink() + ", authorIcon=" + this.getAuthorIcon() + ", title=" + this.getTitle() + ", titleLink=" + this.getTitleLink() + ", text=" + this.getText() + ", fields=" + this.getFields() + ", imageUrl=" + this.getImageUrl() + ", thumbUrl=" + this.getThumbUrl() + ", footer=" + this.getFooter() + ", footerIcon=" + this.getFooterIcon() + ", timestamp=" + this.getTimestamp() + ", actions=" + this.getActions() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SlackAttachment(id=" + this.getId() + ", fallback=" + this.getFallback() + ", color=" + this.getColor()
+				+ ", pretext=" + this.getPretext() + ", authorName=" + this.getAuthorName() + ", authorLink="
+				+ this.getAuthorLink() + ", authorIcon=" + this.getAuthorIcon() + ", title=" + this.getTitle()
+				+ ", titleLink=" + this.getTitleLink() + ", text=" + this.getText() + ", fields=" + this.getFields()
+				+ ", imageUrl=" + this.getImageUrl() + ", thumbUrl=" + this.getThumbUrl() + ", footer="
+				+ this.getFooter() + ", footerIcon=" + this.getFooterIcon() + ", timestamp=" + this.getTimestamp()
+				+ ", actions=" + this.getActions() + ")";
+	}
 }

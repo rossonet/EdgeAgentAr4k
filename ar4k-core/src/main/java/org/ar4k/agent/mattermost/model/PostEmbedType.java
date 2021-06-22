@@ -25,37 +25,32 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.PostEmbedType.PostEmbedTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * Post embed type.
- * 
- * @since Mattermost Server 5.8
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = PostEmbedTypeDeserializer.class)
 public enum PostEmbedType implements HasCode<PostEmbedType> {
-  IMAGE("image"), MESSAGE_ATTACHMENT("message_attachment"), OPENGRAPH("opengraph");
-  private final String code;
+	IMAGE("image"), MESSAGE_ATTACHMENT("message_attachment"), OPENGRAPH("opengraph");
 
-  public static PostEmbedType of(String type) {
-    return Arrays.stream(values()).filter(t -> t.getCode().equals(type)).findFirst().orElse(null);
-  }
+	private final String code;
 
+	public static PostEmbedType of(String type) {
+		return Arrays.stream(values()).filter(t -> t.getCode().equals(type)).findFirst().orElse(null);
+	}
 
-  public static class PostEmbedTypeDeserializer extends JsonDeserializer<PostEmbedType> {
-    @Override
-    public PostEmbedType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String code = p.getText();
-      return PostEmbedType.of(code);
-    }
-  }
+	public static class PostEmbedTypeDeserializer extends JsonDeserializer<PostEmbedType> {
+		@Override
+		public PostEmbedType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return PostEmbedType.of(code);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  private PostEmbedType(final String code) {
-    this.code = code;
-  }
+	@java.lang.SuppressWarnings("all")
+	private PostEmbedType(final String code) {
+		this.code = code;
+	}
 }

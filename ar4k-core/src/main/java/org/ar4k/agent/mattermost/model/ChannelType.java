@@ -24,47 +24,40 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.ChannelType.ChannelTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of {@link Channel}.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = ChannelTypeDeserializer.class)
 public enum ChannelType implements HasCode<ChannelType> {
 
-  Open("O"), Private("P"), Direct("D"), Group("G");
-  private final String code;
+	Open("O"), Private("P"), Direct("D"), Group("G");
 
-  ChannelType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	ChannelType(String code) {
+		this.code = code;
+	}
 
-  /**
-   * Get an enum constant for provided {@code code}.
-   */
-  public static ChannelType of(String code) {
-    for (ChannelType type : ChannelType.values()) {
-      if (type.getCode().equals(code)) {
-        return type;
-      }
-    }
-    return null;
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  public static class ChannelTypeDeserializer extends JsonDeserializer<ChannelType> {
+	public static ChannelType of(String code) {
+		for (ChannelType type : ChannelType.values()) {
+			if (type.getCode().equals(code)) {
+				return type;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public ChannelType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public static class ChannelTypeDeserializer extends JsonDeserializer<ChannelType> {
 
-      final String jsonValue = p.getText();
-      return ChannelType.of(jsonValue);
-    }
+		@Override
+		public ChannelType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 
-  }
+			final String jsonValue = p.getText();
+			return ChannelType.of(jsonValue);
+		}
+
+	}
 }

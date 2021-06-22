@@ -16,113 +16,108 @@ package org.ar4k.agent.mattermost.client4.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Update user password request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#updateUserPassword(String, String, String)
- * @author Takayuki Maruyama
- */
 public final class UpdateUserPasswordRequest {
-  @JsonProperty("current_password")
-  private final String currentPassword;
-  @JsonProperty("new_password")
-  private final String newPassword;
+	@JsonProperty("current_password")
+	private final String currentPassword;
+	@JsonProperty("new_password")
+	private final String newPassword;
 
-  @java.lang.SuppressWarnings("all")
-  UpdateUserPasswordRequest(final String currentPassword, final String newPassword) {
-    this.currentPassword = currentPassword;
-    this.newPassword = newPassword;
-  }
+	@java.lang.SuppressWarnings("all")
+	UpdateUserPasswordRequest(final String currentPassword, final String newPassword) {
+		this.currentPassword = currentPassword;
+		this.newPassword = newPassword;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class UpdateUserPasswordRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String currentPassword;
+		@java.lang.SuppressWarnings("all")
+		private String newPassword;
 
-  @java.lang.SuppressWarnings("all")
-  public static class UpdateUserPasswordRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String currentPassword;
-    @java.lang.SuppressWarnings("all")
-    private String newPassword;
+		@java.lang.SuppressWarnings("all")
+		UpdateUserPasswordRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    UpdateUserPasswordRequestBuilder() {
-    }
+		@JsonProperty("current_password")
+		@java.lang.SuppressWarnings("all")
+		public UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder currentPassword(
+				final String currentPassword) {
+			this.currentPassword = currentPassword;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("current_password")
-    @java.lang.SuppressWarnings("all")
-    public UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder currentPassword(final String currentPassword) {
-      this.currentPassword = currentPassword;
-      return this;
-    }
+		@JsonProperty("new_password")
+		@java.lang.SuppressWarnings("all")
+		public UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder newPassword(final String newPassword) {
+			this.newPassword = newPassword;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @JsonProperty("new_password")
-    @java.lang.SuppressWarnings("all")
-    public UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder newPassword(final String newPassword) {
-      this.newPassword = newPassword;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public UpdateUserPasswordRequest build() {
+			return new UpdateUserPasswordRequest(this.currentPassword, this.newPassword);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public UpdateUserPasswordRequest build() {
-      return new UpdateUserPasswordRequest(this.currentPassword, this.newPassword);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder(currentPassword=" + this.currentPassword
+					+ ", newPassword=" + this.newPassword + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder(currentPassword=" + this.currentPassword + ", newPassword=" + this.newPassword + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder builder() {
+		return new UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder builder() {
-    return new UpdateUserPasswordRequest.UpdateUserPasswordRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCurrentPassword() {
+		return this.currentPassword;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCurrentPassword() {
-    return this.currentPassword;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getNewPassword() {
+		return this.newPassword;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getNewPassword() {
-    return this.newPassword;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UpdateUserPasswordRequest))
+			return false;
+		final UpdateUserPasswordRequest other = (UpdateUserPasswordRequest) o;
+		final java.lang.Object this$currentPassword = this.getCurrentPassword();
+		final java.lang.Object other$currentPassword = other.getCurrentPassword();
+		if (this$currentPassword == null ? other$currentPassword != null
+				: !this$currentPassword.equals(other$currentPassword))
+			return false;
+		final java.lang.Object this$newPassword = this.getNewPassword();
+		final java.lang.Object other$newPassword = other.getNewPassword();
+		if (this$newPassword == null ? other$newPassword != null : !this$newPassword.equals(other$newPassword))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UpdateUserPasswordRequest)) return false;
-    final UpdateUserPasswordRequest other = (UpdateUserPasswordRequest) o;
-    final java.lang.Object this$currentPassword = this.getCurrentPassword();
-    final java.lang.Object other$currentPassword = other.getCurrentPassword();
-    if (this$currentPassword == null ? other$currentPassword != null : !this$currentPassword.equals(other$currentPassword)) return false;
-    final java.lang.Object this$newPassword = this.getNewPassword();
-    final java.lang.Object other$newPassword = other.getNewPassword();
-    if (this$newPassword == null ? other$newPassword != null : !this$newPassword.equals(other$newPassword)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $currentPassword = this.getCurrentPassword();
+		result = result * PRIME + ($currentPassword == null ? 43 : $currentPassword.hashCode());
+		final java.lang.Object $newPassword = this.getNewPassword();
+		result = result * PRIME + ($newPassword == null ? 43 : $newPassword.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $currentPassword = this.getCurrentPassword();
-    result = result * PRIME + ($currentPassword == null ? 43 : $currentPassword.hashCode());
-    final java.lang.Object $newPassword = this.getNewPassword();
-    result = result * PRIME + ($newPassword == null ? 43 : $newPassword.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UpdateUserPasswordRequest(currentPassword=" + this.getCurrentPassword() + ", newPassword=" + this.getNewPassword() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UpdateUserPasswordRequest(currentPassword=" + this.getCurrentPassword() + ", newPassword="
+				+ this.getNewPassword() + ")";
+	}
 }

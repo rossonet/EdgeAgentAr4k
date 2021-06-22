@@ -16,13 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link Command}.
- * 
- * @author Takayuki Maruyama
- */
 public class CommandList extends ArrayList<Command> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

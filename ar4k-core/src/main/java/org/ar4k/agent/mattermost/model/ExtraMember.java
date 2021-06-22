@@ -16,133 +16,137 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Extra member info.
- * 
- * @author Takayuki Maruyama
- */
 public class ExtraMember {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("nickname")
-  private String nickname;
-  @JsonProperty("email")
-  private String email;
-  @JsonProperty("roles")
-  private String roles;
-  @JsonProperty("username")
-  private String username;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("nickname")
+	private String nickname;
+	@JsonProperty("email")
+	private String email;
+	@JsonProperty("roles")
+	private String roles;
+	@JsonProperty("username")
+	private String username;
 
-  @java.lang.SuppressWarnings("all")
-  public ExtraMember() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ExtraMember() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getNickname() {
-    return this.nickname;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getNickname() {
+		return this.nickname;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getEmail() {
-    return this.email;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getEmail() {
+		return this.email;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getRoles() {
-    return this.roles;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getRoles() {
+		return this.roles;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUsername() {
-    return this.username;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUsername() {
+		return this.username;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("nickname")
-  @java.lang.SuppressWarnings("all")
-  public void setNickname(final String nickname) {
-    this.nickname = nickname;
-  }
+	@JsonProperty("nickname")
+	@java.lang.SuppressWarnings("all")
+	public void setNickname(final String nickname) {
+		this.nickname = nickname;
+	}
 
-  @JsonProperty("email")
-  @java.lang.SuppressWarnings("all")
-  public void setEmail(final String email) {
-    this.email = email;
-  }
+	@JsonProperty("email")
+	@java.lang.SuppressWarnings("all")
+	public void setEmail(final String email) {
+		this.email = email;
+	}
 
-  @JsonProperty("roles")
-  @java.lang.SuppressWarnings("all")
-  public void setRoles(final String roles) {
-    this.roles = roles;
-  }
+	@JsonProperty("roles")
+	@java.lang.SuppressWarnings("all")
+	public void setRoles(final String roles) {
+		this.roles = roles;
+	}
 
-  @JsonProperty("username")
-  @java.lang.SuppressWarnings("all")
-  public void setUsername(final String username) {
-    this.username = username;
-  }
+	@JsonProperty("username")
+	@java.lang.SuppressWarnings("all")
+	public void setUsername(final String username) {
+		this.username = username;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ExtraMember)) return false;
-    final ExtraMember other = (ExtraMember) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$nickname = this.getNickname();
-    final java.lang.Object other$nickname = other.getNickname();
-    if (this$nickname == null ? other$nickname != null : !this$nickname.equals(other$nickname)) return false;
-    final java.lang.Object this$email = this.getEmail();
-    final java.lang.Object other$email = other.getEmail();
-    if (this$email == null ? other$email != null : !this$email.equals(other$email)) return false;
-    final java.lang.Object this$roles = this.getRoles();
-    final java.lang.Object other$roles = other.getRoles();
-    if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles)) return false;
-    final java.lang.Object this$username = this.getUsername();
-    final java.lang.Object other$username = other.getUsername();
-    if (this$username == null ? other$username != null : !this$username.equals(other$username)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ExtraMember))
+			return false;
+		final ExtraMember other = (ExtraMember) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$nickname = this.getNickname();
+		final java.lang.Object other$nickname = other.getNickname();
+		if (this$nickname == null ? other$nickname != null : !this$nickname.equals(other$nickname))
+			return false;
+		final java.lang.Object this$email = this.getEmail();
+		final java.lang.Object other$email = other.getEmail();
+		if (this$email == null ? other$email != null : !this$email.equals(other$email))
+			return false;
+		final java.lang.Object this$roles = this.getRoles();
+		final java.lang.Object other$roles = other.getRoles();
+		if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles))
+			return false;
+		final java.lang.Object this$username = this.getUsername();
+		final java.lang.Object other$username = other.getUsername();
+		if (this$username == null ? other$username != null : !this$username.equals(other$username))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ExtraMember;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ExtraMember;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $nickname = this.getNickname();
-    result = result * PRIME + ($nickname == null ? 43 : $nickname.hashCode());
-    final java.lang.Object $email = this.getEmail();
-    result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-    final java.lang.Object $roles = this.getRoles();
-    result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
-    final java.lang.Object $username = this.getUsername();
-    result = result * PRIME + ($username == null ? 43 : $username.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $nickname = this.getNickname();
+		result = result * PRIME + ($nickname == null ? 43 : $nickname.hashCode());
+		final java.lang.Object $email = this.getEmail();
+		result = result * PRIME + ($email == null ? 43 : $email.hashCode());
+		final java.lang.Object $roles = this.getRoles();
+		result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
+		final java.lang.Object $username = this.getUsername();
+		result = result * PRIME + ($username == null ? 43 : $username.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ExtraMember(id=" + this.getId() + ", nickname=" + this.getNickname() + ", email=" + this.getEmail() + ", roles=" + this.getRoles() + ", username=" + this.getUsername() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ExtraMember(id=" + this.getId() + ", nickname=" + this.getNickname() + ", email=" + this.getEmail()
+				+ ", roles=" + this.getRoles() + ", username=" + this.getUsername() + ")";
+	}
 }

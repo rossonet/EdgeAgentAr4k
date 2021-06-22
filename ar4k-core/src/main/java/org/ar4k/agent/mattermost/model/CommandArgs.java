@@ -16,168 +16,175 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Command arguments.
- * 
- * @author Takayuki Maruyama
- */
 public class CommandArgs {
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("channel_id")
-  private String channelId;
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("root_id")
-  private String rootId;
-  @JsonProperty("parent_id")
-  private String parentId;
-  @JsonProperty("command")
-  private String command;
-  /* @since Mattermost Server 5.6 */
-  private String commandArgs;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("channel_id")
+	private String channelId;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("root_id")
+	private String rootId;
+	@JsonProperty("parent_id")
+	private String parentId;
+	@JsonProperty("command")
+	private String command;
+	/* @since Mattermost Server 5.6 */
+	private String commandArgs;
 
-  @java.lang.SuppressWarnings("all")
-  public CommandArgs() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public CommandArgs() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getRootId() {
-    return this.rootId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getRootId() {
+		return this.rootId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getParentId() {
-    return this.parentId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getParentId() {
+		return this.parentId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCommand() {
-    return this.command;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCommand() {
+		return this.command;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCommandArgs() {
-    return this.commandArgs;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCommandArgs() {
+		return this.commandArgs;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("channel_id")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@JsonProperty("channel_id")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("root_id")
-  @java.lang.SuppressWarnings("all")
-  public void setRootId(final String rootId) {
-    this.rootId = rootId;
-  }
+	@JsonProperty("root_id")
+	@java.lang.SuppressWarnings("all")
+	public void setRootId(final String rootId) {
+		this.rootId = rootId;
+	}
 
-  @JsonProperty("parent_id")
-  @java.lang.SuppressWarnings("all")
-  public void setParentId(final String parentId) {
-    this.parentId = parentId;
-  }
+	@JsonProperty("parent_id")
+	@java.lang.SuppressWarnings("all")
+	public void setParentId(final String parentId) {
+		this.parentId = parentId;
+	}
 
-  @JsonProperty("command")
-  @java.lang.SuppressWarnings("all")
-  public void setCommand(final String command) {
-    this.command = command;
-  }
+	@JsonProperty("command")
+	@java.lang.SuppressWarnings("all")
+	public void setCommand(final String command) {
+		this.command = command;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setCommandArgs(final String commandArgs) {
-    this.commandArgs = commandArgs;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setCommandArgs(final String commandArgs) {
+		this.commandArgs = commandArgs;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof CommandArgs)) return false;
-    final CommandArgs other = (CommandArgs) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$rootId = this.getRootId();
-    final java.lang.Object other$rootId = other.getRootId();
-    if (this$rootId == null ? other$rootId != null : !this$rootId.equals(other$rootId)) return false;
-    final java.lang.Object this$parentId = this.getParentId();
-    final java.lang.Object other$parentId = other.getParentId();
-    if (this$parentId == null ? other$parentId != null : !this$parentId.equals(other$parentId)) return false;
-    final java.lang.Object this$command = this.getCommand();
-    final java.lang.Object other$command = other.getCommand();
-    if (this$command == null ? other$command != null : !this$command.equals(other$command)) return false;
-    final java.lang.Object this$commandArgs = this.getCommandArgs();
-    final java.lang.Object other$commandArgs = other.getCommandArgs();
-    if (this$commandArgs == null ? other$commandArgs != null : !this$commandArgs.equals(other$commandArgs)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof CommandArgs))
+			return false;
+		final CommandArgs other = (CommandArgs) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$rootId = this.getRootId();
+		final java.lang.Object other$rootId = other.getRootId();
+		if (this$rootId == null ? other$rootId != null : !this$rootId.equals(other$rootId))
+			return false;
+		final java.lang.Object this$parentId = this.getParentId();
+		final java.lang.Object other$parentId = other.getParentId();
+		if (this$parentId == null ? other$parentId != null : !this$parentId.equals(other$parentId))
+			return false;
+		final java.lang.Object this$command = this.getCommand();
+		final java.lang.Object other$command = other.getCommand();
+		if (this$command == null ? other$command != null : !this$command.equals(other$command))
+			return false;
+		final java.lang.Object this$commandArgs = this.getCommandArgs();
+		final java.lang.Object other$commandArgs = other.getCommandArgs();
+		if (this$commandArgs == null ? other$commandArgs != null : !this$commandArgs.equals(other$commandArgs))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof CommandArgs;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof CommandArgs;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $rootId = this.getRootId();
-    result = result * PRIME + ($rootId == null ? 43 : $rootId.hashCode());
-    final java.lang.Object $parentId = this.getParentId();
-    result = result * PRIME + ($parentId == null ? 43 : $parentId.hashCode());
-    final java.lang.Object $command = this.getCommand();
-    result = result * PRIME + ($command == null ? 43 : $command.hashCode());
-    final java.lang.Object $commandArgs = this.getCommandArgs();
-    result = result * PRIME + ($commandArgs == null ? 43 : $commandArgs.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $rootId = this.getRootId();
+		result = result * PRIME + ($rootId == null ? 43 : $rootId.hashCode());
+		final java.lang.Object $parentId = this.getParentId();
+		result = result * PRIME + ($parentId == null ? 43 : $parentId.hashCode());
+		final java.lang.Object $command = this.getCommand();
+		result = result * PRIME + ($command == null ? 43 : $command.hashCode());
+		final java.lang.Object $commandArgs = this.getCommandArgs();
+		result = result * PRIME + ($commandArgs == null ? 43 : $commandArgs.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "CommandArgs(userId=" + this.getUserId() + ", channelId=" + this.getChannelId() + ", teamId=" + this.getTeamId() + ", rootId=" + this.getRootId() + ", parentId=" + this.getParentId() + ", command=" + this.getCommand() + ", commandArgs=" + this.getCommandArgs() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "CommandArgs(userId=" + this.getUserId() + ", channelId=" + this.getChannelId() + ", teamId="
+				+ this.getTeamId() + ", rootId=" + this.getRootId() + ", parentId=" + this.getParentId() + ", command="
+				+ this.getCommand() + ", commandArgs=" + this.getCommandArgs() + ")";
+	}
 }

@@ -21,57 +21,18 @@ import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.client4.model.FileUploadResult;
 import org.ar4k.agent.mattermost.model.FileInfo;
 
-/**
- * Files API.
- */
 public interface FilesApi {
 
-  /**
-   * Upload a file to specified channel.
-   * 
-   * @param channelId channel id will be upload file to.
-   * @param filePath file path to upload.
-   * @throws IOException If an I/O error occurs
-   * @throws IllegalArgumentException If no filePath specified
-   */
-  ApiResponse<FileUploadResult> uploadFile(String channelId, Path... filePath) throws IOException;
+	ApiResponse<FileUploadResult> uploadFile(String channelId, Path... filePath) throws IOException;
 
-  /**
-   * Get a file content.
-   * 
-   * @param fileId the file id to get
-   * @throws IOException If an I/O error occurs
-   */
-  ApiResponse<Path> getFile(String fileId) throws IOException;
+	ApiResponse<Path> getFile(String fileId) throws IOException;
 
-  /**
-   * Get a file thumbnail.
-   * 
-   * @param fileId the file id to get thumbnail
-   * @throws IOException If an I/O error occurs
-   */
-  ApiResponse<Path> getFileThumbnail(String fileId) throws IOException;
+	ApiResponse<Path> getFileThumbnail(String fileId) throws IOException;
 
-  /**
-   * Get a file preview.
-   * 
-   * @param fileId the file id to get preview
-   * @throws IOException If an I/O error occurs
-   */
-  ApiResponse<Path> getFilePreview(String fileId) throws IOException;
+	ApiResponse<Path> getFilePreview(String fileId) throws IOException;
 
-  /**
-   * Get a public link can be access without logging in to Mattermost.
-   * 
-   * @param fileId the file id to get public link
-   */
-  ApiResponse<String> getPublicFileLink(String fileId);
+	ApiResponse<String> getPublicFileLink(String fileId);
 
-  /**
-   * Get a file metadata.
-   * 
-   * @param fileId the file id to get metadata
-   */
-  ApiResponse<FileInfo> getFileMetadata(String fileId);
+	ApiResponse<FileInfo> getFileMetadata(String fileId);
 
 }

@@ -18,117 +18,120 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/**
- * List of {@link Post}.
- * 
- * @author Takayuki Maruyama
- */
 public class PostList {
-  @JsonProperty("order")
-  private List<String> order;
-  @JsonProperty("posts")
-  private Map<String, Post> posts;
-  /* @since Mattermost Server 5.14 */
-  private String nextPostId;
-  /* @since Mattermost Server 5.14 */
-  private String prevPostId;
+	@JsonProperty("order")
+	private List<String> order;
+	@JsonProperty("posts")
+	private Map<String, Post> posts;
+	/* @since Mattermost Server 5.14 */
+	private String nextPostId;
+	/* @since Mattermost Server 5.14 */
+	private String prevPostId;
 
-  public int size() {
-    return posts == null ? 0 : posts.size();
-  }
+	public int size() {
+		return posts == null ? 0 : posts.size();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public PostList() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PostList() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<String> getOrder() {
-    return this.order;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<String> getOrder() {
+		return this.order;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Post> getPosts() {
-    return this.posts;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Post> getPosts() {
+		return this.posts;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getNextPostId() {
-    return this.nextPostId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getNextPostId() {
+		return this.nextPostId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPrevPostId() {
-    return this.prevPostId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPrevPostId() {
+		return this.prevPostId;
+	}
 
-  @JsonProperty("order")
-  @java.lang.SuppressWarnings("all")
-  public void setOrder(final List<String> order) {
-    this.order = order;
-  }
+	@JsonProperty("order")
+	@java.lang.SuppressWarnings("all")
+	public void setOrder(final List<String> order) {
+		this.order = order;
+	}
 
-  @JsonProperty("posts")
-  @java.lang.SuppressWarnings("all")
-  public void setPosts(final Map<String, Post> posts) {
-    this.posts = posts;
-  }
+	@JsonProperty("posts")
+	@java.lang.SuppressWarnings("all")
+	public void setPosts(final Map<String, Post> posts) {
+		this.posts = posts;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setNextPostId(final String nextPostId) {
-    this.nextPostId = nextPostId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setNextPostId(final String nextPostId) {
+		this.nextPostId = nextPostId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setPrevPostId(final String prevPostId) {
-    this.prevPostId = prevPostId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setPrevPostId(final String prevPostId) {
+		this.prevPostId = prevPostId;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PostList)) return false;
-    final PostList other = (PostList) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$order = this.getOrder();
-    final java.lang.Object other$order = other.getOrder();
-    if (this$order == null ? other$order != null : !this$order.equals(other$order)) return false;
-    final java.lang.Object this$posts = this.getPosts();
-    final java.lang.Object other$posts = other.getPosts();
-    if (this$posts == null ? other$posts != null : !this$posts.equals(other$posts)) return false;
-    final java.lang.Object this$nextPostId = this.getNextPostId();
-    final java.lang.Object other$nextPostId = other.getNextPostId();
-    if (this$nextPostId == null ? other$nextPostId != null : !this$nextPostId.equals(other$nextPostId)) return false;
-    final java.lang.Object this$prevPostId = this.getPrevPostId();
-    final java.lang.Object other$prevPostId = other.getPrevPostId();
-    if (this$prevPostId == null ? other$prevPostId != null : !this$prevPostId.equals(other$prevPostId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PostList))
+			return false;
+		final PostList other = (PostList) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$order = this.getOrder();
+		final java.lang.Object other$order = other.getOrder();
+		if (this$order == null ? other$order != null : !this$order.equals(other$order))
+			return false;
+		final java.lang.Object this$posts = this.getPosts();
+		final java.lang.Object other$posts = other.getPosts();
+		if (this$posts == null ? other$posts != null : !this$posts.equals(other$posts))
+			return false;
+		final java.lang.Object this$nextPostId = this.getNextPostId();
+		final java.lang.Object other$nextPostId = other.getNextPostId();
+		if (this$nextPostId == null ? other$nextPostId != null : !this$nextPostId.equals(other$nextPostId))
+			return false;
+		final java.lang.Object this$prevPostId = this.getPrevPostId();
+		final java.lang.Object other$prevPostId = other.getPrevPostId();
+		if (this$prevPostId == null ? other$prevPostId != null : !this$prevPostId.equals(other$prevPostId))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PostList;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PostList;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $order = this.getOrder();
-    result = result * PRIME + ($order == null ? 43 : $order.hashCode());
-    final java.lang.Object $posts = this.getPosts();
-    result = result * PRIME + ($posts == null ? 43 : $posts.hashCode());
-    final java.lang.Object $nextPostId = this.getNextPostId();
-    result = result * PRIME + ($nextPostId == null ? 43 : $nextPostId.hashCode());
-    final java.lang.Object $prevPostId = this.getPrevPostId();
-    result = result * PRIME + ($prevPostId == null ? 43 : $prevPostId.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $order = this.getOrder();
+		result = result * PRIME + ($order == null ? 43 : $order.hashCode());
+		final java.lang.Object $posts = this.getPosts();
+		result = result * PRIME + ($posts == null ? 43 : $posts.hashCode());
+		final java.lang.Object $nextPostId = this.getNextPostId();
+		result = result * PRIME + ($nextPostId == null ? 43 : $nextPostId.hashCode());
+		final java.lang.Object $prevPostId = this.getPrevPostId();
+		result = result * PRIME + ($prevPostId == null ? 43 : $prevPostId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PostList(order=" + this.getOrder() + ", posts=" + this.getPosts() + ", nextPostId=" + this.getNextPostId() + ", prevPostId=" + this.getPrevPostId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PostList(order=" + this.getOrder() + ", posts=" + this.getPosts() + ", nextPostId="
+				+ this.getNextPostId() + ", prevPostId=" + this.getPrevPostId() + ")";
+	}
 }

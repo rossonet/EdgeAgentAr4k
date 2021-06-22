@@ -14,75 +14,75 @@
  */
 package org.ar4k.agent.mattermost.model;
 
-/**
- * Predefined options that the user can choose from radio or dropdown for plugin setting.
- * 
- * @author Takayuki Maruyama
- */
 public class PluginOption {
-  private String displayName;
-  private String value;
+	private String displayName;
+	private String value;
 
-  @java.lang.SuppressWarnings("all")
-  public PluginOption() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PluginOption() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDisplayName() {
-    return this.displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDisplayName() {
+		return this.displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getValue() {
-    return this.value;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getValue() {
+		return this.value;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setValue(final String value) {
-    this.value = value;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setValue(final String value) {
+		this.value = value;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PluginOption)) return false;
-    final PluginOption other = (PluginOption) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$displayName = this.getDisplayName();
-    final java.lang.Object other$displayName = other.getDisplayName();
-    if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName)) return false;
-    final java.lang.Object this$value = this.getValue();
-    final java.lang.Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PluginOption))
+			return false;
+		final PluginOption other = (PluginOption) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$displayName = this.getDisplayName();
+		final java.lang.Object other$displayName = other.getDisplayName();
+		if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+			return false;
+		final java.lang.Object this$value = this.getValue();
+		final java.lang.Object other$value = other.getValue();
+		if (this$value == null ? other$value != null : !this$value.equals(other$value))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PluginOption;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PluginOption;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $displayName = this.getDisplayName();
-    result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
-    final java.lang.Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $displayName = this.getDisplayName();
+		result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+		final java.lang.Object $value = this.getValue();
+		result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PluginOption(displayName=" + this.getDisplayName() + ", value=" + this.getValue() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PluginOption(displayName=" + this.getDisplayName() + ", value=" + this.getValue() + ")";
+	}
 }

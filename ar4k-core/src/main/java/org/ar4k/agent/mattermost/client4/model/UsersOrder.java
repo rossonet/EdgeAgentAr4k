@@ -14,67 +14,47 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Users fetch order.
- */
 public class UsersOrder {
 
-  /**
-   * Order in team.
-   * 
-   * @since Mattermost Server 4.0
-   */
-  public enum InTeam {
-    /**
-     * sort by username.
-     */
-    NONE(""), /**
-     * sort by last_activity_at.
-     */
-    LAST_ACTIVITY_AT, /**
-     * sort by create_at.
-     */
-    CREATE_AT;
-    private final String sort;
+	public enum InTeam {
 
-    InTeam() {
-      this.sort = name().toLowerCase();
-    }
+		NONE(""), LAST_ACTIVITY_AT, CREATE_AT;
 
-    InTeam(String sort) {
-      this.sort = sort;
-    }
+		private final String sort;
 
-    @java.lang.SuppressWarnings("all")
-    public String getSort() {
-      return this.sort;
-    }
-  }
+		InTeam() {
+			this.sort = name().toLowerCase();
+		}
 
+		InTeam(String sort) {
+			this.sort = sort;
+		}
 
-  /**
-   * Order in channel.
-   * 
-   * @since Mattermost Server 4.7
-   */
-  public enum InChannel {
-    /** sort by username. */
-    NONE(""), 
-    /** sort by status (online, away, dnd, offline). */
-    STATUS;
-    private final String sort;
+		@java.lang.SuppressWarnings("all")
+		public String getSort() {
+			return this.sort;
+		}
+	}
 
-    InChannel() {
-      this.sort = name().toLowerCase();
-    }
+	public enum InChannel {
 
-    InChannel(String sort) {
-      this.sort = sort;
-    }
+		NONE(""),
 
-    @java.lang.SuppressWarnings("all")
-    public String getSort() {
-      return this.sort;
-    }
-  }
+		STATUS;
+
+		private final String sort;
+
+		InChannel() {
+			this.sort = name().toLowerCase();
+		}
+
+		InChannel(String sort) {
+			this.sort = sort;
+		}
+
+		@java.lang.SuppressWarnings("all")
+		public String getSort() {
+			return this.sort;
+		}
+	}
 }

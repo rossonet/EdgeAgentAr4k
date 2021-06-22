@@ -25,37 +25,34 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.PreferenceCategory.PreferenceCategoryDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of preference category.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = PreferenceCategoryDeserializer.class)
 public enum PreferenceCategory implements HasCode<PreferenceCategory> {
-  DIRECT_CHANNEL_SHOW("direct_channel_show"), TUTORIAL_STEPS("tutorial_step"), ADVANCED_SETTINGS("advanced_settings"), FLAGGED_POST("flagged_post"),  //
-  DISPLAY_SETTINGS("display_settings"), THEME("theme"), AUTHORIZED_OAUTH_APP("oauth_app"), LAST("last"), NOTIFICATIONS("notifications");
-  private final String code;
+	DIRECT_CHANNEL_SHOW("direct_channel_show"), TUTORIAL_STEPS("tutorial_step"), ADVANCED_SETTINGS("advanced_settings"),
+	FLAGGED_POST("flagged_post"), //
+	DISPLAY_SETTINGS("display_settings"), THEME("theme"), AUTHORIZED_OAUTH_APP("oauth_app"), LAST("last"),
+	NOTIFICATIONS("notifications");
 
-  private PreferenceCategory(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  public static PreferenceCategory of(String code) {
-    return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(null);
-  }
+	private PreferenceCategory(String code) {
+		this.code = code;
+	}
 
+	public static PreferenceCategory of(String code) {
+		return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(null);
+	}
 
-  static class PreferenceCategoryDeserializer extends JsonDeserializer<PreferenceCategory> {
-    @Override
-    public PreferenceCategory deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return of(jsonValue);
-    }
-  }
+	static class PreferenceCategoryDeserializer extends JsonDeserializer<PreferenceCategory> {
+		@Override
+		public PreferenceCategory deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return of(jsonValue);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

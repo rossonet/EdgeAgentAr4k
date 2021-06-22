@@ -20,24 +20,21 @@ import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.model.PluginManifest;
 import org.ar4k.agent.mattermost.model.Plugins;
 
-/**
- * Plugin API.
- */
 public interface PluginApi {
 
-  default ApiResponse<PluginManifest> uploadPlugin(Path plugin) {
-    return uploadPlugin(plugin, false);
-  }
+	default ApiResponse<PluginManifest> uploadPlugin(Path plugin) {
+		return uploadPlugin(plugin, false);
+	}
 
-  ApiResponse<PluginManifest> uploadPlugin(Path plugin, boolean force);
+	ApiResponse<PluginManifest> uploadPlugin(Path plugin, boolean force);
 
-  ApiResponse<Plugins> getPlugins();
+	ApiResponse<Plugins> getPlugins();
 
-  ApiResponse<Boolean> removePlugin(String pluginId);
+	ApiResponse<Boolean> removePlugin(String pluginId);
 
-  ApiResponse<Boolean> enablePlugin(String pluginId);
+	ApiResponse<Boolean> enablePlugin(String pluginId);
 
-  ApiResponse<Boolean> disablePlugin(String pluginId);
+	ApiResponse<Boolean> disablePlugin(String pluginId);
 
-  ApiResponse<PluginManifest[]> getWebappPlugins();
+	ApiResponse<PluginManifest[]> getWebappPlugins();
 }

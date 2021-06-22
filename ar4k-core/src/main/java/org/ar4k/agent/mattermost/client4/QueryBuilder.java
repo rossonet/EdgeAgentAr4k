@@ -19,87 +19,54 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Query parameter builder.
- * 
- * @author Takayuki Maruyama
- */
 public class QueryBuilder {
 
-  private static final String PREFIX = "?";
-  private static final String DELIMITER = "&";
-  private static final String EQUALS = "=";
-  private final Map<String, String> parameters = new HashMap<>();
+	private static final String PREFIX = "?";
+	private static final String DELIMITER = "&";
+	private static final String EQUALS = "=";
+	private final Map<String, String> parameters = new HashMap<>();
 
-  /**
-   * Set string parameter.
-   */
-  public QueryBuilder set(String key, String value) {
-    if (StringUtils.isEmpty(key)) {
-      throw new IllegalArgumentException("key");
-    }
-    parameters.put(key, StringUtils.stripToEmpty(value));
-    return this;
-  }
+	public QueryBuilder set(String key, String value) {
+		if (StringUtils.isEmpty(key)) {
+			throw new IllegalArgumentException("key");
+		}
+		parameters.put(key, StringUtils.stripToEmpty(value));
+		return this;
+	}
 
-  /**
-   * Set integer parameter.
-   */
-  public QueryBuilder set(String key, int value) {
-    return set(key, String.valueOf(value));
-  }
+	public QueryBuilder set(String key, int value) {
+		return set(key, String.valueOf(value));
+	}
 
-  /**
-   * Set boolean parameter.
-   */
-  public QueryBuilder set(String key, boolean value) {
-    return set(key, Boolean.toString(value));
-  }
+	public QueryBuilder set(String key, boolean value) {
+		return set(key, Boolean.toString(value));
+	}
 
-  /**
-   * Set pager parameter.
-   */
-  public QueryBuilder set(Pager pager) {
-    set("page", pager.getPage());
-    set("per_page", pager.getPerPage());
-    return this;
-  }
+	public QueryBuilder set(Pager pager) {
+		set("page", pager.getPage());
+		set("per_page", pager.getPerPage());
+		return this;
+	}
 
-  /**
-   * Set string parameter.
-   * 
-   * @deprecated Use {@link #set(String, String)} instead,
-   */
-  @Deprecated
-  public QueryBuilder append(String key, String value) {
-    return set(key, value);
-  }
+	@Deprecated
+	public QueryBuilder append(String key, String value) {
+		return set(key, value);
+	}
 
+	@Deprecated
+	public QueryBuilder append(String key, int value) {
+		return append(key, String.valueOf(value));
+	}
 
-  /**
-   * Set integer parameter.
-   * 
-   * @deprecated Use {@link #set(String, int)} instead.
-   */
-  @Deprecated
-  public QueryBuilder append(String key, int value) {
-    return append(key, String.valueOf(value));
-  }
+	@Deprecated
+	public QueryBuilder append(String key, boolean value) {
+		return append(key, Boolean.toString(value));
+	}
 
-  /**
-   * Set boolean parameter.
-   * 
-   * @deprecated Use {@link #set(String, boolean)} instead.
-   */
-  @Deprecated
-  public QueryBuilder append(String key, boolean value) {
-    return append(key, Boolean.toString(value));
-  }
-
-  @Override
-  public String toString() {
-    return parameters.entrySet().stream().map(e -> e.getKey() + EQUALS + e.getValue())
-        .collect(Collectors.joining(DELIMITER, PREFIX, ""));
-  }
+	@Override
+	public String toString() {
+		return parameters.entrySet().stream().map(e -> e.getKey() + EQUALS + e.getValue())
+				.collect(Collectors.joining(DELIMITER, PREFIX, ""));
+	}
 
 }

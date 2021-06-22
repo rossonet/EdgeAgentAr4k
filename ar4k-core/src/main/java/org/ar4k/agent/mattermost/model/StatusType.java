@@ -24,32 +24,27 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.StatusType.StatusTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of user status.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = StatusTypeDeserializer.class)
 public enum StatusType implements HasCode<StatusType> {
-  OFFLINE("offline"), AWAY("away"), ONLINE("online"), DND("dnd");
-  private final String code;
+	OFFLINE("offline"), AWAY("away"), ONLINE("online"), DND("dnd");
 
-  private StatusType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
+	private StatusType(String code) {
+		this.code = code;
+	}
 
-  static class StatusTypeDeserializer extends JsonDeserializer<StatusType> {
-    @Override
-    public StatusType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return HasCode.of(StatusType::values, jsonValue, OFFLINE);
-    }
-  }
+	static class StatusTypeDeserializer extends JsonDeserializer<StatusType> {
+		@Override
+		public StatusType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return HasCode.of(StatusType::values, jsonValue, OFFLINE);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

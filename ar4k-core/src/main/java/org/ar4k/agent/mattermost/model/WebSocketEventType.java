@@ -24,72 +24,63 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.WebSocketEventType.WebSocketEventTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * Type of Websocket event.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = WebSocketEventTypeDeserializer.class)
 public enum WebSocketEventType implements HasCode<WebSocketEventType> {
 
-  Typing("typing"), //
-  Posted("posted"), //
-  PostEdited("post_edited"), //
-  PostDeleted("post_deleted"), //
-  ChannelDeleted("channel_deleted"), //
-  ChannelCreated("channel_created"), //
-  DirectAdded("direct_added"), //
-  GroupAdded("group_added"), //
-  NewUser("new_user"), //
-  AddedToTeam("added_to_team"), //
-  LeaveTeam("leave_team"), //
-  UpdateTeam("update_team"), //
-  UserAdded("user_added"), //
-  UserUpdated("user_updated"), //
-  UserRemoved("user_removed"), //
-  PreferenceChanged("preference_changed"), //
-  PreferencesChanged("preferences_changed"), //
-  PreferencesDeleted("preferences_deleted"), //
-  EphemeralMessage("ephemeral_message"), //
-  StatusChange("status_change"), //
-  Hello("hello"), //
-  Webrtc("webrtc"), //
-  ReactionAdded("reaction_added"), //
-  ReactionRemoved("reaction_removed"), //
-  Response("response");
+	Typing("typing"), //
+	Posted("posted"), //
+	PostEdited("post_edited"), //
+	PostDeleted("post_deleted"), //
+	ChannelDeleted("channel_deleted"), //
+	ChannelCreated("channel_created"), //
+	DirectAdded("direct_added"), //
+	GroupAdded("group_added"), //
+	NewUser("new_user"), //
+	AddedToTeam("added_to_team"), //
+	LeaveTeam("leave_team"), //
+	UpdateTeam("update_team"), //
+	UserAdded("user_added"), //
+	UserUpdated("user_updated"), //
+	UserRemoved("user_removed"), //
+	PreferenceChanged("preference_changed"), //
+	PreferencesChanged("preferences_changed"), //
+	PreferencesDeleted("preferences_deleted"), //
+	EphemeralMessage("ephemeral_message"), //
+	StatusChange("status_change"), //
+	Hello("hello"), //
+	Webrtc("webrtc"), //
+	ReactionAdded("reaction_added"), //
+	ReactionRemoved("reaction_removed"), //
+	Response("response");
 
-  private final String code;
+	private final String code;
 
-  WebSocketEventType(String code) {
-    this.code = code;
-  }
+	WebSocketEventType(String code) {
+		this.code = code;
+	}
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  /**
-   * Get a WebSocketEventType constant for provided {@code code}.
-   */
-  public static WebSocketEventType of(String code) {
-    for (WebSocketEventType type : WebSocketEventType.values()) {
-      if (type.getCode().equals(code)) {
-        return type;
-      }
-    }
-    return null;
-  }
+	public static WebSocketEventType of(String code) {
+		for (WebSocketEventType type : WebSocketEventType.values()) {
+			if (type.getCode().equals(code)) {
+				return type;
+			}
+		}
+		return null;
+	}
 
-  public static class WebSocketEventTypeDeserializer extends JsonDeserializer<WebSocketEventType> {
+	public static class WebSocketEventTypeDeserializer extends JsonDeserializer<WebSocketEventType> {
 
-    @Override
-    public WebSocketEventType deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException {
-      String code = p.getText();
-      return WebSocketEventType.of(code);
-    }
+		@Override
+		public WebSocketEventType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return WebSocketEventType.of(code);
+		}
 
-  }
+	}
 }

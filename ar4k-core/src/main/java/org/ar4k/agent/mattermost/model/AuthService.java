@@ -25,36 +25,31 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.AuthService.AuthServiceDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of auth service.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = AuthServiceDeserializer.class)
 public enum AuthService implements HasCode<AuthService> {
-  Email("email"), Saml("saml"), GitLab("gitlab"), Google("google"), Office365("office365");
-  private final String code;
+	Email("email"), Saml("saml"), GitLab("gitlab"), Google("google"), Office365("office365");
 
-  AuthService(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  public static AuthService of(String code) {
-    return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(Email);
-  }
+	AuthService(String code) {
+		this.code = code;
+	}
 
+	public static AuthService of(String code) {
+		return Arrays.stream(values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(Email);
+	}
 
-  static class AuthServiceDeserializer extends JsonDeserializer<AuthService> {
-    @Override
-    public AuthService deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return of(jsonValue);
-    }
-  }
+	static class AuthServiceDeserializer extends JsonDeserializer<AuthService> {
+		@Override
+		public AuthService deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return of(jsonValue);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

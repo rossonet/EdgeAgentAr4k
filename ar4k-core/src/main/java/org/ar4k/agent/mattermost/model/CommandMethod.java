@@ -24,45 +24,38 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.CommandMethod.CommandMethodDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of command execute request method.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = CommandMethodDeserializer.class)
 public enum CommandMethod implements HasCode<CommandMethod> {
 
-  POST("P"), GET("G");
-  private final String code;
+	POST("P"), GET("G");
 
-  CommandMethod(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	CommandMethod(String code) {
+		this.code = code;
+	}
 
-  /**
-   * Get an enum constant for provided {@code code}.
-   */
-  public static CommandMethod of(String code) {
-    for (CommandMethod method : CommandMethod.values()) {
-      if (method.getCode().equals(code)) {
-        return method;
-      }
-    }
-    return null;
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  public static class CommandMethodDeserializer extends JsonDeserializer<CommandMethod> {
+	public static CommandMethod of(String code) {
+		for (CommandMethod method : CommandMethod.values()) {
+			if (method.getCode().equals(code)) {
+				return method;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public CommandMethod deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String code = p.getText();
-      return CommandMethod.of(code);
-    }
-  }
+	public static class CommandMethodDeserializer extends JsonDeserializer<CommandMethod> {
+
+		@Override
+		public CommandMethod deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return CommandMethod.of(code);
+		}
+	}
 }

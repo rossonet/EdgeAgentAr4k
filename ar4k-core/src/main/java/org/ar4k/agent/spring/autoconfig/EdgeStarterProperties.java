@@ -42,6 +42,7 @@ public class EdgeStarterProperties {
 	private String beaconDiscoveryPort = "33666";
 	private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
 	private String consoleOnly = "false";
+	private String defaultWebPage = "/ar4k-console";
 	private String dnsConfig = "";
 	private String dnsConfigOrder = "1";
 	private String dnsKeystore = "";
@@ -62,6 +63,7 @@ public class EdgeStarterProperties {
 	private String test = "true";
 	private String threadSleep = "800";
 	private String uniqueName = null;
+
 	private String uniqueNameFile = null;
 
 	private String webConfig = "";
@@ -110,6 +112,10 @@ public class EdgeStarterProperties {
 
 	public String getConsoleOnly() {
 		return consoleOnly;
+	}
+
+	public String getDefaultWebPage() {
+		return defaultWebPage;
 	}
 
 	public String getDnsConfig() {
@@ -268,6 +274,10 @@ public class EdgeStarterProperties {
 		this.consoleOnly = consoleOnly;
 	}
 
+	public void setDefaultWebPage(String defaultWebPage) {
+		this.defaultWebPage = defaultWebPage;
+	}
+
 	public void setDnsConfig(String dnsConfig) {
 		this.dnsConfig = dnsConfig;
 	}
@@ -366,6 +376,178 @@ public class EdgeStarterProperties {
 
 	public void setWebRegistrationEndpoint(String webRegistrationEndpoint) {
 		this.webRegistrationEndpoint = webRegistrationEndpoint;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("EdgeStarterProperties [");
+		if (animaDatastoreFileName != null) {
+			builder.append("animaDatastoreFileName=");
+			builder.append(animaDatastoreFileName);
+			builder.append(", ");
+		}
+		if (baseConfig != null) {
+			builder.append("baseConfig=");
+			builder.append(baseConfig);
+			builder.append(", ");
+		}
+		if (baseConfigOrder != null) {
+			builder.append("baseConfigOrder=");
+			builder.append(baseConfigOrder);
+			builder.append(", ");
+		}
+		if (beaconCaChainPem != null) {
+			builder.append("beaconCaChainPem=");
+			builder.append(beaconCaChainPem);
+			builder.append(", ");
+		}
+		if (beaconClearText != null) {
+			builder.append("beaconClearText=");
+			builder.append(beaconClearText);
+			builder.append(", ");
+		}
+		if (beaconDiscoveryFilterString != null) {
+			builder.append("beaconDiscoveryFilterString=");
+			builder.append(beaconDiscoveryFilterString);
+			builder.append(", ");
+		}
+		if (beaconDiscoveryPort != null) {
+			builder.append("beaconDiscoveryPort=");
+			builder.append(beaconDiscoveryPort);
+			builder.append(", ");
+		}
+		if (confPath != null) {
+			builder.append("confPath=");
+			builder.append(confPath);
+			builder.append(", ");
+		}
+		if (consoleOnly != null) {
+			builder.append("consoleOnly=");
+			builder.append(consoleOnly);
+			builder.append(", ");
+		}
+		if (defaultWebPage != null) {
+			builder.append("defaultWebPage=");
+			builder.append(defaultWebPage);
+			builder.append(", ");
+		}
+		if (dnsConfig != null) {
+			builder.append("dnsConfig=");
+			builder.append(dnsConfig);
+			builder.append(", ");
+		}
+		if (dnsConfigOrder != null) {
+			builder.append("dnsConfigOrder=");
+			builder.append(dnsConfigOrder);
+			builder.append(", ");
+		}
+		if (dnsKeystore != null) {
+			builder.append("dnsKeystore=");
+			builder.append(dnsKeystore);
+			builder.append(", ");
+		}
+		if (dnsRegistrationEndpoint != null) {
+			builder.append("dnsRegistrationEndpoint=");
+			builder.append(dnsRegistrationEndpoint);
+			builder.append(", ");
+		}
+		if (fileConfig != null) {
+			builder.append("fileConfig=");
+			builder.append(fileConfig);
+			builder.append(", ");
+		}
+		if (fileConfigOrder != null) {
+			builder.append("fileConfigOrder=");
+			builder.append(fileConfigOrder);
+			builder.append(", ");
+		}
+		if (fileKeystore != null) {
+			builder.append("fileKeystore=");
+			builder.append(fileKeystore);
+			builder.append(", ");
+		}
+		if (keystoreBeaconAlias != null) {
+			builder.append("keystoreBeaconAlias=");
+			builder.append(keystoreBeaconAlias);
+			builder.append(", ");
+		}
+		if (keystoreConfigAlias != null) {
+			builder.append("keystoreConfigAlias=");
+			builder.append(keystoreConfigAlias);
+			builder.append(", ");
+		}
+		if (keystoreMainAlias != null) {
+			builder.append("keystoreMainAlias=");
+			builder.append(keystoreMainAlias);
+			builder.append(", ");
+		}
+		if (logoUrl != null) {
+			builder.append("logoUrl=");
+			builder.append(logoUrl);
+			builder.append(", ");
+		}
+		if (rossonetChatServer != null) {
+			builder.append("rossonetChatServer=");
+			builder.append(rossonetChatServer);
+			builder.append(", ");
+		}
+		if (rossonetChatToken != null) {
+			builder.append("rossonetChatToken=");
+			builder.append(rossonetChatToken);
+			builder.append(", ");
+		}
+		if (rossonetChatUser != null) {
+			builder.append("rossonetChatUser=");
+			builder.append(rossonetChatUser);
+			builder.append(", ");
+		}
+		if (showRegistrationCode != null) {
+			builder.append("showRegistrationCode=");
+			builder.append(showRegistrationCode);
+			builder.append(", ");
+		}
+		if (test != null) {
+			builder.append("test=");
+			builder.append(test);
+			builder.append(", ");
+		}
+		if (threadSleep != null) {
+			builder.append("threadSleep=");
+			builder.append(threadSleep);
+			builder.append(", ");
+		}
+		if (uniqueName != null) {
+			builder.append("uniqueName=");
+			builder.append(uniqueName);
+			builder.append(", ");
+		}
+		if (uniqueNameFile != null) {
+			builder.append("uniqueNameFile=");
+			builder.append(uniqueNameFile);
+			builder.append(", ");
+		}
+		if (webConfig != null) {
+			builder.append("webConfig=");
+			builder.append(webConfig);
+			builder.append(", ");
+		}
+		if (webConfigOrder != null) {
+			builder.append("webConfigOrder=");
+			builder.append(webConfigOrder);
+			builder.append(", ");
+		}
+		if (webKeystore != null) {
+			builder.append("webKeystore=");
+			builder.append(webKeystore);
+			builder.append(", ");
+		}
+		if (webRegistrationEndpoint != null) {
+			builder.append("webRegistrationEndpoint=");
+			builder.append(webRegistrationEndpoint);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

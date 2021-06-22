@@ -16,79 +16,79 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Command suggestion item.
- * 
- * @author Takayuki Maruyama
- */
 public class SuggestCommand {
-  @JsonProperty("suggestion")
-  private String suggestion;
-  @JsonProperty("description")
-  private String description;
+	@JsonProperty("suggestion")
+	private String suggestion;
+	@JsonProperty("description")
+	private String description;
 
-  @java.lang.SuppressWarnings("all")
-  public SuggestCommand() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public SuggestCommand() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getSuggestion() {
-    return this.suggestion;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getSuggestion() {
+		return this.suggestion;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDescription() {
-    return this.description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDescription() {
+		return this.description;
+	}
 
-  @JsonProperty("suggestion")
-  @java.lang.SuppressWarnings("all")
-  public void setSuggestion(final String suggestion) {
-    this.suggestion = suggestion;
-  }
+	@JsonProperty("suggestion")
+	@java.lang.SuppressWarnings("all")
+	public void setSuggestion(final String suggestion) {
+		this.suggestion = suggestion;
+	}
 
-  @JsonProperty("description")
-  @java.lang.SuppressWarnings("all")
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+	@JsonProperty("description")
+	@java.lang.SuppressWarnings("all")
+	public void setDescription(final String description) {
+		this.description = description;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SuggestCommand)) return false;
-    final SuggestCommand other = (SuggestCommand) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$suggestion = this.getSuggestion();
-    final java.lang.Object other$suggestion = other.getSuggestion();
-    if (this$suggestion == null ? other$suggestion != null : !this$suggestion.equals(other$suggestion)) return false;
-    final java.lang.Object this$description = this.getDescription();
-    final java.lang.Object other$description = other.getDescription();
-    if (this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SuggestCommand))
+			return false;
+		final SuggestCommand other = (SuggestCommand) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$suggestion = this.getSuggestion();
+		final java.lang.Object other$suggestion = other.getSuggestion();
+		if (this$suggestion == null ? other$suggestion != null : !this$suggestion.equals(other$suggestion))
+			return false;
+		final java.lang.Object this$description = this.getDescription();
+		final java.lang.Object other$description = other.getDescription();
+		if (this$description == null ? other$description != null : !this$description.equals(other$description))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof SuggestCommand;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof SuggestCommand;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $suggestion = this.getSuggestion();
-    result = result * PRIME + ($suggestion == null ? 43 : $suggestion.hashCode());
-    final java.lang.Object $description = this.getDescription();
-    result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $suggestion = this.getSuggestion();
+		result = result * PRIME + ($suggestion == null ? 43 : $suggestion.hashCode());
+		final java.lang.Object $description = this.getDescription();
+		result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SuggestCommand(suggestion=" + this.getSuggestion() + ", description=" + this.getDescription() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SuggestCommand(suggestion=" + this.getSuggestion() + ", description=" + this.getDescription() + ")";
+	}
 }

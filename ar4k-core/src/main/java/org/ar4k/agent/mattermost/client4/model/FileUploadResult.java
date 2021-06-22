@@ -16,67 +16,70 @@ package org.ar4k.agent.mattermost.client4.model;
 
 import org.ar4k.agent.mattermost.model.FileInfo;
 
-/**
- * File upload result.
- */
 public class FileUploadResult {
-  private FileInfo[] fileInfos;
-  private String[] clientIds;
+	private FileInfo[] fileInfos;
+	private String[] clientIds;
 
-  @java.lang.SuppressWarnings("all")
-  public FileUploadResult() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public FileUploadResult() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public FileInfo[] getFileInfos() {
-    return this.fileInfos;
-  }
+	@java.lang.SuppressWarnings("all")
+	public FileInfo[] getFileInfos() {
+		return this.fileInfos;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String[] getClientIds() {
-    return this.clientIds;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String[] getClientIds() {
+		return this.clientIds;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setFileInfos(final FileInfo[] fileInfos) {
-    this.fileInfos = fileInfos;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setFileInfos(final FileInfo[] fileInfos) {
+		this.fileInfos = fileInfos;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setClientIds(final String[] clientIds) {
-    this.clientIds = clientIds;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setClientIds(final String[] clientIds) {
+		this.clientIds = clientIds;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof FileUploadResult)) return false;
-    final FileUploadResult other = (FileUploadResult) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (!java.util.Arrays.deepEquals(this.getFileInfos(), other.getFileInfos())) return false;
-    if (!java.util.Arrays.deepEquals(this.getClientIds(), other.getClientIds())) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof FileUploadResult))
+			return false;
+		final FileUploadResult other = (FileUploadResult) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (!java.util.Arrays.deepEquals(this.getFileInfos(), other.getFileInfos()))
+			return false;
+		if (!java.util.Arrays.deepEquals(this.getClientIds(), other.getClientIds()))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof FileUploadResult;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof FileUploadResult;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + java.util.Arrays.deepHashCode(this.getFileInfos());
-    result = result * PRIME + java.util.Arrays.deepHashCode(this.getClientIds());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + java.util.Arrays.deepHashCode(this.getFileInfos());
+		result = result * PRIME + java.util.Arrays.deepHashCode(this.getClientIds());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "FileUploadResult(fileInfos=" + java.util.Arrays.deepToString(this.getFileInfos()) + ", clientIds=" + java.util.Arrays.deepToString(this.getClientIds()) + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "FileUploadResult(fileInfos=" + java.util.Arrays.deepToString(this.getFileInfos()) + ", clientIds="
+				+ java.util.Arrays.deepToString(this.getClientIds()) + ")";
+	}
 }

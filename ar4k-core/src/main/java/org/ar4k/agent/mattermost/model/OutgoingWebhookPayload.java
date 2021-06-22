@@ -16,239 +16,252 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Outgoing webhook notify payload.
- * 
- * @author Takayuki Maruyama
- */
 public class OutgoingWebhookPayload {
-  @JsonProperty("token")
-  private String token;
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("team_domain")
-  private String teamDomain;
-  @JsonProperty("channel_id")
-  private String channelId;
-  @JsonProperty("channel_name")
-  private String channelName;
-  @JsonProperty("timestamp")
-  private long timestamp;
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("user_name")
-  private String userName;
-  @JsonProperty("post_id")
-  private String postId;
-  @JsonProperty("text")
-  private String text;
-  @JsonProperty("trigger_word")
-  private String triggerWord;
+	@JsonProperty("token")
+	private String token;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("team_domain")
+	private String teamDomain;
+	@JsonProperty("channel_id")
+	private String channelId;
+	@JsonProperty("channel_name")
+	private String channelName;
+	@JsonProperty("timestamp")
+	private long timestamp;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("user_name")
+	private String userName;
+	@JsonProperty("post_id")
+	private String postId;
+	@JsonProperty("text")
+	private String text;
+	@JsonProperty("trigger_word")
+	private String triggerWord;
 
-  @java.lang.SuppressWarnings("all")
-  public OutgoingWebhookPayload() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public OutgoingWebhookPayload() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getToken() {
-    return this.token;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getToken() {
+		return this.token;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamDomain() {
-    return this.teamDomain;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamDomain() {
+		return this.teamDomain;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelName() {
-    return this.channelName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelName() {
+		return this.channelName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getTimestamp() {
-    return this.timestamp;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getTimestamp() {
+		return this.timestamp;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserName() {
-    return this.userName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserName() {
+		return this.userName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPostId() {
-    return this.postId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPostId() {
+		return this.postId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getText() {
-    return this.text;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getText() {
+		return this.text;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTriggerWord() {
-    return this.triggerWord;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTriggerWord() {
+		return this.triggerWord;
+	}
 
-  @JsonProperty("token")
-  @java.lang.SuppressWarnings("all")
-  public void setToken(final String token) {
-    this.token = token;
-  }
+	@JsonProperty("token")
+	@java.lang.SuppressWarnings("all")
+	public void setToken(final String token) {
+		this.token = token;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("team_domain")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamDomain(final String teamDomain) {
-    this.teamDomain = teamDomain;
-  }
+	@JsonProperty("team_domain")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamDomain(final String teamDomain) {
+		this.teamDomain = teamDomain;
+	}
 
-  @JsonProperty("channel_id")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@JsonProperty("channel_id")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @JsonProperty("channel_name")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelName(final String channelName) {
-    this.channelName = channelName;
-  }
+	@JsonProperty("channel_name")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelName(final String channelName) {
+		this.channelName = channelName;
+	}
 
-  @JsonProperty("timestamp")
-  @java.lang.SuppressWarnings("all")
-  public void setTimestamp(final long timestamp) {
-    this.timestamp = timestamp;
-  }
+	@JsonProperty("timestamp")
+	@java.lang.SuppressWarnings("all")
+	public void setTimestamp(final long timestamp) {
+		this.timestamp = timestamp;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("user_name")
-  @java.lang.SuppressWarnings("all")
-  public void setUserName(final String userName) {
-    this.userName = userName;
-  }
+	@JsonProperty("user_name")
+	@java.lang.SuppressWarnings("all")
+	public void setUserName(final String userName) {
+		this.userName = userName;
+	}
 
-  @JsonProperty("post_id")
-  @java.lang.SuppressWarnings("all")
-  public void setPostId(final String postId) {
-    this.postId = postId;
-  }
+	@JsonProperty("post_id")
+	@java.lang.SuppressWarnings("all")
+	public void setPostId(final String postId) {
+		this.postId = postId;
+	}
 
-  @JsonProperty("text")
-  @java.lang.SuppressWarnings("all")
-  public void setText(final String text) {
-    this.text = text;
-  }
+	@JsonProperty("text")
+	@java.lang.SuppressWarnings("all")
+	public void setText(final String text) {
+		this.text = text;
+	}
 
-  @JsonProperty("trigger_word")
-  @java.lang.SuppressWarnings("all")
-  public void setTriggerWord(final String triggerWord) {
-    this.triggerWord = triggerWord;
-  }
+	@JsonProperty("trigger_word")
+	@java.lang.SuppressWarnings("all")
+	public void setTriggerWord(final String triggerWord) {
+		this.triggerWord = triggerWord;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof OutgoingWebhookPayload)) return false;
-    final OutgoingWebhookPayload other = (OutgoingWebhookPayload) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getTimestamp() != other.getTimestamp()) return false;
-    final java.lang.Object this$token = this.getToken();
-    final java.lang.Object other$token = other.getToken();
-    if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$teamDomain = this.getTeamDomain();
-    final java.lang.Object other$teamDomain = other.getTeamDomain();
-    if (this$teamDomain == null ? other$teamDomain != null : !this$teamDomain.equals(other$teamDomain)) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    final java.lang.Object this$channelName = this.getChannelName();
-    final java.lang.Object other$channelName = other.getChannelName();
-    if (this$channelName == null ? other$channelName != null : !this$channelName.equals(other$channelName)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$userName = this.getUserName();
-    final java.lang.Object other$userName = other.getUserName();
-    if (this$userName == null ? other$userName != null : !this$userName.equals(other$userName)) return false;
-    final java.lang.Object this$postId = this.getPostId();
-    final java.lang.Object other$postId = other.getPostId();
-    if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId)) return false;
-    final java.lang.Object this$text = this.getText();
-    final java.lang.Object other$text = other.getText();
-    if (this$text == null ? other$text != null : !this$text.equals(other$text)) return false;
-    final java.lang.Object this$triggerWord = this.getTriggerWord();
-    final java.lang.Object other$triggerWord = other.getTriggerWord();
-    if (this$triggerWord == null ? other$triggerWord != null : !this$triggerWord.equals(other$triggerWord)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof OutgoingWebhookPayload))
+			return false;
+		final OutgoingWebhookPayload other = (OutgoingWebhookPayload) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getTimestamp() != other.getTimestamp())
+			return false;
+		final java.lang.Object this$token = this.getToken();
+		final java.lang.Object other$token = other.getToken();
+		if (this$token == null ? other$token != null : !this$token.equals(other$token))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$teamDomain = this.getTeamDomain();
+		final java.lang.Object other$teamDomain = other.getTeamDomain();
+		if (this$teamDomain == null ? other$teamDomain != null : !this$teamDomain.equals(other$teamDomain))
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		final java.lang.Object this$channelName = this.getChannelName();
+		final java.lang.Object other$channelName = other.getChannelName();
+		if (this$channelName == null ? other$channelName != null : !this$channelName.equals(other$channelName))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$userName = this.getUserName();
+		final java.lang.Object other$userName = other.getUserName();
+		if (this$userName == null ? other$userName != null : !this$userName.equals(other$userName))
+			return false;
+		final java.lang.Object this$postId = this.getPostId();
+		final java.lang.Object other$postId = other.getPostId();
+		if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId))
+			return false;
+		final java.lang.Object this$text = this.getText();
+		final java.lang.Object other$text = other.getText();
+		if (this$text == null ? other$text != null : !this$text.equals(other$text))
+			return false;
+		final java.lang.Object this$triggerWord = this.getTriggerWord();
+		final java.lang.Object other$triggerWord = other.getTriggerWord();
+		if (this$triggerWord == null ? other$triggerWord != null : !this$triggerWord.equals(other$triggerWord))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof OutgoingWebhookPayload;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof OutgoingWebhookPayload;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $timestamp = this.getTimestamp();
-    result = result * PRIME + (int) ($timestamp >>> 32 ^ $timestamp);
-    final java.lang.Object $token = this.getToken();
-    result = result * PRIME + ($token == null ? 43 : $token.hashCode());
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $teamDomain = this.getTeamDomain();
-    result = result * PRIME + ($teamDomain == null ? 43 : $teamDomain.hashCode());
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    final java.lang.Object $channelName = this.getChannelName();
-    result = result * PRIME + ($channelName == null ? 43 : $channelName.hashCode());
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $userName = this.getUserName();
-    result = result * PRIME + ($userName == null ? 43 : $userName.hashCode());
-    final java.lang.Object $postId = this.getPostId();
-    result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
-    final java.lang.Object $text = this.getText();
-    result = result * PRIME + ($text == null ? 43 : $text.hashCode());
-    final java.lang.Object $triggerWord = this.getTriggerWord();
-    result = result * PRIME + ($triggerWord == null ? 43 : $triggerWord.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $timestamp = this.getTimestamp();
+		result = result * PRIME + (int) ($timestamp >>> 32 ^ $timestamp);
+		final java.lang.Object $token = this.getToken();
+		result = result * PRIME + ($token == null ? 43 : $token.hashCode());
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $teamDomain = this.getTeamDomain();
+		result = result * PRIME + ($teamDomain == null ? 43 : $teamDomain.hashCode());
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		final java.lang.Object $channelName = this.getChannelName();
+		result = result * PRIME + ($channelName == null ? 43 : $channelName.hashCode());
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $userName = this.getUserName();
+		result = result * PRIME + ($userName == null ? 43 : $userName.hashCode());
+		final java.lang.Object $postId = this.getPostId();
+		result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
+		final java.lang.Object $text = this.getText();
+		result = result * PRIME + ($text == null ? 43 : $text.hashCode());
+		final java.lang.Object $triggerWord = this.getTriggerWord();
+		result = result * PRIME + ($triggerWord == null ? 43 : $triggerWord.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "OutgoingWebhookPayload(token=" + this.getToken() + ", teamId=" + this.getTeamId() + ", teamDomain=" + this.getTeamDomain() + ", channelId=" + this.getChannelId() + ", channelName=" + this.getChannelName() + ", timestamp=" + this.getTimestamp() + ", userId=" + this.getUserId() + ", userName=" + this.getUserName() + ", postId=" + this.getPostId() + ", text=" + this.getText() + ", triggerWord=" + this.getTriggerWord() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "OutgoingWebhookPayload(token=" + this.getToken() + ", teamId=" + this.getTeamId() + ", teamDomain="
+				+ this.getTeamDomain() + ", channelId=" + this.getChannelId() + ", channelName=" + this.getChannelName()
+				+ ", timestamp=" + this.getTimestamp() + ", userId=" + this.getUserId() + ", userName="
+				+ this.getUserName() + ", postId=" + this.getPostId() + ", text=" + this.getText() + ", triggerWord="
+				+ this.getTriggerWord() + ")";
+	}
 }

@@ -17,511 +17,556 @@ package org.ar4k.agent.mattermost.model.config;
 import org.ar4k.agent.mattermost.model.config.consts.ConnectionSecurity;
 import org.ar4k.agent.mattermost.model.config.consts.EmailNotificationContent;
 
-/**
- * Email settings.
- * 
- * @author Takayuki Maruyama
- */
 public class EmailSettings {
-  private boolean enableSignUpWithEmail;
-  private boolean enableSignInWithEmail;
-  private boolean enableSignInWithUsername;
-  private boolean sendEmailNotifications;
-  private boolean requireEmailVerification;
-  private String feedbackName;
-  private String feedbackEmail;
-  private String feedbackOrganization;
-  private String smtpUsername;
-  private String smtpPassword;
-  private String smtpServer;
-  private String smtpPort;
-  private ConnectionSecurity connectionSecurity;
-  private String inviteSalt;
-  private boolean sendPushNotifications;
-  private String pushNotificationServer;
-  private String pushNotificationContents;
-  private boolean enableEmailBatching;
-  private int emailBatchingBufferSize;
-  private int emailBatchingInterval;
-  private boolean skipServerCertificateVerification;
-  /* @since Mattermost Server 4.1 */
-  private boolean enableSmtpAuth;
-  /* @since Mattermost Server 4.1 */
-  private EmailNotificationContent emailNotificationContentsType;
-  /* @since Mattermost Server 4.5 */
-  private boolean useChannelInEmailNotifications;
-  /* @since Mattermost Server 4.6 */
-  private String loginButtonColor;
-  /* @since Mattermost Server 4.6 */
-  private String loginButtonBorderColor;
-  /* @since Mattermost Server 4.6 */
-  private String loginButtonTextColor;
-  /* @since Mattermost Server 5.0 */
-  private boolean enablePreviewModeBanner;
-  /* @since Mattermost Server 5.10 */
-  private String replyToAddress;
-  /* @since Mattermost Server 5.22 */
-  private int smtpServerTimeout = 10;
-
-  /**
-   * Should not use this.
-   * 
-   * @deprecated This is typo. Please use {@link #getEmailNotificationContentsType()}
-   */
-  @Deprecated
-  public EmailNotificationContent getEmailNotificationContentType() {
-    return getEmailNotificationContentsType();
-  }
-
-  /**
-   * Should not use this.
-   * 
-   * @deprecated This is typo. Please use
-   *             {@link #setEmailNotificationContentsType(EmailNotificationContent)}
-   */
-  @Deprecated
-  public void setEmailNotificationContentType(EmailNotificationContent emailNotificationContent) {
-    setEmailNotificationContentsType(emailNotificationContent);
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public EmailSettings() {
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnableSignUpWithEmail() {
-    return this.enableSignUpWithEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnableSignInWithEmail() {
-    return this.enableSignInWithEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnableSignInWithUsername() {
-    return this.enableSignInWithUsername;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isSendEmailNotifications() {
-    return this.sendEmailNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isRequireEmailVerification() {
-    return this.requireEmailVerification;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getFeedbackName() {
-    return this.feedbackName;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getFeedbackEmail() {
-    return this.feedbackEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getFeedbackOrganization() {
-    return this.feedbackOrganization;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getSmtpUsername() {
-    return this.smtpUsername;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getSmtpPassword() {
-    return this.smtpPassword;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getSmtpServer() {
-    return this.smtpServer;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getSmtpPort() {
-    return this.smtpPort;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public ConnectionSecurity getConnectionSecurity() {
-    return this.connectionSecurity;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getInviteSalt() {
-    return this.inviteSalt;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isSendPushNotifications() {
-    return this.sendPushNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getPushNotificationServer() {
-    return this.pushNotificationServer;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getPushNotificationContents() {
-    return this.pushNotificationContents;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnableEmailBatching() {
-    return this.enableEmailBatching;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public int getEmailBatchingBufferSize() {
-    return this.emailBatchingBufferSize;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public int getEmailBatchingInterval() {
-    return this.emailBatchingInterval;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isSkipServerCertificateVerification() {
-    return this.skipServerCertificateVerification;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnableSmtpAuth() {
-    return this.enableSmtpAuth;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public EmailNotificationContent getEmailNotificationContentsType() {
-    return this.emailNotificationContentsType;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isUseChannelInEmailNotifications() {
-    return this.useChannelInEmailNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getLoginButtonColor() {
-    return this.loginButtonColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getLoginButtonBorderColor() {
-    return this.loginButtonBorderColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getLoginButtonTextColor() {
-    return this.loginButtonTextColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public boolean isEnablePreviewModeBanner() {
-    return this.enablePreviewModeBanner;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public String getReplyToAddress() {
-    return this.replyToAddress;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public int getSmtpServerTimeout() {
-    return this.smtpServerTimeout;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnableSignUpWithEmail(final boolean enableSignUpWithEmail) {
-    this.enableSignUpWithEmail = enableSignUpWithEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnableSignInWithEmail(final boolean enableSignInWithEmail) {
-    this.enableSignInWithEmail = enableSignInWithEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnableSignInWithUsername(final boolean enableSignInWithUsername) {
-    this.enableSignInWithUsername = enableSignInWithUsername;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSendEmailNotifications(final boolean sendEmailNotifications) {
-    this.sendEmailNotifications = sendEmailNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setRequireEmailVerification(final boolean requireEmailVerification) {
-    this.requireEmailVerification = requireEmailVerification;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setFeedbackName(final String feedbackName) {
-    this.feedbackName = feedbackName;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setFeedbackEmail(final String feedbackEmail) {
-    this.feedbackEmail = feedbackEmail;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setFeedbackOrganization(final String feedbackOrganization) {
-    this.feedbackOrganization = feedbackOrganization;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSmtpUsername(final String smtpUsername) {
-    this.smtpUsername = smtpUsername;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSmtpPassword(final String smtpPassword) {
-    this.smtpPassword = smtpPassword;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSmtpServer(final String smtpServer) {
-    this.smtpServer = smtpServer;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSmtpPort(final String smtpPort) {
-    this.smtpPort = smtpPort;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setConnectionSecurity(final ConnectionSecurity connectionSecurity) {
-    this.connectionSecurity = connectionSecurity;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setInviteSalt(final String inviteSalt) {
-    this.inviteSalt = inviteSalt;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSendPushNotifications(final boolean sendPushNotifications) {
-    this.sendPushNotifications = sendPushNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setPushNotificationServer(final String pushNotificationServer) {
-    this.pushNotificationServer = pushNotificationServer;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setPushNotificationContents(final String pushNotificationContents) {
-    this.pushNotificationContents = pushNotificationContents;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnableEmailBatching(final boolean enableEmailBatching) {
-    this.enableEmailBatching = enableEmailBatching;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEmailBatchingBufferSize(final int emailBatchingBufferSize) {
-    this.emailBatchingBufferSize = emailBatchingBufferSize;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEmailBatchingInterval(final int emailBatchingInterval) {
-    this.emailBatchingInterval = emailBatchingInterval;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSkipServerCertificateVerification(final boolean skipServerCertificateVerification) {
-    this.skipServerCertificateVerification = skipServerCertificateVerification;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnableSmtpAuth(final boolean enableSmtpAuth) {
-    this.enableSmtpAuth = enableSmtpAuth;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEmailNotificationContentsType(final EmailNotificationContent emailNotificationContentsType) {
-    this.emailNotificationContentsType = emailNotificationContentsType;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setUseChannelInEmailNotifications(final boolean useChannelInEmailNotifications) {
-    this.useChannelInEmailNotifications = useChannelInEmailNotifications;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setLoginButtonColor(final String loginButtonColor) {
-    this.loginButtonColor = loginButtonColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setLoginButtonBorderColor(final String loginButtonBorderColor) {
-    this.loginButtonBorderColor = loginButtonBorderColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setLoginButtonTextColor(final String loginButtonTextColor) {
-    this.loginButtonTextColor = loginButtonTextColor;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setEnablePreviewModeBanner(final boolean enablePreviewModeBanner) {
-    this.enablePreviewModeBanner = enablePreviewModeBanner;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setReplyToAddress(final String replyToAddress) {
-    this.replyToAddress = replyToAddress;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  public void setSmtpServerTimeout(final int smtpServerTimeout) {
-    this.smtpServerTimeout = smtpServerTimeout;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof EmailSettings)) return false;
-    final EmailSettings other = (EmailSettings) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.isEnableSignUpWithEmail() != other.isEnableSignUpWithEmail()) return false;
-    if (this.isEnableSignInWithEmail() != other.isEnableSignInWithEmail()) return false;
-    if (this.isEnableSignInWithUsername() != other.isEnableSignInWithUsername()) return false;
-    if (this.isSendEmailNotifications() != other.isSendEmailNotifications()) return false;
-    if (this.isRequireEmailVerification() != other.isRequireEmailVerification()) return false;
-    if (this.isSendPushNotifications() != other.isSendPushNotifications()) return false;
-    if (this.isEnableEmailBatching() != other.isEnableEmailBatching()) return false;
-    if (this.getEmailBatchingBufferSize() != other.getEmailBatchingBufferSize()) return false;
-    if (this.getEmailBatchingInterval() != other.getEmailBatchingInterval()) return false;
-    if (this.isSkipServerCertificateVerification() != other.isSkipServerCertificateVerification()) return false;
-    if (this.isEnableSmtpAuth() != other.isEnableSmtpAuth()) return false;
-    if (this.isUseChannelInEmailNotifications() != other.isUseChannelInEmailNotifications()) return false;
-    if (this.isEnablePreviewModeBanner() != other.isEnablePreviewModeBanner()) return false;
-    if (this.getSmtpServerTimeout() != other.getSmtpServerTimeout()) return false;
-    final java.lang.Object this$feedbackName = this.getFeedbackName();
-    final java.lang.Object other$feedbackName = other.getFeedbackName();
-    if (this$feedbackName == null ? other$feedbackName != null : !this$feedbackName.equals(other$feedbackName)) return false;
-    final java.lang.Object this$feedbackEmail = this.getFeedbackEmail();
-    final java.lang.Object other$feedbackEmail = other.getFeedbackEmail();
-    if (this$feedbackEmail == null ? other$feedbackEmail != null : !this$feedbackEmail.equals(other$feedbackEmail)) return false;
-    final java.lang.Object this$feedbackOrganization = this.getFeedbackOrganization();
-    final java.lang.Object other$feedbackOrganization = other.getFeedbackOrganization();
-    if (this$feedbackOrganization == null ? other$feedbackOrganization != null : !this$feedbackOrganization.equals(other$feedbackOrganization)) return false;
-    final java.lang.Object this$smtpUsername = this.getSmtpUsername();
-    final java.lang.Object other$smtpUsername = other.getSmtpUsername();
-    if (this$smtpUsername == null ? other$smtpUsername != null : !this$smtpUsername.equals(other$smtpUsername)) return false;
-    final java.lang.Object this$smtpPassword = this.getSmtpPassword();
-    final java.lang.Object other$smtpPassword = other.getSmtpPassword();
-    if (this$smtpPassword == null ? other$smtpPassword != null : !this$smtpPassword.equals(other$smtpPassword)) return false;
-    final java.lang.Object this$smtpServer = this.getSmtpServer();
-    final java.lang.Object other$smtpServer = other.getSmtpServer();
-    if (this$smtpServer == null ? other$smtpServer != null : !this$smtpServer.equals(other$smtpServer)) return false;
-    final java.lang.Object this$smtpPort = this.getSmtpPort();
-    final java.lang.Object other$smtpPort = other.getSmtpPort();
-    if (this$smtpPort == null ? other$smtpPort != null : !this$smtpPort.equals(other$smtpPort)) return false;
-    final java.lang.Object this$connectionSecurity = this.getConnectionSecurity();
-    final java.lang.Object other$connectionSecurity = other.getConnectionSecurity();
-    if (this$connectionSecurity == null ? other$connectionSecurity != null : !this$connectionSecurity.equals(other$connectionSecurity)) return false;
-    final java.lang.Object this$inviteSalt = this.getInviteSalt();
-    final java.lang.Object other$inviteSalt = other.getInviteSalt();
-    if (this$inviteSalt == null ? other$inviteSalt != null : !this$inviteSalt.equals(other$inviteSalt)) return false;
-    final java.lang.Object this$pushNotificationServer = this.getPushNotificationServer();
-    final java.lang.Object other$pushNotificationServer = other.getPushNotificationServer();
-    if (this$pushNotificationServer == null ? other$pushNotificationServer != null : !this$pushNotificationServer.equals(other$pushNotificationServer)) return false;
-    final java.lang.Object this$pushNotificationContents = this.getPushNotificationContents();
-    final java.lang.Object other$pushNotificationContents = other.getPushNotificationContents();
-    if (this$pushNotificationContents == null ? other$pushNotificationContents != null : !this$pushNotificationContents.equals(other$pushNotificationContents)) return false;
-    final java.lang.Object this$emailNotificationContentsType = this.getEmailNotificationContentsType();
-    final java.lang.Object other$emailNotificationContentsType = other.getEmailNotificationContentsType();
-    if (this$emailNotificationContentsType == null ? other$emailNotificationContentsType != null : !this$emailNotificationContentsType.equals(other$emailNotificationContentsType)) return false;
-    final java.lang.Object this$loginButtonColor = this.getLoginButtonColor();
-    final java.lang.Object other$loginButtonColor = other.getLoginButtonColor();
-    if (this$loginButtonColor == null ? other$loginButtonColor != null : !this$loginButtonColor.equals(other$loginButtonColor)) return false;
-    final java.lang.Object this$loginButtonBorderColor = this.getLoginButtonBorderColor();
-    final java.lang.Object other$loginButtonBorderColor = other.getLoginButtonBorderColor();
-    if (this$loginButtonBorderColor == null ? other$loginButtonBorderColor != null : !this$loginButtonBorderColor.equals(other$loginButtonBorderColor)) return false;
-    final java.lang.Object this$loginButtonTextColor = this.getLoginButtonTextColor();
-    final java.lang.Object other$loginButtonTextColor = other.getLoginButtonTextColor();
-    if (this$loginButtonTextColor == null ? other$loginButtonTextColor != null : !this$loginButtonTextColor.equals(other$loginButtonTextColor)) return false;
-    final java.lang.Object this$replyToAddress = this.getReplyToAddress();
-    final java.lang.Object other$replyToAddress = other.getReplyToAddress();
-    if (this$replyToAddress == null ? other$replyToAddress != null : !this$replyToAddress.equals(other$replyToAddress)) return false;
-    return true;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof EmailSettings;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isEnableSignUpWithEmail() ? 79 : 97);
-    result = result * PRIME + (this.isEnableSignInWithEmail() ? 79 : 97);
-    result = result * PRIME + (this.isEnableSignInWithUsername() ? 79 : 97);
-    result = result * PRIME + (this.isSendEmailNotifications() ? 79 : 97);
-    result = result * PRIME + (this.isRequireEmailVerification() ? 79 : 97);
-    result = result * PRIME + (this.isSendPushNotifications() ? 79 : 97);
-    result = result * PRIME + (this.isEnableEmailBatching() ? 79 : 97);
-    result = result * PRIME + this.getEmailBatchingBufferSize();
-    result = result * PRIME + this.getEmailBatchingInterval();
-    result = result * PRIME + (this.isSkipServerCertificateVerification() ? 79 : 97);
-    result = result * PRIME + (this.isEnableSmtpAuth() ? 79 : 97);
-    result = result * PRIME + (this.isUseChannelInEmailNotifications() ? 79 : 97);
-    result = result * PRIME + (this.isEnablePreviewModeBanner() ? 79 : 97);
-    result = result * PRIME + this.getSmtpServerTimeout();
-    final java.lang.Object $feedbackName = this.getFeedbackName();
-    result = result * PRIME + ($feedbackName == null ? 43 : $feedbackName.hashCode());
-    final java.lang.Object $feedbackEmail = this.getFeedbackEmail();
-    result = result * PRIME + ($feedbackEmail == null ? 43 : $feedbackEmail.hashCode());
-    final java.lang.Object $feedbackOrganization = this.getFeedbackOrganization();
-    result = result * PRIME + ($feedbackOrganization == null ? 43 : $feedbackOrganization.hashCode());
-    final java.lang.Object $smtpUsername = this.getSmtpUsername();
-    result = result * PRIME + ($smtpUsername == null ? 43 : $smtpUsername.hashCode());
-    final java.lang.Object $smtpPassword = this.getSmtpPassword();
-    result = result * PRIME + ($smtpPassword == null ? 43 : $smtpPassword.hashCode());
-    final java.lang.Object $smtpServer = this.getSmtpServer();
-    result = result * PRIME + ($smtpServer == null ? 43 : $smtpServer.hashCode());
-    final java.lang.Object $smtpPort = this.getSmtpPort();
-    result = result * PRIME + ($smtpPort == null ? 43 : $smtpPort.hashCode());
-    final java.lang.Object $connectionSecurity = this.getConnectionSecurity();
-    result = result * PRIME + ($connectionSecurity == null ? 43 : $connectionSecurity.hashCode());
-    final java.lang.Object $inviteSalt = this.getInviteSalt();
-    result = result * PRIME + ($inviteSalt == null ? 43 : $inviteSalt.hashCode());
-    final java.lang.Object $pushNotificationServer = this.getPushNotificationServer();
-    result = result * PRIME + ($pushNotificationServer == null ? 43 : $pushNotificationServer.hashCode());
-    final java.lang.Object $pushNotificationContents = this.getPushNotificationContents();
-    result = result * PRIME + ($pushNotificationContents == null ? 43 : $pushNotificationContents.hashCode());
-    final java.lang.Object $emailNotificationContentsType = this.getEmailNotificationContentsType();
-    result = result * PRIME + ($emailNotificationContentsType == null ? 43 : $emailNotificationContentsType.hashCode());
-    final java.lang.Object $loginButtonColor = this.getLoginButtonColor();
-    result = result * PRIME + ($loginButtonColor == null ? 43 : $loginButtonColor.hashCode());
-    final java.lang.Object $loginButtonBorderColor = this.getLoginButtonBorderColor();
-    result = result * PRIME + ($loginButtonBorderColor == null ? 43 : $loginButtonBorderColor.hashCode());
-    final java.lang.Object $loginButtonTextColor = this.getLoginButtonTextColor();
-    result = result * PRIME + ($loginButtonTextColor == null ? 43 : $loginButtonTextColor.hashCode());
-    final java.lang.Object $replyToAddress = this.getReplyToAddress();
-    result = result * PRIME + ($replyToAddress == null ? 43 : $replyToAddress.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "EmailSettings(enableSignUpWithEmail=" + this.isEnableSignUpWithEmail() + ", enableSignInWithEmail=" + this.isEnableSignInWithEmail() + ", enableSignInWithUsername=" + this.isEnableSignInWithUsername() + ", sendEmailNotifications=" + this.isSendEmailNotifications() + ", requireEmailVerification=" + this.isRequireEmailVerification() + ", feedbackName=" + this.getFeedbackName() + ", feedbackEmail=" + this.getFeedbackEmail() + ", feedbackOrganization=" + this.getFeedbackOrganization() + ", smtpUsername=" + this.getSmtpUsername() + ", smtpPassword=" + this.getSmtpPassword() + ", smtpServer=" + this.getSmtpServer() + ", smtpPort=" + this.getSmtpPort() + ", connectionSecurity=" + this.getConnectionSecurity() + ", inviteSalt=" + this.getInviteSalt() + ", sendPushNotifications=" + this.isSendPushNotifications() + ", pushNotificationServer=" + this.getPushNotificationServer() + ", pushNotificationContents=" + this.getPushNotificationContents() + ", enableEmailBatching=" + this.isEnableEmailBatching() + ", emailBatchingBufferSize=" + this.getEmailBatchingBufferSize() + ", emailBatchingInterval=" + this.getEmailBatchingInterval() + ", skipServerCertificateVerification=" + this.isSkipServerCertificateVerification() + ", enableSmtpAuth=" + this.isEnableSmtpAuth() + ", emailNotificationContentsType=" + this.getEmailNotificationContentsType() + ", useChannelInEmailNotifications=" + this.isUseChannelInEmailNotifications() + ", loginButtonColor=" + this.getLoginButtonColor() + ", loginButtonBorderColor=" + this.getLoginButtonBorderColor() + ", loginButtonTextColor=" + this.getLoginButtonTextColor() + ", enablePreviewModeBanner=" + this.isEnablePreviewModeBanner() + ", replyToAddress=" + this.getReplyToAddress() + ", smtpServerTimeout=" + this.getSmtpServerTimeout() + ")";
-  }
+	private boolean enableSignUpWithEmail;
+	private boolean enableSignInWithEmail;
+	private boolean enableSignInWithUsername;
+	private boolean sendEmailNotifications;
+	private boolean requireEmailVerification;
+	private String feedbackName;
+	private String feedbackEmail;
+	private String feedbackOrganization;
+	private String smtpUsername;
+	private String smtpPassword;
+	private String smtpServer;
+	private String smtpPort;
+	private ConnectionSecurity connectionSecurity;
+	private String inviteSalt;
+	private boolean sendPushNotifications;
+	private String pushNotificationServer;
+	private String pushNotificationContents;
+	private boolean enableEmailBatching;
+	private int emailBatchingBufferSize;
+	private int emailBatchingInterval;
+	private boolean skipServerCertificateVerification;
+	/* @since Mattermost Server 4.1 */
+	private boolean enableSmtpAuth;
+	/* @since Mattermost Server 4.1 */
+	private EmailNotificationContent emailNotificationContentsType;
+	/* @since Mattermost Server 4.5 */
+	private boolean useChannelInEmailNotifications;
+	/* @since Mattermost Server 4.6 */
+	private String loginButtonColor;
+	/* @since Mattermost Server 4.6 */
+	private String loginButtonBorderColor;
+	/* @since Mattermost Server 4.6 */
+	private String loginButtonTextColor;
+	/* @since Mattermost Server 5.0 */
+	private boolean enablePreviewModeBanner;
+	/* @since Mattermost Server 5.10 */
+	private String replyToAddress;
+	/* @since Mattermost Server 5.22 */
+	private int smtpServerTimeout = 10;
+
+	@Deprecated
+	public EmailNotificationContent getEmailNotificationContentType() {
+		return getEmailNotificationContentsType();
+	}
+
+	@Deprecated
+	public void setEmailNotificationContentType(EmailNotificationContent emailNotificationContent) {
+		setEmailNotificationContentsType(emailNotificationContent);
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public EmailSettings() {
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnableSignUpWithEmail() {
+		return this.enableSignUpWithEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnableSignInWithEmail() {
+		return this.enableSignInWithEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnableSignInWithUsername() {
+		return this.enableSignInWithUsername;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isSendEmailNotifications() {
+		return this.sendEmailNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isRequireEmailVerification() {
+		return this.requireEmailVerification;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getFeedbackName() {
+		return this.feedbackName;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getFeedbackEmail() {
+		return this.feedbackEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getFeedbackOrganization() {
+		return this.feedbackOrganization;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getSmtpUsername() {
+		return this.smtpUsername;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getSmtpPassword() {
+		return this.smtpPassword;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getSmtpServer() {
+		return this.smtpServer;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getSmtpPort() {
+		return this.smtpPort;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public ConnectionSecurity getConnectionSecurity() {
+		return this.connectionSecurity;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getInviteSalt() {
+		return this.inviteSalt;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isSendPushNotifications() {
+		return this.sendPushNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getPushNotificationServer() {
+		return this.pushNotificationServer;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getPushNotificationContents() {
+		return this.pushNotificationContents;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnableEmailBatching() {
+		return this.enableEmailBatching;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public int getEmailBatchingBufferSize() {
+		return this.emailBatchingBufferSize;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public int getEmailBatchingInterval() {
+		return this.emailBatchingInterval;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isSkipServerCertificateVerification() {
+		return this.skipServerCertificateVerification;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnableSmtpAuth() {
+		return this.enableSmtpAuth;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public EmailNotificationContent getEmailNotificationContentsType() {
+		return this.emailNotificationContentsType;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isUseChannelInEmailNotifications() {
+		return this.useChannelInEmailNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getLoginButtonColor() {
+		return this.loginButtonColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getLoginButtonBorderColor() {
+		return this.loginButtonBorderColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getLoginButtonTextColor() {
+		return this.loginButtonTextColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public boolean isEnablePreviewModeBanner() {
+		return this.enablePreviewModeBanner;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public String getReplyToAddress() {
+		return this.replyToAddress;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public int getSmtpServerTimeout() {
+		return this.smtpServerTimeout;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnableSignUpWithEmail(final boolean enableSignUpWithEmail) {
+		this.enableSignUpWithEmail = enableSignUpWithEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnableSignInWithEmail(final boolean enableSignInWithEmail) {
+		this.enableSignInWithEmail = enableSignInWithEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnableSignInWithUsername(final boolean enableSignInWithUsername) {
+		this.enableSignInWithUsername = enableSignInWithUsername;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSendEmailNotifications(final boolean sendEmailNotifications) {
+		this.sendEmailNotifications = sendEmailNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setRequireEmailVerification(final boolean requireEmailVerification) {
+		this.requireEmailVerification = requireEmailVerification;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setFeedbackName(final String feedbackName) {
+		this.feedbackName = feedbackName;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setFeedbackEmail(final String feedbackEmail) {
+		this.feedbackEmail = feedbackEmail;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setFeedbackOrganization(final String feedbackOrganization) {
+		this.feedbackOrganization = feedbackOrganization;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSmtpUsername(final String smtpUsername) {
+		this.smtpUsername = smtpUsername;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSmtpPassword(final String smtpPassword) {
+		this.smtpPassword = smtpPassword;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSmtpServer(final String smtpServer) {
+		this.smtpServer = smtpServer;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSmtpPort(final String smtpPort) {
+		this.smtpPort = smtpPort;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setConnectionSecurity(final ConnectionSecurity connectionSecurity) {
+		this.connectionSecurity = connectionSecurity;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setInviteSalt(final String inviteSalt) {
+		this.inviteSalt = inviteSalt;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSendPushNotifications(final boolean sendPushNotifications) {
+		this.sendPushNotifications = sendPushNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setPushNotificationServer(final String pushNotificationServer) {
+		this.pushNotificationServer = pushNotificationServer;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setPushNotificationContents(final String pushNotificationContents) {
+		this.pushNotificationContents = pushNotificationContents;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnableEmailBatching(final boolean enableEmailBatching) {
+		this.enableEmailBatching = enableEmailBatching;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEmailBatchingBufferSize(final int emailBatchingBufferSize) {
+		this.emailBatchingBufferSize = emailBatchingBufferSize;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEmailBatchingInterval(final int emailBatchingInterval) {
+		this.emailBatchingInterval = emailBatchingInterval;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSkipServerCertificateVerification(final boolean skipServerCertificateVerification) {
+		this.skipServerCertificateVerification = skipServerCertificateVerification;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnableSmtpAuth(final boolean enableSmtpAuth) {
+		this.enableSmtpAuth = enableSmtpAuth;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEmailNotificationContentsType(final EmailNotificationContent emailNotificationContentsType) {
+		this.emailNotificationContentsType = emailNotificationContentsType;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setUseChannelInEmailNotifications(final boolean useChannelInEmailNotifications) {
+		this.useChannelInEmailNotifications = useChannelInEmailNotifications;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setLoginButtonColor(final String loginButtonColor) {
+		this.loginButtonColor = loginButtonColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setLoginButtonBorderColor(final String loginButtonBorderColor) {
+		this.loginButtonBorderColor = loginButtonBorderColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setLoginButtonTextColor(final String loginButtonTextColor) {
+		this.loginButtonTextColor = loginButtonTextColor;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setEnablePreviewModeBanner(final boolean enablePreviewModeBanner) {
+		this.enablePreviewModeBanner = enablePreviewModeBanner;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setReplyToAddress(final String replyToAddress) {
+		this.replyToAddress = replyToAddress;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	public void setSmtpServerTimeout(final int smtpServerTimeout) {
+		this.smtpServerTimeout = smtpServerTimeout;
+	}
+
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof EmailSettings))
+			return false;
+		final EmailSettings other = (EmailSettings) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.isEnableSignUpWithEmail() != other.isEnableSignUpWithEmail())
+			return false;
+		if (this.isEnableSignInWithEmail() != other.isEnableSignInWithEmail())
+			return false;
+		if (this.isEnableSignInWithUsername() != other.isEnableSignInWithUsername())
+			return false;
+		if (this.isSendEmailNotifications() != other.isSendEmailNotifications())
+			return false;
+		if (this.isRequireEmailVerification() != other.isRequireEmailVerification())
+			return false;
+		if (this.isSendPushNotifications() != other.isSendPushNotifications())
+			return false;
+		if (this.isEnableEmailBatching() != other.isEnableEmailBatching())
+			return false;
+		if (this.getEmailBatchingBufferSize() != other.getEmailBatchingBufferSize())
+			return false;
+		if (this.getEmailBatchingInterval() != other.getEmailBatchingInterval())
+			return false;
+		if (this.isSkipServerCertificateVerification() != other.isSkipServerCertificateVerification())
+			return false;
+		if (this.isEnableSmtpAuth() != other.isEnableSmtpAuth())
+			return false;
+		if (this.isUseChannelInEmailNotifications() != other.isUseChannelInEmailNotifications())
+			return false;
+		if (this.isEnablePreviewModeBanner() != other.isEnablePreviewModeBanner())
+			return false;
+		if (this.getSmtpServerTimeout() != other.getSmtpServerTimeout())
+			return false;
+		final java.lang.Object this$feedbackName = this.getFeedbackName();
+		final java.lang.Object other$feedbackName = other.getFeedbackName();
+		if (this$feedbackName == null ? other$feedbackName != null : !this$feedbackName.equals(other$feedbackName))
+			return false;
+		final java.lang.Object this$feedbackEmail = this.getFeedbackEmail();
+		final java.lang.Object other$feedbackEmail = other.getFeedbackEmail();
+		if (this$feedbackEmail == null ? other$feedbackEmail != null : !this$feedbackEmail.equals(other$feedbackEmail))
+			return false;
+		final java.lang.Object this$feedbackOrganization = this.getFeedbackOrganization();
+		final java.lang.Object other$feedbackOrganization = other.getFeedbackOrganization();
+		if (this$feedbackOrganization == null ? other$feedbackOrganization != null
+				: !this$feedbackOrganization.equals(other$feedbackOrganization))
+			return false;
+		final java.lang.Object this$smtpUsername = this.getSmtpUsername();
+		final java.lang.Object other$smtpUsername = other.getSmtpUsername();
+		if (this$smtpUsername == null ? other$smtpUsername != null : !this$smtpUsername.equals(other$smtpUsername))
+			return false;
+		final java.lang.Object this$smtpPassword = this.getSmtpPassword();
+		final java.lang.Object other$smtpPassword = other.getSmtpPassword();
+		if (this$smtpPassword == null ? other$smtpPassword != null : !this$smtpPassword.equals(other$smtpPassword))
+			return false;
+		final java.lang.Object this$smtpServer = this.getSmtpServer();
+		final java.lang.Object other$smtpServer = other.getSmtpServer();
+		if (this$smtpServer == null ? other$smtpServer != null : !this$smtpServer.equals(other$smtpServer))
+			return false;
+		final java.lang.Object this$smtpPort = this.getSmtpPort();
+		final java.lang.Object other$smtpPort = other.getSmtpPort();
+		if (this$smtpPort == null ? other$smtpPort != null : !this$smtpPort.equals(other$smtpPort))
+			return false;
+		final java.lang.Object this$connectionSecurity = this.getConnectionSecurity();
+		final java.lang.Object other$connectionSecurity = other.getConnectionSecurity();
+		if (this$connectionSecurity == null ? other$connectionSecurity != null
+				: !this$connectionSecurity.equals(other$connectionSecurity))
+			return false;
+		final java.lang.Object this$inviteSalt = this.getInviteSalt();
+		final java.lang.Object other$inviteSalt = other.getInviteSalt();
+		if (this$inviteSalt == null ? other$inviteSalt != null : !this$inviteSalt.equals(other$inviteSalt))
+			return false;
+		final java.lang.Object this$pushNotificationServer = this.getPushNotificationServer();
+		final java.lang.Object other$pushNotificationServer = other.getPushNotificationServer();
+		if (this$pushNotificationServer == null ? other$pushNotificationServer != null
+				: !this$pushNotificationServer.equals(other$pushNotificationServer))
+			return false;
+		final java.lang.Object this$pushNotificationContents = this.getPushNotificationContents();
+		final java.lang.Object other$pushNotificationContents = other.getPushNotificationContents();
+		if (this$pushNotificationContents == null ? other$pushNotificationContents != null
+				: !this$pushNotificationContents.equals(other$pushNotificationContents))
+			return false;
+		final java.lang.Object this$emailNotificationContentsType = this.getEmailNotificationContentsType();
+		final java.lang.Object other$emailNotificationContentsType = other.getEmailNotificationContentsType();
+		if (this$emailNotificationContentsType == null ? other$emailNotificationContentsType != null
+				: !this$emailNotificationContentsType.equals(other$emailNotificationContentsType))
+			return false;
+		final java.lang.Object this$loginButtonColor = this.getLoginButtonColor();
+		final java.lang.Object other$loginButtonColor = other.getLoginButtonColor();
+		if (this$loginButtonColor == null ? other$loginButtonColor != null
+				: !this$loginButtonColor.equals(other$loginButtonColor))
+			return false;
+		final java.lang.Object this$loginButtonBorderColor = this.getLoginButtonBorderColor();
+		final java.lang.Object other$loginButtonBorderColor = other.getLoginButtonBorderColor();
+		if (this$loginButtonBorderColor == null ? other$loginButtonBorderColor != null
+				: !this$loginButtonBorderColor.equals(other$loginButtonBorderColor))
+			return false;
+		final java.lang.Object this$loginButtonTextColor = this.getLoginButtonTextColor();
+		final java.lang.Object other$loginButtonTextColor = other.getLoginButtonTextColor();
+		if (this$loginButtonTextColor == null ? other$loginButtonTextColor != null
+				: !this$loginButtonTextColor.equals(other$loginButtonTextColor))
+			return false;
+		final java.lang.Object this$replyToAddress = this.getReplyToAddress();
+		final java.lang.Object other$replyToAddress = other.getReplyToAddress();
+		if (this$replyToAddress == null ? other$replyToAddress != null
+				: !this$replyToAddress.equals(other$replyToAddress))
+			return false;
+		return true;
+	}
+
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof EmailSettings;
+	}
+
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isEnableSignUpWithEmail() ? 79 : 97);
+		result = result * PRIME + (this.isEnableSignInWithEmail() ? 79 : 97);
+		result = result * PRIME + (this.isEnableSignInWithUsername() ? 79 : 97);
+		result = result * PRIME + (this.isSendEmailNotifications() ? 79 : 97);
+		result = result * PRIME + (this.isRequireEmailVerification() ? 79 : 97);
+		result = result * PRIME + (this.isSendPushNotifications() ? 79 : 97);
+		result = result * PRIME + (this.isEnableEmailBatching() ? 79 : 97);
+		result = result * PRIME + this.getEmailBatchingBufferSize();
+		result = result * PRIME + this.getEmailBatchingInterval();
+		result = result * PRIME + (this.isSkipServerCertificateVerification() ? 79 : 97);
+		result = result * PRIME + (this.isEnableSmtpAuth() ? 79 : 97);
+		result = result * PRIME + (this.isUseChannelInEmailNotifications() ? 79 : 97);
+		result = result * PRIME + (this.isEnablePreviewModeBanner() ? 79 : 97);
+		result = result * PRIME + this.getSmtpServerTimeout();
+		final java.lang.Object $feedbackName = this.getFeedbackName();
+		result = result * PRIME + ($feedbackName == null ? 43 : $feedbackName.hashCode());
+		final java.lang.Object $feedbackEmail = this.getFeedbackEmail();
+		result = result * PRIME + ($feedbackEmail == null ? 43 : $feedbackEmail.hashCode());
+		final java.lang.Object $feedbackOrganization = this.getFeedbackOrganization();
+		result = result * PRIME + ($feedbackOrganization == null ? 43 : $feedbackOrganization.hashCode());
+		final java.lang.Object $smtpUsername = this.getSmtpUsername();
+		result = result * PRIME + ($smtpUsername == null ? 43 : $smtpUsername.hashCode());
+		final java.lang.Object $smtpPassword = this.getSmtpPassword();
+		result = result * PRIME + ($smtpPassword == null ? 43 : $smtpPassword.hashCode());
+		final java.lang.Object $smtpServer = this.getSmtpServer();
+		result = result * PRIME + ($smtpServer == null ? 43 : $smtpServer.hashCode());
+		final java.lang.Object $smtpPort = this.getSmtpPort();
+		result = result * PRIME + ($smtpPort == null ? 43 : $smtpPort.hashCode());
+		final java.lang.Object $connectionSecurity = this.getConnectionSecurity();
+		result = result * PRIME + ($connectionSecurity == null ? 43 : $connectionSecurity.hashCode());
+		final java.lang.Object $inviteSalt = this.getInviteSalt();
+		result = result * PRIME + ($inviteSalt == null ? 43 : $inviteSalt.hashCode());
+		final java.lang.Object $pushNotificationServer = this.getPushNotificationServer();
+		result = result * PRIME + ($pushNotificationServer == null ? 43 : $pushNotificationServer.hashCode());
+		final java.lang.Object $pushNotificationContents = this.getPushNotificationContents();
+		result = result * PRIME + ($pushNotificationContents == null ? 43 : $pushNotificationContents.hashCode());
+		final java.lang.Object $emailNotificationContentsType = this.getEmailNotificationContentsType();
+		result = result * PRIME
+				+ ($emailNotificationContentsType == null ? 43 : $emailNotificationContentsType.hashCode());
+		final java.lang.Object $loginButtonColor = this.getLoginButtonColor();
+		result = result * PRIME + ($loginButtonColor == null ? 43 : $loginButtonColor.hashCode());
+		final java.lang.Object $loginButtonBorderColor = this.getLoginButtonBorderColor();
+		result = result * PRIME + ($loginButtonBorderColor == null ? 43 : $loginButtonBorderColor.hashCode());
+		final java.lang.Object $loginButtonTextColor = this.getLoginButtonTextColor();
+		result = result * PRIME + ($loginButtonTextColor == null ? 43 : $loginButtonTextColor.hashCode());
+		final java.lang.Object $replyToAddress = this.getReplyToAddress();
+		result = result * PRIME + ($replyToAddress == null ? 43 : $replyToAddress.hashCode());
+		return result;
+	}
+
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "EmailSettings(enableSignUpWithEmail=" + this.isEnableSignUpWithEmail() + ", enableSignInWithEmail="
+				+ this.isEnableSignInWithEmail() + ", enableSignInWithUsername=" + this.isEnableSignInWithUsername()
+				+ ", sendEmailNotifications=" + this.isSendEmailNotifications() + ", requireEmailVerification="
+				+ this.isRequireEmailVerification() + ", feedbackName=" + this.getFeedbackName() + ", feedbackEmail="
+				+ this.getFeedbackEmail() + ", feedbackOrganization=" + this.getFeedbackOrganization()
+				+ ", smtpUsername=" + this.getSmtpUsername() + ", smtpPassword=" + this.getSmtpPassword()
+				+ ", smtpServer=" + this.getSmtpServer() + ", smtpPort=" + this.getSmtpPort() + ", connectionSecurity="
+				+ this.getConnectionSecurity() + ", inviteSalt=" + this.getInviteSalt() + ", sendPushNotifications="
+				+ this.isSendPushNotifications() + ", pushNotificationServer=" + this.getPushNotificationServer()
+				+ ", pushNotificationContents=" + this.getPushNotificationContents() + ", enableEmailBatching="
+				+ this.isEnableEmailBatching() + ", emailBatchingBufferSize=" + this.getEmailBatchingBufferSize()
+				+ ", emailBatchingInterval=" + this.getEmailBatchingInterval() + ", skipServerCertificateVerification="
+				+ this.isSkipServerCertificateVerification() + ", enableSmtpAuth=" + this.isEnableSmtpAuth()
+				+ ", emailNotificationContentsType=" + this.getEmailNotificationContentsType()
+				+ ", useChannelInEmailNotifications=" + this.isUseChannelInEmailNotifications() + ", loginButtonColor="
+				+ this.getLoginButtonColor() + ", loginButtonBorderColor=" + this.getLoginButtonBorderColor()
+				+ ", loginButtonTextColor=" + this.getLoginButtonTextColor() + ", enablePreviewModeBanner="
+				+ this.isEnablePreviewModeBanner() + ", replyToAddress=" + this.getReplyToAddress()
+				+ ", smtpServerTimeout=" + this.getSmtpServerTimeout() + ")";
+	}
 }

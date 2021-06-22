@@ -28,47 +28,41 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.TriggerWhen.TriggerWhenDeserializer;
 import org.ar4k.agent.mattermost.model.TriggerWhen.TriggerWhenSerializer;
 
-/**
- * The type of trigger when.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = TriggerWhenSerializer.class)
 @JsonDeserialize(using = TriggerWhenDeserializer.class)
 public enum TriggerWhen {
-  CONTAINS(1), STARTS_WITH(0);
-  private final int code;
+	CONTAINS(1), STARTS_WITH(0);
 
-  public static TriggerWhen of(int code) {
-    return Arrays.stream(values()).filter(e -> e.getCode() == code).findFirst().orElse(null);
-  }
+	private final int code;
 
+	public static TriggerWhen of(int code) {
+		return Arrays.stream(values()).filter(e -> e.getCode() == code).findFirst().orElse(null);
+	}
 
-  static class TriggerWhenSerializer extends JsonSerializer<TriggerWhen> {
-    @Override
-    public void serialize(TriggerWhen value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-      if (value != null) {
-        gen.writeNumber(value.getCode());
-      }
-    }
-  }
+	static class TriggerWhenSerializer extends JsonSerializer<TriggerWhen> {
+		@Override
+		public void serialize(TriggerWhen value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+			if (value != null) {
+				gen.writeNumber(value.getCode());
+			}
+		}
+	}
 
+	static class TriggerWhenDeserializer extends JsonDeserializer<TriggerWhen> {
+		@Override
+		public TriggerWhen deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			int jsonValue = p.getValueAsInt();
+			return of(jsonValue);
+		}
+	}
 
-  static class TriggerWhenDeserializer extends JsonDeserializer<TriggerWhen> {
-    @Override
-    public TriggerWhen deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      int jsonValue = p.getValueAsInt();
-      return of(jsonValue);
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public int getCode() {
+		return this.code;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public int getCode() {
-    return this.code;
-  }
-
-  @java.lang.SuppressWarnings("all")
-  private TriggerWhen(final int code) {
-    this.code = code;
-  }
+	@java.lang.SuppressWarnings("all")
+	private TriggerWhen(final int code) {
+		this.code = code;
+	}
 }

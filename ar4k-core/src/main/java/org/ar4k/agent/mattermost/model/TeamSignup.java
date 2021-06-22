@@ -16,130 +16,135 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Team signup.
- * 
- * @author Takayuki Maruyama
- */
 public class TeamSignup {
-  @JsonProperty("team")
-  private Team team;
-  @JsonProperty("user")
-  private User user;
-  @JsonProperty("invites")
-  private String[] invites;
-  @JsonProperty("data")
-  private String data;
-  @JsonProperty("hash")
-  private String hash;
+	@JsonProperty("team")
+	private Team team;
+	@JsonProperty("user")
+	private User user;
+	@JsonProperty("invites")
+	private String[] invites;
+	@JsonProperty("data")
+	private String data;
+	@JsonProperty("hash")
+	private String hash;
 
-  @java.lang.SuppressWarnings("all")
-  public TeamSignup() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public TeamSignup() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Team getTeam() {
-    return this.team;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Team getTeam() {
+		return this.team;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public User getUser() {
-    return this.user;
-  }
+	@java.lang.SuppressWarnings("all")
+	public User getUser() {
+		return this.user;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String[] getInvites() {
-    return this.invites;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String[] getInvites() {
+		return this.invites;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getData() {
-    return this.data;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getData() {
+		return this.data;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getHash() {
-    return this.hash;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getHash() {
+		return this.hash;
+	}
 
-  @JsonProperty("team")
-  @java.lang.SuppressWarnings("all")
-  public void setTeam(final Team team) {
-    this.team = team;
-  }
+	@JsonProperty("team")
+	@java.lang.SuppressWarnings("all")
+	public void setTeam(final Team team) {
+		this.team = team;
+	}
 
-  @JsonProperty("user")
-  @java.lang.SuppressWarnings("all")
-  public void setUser(final User user) {
-    this.user = user;
-  }
+	@JsonProperty("user")
+	@java.lang.SuppressWarnings("all")
+	public void setUser(final User user) {
+		this.user = user;
+	}
 
-  @JsonProperty("invites")
-  @java.lang.SuppressWarnings("all")
-  public void setInvites(final String[] invites) {
-    this.invites = invites;
-  }
+	@JsonProperty("invites")
+	@java.lang.SuppressWarnings("all")
+	public void setInvites(final String[] invites) {
+		this.invites = invites;
+	}
 
-  @JsonProperty("data")
-  @java.lang.SuppressWarnings("all")
-  public void setData(final String data) {
-    this.data = data;
-  }
+	@JsonProperty("data")
+	@java.lang.SuppressWarnings("all")
+	public void setData(final String data) {
+		this.data = data;
+	}
 
-  @JsonProperty("hash")
-  @java.lang.SuppressWarnings("all")
-  public void setHash(final String hash) {
-    this.hash = hash;
-  }
+	@JsonProperty("hash")
+	@java.lang.SuppressWarnings("all")
+	public void setHash(final String hash) {
+		this.hash = hash;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof TeamSignup)) return false;
-    final TeamSignup other = (TeamSignup) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$team = this.getTeam();
-    final java.lang.Object other$team = other.getTeam();
-    if (this$team == null ? other$team != null : !this$team.equals(other$team)) return false;
-    final java.lang.Object this$user = this.getUser();
-    final java.lang.Object other$user = other.getUser();
-    if (this$user == null ? other$user != null : !this$user.equals(other$user)) return false;
-    if (!java.util.Arrays.deepEquals(this.getInvites(), other.getInvites())) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    final java.lang.Object this$hash = this.getHash();
-    final java.lang.Object other$hash = other.getHash();
-    if (this$hash == null ? other$hash != null : !this$hash.equals(other$hash)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof TeamSignup))
+			return false;
+		final TeamSignup other = (TeamSignup) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$team = this.getTeam();
+		final java.lang.Object other$team = other.getTeam();
+		if (this$team == null ? other$team != null : !this$team.equals(other$team))
+			return false;
+		final java.lang.Object this$user = this.getUser();
+		final java.lang.Object other$user = other.getUser();
+		if (this$user == null ? other$user != null : !this$user.equals(other$user))
+			return false;
+		if (!java.util.Arrays.deepEquals(this.getInvites(), other.getInvites()))
+			return false;
+		final java.lang.Object this$data = this.getData();
+		final java.lang.Object other$data = other.getData();
+		if (this$data == null ? other$data != null : !this$data.equals(other$data))
+			return false;
+		final java.lang.Object this$hash = this.getHash();
+		final java.lang.Object other$hash = other.getHash();
+		if (this$hash == null ? other$hash != null : !this$hash.equals(other$hash))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof TeamSignup;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof TeamSignup;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $team = this.getTeam();
-    result = result * PRIME + ($team == null ? 43 : $team.hashCode());
-    final java.lang.Object $user = this.getUser();
-    result = result * PRIME + ($user == null ? 43 : $user.hashCode());
-    result = result * PRIME + java.util.Arrays.deepHashCode(this.getInvites());
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
-    final java.lang.Object $hash = this.getHash();
-    result = result * PRIME + ($hash == null ? 43 : $hash.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $team = this.getTeam();
+		result = result * PRIME + ($team == null ? 43 : $team.hashCode());
+		final java.lang.Object $user = this.getUser();
+		result = result * PRIME + ($user == null ? 43 : $user.hashCode());
+		result = result * PRIME + java.util.Arrays.deepHashCode(this.getInvites());
+		final java.lang.Object $data = this.getData();
+		result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+		final java.lang.Object $hash = this.getHash();
+		result = result * PRIME + ($hash == null ? 43 : $hash.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "TeamSignup(team=" + this.getTeam() + ", user=" + this.getUser() + ", invites=" + java.util.Arrays.deepToString(this.getInvites()) + ", data=" + this.getData() + ", hash=" + this.getHash() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "TeamSignup(team=" + this.getTeam() + ", user=" + this.getUser() + ", invites="
+				+ java.util.Arrays.deepToString(this.getInvites()) + ", data=" + this.getData() + ", hash="
+				+ this.getHash() + ")";
+	}
 }

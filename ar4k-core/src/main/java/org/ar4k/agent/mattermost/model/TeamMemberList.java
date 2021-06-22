@@ -16,13 +16,8 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link TeamMember}.
- * 
- * @author Takayuki Maruyama
- */
 public class TeamMemberList extends ArrayList<TeamMember> {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

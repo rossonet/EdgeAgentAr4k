@@ -16,167 +16,174 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Audit.
- * 
- * @author Takayuki Maruyama
- */
 public class Audit {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("action")
-  private String action;
-  @JsonProperty("extra_info")
-  private String extraInfo;
-  @JsonProperty("ip_address")
-  private String ipAddress;
-  @JsonProperty("session_id")
-  private String sessionId;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("action")
+	private String action;
+	@JsonProperty("extra_info")
+	private String extraInfo;
+	@JsonProperty("ip_address")
+	private String ipAddress;
+	@JsonProperty("session_id")
+	private String sessionId;
 
-  @java.lang.SuppressWarnings("all")
-  public Audit() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Audit() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getAction() {
-    return this.action;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getAction() {
+		return this.action;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getExtraInfo() {
-    return this.extraInfo;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getExtraInfo() {
+		return this.extraInfo;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getIpAddress() {
-    return this.ipAddress;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getIpAddress() {
+		return this.ipAddress;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getSessionId() {
-    return this.sessionId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getSessionId() {
+		return this.sessionId;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("action")
-  @java.lang.SuppressWarnings("all")
-  public void setAction(final String action) {
-    this.action = action;
-  }
+	@JsonProperty("action")
+	@java.lang.SuppressWarnings("all")
+	public void setAction(final String action) {
+		this.action = action;
+	}
 
-  @JsonProperty("extra_info")
-  @java.lang.SuppressWarnings("all")
-  public void setExtraInfo(final String extraInfo) {
-    this.extraInfo = extraInfo;
-  }
+	@JsonProperty("extra_info")
+	@java.lang.SuppressWarnings("all")
+	public void setExtraInfo(final String extraInfo) {
+		this.extraInfo = extraInfo;
+	}
 
-  @JsonProperty("ip_address")
-  @java.lang.SuppressWarnings("all")
-  public void setIpAddress(final String ipAddress) {
-    this.ipAddress = ipAddress;
-  }
+	@JsonProperty("ip_address")
+	@java.lang.SuppressWarnings("all")
+	public void setIpAddress(final String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
 
-  @JsonProperty("session_id")
-  @java.lang.SuppressWarnings("all")
-  public void setSessionId(final String sessionId) {
-    this.sessionId = sessionId;
-  }
+	@JsonProperty("session_id")
+	@java.lang.SuppressWarnings("all")
+	public void setSessionId(final String sessionId) {
+		this.sessionId = sessionId;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Audit)) return false;
-    final Audit other = (Audit) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$action = this.getAction();
-    final java.lang.Object other$action = other.getAction();
-    if (this$action == null ? other$action != null : !this$action.equals(other$action)) return false;
-    final java.lang.Object this$extraInfo = this.getExtraInfo();
-    final java.lang.Object other$extraInfo = other.getExtraInfo();
-    if (this$extraInfo == null ? other$extraInfo != null : !this$extraInfo.equals(other$extraInfo)) return false;
-    final java.lang.Object this$ipAddress = this.getIpAddress();
-    final java.lang.Object other$ipAddress = other.getIpAddress();
-    if (this$ipAddress == null ? other$ipAddress != null : !this$ipAddress.equals(other$ipAddress)) return false;
-    final java.lang.Object this$sessionId = this.getSessionId();
-    final java.lang.Object other$sessionId = other.getSessionId();
-    if (this$sessionId == null ? other$sessionId != null : !this$sessionId.equals(other$sessionId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Audit))
+			return false;
+		final Audit other = (Audit) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$action = this.getAction();
+		final java.lang.Object other$action = other.getAction();
+		if (this$action == null ? other$action != null : !this$action.equals(other$action))
+			return false;
+		final java.lang.Object this$extraInfo = this.getExtraInfo();
+		final java.lang.Object other$extraInfo = other.getExtraInfo();
+		if (this$extraInfo == null ? other$extraInfo != null : !this$extraInfo.equals(other$extraInfo))
+			return false;
+		final java.lang.Object this$ipAddress = this.getIpAddress();
+		final java.lang.Object other$ipAddress = other.getIpAddress();
+		if (this$ipAddress == null ? other$ipAddress != null : !this$ipAddress.equals(other$ipAddress))
+			return false;
+		final java.lang.Object this$sessionId = this.getSessionId();
+		final java.lang.Object other$sessionId = other.getSessionId();
+		if (this$sessionId == null ? other$sessionId != null : !this$sessionId.equals(other$sessionId))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Audit;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Audit;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $action = this.getAction();
-    result = result * PRIME + ($action == null ? 43 : $action.hashCode());
-    final java.lang.Object $extraInfo = this.getExtraInfo();
-    result = result * PRIME + ($extraInfo == null ? 43 : $extraInfo.hashCode());
-    final java.lang.Object $ipAddress = this.getIpAddress();
-    result = result * PRIME + ($ipAddress == null ? 43 : $ipAddress.hashCode());
-    final java.lang.Object $sessionId = this.getSessionId();
-    result = result * PRIME + ($sessionId == null ? 43 : $sessionId.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $action = this.getAction();
+		result = result * PRIME + ($action == null ? 43 : $action.hashCode());
+		final java.lang.Object $extraInfo = this.getExtraInfo();
+		result = result * PRIME + ($extraInfo == null ? 43 : $extraInfo.hashCode());
+		final java.lang.Object $ipAddress = this.getIpAddress();
+		result = result * PRIME + ($ipAddress == null ? 43 : $ipAddress.hashCode());
+		final java.lang.Object $sessionId = this.getSessionId();
+		result = result * PRIME + ($sessionId == null ? 43 : $sessionId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Audit(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", userId=" + this.getUserId() + ", action=" + this.getAction() + ", extraInfo=" + this.getExtraInfo() + ", ipAddress=" + this.getIpAddress() + ", sessionId=" + this.getSessionId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Audit(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", userId=" + this.getUserId()
+				+ ", action=" + this.getAction() + ", extraInfo=" + this.getExtraInfo() + ", ipAddress="
+				+ this.getIpAddress() + ", sessionId=" + this.getSessionId() + ")";
+	}
 }

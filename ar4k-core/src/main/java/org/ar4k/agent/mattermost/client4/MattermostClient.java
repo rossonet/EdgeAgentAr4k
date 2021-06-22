@@ -171,16 +171,9 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/**
- * Mattermost API Version4 Client default implementation.
- *
- * @author Maruyama Takayuki
- * @since 2017/06/10
- */
-public class MattermostClient implements AutoCloseable, AuditsApi, AuthenticationApi, BotsApi,
-BrandApi, ChannelApi, ClusterApi, CommandsApi, ComplianceApi, ElasticsearchApi, EmojiApi,
-FilesApi, SystemApi, LdapApi, LogsApi, OAuthApi,  PluginApi, PostApi,
-PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
+public class MattermostClient implements AutoCloseable, AuditsApi, AuthenticationApi, BotsApi, BrandApi, ChannelApi,
+		ClusterApi, CommandsApi, ComplianceApi, ElasticsearchApi, EmojiApi, FilesApi, SystemApi, LdapApi, LogsApi,
+		OAuthApi, PluginApi, PostApi, PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	protected static final String API_URL_SUFFIX = "/api/v4";
 	private final String url;
@@ -197,8 +190,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	protected Client buildClient(Consumer<ClientBuilder> httpClientConfig) {
 		final ClientBuilder builder = ClientBuilder.newBuilder()
-				.register(new MattermostModelMapperProvider(ignoreUnknownProperties))
-				.register(JacksonFeature.class).register(MultiPartFeature.class)
+				.register(new MattermostModelMapperProvider(ignoreUnknownProperties)).register(JacksonFeature.class)
+				.register(MultiPartFeature.class)
 				// needs for PUT request with null entity
 				// (/commands/{command_id}/regen_token)
 				.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
@@ -254,23 +247,19 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		this(url, null);
 	}
 
-	/**
-	 * Create new MattermosClient instance.
-	 */
 	public MattermostClient(String url, Level logLevel) {
-		this(url, logLevel, false, clientBuilder -> {});
+		this(url, logLevel, false, clientBuilder -> {
+		});
 	}
 
 	MattermostClient(String url, Level logLevel, boolean ignoreUnknownProperties,
-			Consumer<ClientBuilder> httpClientConfig)
-	{
+			Consumer<ClientBuilder> httpClientConfig) {
 		this.url = url;
 		this.apiUrl = url + API_URL_SUFFIX;
 		this.clientLogLevel = logLevel;
 		this.ignoreUnknownProperties = ignoreUnknownProperties;
 		this.httpClient = buildClient(httpClientConfig);
 	}
-
 
 	public void setOAuthToken(String token) {
 		this.authToken = token;
@@ -282,11 +271,6 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		this.authType = AuthType.BEARER;
 	}
 
-	/**
-	 * Set Personal Access Token that use to access Mattermost API to this client.
-	 *
-	 * @since Mattermost Server 4.1
-	 */
 	public void setAccessToken(String token) {
 		this.authToken = token;
 		this.authType = AuthType.BEARER;
@@ -333,8 +317,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	public String getTeamAutoCompleteCommandsRoute(String teamId) {
-		return getTeamsRoute()
-				+ String.format("/%s/commands/autocomplete", StringUtils.stripToEmpty(teamId));
+		return getTeamsRoute() + String.format("/%s/commands/autocomplete", StringUtils.stripToEmpty(teamId));
 	}
 
 	public String getTeamByNameRoute(String teamName) {
@@ -378,13 +361,11 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	public String getChannelByNameRoute(String channelName, String teamId) {
-		return getTeamRoute(teamId)
-				+ String.format("/channels/name/%s", StringUtils.stripToEmpty(channelName));
+		return getTeamRoute(teamId) + String.format("/channels/name/%s", StringUtils.stripToEmpty(channelName));
 	}
 
 	public String getChannelByNameForTeamNameRoute(String channelName, String teamName) {
-		return getTeamByNameRoute(teamName)
-				+ String.format("/channels/name/%s", StringUtils.stripToEmpty(channelName));
+		return getTeamByNameRoute(teamName) + String.format("/channels/name/%s", StringUtils.stripToEmpty(channelName));
 	}
 
 	public String getChannelMembersRoute(String channelId) {
@@ -392,8 +373,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	public String getChannelMemberRoute(String channelId, String userId) {
-		return getChannelMembersRoute(channelId)
-				+ String.format("/%s", StringUtils.stripToEmpty(userId));
+		return getChannelMembersRoute(channelId) + String.format("/%s", StringUtils.stripToEmpty(userId));
 	}
 
 	public String getPostsRoute() {
@@ -576,12 +556,11 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		return doApiPostMultiPart(url, multiPart, Void.class);
 	}
 
-	protected <T> ApiResponse<T> doApiPostMultiPart(String url, MultiPart multiPart,
-			Class<T> responseType) {
+	protected <T> ApiResponse<T> doApiPostMultiPart(String url, MultiPart multiPart, Class<T> responseType) {
 		final MediaType mediaPart = multiPart.getMediaType();
 		return ApiResponse.of(httpClient.target(apiUrl + url).request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HEADER_AUTH, getAuthority())
-				.method(HttpMethod.POST, Entity.entity(multiPart,mediaPart )), responseType);
+				.header(HEADER_AUTH, getAuthority()).method(HttpMethod.POST, Entity.entity(multiPart, mediaPart)),
+				responseType);
 	}
 
 	protected <T, U> ApiResponse<T> doApiPut(String url, U data, Class<T> responseType) {
@@ -603,21 +582,21 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	protected <T, U> ApiResponse<T> doApiRequest(String method, String url, U data, String etag,
 			Class<T> responseType) {
 		return ApiResponse.of(httpClient.target(url).request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority())
-				.method(method, Entity.json(data)), responseType);
+				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority()).method(method, Entity.json(data)),
+				responseType);
 	}
 
 	protected <T, U> ApiResponse<T> doApiRequest(String method, String url, U data, String etag,
 			GenericType<T> responseType) {
 		return ApiResponse.of(httpClient.target(url).request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority())
-				.method(method, Entity.json(data)), responseType);
+				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority()).method(method, Entity.json(data)),
+				responseType);
 	}
 
 	protected <U> ApiResponse<Void> doApiRequest(String method, String url, U data, String etag) {
 		return ApiResponse.of(httpClient.target(url).request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority())
-				.method(method, Entity.json(data)), Void.class);
+				.header(HEADER_ETAG_CLIENT, etag).header(HEADER_AUTH, getAuthority()).method(method, Entity.json(data)),
+				Void.class);
 	}
 
 	public String getAuthority() {
@@ -662,12 +641,10 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		return onLogin(doApiPost("/users/login", param));
 	}
 
-
 	@Override
 	public ApiResponse<User> login(String loginId, String password) {
 		return login(LoginRequest.builder().loginId(loginId).password(password).build());
 	}
-
 
 	@Override
 	public ApiResponse<User> loginByLdap(String loginId, String password) {
@@ -676,10 +653,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<User> loginWithDevice(String loginId, String password, String deviceId) {
-		return login(
-				LoginRequest.builder().loginId(loginId).password(password).deviceId(deviceId).build());
+		return login(LoginRequest.builder().loginId(loginId).password(password).deviceId(deviceId).build());
 	}
-
 
 	@Override
 	public ApiResponse<Boolean> logout() {
@@ -695,8 +670,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<SwitchAccountTypeResult> switchAccountType(SwitchRequest switchRequest) {
-		return doApiPost(getUsersRoute() + "/login/switch", switchRequest,
-				SwitchAccountTypeResult.class);
+		return doApiPost(getUsersRoute() + "/login/switch", switchRequest, SwitchAccountTypeResult.class);
 	}
 
 	// User Section
@@ -729,15 +703,14 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<UserAutocomplete> autocompleteUsersInTeam(String teamId, String username,
-			String etag) {
+	public ApiResponse<UserAutocomplete> autocompleteUsersInTeam(String teamId, String username, String etag) {
 		final String query = new QueryBuilder().set("in_team", teamId).set("name", username).toString();
 		return doApiGet(getUsersRoute() + "/autocomplete" + query, etag, UserAutocomplete.class);
 	}
 
 	@Override
-	public ApiResponse<UserAutocomplete> autocompleteUsersInChannel(String teamId, String channelId,
-			String username, String etag) {
+	public ApiResponse<UserAutocomplete> autocompleteUsersInChannel(String teamId, String channelId, String username,
+			String etag) {
 		final String query = new QueryBuilder().set("in_team", teamId).set("in_channel", channelId)
 				.set("name", username).toString();
 		return doApiGet(getUsersRoute() + "/autocomplete" + query, etag, UserAutocomplete.class);
@@ -755,11 +728,13 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	private GenericType<Map<String, String>> stringMapType() {
-		return new GenericType<Map<String, String>>() {};
+		return new GenericType<Map<String, String>>() {
+		};
 	}
 
 	private <T> GenericType<List<T>> listType() {
-		return new GenericType<List<T>>() {};
+		return new GenericType<List<T>>() {
+		};
 	}
 
 	@Override
@@ -768,8 +743,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<UserList> getUsersInTeam(String teamId, UsersOrder.InTeam order, Pager pager,
-			String etag) {
+	public ApiResponse<UserList> getUsersInTeam(String teamId, UsersOrder.InTeam order, Pager pager, String etag) {
 		final String query = new QueryBuilder() //
 				.set("in_team", teamId) //
 				.set("sort", order.getSort())//
@@ -784,8 +758,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<UserList> getUsersInChannel(String channelId, UsersOrder.InChannel order,
-			Pager pager, String etag) {
+	public ApiResponse<UserList> getUsersInChannel(String channelId, UsersOrder.InChannel order, Pager pager,
+			String etag) {
 		final String query = new QueryBuilder() //
 				.set("in_channel", channelId) //
 				.set("sort", order.getSort())//
@@ -794,10 +768,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<UserList> getUsersNotInChannel(String teamId, String channelId, Pager pager,
-			String etag) {
-		final String query =
-				new QueryBuilder().set("in_team", teamId).set("not_in_channel", channelId).toString();
+	public ApiResponse<UserList> getUsersNotInChannel(String teamId, String channelId, Pager pager, String etag) {
+		final String query = new QueryBuilder().set("in_team", teamId).set("not_in_channel", channelId).toString();
 		return doApiGet(getUsersRoute() + query + pager.toQuery(false), etag, UserList.class);
 	}
 
@@ -834,16 +806,15 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Boolean> updateUserMfa(String userId, String code, boolean activate) {
-		final UpdateUserMfaRequest request =
-				UpdateUserMfaRequest.builder().activate(activate).code(code).build();
+		final UpdateUserMfaRequest request = UpdateUserMfaRequest.builder().activate(activate).code(code).build();
 		return doApiPut(getUserRoute(userId) + "/mfa", request).checkStatusOk();
 	}
 
 	@Override
 	public boolean checkUserMfa(String loginId) {
 		final CheckUserMfaRequest request = CheckUserMfaRequest.builder().loginId(loginId).build();
-		return Boolean.valueOf(doApiPost(getUsersRoute() + "/mfa", request, stringMapType())
-				.readEntity().getOrDefault("mfa_required", "false"));
+		return Boolean.valueOf(doApiPost(getUsersRoute() + "/mfa", request, stringMapType()).readEntity()
+				.getOrDefault("mfa_required", "false"));
 	}
 
 	@Override
@@ -852,10 +823,9 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<Boolean> updateUserPassword(String userId, String currentPassword,
-			String newPassword) {
-		final UpdateUserPasswordRequest request = UpdateUserPasswordRequest.builder()
-				.currentPassword(currentPassword).newPassword(newPassword).build();
+	public ApiResponse<Boolean> updateUserPassword(String userId, String currentPassword, String newPassword) {
+		final UpdateUserPasswordRequest request = UpdateUserPasswordRequest.builder().currentPassword(currentPassword)
+				.newPassword(newPassword).build();
 		return doApiPut(getUserRoute(userId) + "/password", request).checkStatusOk();
 	}
 
@@ -878,15 +848,14 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Boolean> sendPasswordResetEmail(String email) {
-		final SendPasswordResetEmailRequest request =
-				SendPasswordResetEmailRequest.builder().email(email).build();
+		final SendPasswordResetEmailRequest request = SendPasswordResetEmailRequest.builder().email(email).build();
 		return doApiPost(getUsersRoute() + "/password/reset/send", request).checkStatusOk();
 	}
 
 	@Override
 	public ApiResponse<Boolean> resetPassword(String token, String newPassword) {
-		final ResetPasswordRequest request =
-				ResetPasswordRequest.builder().token(token).newPassword(newPassword).build();
+		final ResetPasswordRequest request = ResetPasswordRequest.builder().token(token).newPassword(newPassword)
+				.build();
 		return doApiPost(getUsersRoute() + "/password/reset", request).checkStatusOk();
 	}
 
@@ -910,7 +879,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<TeamUnreadList> getTeamUnreadForUser(String userId, String teamIdToExclude) {
 		String optional = "";
-		if (teamIdToExclude != null) { //  use StringUtils.isNotEmpty
+		if (teamIdToExclude != null) { // use StringUtils.isNotEmpty
 			try {
 				optional = String.format("?exclude_team=%s",
 						URLEncoder.encode(teamIdToExclude, StandardCharsets.UTF_8.displayName()));
@@ -934,8 +903,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Boolean> sendVerificationEmail(String email) {
-		final SendVerificationEmailRequest request =
-				SendVerificationEmailRequest.builder().email(email).build();
+		final SendVerificationEmailRequest request = SendVerificationEmailRequest.builder().email(email).build();
 		return doApiPost(getUsersRoute() + "/email/verify/send", request).checkStatusOk();
 	}
 
@@ -968,8 +936,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Boolean> revokeUserAccessToken(String tokenId) {
-		return doApiPost(getUserTokensRoute() + "/revoke", RevokeTokenRequest.of(tokenId))
-				.checkStatusOk();
+		return doApiPost(getUserTokensRoute() + "/revoke", RevokeTokenRequest.of(tokenId)).checkStatusOk();
 	}
 
 	@Override
@@ -979,20 +946,17 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Boolean> disableUserAccessToken(String tokenId) {
-		return doApiPost(getUserTokensRoute() + "/disable", DisableEnableTokenRequest.of(tokenId))
-				.checkStatusOk();
+		return doApiPost(getUserTokensRoute() + "/disable", DisableEnableTokenRequest.of(tokenId)).checkStatusOk();
 	}
 
 	@Override
 	public ApiResponse<Boolean> enableUserAccessToken(String tokenId) {
-		return doApiPost(getUserTokensRoute() + "/enable", DisableEnableTokenRequest.of(tokenId))
-				.checkStatusOk();
+		return doApiPost(getUserTokensRoute() + "/enable", DisableEnableTokenRequest.of(tokenId)).checkStatusOk();
 	}
 
 	@Override
 	public ApiResponse<UserAccessTokenList> searchTokens(String term) {
-		return doApiPost(getUserTokensRoute() + "/search", SearchTokensRequest.of(term),
-				UserAccessTokenList.class);
+		return doApiPost(getUserTokensRoute() + "/search", SearchTokensRequest.of(term), UserAccessTokenList.class);
 	}
 
 	@Override
@@ -1048,8 +1012,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<Boolean> updateTeamMemberRoles(String teamId, String userId,
-			Role... newRoles) {
+	public ApiResponse<Boolean> updateTeamMemberRoles(String teamId, String userId, Role... newRoles) {
 		final UpdateRolesRequest request = new UpdateRolesRequest(newRoles);
 		return doApiPut(getTeamMemberRoute(teamId, userId) + "/roles", request).checkStatusOk();
 	}
@@ -1093,14 +1056,13 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<TeamMember> addTeamMember(TeamMember teamMemberToAdd) {
-		return doApiPost(getTeamMembersRoute(teamMemberToAdd.getTeamId()), teamMemberToAdd,
-				TeamMember.class);
+		return doApiPost(getTeamMembersRoute(teamMemberToAdd.getTeamId()), teamMemberToAdd, TeamMember.class);
 	}
 
 	@Deprecated
 	@Override
-	public ApiResponse<TeamMember> addTeamMember(String teamId, String userId, String hash,
-			String dataToHash, String inviteId) {
+	public ApiResponse<TeamMember> addTeamMember(String teamId, String userId, String hash, String dataToHash,
+			String inviteId) {
 		final QueryBuilder query = new QueryBuilder();
 		if (StringUtils.isNotEmpty(inviteId)) {
 			query.set("invite_id", inviteId);
@@ -1124,8 +1086,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 			query.set("hash", hash).set("data", dataToHash);
 		}
 
-		return doApiPost(getTeamsRoute() + "/members/invite" + query.toString(), null,
-				TeamMember.class);
+		return doApiPost(getTeamsRoute() + "/members/invite" + query.toString(), null, TeamMember.class);
 	}
 
 	@Override
@@ -1137,14 +1098,13 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		if (StringUtils.isNotEmpty(inviteId)) {
 			query.set("invite_id", inviteId);
 		}
-		return doApiPost(getTeamsRoute() + "/members/invite" + query.toString(), null,
-				TeamMember.class);
+		return doApiPost(getTeamsRoute() + "/members/invite" + query.toString(), null, TeamMember.class);
 	}
 
 	@Override
 	public ApiResponse<TeamMemberList> addTeamMembers(String teamId, String... userIds) {
-		final List<TeamMember> members =
-				Arrays.stream(userIds).map(u -> new TeamMember(teamId, u)).collect(Collectors.toList());
+		final List<TeamMember> members = Arrays.stream(userIds).map(u -> new TeamMember(teamId, u))
+				.collect(Collectors.toList());
 
 		return doApiPost(getTeamMembersRoute(teamId) + "/batch", members, TeamMemberList.class);
 	}
@@ -1182,13 +1142,12 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<TeamUnread> getTeamUnread(String teamId, String userId) {
-		return doApiGet(getUserRoute(userId) + getTeamRoute(teamId) + "/unread", null,
-				TeamUnread.class);
+		return doApiGet(getUserRoute(userId) + getTeamRoute(teamId) + "/unread", null, TeamUnread.class);
 	}
 
 	@Override
-	public ApiResponse<byte[]> importTeam(byte[] data, int filesize, String importFrom,
-			String fileName, String teamId) {
+	public ApiResponse<byte[]> importTeam(byte[] data, int filesize, String importFrom, String fileName,
+			String teamId) {
 		// not used
 		throw new UnsupportedOperationException();
 	}
@@ -1222,8 +1181,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Channel> createDirectChannel(String userId1, String userId2) {
-		return doApiPost(getChannelsRoute() + "/direct", Arrays.asList(userId1, userId2),
-				Channel.class);
+		return doApiPost(getChannelsRoute() + "/direct", Arrays.asList(userId1, userId2), Channel.class);
 	}
 
 	@Override
@@ -1247,22 +1205,18 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<ChannelList> getPublicChannelsForTeam(String teamId, Pager pager,
-			String etag) {
+	public ApiResponse<ChannelList> getPublicChannelsForTeam(String teamId, Pager pager, String etag) {
 		return doApiGet(getChannelsForTeamRoute(teamId) + pager.toQuery(), etag, ChannelList.class);
 	}
 
 	@Override
-	public ApiResponse<ChannelList> getPublicChannelsByIdsForTeam(String teamId,
-			String... channelIds) {
+	public ApiResponse<ChannelList> getPublicChannelsByIdsForTeam(String teamId, String... channelIds) {
 		return doApiPost(getChannelsForTeamRoute(teamId) + "/ids", channelIds, ChannelList.class);
 	}
 
 	@Override
-	public ApiResponse<ChannelList> getChannelsForTeamForUser(String teamId, String userId,
-			String etag) {
-		return doApiGet(getUserRoute(userId) + getTeamRoute(teamId) + "/channels", etag,
-				ChannelList.class);
+	public ApiResponse<ChannelList> getChannelsForTeamForUser(String teamId, String userId, String etag) {
+		return doApiGet(getUserRoute(userId) + getTeamRoute(teamId) + "/channels", etag, ChannelList.class);
 	}
 
 	@Override
@@ -1281,15 +1235,13 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<Channel> getChannelByNameForTeamName(String channelName, String teamName,
-			String etag) {
+	public ApiResponse<Channel> getChannelByNameForTeamName(String channelName, String teamName, String etag) {
 		return doApiGet(getChannelByNameForTeamNameRoute(channelName, teamName), etag, Channel.class);
 	}
 
 	@Override
 	public ApiResponse<ChannelMembers> getChannelMembers(String channelId, Pager pager, String etag) {
-		return doApiGet(getChannelMembersRoute(channelId) + pager.toQuery(), etag,
-				ChannelMembers.class);
+		return doApiGet(getChannelMembersRoute(channelId) + pager.toQuery(), etag, ChannelMembers.class);
 	}
 
 	@Override
@@ -1303,10 +1255,9 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<ChannelMembers> getChannelMembersForUser(String userId, String teamId,
-			String etag) {
-		return doApiGet(getUserRoute(userId) + String.format("/teams/%s/channels/members", teamId),
-				etag, ChannelMembers.class);
+	public ApiResponse<ChannelMembers> getChannelMembersForUser(String userId, String teamId, String etag) {
+		return doApiGet(getUserRoute(userId) + String.format("/teams/%s/channels/members", teamId), etag,
+				ChannelMembers.class);
 	}
 
 	@Override
@@ -1317,8 +1268,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<ChannelUnread> getChannelUnread(String channelId, String userId) {
-		return doApiGet(getUserRoute(userId) + getChannelRoute(channelId) + "/unread", null,
-				ChannelUnread.class);
+		return doApiGet(getUserRoute(userId) + getChannelRoute(channelId) + "/unread", null, ChannelUnread.class);
 	}
 
 	@Override
@@ -1328,10 +1278,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<Boolean> updateChannelNotifyProps(String channelId, String userId,
-			Map<String, String> props) {
-		return doApiPut(getChannelMemberRoute(channelId, userId) + "/notify_props", props)
-				.checkStatusOk();
+	public ApiResponse<Boolean> updateChannelNotifyProps(String channelId, String userId, Map<String, String> props) {
+		return doApiPut(getChannelMemberRoute(channelId, userId) + "/notify_props", props).checkStatusOk();
 	}
 
 	@Override
@@ -1352,8 +1300,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<ChannelList> getDeletedChannels(String teamId, Pager pager) {
-		return doApiGet(getChannelsForTeamRoute(teamId) + "/deleted" + pager.toQuery(), null,
-				ChannelList.class);
+		return doApiGet(getChannelsForTeamRoute(teamId) + "/deleted" + pager.toQuery(), null, ChannelList.class);
 	}
 
 	@Override
@@ -1363,12 +1310,14 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<ChannelList> autocompleteChannels(String teamId, String searchTerm) {
-		return doApiGet(getChannelsForTeamRoute(teamId) + "/autocomplete" + "?name=" + searchTerm, null, ChannelList.class);
+		return doApiGet(getChannelsForTeamRoute(teamId) + "/autocomplete" + "?name=" + searchTerm, null,
+				ChannelList.class);
 	}
 
 	@Override
 	public ApiResponse<ChannelList> autocompleteChannelsForSearch(String teamId, String searchTerm) {
-		return doApiGet(getChannelsForTeamRoute(teamId) + "/search_autocomplete" + "?name=" + searchTerm, null, ChannelList.class);
+		return doApiGet(getChannelsForTeamRoute(teamId) + "/search_autocomplete" + "?name=" + searchTerm, null,
+				ChannelList.class);
 	}
 
 	// Post Section
@@ -1429,26 +1378,21 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<PostList> getFlaggedPostsForUser(String userId, Pager pager) {
-		return doApiGet(getUserRoute(userId) + "/posts/flagged" + pager.toQuery(), null,
-				PostList.class);
+		return doApiGet(getUserRoute(userId) + "/posts/flagged" + pager.toQuery(), null, PostList.class);
 	}
 
 	@Override
-	public ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId,
-			Pager pager) {
+	public ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId, Pager pager) {
 		// teamId length validation
 		final String query = new QueryBuilder().set("in_team", teamId).toString();
-		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null,
-				PostList.class);
+		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null, PostList.class);
 	}
 
 	@Override
-	public ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId,
-			Pager pager) {
+	public ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId, Pager pager) {
 		// channelId length validation
 		final String query = new QueryBuilder().set("in_channel", channelId).toString();
-		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null,
-				PostList.class);
+		return doApiGet(getUserRoute(userId) + "/posts/flagged" + query + pager.toQuery(false), null, PostList.class);
 	}
 
 	@Override
@@ -1458,26 +1402,20 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager,
-			String etag) {
+	public ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager, String etag) {
 		final String query = new QueryBuilder().set("after", postId).toString();
-		return doApiGet(getChannelRoute(channelId) + "/posts" + query + pager.toQuery(false), etag,
-				PostList.class);
+		return doApiGet(getChannelRoute(channelId) + "/posts" + query + pager.toQuery(false), etag, PostList.class);
 	}
 
 	@Override
-	public ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager,
-			String etag) {
+	public ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager, String etag) {
 		final String query = new QueryBuilder().set("before", postId).toString();
-		return doApiGet(getChannelRoute(channelId) + "/posts" + query + pager.toQuery(false), etag,
-				PostList.class);
+		return doApiGet(getChannelRoute(channelId) + "/posts" + query + pager.toQuery(false), etag, PostList.class);
 	}
 
 	@Override
-	public ApiResponse<PostSearchResults> searchPosts(String teamId, String terms,
-			boolean isOrSearch) {
-		final SearchPostsRequest request =
-				SearchPostsRequest.builder().terms(terms).isOrSearch(isOrSearch).build();
+	public ApiResponse<PostSearchResults> searchPosts(String teamId, String terms, boolean isOrSearch) {
+		final SearchPostsRequest request = SearchPostsRequest.builder().terms(terms).isOrSearch(isOrSearch).build();
 		return doApiPost(getTeamRoute(teamId) + "/posts/search", request, PostSearchResults.class);
 	}
 
@@ -1489,8 +1427,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	// File Section
 
 	@Override
-	public ApiResponse<FileUploadResult> uploadFile(String channelId, Path... filePaths)
-			throws IOException {
+	public ApiResponse<FileUploadResult> uploadFile(String channelId, Path... filePaths) throws IOException {
 
 		if (filePaths.length == 0) {
 			throw new IllegalArgumentException("At least one filePath required.");
@@ -1525,8 +1462,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<String> getPublicFileLink(String fileId) {
-		final ApiResponse<PublicFileLink> response =
-				doApiGet(getFileRoute(fileId) + "/link", null, PublicFileLink.class);
+		final ApiResponse<PublicFileLink> response = doApiGet(getFileRoute(fileId) + "/link", null,
+				PublicFileLink.class);
 		if (response.hasError()) {
 			return ApiResponse.of(response.getRawResponse(), String.class);
 		}
@@ -1629,11 +1566,9 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<IncomingWebhookList> getIncomingWebhooksForTeam(String teamId, Pager pager,
-			String etag) {
+	public ApiResponse<IncomingWebhookList> getIncomingWebhooksForTeam(String teamId, Pager pager, String etag) {
 		final String query = new QueryBuilder().set("team_id", teamId).toString();
-		return doApiGet(getIncomingWebhooksRoute() + query + pager.toQuery(false), etag,
-				IncomingWebhookList.class);
+		return doApiGet(getIncomingWebhooksRoute() + query + pager.toQuery(false), etag, IncomingWebhookList.class);
 	}
 
 	@Override
@@ -1667,19 +1602,15 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<OutgoingWebhookList> getOutgoingWebhooksForChannel(String channelId,
-			Pager pager, String etag) {
+	public ApiResponse<OutgoingWebhookList> getOutgoingWebhooksForChannel(String channelId, Pager pager, String etag) {
 		final String query = new QueryBuilder().set("channel_id", channelId).toString();
-		return doApiGet(getOutgoingWebhooksRoute() + query + pager.toQuery(false), etag,
-				OutgoingWebhookList.class);
+		return doApiGet(getOutgoingWebhooksRoute() + query + pager.toQuery(false), etag, OutgoingWebhookList.class);
 	}
 
 	@Override
-	public ApiResponse<OutgoingWebhookList> getOutgoingWebhooksForTeam(String teamId, Pager pager,
-			String etag) {
+	public ApiResponse<OutgoingWebhookList> getOutgoingWebhooksForTeam(String teamId, Pager pager, String etag) {
 		final String query = new QueryBuilder().set("team_id", teamId).toString();
-		return doApiGet(getOutgoingWebhooksRoute() + query + pager.toQuery(false), etag,
-				OutgoingWebhookList.class);
+		return doApiGet(getOutgoingWebhooksRoute() + query + pager.toQuery(false), etag, OutgoingWebhookList.class);
 	}
 
 	@Override
@@ -1710,15 +1641,14 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	}
 
 	@Override
-	public ApiResponse<Preferences> getPreferencesByCategory(String userId,
-			PreferenceCategory category) {
+	public ApiResponse<Preferences> getPreferencesByCategory(String userId, PreferenceCategory category) {
 		final String url = String.format(getPreferencesRoute(userId) + "/%s", category.getCode());
 		return doApiGet(url, null, Preferences.class);
 	}
 
 	@Override
-	public ApiResponse<Preference> getPreferenceByCategoryAndName(String userId,
-			PreferenceCategory category, String preferenceName) {
+	public ApiResponse<Preference> getPreferenceByCategoryAndName(String userId, PreferenceCategory category,
+			String preferenceName) {
 		final String url = String.format(getPreferencesRoute(userId) + "/%s/name/%s", category.getCode(),
 				preferenceName);
 		return doApiGet(url, null, Preference.class);
@@ -1901,20 +1831,18 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<List<OAuthApp>> getAuthorizedOAuthAppsForUser(String userId, Pager pager) {
-		return doApiGet(getUserRoute(userId) + "/oauth/apps/authorized" + pager.toQuery(), null,
-				listType());
+		return doApiGet(getUserRoute(userId) + "/oauth/apps/authorized" + pager.toQuery(), null, listType());
 	}
 
 	@Override
 	public String authorizeOAuthApp(AuthorizeRequest authRequest) {
-		return doApiRequest(HttpMethod.POST, url + "/oauth/authorize", authRequest, null,
-				stringMapType()).readEntity().get("redirect");
+		return doApiRequest(HttpMethod.POST, url + "/oauth/authorize", authRequest, null, stringMapType()).readEntity()
+				.get("redirect");
 	}
 
 	@Override
 	public ApiResponse<Boolean> deauthorizeOAuthApp(String appId) {
-		final DeauthorizeOAuthAppRequest request =
-				DeauthorizeOAuthAppRequest.builder().clientId(appId).build();
+		final DeauthorizeOAuthAppRequest request = DeauthorizeOAuthAppRequest.builder().clientId(appId).build();
 		return doApiRequest(HttpMethod.POST, url + "/oauth/deauthorize", request, null).checkStatusOk();
 	}
 
@@ -1937,8 +1865,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<CommandList> listCommands(String teamId, boolean customOnly) {
-		final String query =
-				new QueryBuilder().set("team_id", teamId).set("custom_only", customOnly).toString();
+		final String query = new QueryBuilder().set("team_id", teamId).set("custom_only", customOnly).toString();
 		return doApiGet(getCommandsRoute() + query, null, CommandList.class);
 	}
 
@@ -2037,8 +1964,8 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		} else if (mediaType.isCompatible(MediaType.valueOf("image/bmp"))) {
 			return ".bmp";
 		} else {
-			final String contentDispositionHeader =
-					String.class.cast(response.getHeaders().getFirst("Content-Disposition"));
+			final String contentDispositionHeader = String.class
+					.cast(response.getHeaders().getFirst("Content-Disposition"));
 			try {
 				final ContentDisposition contentDisposition = new ContentDisposition(contentDispositionHeader);
 				final String fileName = contentDisposition.getFileName();
@@ -2081,7 +2008,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 	@Override
 	public ApiResponse<Boolean> deleteReaction(Reaction reaction) {
 		return doApiDelete(getUserRoute(reaction.getUserId()) + getPostRoute(reaction.getPostId())
-		+ String.format("/reactions/%s", reaction.getEmojiName())).checkStatusOk();
+				+ String.format("/reactions/%s", reaction.getEmojiName())).checkStatusOk();
 	}
 
 	// Elasticsearch Section
@@ -2136,7 +2063,6 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 		return doApiGet(getPluginsRoute() + "/webapp", null, PluginManifest[].class);
 	}
 
-
 	// Bots section
 
 	@Override
@@ -2177,8 +2103,7 @@ PreferencesApi, ReactionApi, SamlApi, StatusApi, TeamApi, UserApi, WebhookApi {
 
 	@Override
 	public ApiResponse<Bot> assignBotToUser(String botUserId, String ownerUserId) {
-		return doApiPost(String.format("%s/assign/%s", getBotsRoute(botUserId), ownerUserId), null,
-				Bot.class);
+		return doApiPost(String.format("%s/assign/%s", getBotsRoute(botUserId), ownerUserId), null, Bot.class);
 	}
 
 }

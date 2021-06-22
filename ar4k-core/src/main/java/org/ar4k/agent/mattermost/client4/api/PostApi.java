@@ -25,209 +25,103 @@ import org.ar4k.agent.mattermost.model.PostList;
 import org.ar4k.agent.mattermost.model.PostPatch;
 import org.ar4k.agent.mattermost.model.PostSearchResults;
 
-/**
- * Post API.
- * 
- * @author Takayuki Maruyama
- */
 public interface PostApi {
 
-  /**
-   * creates a post based on the provided post object.
-   */
-  ApiResponse<Post> createPost(Post post);
+	ApiResponse<Post> createPost(Post post);
 
-  /**
-   * creates an ephemeral post send to {@code targetUserId}.
-   */
-  ApiResponse<Post> createEphemeralPost(String targetUserId, Post post);
+	ApiResponse<Post> createEphemeralPost(String targetUserId, Post post);
 
-  /**
-   * updates a post based on the provided post object.
-   */
-  ApiResponse<Post> updatePost(Post post);
+	ApiResponse<Post> updatePost(Post post);
 
-  /**
-   * updates a post based on the provided post object.
-   * @deprecated use {@link #updatePost(Post)} instead.
-   */
-  @Deprecated
-  default ApiResponse<Post> updatePost(String postId, Post post) {
-    return updatePost(post);
-  }
+	@Deprecated
+	default ApiResponse<Post> updatePost(String postId, Post post) {
+		return updatePost(post);
+	}
 
-  /**
-   * partially updates a post. Any missing fields are not updated.
-   */
-  ApiResponse<Post> patchPost(String postId, PostPatch patch);
+	ApiResponse<Post> patchPost(String postId, PostPatch patch);
 
-  /**
-   * pin a post based on proviced post id string.
-   */
-  ApiResponse<Boolean> pinPost(String postId);
+	ApiResponse<Boolean> pinPost(String postId);
 
-  /**
-   * unpin a post based on provided post id string.
-   */
-  ApiResponse<Boolean> unpinPost(String postId);
+	ApiResponse<Boolean> unpinPost(String postId);
 
-  /**
-   * gets a single post.
-   */
-  default ApiResponse<Post> getPost(String postId) {
-    return getPost(postId, null);
-  }
+	default ApiResponse<Post> getPost(String postId) {
+		return getPost(postId, null);
+	}
 
-  /**
-   * gets a single post.
-   */
-  ApiResponse<Post> getPost(String postId, String etag);
+	ApiResponse<Post> getPost(String postId, String etag);
 
-  /**
-   * deletes a post from the provided post id string.
-   */
-  ApiResponse<Boolean> deletePost(String postId);
+	ApiResponse<Boolean> deletePost(String postId);
 
-  /**
-   * gets a post with all the other posts in the same thread.
-   */
-  default ApiResponse<PostList> getPostThread(String postId) {
-    return getPostThread(postId, null);
-  }
+	default ApiResponse<PostList> getPostThread(String postId) {
+		return getPostThread(postId, null);
+	}
 
-  /**
-   * gets a post with all the other posts in the same thread.
-   */
-  ApiResponse<PostList> getPostThread(String postId, String etag);
+	ApiResponse<PostList> getPostThread(String postId, String etag);
 
-  /**
-   * gets a page of posts with an array for ordering for a channel.
-   */
-  default ApiResponse<PostList> getPostsForChannel(String channelId) {
-    return getPostsForChannel(channelId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getPostsForChannel(String channelId) {
+		return getPostsForChannel(channelId, Pager.defaultPager());
+	}
 
-  /**
-   * gets a page of posts with an array for ordering for a channel.
-   */
-  default ApiResponse<PostList> getPostsForChannel(String channelId, Pager pager) {
-    return getPostsForChannel(channelId, pager, null);
-  }
+	default ApiResponse<PostList> getPostsForChannel(String channelId, Pager pager) {
+		return getPostsForChannel(channelId, pager, null);
+	}
 
-  /**
-   * gets a page of posts with an array for ordering for a channel.
-   */
-  ApiResponse<PostList> getPostsForChannel(String channelId, Pager pager, String etag);
+	ApiResponse<PostList> getPostsForChannel(String channelId, Pager pager, String etag);
 
-  /**
-   * returns flagges posts of a user based on user id string.
-   */
-  default ApiResponse<PostList> getFlaggedPostsForUser(String userId) {
-    return getFlaggedPostsForUser(userId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getFlaggedPostsForUser(String userId) {
+		return getFlaggedPostsForUser(userId, Pager.defaultPager());
+	}
 
-  /**
-   * returns flagges posts of a user based on user id string.
-   */
-  ApiResponse<PostList> getFlaggedPostsForUser(String userId, Pager pager);
+	ApiResponse<PostList> getFlaggedPostsForUser(String userId, Pager pager);
 
-  /**
-   * returns flagged posts in team of a user based on user id string.
-   */
-  default ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId) {
-    return getFlaggedPostsForUserInTeam(userId, teamId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId) {
+		return getFlaggedPostsForUserInTeam(userId, teamId, Pager.defaultPager());
+	}
 
-  /**
-   * returns flagged posts in team of a user based on user id string.
-   */
-  ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId, Pager pager);
+	ApiResponse<PostList> getFlaggedPostsForUserInTeam(String userId, String teamId, Pager pager);
 
-  /**
-   * returns flagged posts in channel of a user based on user id string.
-   */
-  default ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId) {
-    return getFlaggedPostsForUserInChannel(userId, channelId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId) {
+		return getFlaggedPostsForUserInChannel(userId, channelId, Pager.defaultPager());
+	}
 
-  /**
-   * returns flagged posts in channel of a user based on user id string.
-   */
-  ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId,
-      Pager pager);
+	ApiResponse<PostList> getFlaggedPostsForUserInChannel(String userId, String channelId, Pager pager);
 
-  /**
-   * gets posts created after a specified time as Unix time in milliseconds.
-   */
-  default ApiResponse<PostList> getPostsSince(String channelId, Date since) {
-    return getPostsSince(channelId, since.getTime());
-  }
+	default ApiResponse<PostList> getPostsSince(String channelId, Date since) {
+		return getPostsSince(channelId, since.getTime());
+	}
 
-  /**
-   * gets posts created after a specified time as Unix time in milliseconds.
-   */
-  default ApiResponse<PostList> getPostsSince(String channelId, ZonedDateTime since) {
-    return getPostsSince(channelId, since.toInstant().toEpochMilli());
-  }
+	default ApiResponse<PostList> getPostsSince(String channelId, ZonedDateTime since) {
+		return getPostsSince(channelId, since.toInstant().toEpochMilli());
+	}
 
-  /**
-   * gets posts created after a specified time as Unix time in milliseconds.
-   */
-  ApiResponse<PostList> getPostsSince(String channelId, long since);
+	ApiResponse<PostList> getPostsSince(String channelId, long since);
 
-  /**
-   * gets a page of posts that were posted after the post provided.
-   */
-  default ApiResponse<PostList> getPostsAfter(String channelId, String postId) {
-    return getPostsAfter(channelId, postId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getPostsAfter(String channelId, String postId) {
+		return getPostsAfter(channelId, postId, Pager.defaultPager());
+	}
 
-  /**
-   * gets a page of posts that were posted after the post provided.
-   */
-  default ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager) {
-    return getPostsAfter(channelId, postId, pager, null);
-  }
+	default ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager) {
+		return getPostsAfter(channelId, postId, pager, null);
+	}
 
-  /**
-   * gets a page of posts that were posted after the post provided.
-   */
-  ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager, String etag);
+	ApiResponse<PostList> getPostsAfter(String channelId, String postId, Pager pager, String etag);
 
-  /**
-   * gets a page of posts that were posted before the post provided.
-   */
-  default ApiResponse<PostList> getPostsBefore(String channelId, String postId) {
-    return getPostsBefore(channelId, postId, Pager.defaultPager());
-  }
+	default ApiResponse<PostList> getPostsBefore(String channelId, String postId) {
+		return getPostsBefore(channelId, postId, Pager.defaultPager());
+	}
 
-  /**
-   * gets a page of posts that were posted before the post provided.
-   */
-  default ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager) {
-    return getPostsBefore(channelId, postId, pager, null);
-  }
+	default ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager) {
+		return getPostsBefore(channelId, postId, pager, null);
+	}
 
-  /**
-   * gets a page of posts that were posted before the post provided.
-   */
-  ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager, String etag);
+	ApiResponse<PostList> getPostsBefore(String channelId, String postId, Pager pager, String etag);
 
-  /**
-   * returns any posts with matching term string.
-   */
-  default ApiResponse<PostSearchResults> searchPosts(String teamId, String terms) {
-    return searchPosts(teamId, terms, false);
-  }
+	default ApiResponse<PostSearchResults> searchPosts(String teamId, String terms) {
+		return searchPosts(teamId, terms, false);
+	}
 
-  /**
-   * returns any posts with matching term string.
-   */
-  ApiResponse<PostSearchResults> searchPosts(String teamId, String terms, boolean isOrSearch);
+	ApiResponse<PostSearchResults> searchPosts(String teamId, String terms, boolean isOrSearch);
 
-  /**
-   * get a list of file info attached the post.
-   */
-  ApiResponse<FileInfo[]> getFileInfoForPost(String postId);
+	ApiResponse<FileInfo[]> getFileInfoForPost(String postId);
 
 }

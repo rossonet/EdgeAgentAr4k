@@ -16,293 +16,310 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * File info.
- * 
- * @author Takayuki Maruyama
- */
 public class FileInfo {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("user_id")
-  private String creatorId;
-  @JsonProperty("post_id")
-  private String postId;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("update_at")
-  private long updateAt;
-  @JsonProperty("delete_at")
-  private long deleteAt;
-  private transient String path; // not sent back to the client
-  private transient String thumbnailPath; // not sent back to the client
-  private transient String previewPath; // not sent back to the client
-  @JsonProperty("name")
-  private String name;
-  @JsonProperty("extension")
-  private String extension;
-  @JsonProperty("size")
-  private long size;
-  @JsonProperty("mime_type")
-  private String mimeType;
-  @JsonProperty("width")
-  private int width;
-  @JsonProperty("height")
-  private int height;
-  @JsonProperty("has_preview_image")
-  private boolean hasPreviewImage;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("user_id")
+	private String creatorId;
+	@JsonProperty("post_id")
+	private String postId;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("update_at")
+	private long updateAt;
+	@JsonProperty("delete_at")
+	private long deleteAt;
+	private transient String path; // not sent back to the client
+	private transient String thumbnailPath; // not sent back to the client
+	private transient String previewPath; // not sent back to the client
+	@JsonProperty("name")
+	private String name;
+	@JsonProperty("extension")
+	private String extension;
+	@JsonProperty("size")
+	private long size;
+	@JsonProperty("mime_type")
+	private String mimeType;
+	@JsonProperty("width")
+	private int width;
+	@JsonProperty("height")
+	private int height;
+	@JsonProperty("has_preview_image")
+	private boolean hasPreviewImage;
 
-  @java.lang.SuppressWarnings("all")
-  public FileInfo() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public FileInfo() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCreatorId() {
-    return this.creatorId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCreatorId() {
+		return this.creatorId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPostId() {
-    return this.postId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPostId() {
+		return this.postId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getUpdateAt() {
-    return this.updateAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getUpdateAt() {
+		return this.updateAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getDeleteAt() {
-    return this.deleteAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getDeleteAt() {
+		return this.deleteAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPath() {
-    return this.path;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPath() {
+		return this.path;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getThumbnailPath() {
-    return this.thumbnailPath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getThumbnailPath() {
+		return this.thumbnailPath;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getPreviewPath() {
-    return this.previewPath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getPreviewPath() {
+		return this.previewPath;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getName() {
-    return this.name;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getName() {
+		return this.name;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getExtension() {
-    return this.extension;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getExtension() {
+		return this.extension;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getSize() {
-    return this.size;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getSize() {
+		return this.size;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getMimeType() {
-    return this.mimeType;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getMimeType() {
+		return this.mimeType;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public int getWidth() {
-    return this.width;
-  }
+	@java.lang.SuppressWarnings("all")
+	public int getWidth() {
+		return this.width;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public int getHeight() {
-    return this.height;
-  }
+	@java.lang.SuppressWarnings("all")
+	public int getHeight() {
+		return this.height;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isHasPreviewImage() {
-    return this.hasPreviewImage;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isHasPreviewImage() {
+		return this.hasPreviewImage;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setCreatorId(final String creatorId) {
-    this.creatorId = creatorId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setCreatorId(final String creatorId) {
+		this.creatorId = creatorId;
+	}
 
-  @JsonProperty("post_id")
-  @java.lang.SuppressWarnings("all")
-  public void setPostId(final String postId) {
-    this.postId = postId;
-  }
+	@JsonProperty("post_id")
+	@java.lang.SuppressWarnings("all")
+	public void setPostId(final String postId) {
+		this.postId = postId;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("update_at")
-  @java.lang.SuppressWarnings("all")
-  public void setUpdateAt(final long updateAt) {
-    this.updateAt = updateAt;
-  }
+	@JsonProperty("update_at")
+	@java.lang.SuppressWarnings("all")
+	public void setUpdateAt(final long updateAt) {
+		this.updateAt = updateAt;
+	}
 
-  @JsonProperty("delete_at")
-  @java.lang.SuppressWarnings("all")
-  public void setDeleteAt(final long deleteAt) {
-    this.deleteAt = deleteAt;
-  }
+	@JsonProperty("delete_at")
+	@java.lang.SuppressWarnings("all")
+	public void setDeleteAt(final long deleteAt) {
+		this.deleteAt = deleteAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setPath(final String path) {
-    this.path = path;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setPath(final String path) {
+		this.path = path;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setThumbnailPath(final String thumbnailPath) {
-    this.thumbnailPath = thumbnailPath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setThumbnailPath(final String thumbnailPath) {
+		this.thumbnailPath = thumbnailPath;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setPreviewPath(final String previewPath) {
-    this.previewPath = previewPath;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setPreviewPath(final String previewPath) {
+		this.previewPath = previewPath;
+	}
 
-  @JsonProperty("name")
-  @java.lang.SuppressWarnings("all")
-  public void setName(final String name) {
-    this.name = name;
-  }
+	@JsonProperty("name")
+	@java.lang.SuppressWarnings("all")
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-  @JsonProperty("extension")
-  @java.lang.SuppressWarnings("all")
-  public void setExtension(final String extension) {
-    this.extension = extension;
-  }
+	@JsonProperty("extension")
+	@java.lang.SuppressWarnings("all")
+	public void setExtension(final String extension) {
+		this.extension = extension;
+	}
 
-  @JsonProperty("size")
-  @java.lang.SuppressWarnings("all")
-  public void setSize(final long size) {
-    this.size = size;
-  }
+	@JsonProperty("size")
+	@java.lang.SuppressWarnings("all")
+	public void setSize(final long size) {
+		this.size = size;
+	}
 
-  @JsonProperty("mime_type")
-  @java.lang.SuppressWarnings("all")
-  public void setMimeType(final String mimeType) {
-    this.mimeType = mimeType;
-  }
+	@JsonProperty("mime_type")
+	@java.lang.SuppressWarnings("all")
+	public void setMimeType(final String mimeType) {
+		this.mimeType = mimeType;
+	}
 
-  @JsonProperty("width")
-  @java.lang.SuppressWarnings("all")
-  public void setWidth(final int width) {
-    this.width = width;
-  }
+	@JsonProperty("width")
+	@java.lang.SuppressWarnings("all")
+	public void setWidth(final int width) {
+		this.width = width;
+	}
 
-  @JsonProperty("height")
-  @java.lang.SuppressWarnings("all")
-  public void setHeight(final int height) {
-    this.height = height;
-  }
+	@JsonProperty("height")
+	@java.lang.SuppressWarnings("all")
+	public void setHeight(final int height) {
+		this.height = height;
+	}
 
-  @JsonProperty("has_preview_image")
-  @java.lang.SuppressWarnings("all")
-  public void setHasPreviewImage(final boolean hasPreviewImage) {
-    this.hasPreviewImage = hasPreviewImage;
-  }
+	@JsonProperty("has_preview_image")
+	@java.lang.SuppressWarnings("all")
+	public void setHasPreviewImage(final boolean hasPreviewImage) {
+		this.hasPreviewImage = hasPreviewImage;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof FileInfo)) return false;
-    final FileInfo other = (FileInfo) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    if (this.getUpdateAt() != other.getUpdateAt()) return false;
-    if (this.getDeleteAt() != other.getDeleteAt()) return false;
-    if (this.getSize() != other.getSize()) return false;
-    if (this.getWidth() != other.getWidth()) return false;
-    if (this.getHeight() != other.getHeight()) return false;
-    if (this.isHasPreviewImage() != other.isHasPreviewImage()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$creatorId = this.getCreatorId();
-    final java.lang.Object other$creatorId = other.getCreatorId();
-    if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId)) return false;
-    final java.lang.Object this$postId = this.getPostId();
-    final java.lang.Object other$postId = other.getPostId();
-    if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    final java.lang.Object this$extension = this.getExtension();
-    final java.lang.Object other$extension = other.getExtension();
-    if (this$extension == null ? other$extension != null : !this$extension.equals(other$extension)) return false;
-    final java.lang.Object this$mimeType = this.getMimeType();
-    final java.lang.Object other$mimeType = other.getMimeType();
-    if (this$mimeType == null ? other$mimeType != null : !this$mimeType.equals(other$mimeType)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof FileInfo))
+			return false;
+		final FileInfo other = (FileInfo) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		if (this.getUpdateAt() != other.getUpdateAt())
+			return false;
+		if (this.getDeleteAt() != other.getDeleteAt())
+			return false;
+		if (this.getSize() != other.getSize())
+			return false;
+		if (this.getWidth() != other.getWidth())
+			return false;
+		if (this.getHeight() != other.getHeight())
+			return false;
+		if (this.isHasPreviewImage() != other.isHasPreviewImage())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$creatorId = this.getCreatorId();
+		final java.lang.Object other$creatorId = other.getCreatorId();
+		if (this$creatorId == null ? other$creatorId != null : !this$creatorId.equals(other$creatorId))
+			return false;
+		final java.lang.Object this$postId = this.getPostId();
+		final java.lang.Object other$postId = other.getPostId();
+		if (this$postId == null ? other$postId != null : !this$postId.equals(other$postId))
+			return false;
+		final java.lang.Object this$name = this.getName();
+		final java.lang.Object other$name = other.getName();
+		if (this$name == null ? other$name != null : !this$name.equals(other$name))
+			return false;
+		final java.lang.Object this$extension = this.getExtension();
+		final java.lang.Object other$extension = other.getExtension();
+		if (this$extension == null ? other$extension != null : !this$extension.equals(other$extension))
+			return false;
+		final java.lang.Object this$mimeType = this.getMimeType();
+		final java.lang.Object other$mimeType = other.getMimeType();
+		if (this$mimeType == null ? other$mimeType != null : !this$mimeType.equals(other$mimeType))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof FileInfo;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof FileInfo;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final long $updateAt = this.getUpdateAt();
-    result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
-    final long $deleteAt = this.getDeleteAt();
-    result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
-    final long $size = this.getSize();
-    result = result * PRIME + (int) ($size >>> 32 ^ $size);
-    result = result * PRIME + this.getWidth();
-    result = result * PRIME + this.getHeight();
-    result = result * PRIME + (this.isHasPreviewImage() ? 79 : 97);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $creatorId = this.getCreatorId();
-    result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
-    final java.lang.Object $postId = this.getPostId();
-    result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    final java.lang.Object $extension = this.getExtension();
-    result = result * PRIME + ($extension == null ? 43 : $extension.hashCode());
-    final java.lang.Object $mimeType = this.getMimeType();
-    result = result * PRIME + ($mimeType == null ? 43 : $mimeType.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final long $updateAt = this.getUpdateAt();
+		result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
+		final long $deleteAt = this.getDeleteAt();
+		result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
+		final long $size = this.getSize();
+		result = result * PRIME + (int) ($size >>> 32 ^ $size);
+		result = result * PRIME + this.getWidth();
+		result = result * PRIME + this.getHeight();
+		result = result * PRIME + (this.isHasPreviewImage() ? 79 : 97);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $creatorId = this.getCreatorId();
+		result = result * PRIME + ($creatorId == null ? 43 : $creatorId.hashCode());
+		final java.lang.Object $postId = this.getPostId();
+		result = result * PRIME + ($postId == null ? 43 : $postId.hashCode());
+		final java.lang.Object $name = this.getName();
+		result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+		final java.lang.Object $extension = this.getExtension();
+		result = result * PRIME + ($extension == null ? 43 : $extension.hashCode());
+		final java.lang.Object $mimeType = this.getMimeType();
+		result = result * PRIME + ($mimeType == null ? 43 : $mimeType.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "FileInfo(id=" + this.getId() + ", creatorId=" + this.getCreatorId() + ", postId=" + this.getPostId() + ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", path=" + this.getPath() + ", thumbnailPath=" + this.getThumbnailPath() + ", previewPath=" + this.getPreviewPath() + ", name=" + this.getName() + ", extension=" + this.getExtension() + ", size=" + this.getSize() + ", mimeType=" + this.getMimeType() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", hasPreviewImage=" + this.isHasPreviewImage() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "FileInfo(id=" + this.getId() + ", creatorId=" + this.getCreatorId() + ", postId=" + this.getPostId()
+				+ ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt() + ", deleteAt="
+				+ this.getDeleteAt() + ", path=" + this.getPath() + ", thumbnailPath=" + this.getThumbnailPath()
+				+ ", previewPath=" + this.getPreviewPath() + ", name=" + this.getName() + ", extension="
+				+ this.getExtension() + ", size=" + this.getSize() + ", mimeType=" + this.getMimeType() + ", width="
+				+ this.getWidth() + ", height=" + this.getHeight() + ", hasPreviewImage=" + this.isHasPreviewImage()
+				+ ")";
+	}
 }

@@ -17,115 +17,118 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Websocket broadcast.
- * 
- * @author Takayuki Maruyama
- */
 public class WebsocketBroadcast {
-  @JsonProperty("omit_users")
-  private Map<String, Boolean> omitUsers;
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("channel_id")
-  private String channelId;
-  @JsonProperty("team_id")
-  private String teamId;
+	@JsonProperty("omit_users")
+	private Map<String, Boolean> omitUsers;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("channel_id")
+	private String channelId;
+	@JsonProperty("team_id")
+	private String teamId;
 
-  @java.lang.SuppressWarnings("all")
-  public WebsocketBroadcast() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public WebsocketBroadcast() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Boolean> getOmitUsers() {
-    return this.omitUsers;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Boolean> getOmitUsers() {
+		return this.omitUsers;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @JsonProperty("omit_users")
-  @java.lang.SuppressWarnings("all")
-  public void setOmitUsers(final Map<String, Boolean> omitUsers) {
-    this.omitUsers = omitUsers;
-  }
+	@JsonProperty("omit_users")
+	@java.lang.SuppressWarnings("all")
+	public void setOmitUsers(final Map<String, Boolean> omitUsers) {
+		this.omitUsers = omitUsers;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("channel_id")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@JsonProperty("channel_id")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof WebsocketBroadcast)) return false;
-    final WebsocketBroadcast other = (WebsocketBroadcast) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$omitUsers = this.getOmitUsers();
-    final java.lang.Object other$omitUsers = other.getOmitUsers();
-    if (this$omitUsers == null ? other$omitUsers != null : !this$omitUsers.equals(other$omitUsers)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof WebsocketBroadcast))
+			return false;
+		final WebsocketBroadcast other = (WebsocketBroadcast) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$omitUsers = this.getOmitUsers();
+		final java.lang.Object other$omitUsers = other.getOmitUsers();
+		if (this$omitUsers == null ? other$omitUsers != null : !this$omitUsers.equals(other$omitUsers))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof WebsocketBroadcast;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof WebsocketBroadcast;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $omitUsers = this.getOmitUsers();
-    result = result * PRIME + ($omitUsers == null ? 43 : $omitUsers.hashCode());
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $omitUsers = this.getOmitUsers();
+		result = result * PRIME + ($omitUsers == null ? 43 : $omitUsers.hashCode());
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "WebsocketBroadcast(omitUsers=" + this.getOmitUsers() + ", userId=" + this.getUserId() + ", channelId=" + this.getChannelId() + ", teamId=" + this.getTeamId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "WebsocketBroadcast(omitUsers=" + this.getOmitUsers() + ", userId=" + this.getUserId() + ", channelId="
+				+ this.getChannelId() + ", teamId=" + this.getTeamId() + ")";
+	}
 }

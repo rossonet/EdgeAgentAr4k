@@ -21,69 +21,31 @@ import org.ar4k.agent.mattermost.model.Bot;
 import org.ar4k.agent.mattermost.model.BotPatch;
 import org.ar4k.agent.mattermost.model.Bots;
 
-/**
- * Bots API.
- * 
- * @author Takayuki Maruyama
- * @since Mattermost Server 5.12
- */
 public interface BotsApi {
 
-  /**
-   * Create a bot.
-   */
-  ApiResponse<Bot> createBot(BotPatch bot);
+	ApiResponse<Bot> createBot(BotPatch bot);
 
-  /**
-   * Patch a bot.
-   */
-  ApiResponse<Bot> patchBot(String botUserId, BotPatch patch);
+	ApiResponse<Bot> patchBot(String botUserId, BotPatch patch);
 
-  /**
-   * Get a bot exclude deleted.
-   */
-  default ApiResponse<Bot> getBot(String botUserId) {
-    return getBot(botUserId, false);
-  }
+	default ApiResponse<Bot> getBot(String botUserId) {
+		return getBot(botUserId, false);
+	}
 
-  /**
-   * Get a bot.
-   */
-  ApiResponse<Bot> getBot(String botUserId, boolean includeDeleted);
+	ApiResponse<Bot> getBot(String botUserId, boolean includeDeleted);
 
-  /**
-   * Get bots.
-   * 
-   * @see GetBotsOption
-   */
-  default ApiResponse<Bots> getBots() {
-    return getBots(Pager.defaultPager(), GetBotsOption.defaultInstance());
-  }
+	default ApiResponse<Bots> getBots() {
+		return getBots(Pager.defaultPager(), GetBotsOption.defaultInstance());
+	}
 
-  /**
-   * Get bots.
-   */
-  default ApiResponse<Bots> getBots(GetBotsOption option) {
-    return getBots(Pager.defaultPager(), option);
-  }
+	default ApiResponse<Bots> getBots(GetBotsOption option) {
+		return getBots(Pager.defaultPager(), option);
+	}
 
-  /**
-   * Get bots.
-   */
-  ApiResponse<Bots> getBots(Pager pager, GetBotsOption option);
+	ApiResponse<Bots> getBots(Pager pager, GetBotsOption option);
 
-  /**
-   * Disable a bot.
-   */
-  ApiResponse<Bot> disableBot(String botUserId);
+	ApiResponse<Bot> disableBot(String botUserId);
 
-  /**
-   * Enable a bot.
-   */
-  ApiResponse<Bot> enableBot(String botUserId);
+	ApiResponse<Bot> enableBot(String botUserId);
 
-  /**
-   * Assign a bot to a user.
-   */
-  ApiResponse<Bot> assignBotToUser(String botUserId, String ownerUserId);
+	ApiResponse<Bot> assignBotToUser(String botUserId, String ownerUserId);
 }

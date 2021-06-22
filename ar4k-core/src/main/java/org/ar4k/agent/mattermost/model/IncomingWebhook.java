@@ -16,245 +16,259 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Incoming webhook.
- * 
- * @author Takayuki Maruyama
- */
 public class IncomingWebhook {
-  @JsonProperty("id")
-  private String id;
-  @JsonProperty("create_at")
-  private long createAt;
-  @JsonProperty("update_at")
-  private long updateAt;
-  @JsonProperty("delete_at")
-  private long deleteAt;
-  @JsonProperty("user_id")
-  private String userId;
-  @JsonProperty("channel_id")
-  private String channelId;
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("display_name")
-  private String displayName;
-  @JsonProperty("description")
-  private String description;
-  private String username;
-  private String iconUrl;
-  /* @since Mattermost Server what ver? */
-  private boolean channelLocked;
+	@JsonProperty("id")
+	private String id;
+	@JsonProperty("create_at")
+	private long createAt;
+	@JsonProperty("update_at")
+	private long updateAt;
+	@JsonProperty("delete_at")
+	private long deleteAt;
+	@JsonProperty("user_id")
+	private String userId;
+	@JsonProperty("channel_id")
+	private String channelId;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("display_name")
+	private String displayName;
+	@JsonProperty("description")
+	private String description;
+	private String username;
+	private String iconUrl;
+	/* @since Mattermost Server what ver? */
+	private boolean channelLocked;
 
-  @java.lang.SuppressWarnings("all")
-  public IncomingWebhook() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public IncomingWebhook() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getId() {
-    return this.id;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getId() {
+		return this.id;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getUpdateAt() {
-    return this.updateAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getUpdateAt() {
+		return this.updateAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getDeleteAt() {
-    return this.deleteAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getDeleteAt() {
+		return this.deleteAt;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDisplayName() {
-    return this.displayName;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDisplayName() {
+		return this.displayName;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDescription() {
-    return this.description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDescription() {
+		return this.description;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUsername() {
-    return this.username;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUsername() {
+		return this.username;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getIconUrl() {
-    return this.iconUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getIconUrl() {
+		return this.iconUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isChannelLocked() {
-    return this.channelLocked;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isChannelLocked() {
+		return this.channelLocked;
+	}
 
-  @JsonProperty("id")
-  @java.lang.SuppressWarnings("all")
-  public void setId(final String id) {
-    this.id = id;
-  }
+	@JsonProperty("id")
+	@java.lang.SuppressWarnings("all")
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  @JsonProperty("create_at")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("create_at")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @JsonProperty("update_at")
-  @java.lang.SuppressWarnings("all")
-  public void setUpdateAt(final long updateAt) {
-    this.updateAt = updateAt;
-  }
+	@JsonProperty("update_at")
+	@java.lang.SuppressWarnings("all")
+	public void setUpdateAt(final long updateAt) {
+		this.updateAt = updateAt;
+	}
 
-  @JsonProperty("delete_at")
-  @java.lang.SuppressWarnings("all")
-  public void setDeleteAt(final long deleteAt) {
-    this.deleteAt = deleteAt;
-  }
+	@JsonProperty("delete_at")
+	@java.lang.SuppressWarnings("all")
+	public void setDeleteAt(final long deleteAt) {
+		this.deleteAt = deleteAt;
+	}
 
-  @JsonProperty("user_id")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("user_id")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("channel_id")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@JsonProperty("channel_id")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("display_name")
-  @java.lang.SuppressWarnings("all")
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+	@JsonProperty("display_name")
+	@java.lang.SuppressWarnings("all")
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
 
-  @JsonProperty("description")
-  @java.lang.SuppressWarnings("all")
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+	@JsonProperty("description")
+	@java.lang.SuppressWarnings("all")
+	public void setDescription(final String description) {
+		this.description = description;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setUsername(final String username) {
-    this.username = username;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setUsername(final String username) {
+		this.username = username;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setIconUrl(final String iconUrl) {
-    this.iconUrl = iconUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setIconUrl(final String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setChannelLocked(final boolean channelLocked) {
-    this.channelLocked = channelLocked;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setChannelLocked(final boolean channelLocked) {
+		this.channelLocked = channelLocked;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof IncomingWebhook)) return false;
-    final IncomingWebhook other = (IncomingWebhook) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    if (this.getUpdateAt() != other.getUpdateAt()) return false;
-    if (this.getDeleteAt() != other.getDeleteAt()) return false;
-    if (this.isChannelLocked() != other.isChannelLocked()) return false;
-    final java.lang.Object this$id = this.getId();
-    final java.lang.Object other$id = other.getId();
-    if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$displayName = this.getDisplayName();
-    final java.lang.Object other$displayName = other.getDisplayName();
-    if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName)) return false;
-    final java.lang.Object this$description = this.getDescription();
-    final java.lang.Object other$description = other.getDescription();
-    if (this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
-    final java.lang.Object this$username = this.getUsername();
-    final java.lang.Object other$username = other.getUsername();
-    if (this$username == null ? other$username != null : !this$username.equals(other$username)) return false;
-    final java.lang.Object this$iconUrl = this.getIconUrl();
-    final java.lang.Object other$iconUrl = other.getIconUrl();
-    if (this$iconUrl == null ? other$iconUrl != null : !this$iconUrl.equals(other$iconUrl)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof IncomingWebhook))
+			return false;
+		final IncomingWebhook other = (IncomingWebhook) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		if (this.getUpdateAt() != other.getUpdateAt())
+			return false;
+		if (this.getDeleteAt() != other.getDeleteAt())
+			return false;
+		if (this.isChannelLocked() != other.isChannelLocked())
+			return false;
+		final java.lang.Object this$id = this.getId();
+		final java.lang.Object other$id = other.getId();
+		if (this$id == null ? other$id != null : !this$id.equals(other$id))
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$displayName = this.getDisplayName();
+		final java.lang.Object other$displayName = other.getDisplayName();
+		if (this$displayName == null ? other$displayName != null : !this$displayName.equals(other$displayName))
+			return false;
+		final java.lang.Object this$description = this.getDescription();
+		final java.lang.Object other$description = other.getDescription();
+		if (this$description == null ? other$description != null : !this$description.equals(other$description))
+			return false;
+		final java.lang.Object this$username = this.getUsername();
+		final java.lang.Object other$username = other.getUsername();
+		if (this$username == null ? other$username != null : !this$username.equals(other$username))
+			return false;
+		final java.lang.Object this$iconUrl = this.getIconUrl();
+		final java.lang.Object other$iconUrl = other.getIconUrl();
+		if (this$iconUrl == null ? other$iconUrl != null : !this$iconUrl.equals(other$iconUrl))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof IncomingWebhook;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof IncomingWebhook;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final long $updateAt = this.getUpdateAt();
-    result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
-    final long $deleteAt = this.getDeleteAt();
-    result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
-    result = result * PRIME + (this.isChannelLocked() ? 79 : 97);
-    final java.lang.Object $id = this.getId();
-    result = result * PRIME + ($id == null ? 43 : $id.hashCode());
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $displayName = this.getDisplayName();
-    result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
-    final java.lang.Object $description = this.getDescription();
-    result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-    final java.lang.Object $username = this.getUsername();
-    result = result * PRIME + ($username == null ? 43 : $username.hashCode());
-    final java.lang.Object $iconUrl = this.getIconUrl();
-    result = result * PRIME + ($iconUrl == null ? 43 : $iconUrl.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final long $updateAt = this.getUpdateAt();
+		result = result * PRIME + (int) ($updateAt >>> 32 ^ $updateAt);
+		final long $deleteAt = this.getDeleteAt();
+		result = result * PRIME + (int) ($deleteAt >>> 32 ^ $deleteAt);
+		result = result * PRIME + (this.isChannelLocked() ? 79 : 97);
+		final java.lang.Object $id = this.getId();
+		result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $displayName = this.getDisplayName();
+		result = result * PRIME + ($displayName == null ? 43 : $displayName.hashCode());
+		final java.lang.Object $description = this.getDescription();
+		result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+		final java.lang.Object $username = this.getUsername();
+		result = result * PRIME + ($username == null ? 43 : $username.hashCode());
+		final java.lang.Object $iconUrl = this.getIconUrl();
+		result = result * PRIME + ($iconUrl == null ? 43 : $iconUrl.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "IncomingWebhook(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", updateAt=" + this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", userId=" + this.getUserId() + ", channelId=" + this.getChannelId() + ", teamId=" + this.getTeamId() + ", displayName=" + this.getDisplayName() + ", description=" + this.getDescription() + ", username=" + this.getUsername() + ", iconUrl=" + this.getIconUrl() + ", channelLocked=" + this.isChannelLocked() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "IncomingWebhook(id=" + this.getId() + ", createAt=" + this.getCreateAt() + ", updateAt="
+				+ this.getUpdateAt() + ", deleteAt=" + this.getDeleteAt() + ", userId=" + this.getUserId()
+				+ ", channelId=" + this.getChannelId() + ", teamId=" + this.getTeamId() + ", displayName="
+				+ this.getDisplayName() + ", description=" + this.getDescription() + ", username=" + this.getUsername()
+				+ ", iconUrl=" + this.getIconUrl() + ", channelLocked=" + this.isChannelLocked() + ")";
+	}
 }

@@ -17,79 +17,79 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Channel's count.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelCounts {
-  @JsonProperty("counts")
-  private Map<String, Long> counts;
-  @JsonProperty("update_times")
-  private Map<String, Long> updateTimes;
+	@JsonProperty("counts")
+	private Map<String, Long> counts;
+	@JsonProperty("update_times")
+	private Map<String, Long> updateTimes;
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelCounts() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelCounts() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Long> getCounts() {
-    return this.counts;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Long> getCounts() {
+		return this.counts;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, Long> getUpdateTimes() {
-    return this.updateTimes;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, Long> getUpdateTimes() {
+		return this.updateTimes;
+	}
 
-  @JsonProperty("counts")
-  @java.lang.SuppressWarnings("all")
-  public void setCounts(final Map<String, Long> counts) {
-    this.counts = counts;
-  }
+	@JsonProperty("counts")
+	@java.lang.SuppressWarnings("all")
+	public void setCounts(final Map<String, Long> counts) {
+		this.counts = counts;
+	}
 
-  @JsonProperty("update_times")
-  @java.lang.SuppressWarnings("all")
-  public void setUpdateTimes(final Map<String, Long> updateTimes) {
-    this.updateTimes = updateTimes;
-  }
+	@JsonProperty("update_times")
+	@java.lang.SuppressWarnings("all")
+	public void setUpdateTimes(final Map<String, Long> updateTimes) {
+		this.updateTimes = updateTimes;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelCounts)) return false;
-    final ChannelCounts other = (ChannelCounts) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$counts = this.getCounts();
-    final java.lang.Object other$counts = other.getCounts();
-    if (this$counts == null ? other$counts != null : !this$counts.equals(other$counts)) return false;
-    final java.lang.Object this$updateTimes = this.getUpdateTimes();
-    final java.lang.Object other$updateTimes = other.getUpdateTimes();
-    if (this$updateTimes == null ? other$updateTimes != null : !this$updateTimes.equals(other$updateTimes)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelCounts))
+			return false;
+		final ChannelCounts other = (ChannelCounts) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$counts = this.getCounts();
+		final java.lang.Object other$counts = other.getCounts();
+		if (this$counts == null ? other$counts != null : !this$counts.equals(other$counts))
+			return false;
+		final java.lang.Object this$updateTimes = this.getUpdateTimes();
+		final java.lang.Object other$updateTimes = other.getUpdateTimes();
+		if (this$updateTimes == null ? other$updateTimes != null : !this$updateTimes.equals(other$updateTimes))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelCounts;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelCounts;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $counts = this.getCounts();
-    result = result * PRIME + ($counts == null ? 43 : $counts.hashCode());
-    final java.lang.Object $updateTimes = this.getUpdateTimes();
-    result = result * PRIME + ($updateTimes == null ? 43 : $updateTimes.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $counts = this.getCounts();
+		result = result * PRIME + ($counts == null ? 43 : $counts.hashCode());
+		final java.lang.Object $updateTimes = this.getUpdateTimes();
+		result = result * PRIME + ($updateTimes == null ? 43 : $updateTimes.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelCounts(counts=" + this.getCounts() + ", updateTimes=" + this.getUpdateTimes() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelCounts(counts=" + this.getCounts() + ", updateTimes=" + this.getUpdateTimes() + ")";
+	}
 }

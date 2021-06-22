@@ -24,32 +24,27 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.PushStatus.PushStatusDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of push notification status.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = PushStatusDeserializer.class)
 public enum PushStatus implements HasCode<PushStatus> {
-  OK("OK"), FAIL("FAIL"), REMOVE("REMOVE");
-  private final String code;
+	OK("OK"), FAIL("FAIL"), REMOVE("REMOVE");
 
-  private PushStatus(String code) {
-    this.code = code;
-  }
+	private final String code;
 
+	private PushStatus(String code) {
+		this.code = code;
+	}
 
-  static class PushStatusDeserializer extends JsonDeserializer<PushStatus> {
-    @Override
-    public PushStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return HasCode.of(PushStatus::values, jsonValue, null);
-    }
-  }
+	static class PushStatusDeserializer extends JsonDeserializer<PushStatus> {
+		@Override
+		public PushStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return HasCode.of(PushStatus::values, jsonValue, null);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

@@ -14,52 +14,52 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Create user access token request payload.
- */
 public final class UserAccessTokenCreateRequest {
-  private final String description;
+	private final String description;
 
-  @java.lang.SuppressWarnings("all")
-  private UserAccessTokenCreateRequest(final String description) {
-    this.description = description;
-  }
+	@java.lang.SuppressWarnings("all")
+	private UserAccessTokenCreateRequest(final String description) {
+		this.description = description;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static UserAccessTokenCreateRequest of(final String description) {
-    return new UserAccessTokenCreateRequest(description);
-  }
+	@java.lang.SuppressWarnings("all")
+	public static UserAccessTokenCreateRequest of(final String description) {
+		return new UserAccessTokenCreateRequest(description);
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getDescription() {
-    return this.description;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getDescription() {
+		return this.description;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UserAccessTokenCreateRequest)) return false;
-    final UserAccessTokenCreateRequest other = (UserAccessTokenCreateRequest) o;
-    final java.lang.Object this$description = this.getDescription();
-    final java.lang.Object other$description = other.getDescription();
-    if (this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UserAccessTokenCreateRequest))
+			return false;
+		final UserAccessTokenCreateRequest other = (UserAccessTokenCreateRequest) o;
+		final java.lang.Object this$description = this.getDescription();
+		final java.lang.Object other$description = other.getDescription();
+		if (this$description == null ? other$description != null : !this$description.equals(other$description))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $description = this.getDescription();
-    result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $description = this.getDescription();
+		result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UserAccessTokenCreateRequest(description=" + this.getDescription() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UserAccessTokenCreateRequest(description=" + this.getDescription() + ")";
+	}
 }

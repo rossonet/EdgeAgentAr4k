@@ -17,61 +17,60 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/**
- * User autocomplete items in team.
- * 
- * @author Takayuki Maruyama
- */
 public class UserAutocompleteInTeam {
-  @JsonProperty("in_team")
-  private List<User> inTeam;
+	@JsonProperty("in_team")
+	private List<User> inTeam;
 
-  @java.lang.SuppressWarnings("all")
-  public UserAutocompleteInTeam() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public UserAutocompleteInTeam() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<User> getInTeam() {
-    return this.inTeam;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<User> getInTeam() {
+		return this.inTeam;
+	}
 
-  @JsonProperty("in_team")
-  @java.lang.SuppressWarnings("all")
-  public void setInTeam(final List<User> inTeam) {
-    this.inTeam = inTeam;
-  }
+	@JsonProperty("in_team")
+	@java.lang.SuppressWarnings("all")
+	public void setInTeam(final List<User> inTeam) {
+		this.inTeam = inTeam;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UserAutocompleteInTeam)) return false;
-    final UserAutocompleteInTeam other = (UserAutocompleteInTeam) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$inTeam = this.getInTeam();
-    final java.lang.Object other$inTeam = other.getInTeam();
-    if (this$inTeam == null ? other$inTeam != null : !this$inTeam.equals(other$inTeam)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UserAutocompleteInTeam))
+			return false;
+		final UserAutocompleteInTeam other = (UserAutocompleteInTeam) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$inTeam = this.getInTeam();
+		final java.lang.Object other$inTeam = other.getInTeam();
+		if (this$inTeam == null ? other$inTeam != null : !this$inTeam.equals(other$inTeam))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof UserAutocompleteInTeam;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof UserAutocompleteInTeam;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $inTeam = this.getInTeam();
-    result = result * PRIME + ($inTeam == null ? 43 : $inTeam.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $inTeam = this.getInTeam();
+		result = result * PRIME + ($inTeam == null ? 43 : $inTeam.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UserAutocompleteInTeam(inTeam=" + this.getInTeam() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UserAutocompleteInTeam(inTeam=" + this.getInTeam() + ")";
+	}
 }

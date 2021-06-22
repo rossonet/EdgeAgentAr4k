@@ -25,40 +25,34 @@ import java.util.Arrays;
 import org.ar4k.agent.mattermost.model.ComplianceStatus.ComplianceStatusDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of compliance report creation status.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = ComplianceStatusDeserializer.class)
 public enum ComplianceStatus implements HasCode<ComplianceStatus> {
 
-  Created("created"), Running("running"), Finished("finished"), Failed("failed"), Removed(
-      "removed");
-  private final String code;
+	Created("created"), Running("running"), Finished("finished"), Failed("failed"), Removed("removed");
 
-  ComplianceStatus(String code) {
-    this.code = code;
-  }
+	private final String code;
 
-  @Override
-  public String getCode() {
-    return code;
-  }
+	ComplianceStatus(String code) {
+		this.code = code;
+	}
 
-  public static ComplianceStatus of(String code) {
-    return Arrays.asList(ComplianceStatus.values()).stream().filter(s -> s.getCode().equals(code))
-        .findFirst().orElse(null);
-  }
+	@Override
+	public String getCode() {
+		return code;
+	}
 
-  public static class ComplianceStatusDeserializer extends JsonDeserializer<ComplianceStatus> {
+	public static ComplianceStatus of(String code) {
+		return Arrays.asList(ComplianceStatus.values()).stream().filter(s -> s.getCode().equals(code)).findFirst()
+				.orElse(null);
+	}
 
-    @Override
-    public ComplianceStatus deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException {
-      String code = p.getText();
-      return ComplianceStatus.of(code);
-    }
-  }
+	public static class ComplianceStatusDeserializer extends JsonDeserializer<ComplianceStatus> {
+
+		@Override
+		public ComplianceStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String code = p.getText();
+			return ComplianceStatus.of(code);
+		}
+	}
 }

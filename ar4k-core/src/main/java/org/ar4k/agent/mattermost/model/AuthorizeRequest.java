@@ -16,133 +16,138 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Authorize request.
- * 
- * @author Takayuki Maruyama
- */
 public class AuthorizeRequest {
-  @JsonProperty("response_type")
-  private String responseType;
-  @JsonProperty("client_id")
-  private String clientId;
-  @JsonProperty("redirect_url")
-  private String redirectUrl;
-  @JsonProperty("scope")
-  private String scope;
-  @JsonProperty("state")
-  private String state;
+	@JsonProperty("response_type")
+	private String responseType;
+	@JsonProperty("client_id")
+	private String clientId;
+	@JsonProperty("redirect_url")
+	private String redirectUrl;
+	@JsonProperty("scope")
+	private String scope;
+	@JsonProperty("state")
+	private String state;
 
-  @java.lang.SuppressWarnings("all")
-  public AuthorizeRequest() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public AuthorizeRequest() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getResponseType() {
-    return this.responseType;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getResponseType() {
+		return this.responseType;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getClientId() {
-    return this.clientId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getClientId() {
+		return this.clientId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getRedirectUrl() {
-    return this.redirectUrl;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getRedirectUrl() {
+		return this.redirectUrl;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getScope() {
-    return this.scope;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getScope() {
+		return this.scope;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getState() {
-    return this.state;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getState() {
+		return this.state;
+	}
 
-  @JsonProperty("response_type")
-  @java.lang.SuppressWarnings("all")
-  public void setResponseType(final String responseType) {
-    this.responseType = responseType;
-  }
+	@JsonProperty("response_type")
+	@java.lang.SuppressWarnings("all")
+	public void setResponseType(final String responseType) {
+		this.responseType = responseType;
+	}
 
-  @JsonProperty("client_id")
-  @java.lang.SuppressWarnings("all")
-  public void setClientId(final String clientId) {
-    this.clientId = clientId;
-  }
+	@JsonProperty("client_id")
+	@java.lang.SuppressWarnings("all")
+	public void setClientId(final String clientId) {
+		this.clientId = clientId;
+	}
 
-  @JsonProperty("redirect_url")
-  @java.lang.SuppressWarnings("all")
-  public void setRedirectUrl(final String redirectUrl) {
-    this.redirectUrl = redirectUrl;
-  }
+	@JsonProperty("redirect_url")
+	@java.lang.SuppressWarnings("all")
+	public void setRedirectUrl(final String redirectUrl) {
+		this.redirectUrl = redirectUrl;
+	}
 
-  @JsonProperty("scope")
-  @java.lang.SuppressWarnings("all")
-  public void setScope(final String scope) {
-    this.scope = scope;
-  }
+	@JsonProperty("scope")
+	@java.lang.SuppressWarnings("all")
+	public void setScope(final String scope) {
+		this.scope = scope;
+	}
 
-  @JsonProperty("state")
-  @java.lang.SuppressWarnings("all")
-  public void setState(final String state) {
-    this.state = state;
-  }
+	@JsonProperty("state")
+	@java.lang.SuppressWarnings("all")
+	public void setState(final String state) {
+		this.state = state;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof AuthorizeRequest)) return false;
-    final AuthorizeRequest other = (AuthorizeRequest) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$responseType = this.getResponseType();
-    final java.lang.Object other$responseType = other.getResponseType();
-    if (this$responseType == null ? other$responseType != null : !this$responseType.equals(other$responseType)) return false;
-    final java.lang.Object this$clientId = this.getClientId();
-    final java.lang.Object other$clientId = other.getClientId();
-    if (this$clientId == null ? other$clientId != null : !this$clientId.equals(other$clientId)) return false;
-    final java.lang.Object this$redirectUrl = this.getRedirectUrl();
-    final java.lang.Object other$redirectUrl = other.getRedirectUrl();
-    if (this$redirectUrl == null ? other$redirectUrl != null : !this$redirectUrl.equals(other$redirectUrl)) return false;
-    final java.lang.Object this$scope = this.getScope();
-    final java.lang.Object other$scope = other.getScope();
-    if (this$scope == null ? other$scope != null : !this$scope.equals(other$scope)) return false;
-    final java.lang.Object this$state = this.getState();
-    final java.lang.Object other$state = other.getState();
-    if (this$state == null ? other$state != null : !this$state.equals(other$state)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof AuthorizeRequest))
+			return false;
+		final AuthorizeRequest other = (AuthorizeRequest) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$responseType = this.getResponseType();
+		final java.lang.Object other$responseType = other.getResponseType();
+		if (this$responseType == null ? other$responseType != null : !this$responseType.equals(other$responseType))
+			return false;
+		final java.lang.Object this$clientId = this.getClientId();
+		final java.lang.Object other$clientId = other.getClientId();
+		if (this$clientId == null ? other$clientId != null : !this$clientId.equals(other$clientId))
+			return false;
+		final java.lang.Object this$redirectUrl = this.getRedirectUrl();
+		final java.lang.Object other$redirectUrl = other.getRedirectUrl();
+		if (this$redirectUrl == null ? other$redirectUrl != null : !this$redirectUrl.equals(other$redirectUrl))
+			return false;
+		final java.lang.Object this$scope = this.getScope();
+		final java.lang.Object other$scope = other.getScope();
+		if (this$scope == null ? other$scope != null : !this$scope.equals(other$scope))
+			return false;
+		final java.lang.Object this$state = this.getState();
+		final java.lang.Object other$state = other.getState();
+		if (this$state == null ? other$state != null : !this$state.equals(other$state))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof AuthorizeRequest;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof AuthorizeRequest;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $responseType = this.getResponseType();
-    result = result * PRIME + ($responseType == null ? 43 : $responseType.hashCode());
-    final java.lang.Object $clientId = this.getClientId();
-    result = result * PRIME + ($clientId == null ? 43 : $clientId.hashCode());
-    final java.lang.Object $redirectUrl = this.getRedirectUrl();
-    result = result * PRIME + ($redirectUrl == null ? 43 : $redirectUrl.hashCode());
-    final java.lang.Object $scope = this.getScope();
-    result = result * PRIME + ($scope == null ? 43 : $scope.hashCode());
-    final java.lang.Object $state = this.getState();
-    result = result * PRIME + ($state == null ? 43 : $state.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $responseType = this.getResponseType();
+		result = result * PRIME + ($responseType == null ? 43 : $responseType.hashCode());
+		final java.lang.Object $clientId = this.getClientId();
+		result = result * PRIME + ($clientId == null ? 43 : $clientId.hashCode());
+		final java.lang.Object $redirectUrl = this.getRedirectUrl();
+		result = result * PRIME + ($redirectUrl == null ? 43 : $redirectUrl.hashCode());
+		final java.lang.Object $scope = this.getScope();
+		result = result * PRIME + ($scope == null ? 43 : $scope.hashCode());
+		final java.lang.Object $state = this.getState();
+		result = result * PRIME + ($state == null ? 43 : $state.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "AuthorizeRequest(responseType=" + this.getResponseType() + ", clientId=" + this.getClientId() + ", redirectUrl=" + this.getRedirectUrl() + ", scope=" + this.getScope() + ", state=" + this.getState() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "AuthorizeRequest(responseType=" + this.getResponseType() + ", clientId=" + this.getClientId()
+				+ ", redirectUrl=" + this.getRedirectUrl() + ", scope=" + this.getScope() + ", state=" + this.getState()
+				+ ")";
+	}
 }

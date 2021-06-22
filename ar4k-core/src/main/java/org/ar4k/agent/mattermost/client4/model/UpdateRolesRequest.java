@@ -19,49 +19,46 @@ import java.util.stream.Collectors;
 
 import org.ar4k.agent.mattermost.model.Role;
 
-/**
- * Update user roles request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#updateUserRoles(String, Role...)
- * @author Takayuki Maruyama
- */
 public final class UpdateRolesRequest {
-  private final String roles;
+	private final String roles;
 
-  public UpdateRolesRequest(Role... role) {
-    this.roles = Arrays.stream(role).map(Role::getRoleName).collect(Collectors.joining(" "));
-  }
+	public UpdateRolesRequest(Role... role) {
+		this.roles = Arrays.stream(role).map(Role::getRoleName).collect(Collectors.joining(" "));
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getRoles() {
-    return this.roles;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getRoles() {
+		return this.roles;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UpdateRolesRequest)) return false;
-    final UpdateRolesRequest other = (UpdateRolesRequest) o;
-    final java.lang.Object this$roles = this.getRoles();
-    final java.lang.Object other$roles = other.getRoles();
-    if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UpdateRolesRequest))
+			return false;
+		final UpdateRolesRequest other = (UpdateRolesRequest) o;
+		final java.lang.Object this$roles = this.getRoles();
+		final java.lang.Object other$roles = other.getRoles();
+		if (this$roles == null ? other$roles != null : !this$roles.equals(other$roles))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $roles = this.getRoles();
-    result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $roles = this.getRoles();
+		result = result * PRIME + ($roles == null ? 43 : $roles.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UpdateRolesRequest(roles=" + this.getRoles() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UpdateRolesRequest(roles=" + this.getRoles() + ")";
+	}
 }

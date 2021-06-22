@@ -14,86 +14,79 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Send verification email request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#sendVerificationEmail(String)
- * @author Takayuki Maruyama
- */
 public final class SendVerificationEmailRequest {
-  private final String email;
+	private final String email;
 
-  @java.lang.SuppressWarnings("all")
-  SendVerificationEmailRequest(final String email) {
-    this.email = email;
-  }
+	@java.lang.SuppressWarnings("all")
+	SendVerificationEmailRequest(final String email) {
+		this.email = email;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class SendVerificationEmailRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String email;
 
-  @java.lang.SuppressWarnings("all")
-  public static class SendVerificationEmailRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String email;
+		@java.lang.SuppressWarnings("all")
+		SendVerificationEmailRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    SendVerificationEmailRequestBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public SendVerificationEmailRequest.SendVerificationEmailRequestBuilder email(final String email) {
+			this.email = email;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public SendVerificationEmailRequest.SendVerificationEmailRequestBuilder email(final String email) {
-      this.email = email;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public SendVerificationEmailRequest build() {
+			return new SendVerificationEmailRequest(this.email);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public SendVerificationEmailRequest build() {
-      return new SendVerificationEmailRequest(this.email);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "SendVerificationEmailRequest.SendVerificationEmailRequestBuilder(email=" + this.email + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "SendVerificationEmailRequest.SendVerificationEmailRequestBuilder(email=" + this.email + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static SendVerificationEmailRequest.SendVerificationEmailRequestBuilder builder() {
+		return new SendVerificationEmailRequest.SendVerificationEmailRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static SendVerificationEmailRequest.SendVerificationEmailRequestBuilder builder() {
-    return new SendVerificationEmailRequest.SendVerificationEmailRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getEmail() {
+		return this.email;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getEmail() {
-    return this.email;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SendVerificationEmailRequest))
+			return false;
+		final SendVerificationEmailRequest other = (SendVerificationEmailRequest) o;
+		final java.lang.Object this$email = this.getEmail();
+		final java.lang.Object other$email = other.getEmail();
+		if (this$email == null ? other$email != null : !this$email.equals(other$email))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SendVerificationEmailRequest)) return false;
-    final SendVerificationEmailRequest other = (SendVerificationEmailRequest) o;
-    final java.lang.Object this$email = this.getEmail();
-    final java.lang.Object other$email = other.getEmail();
-    if (this$email == null ? other$email != null : !this$email.equals(other$email)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $email = this.getEmail();
+		result = result * PRIME + ($email == null ? 43 : $email.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $email = this.getEmail();
-    result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SendVerificationEmailRequest(email=" + this.getEmail() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SendVerificationEmailRequest(email=" + this.getEmail() + ")";
+	}
 }

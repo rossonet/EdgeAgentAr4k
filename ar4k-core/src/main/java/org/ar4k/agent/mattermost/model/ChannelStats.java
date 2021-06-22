@@ -16,105 +16,108 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Channel statistics.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelStats {
-  private String channelId;
-  private long memberCount;
-  /* @since Mattermost Server 5.16 */
-  private long guestCount;
-  /* @since Mattermost Server 5.16 */
-  @JsonProperty("pinnedpost_count")
-  private long pinnedPostCount;
+	private String channelId;
+	private long memberCount;
+	/* @since Mattermost Server 5.16 */
+	private long guestCount;
+	/* @since Mattermost Server 5.16 */
+	@JsonProperty("pinnedpost_count")
+	private long pinnedPostCount;
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelStats() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelStats() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getMemberCount() {
-    return this.memberCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getMemberCount() {
+		return this.memberCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getGuestCount() {
-    return this.guestCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getGuestCount() {
+		return this.guestCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getPinnedPostCount() {
-    return this.pinnedPostCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getPinnedPostCount() {
+		return this.pinnedPostCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setMemberCount(final long memberCount) {
-    this.memberCount = memberCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setMemberCount(final long memberCount) {
+		this.memberCount = memberCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setGuestCount(final long guestCount) {
-    this.guestCount = guestCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setGuestCount(final long guestCount) {
+		this.guestCount = guestCount;
+	}
 
-  @JsonProperty("pinnedpost_count")
-  @java.lang.SuppressWarnings("all")
-  public void setPinnedPostCount(final long pinnedPostCount) {
-    this.pinnedPostCount = pinnedPostCount;
-  }
+	@JsonProperty("pinnedpost_count")
+	@java.lang.SuppressWarnings("all")
+	public void setPinnedPostCount(final long pinnedPostCount) {
+		this.pinnedPostCount = pinnedPostCount;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelStats)) return false;
-    final ChannelStats other = (ChannelStats) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getMemberCount() != other.getMemberCount()) return false;
-    if (this.getGuestCount() != other.getGuestCount()) return false;
-    if (this.getPinnedPostCount() != other.getPinnedPostCount()) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelStats))
+			return false;
+		final ChannelStats other = (ChannelStats) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getMemberCount() != other.getMemberCount())
+			return false;
+		if (this.getGuestCount() != other.getGuestCount())
+			return false;
+		if (this.getPinnedPostCount() != other.getPinnedPostCount())
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelStats;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelStats;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $memberCount = this.getMemberCount();
-    result = result * PRIME + (int) ($memberCount >>> 32 ^ $memberCount);
-    final long $guestCount = this.getGuestCount();
-    result = result * PRIME + (int) ($guestCount >>> 32 ^ $guestCount);
-    final long $pinnedPostCount = this.getPinnedPostCount();
-    result = result * PRIME + (int) ($pinnedPostCount >>> 32 ^ $pinnedPostCount);
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $memberCount = this.getMemberCount();
+		result = result * PRIME + (int) ($memberCount >>> 32 ^ $memberCount);
+		final long $guestCount = this.getGuestCount();
+		result = result * PRIME + (int) ($guestCount >>> 32 ^ $guestCount);
+		final long $pinnedPostCount = this.getPinnedPostCount();
+		result = result * PRIME + (int) ($pinnedPostCount >>> 32 ^ $pinnedPostCount);
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelStats(channelId=" + this.getChannelId() + ", memberCount=" + this.getMemberCount() + ", guestCount=" + this.getGuestCount() + ", pinnedPostCount=" + this.getPinnedPostCount() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelStats(channelId=" + this.getChannelId() + ", memberCount=" + this.getMemberCount()
+				+ ", guestCount=" + this.getGuestCount() + ", pinnedPostCount=" + this.getPinnedPostCount() + ")";
+	}
 }

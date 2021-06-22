@@ -16,94 +16,96 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Slack attachment field.
- * 
- * @author Takayuki Maruyama
- */
 public class SlackAttachmentField {
-  @JsonProperty("title")
-  private String title;
-  @JsonProperty("value")
-  private Object value;
-  @JsonProperty("short")
-  private boolean shortField;
+	@JsonProperty("title")
+	private String title;
+	@JsonProperty("value")
+	private Object value;
+	@JsonProperty("short")
+	private boolean shortField;
 
-  @java.lang.SuppressWarnings("all")
-  public SlackAttachmentField() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public SlackAttachmentField() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTitle() {
-    return this.title;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTitle() {
+		return this.title;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Object getValue() {
-    return this.value;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Object getValue() {
+		return this.value;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isShortField() {
-    return this.shortField;
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isShortField() {
+		return this.shortField;
+	}
 
-  @JsonProperty("title")
-  @java.lang.SuppressWarnings("all")
-  public void setTitle(final String title) {
-    this.title = title;
-  }
+	@JsonProperty("title")
+	@java.lang.SuppressWarnings("all")
+	public void setTitle(final String title) {
+		this.title = title;
+	}
 
-  @JsonProperty("value")
-  @java.lang.SuppressWarnings("all")
-  public void setValue(final Object value) {
-    this.value = value;
-  }
+	@JsonProperty("value")
+	@java.lang.SuppressWarnings("all")
+	public void setValue(final Object value) {
+		this.value = value;
+	}
 
-  @JsonProperty("short")
-  @java.lang.SuppressWarnings("all")
-  public void setShortField(final boolean shortField) {
-    this.shortField = shortField;
-  }
+	@JsonProperty("short")
+	@java.lang.SuppressWarnings("all")
+	public void setShortField(final boolean shortField) {
+		this.shortField = shortField;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SlackAttachmentField)) return false;
-    final SlackAttachmentField other = (SlackAttachmentField) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.isShortField() != other.isShortField()) return false;
-    final java.lang.Object this$title = this.getTitle();
-    final java.lang.Object other$title = other.getTitle();
-    if (this$title == null ? other$title != null : !this$title.equals(other$title)) return false;
-    final java.lang.Object this$value = this.getValue();
-    final java.lang.Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SlackAttachmentField))
+			return false;
+		final SlackAttachmentField other = (SlackAttachmentField) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.isShortField() != other.isShortField())
+			return false;
+		final java.lang.Object this$title = this.getTitle();
+		final java.lang.Object other$title = other.getTitle();
+		if (this$title == null ? other$title != null : !this$title.equals(other$title))
+			return false;
+		final java.lang.Object this$value = this.getValue();
+		final java.lang.Object other$value = other.getValue();
+		if (this$value == null ? other$value != null : !this$value.equals(other$value))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof SlackAttachmentField;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof SlackAttachmentField;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isShortField() ? 79 : 97);
-    final java.lang.Object $title = this.getTitle();
-    result = result * PRIME + ($title == null ? 43 : $title.hashCode());
-    final java.lang.Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isShortField() ? 79 : 97);
+		final java.lang.Object $title = this.getTitle();
+		result = result * PRIME + ($title == null ? 43 : $title.hashCode());
+		final java.lang.Object $value = this.getValue();
+		result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SlackAttachmentField(title=" + this.getTitle() + ", value=" + this.getValue() + ", shortField=" + this.isShortField() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SlackAttachmentField(title=" + this.getTitle() + ", value=" + this.getValue() + ", shortField="
+				+ this.isShortField() + ")";
+	}
 }

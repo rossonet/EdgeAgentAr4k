@@ -16,19 +16,10 @@ package org.ar4k.agent.mattermost.client4.api;
 
 import org.ar4k.agent.mattermost.client4.ApiResponse;
 
-/**
- * Elasticsearch API.
- */
 public interface ElasticsearchApi {
 
-  /**
-   * test Elasticsearch configuration.
-   */
   ApiResponse<Boolean> testElasticsearchConfiguration();
 
-  /**
-   * deletes all Elasticsearch indexes.
-   */
   ApiResponse<Boolean> purgeElasticsearchIndexes();
 
 }

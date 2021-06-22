@@ -14,86 +14,79 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Verify user email request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#verifyUserEmail(String)
- * @author Takayuki Maruyama
- */
 public final class VerifyUserEmailRequest {
-  private final String token;
+	private final String token;
 
-  @java.lang.SuppressWarnings("all")
-  VerifyUserEmailRequest(final String token) {
-    this.token = token;
-  }
+	@java.lang.SuppressWarnings("all")
+	VerifyUserEmailRequest(final String token) {
+		this.token = token;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class VerifyUserEmailRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private String token;
 
-  @java.lang.SuppressWarnings("all")
-  public static class VerifyUserEmailRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private String token;
+		@java.lang.SuppressWarnings("all")
+		VerifyUserEmailRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    VerifyUserEmailRequestBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public VerifyUserEmailRequest.VerifyUserEmailRequestBuilder token(final String token) {
+			this.token = token;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public VerifyUserEmailRequest.VerifyUserEmailRequestBuilder token(final String token) {
-      this.token = token;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public VerifyUserEmailRequest build() {
+			return new VerifyUserEmailRequest(this.token);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public VerifyUserEmailRequest build() {
-      return new VerifyUserEmailRequest(this.token);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "VerifyUserEmailRequest.VerifyUserEmailRequestBuilder(token=" + this.token + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "VerifyUserEmailRequest.VerifyUserEmailRequestBuilder(token=" + this.token + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static VerifyUserEmailRequest.VerifyUserEmailRequestBuilder builder() {
+		return new VerifyUserEmailRequest.VerifyUserEmailRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static VerifyUserEmailRequest.VerifyUserEmailRequestBuilder builder() {
-    return new VerifyUserEmailRequest.VerifyUserEmailRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getToken() {
+		return this.token;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getToken() {
-    return this.token;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof VerifyUserEmailRequest))
+			return false;
+		final VerifyUserEmailRequest other = (VerifyUserEmailRequest) o;
+		final java.lang.Object this$token = this.getToken();
+		final java.lang.Object other$token = other.getToken();
+		if (this$token == null ? other$token != null : !this$token.equals(other$token))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof VerifyUserEmailRequest)) return false;
-    final VerifyUserEmailRequest other = (VerifyUserEmailRequest) o;
-    final java.lang.Object this$token = this.getToken();
-    final java.lang.Object other$token = other.getToken();
-    if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $token = this.getToken();
+		result = result * PRIME + ($token == null ? 43 : $token.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $token = this.getToken();
-    result = result * PRIME + ($token == null ? 43 : $token.hashCode());
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "VerifyUserEmailRequest(token=" + this.getToken() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "VerifyUserEmailRequest(token=" + this.getToken() + ")";
+	}
 }

@@ -17,127 +17,132 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Channel unread counts.
- * 
- * @author Takayuki Maruyama
- */
 public class ChannelUnread {
-  @JsonProperty("team_id")
-  private String teamId;
-  @JsonProperty("channel_id")
-  private String channelId;
-  @JsonProperty("msg_count")
-  private long msgCount;
-  @JsonProperty("mention_count")
-  private long mentionCount;
-  private Map<String, String> notifyProps;
+	@JsonProperty("team_id")
+	private String teamId;
+	@JsonProperty("channel_id")
+	private String channelId;
+	@JsonProperty("msg_count")
+	private long msgCount;
+	@JsonProperty("mention_count")
+	private long mentionCount;
+	private Map<String, String> notifyProps;
 
-  @java.lang.SuppressWarnings("all")
-  public ChannelUnread() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public ChannelUnread() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTeamId() {
-    return this.teamId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTeamId() {
+		return this.teamId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getChannelId() {
-    return this.channelId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getChannelId() {
+		return this.channelId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getMsgCount() {
-    return this.msgCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getMsgCount() {
+		return this.msgCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getMentionCount() {
-    return this.mentionCount;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getMentionCount() {
+		return this.mentionCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getNotifyProps() {
-    return this.notifyProps;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getNotifyProps() {
+		return this.notifyProps;
+	}
 
-  @JsonProperty("team_id")
-  @java.lang.SuppressWarnings("all")
-  public void setTeamId(final String teamId) {
-    this.teamId = teamId;
-  }
+	@JsonProperty("team_id")
+	@java.lang.SuppressWarnings("all")
+	public void setTeamId(final String teamId) {
+		this.teamId = teamId;
+	}
 
-  @JsonProperty("channel_id")
-  @java.lang.SuppressWarnings("all")
-  public void setChannelId(final String channelId) {
-    this.channelId = channelId;
-  }
+	@JsonProperty("channel_id")
+	@java.lang.SuppressWarnings("all")
+	public void setChannelId(final String channelId) {
+		this.channelId = channelId;
+	}
 
-  @JsonProperty("msg_count")
-  @java.lang.SuppressWarnings("all")
-  public void setMsgCount(final long msgCount) {
-    this.msgCount = msgCount;
-  }
+	@JsonProperty("msg_count")
+	@java.lang.SuppressWarnings("all")
+	public void setMsgCount(final long msgCount) {
+		this.msgCount = msgCount;
+	}
 
-  @JsonProperty("mention_count")
-  @java.lang.SuppressWarnings("all")
-  public void setMentionCount(final long mentionCount) {
-    this.mentionCount = mentionCount;
-  }
+	@JsonProperty("mention_count")
+	@java.lang.SuppressWarnings("all")
+	public void setMentionCount(final long mentionCount) {
+		this.mentionCount = mentionCount;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setNotifyProps(final Map<String, String> notifyProps) {
-    this.notifyProps = notifyProps;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setNotifyProps(final Map<String, String> notifyProps) {
+		this.notifyProps = notifyProps;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ChannelUnread)) return false;
-    final ChannelUnread other = (ChannelUnread) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getMsgCount() != other.getMsgCount()) return false;
-    if (this.getMentionCount() != other.getMentionCount()) return false;
-    final java.lang.Object this$teamId = this.getTeamId();
-    final java.lang.Object other$teamId = other.getTeamId();
-    if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId)) return false;
-    final java.lang.Object this$channelId = this.getChannelId();
-    final java.lang.Object other$channelId = other.getChannelId();
-    if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId)) return false;
-    final java.lang.Object this$notifyProps = this.getNotifyProps();
-    final java.lang.Object other$notifyProps = other.getNotifyProps();
-    if (this$notifyProps == null ? other$notifyProps != null : !this$notifyProps.equals(other$notifyProps)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof ChannelUnread))
+			return false;
+		final ChannelUnread other = (ChannelUnread) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getMsgCount() != other.getMsgCount())
+			return false;
+		if (this.getMentionCount() != other.getMentionCount())
+			return false;
+		final java.lang.Object this$teamId = this.getTeamId();
+		final java.lang.Object other$teamId = other.getTeamId();
+		if (this$teamId == null ? other$teamId != null : !this$teamId.equals(other$teamId))
+			return false;
+		final java.lang.Object this$channelId = this.getChannelId();
+		final java.lang.Object other$channelId = other.getChannelId();
+		if (this$channelId == null ? other$channelId != null : !this$channelId.equals(other$channelId))
+			return false;
+		final java.lang.Object this$notifyProps = this.getNotifyProps();
+		final java.lang.Object other$notifyProps = other.getNotifyProps();
+		if (this$notifyProps == null ? other$notifyProps != null : !this$notifyProps.equals(other$notifyProps))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof ChannelUnread;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof ChannelUnread;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $msgCount = this.getMsgCount();
-    result = result * PRIME + (int) ($msgCount >>> 32 ^ $msgCount);
-    final long $mentionCount = this.getMentionCount();
-    result = result * PRIME + (int) ($mentionCount >>> 32 ^ $mentionCount);
-    final java.lang.Object $teamId = this.getTeamId();
-    result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
-    final java.lang.Object $channelId = this.getChannelId();
-    result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
-    final java.lang.Object $notifyProps = this.getNotifyProps();
-    result = result * PRIME + ($notifyProps == null ? 43 : $notifyProps.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $msgCount = this.getMsgCount();
+		result = result * PRIME + (int) ($msgCount >>> 32 ^ $msgCount);
+		final long $mentionCount = this.getMentionCount();
+		result = result * PRIME + (int) ($mentionCount >>> 32 ^ $mentionCount);
+		final java.lang.Object $teamId = this.getTeamId();
+		result = result * PRIME + ($teamId == null ? 43 : $teamId.hashCode());
+		final java.lang.Object $channelId = this.getChannelId();
+		result = result * PRIME + ($channelId == null ? 43 : $channelId.hashCode());
+		final java.lang.Object $notifyProps = this.getNotifyProps();
+		result = result * PRIME + ($notifyProps == null ? 43 : $notifyProps.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "ChannelUnread(teamId=" + this.getTeamId() + ", channelId=" + this.getChannelId() + ", msgCount=" + this.getMsgCount() + ", mentionCount=" + this.getMentionCount() + ", notifyProps=" + this.getNotifyProps() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "ChannelUnread(teamId=" + this.getTeamId() + ", channelId=" + this.getChannelId() + ", msgCount="
+				+ this.getMsgCount() + ", mentionCount=" + this.getMentionCount() + ", notifyProps="
+				+ this.getNotifyProps() + ")";
+	}
 }

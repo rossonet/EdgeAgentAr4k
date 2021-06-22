@@ -20,40 +20,20 @@ import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.model.Status;
 import org.ar4k.agent.mattermost.model.StatusList;
 
-/**
- * Status API.
- * 
- * @author Takayuki Maruyama
- */
 public interface StatusApi {
 
-  /**
-   * returns a user status based on the provided user id string.
-   */
-  default ApiResponse<Status> getUserStatus(String userId) {
-    return getUserStatus(userId, null);
-  }
+	default ApiResponse<Status> getUserStatus(String userId) {
+		return getUserStatus(userId, null);
+	}
 
-  /**
-   * returns a user status based on the provided user id string.
-   */
-  ApiResponse<Status> getUserStatus(String userId, String etag);
+	ApiResponse<Status> getUserStatus(String userId, String etag);
 
-  /**
-   * returns a list of users status based on the provided user ids.
-   */
-  default ApiResponse<StatusList> getUsersStatusesByIds(Collection<String> userIds) {
-    return getUsersStatusesByIds(userIds.toArray(new String[0]));
-  }
+	default ApiResponse<StatusList> getUsersStatusesByIds(Collection<String> userIds) {
+		return getUsersStatusesByIds(userIds.toArray(new String[0]));
+	}
 
-  /**
-   * returns a list of users status based on the provided user ids.
-   */
-  ApiResponse<StatusList> getUsersStatusesByIds(String... userIds);
+	ApiResponse<StatusList> getUsersStatusesByIds(String... userIds);
 
-  /**
-   * sets a user's status based on the provided user id string.
-   */
-  ApiResponse<Status> updateUserStatus(String userId, Status userStatus);
+	ApiResponse<Status> updateUserStatus(String userId, Status userStatus);
 
 }

@@ -19,10 +19,9 @@ import java.util.function.Supplier;
 
 public interface HasCode<T extends Enum<T>> {
 
-  String getCode();
+	String getCode();
 
-  static <E extends HasCode<?>> E of(Supplier<E[]> values, String code, E defaultValue) {
-    return Arrays.stream(values.get()).filter(e -> e.getCode().equals(code)).findFirst()
-        .orElse(defaultValue);
-  }
+	static <E extends HasCode<?>> E of(Supplier<E[]> values, String code, E defaultValue) {
+		return Arrays.stream(values.get()).filter(e -> e.getCode().equals(code)).findFirst().orElse(defaultValue);
+	}
 }

@@ -24,32 +24,27 @@ import java.io.IOException;
 import org.ar4k.agent.mattermost.model.TeamType.TeamTypeDeserializer;
 import org.ar4k.agent.mattermost.model.serialize.HasCodeSerializer;
 
-/**
- * The type of team.
- * 
- * @author Takayuki Maruyama
- */
 @JsonSerialize(using = HasCodeSerializer.class)
 @JsonDeserialize(using = TeamTypeDeserializer.class)
 public enum TeamType implements HasCode<TeamType> {
-  OPEN("O"), INVITE("I");
-  private final String code;
+	OPEN("O"), INVITE("I");
 
-  private TeamType(String code) {
-    this.code = code;
-  }
+	private final String code;
 
+	private TeamType(String code) {
+		this.code = code;
+	}
 
-  static class TeamTypeDeserializer extends JsonDeserializer<TeamType> {
-    @Override
-    public TeamType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-      String jsonValue = p.getText();
-      return HasCode.of(TeamType::values, jsonValue, OPEN);
-    }
-  }
+	static class TeamTypeDeserializer extends JsonDeserializer<TeamType> {
+		@Override
+		public TeamType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+			String jsonValue = p.getText();
+			return HasCode.of(TeamType::values, jsonValue, OPEN);
+		}
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 }

@@ -20,30 +20,14 @@ import java.util.Map;
 import org.ar4k.agent.mattermost.client4.ApiResponse;
 import org.ar4k.agent.mattermost.client4.Pager;
 
-/**
- * Log API.
- * 
- * @author Takayuki Maruyama
- */
 public interface LogsApi {
 
-  /**
-   * page of logs as a string list.
-   */
-  default ApiResponse<List<String>> getLogs() {
-    return getLogs(Pager.defaultPager());
-  }
+	default ApiResponse<List<String>> getLogs() {
+		return getLogs(Pager.defaultPager());
+	}
 
-  /**
-   * page of logs as a string list.
-   */
-  ApiResponse<List<String>> getLogs(Pager pager);
+	ApiResponse<List<String>> getLogs(Pager pager);
 
-  /**
-   * This method is a convenience Web Service call so clients can log messages into the server-side
-   * logs. For example we typically log javascript error messages into the server-side. It returns
-   * the log message if the logging was successful.
-   */
-  ApiResponse<Map<String, String>> postLog(Map<String, String> message);
+	ApiResponse<Map<String, String>> postLog(Map<String, String> message);
 
 }

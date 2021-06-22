@@ -14,52 +14,52 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Revoke user access token request.
- */
 public final class RevokeTokenRequest {
-  private final String tokenId;
+	private final String tokenId;
 
-  @java.lang.SuppressWarnings("all")
-  private RevokeTokenRequest(final String tokenId) {
-    this.tokenId = tokenId;
-  }
+	@java.lang.SuppressWarnings("all")
+	private RevokeTokenRequest(final String tokenId) {
+		this.tokenId = tokenId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static RevokeTokenRequest of(final String tokenId) {
-    return new RevokeTokenRequest(tokenId);
-  }
+	@java.lang.SuppressWarnings("all")
+	public static RevokeTokenRequest of(final String tokenId) {
+		return new RevokeTokenRequest(tokenId);
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getTokenId() {
-    return this.tokenId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getTokenId() {
+		return this.tokenId;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof RevokeTokenRequest)) return false;
-    final RevokeTokenRequest other = (RevokeTokenRequest) o;
-    final java.lang.Object this$tokenId = this.getTokenId();
-    final java.lang.Object other$tokenId = other.getTokenId();
-    if (this$tokenId == null ? other$tokenId != null : !this$tokenId.equals(other$tokenId)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof RevokeTokenRequest))
+			return false;
+		final RevokeTokenRequest other = (RevokeTokenRequest) o;
+		final java.lang.Object this$tokenId = this.getTokenId();
+		final java.lang.Object other$tokenId = other.getTokenId();
+		if (this$tokenId == null ? other$tokenId != null : !this$tokenId.equals(other$tokenId))
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $tokenId = this.getTokenId();
-    result = result * PRIME + ($tokenId == null ? 43 : $tokenId.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $tokenId = this.getTokenId();
+		result = result * PRIME + ($tokenId == null ? 43 : $tokenId.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "RevokeTokenRequest(tokenId=" + this.getTokenId() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "RevokeTokenRequest(tokenId=" + this.getTokenId() + ")";
+	}
 }

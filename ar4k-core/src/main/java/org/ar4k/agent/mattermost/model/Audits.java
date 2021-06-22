@@ -16,12 +16,7 @@ package org.ar4k.agent.mattermost.model;
 
 import java.util.ArrayList;
 
-/**
- * List of {@link Audit}.
- * 
- * @author Takayuki Maruyama
- */
 public class Audits extends ArrayList<Audit> {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

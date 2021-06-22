@@ -17,113 +17,116 @@ package org.ar4k.agent.mattermost.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/**
- * Websocket event payload.
- * 
- * @author Takayuki Maruyama
- */
 public class WebSocketEvent {
-  @JsonProperty("event")
-  private WebSocketEventType event;
-  @JsonProperty("data")
-  private Map<String, String> data;
-  @JsonProperty("broadcast")
-  private WebsocketBroadcast broadcast;
-  @JsonProperty("seq")
-  private long sequence;
+	@JsonProperty("event")
+	private WebSocketEventType event;
+	@JsonProperty("data")
+	private Map<String, String> data;
+	@JsonProperty("broadcast")
+	private WebsocketBroadcast broadcast;
+	@JsonProperty("seq")
+	private long sequence;
 
-  @java.lang.SuppressWarnings("all")
-  public WebSocketEvent() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public WebSocketEvent() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public WebSocketEventType getEvent() {
-    return this.event;
-  }
+	@java.lang.SuppressWarnings("all")
+	public WebSocketEventType getEvent() {
+		return this.event;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Map<String, String> getData() {
-    return this.data;
-  }
+	@java.lang.SuppressWarnings("all")
+	public Map<String, String> getData() {
+		return this.data;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public WebsocketBroadcast getBroadcast() {
-    return this.broadcast;
-  }
+	@java.lang.SuppressWarnings("all")
+	public WebsocketBroadcast getBroadcast() {
+		return this.broadcast;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getSequence() {
-    return this.sequence;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getSequence() {
+		return this.sequence;
+	}
 
-  @JsonProperty("event")
-  @java.lang.SuppressWarnings("all")
-  public void setEvent(final WebSocketEventType event) {
-    this.event = event;
-  }
+	@JsonProperty("event")
+	@java.lang.SuppressWarnings("all")
+	public void setEvent(final WebSocketEventType event) {
+		this.event = event;
+	}
 
-  @JsonProperty("data")
-  @java.lang.SuppressWarnings("all")
-  public void setData(final Map<String, String> data) {
-    this.data = data;
-  }
+	@JsonProperty("data")
+	@java.lang.SuppressWarnings("all")
+	public void setData(final Map<String, String> data) {
+		this.data = data;
+	}
 
-  @JsonProperty("broadcast")
-  @java.lang.SuppressWarnings("all")
-  public void setBroadcast(final WebsocketBroadcast broadcast) {
-    this.broadcast = broadcast;
-  }
+	@JsonProperty("broadcast")
+	@java.lang.SuppressWarnings("all")
+	public void setBroadcast(final WebsocketBroadcast broadcast) {
+		this.broadcast = broadcast;
+	}
 
-  @JsonProperty("seq")
-  @java.lang.SuppressWarnings("all")
-  public void setSequence(final long sequence) {
-    this.sequence = sequence;
-  }
+	@JsonProperty("seq")
+	@java.lang.SuppressWarnings("all")
+	public void setSequence(final long sequence) {
+		this.sequence = sequence;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof WebSocketEvent)) return false;
-    final WebSocketEvent other = (WebSocketEvent) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getSequence() != other.getSequence()) return false;
-    final java.lang.Object this$event = this.getEvent();
-    final java.lang.Object other$event = other.getEvent();
-    if (this$event == null ? other$event != null : !this$event.equals(other$event)) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
-    final java.lang.Object this$broadcast = this.getBroadcast();
-    final java.lang.Object other$broadcast = other.getBroadcast();
-    if (this$broadcast == null ? other$broadcast != null : !this$broadcast.equals(other$broadcast)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof WebSocketEvent))
+			return false;
+		final WebSocketEvent other = (WebSocketEvent) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getSequence() != other.getSequence())
+			return false;
+		final java.lang.Object this$event = this.getEvent();
+		final java.lang.Object other$event = other.getEvent();
+		if (this$event == null ? other$event != null : !this$event.equals(other$event))
+			return false;
+		final java.lang.Object this$data = this.getData();
+		final java.lang.Object other$data = other.getData();
+		if (this$data == null ? other$data != null : !this$data.equals(other$data))
+			return false;
+		final java.lang.Object this$broadcast = this.getBroadcast();
+		final java.lang.Object other$broadcast = other.getBroadcast();
+		if (this$broadcast == null ? other$broadcast != null : !this$broadcast.equals(other$broadcast))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof WebSocketEvent;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof WebSocketEvent;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $sequence = this.getSequence();
-    result = result * PRIME + (int) ($sequence >>> 32 ^ $sequence);
-    final java.lang.Object $event = this.getEvent();
-    result = result * PRIME + ($event == null ? 43 : $event.hashCode());
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
-    final java.lang.Object $broadcast = this.getBroadcast();
-    result = result * PRIME + ($broadcast == null ? 43 : $broadcast.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $sequence = this.getSequence();
+		result = result * PRIME + (int) ($sequence >>> 32 ^ $sequence);
+		final java.lang.Object $event = this.getEvent();
+		result = result * PRIME + ($event == null ? 43 : $event.hashCode());
+		final java.lang.Object $data = this.getData();
+		result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+		final java.lang.Object $broadcast = this.getBroadcast();
+		result = result * PRIME + ($broadcast == null ? 43 : $broadcast.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "WebSocketEvent(event=" + this.getEvent() + ", data=" + this.getData() + ", broadcast=" + this.getBroadcast() + ", sequence=" + this.getSequence() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "WebSocketEvent(event=" + this.getEvent() + ", data=" + this.getData() + ", broadcast="
+				+ this.getBroadcast() + ", sequence=" + this.getSequence() + ")";
+	}
 }

@@ -19,28 +19,12 @@ import java.nio.file.Path;
 
 import org.ar4k.agent.mattermost.client4.ApiResponse;
 
-/**
- * Branding API.
- * 
- * @author Takayuki Maruyama
- */
 public interface BrandApi {
 
-  /**
-   * retrieves the previously uploaded brand image.
-   */
-  ApiResponse<Path> getBrandImage() throws IOException;
+	ApiResponse<Path> getBrandImage() throws IOException;
 
-  /**
-   * sets the brand image for the system.
-   */
-  ApiResponse<Boolean> uploadBrandImage(Path dataFIle);
+	ApiResponse<Boolean> uploadBrandImage(Path dataFIle);
 
-  /**
-   * delete the brand image for the system.
-   * 
-   * @since Mattermost Server 5.6
-   */
-  ApiResponse<Boolean> deleteBrandImage();
+	ApiResponse<Boolean> deleteBrandImage();
 
 }

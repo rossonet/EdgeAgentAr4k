@@ -14,83 +14,76 @@
  */
 package org.ar4k.agent.mattermost.client4.model;
 
-/**
- * Update user active request payload.
- * 
- * @see org.ar4k.agent.mattermost.client4.api.UserApi#updateUserActive(String, boolean)
- * @author Takayuki Maruyama
- */
 public final class UpdateUserActiveRequest {
-  private final boolean active;
+	private final boolean active;
 
-  @java.lang.SuppressWarnings("all")
-  UpdateUserActiveRequest(final boolean active) {
-    this.active = active;
-  }
+	@java.lang.SuppressWarnings("all")
+	UpdateUserActiveRequest(final boolean active) {
+		this.active = active;
+	}
 
+	@java.lang.SuppressWarnings("all")
+	public static class UpdateUserActiveRequestBuilder {
+		@java.lang.SuppressWarnings("all")
+		private boolean active;
 
-  @java.lang.SuppressWarnings("all")
-  public static class UpdateUserActiveRequestBuilder {
-    @java.lang.SuppressWarnings("all")
-    private boolean active;
+		@java.lang.SuppressWarnings("all")
+		UpdateUserActiveRequestBuilder() {
+		}
 
-    @java.lang.SuppressWarnings("all")
-    UpdateUserActiveRequestBuilder() {
-    }
+		@java.lang.SuppressWarnings("all")
+		public UpdateUserActiveRequest.UpdateUserActiveRequestBuilder active(final boolean active) {
+			this.active = active;
+			return this;
+		}
 
-    /**
-     * @return {@code this}.
-     */
-    @java.lang.SuppressWarnings("all")
-    public UpdateUserActiveRequest.UpdateUserActiveRequestBuilder active(final boolean active) {
-      this.active = active;
-      return this;
-    }
+		@java.lang.SuppressWarnings("all")
+		public UpdateUserActiveRequest build() {
+			return new UpdateUserActiveRequest(this.active);
+		}
 
-    @java.lang.SuppressWarnings("all")
-    public UpdateUserActiveRequest build() {
-      return new UpdateUserActiveRequest(this.active);
-    }
+		@java.lang.Override
+		@java.lang.SuppressWarnings("all")
+		public java.lang.String toString() {
+			return "UpdateUserActiveRequest.UpdateUserActiveRequestBuilder(active=" + this.active + ")";
+		}
+	}
 
-    @java.lang.Override
-    @java.lang.SuppressWarnings("all")
-    public java.lang.String toString() {
-      return "UpdateUserActiveRequest.UpdateUserActiveRequestBuilder(active=" + this.active + ")";
-    }
-  }
+	@java.lang.SuppressWarnings("all")
+	public static UpdateUserActiveRequest.UpdateUserActiveRequestBuilder builder() {
+		return new UpdateUserActiveRequest.UpdateUserActiveRequestBuilder();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public static UpdateUserActiveRequest.UpdateUserActiveRequestBuilder builder() {
-    return new UpdateUserActiveRequest.UpdateUserActiveRequestBuilder();
-  }
+	@java.lang.SuppressWarnings("all")
+	public boolean isActive() {
+		return this.active;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public boolean isActive() {
-    return this.active;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof UpdateUserActiveRequest))
+			return false;
+		final UpdateUserActiveRequest other = (UpdateUserActiveRequest) o;
+		if (this.isActive() != other.isActive())
+			return false;
+		return true;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof UpdateUserActiveRequest)) return false;
-    final UpdateUserActiveRequest other = (UpdateUserActiveRequest) o;
-    if (this.isActive() != other.isActive()) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + (this.isActive() ? 79 : 97);
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    result = result * PRIME + (this.isActive() ? 79 : 97);
-    return result;
-  }
-
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "UpdateUserActiveRequest(active=" + this.isActive() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "UpdateUserActiveRequest(active=" + this.isActive() + ")";
+	}
 }

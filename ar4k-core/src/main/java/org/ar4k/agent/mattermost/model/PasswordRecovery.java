@@ -16,95 +16,97 @@ package org.ar4k.agent.mattermost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Password recovery.
- * 
- * @author Takayuki Maruyama
- */
 public class PasswordRecovery {
-  @JsonProperty("UserId")
-  private String userId;
-  @JsonProperty("Code")
-  private String code;
-  @JsonProperty("CreateAt")
-  private long createAt;
+	@JsonProperty("UserId")
+	private String userId;
+	@JsonProperty("Code")
+	private String code;
+	@JsonProperty("CreateAt")
+	private long createAt;
 
-  @java.lang.SuppressWarnings("all")
-  public PasswordRecovery() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public PasswordRecovery() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getUserId() {
-    return this.userId;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getUserId() {
+		return this.userId;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public String getCode() {
-    return this.code;
-  }
+	@java.lang.SuppressWarnings("all")
+	public String getCode() {
+		return this.code;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public long getCreateAt() {
-    return this.createAt;
-  }
+	@java.lang.SuppressWarnings("all")
+	public long getCreateAt() {
+		return this.createAt;
+	}
 
-  @JsonProperty("UserId")
-  @java.lang.SuppressWarnings("all")
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+	@JsonProperty("UserId")
+	@java.lang.SuppressWarnings("all")
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
 
-  @JsonProperty("Code")
-  @java.lang.SuppressWarnings("all")
-  public void setCode(final String code) {
-    this.code = code;
-  }
+	@JsonProperty("Code")
+	@java.lang.SuppressWarnings("all")
+	public void setCode(final String code) {
+		this.code = code;
+	}
 
-  @JsonProperty("CreateAt")
-  @java.lang.SuppressWarnings("all")
-  public void setCreateAt(final long createAt) {
-    this.createAt = createAt;
-  }
+	@JsonProperty("CreateAt")
+	@java.lang.SuppressWarnings("all")
+	public void setCreateAt(final long createAt) {
+		this.createAt = createAt;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof PasswordRecovery)) return false;
-    final PasswordRecovery other = (PasswordRecovery) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    if (this.getCreateAt() != other.getCreateAt()) return false;
-    final java.lang.Object this$userId = this.getUserId();
-    final java.lang.Object other$userId = other.getUserId();
-    if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId)) return false;
-    final java.lang.Object this$code = this.getCode();
-    final java.lang.Object other$code = other.getCode();
-    if (this$code == null ? other$code != null : !this$code.equals(other$code)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PasswordRecovery))
+			return false;
+		final PasswordRecovery other = (PasswordRecovery) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		if (this.getCreateAt() != other.getCreateAt())
+			return false;
+		final java.lang.Object this$userId = this.getUserId();
+		final java.lang.Object other$userId = other.getUserId();
+		if (this$userId == null ? other$userId != null : !this$userId.equals(other$userId))
+			return false;
+		final java.lang.Object this$code = this.getCode();
+		final java.lang.Object other$code = other.getCode();
+		if (this$code == null ? other$code != null : !this$code.equals(other$code))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof PasswordRecovery;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof PasswordRecovery;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long $createAt = this.getCreateAt();
-    result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
-    final java.lang.Object $userId = this.getUserId();
-    result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
-    final java.lang.Object $code = this.getCode();
-    result = result * PRIME + ($code == null ? 43 : $code.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final long $createAt = this.getCreateAt();
+		result = result * PRIME + (int) ($createAt >>> 32 ^ $createAt);
+		final java.lang.Object $userId = this.getUserId();
+		result = result * PRIME + ($userId == null ? 43 : $userId.hashCode());
+		final java.lang.Object $code = this.getCode();
+		result = result * PRIME + ($code == null ? 43 : $code.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "PasswordRecovery(userId=" + this.getUserId() + ", code=" + this.getCode() + ", createAt=" + this.getCreateAt() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "PasswordRecovery(userId=" + this.getUserId() + ", code=" + this.getCode() + ", createAt="
+				+ this.getCreateAt() + ")";
+	}
 }

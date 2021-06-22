@@ -19,66 +19,65 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Invite infos.
- * 
- * @author Takayuki Maruyama
- */
 public class Invites implements Iterable<Map<String, String>> {
-  @JsonProperty("invites")
-  private List<Map<String, String>> invites;
+	@JsonProperty("invites")
+	private List<Map<String, String>> invites;
 
-  @Override
-  public Iterator<Map<String, String>> iterator() {
-    return invites.iterator();
-  }
+	@Override
+	public Iterator<Map<String, String>> iterator() {
+		return invites.iterator();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public Invites() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public Invites() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<Map<String, String>> getInvites() {
-    return this.invites;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<Map<String, String>> getInvites() {
+		return this.invites;
+	}
 
-  @JsonProperty("invites")
-  @java.lang.SuppressWarnings("all")
-  public void setInvites(final List<Map<String, String>> invites) {
-    this.invites = invites;
-  }
+	@JsonProperty("invites")
+	@java.lang.SuppressWarnings("all")
+	public void setInvites(final List<Map<String, String>> invites) {
+		this.invites = invites;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof Invites)) return false;
-    final Invites other = (Invites) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$invites = this.getInvites();
-    final java.lang.Object other$invites = other.getInvites();
-    if (this$invites == null ? other$invites != null : !this$invites.equals(other$invites)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Invites))
+			return false;
+		final Invites other = (Invites) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$invites = this.getInvites();
+		final java.lang.Object other$invites = other.getInvites();
+		if (this$invites == null ? other$invites != null : !this$invites.equals(other$invites))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof Invites;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof Invites;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $invites = this.getInvites();
-    result = result * PRIME + ($invites == null ? 43 : $invites.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $invites = this.getInvites();
+		result = result * PRIME + ($invites == null ? 43 : $invites.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "Invites(invites=" + this.getInvites() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "Invites(invites=" + this.getInvites() + ")";
+	}
 }

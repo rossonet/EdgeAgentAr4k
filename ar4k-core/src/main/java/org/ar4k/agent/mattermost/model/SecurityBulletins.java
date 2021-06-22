@@ -17,64 +17,64 @@ package org.ar4k.agent.mattermost.model;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * List of {@link SecurityBulletin}.
- * 
- * @author Takayuki Maruyama
- */
 public class SecurityBulletins implements Iterable<SecurityBulletin> {
-  private List<SecurityBulletin> securityBulletins;
+	private List<SecurityBulletin> securityBulletins;
 
-  @Override
-  public Iterator<SecurityBulletin> iterator() {
-    return securityBulletins.iterator();
-  }
+	@Override
+	public Iterator<SecurityBulletin> iterator() {
+		return securityBulletins.iterator();
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public SecurityBulletins() {
-  }
+	@java.lang.SuppressWarnings("all")
+	public SecurityBulletins() {
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public List<SecurityBulletin> getSecurityBulletins() {
-    return this.securityBulletins;
-  }
+	@java.lang.SuppressWarnings("all")
+	public List<SecurityBulletin> getSecurityBulletins() {
+		return this.securityBulletins;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  public void setSecurityBulletins(final List<SecurityBulletin> securityBulletins) {
-    this.securityBulletins = securityBulletins;
-  }
+	@java.lang.SuppressWarnings("all")
+	public void setSecurityBulletins(final List<SecurityBulletin> securityBulletins) {
+		this.securityBulletins = securityBulletins;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public boolean equals(final java.lang.Object o) {
-    if (o == this) return true;
-    if (!(o instanceof SecurityBulletins)) return false;
-    final SecurityBulletins other = (SecurityBulletins) o;
-    if (!other.canEqual((java.lang.Object) this)) return false;
-    final java.lang.Object this$securityBulletins = this.getSecurityBulletins();
-    final java.lang.Object other$securityBulletins = other.getSecurityBulletins();
-    if (this$securityBulletins == null ? other$securityBulletins != null : !this$securityBulletins.equals(other$securityBulletins)) return false;
-    return true;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public boolean equals(final java.lang.Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof SecurityBulletins))
+			return false;
+		final SecurityBulletins other = (SecurityBulletins) o;
+		if (!other.canEqual((java.lang.Object) this))
+			return false;
+		final java.lang.Object this$securityBulletins = this.getSecurityBulletins();
+		final java.lang.Object other$securityBulletins = other.getSecurityBulletins();
+		if (this$securityBulletins == null ? other$securityBulletins != null
+				: !this$securityBulletins.equals(other$securityBulletins))
+			return false;
+		return true;
+	}
 
-  @java.lang.SuppressWarnings("all")
-  protected boolean canEqual(final java.lang.Object other) {
-    return other instanceof SecurityBulletins;
-  }
+	@java.lang.SuppressWarnings("all")
+	protected boolean canEqual(final java.lang.Object other) {
+		return other instanceof SecurityBulletins;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final java.lang.Object $securityBulletins = this.getSecurityBulletins();
-    result = result * PRIME + ($securityBulletins == null ? 43 : $securityBulletins.hashCode());
-    return result;
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		final java.lang.Object $securityBulletins = this.getSecurityBulletins();
+		result = result * PRIME + ($securityBulletins == null ? 43 : $securityBulletins.hashCode());
+		return result;
+	}
 
-  @java.lang.Override
-  @java.lang.SuppressWarnings("all")
-  public java.lang.String toString() {
-    return "SecurityBulletins(securityBulletins=" + this.getSecurityBulletins() + ")";
-  }
+	@java.lang.Override
+	@java.lang.SuppressWarnings("all")
+	public java.lang.String toString() {
+		return "SecurityBulletins(securityBulletins=" + this.getSecurityBulletins() + ")";
+	}
 }
