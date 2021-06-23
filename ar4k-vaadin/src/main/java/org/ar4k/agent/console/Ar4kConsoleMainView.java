@@ -45,12 +45,12 @@ import com.vaadin.flow.theme.material.Material;
 @Theme(value = Material.class, variant = Material.DARK)
 @PageTitle("Ar4k Console")
 @StyleSheet("frontend://edge.css")
-public class MainView extends VerticalLayout implements IMainView {
+public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 
 	private static final long serialVersionUID = 53637205682774475L;
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MainView.class.toString());
+			.getLogger(Ar4kConsoleMainView.class.toString());
 
 	public static final String PACKET_SEARCH_BASE = "org.ar4k.agent";
 
@@ -67,7 +67,7 @@ public class MainView extends VerticalLayout implements IMainView {
 	// private final Board board = new Board();
 	private BeaconAgentDialog beaconAgentForm = null;
 
-	public MainView() {
+	public Ar4kConsoleMainView() {
 		addClassName("main-view");
 		configureMenu();
 		setMargin(true);

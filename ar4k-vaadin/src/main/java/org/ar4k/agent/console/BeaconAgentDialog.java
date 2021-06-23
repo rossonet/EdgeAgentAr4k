@@ -134,7 +134,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 
 	private List<AgentTab> getAgentTabs() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		List<AgentTab> annotatedTabs = getAnnotatedTabs(MainView.PACKET_SEARCH_BASE);
+		List<AgentTab> annotatedTabs = getAnnotatedTabs(Ar4kConsoleMainView.PACKET_SEARCH_BASE);
 		List<AgentTab> finalTabs = new ArrayList<>();
 		for (AgentTab a : annotatedTabs) {
 			if (a.isActive(beaconAgentWrapper)) {

@@ -16,6 +16,7 @@ package org.ar4k.agent.console;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +25,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Andrea Ambrosini
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
 @ComponentScan("org.ar4k.agent")
 public class Ar4kAgentDruido {
 
