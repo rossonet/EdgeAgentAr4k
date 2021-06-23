@@ -16,7 +16,7 @@
 
 [ar4k-ai-nlp](javadoc/ar4k-ai-nlp/index.html)
 
-[ar4k-industrial](javadoc/ar4k-inndustrial/index.html)
+[ar4k-industrial](javadoc/ar4k-industrial/index.html)
 
 [ar4k-serial-comm](javadoc/ar4k-serial-comm/index.html)
 
