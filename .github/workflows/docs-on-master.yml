@@ -36,6 +36,13 @@ jobs:
         python3 -m pip install --upgrade pip     # install pip
         python3 -m pip install mkdocs            # install mkdocs 
         python3 -m pip install mkdocs-material   # install material theme
+    - name: Configure GPG Key
+      run: |
+        mkdir -p ~/.gnupg/
+        printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
+        gpg --import --batch ~/.gnupg/private.key
+      env:
+        GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
     - name: Build docs
       run: ./scripts/genera-documentazione.sh
     - name: Publish docs
