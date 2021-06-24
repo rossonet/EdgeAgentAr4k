@@ -647,25 +647,42 @@ public class ShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Stop runtime service", group = "Agent Life Cycle Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testIsRunningOk")
-	public void stopService() {
-		// TODO implementare lo spegnimento di un servizio
+	@ShellMethodAvailability("sessionOkOrStatusInit")
+	public void stopService(String uniqueId) {
+		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
+			if (servizio.getPot().getConfiguration().getUniqueId().equals(uniqueId)) {
+				servizio.stop();
+				break;
+			}
+		}
 	}
 
 	@ShellMethod(value = "Start runtime service", group = "Agent Life Cycle Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("testIsRunningOk")
-	public void startServices() {
-		// TODO implementare l'accensione di un servizio
+	@ShellMethodAvailability("sessionOkOrStatusInit")
+	public void startService(String uniqueId) {
+		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
+			if (servizio.getPot().getConfiguration().getUniqueId().equals(uniqueId)) {
+				servizio.start();
+				break;
+			}
+		}
 	}
 
 	@ShellMethod(value = "Get details of a runtime service", group = "Agent Life Cycle Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testIsRunningOk")
-	public String getServiceDetails() {
-		String risposta = "";
-		// TODO implementare la visulizzazione dei dettagli di un servizio
-		return risposta;
+	public String getServiceDetails(String uniqueId) {
+		StringBuilder risposta = new StringBuilder();
+		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
+			if (servizio.getPot().getConfiguration().getUniqueId().equals(uniqueId)) {
+				risposta.append("POT : " + servizio.getPot().toString() + "\n");
+				risposta.append("CONFIG : " + servizio.getPot().getConfiguration().toString() + "\n");
+				risposta.append("SERVIZIO : " + servizio.toString());
+				break;
+			}
+		}
+		return risposta.toString();
 	}
 
 	@ShellMethod(value = "Clone runtime config in the runtime list with a new id, name and prompt", group = "Agent Life Cycle Commands")
