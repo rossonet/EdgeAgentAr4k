@@ -155,4 +155,21 @@ public class BeaconService implements EdgeComponent {
 		return getConfiguration().getName();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BeaconService [");
+		if (beaconServer != null) {
+			builder.append("beaconServer=");
+			builder.append(beaconServer);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

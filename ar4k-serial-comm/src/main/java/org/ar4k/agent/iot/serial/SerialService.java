@@ -189,11 +189,6 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 	}
 
 	@Override
-	public String toString() {
-		return comPort != null ? comPort.getSystemPortName() + " [" + comPort.isOpen() + "]" : "DISCONNECTED";
-	}
-
-	@Override
 	public void close() throws IOException {
 		kill();
 	}
@@ -255,5 +250,67 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SerialService [");
+		if (comPort != null) {
+			builder.append("comPort=");
+			builder.append(comPort);
+			builder.append(", ");
+		}
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (channelRoot != null) {
+			builder.append("channelRoot=");
+			builder.append(channelRoot);
+			builder.append(", ");
+		}
+		if (readChannelBytes != null) {
+			builder.append("readChannelBytes=");
+			builder.append(readChannelBytes);
+			builder.append(", ");
+		}
+		if (readChannel != null) {
+			builder.append("readChannel=");
+			builder.append(readChannel);
+			builder.append(", ");
+		}
+		if (writeChannel != null) {
+			builder.append("writeChannel=");
+			builder.append(writeChannel);
+			builder.append(", ");
+		}
+		if (writeChannelBytes != null) {
+			builder.append("writeChannelBytes=");
+			builder.append(writeChannelBytes);
+			builder.append(", ");
+		}
+		if (handlerBytesWriter != null) {
+			builder.append("handlerBytesWriter=");
+			builder.append(handlerBytesWriter);
+			builder.append(", ");
+		}
+		if (handlerStringWriter != null) {
+			builder.append("handlerStringWriter=");
+			builder.append(handlerStringWriter);
+			builder.append(", ");
+		}
+		if (dataspace != null) {
+			builder.append("dataspace=");
+			builder.append(dataspace);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 }

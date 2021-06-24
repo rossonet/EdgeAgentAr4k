@@ -637,10 +637,10 @@ public class ShellInterface extends AbstractShellHelper {
 	public String listServices() {
 		String risposta = "";
 		for (final ServiceComponent<EdgeComponent> servizio : homunculus.getComponents()) {
-			risposta = risposta + AnsiOutput.toString(AnsiColor.GREEN,
-					servizio.getPot().getConfiguration().getUniqueId().toString(), AnsiColor.DEFAULT, " - ",
-					servizio.getPot().getConfiguration().getName(), " [", AnsiColor.RED, servizio.toString(),
-					AnsiColor.DEFAULT, "]\n");
+			risposta = risposta
+					+ AnsiOutput.toString(AnsiColor.GREEN, servizio.getPot().getConfiguration().getUniqueId(),
+							AnsiColor.DEFAULT, " - ", servizio.getPot().getConfiguration().getName(), " [",
+							AnsiColor.RED, servizio.toString(), AnsiColor.DEFAULT, "]\n\n");
 		}
 		return risposta;
 	}
@@ -678,7 +678,8 @@ public class ShellInterface extends AbstractShellHelper {
 			if (servizio.getPot().getConfiguration().getUniqueId().equals(uniqueId)) {
 				risposta.append("POT : " + servizio.getPot().toString() + "\n");
 				risposta.append("CONFIG : " + servizio.getPot().getConfiguration().toString() + "\n");
-				risposta.append("SERVIZIO : " + servizio.toString());
+				risposta.append("SERVIZIO : " + servizio.toString() + "\n");
+				risposta.append("RUNNING : " + servizio.isRunning());
 				break;
 			}
 		}

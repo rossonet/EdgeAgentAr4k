@@ -113,6 +113,13 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	@Parameter(names = "--clockRunnableWatchDog", description = "interval for watchdog runnable thread")
 	public int clockRunnableClass = 5000;
 
+	@Parameter(names = "--startOnInit", description = "start service on init agent?")
+	public boolean startOnInit = true;
+
+	public boolean startOnInit() {
+		return startOnInit;
+	}
+
 	/**
 	 * timeout per il check del servizio regolare (watchdog)
 	 */
@@ -351,17 +358,107 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("AbstractServiceConfig [creationDate=").append(creationDate).append(", lastUpdate=")
-				.append(lastUpdate).append(", uniqueId=").append(uniqueId).append(", name=").append(name)
-				.append(", description=").append(description).append(", version=").append(version).append(", context=")
-				.append(context).append(", groups=").append(groups).append(", ports=").append(ports).append(", tags=")
-				.append(tags).append(", provides=").append(provides).append(", required=").append(required)
-				.append(", note=").append(note).append(", comment=").append(comment).append(", remote=").append(remote)
-				.append(", data=").append(data).append(", timeoutWatchDog=").append(timeoutWatchDog)
-				.append(", watchDogRetries=").append(watchDogRetries).append(", targetRunLevel=").append(targetRunLevel)
-				.append(", pausable=").append(pausable).append(", usableWithCron=").append(usableWithCron)
-				.append(", priority=").append(priority).append("]");
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractServiceConfig [");
+		if (creationDate != null) {
+			builder.append("creationDate=");
+			builder.append(creationDate);
+			builder.append(", ");
+		}
+		if (lastUpdate != null) {
+			builder.append("lastUpdate=");
+			builder.append(lastUpdate);
+			builder.append(", ");
+		}
+		if (uniqueId != null) {
+			builder.append("uniqueId=");
+			builder.append(uniqueId);
+			builder.append(", ");
+		}
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (description != null) {
+			builder.append("description=");
+			builder.append(description);
+			builder.append(", ");
+		}
+		if (version != null) {
+			builder.append("version=");
+			builder.append(version);
+			builder.append(", ");
+		}
+		if (context != null) {
+			builder.append("context=");
+			builder.append(context);
+			builder.append(", ");
+		}
+		if (groups != null) {
+			builder.append("groups=");
+			builder.append(groups);
+			builder.append(", ");
+		}
+		if (ports != null) {
+			builder.append("ports=");
+			builder.append(ports);
+			builder.append(", ");
+		}
+		if (tags != null) {
+			builder.append("tags=");
+			builder.append(tags);
+			builder.append(", ");
+		}
+		if (provides != null) {
+			builder.append("provides=");
+			builder.append(provides);
+			builder.append(", ");
+		}
+		if (required != null) {
+			builder.append("required=");
+			builder.append(required);
+			builder.append(", ");
+		}
+		if (note != null) {
+			builder.append("note=");
+			builder.append(note);
+			builder.append(", ");
+		}
+		if (comment != null) {
+			builder.append("comment=");
+			builder.append(comment);
+			builder.append(", ");
+		}
+		builder.append("remote=");
+		builder.append(remote);
+		builder.append(", ");
+		if (data != null) {
+			builder.append("data=");
+			builder.append(data);
+			builder.append(", ");
+		}
+		builder.append("clockRunnableClass=");
+		builder.append(clockRunnableClass);
+		builder.append(", startOnInit=");
+		builder.append(startOnInit);
+		builder.append(", timeoutWatchDog=");
+		builder.append(timeoutWatchDog);
+		builder.append(", watchDogRetries=");
+		builder.append(watchDogRetries);
+		builder.append(", ");
+		if (targetRunLevel != null) {
+			builder.append("targetRunLevel=");
+			builder.append(targetRunLevel);
+			builder.append(", ");
+		}
+		builder.append("pausable=");
+		builder.append(pausable);
+		builder.append(", usableWithCron=");
+		builder.append(usableWithCron);
+		builder.append(", priority=");
+		builder.append(priority);
+		builder.append("]");
 		return builder.toString();
 	}
 

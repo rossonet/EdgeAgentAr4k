@@ -229,4 +229,46 @@ public class WatsonService implements EdgeComponent, MessageHandler {
 		}
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("WatsonService [");
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (inputChannels != null) {
+			builder.append("inputChannels=");
+			builder.append(inputChannels);
+			builder.append(", ");
+		}
+		if (outputChannels != null) {
+			builder.append("outputChannels=");
+			builder.append(outputChannels);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+			builder.append(", ");
+		}
+		if (assistant != null) {
+			builder.append("assistant=");
+			builder.append(assistant);
+			builder.append(", ");
+		}
+		if (sessions != null) {
+			builder.append("sessions=");
+			builder.append(sessions);
+			builder.append(", ");
+		}
+		if (rpcSessions != null) {
+			builder.append("rpcSessions=");
+			builder.append(rpcSessions);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

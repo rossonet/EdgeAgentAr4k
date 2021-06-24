@@ -105,11 +105,6 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	}
 
 	@Override
-	public String toString() {
-		return configuration.getClass().getName() + " " + configuration;
-	}
-
-	@Override
 	public synchronized ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
 		final StringMessage message = new StringMessage();
 		if (isTunnelOk() && session != null && session.isConnected()) {
@@ -151,5 +146,27 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	}
 
 	protected abstract boolean isTunnelOk();
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractSshTunnel [");
+		if (jsch != null) {
+			builder.append("jsch=");
+			builder.append(jsch);
+			builder.append(", ");
+		}
+		if (session != null) {
+			builder.append("session=");
+			builder.append(session);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

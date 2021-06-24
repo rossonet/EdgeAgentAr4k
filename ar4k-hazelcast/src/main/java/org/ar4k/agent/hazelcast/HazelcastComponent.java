@@ -109,12 +109,6 @@ public class HazelcastComponent implements EdgeComponent {
 		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().destroyBean(this);
 	}
 
-	@Override
-	public String toString() {
-		return hazelcastInstance != null ? hazelcastInstance.getCluster().getClusterState().toString()
-				: "hazelcastInstance null";
-	}
-
 	public HazelcastInstance createOrGetHazelcastInstance() {
 		if (hazelcastInstance == null) {
 			hazelcastInstance = Hazelcast.newHazelcastInstance(generateHazelcastConfig());
@@ -206,6 +200,48 @@ public class HazelcastComponent implements EdgeComponent {
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HazelcastComponent [");
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (hazelcastInstance != null) {
+			builder.append("hazelcastInstance=");
+			builder.append(hazelcastInstance);
+			builder.append(", ");
+		}
+		if (beanName != null) {
+			builder.append("beanName=");
+			builder.append(beanName);
+			builder.append(", ");
+		}
+		if (subscriberTopicsFromExternal != null) {
+			builder.append("subscriberTopicsFromExternal=");
+			builder.append(subscriberTopicsFromExternal);
+			builder.append(", ");
+		}
+		if (subscriberTopicsFromInternal != null) {
+			builder.append("subscriberTopicsFromInternal=");
+			builder.append(subscriberTopicsFromInternal);
+			builder.append(", ");
+		}
+		if (dataspace != null) {
+			builder.append("dataspace=");
+			builder.append(dataspace);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

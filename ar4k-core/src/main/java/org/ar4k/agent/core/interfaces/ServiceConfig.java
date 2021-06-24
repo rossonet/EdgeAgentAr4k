@@ -13,6 +13,8 @@ import java.util.List;
 public interface ServiceConfig extends ConfigSeed {
 
 	int getMaxRestartRetries();
+	
+	boolean startOnInit();
 
 	int getPriority();
 

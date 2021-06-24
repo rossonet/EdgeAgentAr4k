@@ -581,8 +581,6 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 			builder.append("stateTarget=").append(stateTarget).append(", ");
 		if (statesBefore != null)
 			builder.append("statesBefore=").append(statesBefore).append(", ");
-		if (components != null)
-			builder.append("components=").append(components).append(", ");
 		if (dataStore != null)
 			builder.append("dataStore_size=").append(dataStore != null ? dataStore.size() : 0).append(", ");
 		if (localUsers != null)

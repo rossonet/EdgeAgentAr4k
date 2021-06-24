@@ -53,7 +53,7 @@ import com.google.gson.GsonBuilder;
  *
  **/
 public class SshdSystemService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
-ChannelListener, PortForwardingEventListener {
+		ChannelListener, PortForwardingEventListener {
 
 	@Override
 	public void establishingExplicitTunnel(Session session, SshdSocketAddress local, SshdSocketAddress remote,
@@ -237,6 +237,38 @@ ChannelListener, PortForwardingEventListener {
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SshdSystemService [");
+		if (server != null) {
+			builder.append("server=");
+			builder.append(server);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (requestCommandChannel != null) {
+			builder.append("requestCommandChannel=");
+			builder.append(requestCommandChannel);
+			builder.append(", ");
+		}
+		if (replyCommandChannel != null) {
+			builder.append("replyCommandChannel=");
+			builder.append(replyCommandChannel);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

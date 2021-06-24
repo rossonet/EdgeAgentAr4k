@@ -45,7 +45,7 @@ import com.google.gson.GsonBuilder;
  *
  */
 public class SshdHomunculusService implements EdgeComponent, SshFutureListener<CloseFuture>, SessionListener,
-ChannelListener, PortForwardingEventListener {
+		ChannelListener, PortForwardingEventListener {
 
 	private final static Gson gson = new GsonBuilder().create();
 
@@ -215,6 +215,38 @@ ChannelListener, PortForwardingEventListener {
 		message.setPayload(serviceStatus.toString());
 		statusChannel.getChannel().send(message);
 		return serviceStatus;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SshdHomunculusService [");
+		if (server != null) {
+			builder.append("server=");
+			builder.append(server);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (requestCommandChannel != null) {
+			builder.append("requestCommandChannel=");
+			builder.append(requestCommandChannel);
+			builder.append(", ");
+		}
+		if (replyCommandChannel != null) {
+			builder.append("replyCommandChannel=");
+			builder.append(replyCommandChannel);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

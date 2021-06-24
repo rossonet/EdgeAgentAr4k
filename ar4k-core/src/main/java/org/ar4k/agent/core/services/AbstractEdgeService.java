@@ -137,7 +137,7 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 					Thread.currentThread().setName("init " + pot.getServiceName());
 					pot.init();
 				} catch (Exception e) {
-					logger.logException("in service " + pot.getConfiguration() + " init", e);
+					logger.logException("in service " + pot + " init", e);
 				}
 			}
 		});
@@ -145,12 +145,12 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 			callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
 			lastRestart = Instant.now();
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			logger.logException("service " + pot.getConfiguration() + " timeout during init", e);
+			logger.logException("service " + pot + " timeout during init", e);
 		}
 		if (watchDogTask == null) {
 
 		}
-		logger.info("started service " + getPot().getConfiguration());
+		logger.info("started service " + getPot());
 	}
 
 	@Override
@@ -162,27 +162,16 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 				try {
 					pot.kill();
 				} catch (Exception e) {
-					logger.logException("in service " + pot.getConfiguration() + " kill", e);
+					logger.logException("in service " + pot + " kill", e);
 				}
 			}
 		});
 		try {
 			callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			logger.logException("service " + pot.getConfiguration() + " timeout during kill", e);
+			logger.logException("service " + pot + " timeout during kill", e);
 		}
-		logger.info("stopped service " + getPot().getConfiguration());
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AbstractAr4kService [pot=").append(pot).append(", maxFaults=").append(maxFaults)
-				.append(", watchDogInterval=").append(watchDogInterval).append(", startRetries=").append(startRetries)
-				.append(", stopped=").append(stopped).append(", lastRestart=").append(lastRestart)
-				.append(", watchDogTimeout=").append(watchDogTimeout).append(", watchDogTask=").append(watchDogTask)
-				.append("]");
-		return builder.toString();
+		logger.info("stopped service " + getPot());
 	}
 
 	private void createTask(Timer timerScheduler) {
@@ -191,25 +180,32 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 	}
 
 	private ServiceStatus getUpdateFromPot() {
-		final Future<ServiceStatus> callFuture = (executor != null) ? (executor.submit(new Callable<ServiceStatus>() {
-			@Override
-			public ServiceStatus call() {
-				try {
-					return pot.updateAndGetStatus();
-				} catch (Exception e) {
-					logger.info(
-							"in service " + pot.getConfiguration() + " update\n" + EdgeLogger.stackTraceToString(e, 6));
-					notifyException();
-					return ServiceStatus.FAULT;
-				}
+		if (!stopped.get()) {
+			final Future<ServiceStatus> callFuture = (executor != null)
+					? (executor.submit(new Callable<ServiceStatus>() {
+						@Override
+						public ServiceStatus call() {
+							try {
+								return pot.updateAndGetStatus();
+							} catch (Exception e) {
+								logger.info("in service " + pot.getConfiguration() + " update\n"
+										+ EdgeLogger.stackTraceToString(e, 6));
+								notifyException();
+								return ServiceStatus.FAULT;
+							}
+						}
+					}))
+					: null;
+			try {
+				return callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
+			} catch (Exception e) {
+				logger.info(
+						"service " + pot.getConfiguration() + " during update\n" + EdgeLogger.stackTraceToString(e, 6));
+				notifyException();
+				return ServiceStatus.FAULT;
 			}
-		})) : null;
-		try {
-			return callFuture.get(watchDogTimeout, TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
-			logger.info("service " + pot.getConfiguration() + " during update\n" + EdgeLogger.stackTraceToString(e, 6));
-			notifyException();
-			return ServiceStatus.FAULT;
+		} else {
+			return ServiceStatus.STOPPED;
 		}
 	}
 
@@ -228,6 +224,46 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 				}
 			});
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractEdgeService [");
+		if (executor != null) {
+			builder.append("executor=");
+			builder.append(executor);
+			builder.append(", ");
+		}
+		if (lastRestart != null) {
+			builder.append("lastRestart=");
+			builder.append(lastRestart);
+			builder.append(", ");
+		}
+		builder.append("maxFaults=");
+		builder.append(maxFaults);
+		builder.append(", ");
+		if (pot != null) {
+			builder.append("pot=");
+			builder.append(pot);
+			builder.append(", ");
+		}
+		if (startRetries != null) {
+			builder.append("startRetries=");
+			builder.append(startRetries);
+			builder.append(", ");
+		}
+		if (stopped != null) {
+			builder.append("stopped=");
+			builder.append(stopped);
+			builder.append(", ");
+		}
+		builder.append("watchDogInterval=");
+		builder.append(watchDogInterval);
+		builder.append(", watchDogTimeout=");
+		builder.append(watchDogTimeout);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

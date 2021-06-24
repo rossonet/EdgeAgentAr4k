@@ -50,14 +50,6 @@ public class DroolsService implements EdgeComponent {
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(DroolsService.class.toString());
 
-	@Override
-	public String toString() {
-		return "DroolsService [configuration=" + configuration + ", kieContainer=" + kieContainer + ", kieServices="
-				+ kieServices + ", kieRepository=" + kieRepository + ", allResources=" + allResources + ", kieModule="
-				+ kieModule + ", kieSession=" + kieSession + ", kieStatelessSession=" + kieStatelessSession
-				+ ", homunculus=" + homunculus + ", dataAddress=" + dataAddress + "]";
-	}
-
 	public enum DroolsServiceUpdateAction {
 		FIRE_UNTIL_HALT, FIRE_ALL_RULES, NONE
 	}
@@ -375,6 +367,63 @@ public class DroolsService implements EdgeComponent {
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("DroolsService [");
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (kieContainer != null) {
+			builder.append("kieContainer=");
+			builder.append(kieContainer);
+			builder.append(", ");
+		}
+		if (kieServices != null) {
+			builder.append("kieServices=");
+			builder.append(kieServices);
+			builder.append(", ");
+		}
+		if (kieRepository != null) {
+			builder.append("kieRepository=");
+			builder.append(kieRepository);
+			builder.append(", ");
+		}
+		if (allResources != null) {
+			builder.append("allResources=");
+			builder.append(allResources);
+			builder.append(", ");
+		}
+		if (kieModule != null) {
+			builder.append("kieModule=");
+			builder.append(kieModule);
+			builder.append(", ");
+		}
+		if (kieSession != null) {
+			builder.append("kieSession=");
+			builder.append(kieSession);
+			builder.append(", ");
+		}
+		if (kieStatelessSession != null) {
+			builder.append("kieStatelessSession=");
+			builder.append(kieStatelessSession);
+			builder.append(", ");
+		}
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (dataAddress != null) {
+			builder.append("dataAddress=");
+			builder.append(dataAddress);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

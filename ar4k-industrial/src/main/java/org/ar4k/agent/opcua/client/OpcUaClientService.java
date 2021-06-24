@@ -327,4 +327,36 @@ public class OpcUaClientService implements EdgeComponent {
 				original.getTransportProfileUri(), original.getSecurityLevel());
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("OpcUaClientService [");
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (dataAddress != null) {
+			builder.append("dataAddress=");
+			builder.append(dataAddress);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (clientOpc != null) {
+			builder.append("clientOpc=");
+			builder.append(clientOpc);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

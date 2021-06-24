@@ -186,4 +186,36 @@ public class PcapSnifferService implements EdgeComponent {
 		return getConfiguration().getName();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PcapSnifferService [");
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (dataspace != null) {
+			builder.append("dataspace=");
+			builder.append(dataspace);
+			builder.append(", ");
+		}
+		if (readerChannels != null) {
+			builder.append("readerChannels=");
+			builder.append(readerChannels);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

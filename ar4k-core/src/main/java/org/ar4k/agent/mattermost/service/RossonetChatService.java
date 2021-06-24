@@ -28,9 +28,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.SubscribableChannel;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
@@ -42,7 +39,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(RossonetChatService.class.toString());
 
-	private final static Gson gson = new GsonBuilder().create();
+	// private final static Gson gson = new GsonBuilder().create();
 	// iniettata vedi set/get
 	private RossonetChatConfig configuration = null;
 
@@ -294,17 +291,6 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	}
 
 	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("RossonetChatService [configuration=");
-		builder.append(configuration);
-		builder.append(", serviceStatus=");
-		builder.append(serviceStatus);
-		builder.append("]");
-		return builder.toString();
-	}
-
-	@Override
 	public void handleMessage(Message<?> message) {
 		if (message instanceof ChatMessage) {
 			if (mattermostClient != null) {
@@ -324,6 +310,63 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 			logger.error("received bad message type in write queue " + message.getPayload());
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RossonetChatService [");
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (mattermostClient != null) {
+			builder.append("mattermostClient=");
+			builder.append(mattermostClient);
+			builder.append(", ");
+		}
+		if (requestCommandChannel != null) {
+			builder.append("requestCommandChannel=");
+			builder.append(requestCommandChannel);
+			builder.append(", ");
+		}
+		if (statusChannel != null) {
+			builder.append("statusChannel=");
+			builder.append(statusChannel);
+			builder.append(", ");
+		}
+		if (newUserChannel != null) {
+			builder.append("newUserChannel=");
+			builder.append(newUserChannel);
+			builder.append(", ");
+		}
+		if (newChannelChannel != null) {
+			builder.append("newChannelChannel=");
+			builder.append(newChannelChannel);
+			builder.append(", ");
+		}
+		if (newTeamChannel != null) {
+			builder.append("newTeamChannel=");
+			builder.append(newTeamChannel);
+			builder.append(", ");
+		}
+		if (writeCommandChannel != null) {
+			builder.append("writeCommandChannel=");
+			builder.append(writeCommandChannel);
+			builder.append(", ");
+		}
+		if (myUserId != null) {
+			builder.append("myUserId=");
+			builder.append(myUserId);
+			builder.append(", ");
+		}
+		if (myNickname != null) {
+			builder.append("myNickname=");
+			builder.append(myNickname);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

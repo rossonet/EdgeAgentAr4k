@@ -296,4 +296,61 @@ public class StreamCameraService implements EdgeComponent {
 	public String getServiceName() {
 		return getConfiguration().getName();
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("StreamCameraService [");
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (executor != null) {
+			builder.append("executor=");
+			builder.append(executor);
+			builder.append(", ");
+		}
+		if (webcam != null) {
+			builder.append("webcam=");
+			builder.append(webcam);
+			builder.append(", ");
+		}
+		if (channelRoot != null) {
+			builder.append("channelRoot=");
+			builder.append(channelRoot);
+			builder.append(", ");
+		}
+		if (globalImageQueue != null) {
+			builder.append("globalImageQueue=");
+			builder.append(globalImageQueue);
+			builder.append(", ");
+		}
+		if (globalMotionDetectQueue != null) {
+			builder.append("globalMotionDetectQueue=");
+			builder.append(globalMotionDetectQueue);
+			builder.append(", ");
+		}
+		if (runningIstances != null) {
+			builder.append("runningIstances=");
+			builder.append(runningIstances);
+			builder.append(", ");
+		}
+		if (dataspace != null) {
+			builder.append("dataspace=");
+			builder.append(dataspace);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }

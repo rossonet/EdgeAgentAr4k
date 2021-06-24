@@ -88,6 +88,23 @@ public class DataGeneratorService implements EdgeComponent {
 			}
 		}
 
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("FireSimulationTask [");
+			if (dataChannel != null) {
+				builder.append("dataChannel=");
+				builder.append(dataChannel);
+				builder.append(", ");
+			}
+			if (dataNodeSimulator != null) {
+				builder.append("dataNodeSimulator=");
+				builder.append(dataNodeSimulator);
+			}
+			builder.append("]");
+			return builder.toString();
+		}
+
 	}
 
 	public class PoolDataTask extends TimerTask {
