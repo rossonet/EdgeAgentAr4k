@@ -1,6 +1,5 @@
-package org.ar4k.agent.pcap.message;
+package org.ar4k.agent.core.data.messages;
 
-import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
 public class PcapMessage extends InternalMessage<PcapPayload> {

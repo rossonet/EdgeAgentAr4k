@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.data.AbstractChannel;
+import org.ar4k.agent.core.data.messages.HazelcastMessage;
 import org.springframework.messaging.MessageHeaders;
 
 import com.hazelcast.core.ITopic;

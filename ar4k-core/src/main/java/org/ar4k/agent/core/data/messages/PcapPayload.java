@@ -1,4 +1,4 @@
-package org.ar4k.agent.pcap.message;
+package org.ar4k.agent.core.data.messages;
 
 public class PcapPayload {
 

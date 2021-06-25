@@ -1,16 +1,18 @@
-package org.ar4k.agent.iot.serial;
+package org.ar4k.agent.core.data.messages;
+
+import java.awt.image.BufferedImage;
 
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class SerialBytesMessage extends InternalMessage<Byte[]> {
+public class VideoMessage extends InternalMessage<BufferedImage> {
 
-	private static final long serialVersionUID = -8317240852093510543L;
-	private Byte[] payload = null;
+	private static final long serialVersionUID = -5291453326352482735L;
+	private BufferedImage payload = null;
 	private MessageHeaders headers = null;
 
 	@Override
-	public void setPayload(Byte[] payload) {
+	public void setPayload(BufferedImage payload) {
 		this.payload = payload;
 	}
 
@@ -20,7 +22,7 @@ public class SerialBytesMessage extends InternalMessage<Byte[]> {
 	}
 
 	@Override
-	public Byte[] getPayload() {
+	public BufferedImage getPayload() {
 		return payload;
 	}
 

@@ -1,16 +1,15 @@
-package org.ar4k.agent.hazelcast;
+package org.ar4k.agent.core.data.messages;
 
-import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class HazelcastMessage extends InternalMessage<Object> {
+public class SerialStringMessage extends InternalMessage<String> {
 
-	private static final long serialVersionUID = 2148550503181500278L;
-	private Object payload = null;
+	private static final long serialVersionUID = 577397693578436293L;
+	private String payload = null;
 	private MessageHeaders headers = null;
 
 	@Override
-	public void setPayload(Object payload) {
+	public void setPayload(String payload) {
 		this.payload = payload;
 	}
 
@@ -20,7 +19,7 @@ public class HazelcastMessage extends InternalMessage<Object> {
 	}
 
 	@Override
-	public Object getPayload() {
+	public String getPayload() {
 		return payload;
 	}
 

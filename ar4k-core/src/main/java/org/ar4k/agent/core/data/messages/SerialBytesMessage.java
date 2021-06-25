@@ -1,18 +1,16 @@
-package org.ar4k.agent.camera.messages;
-
-import java.awt.image.BufferedImage;
+package org.ar4k.agent.core.data.messages;
 
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class VideoMessage extends InternalMessage<BufferedImage> {
+public class SerialBytesMessage extends InternalMessage<Byte[]> {
 
-	private static final long serialVersionUID = -5291453326352482735L;
-	private BufferedImage payload = null;
+	private static final long serialVersionUID = -8317240852093510543L;
+	private Byte[] payload = null;
 	private MessageHeaders headers = null;
 
 	@Override
-	public void setPayload(BufferedImage payload) {
+	public void setPayload(Byte[] payload) {
 		this.payload = payload;
 	}
 
@@ -22,7 +20,7 @@ public class VideoMessage extends InternalMessage<BufferedImage> {
 	}
 
 	@Override
-	public BufferedImage getPayload() {
+	public Byte[] getPayload() {
 		return payload;
 	}
 

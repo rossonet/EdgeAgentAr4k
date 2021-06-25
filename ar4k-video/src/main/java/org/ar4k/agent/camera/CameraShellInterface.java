@@ -22,10 +22,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.validation.Valid;
 
-import org.ar4k.agent.camera.messages.VideoMessage;
 import org.ar4k.agent.camera.usb.StreamCameraConfig;
 import org.ar4k.agent.camera.usb.StreamCameraService;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.VideoMessage;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;

@@ -1,6 +1,5 @@
-package org.ar4k.agent.iot.serial.json;
+package org.ar4k.agent.core.data.messages;
 
-import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.json.JSONObject;
 import org.springframework.messaging.MessageHeaders;
 

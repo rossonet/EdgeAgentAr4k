@@ -18,10 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.data.messages.SerialStringMessage;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.iot.serial.SerialService;
-import org.ar4k.agent.iot.serial.SerialStringMessage;
 import org.springframework.messaging.MessageHeaders;
 
 import com.fazecast.jSerialComm.SerialPortEvent;

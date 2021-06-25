@@ -1,16 +1,16 @@
-package org.ar4k.agent.iot.serial;
+package org.ar4k.agent.core.data.messages;
 
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
-public class SerialStringMessage extends InternalMessage<String> {
+public class HazelcastMessage extends InternalMessage<Object> {
 
-	private static final long serialVersionUID = 577397693578436293L;
-	private String payload = null;
+	private static final long serialVersionUID = 2148550503181500278L;
+	private Object payload = null;
 	private MessageHeaders headers = null;
 
 	@Override
-	public void setPayload(String payload) {
+	public void setPayload(Object payload) {
 		this.payload = payload;
 	}
 
@@ -20,7 +20,7 @@ public class SerialStringMessage extends InternalMessage<String> {
 	}
 
 	@Override
-	public String getPayload() {
+	public Object getPayload() {
 		return payload;
 	}
 
