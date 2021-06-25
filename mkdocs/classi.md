@@ -24,6 +24,8 @@
 
 [ar4k-kettle](javadoc/ar4k-kettle/index.html)
 
+[ar4k-watson](javadoc/ar4k-watson/index.html)
+
 [ar4k-video](javadoc/ar4k-video/index.html)
 
 [ar4k-agent-druido](javadoc/ar4k-agent-druido/index.html)
@@ -33,3 +35,5 @@
 [ar4k-agent-web](javadoc/ar4k-agent-web/index.html)
 
 [ar4k-agent-qa](javadoc/ar4k-agent-qa/index.html)
+
+[ar4k-agent-watson](javadoc/ar4k-agent-qa/index.html)

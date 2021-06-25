@@ -35,14 +35,14 @@ public class OpcUaClientNodeConfig implements Serializable {
 
 	private static final long serialVersionUID = 970930410169105077L;
 
-	@Parameter(names = "--nodeRegEx", description = "Node ID or a regEx to find a list of nodes")
-	public String nodeRegEx = null;
+	@Parameter(names = "--nodeRegEx", description = "Node ID")
+	public String nodeId = null;
 
 	@Parameter(names = "--group", description = "the subscription group")
 	public String group = "default-group";
 
 	@Parameter(names = "--samplingInterval", description = "sampling interval")
-	public int samplingInterval = 1000;
+	public Double samplingInterval = 1000.0;
 
 	@Parameter(names = "--publishInterval", description = "publish interval")
 	public int publishInterval = 2000;
@@ -65,6 +65,9 @@ public class OpcUaClientNodeConfig implements Serializable {
 	@Parameter(names = "--internalTargetChannel", description = "internal channel to send the update from the node")
 	public String readChannel = null;
 
+	@Parameter(names = "--internalWriteChannel", description = "internal channel to write data to the node")
+	public String writeChannel = null;
+
 	@Parameter(names = "--fatherOfChannels", description = "directory channel for message topics")
 	public String fatherOfChannels = null;
 
@@ -80,9 +83,9 @@ public class OpcUaClientNodeConfig implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OpcUaClientNodeConfig [");
-		if (nodeRegEx != null) {
+		if (nodeId != null) {
 			builder.append("nodeRegEx=");
-			builder.append(nodeRegEx);
+			builder.append(nodeId);
 			builder.append(", ");
 		}
 		builder.append("samplingInterval=");

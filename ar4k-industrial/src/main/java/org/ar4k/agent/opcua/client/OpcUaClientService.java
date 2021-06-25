@@ -1,16 +1,16 @@
 package org.ar4k.agent.opcua.client;
 
 import java.io.ByteArrayInputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.ar4k.agent.core.Homunculus;
@@ -23,7 +23,6 @@ import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.IdentityProvider;
@@ -31,7 +30,6 @@ import org.eclipse.milo.opcua.sdk.client.api.identity.UsernameProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.channel.MessageLimits;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
@@ -46,14 +44,15 @@ import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
 public class OpcUaClientService implements EdgeComponent {
 
+	private static final String CERTIFICATE_CHAIN_SEPARATOR = ",";
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
 			.getLogger(OpcUaClientService.class.toString());
-	private static final String CERTIFICATE_CHAIN_SEPARATOR = ",";
+	private OpcUaClient clientOpc = null;
 	private OpcUaClientConfig configuration = null;
-	private Homunculus homunculus = null;
 	private DataAddress dataAddress = null;
+	private Homunculus homunculus = null;
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
-	private UaClient clientOpc = null;
+	private Map<String, OpcUaGroupManager> groups = new HashMap<>();
 
 	@Override
 	public void close() throws Exception {
@@ -61,8 +60,23 @@ public class OpcUaClientService implements EdgeComponent {
 	}
 
 	@Override
-	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		return serviceStatus;
+	public ServiceConfig getConfiguration() {
+		return configuration;
+	}
+
+	@Override
+	public DataAddress getDataAddress() {
+		return dataAddress;
+	}
+
+	@Override
+	public Homunculus getHomunculus() {
+		return homunculus;
+	}
+
+	@Override
+	public String getServiceName() {
+		return getConfiguration().getName();
 	}
 
 	@Override
@@ -77,45 +91,86 @@ public class OpcUaClientService implements EdgeComponent {
 		}
 	}
 
-	private void connectGroups() {
-		// TODO completare sottoscrizione gruppi in opcua
-
-	}
-
-	private MessageLimits getMessageLimits() {
-		return new MessageLimits(Integer.valueOf(configuration.maxChunkSize),
-				Integer.valueOf(configuration.maxChunkCount), Integer.valueOf(configuration.maxMessageSize));
-	}
-
-	private IdentityProvider getIdentityProvider() {
-		IdentityProvider idp = null;
-		switch (configuration.authMode) {
-		case password:
-			idp = new UsernameProvider(configuration.username, configuration.password);
-			break;
-		case none:
-			idp = new AnonymousProvider();
-			break;
-		case certificate:
-			if (configuration.aliasAuthCertificateInKeystore != null) {
-				idp = new X509IdentityProvider(
-						homunculus.getMyIdentityKeystore()
-								.getClientCertificate(configuration.aliasAuthCertificateInKeystore),
-						homunculus.getMyIdentityKeystore().getPrivateKey(configuration.aliasAuthCertificateInKeystore));
-			} else {
-				logger.error(
-						"required authetication by certificate but aliasAuthCertificateInKeystore is null, try anonymous way");
-				idp = new AnonymousProvider();
-			}
-			break;
-		default:
-			idp = new AnonymousProvider();
-			break;
+	@Override
+	public void kill() {
+		if (clientOpc != null) {
+			clientOpc.disconnect();
 		}
-		return idp;
+		serviceStatus = ServiceStatus.KILLED;
 	}
 
-	private UaClient createConnection() throws UaException, InterruptedException, ExecutionException {
+	@Override
+	public void setConfiguration(ServiceConfig configuration) {
+		this.configuration = (OpcUaClientConfig) configuration;
+	}
+
+	@Override
+	public void setDataAddress(DataAddress dataAddress) {
+		this.dataAddress = dataAddress;
+	}
+
+	@Override
+	public void setHomunculus(Homunculus homunculus) {
+		this.homunculus = homunculus;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("OpcUaClientService [");
+		if (configuration != null) {
+			builder.append("configuration=");
+			builder.append(configuration);
+			builder.append(", ");
+		}
+		if (homunculus != null) {
+			builder.append("homunculus=");
+			builder.append(homunculus);
+			builder.append(", ");
+		}
+		if (dataAddress != null) {
+			builder.append("dataAddress=");
+			builder.append(dataAddress);
+			builder.append(", ");
+		}
+		if (serviceStatus != null) {
+			builder.append("serviceStatus=");
+			builder.append(serviceStatus);
+			builder.append(", ");
+		}
+		if (clientOpc != null) {
+			builder.append("clientOpc=");
+			builder.append(clientOpc);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
+	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
+		return serviceStatus;
+	}
+
+	private void connectGroups() {
+		for (OpcUaClientNodeConfig s : configuration.subscriptions) {
+			final String groupName = s.group + "-" + s.publishInterval;
+			if (!groups.containsKey(groupName)) {
+				try {
+					groups.put(groupName, new OpcUaGroupManager(groupName, this,
+							clientOpc.getSubscriptionManager().createSubscription(1000.0).get()));
+				} catch (Exception exception) {
+					logger.logException("during group subscription", exception);
+				}
+			}
+			try {
+				groups.get(groupName).addSingleNode(s);
+			} catch (InterruptedException | ExecutionException exception) {
+				logger.logException(exception);
+			}
+		}
+	}
+
+	private OpcUaClient createConnection() throws UaException, InterruptedException, ExecutionException {
 		final EndpointDescription endpoint = getEndpoint();
 		logger.info("OPCUA connection to " + endpoint);
 		final OpcUaClientConfigBuilder config = org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig.builder()
@@ -146,7 +201,7 @@ public class OpcUaClientService implements EdgeComponent {
 			config.setChannelLifetime(UInteger.valueOf(configuration.channelLifetime));
 		}
 		config.setIdentityProvider(getIdentityProvider());
-		config.setMessageLimits(getMessageLimits());
+		// config.setMessageLimits(getMessageLimits());
 		if (configuration.acknowledgeTimeout != null) {
 			config.setAcknowledgeTimeout(UInteger.valueOf(configuration.acknowledgeTimeout));
 		}
@@ -159,8 +214,9 @@ public class OpcUaClientService implements EdgeComponent {
 				config.setCertificate(certificate);
 			}
 		}
-		final UaClient client = OpcUaClient.create(config.build());
-		return client.connect().get();
+		final OpcUaClient client = OpcUaClient.create(config.build());
+		client.connect().get();
+		return client;
 	}
 
 	private X509Certificate getCertificate() {
@@ -203,8 +259,9 @@ public class OpcUaClientService implements EdgeComponent {
 		EndpointDescription endpointDescriptionFound = null;
 		List<EndpointDescription> endpoints = null;
 		try {
+			logger.error("connect to opcua endpoint " + configuration.serverUrl);
 			endpoints = DiscoveryClient.getEndpoints(configuration.serverUrl).get();
-		} catch (Exception exception) {
+		} catch (ExecutionException | InterruptedException exception) {
 			logger.error("error endpoint opcua ", exception);
 		}
 		MessageSecurityMode searchSecurityMode = MessageSecurityMode.None;
@@ -260,8 +317,8 @@ public class OpcUaClientService implements EdgeComponent {
 		}
 		if (configuration.forceHostName == true) {
 			try {
-				return updateEndpointUrl(endpointDescriptionFound, new URL(configuration.serverUrl).getHost());
-			} catch (MalformedURLException exception) {
+				return updateEndpointUrl(endpointDescriptionFound, new URI(configuration.serverUrl).getHost());
+			} catch (Exception exception) {
 				logger.logException(exception);
 				return endpointDescriptionFound;
 			}
@@ -270,49 +327,40 @@ public class OpcUaClientService implements EdgeComponent {
 		}
 	}
 
-	@Override
-	public void kill() {
-		if (clientOpc != null) {
-			clientOpc.disconnect();
+	private IdentityProvider getIdentityProvider() {
+		IdentityProvider idp = null;
+		switch (configuration.authMode) {
+		case password:
+			idp = new UsernameProvider(configuration.username, configuration.password);
+			break;
+		case none:
+			idp = new AnonymousProvider();
+			break;
+		case certificate:
+			if (configuration.aliasAuthCertificateInKeystore != null) {
+				idp = new X509IdentityProvider(
+						homunculus.getMyIdentityKeystore()
+								.getClientCertificate(configuration.aliasAuthCertificateInKeystore),
+						homunculus.getMyIdentityKeystore().getPrivateKey(configuration.aliasAuthCertificateInKeystore));
+			} else {
+				logger.error(
+						"required authetication by certificate but aliasAuthCertificateInKeystore is null, try anonymous way");
+				idp = new AnonymousProvider();
+			}
+			break;
+		default:
+			idp = new AnonymousProvider();
+			break;
 		}
-		serviceStatus = ServiceStatus.KILLED;
+		return idp;
 	}
 
-	@Override
-	public Homunculus getHomunculus() {
-		return homunculus;
-	}
-
-	@Override
-	public DataAddress getDataAddress() {
-		return dataAddress;
-	}
-
-	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		this.dataAddress = dataAddress;
-	}
-
-	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
-	}
-
-	@Override
-	public ServiceConfig getConfiguration() {
-		return configuration;
-	}
-
-	@Override
-	public void setConfiguration(ServiceConfig configuration) {
-		this.configuration = (OpcUaClientConfig) configuration;
-	}
-
-	@Override
-	public String getServiceName() {
-		return getConfiguration().getName();
-	}
-
+	/*
+	 * private MessageLimits getMessageLimits() { return new
+	 * MessageLimits(Integer.valueOf(configuration.maxChunkSize),
+	 * Integer.valueOf(configuration.maxChunkCount),
+	 * Integer.valueOf(configuration.maxMessageSize)); }
+	 */
 	public static EndpointDescription updateEndpointUrl(EndpointDescription original, String hostname) {
 		URI uri = null;
 		try {
@@ -327,36 +375,8 @@ public class OpcUaClientService implements EdgeComponent {
 				original.getTransportProfileUri(), original.getSecurityLevel());
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("OpcUaClientService [");
-		if (configuration != null) {
-			builder.append("configuration=");
-			builder.append(configuration);
-			builder.append(", ");
-		}
-		if (homunculus != null) {
-			builder.append("homunculus=");
-			builder.append(homunculus);
-			builder.append(", ");
-		}
-		if (dataAddress != null) {
-			builder.append("dataAddress=");
-			builder.append(dataAddress);
-			builder.append(", ");
-		}
-		if (serviceStatus != null) {
-			builder.append("serviceStatus=");
-			builder.append(serviceStatus);
-			builder.append(", ");
-		}
-		if (clientOpc != null) {
-			builder.append("clientOpc=");
-			builder.append(clientOpc);
-		}
-		builder.append("]");
-		return builder.toString();
+	OpcUaClient getOpcUaClient() {
+		return clientOpc;
 	}
 
 }

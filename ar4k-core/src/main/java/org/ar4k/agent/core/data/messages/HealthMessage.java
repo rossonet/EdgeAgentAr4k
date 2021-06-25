@@ -2,7 +2,7 @@ package org.ar4k.agent.core.data.messages;
 
 import org.springframework.messaging.MessageHeaders;
 
-public class HealthMessage<S> extends InternalMessage<String> {
+public class HealthMessage extends InternalMessage<String> {
 
 	private static final long serialVersionUID = -1177546110648083596L;
 	private String rawString = null;

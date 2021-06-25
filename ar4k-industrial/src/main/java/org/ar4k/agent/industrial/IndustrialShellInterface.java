@@ -17,6 +17,7 @@ package org.ar4k.agent.industrial;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.validation.Valid;
 
@@ -40,7 +42,7 @@ import org.ar4k.agent.opcua.client.OpcUaClientNodeConfig;
 import org.ar4k.agent.opcua.client.OpcUaClientService;
 import org.ar4k.agent.opcua.server.OpcUaServerConfig;
 import org.ar4k.agent.opcua.server.OpcUaServerService;
-import org.ar4k.agent.opcua.utils.OpcUaCertsUtils;
+import org.ar4k.agent.opcua.utils.OpcUaUtils;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 import org.eclipse.milo.opcua.sdk.client.api.identity.IdentityProvider;
@@ -49,6 +51,7 @@ import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
@@ -273,9 +276,9 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 					clientUrn);
 			if (client != null) {
 				if (baseNodeIdentifier == null || baseNodeIdentifier.isEmpty()) {
-					resultMap = browseNode(maxdeep, client, Identifiers.RootFolder);
+					resultMap = OpcUaUtils.browseNode(maxdeep, client, Identifiers.RootFolder);
 				} else {
-					resultMap = browseNode(maxdeep, client, NodeId.parse(baseNodeIdentifier));
+					resultMap = OpcUaUtils.browseNode(maxdeep, client, NodeId.parse(baseNodeIdentifier));
 				}
 			}
 		} catch (Exception ex) {
@@ -302,7 +305,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 				resultMap.put("node class", node.getNodeClass());
 				resultMap.put("node user write mask", node.getUserWriteMask());
 				resultMap.put("node write mask", node.getWriteMask());
-				resultMap.put("node childs", browseNode(1, client, node.getNodeId()));
+				resultMap.put("node childs", OpcUaUtils.browseNode(1, client, node.getNodeId()));
 				resultMap.put("node value", client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get());
 			}
 		} catch (Exception ex) {
@@ -321,85 +324,10 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 					securityMode, cryptoMode, user, password, cryptoCa, cryptoCrt, cryptoKey, crt, key, clientName,
 					clientUrn);
 			if (client != null) {
-				UaNode node = client.getAddressSpace().getNode(NodeId.parse(nodeIdentifier));
-				resultMap.put("nodeId", node.getNodeId());
-				resultMap.put("node browse name", node.getBrowseName());
-				resultMap.put("node description", node.getDescription());
-				resultMap.put("node display name", node.getDisplayName());
-				resultMap.put("node class", node.getNodeClass());
-				resultMap.put("node user write mask", node.getUserWriteMask());
-				resultMap.put("node write mask", node.getWriteMask());
-				resultMap.put("node childs", browseNode(1, client, node.getNodeId()));
-				final DataValue originalRead = client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get();
-				resultMap.put("node value before", originalRead);
-				Object originalValue = originalRead.getValue().getValue();
-				Object convertedValue = null;
-				if (originalValue instanceof String) {
-					convertedValue = value;
-				} else if (originalValue instanceof Integer) {
-					convertedValue = Integer.parseInt(value);
-				} else if (originalValue instanceof Boolean) {
-					convertedValue = Boolean.parseBoolean(value);
-				} else if (originalValue instanceof Double) {
-					convertedValue = Double.parseDouble(value);
-				} else if (originalValue instanceof Boolean) {
-					convertedValue = Boolean.parseBoolean(value);
-				} else if (originalValue instanceof Float) {
-					convertedValue = Float.parseFloat(value);
-				} else if (originalValue instanceof java.util.UUID) {
-					convertedValue = value;
-				} else if (originalValue instanceof Short) {
-					convertedValue = Short.parseShort(value);
-				} else if (originalValue instanceof Long) {
-					convertedValue = Long.parseLong(value);
-				} else if (originalValue instanceof Byte) {
-					convertedValue = Byte.parseByte(value);
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UByte) {
-					convertedValue = UByte.valueOf(Byte.parseByte(value));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.ByteString) {
-					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.ByteString(
-							value.getBytes("UTF8"));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.DateTime) {
-					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.DateTime(
-							Long.parseLong(value));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort) {
-					convertedValue = UShort.valueOf(Short.parseShort(value));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger) {
-					convertedValue = UInteger.valueOf(Integer.parseInt(value));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.ULong) {
-					convertedValue = ULong.valueOf(Long.parseLong(value));
-				} else if (originalValue instanceof org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement) {
-					convertedValue = new org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement(value);
-				} else {
-					convertedValue = value;
-				}
-				resultMap.put("write status",
-						client.writeValue(node.getNodeId(), new DataValue(new Variant(convertedValue))).get());
+				OpcUaUtils.writeValueToOpc(nodeIdentifier, value, resultMap, client);
 			}
 		} catch (Exception ex) {
 			logger.logException(ex);
-		}
-		return resultMap;
-	}
-
-	private Map<String, Object> browseNode(int maxDeep, OpcUaClient client, NodeId browseRoot) {
-		BrowseDescription browse = new BrowseDescription(browseRoot, BrowseDirection.Forward, Identifiers.References,
-				true, uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
-				uint(BrowseResultMask.All.getValue()));
-		Map<String, Object> resultMap = new HashMap<>();
-		try {
-			BrowseResult browseResult = client.browse(browse).get();
-			List<ReferenceDescription> references = toList(browseResult.getReferences());
-			for (ReferenceDescription rd : references) {
-				logger.debug("found -> " + rd.getNodeId().toParseableString());
-				resultMap.put(rd.getNodeId().toParseableString(), rd.getBrowseName().getName());
-				if (maxDeep > 0 && rd.getNodeId().toNodeId(client.getNamespaceTable()).isPresent()) {
-					resultMap.put(rd.getNodeId().toParseableString(),
-							browseNode(maxDeep - 1, client, rd.getNodeId().toNodeId(client.getNamespaceTable()).get()));
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Browsing nodeId={} failed: {}", browseRoot, e.getMessage(), e);
 		}
 		return resultMap;
 	}
@@ -592,10 +520,10 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 		if (targetsEndPoint != null && !targetsEndPoint.isEmpty()) {
 			for (EndpointDescription e : targetsEndPoint) {
 				try {
-					OpcUaCertsUtils loader = null;
-					OpcUaCertsUtils authLoader = null;
+					OpcUaUtils loader = null;
+					OpcUaUtils authLoader = null;
 					if (useCert) {
-						loader = new OpcUaCertsUtils();
+						loader = new OpcUaUtils();
 						if (cryptoKey != null && !cryptoKey.isEmpty() && cryptoCrt != null && !cryptoCrt.isEmpty()) {
 							loader.setClientKeyPair(cryptoKey, cryptoCrt);
 						} else {
@@ -608,7 +536,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 							idp = new UsernameProvider(user, password);
 						}
 						if (certAuth) {
-							authLoader = new OpcUaCertsUtils();
+							authLoader = new OpcUaUtils();
 							authLoader.setClientKeyPair(key, crt);
 							idp = new X509IdentityProvider(authLoader.getClientCertificate(),
 									authLoader.getPrivateKey());

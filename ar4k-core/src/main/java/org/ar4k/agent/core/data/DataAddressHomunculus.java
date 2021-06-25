@@ -165,7 +165,7 @@ public class DataAddressHomunculus extends DataAddress {
 			}
 			if (homunculus != null && homunculus.getDataAddress() != null
 					&& homunculus.getDataAddress().getChannel("health") != null) {
-				final HealthMessage<String> messageObject = new HealthMessage<>();
+				final HealthMessage messageObject = new HealthMessage();
 				messageObject.setPayload(gson.toJson(healthMessage));
 				((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("health")).send(messageObject);
 			}

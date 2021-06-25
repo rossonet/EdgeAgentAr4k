@@ -12,7 +12,6 @@ import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
 import org.eclipse.milo.opcua.sdk.server.api.DataItem;
-import org.eclipse.milo.opcua.sdk.server.api.DataTypeDictionaryManager;
 import org.eclipse.milo.opcua.sdk.server.api.ManagedNamespace;
 import org.eclipse.milo.opcua.sdk.server.api.MonitoredItem;
 import org.eclipse.milo.opcua.sdk.server.model.nodes.objects.BaseEventTypeNode;
@@ -36,7 +35,7 @@ public class OpcUaNamespace extends ManagedNamespace implements DataAddressChang
 	private volatile Thread eventThread;
 	private volatile boolean keepPostingEvents = true;
 
-	private final DataTypeDictionaryManager dictionaryManager;
+	// private final DataTypeManager dictionaryManager;
 
 	private final SubscriptionModel subscriptionModel;
 
@@ -46,12 +45,13 @@ public class OpcUaNamespace extends ManagedNamespace implements DataAddressChang
 		super(server, configuration.namespaceUri);
 		this.configuration = configuration;
 		subscriptionModel = new SubscriptionModel(server, this);
-		dictionaryManager = new DataTypeDictionaryManager(getNodeContext(), configuration.namespaceUri);
+		// dictionaryManager = new DataTypeDictionaryManager(getNodeContext(),
+		// configuration.namespaceUri);
 	}
 
 	public void onStartup() {
 
-		dictionaryManager.startup();
+		// dictionaryManager.startup();
 		subscriptionModel.startup();
 
 		// Create a "HelloWorld" folder and add it to the node manager
@@ -110,7 +110,7 @@ public class OpcUaNamespace extends ManagedNamespace implements DataAddressChang
 	}
 
 	public void onShutdown() {
-		dictionaryManager.shutdown();
+		// dictionaryManager.shutdown();
 		subscriptionModel.shutdown();
 
 		try {

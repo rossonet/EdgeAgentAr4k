@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.mqtt.client;
+package org.ar4k.agent.modbus.master;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
@@ -20,15 +20,15 @@ import org.ar4k.agent.core.interfaces.EdgeComponent;
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Configurazione client Paho.
+ *         Configurazione modbus master.
  */
-public class PahoClientConfig extends AbstractServiceConfig {
+public class ModbusMasterConfig extends AbstractServiceConfig {
 
-	private static final long serialVersionUID = -1385133280351173640L;
+	private static final long serialVersionUID = -3029082975014563280L;
 
 	@Override
 	public EdgeComponent instantiate() {
-		PahoClientService ss = new PahoClientService();
+		ModbusMasterService ss = new ModbusMasterService();
 		ss.setConfiguration(this);
 		return ss;
 	}

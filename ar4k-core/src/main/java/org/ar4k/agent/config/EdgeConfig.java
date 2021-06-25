@@ -40,6 +40,7 @@ import com.beust.jcommander.Parameter;
  */
 
 // TODO: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente
+// TODO: implementare gestione configurazione in XML 
 public class EdgeConfig implements ConfigSeed {
 
 	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()

@@ -39,7 +39,7 @@ public class OpcUaClientConfig extends AbstractServiceConfig {
 	private static final long serialVersionUID = -864167279161787378L;
 
 	@Parameter(names = "--serverUrl", description = "server url in format opc.tcp://localhost:53530/Server")
-	public String serverUrl = "opc.tcp://localhost:53530/Server";
+	public String serverUrl = "opc.tcp://127.0.0.1:53530/OPCUA/SimulationServer";
 
 	@Parameter(names = "--forceHostName", description = "force to host to connect after the discovery")
 	public Boolean forceHostName = true;

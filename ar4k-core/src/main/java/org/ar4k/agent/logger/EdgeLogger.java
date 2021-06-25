@@ -41,8 +41,6 @@ import com.google.gson.GsonBuilder;
 
 public class EdgeLogger implements Logger {
 
-	// TODO implementare versione metodi con argomenti
-
 	private static final String ERROR_LABEL = "error";
 
 	private static final String LEVEL_LABEL = "level";
@@ -142,6 +140,31 @@ public class EdgeLogger implements Logger {
 		sendEvent(level, o);
 	}
 
+	private void sendEventObject(LogLevel level, String format, Object arg) {
+		String message = String.format(format, arg);
+		sendEvent(level, message);
+	}
+
+	private void sendEventTwoObjects(LogLevel level, String format, Object arg1, Object arg2) {
+		String message = String.format(format, arg1, arg2);
+		sendEvent(level, message);
+	}
+
+	private void sendEventException(LogLevel level, String msg, Throwable t) {
+		final Map<String, Object> o = new HashMap<>();
+		o.put(MESSAGE_LABEL, t.getMessage());
+		o.put(ERROR_LABEL, msg);
+		o.put(EXCEPTION_LABEL, stackTraceToString(t));
+		o.put(LEVEL_LABEL, LogLevel.EXCEPTION.name());
+		sendEvent(level, o);
+	}
+
+	private void sendEventObjects(LogLevel level, String format, Object... args) {
+		String message = String.format(format, args);
+		sendEvent(level, message);
+
+	}
+
 	private void sendEvent(LogLevel level, Map<String, Object> logMessage) {
 		try {
 			if (homunculus == null && Homunculus.getApplicationContext() != null
@@ -172,27 +195,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void trace(String msg) {
 		logger.trace(msg);
-		sendEvent(LogLevel.DEBUG, msg);
+		sendEvent(LogLevel.TRACE, msg);
 	}
 
 	@Override
 	public void trace(String format, Object arg) {
 		logger.trace(format, arg);
+		sendEventObject(LogLevel.TRACE, format, arg);
 	}
 
 	@Override
 	public void trace(String format, Object arg1, Object arg2) {
 		logger.trace(format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.TRACE, format, arg1, arg2);
 	}
 
 	@Override
 	public void trace(String format, Object... arguments) {
 		logger.trace(format, arguments);
+		sendEventObjects(LogLevel.TRACE, format, arguments);
 	}
 
 	@Override
 	public void trace(String msg, Throwable t) {
 		logger.trace(msg, t);
+		sendEventException(LogLevel.TRACE, msg, t);
 	}
 
 	@Override
@@ -203,26 +230,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void trace(Marker marker, String msg) {
 		logger.trace(marker, msg);
+		sendEvent(LogLevel.TRACE, msg);
 	}
 
 	@Override
 	public void trace(Marker marker, String format, Object arg) {
 		logger.trace(marker, format, arg);
+		sendEventObject(LogLevel.TRACE, format, arg);
 	}
 
 	@Override
 	public void trace(Marker marker, String format, Object arg1, Object arg2) {
 		logger.trace(marker, format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.TRACE, format, arg1, arg2);
 	}
 
 	@Override
 	public void trace(Marker marker, String format, Object... argArray) {
 		logger.trace(marker, format, argArray);
+		sendEventObjects(LogLevel.TRACE, format, argArray);
 	}
 
 	@Override
 	public void trace(Marker marker, String msg, Throwable t) {
 		logger.trace(marker, msg, t);
+		sendEventException(LogLevel.TRACE, msg, t);
 	}
 
 	@Override
@@ -239,21 +271,25 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void debug(String format, Object arg) {
 		logger.debug(format, arg);
+		sendEventObject(LogLevel.DEBUG, format, arg);
 	}
 
 	@Override
 	public void debug(String format, Object arg1, Object arg2) {
 		logger.debug(format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.DEBUG, format, arg1, arg2);
 	}
 
 	@Override
 	public void debug(String format, Object... arguments) {
 		logger.debug(format, arguments);
+		sendEventObjects(LogLevel.DEBUG, format, arguments);
 	}
 
 	@Override
 	public void debug(String msg, Throwable t) {
 		logger.debug(msg, t);
+		sendEventException(LogLevel.DEBUG, msg, t);
 	}
 
 	@Override
@@ -264,26 +300,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void debug(Marker marker, String msg) {
 		logger.debug(marker, msg);
+		sendEvent(LogLevel.DEBUG, msg);
 	}
 
 	@Override
 	public void debug(Marker marker, String format, Object arg) {
 		logger.debug(marker, format, arg);
+		sendEventObject(LogLevel.DEBUG, format, arg);
 	}
 
 	@Override
 	public void debug(Marker marker, String format, Object arg1, Object arg2) {
 		logger.debug(marker, format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.DEBUG, format, arg1, arg2);
 	}
 
 	@Override
 	public void debug(Marker marker, String format, Object... arguments) {
 		logger.debug(marker, format, arguments);
+		sendEventObjects(LogLevel.DEBUG, format, arguments);
 	}
 
 	@Override
 	public void debug(Marker marker, String msg, Throwable t) {
 		logger.debug(marker, msg, t);
+		sendEventException(LogLevel.DEBUG, msg, t);
 	}
 
 	@Override
@@ -300,21 +341,25 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void info(String format, Object arg) {
 		logger.info(format, arg);
+		sendEventObject(LogLevel.INFO, format, arg);
 	}
 
 	@Override
 	public void info(String format, Object arg1, Object arg2) {
 		logger.info(format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.INFO, format, arg1, arg2);
 	}
 
 	@Override
 	public void info(String format, Object... arguments) {
 		logger.info(format, arguments);
+		sendEventObjects(LogLevel.INFO, format, arguments);
 	}
 
 	@Override
 	public void info(String msg, Throwable t) {
 		logger.info(msg, t);
+		sendEventException(LogLevel.INFO, msg, t);
 	}
 
 	@Override
@@ -325,26 +370,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void info(Marker marker, String msg) {
 		logger.info(marker, msg);
+		sendEvent(LogLevel.INFO, msg);
 	}
 
 	@Override
 	public void info(Marker marker, String format, Object arg) {
 		logger.info(marker, format, arg);
+		sendEventObject(LogLevel.INFO, format, arg);
 	}
 
 	@Override
 	public void info(Marker marker, String format, Object arg1, Object arg2) {
 		logger.info(marker, format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.INFO, format, arg1, arg2);
 	}
 
 	@Override
 	public void info(Marker marker, String format, Object... arguments) {
 		logger.info(marker, format, arguments);
+		sendEventObjects(LogLevel.INFO, format, arguments);
 	}
 
 	@Override
 	public void info(Marker marker, String msg, Throwable t) {
 		logger.info(marker, msg, t);
+		sendEventException(LogLevel.INFO, msg, t);
 	}
 
 	@Override
@@ -361,21 +411,25 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void warn(String format, Object arg) {
 		logger.warn(format, arg);
+		sendEventObject(LogLevel.WARN, format, arg);
 	}
 
 	@Override
 	public void warn(String format, Object... arguments) {
 		logger.warn(format, arguments);
+		sendEventObjects(LogLevel.WARN, format, arguments);
 	}
 
 	@Override
 	public void warn(String format, Object arg1, Object arg2) {
 		logger.warn(format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.WARN, format, arg1, arg2);
 	}
 
 	@Override
 	public void warn(String msg, Throwable t) {
 		logger.warn(msg, t);
+		sendEventException(LogLevel.WARN, msg, t);
 	}
 
 	@Override
@@ -386,26 +440,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void warn(Marker marker, String msg) {
 		logger.warn(marker, msg);
+		sendEvent(LogLevel.WARN, msg);
 	}
 
 	@Override
 	public void warn(Marker marker, String format, Object arg) {
 		logger.warn(marker, format, arg);
+		sendEventObject(LogLevel.WARN, format, arg);
 	}
 
 	@Override
 	public void warn(Marker marker, String format, Object arg1, Object arg2) {
 		logger.warn(marker, format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.WARN, format, arg1, arg2);
 	}
 
 	@Override
 	public void warn(Marker marker, String format, Object... arguments) {
 		logger.warn(marker, format, arguments);
+		sendEventObjects(LogLevel.WARN, format, arguments);
 	}
 
 	@Override
 	public void warn(Marker marker, String msg, Throwable t) {
 		logger.warn(marker, msg, t);
+		sendEventException(LogLevel.WARN, msg, t);
 	}
 
 	@Override
@@ -422,21 +481,25 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void error(String format, Object arg) {
 		logger.error(format, arg);
+		sendEventObject(LogLevel.ERROR, format, arg);
 	}
 
 	@Override
 	public void error(String format, Object arg1, Object arg2) {
 		logger.error(format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.ERROR, format, arg1, arg2);
 	}
 
 	@Override
 	public void error(String format, Object... arguments) {
 		logger.error(format, arguments);
+		sendEventObjects(LogLevel.ERROR, format, arguments);
 	}
 
 	@Override
 	public void error(String msg, Throwable t) {
 		logger.error(msg, t);
+		sendEventException(LogLevel.ERROR, msg, t);
 	}
 
 	@Override
@@ -447,26 +510,31 @@ public class EdgeLogger implements Logger {
 	@Override
 	public void error(Marker marker, String msg) {
 		logger.error(marker, msg);
+		sendEvent(LogLevel.ERROR, msg);
 	}
 
 	@Override
 	public void error(Marker marker, String format, Object arg) {
 		logger.error(marker, format, arg);
+		sendEventObject(LogLevel.ERROR, format, arg);
 	}
 
 	@Override
 	public void error(Marker marker, String format, Object arg1, Object arg2) {
 		logger.error(marker, format, arg1, arg2);
+		sendEventTwoObjects(LogLevel.ERROR, format, arg1, arg2);
 	}
 
 	@Override
 	public void error(Marker marker, String format, Object... arguments) {
 		logger.error(marker, format, arguments);
+		sendEventObjects(LogLevel.ERROR, format, arguments);
 	}
 
 	@Override
 	public void error(Marker marker, String msg, Throwable t) {
 		logger.error(marker, msg, t);
+		sendEventException(LogLevel.ERROR, msg, t);
 	}
 
 }
