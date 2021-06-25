@@ -355,12 +355,6 @@ public class OpcUaClientService implements EdgeComponent {
 		return idp;
 	}
 
-	/*
-	 * private MessageLimits getMessageLimits() { return new
-	 * MessageLimits(Integer.valueOf(configuration.maxChunkSize),
-	 * Integer.valueOf(configuration.maxChunkCount),
-	 * Integer.valueOf(configuration.maxMessageSize)); }
-	 */
 	public static EndpointDescription updateEndpointUrl(EndpointDescription original, String hostname) {
 		URI uri = null;
 		try {

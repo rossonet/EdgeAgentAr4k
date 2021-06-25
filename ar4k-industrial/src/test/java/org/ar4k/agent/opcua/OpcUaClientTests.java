@@ -15,6 +15,7 @@ import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -77,6 +78,7 @@ public class OpcUaClientTests implements MessageHandler {
 	};
 
 	@Test
+	@Ignore
 	public void connectOpcUaClientToLocalProsys() throws Exception {
 		OpcUaClientConfig opcUaClientConfig = new OpcUaClientConfig();
 		opcUaClientConfig.setName("test-opc");
