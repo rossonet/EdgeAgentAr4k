@@ -57,8 +57,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
  *
  */
 public class OpcUaUtils {
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpcUaClientService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(OpcUaClientService.class);
 
 	private static final Pattern IP_ADDR_PATTERN = Pattern
 			.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");

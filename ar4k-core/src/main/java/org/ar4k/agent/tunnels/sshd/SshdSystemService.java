@@ -65,8 +65,7 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 		PortForwardingEventListener.super.establishingExplicitTunnel(session, local, remote, localForwarding);
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SshdSystemService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SshdSystemService.class);
 
 	// iniettata vedi set/get
 	private SshdSystemConfig configuration = null;

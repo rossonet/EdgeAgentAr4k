@@ -47,8 +47,7 @@ public class DroolsService implements EdgeComponent {
 
 	// TODO aggiungere global data anima se flag true
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(DroolsService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DroolsService.class);
 
 	public enum DroolsServiceUpdateAction {
 		FIRE_UNTIL_HALT, FIRE_ALL_RULES, NONE

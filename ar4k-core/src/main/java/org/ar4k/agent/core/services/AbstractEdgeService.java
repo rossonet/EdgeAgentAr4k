@@ -56,8 +56,7 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 		}
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AbstractEdgeService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AbstractEdgeService.class);
 	protected ExecutorService executor = Executors.newScheduledThreadPool(6);
 	protected Instant lastRestart = null;
 	protected int maxFaults;

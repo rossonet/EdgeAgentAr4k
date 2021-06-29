@@ -71,8 +71,7 @@ import oshi.software.os.OperatingSystem;
  */
 public class HardwareHelper {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HardwareHelper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(HardwareHelper.class);
 
 	public static final boolean DEBUG_FREEZE_HAL = false;
 

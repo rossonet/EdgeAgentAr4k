@@ -59,8 +59,7 @@ import com.google.gson.GsonBuilder;
 @RequestMapping("/cameraInterface")
 public class CameraShellInterface extends AbstractShellHelper {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(StreamCameraService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(StreamCameraService.class);
 
 	private StreamCameraService camera = null;
 	private VideoInterface videoInterface = null;

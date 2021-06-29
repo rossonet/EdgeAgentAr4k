@@ -35,8 +35,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 final class MessageCachedNetty implements Serializable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MessageCachedNetty.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MessageCachedNetty.class);
 
 	enum MessageCachedType {
 		TO_BEACON, TO_NETWORK

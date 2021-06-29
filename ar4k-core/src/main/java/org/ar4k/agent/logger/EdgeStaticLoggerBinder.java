@@ -27,27 +27,33 @@ import org.slf4j.spi.LoggerFactoryBinder;
 
 public class EdgeStaticLoggerBinder implements LoggerFactoryBinder {
 
-  private static final EdgeStaticLoggerBinder SINGLETON = new EdgeStaticLoggerBinder();
+	private static final EdgeStaticLoggerBinder SINGLETON = new EdgeStaticLoggerBinder();
 
-  public static final EdgeStaticLoggerBinder getSingleton() {
-    return SINGLETON;
-  }
+	public static final EdgeStaticLoggerBinder getSingleton() {
+		return SINGLETON;
+	}
 
-  public static String REQUESTED_API_VERSION = "1.6";// !final
-  private static final String loggerFactoryClassStr = EdgeLogFactory.class.getName();
-  private EdgeLogFactory loggerFactory;
+	public static String REQUESTED_API_VERSION = "1.6";// !final
+	private static final String loggerFactoryClassStr = EdgeLogFactory.class.getName();
+	private EdgeLogFactory loggerFactory;
 
-  private EdgeStaticLoggerBinder() {
-    loggerFactory = new EdgeLogFactory();
-  }
+	private EdgeStaticLoggerBinder() {
+		loggerFactory = new EdgeLogFactory();
+	}
 
-  @Override
-  public ILoggerFactory getLoggerFactory() {
-    return loggerFactory;
-  }
+	@Override
+	public ILoggerFactory getLoggerFactory() {
+		return loggerFactory;
+	}
 
-  @Override
-  public String getLoggerFactoryClassStr() {
-    return loggerFactoryClassStr;
-  }
+	@Override
+	public String getLoggerFactoryClassStr() {
+		return loggerFactoryClassStr;
+	}
+
+	public static EdgeLogger getClassLogger(Class<?> classForLogger) {
+		return (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
+				.getLogger(classForLogger.toString());
+	}
+
 }

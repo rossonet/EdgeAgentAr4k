@@ -16,8 +16,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  */
 public class OpcUaServerService implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpcUaServerService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(OpcUaServerService.class);
 
 	private Ar4kOpcUaServer server = null;
 

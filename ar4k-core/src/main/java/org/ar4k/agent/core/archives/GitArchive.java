@@ -15,8 +15,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 @ManagedArchiveAr4k
 public class GitArchive implements ManagedArchives {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(GitArchive.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(GitArchive.class);
 
 	private String gitUrl = null;
 	private File localDirectory = null;

@@ -133,8 +133,7 @@ public class DataGeneratorService implements EdgeComponent {
 
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(DataGeneratorService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataGeneratorService.class);
 
 	// iniettata vedi set/get
 	private DataGeneratorConfig configuration = null;

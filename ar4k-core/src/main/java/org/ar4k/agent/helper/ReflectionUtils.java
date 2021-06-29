@@ -9,8 +9,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
 public class ReflectionUtils {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ReflectionUtils.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ReflectionUtils.class);
 
 	private static ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 

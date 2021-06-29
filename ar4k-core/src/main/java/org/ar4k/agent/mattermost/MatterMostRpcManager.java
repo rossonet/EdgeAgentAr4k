@@ -10,8 +10,7 @@ import org.ar4k.agent.mattermost.model.User;
 
 public class MatterMostRpcManager implements MatterMostCallBack {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MatterMostRpcManager.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MatterMostRpcManager.class);
 
 	private final RpcConversation rpc;
 	private MatterMostClientAr4k mattermostClient = null;

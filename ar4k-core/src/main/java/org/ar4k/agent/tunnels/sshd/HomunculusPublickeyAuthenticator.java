@@ -25,8 +25,8 @@ public class HomunculusPublickeyAuthenticator extends AuthorizedKeysAuthenticato
 		super(file);
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HomunculusPublickeyAuthenticator.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder
+			.getClassLogger(HomunculusPublickeyAuthenticator.class);
 
 	@Override
 	public boolean authenticate(String username, PublicKey key, ServerSession session) throws AsyncAuthException {

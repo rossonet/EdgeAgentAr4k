@@ -15,8 +15,8 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconClassicEndpointFromObserver implements StreamObserver<TunnelMessage>, AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconClassicEndpointFromObserver.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder
+			.getClassLogger(BeaconClassicEndpointFromObserver.class);
 
 	private final BeaconClassicConnection beaconClassicConnection;
 	private boolean active = false;

@@ -51,8 +51,7 @@ public class StreamCameraService implements EdgeComponent {
 
 	public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(StreamCameraService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(StreamCameraService.class);
 
 	private Homunculus homunculus = null;
 

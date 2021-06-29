@@ -26,8 +26,7 @@ import com.vaadin.flow.shared.Registration;
 
 public class ProvisioningServerForm extends FormLayout {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ProvisioningServerForm.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ProvisioningServerForm.class);
 
 	private static final long serialVersionUID = -7889305640122267762L;
 

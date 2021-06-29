@@ -21,8 +21,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class ActiveMqService implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ActiveMqService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ActiveMqService.class);
 
 	private ActiveMqBroker broker = null;
 
@@ -154,7 +153,7 @@ public class ActiveMqService implements EdgeComponent {
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 	@Override
 	public String getServiceName() {
 		return getConfiguration().getName();

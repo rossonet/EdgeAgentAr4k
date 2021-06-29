@@ -32,27 +32,26 @@ import com.beust.jcommander.ParameterException;
  */
 public class PotValidator implements IParameterValidator {
 
-  private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(PotValidator.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(PotValidator.class);
 
-  @Override
-  public void validate(String name, String value) throws ParameterException {
-    Homunculus homunculus = (Homunculus) Homunculus.getApplicationContext().getBean("anima");
-    boolean ok = false;
-    StringBuilder r = new StringBuilder();
-    for (ServiceConfig a : homunculus.getRuntimeConfig().pots) {
-      try {
-        ConfigSeed b = a;
-        if (b.getName().equals(value)) {
-          ok = true;
-        }
-        r.append(b.getName() + " ");
-      } catch (Exception ee) {
-        logger.logException(ee);
-      }
-    }
-    if (ok == false) {
-      throw new ParameterException("Parameter " + name + " should be in " + r);
-    }
-  }
+	@Override
+	public void validate(String name, String value) throws ParameterException {
+		Homunculus homunculus = (Homunculus) Homunculus.getApplicationContext().getBean("anima");
+		boolean ok = false;
+		StringBuilder r = new StringBuilder();
+		for (ServiceConfig a : homunculus.getRuntimeConfig().pots) {
+			try {
+				ConfigSeed b = a;
+				if (b.getName().equals(value)) {
+					ok = true;
+				}
+				r.append(b.getName() + " ");
+			} catch (Exception ee) {
+				logger.logException(ee);
+			}
+		}
+		if (ok == false) {
+			throw new ParameterException("Parameter " + name + " should be in " + r);
+		}
+	}
 }

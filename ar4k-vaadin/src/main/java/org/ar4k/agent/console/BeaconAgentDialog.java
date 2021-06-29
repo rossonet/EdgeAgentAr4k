@@ -29,8 +29,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 
 public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconAgentDialog.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconAgentDialog.class);
 
 	private static final long serialVersionUID = -7889305640288767762L;
 
@@ -164,6 +163,7 @@ public class BeaconAgentDialog extends Dialog implements AutoCloseable {
 	private AgentTab createAgentTab(String classTarget)
 			throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		@SuppressWarnings("unchecked")
 		final Class<? extends AgentTab> clazz = (Class<? extends AgentTab>) Class.forName(classTarget);
 		final Constructor<? extends AgentTab> constructor = clazz.getConstructor();
 		return constructor.newInstance();

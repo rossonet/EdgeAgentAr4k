@@ -26,8 +26,7 @@ import com.jcraft.jsch.Session;
  */
 public abstract class AbstractSshTunnel implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AbstractSshTunnel.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AbstractSshTunnel.class);
 
 	protected AbstractSshConfig configuration = null;
 

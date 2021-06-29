@@ -26,8 +26,7 @@ import com.hazelcast.cp.lock.FencedLock;
 
 public class HazelcastComponent implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HazelcastComponent.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(HazelcastComponent.class);
 
 	private Homunculus homunculus = null;
 

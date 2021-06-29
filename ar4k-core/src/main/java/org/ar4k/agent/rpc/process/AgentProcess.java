@@ -11,8 +11,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
 public interface AgentProcess extends AutoCloseable {
 
-	static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AgentProcess.class.toString());
+	static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AgentProcess.class);
 
 	boolean isAlive();
 

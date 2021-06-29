@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.IndustrialMessage;
@@ -27,7 +25,6 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem.Value
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription.ItemCreationCallback;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
-import org.eclipse.milo.opcua.stack.core.serialization.SerializationContext;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -42,8 +39,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 
 public class OpcUaGroupManager implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpcUaGroupManager.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(OpcUaGroupManager.class);
 
 	private final OpcUaClientService opcUaClientService;
 	private final UaSubscription uaSubscription;

@@ -24,8 +24,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  */
 public class SerialJsonService extends SerialService {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SerialJsonService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SerialJsonService.class);
 
 	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
 

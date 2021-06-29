@@ -43,8 +43,7 @@ import com.beust.jcommander.Parameter;
 // TODO: implementare gestione configurazione in XML 
 public class EdgeConfig implements ConfigSeed {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(EdgeConfig.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(EdgeConfig.class);
 
 	private static final long serialVersionUID = 7447810727276010241L;
 

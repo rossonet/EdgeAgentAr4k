@@ -40,8 +40,7 @@ import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
  */
 public class BeaconService implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Homunculus.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Homunculus.class);
 
 	// iniettata vedi set/get
 	private BeaconServiceConfig configuration = null;

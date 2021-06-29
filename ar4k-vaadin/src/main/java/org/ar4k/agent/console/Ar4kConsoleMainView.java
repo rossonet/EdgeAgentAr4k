@@ -49,8 +49,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 
 	private static final long serialVersionUID = 53637205682774475L;
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Ar4kConsoleMainView.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Ar4kConsoleMainView.class);
 
 	public static final String PACKET_SEARCH_BASE = "org.ar4k.agent";
 
@@ -175,6 +174,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	private AgentMenu createMenu(String classTarget)
 			throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		@SuppressWarnings("unchecked")
 		final Class<? extends AgentMenu> clazz = (Class<? extends AgentMenu>) Class.forName(classTarget);
 		final Constructor<? extends AgentMenu> constructor = clazz.getConstructor();
 		return constructor.newInstance();

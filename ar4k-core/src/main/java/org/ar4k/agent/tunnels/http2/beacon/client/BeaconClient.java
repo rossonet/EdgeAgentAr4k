@@ -97,8 +97,7 @@ public class BeaconClient implements AutoCloseable, IBeaconClient {
 		RUNNING, CONNECTED, REGISTERED, IDLE, KILLED
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconClient.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconClient.class);
 	private static int internalHealth = 60000;
 
 	private static boolean useNettyForTunnel = true;

@@ -62,8 +62,7 @@ public class MainBeaconService implements AutoCloseable {
 		};
 	}
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MainBeaconService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MainBeaconService.class);
 
 	private List<IBeaconClientScadaWrapper> beaconServers = new ArrayList<>();
 

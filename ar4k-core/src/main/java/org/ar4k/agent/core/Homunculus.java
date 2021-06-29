@@ -139,8 +139,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 	private static ApplicationContext applicationContext;
 	private static final String DB_DATASTORE_NAME = "datastore";
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Homunculus.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Homunculus.class);
 
 	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
 

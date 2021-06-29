@@ -19,8 +19,7 @@ import org.springframework.messaging.MessageChannel;
 
 public class DataAddress implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(DataAddress.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataAddress.class);
 
 	protected final Homunculus homunculus;
 

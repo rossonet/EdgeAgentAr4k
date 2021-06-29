@@ -20,8 +20,7 @@ import io.grpc.stub.StreamObserver;
 
 public class TunnelRunnerBeaconServer implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(TunnelRunnerBeaconServer.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(TunnelRunnerBeaconServer.class);
 
 	private final long tunnelId;
 	private final Agent serverAgent;
@@ -128,13 +127,17 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 					Thread.sleep(BeaconNettyNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT);
 					final TunnelMessage message = TunnelMessage.newBuilder()
 							.setMessageStatus(MessageStatus.beaconLocalPing).build();
-					if (serverObserver != null && serverObserverLastTime.get() != 0 && (serverObserverLastTime.get()
-							+ BeaconNettyNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date().getTime())) {
+					if (serverObserver != null && serverObserverLastTime.get() != 0
+							&& (serverObserverLastTime.get()
+									+ BeaconNettyNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date()
+											.getTime())) {
 						onNextSynchro(message, serverObserver);
 						serverObserverLastTime.set(new Date().getTime());
 					}
-					if (clientObserver != null && clientObserverLastTime.get() != 0 && (clientObserverLastTime.get()
-							+ BeaconNettyNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date().getTime())) {
+					if (clientObserver != null && clientObserverLastTime.get() != 0
+							&& (clientObserverLastTime.get()
+									+ BeaconNettyNetworkTunnel.LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT < new Date()
+											.getTime())) {
 						onNextSynchro(message, clientObserver);
 						clientObserverLastTime.set(new Date().getTime());
 					}

@@ -32,8 +32,7 @@ import org.springframework.statemachine.state.State;
  */
 public class HomunculusStateMachineConfig
 		extends EnumStateMachineConfigurerAdapter<HomunculusStates, HomunculusEvents> {
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(HomunculusStateMachineConfig.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(HomunculusStateMachineConfig.class);
 
 	@Autowired
 	Homunculus homunculus;

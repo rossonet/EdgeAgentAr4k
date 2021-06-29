@@ -13,6 +13,7 @@ dependencies {
 	compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
 	compile group: 'com.digitalpetri.modbus', name: 'modbus-slave-tcp', version: '1.2.0'
 	compile group: 'com.digitalpetri.modbus', name: 'modbus-master-tcp', version: '1.2.0'
+	testCompile project(':ar4k-activemq')
 }
 
 bootJar {

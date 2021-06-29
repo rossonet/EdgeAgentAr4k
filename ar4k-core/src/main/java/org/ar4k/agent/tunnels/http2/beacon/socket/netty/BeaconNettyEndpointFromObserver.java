@@ -19,8 +19,8 @@ import io.netty.channel.ChannelFutureListener;
 
 public class BeaconNettyEndpointFromObserver implements StreamObserver<TunnelMessage>, AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconNettyEndpointFromObserver.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder
+			.getClassLogger(BeaconNettyEndpointFromObserver.class);
 
 	private final BeaconNettyConnection beaconNettyConnection;
 	private boolean active = false;

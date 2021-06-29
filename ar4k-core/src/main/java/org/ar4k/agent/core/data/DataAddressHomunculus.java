@@ -26,8 +26,7 @@ public class DataAddressHomunculus extends DataAddress {
 
 	private static final String TIMER_HEALTH_DATA_ADDRESS = "TimerHealthDataAddress";
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(DataAddressHomunculus.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataAddressHomunculus.class);
 
 	private static final String SYSTEM_TAG = "system";
 

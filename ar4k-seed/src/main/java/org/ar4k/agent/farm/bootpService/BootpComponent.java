@@ -11,8 +11,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
 public abstract class BootpComponent implements EdgeComponent {
 
-	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BootpComponent.class.toString());
+	protected static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BootpComponent.class);
 
 	private Homunculus homunculus = null;
 

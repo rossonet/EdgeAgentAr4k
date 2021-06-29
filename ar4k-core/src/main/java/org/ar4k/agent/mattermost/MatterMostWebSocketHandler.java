@@ -22,8 +22,7 @@ import org.json.JSONObject;
 
 public class MatterMostWebSocketHandler extends Endpoint {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MatterMostWebSocketHandler.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MatterMostWebSocketHandler.class);
 
 	Session userSession = null;
 	private MessageHandler messageHandler;

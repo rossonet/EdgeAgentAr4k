@@ -26,8 +26,7 @@ import com.vaadin.flow.shared.Registration;
 
 public class BeaconServerForm extends FormLayout {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconServerForm.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconServerForm.class);
 
 	private static final long serialVersionUID = -7889305640288767762L;
 

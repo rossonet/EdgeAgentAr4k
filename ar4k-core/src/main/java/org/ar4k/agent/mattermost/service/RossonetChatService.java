@@ -36,8 +36,7 @@ import org.springframework.messaging.SubscribableChannel;
  */
 public class RossonetChatService implements EdgeComponent, MatterMostCallBack, MessageHandler {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(RossonetChatService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(RossonetChatService.class);
 
 	// private final static Gson gson = new GsonBuilder().create();
 	// iniettata vedi set/get

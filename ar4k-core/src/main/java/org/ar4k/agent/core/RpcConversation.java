@@ -33,8 +33,7 @@ import com.beust.jcommander.ParameterException;
  */
 public class RpcConversation implements RpcExecutor {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(RpcConversation.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(RpcConversation.class);
 
 	private Map<String, EdgeConfig> configurations = new HashMap<>();
 	private Map<String, KeystoreConfig> keyStores = new HashMap<>();

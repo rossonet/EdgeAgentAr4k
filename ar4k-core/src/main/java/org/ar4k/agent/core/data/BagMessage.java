@@ -15,8 +15,7 @@ public class BagMessage implements Serializable {
 
 	private static final long serialVersionUID = -5601362670594700641L;
 
-	private static transient final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton()
-			.getLoggerFactory().getLogger(BagMessage.class.toString());
+	private static transient final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BagMessage.class);
 
 	private InternalMessage<?> message = null;
 	private long time = 0;

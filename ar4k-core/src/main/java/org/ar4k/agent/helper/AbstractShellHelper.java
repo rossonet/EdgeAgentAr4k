@@ -57,8 +57,7 @@ import org.springframework.shell.Availability;
 
 public abstract class AbstractShellHelper {
 
-	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AbstractShellHelper.class.toString());
+	protected static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AbstractShellHelper.class);
 
 	private static final Long load = 1500L;
 

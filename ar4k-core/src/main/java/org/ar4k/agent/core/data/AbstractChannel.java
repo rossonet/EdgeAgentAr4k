@@ -26,18 +26,17 @@ import org.springframework.messaging.MessageChannel;
 import com.beust.jcommander.Parameter;
 
 public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Closeable {
-	
-	//TODO implementare spring integration tra i channel
+
+	// TODO implementare spring integration tra i channel
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message.html#message
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/core.html#spring-integration-core-messaging
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message-routing.html#messaging-routing-chapter
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message-transformation.html#messaging-transformation-chapter
-	//TODO esempio con endpoint camel in spring integration
+	// TODO esempio con endpoint camel in spring integration
 	// https://www.baeldung.com/spring-apache-camel-tutorial
 	// https://dzone.com/articles/spring-integration-and-apache
 
-	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AbstractChannel.class.toString());
+	protected static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AbstractChannel.class);
 
 	@Parameter(names = "--browseName", description = "browse name for the channel", required = true)
 	private String browseName = null;

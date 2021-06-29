@@ -49,8 +49,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 
 	private final static Gson gson = new GsonBuilder().create();
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SshdHomunculusService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SshdHomunculusService.class);
 	// iniettata vedi set/get
 	private SshdHomunculusConfig configuration = null;
 	private DataAddress dataspace = null;

@@ -21,8 +21,7 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconNetworkClassicTunnel.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconNetworkClassicTunnel.class);
 
 	public static final long BEACON_DELAY_RECONNECTION = 0;
 	public static final int LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT = 0;

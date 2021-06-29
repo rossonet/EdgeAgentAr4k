@@ -13,8 +13,7 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconClassicConnection implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconClassicConnection.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconClassicConnection.class);
 
 	private enum StatusNow {
 		INIT, ONLINE, RECONNECTION, CLOSED

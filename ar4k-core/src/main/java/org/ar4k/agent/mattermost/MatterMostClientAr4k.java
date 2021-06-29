@@ -56,8 +56,7 @@ public class MatterMostClientAr4k implements MessageHandler, AutoCloseable {
 
 	private static final Level LOG_LEVEL = Level.FINE;
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MatterMostClientAr4k.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MatterMostClientAr4k.class);
 
 	private final MattermostClient client;
 

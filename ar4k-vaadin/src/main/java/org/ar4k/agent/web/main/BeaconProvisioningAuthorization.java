@@ -12,8 +12,8 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 public class BeaconProvisioningAuthorization implements IBeaconProvisioningAuthorization {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconProvisioningAuthorization.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder
+			.getClassLogger(BeaconProvisioningAuthorization.class);
 
 	private String idRequest;
 	private String name;

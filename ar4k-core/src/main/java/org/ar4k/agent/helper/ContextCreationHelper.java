@@ -18,8 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class ContextCreationHelper implements Callable<Homunculus>, ApplicationListener<ApplicationPreparedEvent> {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ContextCreationHelper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ContextCreationHelper.class);
 
 	private class RunContext implements Runnable {
 		private final String[] argsRunner;

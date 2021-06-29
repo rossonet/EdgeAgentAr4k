@@ -11,8 +11,7 @@ public class GlobalLoggerUtils {
 
 	private static final GlobalLoggerUtils staticInstance = new GlobalLoggerUtils();
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(GlobalLoggerUtils.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(GlobalLoggerUtils.class);
 
 	public void writeInfoLog(String logLine) {
 		logger.info(logLine);

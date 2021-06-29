@@ -39,8 +39,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class BeaconNettyNetworkReceiver implements NetworkReceiver {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconNettyNetworkReceiver.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconNettyNetworkReceiver.class);
 
 	private final class ServerTCPHandler extends SimpleChannelInboundHandler<ByteBuf> implements AutoCloseable {
 		private final long serverSessionId = UUID.randomUUID().getMostSignificantBits(); // battezza la sessione
@@ -64,9 +63,9 @@ public class BeaconNettyNetworkReceiver implements NetworkReceiver {
 				final byte[] bytes = ByteBufUtil.getBytes(s);
 				if (!terminate) {
 					getBeaconNetworkTunnel().addInputCachedMessage(serverSessionId, messageId,
-							new MessageCachedNetty(MessageCachedNetty.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
-									getBeaconNetworkTunnel(), ctx, myRoleMode, serverSessionId, messageId, bytes, null,
-									chunkLimit, bytes.length, null));
+							new MessageCachedNetty(MessageCachedNetty.MessageCachedType.TO_BEACON,
+									getBeaconNetworkReceiver(), getBeaconNetworkTunnel(), ctx, myRoleMode,
+									serverSessionId, messageId, bytes, null, chunkLimit, bytes.length, null));
 				}
 				nextAction(serverSessionId, ctx);
 			} catch (final Exception ff) {
@@ -210,9 +209,9 @@ public class BeaconNettyNetworkReceiver implements NetworkReceiver {
 					final long messageId = getBeaconNetworkTunnel().getProgressiveNetworkToBeacon(clientSerialId);
 					final byte[] bytes = ByteBufUtil.getBytes(s);
 					getBeaconNetworkTunnel().addInputCachedMessage(clientSerialId, messageId,
-							new MessageCachedNetty(MessageCachedNetty.MessageCachedType.TO_BEACON, getBeaconNetworkReceiver(),
-									getBeaconNetworkTunnel(), ctx, myRoleMode, clientSerialId, messageId, bytes, null,
-									chunkLimit, bytes.length, null));
+							new MessageCachedNetty(MessageCachedNetty.MessageCachedType.TO_BEACON,
+									getBeaconNetworkReceiver(), getBeaconNetworkTunnel(), ctx, myRoleMode,
+									clientSerialId, messageId, bytes, null, chunkLimit, bytes.length, null));
 					nextAction(clientSerialId, ctx);
 				}
 			} catch (final Exception ff) {
@@ -342,7 +341,8 @@ public class BeaconNettyNetworkReceiver implements NetworkReceiver {
 	private final Map<Long, CachedChunkNetty> outputCachedDataBase64ByMessageId = new ConcurrentHashMap<>();
 	private boolean terminate = false;
 
-	public BeaconNettyNetworkReceiver(final BeaconNettyNetworkTunnel tunnel, final long uniqueClassId, final int chunkLimit) {
+	public BeaconNettyNetworkReceiver(final BeaconNettyNetworkTunnel tunnel, final long uniqueClassId,
+			final int chunkLimit) {
 		terminate = false;
 		this.chunkLimit = chunkLimit;
 		this.uniqueClassId = uniqueClassId;
@@ -682,7 +682,8 @@ public class BeaconNettyNetworkReceiver implements NetworkReceiver {
 		getBeaconNetworkTunnel().incrementPacketControl();
 		for (final Long serialPacket : getBeaconNetworkTunnel().getInputCachedMessages(sessionId).keySet()) {
 			if (serialPacket <= ackMessageId) {
-				final MessageCachedNetty lock = getBeaconNetworkTunnel().getInputCachedMessages(sessionId).get(serialPacket);
+				final MessageCachedNetty lock = getBeaconNetworkTunnel().getInputCachedMessages(sessionId)
+						.get(serialPacket);
 				if (TRACE_LOG_IN_INFO)
 					logger.info("################ confirmed packet to Beacon and remove it " + serialPacket
 							+ " beacause ack received is " + ackMessageId);

@@ -14,8 +14,7 @@ import org.pcap4j.packet.UdpPacket;
 @Ar4kPcapAnalyzer
 public class BaseLoggerPacketAnalyzer implements PackerAnalyzer {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BaseLoggerPacketAnalyzer.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BaseLoggerPacketAnalyzer.class);
 
 	@Override
 	public void elaboratePacket(Packet packet) throws IOException {

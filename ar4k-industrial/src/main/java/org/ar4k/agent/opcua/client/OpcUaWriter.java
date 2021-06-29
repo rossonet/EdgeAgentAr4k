@@ -23,8 +23,7 @@ import org.springframework.messaging.MessageHandler;
 
 public class OpcUaWriter implements MessageHandler {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpcUaWriter.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(OpcUaWriter.class);
 
 	private final OpcUaClientNodeConfig singleNode;
 	private final OpcUaClientService opcUaClientService;

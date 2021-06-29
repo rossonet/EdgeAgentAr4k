@@ -53,8 +53,7 @@ import com.beust.jcommander.Parameter;
  */
 public class KeystoreConfig implements ConfigSeed {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(KeystoreConfig.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(KeystoreConfig.class);
 
 	private static final long serialVersionUID = 6291742061764165257L;
 

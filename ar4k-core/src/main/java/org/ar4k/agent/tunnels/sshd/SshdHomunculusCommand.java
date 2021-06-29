@@ -30,8 +30,7 @@ import org.springframework.shell.Shell;
  */
 public class SshdHomunculusCommand implements Command {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(AbstractShellHelper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(AbstractShellHelper.class);
 
 	private static final CharSequence COMPLETION_CHAR = "?";
 	private static final CharSequence EXIT_MESSAGE = "exit";

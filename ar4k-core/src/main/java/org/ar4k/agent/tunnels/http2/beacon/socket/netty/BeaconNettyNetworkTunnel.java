@@ -23,8 +23,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class BeaconNettyNetworkTunnel implements NetworkTunnel {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconNettyNetworkTunnel.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconNettyNetworkTunnel.class);
 	private static final int PACKET_CHUNK_LIMIT = 192;
 	public static final long LAST_MESSAGE_FROM_BEACON_SERVER_TIMEOUT = 2500;
 	static final int BEACON_DELAY_RECONNECTION = 1500;

@@ -18,8 +18,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 // TODO completare servizio modbus master
 public class ModbusMasterService implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ModbusMasterService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ModbusMasterService.class);
 
 	@Override
 	public void close() throws Exception {
@@ -47,7 +46,7 @@ public class ModbusMasterService implements EdgeComponent {
 
 	@Override
 	public Homunculus getHomunculus() {
-		//Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 

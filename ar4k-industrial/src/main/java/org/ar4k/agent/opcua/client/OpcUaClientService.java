@@ -45,8 +45,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 public class OpcUaClientService implements EdgeComponent {
 
 	private static final String CERTIFICATE_CHAIN_SEPARATOR = ",";
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(OpcUaClientService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(OpcUaClientService.class);
 	private OpcUaClient clientOpc = null;
 	private OpcUaClientConfig configuration = null;
 	private DataAddress dataAddress = null;

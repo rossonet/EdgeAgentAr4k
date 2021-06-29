@@ -11,8 +11,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage;
 import io.grpc.stub.StreamObserver;
 
 public class BeaconServerNetworkHub implements StreamObserver<TunnelMessage>, AutoCloseable {
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconServerNetworkHub.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconServerNetworkHub.class);
 
 	private final StreamObserver<TunnelMessage> responseObserver;
 	private TunnelRunnerBeaconServer tunnel = null;

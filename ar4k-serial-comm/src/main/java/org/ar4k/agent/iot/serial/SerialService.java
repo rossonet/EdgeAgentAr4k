@@ -44,8 +44,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  */
 public class SerialService implements EdgeComponent, SerialPortDataListener {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SerialService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SerialService.class);
 
 	private SerialPort comPort = null;
 

@@ -28,8 +28,7 @@ import org.springframework.messaging.SubscribableChannel;
 
 public class DataBag implements AutoCloseable, MessageHandler {
 
-	private static transient final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton()
-			.getLoggerFactory().getLogger(DataBag.class.toString());
+	private static transient final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataBag.class);
 
 	private final File file;
 	private final Collection<EdgeChannel> channels;

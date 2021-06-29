@@ -11,8 +11,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  */
 public class SshLocalTunnel extends AbstractSshTunnel {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SshLocalTunnel.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SshLocalTunnel.class);
 
 	private boolean tunnelReturn = true;
 

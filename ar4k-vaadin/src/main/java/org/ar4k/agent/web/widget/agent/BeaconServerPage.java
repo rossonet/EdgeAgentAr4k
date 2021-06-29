@@ -16,8 +16,7 @@ import com.vaadin.flow.component.html.Div;
 @AgentWebTab
 public class BeaconServerPage implements AgentTab {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconServerPage.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconServerPage.class);
 
 	@Override
 	public boolean isActive(IScadaAgent beaconAgentWrapper) {

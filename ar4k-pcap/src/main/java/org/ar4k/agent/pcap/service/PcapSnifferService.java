@@ -35,8 +35,7 @@ import org.pcap4j.packet.UdpPacket;
  */
 public class PcapSnifferService implements EdgeComponent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(PcapSnifferService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(PcapSnifferService.class);
 
 	private PcapSnifferConfig configuration;
 	private Homunculus homunculus;

@@ -15,8 +15,7 @@ import io.grpc.stub.StreamObserver;
 
 public class BeaconNettyConnection implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconNettyConnection.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconNettyConnection.class);
 
 	private enum StatusNow {
 		INIT, ONLINE, RECONNECTION, CLOSED
@@ -47,8 +46,8 @@ public class BeaconNettyConnection implements AutoCloseable {
 					: MessageStatus.closeRequestServer);
 		}
 		final TunnelMessage tunnelMessage = TunnelMessage.newBuilder().setAgentSource(beaconNettyNetworkTunnel.getMe())
-				.setTunnelId(beaconNettyNetworkTunnel.getTunnelId()).setClassUuid(beaconNettyNetworkTunnel.getUniqueClassId())
-				.setMessageStatus(messageType).build();
+				.setTunnelId(beaconNettyNetworkTunnel.getTunnelId())
+				.setClassUuid(beaconNettyNetworkTunnel.getUniqueClassId()).setMessageStatus(messageType).build();
 		fromBeaconServer = new BeaconNettyEndpointFromObserver(this);
 		toBeaconServer = beaconNettyNetworkTunnel.getAsyncStubTunnel().openNetworkChannel(fromBeaconServer);
 		statusNow = StatusNow.ONLINE;

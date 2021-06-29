@@ -15,8 +15,7 @@ import org.json.JSONObject;
 
 public class BeaconAgent implements AutoCloseable {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconAgent.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconAgent.class);
 
 	private static final int queueSize = 50;
 

@@ -43,8 +43,7 @@ import org.eclipse.milo.opcua.stack.server.security.DefaultServerCertificateVali
 
 public class Ar4kOpcUaServer {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(Ar4kOpcUaServer.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Ar4kOpcUaServer.class);
 
 	static {
 		// Required for SecurityPolicy.Aes256_Sha256_RsaPss

@@ -1,5 +1,8 @@
 package org.ar4k.agent.mqtt.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
@@ -12,6 +15,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
@@ -30,9 +34,9 @@ public class PahoClientService implements EdgeComponent {
 	private DataAddress dataAddress = null;
 	private Homunculus homunculus = null;
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
+	private List<MqttNodeSubscription> subscriptions = new ArrayList<>();
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(PahoClientService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(PahoClientService.class);
 
 	@Override
 	public void close() throws Exception {
@@ -41,19 +45,43 @@ public class PahoClientService implements EdgeComponent {
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		// Auto-generated method stub
-		return null;
+		return serviceStatus;
 	}
 
 	@Override
 	public void init() throws ServiceInitException {
-		MqttClientPersistence persistence = null;
-		if (configuration.persistenceOnFileSystem != null && !configuration.persistenceOnFileSystem.isEmpty()) {
-			persistence = new MqttDefaultFilePersistence(configuration.persistenceOnFileSystem);
-		} else {
-			persistence = new MemoryPersistence();
+		try {
+			MqttClientPersistence persistence = null;
+			if (configuration.persistenceOnFileSystem != null && !configuration.persistenceOnFileSystem.isEmpty()) {
+				persistence = new MqttDefaultFilePersistence(configuration.persistenceOnFileSystem);
+			} else {
+				persistence = new MemoryPersistence();
+			}
+			mqttClient = new MqttClient(configuration.broker, configuration.clientId, persistence);
+			MqttConnectOptions connOpts = new MqttConnectOptions();
+			connOpts.setCleanSession(configuration.cleanSession);
+			connOpts.setAutomaticReconnect(true);
+			connOpts.setConnectionTimeout(configuration.connectionTimeout);
+			connOpts.setKeepAliveInterval(configuration.keepAliveInterval);
+			connOpts.setMaxInflight(configuration.maxInflight);
+			connOpts.setMaxReconnectDelay(configuration.maxReconnectDelay);
+			if (configuration.userName != null && configuration.password != null && !configuration.password.isEmpty()
+					&& !configuration.userName.isEmpty()) {
+				connOpts.setUserName(configuration.userName);
+				connOpts.setPassword(configuration.password.toCharArray());
+			}
+			mqttClient.connect(connOpts);
+			subscribeTopics();
+			serviceStatus = ServiceStatus.RUNNING;
+		} catch (MqttException exception) {
+			logger.logException(exception);
 		}
-		mqttClient = new MqttClient(configuration.broker, configuration.clientId, persistence);
+	}
+
+	private void subscribeTopics() {
+		for (MqttTopicConfig t : configuration.subscriptions) {
+			subscriptions.add(new MqttNodeSubscription(mqttClient, t));
+		}
 
 	}
 

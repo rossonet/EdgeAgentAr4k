@@ -14,8 +14,15 @@
     */
 package org.ar4k.agent.mqtt.client;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.opcua.client.OpcUaClientNodeConfig;
+
+import com.beust.jcommander.Parameter;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -25,6 +32,28 @@ import org.ar4k.agent.core.interfaces.EdgeComponent;
 public class PahoClientConfig extends AbstractServiceConfig {
 
 	private static final long serialVersionUID = -1385133280351173640L;
+	@Parameter(names = "--persistenceOnFileSystem", description = "storage messages on filesystem directory. If null the persistance will be on ram")
+	public String persistenceOnFileSystem = null;
+	@Parameter(names = "--broker", description = "mqtt broker url")
+	public String broker = null;
+	@Parameter(names = "--clientId", description = "clientId for mqtt connection")
+	public String clientId = "ar4k-" + UUID.randomUUID().toString();
+	@Parameter(names = "--cleanSession", description = "if true, clean session when reconnect")
+	public boolean cleanSession = true;
+	@Parameter(names = "--connectionTimeout", description = "connection timeout in millisenconds")
+	public int connectionTimeout = 5000;
+	@Parameter(names = "--keepAliveInterval", description = "keep alive interval in seconds")
+	public int keepAliveInterval = 20;
+	@Parameter(names = "--maxInflight", description = "max inflight messages")
+	public int maxInflight = 10;
+	@Parameter(names = "--maxReconnectDelay", description = "max reconnection delay in milliseconds")
+	public int maxReconnectDelay = 2000;
+	@Parameter(names = "--userName", description = "username, if null the connecction will be anonymous")
+	public String userName = null;
+	@Parameter(names = "--password", description = "username, if null the connecction will be anonymous")
+	public String password = null;
+	@Parameter(names = "--subscriptions", description = "List of topics to subscribe", variableArity = true)
+	public List<MqttTopicConfig> subscriptions = new ArrayList<>();
 
 	@Override
 	public EdgeComponent instantiate() {

@@ -59,8 +59,7 @@ import com.jcraft.jsch.Session;
 @RequestMapping("/sshInterface")
 public class SshShellInterface extends AbstractShellHelper {
 
-	protected static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(SshShellInterface.class.toString());
+	protected static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SshShellInterface.class);
 
 	private Map<String, AbstractSshTunnel> tunnels = new HashMap<>();
 

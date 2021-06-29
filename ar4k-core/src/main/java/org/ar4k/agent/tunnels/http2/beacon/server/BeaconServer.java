@@ -45,8 +45,7 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 
 public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
-	static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconServer.class.toString());
+	static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconServer.class);
 
 	static final int SIGN_TIME = 3650;
 	static final long DEFAULT_TIMEOUT = 10000L;

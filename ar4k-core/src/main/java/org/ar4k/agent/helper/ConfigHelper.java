@@ -51,8 +51,7 @@ import com.google.gson.GsonBuilder;
 
 public class ConfigHelper {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ConfigHelper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ConfigHelper.class);
 
 	public static final String NETTY_CTX_CLIENT = "net-ctx-c";
 

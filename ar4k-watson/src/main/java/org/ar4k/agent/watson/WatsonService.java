@@ -45,8 +45,7 @@ import com.ibm.watson.assistant.v2.model.RuntimeResponseGeneric;
  */
 public class WatsonService implements EdgeComponent, MessageHandler {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(WatsonService.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(WatsonService.class);
 	// iniettata vedi set/get
 	private WatsonConfig configuration = null;
 	private DataAddress dataspace = null;

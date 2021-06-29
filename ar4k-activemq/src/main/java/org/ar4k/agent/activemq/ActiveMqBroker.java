@@ -34,8 +34,7 @@ public class ActiveMqBroker implements AutoCloseable {
 
 	private static final String GUEST_MQTT_USER = "guest";
 	private static final String NETTY_CONNECTOR = "netty-connector";
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(ActiveMqBroker.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ActiveMqBroker.class);
 
 	public ActiveMqBroker(ActiveMQSecurityManager securityManager, String portMqtt, String portMqtts,
 			String portWebService, String keystoreActiveMq, String keystoreActiceMqPassword, String discoveryName,

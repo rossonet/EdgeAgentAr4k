@@ -9,22 +9,21 @@ import org.springframework.shell.Shell;
 
 public class HomunculusShellFactory implements ShellFactory {
 
-  private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-      .getLogger(HomunculusShellFactory.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(HomunculusShellFactory.class);
 
-  private final Homunculus homunculus;
-  private final Shell shell;
+	private final Homunculus homunculus;
+	private final Shell shell;
 
-  public HomunculusShellFactory(Homunculus homunculus, Shell shell) {
-    this.homunculus = homunculus;
-    this.shell = shell;
-    logger.warn("Remote connection from SSH to the agent");
-  }
+	public HomunculusShellFactory(Homunculus homunculus, Shell shell) {
+		this.homunculus = homunculus;
+		this.shell = shell;
+		logger.warn("Remote connection from SSH to the agent");
+	}
 
-  @Override
-  public Command create() {
-    SshdHomunculusCommand command = new SshdHomunculusCommand(homunculus, shell);
-    return command;
-  }
+	@Override
+	public Command create() {
+		SshdHomunculusCommand command = new SshdHomunculusCommand(homunculus, shell);
+		return command;
+	}
 
 }

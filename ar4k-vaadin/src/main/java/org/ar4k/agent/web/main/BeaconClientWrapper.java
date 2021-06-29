@@ -14,8 +14,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
 public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(BeaconClientWrapper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconClientWrapper.class);
 
 	@NotNull
 	@NotEmpty

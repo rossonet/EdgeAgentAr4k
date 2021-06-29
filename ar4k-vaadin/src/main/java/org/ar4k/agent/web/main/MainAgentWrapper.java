@@ -17,8 +17,7 @@ import com.google.protobuf.ByteString;
 
 public class MainAgentWrapper implements IScadaAgent {
 
-	private static final EdgeLogger logger = (EdgeLogger) EdgeStaticLoggerBinder.getSingleton().getLoggerFactory()
-			.getLogger(MainAgentWrapper.class.toString());
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MainAgentWrapper.class);
 
 	private final Agent agent;
 	private final IBeaconClient beaconClient;
