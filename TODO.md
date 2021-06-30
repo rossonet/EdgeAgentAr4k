@@ -1,4 +1,5 @@
 ## TODO LIST
+
 ### INDUSTRIAL
 
 1. completare client MQTT
@@ -74,6 +75,34 @@
 ### TELEGRAM
 
 1. realizzare connettore Telegram come sotto progetto
+
+## SOFTWARE DA PROVARE CON SEED
+
+1. activemq
+2. apacheZeppelin
+3. spark
+4. bigBlueButton
+5. apache che
+6. etherpad
+7. gitlab
+8. jenkins
+9. jitsi
+10. kafka
+11. keycloak
+12. kibana
+13. kieWorkbench
+14. mariadb
+15. mongodb
+16. octoPrint
+17. odoo
+18. postgresql
+19. ros (Robot Operating System)
+20. wazuh
+21. wordpress
+22. xpra
+23. zabbix
+24. zimbra
+
 
 ## TODO LIST ESTESA
 
