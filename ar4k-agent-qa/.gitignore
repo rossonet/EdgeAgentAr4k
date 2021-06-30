@@ -15,6 +15,7 @@ a.*.tmp
 *.crt
 *.key
 *.pem
+target
 
 ### OUTPUT ###
 spring-shell.log
