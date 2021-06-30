@@ -106,143 +106,143 @@
 
 ## TODO LIST ESTESA
 
-[ACTIVEMQ verifica stato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqService.java)
+[ACTIVEMQ verifica stato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqService.java#L50)
 
-[completare gestione password integrata in ActiveMQ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqBroker.java)
+[completare gestione password integrata in ActiveMQ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqBroker.java#L136)
 
-[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRpcConfig.java)
+[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRpcConfig.java#L63)
 
-[provare con firma intermedia, ovvero firmando non con master ma con un](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRegistration.java)
+[provare con firma intermedia, ovvero firmando non con master ma con un](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverBeaconRegistration.java#L330)
 
-[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverSsh.java)
+[Completare test beacon](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-agent-qa/src/test/java/org/ar4k/agent/control/remote/RemoteControlOverSsh.java#L55)
 
-[what to do with multi matches?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/bot/intents/OpenNLPEntityMatcher.java)
+[what to do with multi matches?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/bot/intents/OpenNLPEntityMatcher.java#L92)
 
-[to be improved, someday](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/NumberMatcherIT.java)
+[to be improved, someday](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai-nlp/src/main/java/org/ar4k/agent/cortex/opennlp/NumberMatcherIT.java#L33)
 
-[completare servizio implementazioni regole Drools sui dati e comandi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsConfig.java)
+[completare servizio implementazioni regole Drools sui dati e comandi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsConfig.java#L20)
 
-[aggiungere global data anima se flag true](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
+[aggiungere global data anima se flag true](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java#L48)
 
-[inserire oggetti per NLP](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java)
+[inserire oggetti per NLP](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java#L249)
 
-[: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java)
+[: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java#L42)
 
-[: implementare gestione configurazione in XML ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java)
+[: implementare gestione configurazione in XML ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java#L43)
 
-[verificare bene i filtri con una serie di test](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java)
+[verificare bene i filtri con una serie di test](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java#L10)
 
-[implementare spring integration tra i channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java)
+[implementare spring integration tra i channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java#L30)
 
-[esempio con endpoint camel in spring integration](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java)
+[esempio con endpoint camel in spring integration](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java#L35)
 
-[sistemare il feedback di approved](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/interfaces/IBeaconProvisioningAuthorization.java)
+[sistemare il feedback di approved](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/interfaces/IBeaconProvisioningAuthorization.java#L27)
 
-[completare l'implementazione archivio su git con i log](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/GitArchive.java)
+[completare l'implementazione archivio su git con i log](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/GitArchive.java#L70)
 
-[completare la gestione del repository su fs locale](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/LocalFileSystemArchive.java)
+[completare la gestione del repository su fs locale](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/LocalFileSystemArchive.java#L41)
 
-[Implementare ManagedArchives su AWS S3](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/AwsS3Archive.java)
+[Implementare ManagedArchives su AWS S3](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/AwsS3Archive.java#L8)
 
-[valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/RemoteBeaconRpcExecutor.java)
+[valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/RemoteBeaconRpcExecutor.java#L63)
 
-[implementare check aggiuntivi in fase di interrogazione con frequenze a](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/BeaconClient.java)
+[implementare check aggiuntivi in fase di interrogazione con frequenze a](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/BeaconClient.java#L132)
 
-[Implementare discovery peer2peer (viene richiesto in brodcast ai nodi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/BeaconClient.java)
+[Implementare discovery peer2peer (viene richiesto in brodcast ai nodi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/BeaconClient.java#L503)
 
-[Implementare proxy http](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServerTunnelService.java)
+[Implementare proxy http](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServerTunnelService.java#L87)
 
-[da valutare per il cluster beacon server https:grpc.iobloggrpc-load-balancing](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServer.java)
+[da valutare per il cluster beacon server https:grpc.iobloggrpc-load-balancing](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServer.java#L42)
 
-[da valutare opzione di compressione https:github.comgrpcgrpc-javatreemasterexamplessrcmainjavaiogrpcexamplesexperimental](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServer.java)
+[da valutare opzione di compressione https:github.comgrpcgrpc-javatreemasterexamplessrcmainjavaiogrpcexamplesexperimental](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServer.java#L44)
 
-[DATASERVICE in beacon serverclient](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServerDataService.java)
+[DATASERVICE in beacon serverclient](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/BeaconServerDataService.java#L13)
 
-[da provare il giro su una sola macchina](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/server/TunnelRunnerBeaconServer.java)
+[da provare il giro su una sola macchina](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/server/TunnelRunnerBeaconServer.java#L201)
 
-[cache messages](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java)
+[cache messages](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java#L108)
 
-[close channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java)
+[close channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconClassicEndpointFromObserver.java#L209)
 
-[Completare e rivedere classe BeaconNetworkClassicTunnel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java)
+[Completare e rivedere classe BeaconNetworkClassicTunnel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/classic/BeaconNetworkClassicTunnel.java#L65)
 
-[revisione tunnel on grpc ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/AbstractBeaconNetworkSocketConfig.java)
+[revisione tunnel on grpc ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/socket/AbstractBeaconNetworkSocketConfig.java#L12)
 
-[Develop modem interface](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/modem/ModemWrapper.java)
+[Develop modem interface](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/modem/ModemWrapper.java#L3)
 
-[public static final int LIST_FIELD_NUMBER = 1;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java)
+[public static final int LIST_FIELD_NUMBER = 1;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java#L90)
 
-[hash = (37 * hash) + LIST_FIELD_NUMBER;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java)
+[hash = (37 * hash) + LIST_FIELD_NUMBER;](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/grpc/beacon/FlowMessage.java#L184)
 
-[PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngine.java)
+[PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngine.java#L11)
 
-[PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngineFactory.java)
+[PROPOSE Sviluppare script engine Power Shell per piattaforme Windows (JSR 223)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/powershell/UserSpacePowerShellScriptEngineFactory.java#L10)
 
-[binding dati Anima. Valutare binding in boot per pre e post script.](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/ScriptEngineManagerProcess.java)
+[binding dati Anima. Valutare binding in boot per pre e post script.](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/ScriptEngineManagerProcess.java#L35)
 
-[input.interrupt();   better thing to do?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/NativeShellRunner.java)
+[input.interrupt();   better thing to do?](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/NativeShellRunner.java#L99)
 
-[: provare BashScriptEngineFactory e scrivere tests](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/UserSpaceBashScriptEngineFactory.java)
+[: provare BashScriptEngineFactory e scrivere tests](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/rpc/process/bash/UserSpaceBashScriptEngineFactory.java#L12)
 
-[Permettere la creazione di canali brodcast tra i nodi coinvolti nel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/hazelcast/HazelcastComponent.java)
+[Permettere la creazione di canali brodcast tra i nodi coinvolti nel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/hazelcast/HazelcastComponent.java#L42)
 
-[implementare comandi in console per gestire mappe dati serializzate in json dei servizi hazelcast attivi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/hazelcast/HazelcastShellInterface.java)
+[implementare comandi in console per gestire mappe dati serializzate in json dei servizi hazelcast attivi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/hazelcast/HazelcastShellInterface.java#L47)
 
-[sviluppare beacon server cluster basato su hazelcast per grandi volumi di client](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/cluster/BeaconServerCluster.java)
+[sviluppare beacon server cluster basato su hazelcast per grandi volumi di client](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/cluster/BeaconServerCluster.java#L14)
 
-[sostituire con certificati di sistema in OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[sostituire con certificati di sistema in OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java#L83)
 
-[inserire wrapper autenticazione per OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[inserire wrapper autenticazione per OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java#L89)
 
-[updateAndGetStatus di OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
+[updateAndGetStatus di OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java#L193)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java#L151)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java#L157)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java#L163)
 
-[valutare implementazione 4Diac Forte](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
+[valutare implementazione 4Diac Forte](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java#L74)
 
-[integrazione con UNIPI AXON S105](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
+[integrazione con UNIPI AXON S105](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java#L76)
 
-[implementare gestione eventi OPCUA con presa visione e conferma](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
+[implementare gestione eventi OPCUA con presa visione e conferma](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java#L78)
 
-[completare servizio modbus slave](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/slave/ModbusSlaveService.java)
+[completare servizio modbus slave](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/slave/ModbusSlaveService.java#L18)
 
-[completare servizio modbus master](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/master/ModbusMasterService.java)
+[completare servizio modbus master](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/master/ModbusMasterService.java#L18)
 
-[completare invio messaggi verso core](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttTopicSubscription.java)
+[completare invio messaggi verso core](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttTopicSubscription.java#L58)
 
-[completare scrittura messaggi su coda mqtt](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttWriter.java)
+[completare scrittura messaggi su coda mqtt](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttWriter.java#L19)
 
-[servizio che mette a disposizione della console job da repository pre configurati (da zip file). Utilizzare l'interfaccia ManagedArchives per implementare i file systems](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-kettle/src/main/java/org/ar4k/agent/core/kettle/Kettle.java)
+[servizio che mette a disposizione della console job da repository pre configurati (da zip file). Utilizzare l'interfaccia ManagedArchives per implementare i file systems](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-kettle/src/main/java/org/ar4k/agent/core/kettle/Kettle.java#L28)
 
-[completare gestione modulo da gestione comandi remoti come servizi (esempio Staer SG e OpenVPN e cisco)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/remoteSshCommandManaged/RemoteSshCommandManagedShellInterface.java)
+[completare gestione modulo da gestione comandi remoti come servizi (esempio Staer SG e OpenVPN e cisco)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/remoteSshCommandManaged/RemoteSshCommandManagedShellInterface.java#L30)
 
-[private TftpServer tftpServer;   implementare server sftp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/bootpService/BootpComponent.java)
+[private TftpServer tftpServer;   implementare server sftp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/bootpService/BootpComponent.java#L20)
 
-[completare server distribuzioni configurazioni bootd](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/bootpService/BootpShellInterface.java)
+[completare server distribuzioni configurazioni bootd](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/bootpService/BootpShellInterface.java#L30)
 
-[completare gestione modulo da GreenGrass Azure](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/azure/AzureShellInterface.java)
+[completare gestione modulo da GreenGrass Azure](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/azure/AzureShellInterface.java#L30)
 
-[completare gestione modulo da Docker](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/docker/DockerShellInterface.java)
+[completare gestione modulo da Docker](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/docker/DockerShellInterface.java#L30)
 
-[completare gestione modulo da GreenGrass AWS](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/aws/AwsShellInterface.java)
+[completare gestione modulo da GreenGrass AWS](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/aws/AwsShellInterface.java#L30)
 
-[completare gestione modulo da gestione comandi locali come servizi (esempio Staer SG e OpenVPN)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/commandManaged/CommandManagedShellInterface.java)
+[completare gestione modulo da gestione comandi locali come servizi (esempio Staer SG e OpenVPN)](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/commandManaged/CommandManagedShellInterface.java#L30)
 
-[completare gestione modulo da OpenShift con creazione cluster via bootp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/openshift/OpenShiftShellInterface.java)
+[completare gestione modulo da OpenShift con creazione cluster via bootp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/openshift/OpenShiftShellInterface.java#L30)
 
-[Migliorare l'interazione della command line bash](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java)
+[Migliorare l'interazione della command line bash](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java#L832)
 
-[salvare databag realmente il dato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/DataShellInterface.java)
+[salvare databag realmente il dato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/DataShellInterface.java#L197)
 
-[implementare comando di shell per lanciare comandi ssh](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/SshShellInterface.java)
+[implementare comando di shell per lanciare comandi ssh](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/SshShellInterface.java#L127)
 
-[Metodo per creare la configurazione di un nuovo agente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/console/Ar4kConsoleMainView.java)
+[Metodo per creare la configurazione di un nuovo agente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/console/Ar4kConsoleMainView.java#L184)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/web/main/MainAgentWrapper.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/web/main/MainAgentWrapper.java#L142)
 
-[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/web/main/BeaconClientWrapper.java)
+[Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/web/main/BeaconClientWrapper.java#L171)
 
