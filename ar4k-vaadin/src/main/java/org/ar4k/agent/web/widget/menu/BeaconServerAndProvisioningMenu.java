@@ -126,7 +126,7 @@ public class BeaconServerAndProvisioningMenu implements AgentMenu {
 		for (IBeaconProvisioningAuthorization i : provisioningAuthorizationList) {
 			sb.append(i.getIdRequest() + " = " + i.getApprovedDataString());
 		}
-		System.out.println("****** list -> " + sb.toString());
+		//System.out.println("****** list -> " + sb.toString());
 		gridProvisioningRequest.setItems(provisioningAuthorizationList);
 	}
 

@@ -142,7 +142,7 @@ public class OpcUaGroupManager implements AutoCloseable {
 
 	private void addWriteChannel(OpcUaClientNodeConfig singleNode) {
 		final EdgeChannel channelWrite = opcUaClientService.getDataAddress().createOrGetDataChannel(
-				singleNode.writeChannel, IPublishSubscribeChannel.class, "opcua write channel to "+"singleNode.topic",
+				singleNode.writeChannel, IPublishSubscribeChannel.class, "opcua write channel to " + "singleNode.topic",
 				singleNode.fatherOfChannels, singleNode.scopeOfChannels,
 				ConfigHelper.mergeTags(singleNode.tags, opcUaClientService.getConfiguration().getTags()),
 				opcUaClientService);
@@ -161,8 +161,9 @@ public class OpcUaGroupManager implements AutoCloseable {
 		if (!nodeMapCallback.containsKey(uaMonitoredItem.getClientHandle())) {
 			OpcUaClientNodeConfig config = nodeMapConfig.get(uaMonitoredItem.getClientHandle());
 			final EdgeChannel channel = opcUaClientService.getDataAddress().createOrGetDataChannel(config.readChannel,
-					IPublishSubscribeChannel.class, "status of Watson connection", config.fatherOfChannels,
-					config.scopeOfChannels,
+					IPublishSubscribeChannel.class,
+					"opcua read data channel from " + uaMonitoredItem.getReadValueId().getNodeId(),
+					config.fatherOfChannels, config.scopeOfChannels,
 					ConfigHelper.mergeTags(config.tags, opcUaClientService.getConfiguration().getTags()),
 					opcUaClientService);
 			nodeMapCallback.put(uaMonitoredItem.getClientHandle(), channel);

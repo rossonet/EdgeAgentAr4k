@@ -98,19 +98,19 @@ public class BeaconProvisioningAuthorization implements IBeaconProvisioningAutho
 
 	@Override
 	public boolean getApproved() {
-		System.out.println("****** getApproved -> " + approved);
+		//System.out.println("****** getApproved -> " + approved);
 		return approved;
 	}
 
 	@Override
 	public boolean isApproved() {
-		System.out.println("****** isApproved -> " + approved);
+		//System.out.println("****** isApproved -> " + approved);
 		return approved;
 	}
 
 	@Override
 	public long getApprovedData() {
-		System.out.println("****** getApprovedData -> " + approvedData);
+		//System.out.println("****** getApprovedData -> " + approvedData);
 		return approvedData;
 	}
 
@@ -156,19 +156,19 @@ public class BeaconProvisioningAuthorization implements IBeaconProvisioningAutho
 
 	@Override
 	public void setJsonHealth(String jsonHealth) {
-		System.out.println("****** setJsonHealth " + jsonHealth);
+		//System.out.println("****** setJsonHealth " + jsonHealth);
 		this.jsonHealth = jsonHealth;
 	}
 
 	@Override
 	public void setApproved(boolean approved) {
-		System.out.println("****** setApproved " + approved);
+		//System.out.println("****** setApproved " + approved);
 		this.approved = approved;
 	}
 
 	@Override
 	public void setApprovedData(long approvedData) {
-		System.out.println("****** setApprovedData " + approvedData);
+		//System.out.println("****** setApprovedData " + approvedData);
 		this.approvedData = approvedData;
 	}
 
@@ -199,21 +199,21 @@ public class BeaconProvisioningAuthorization implements IBeaconProvisioningAutho
 
 	@Override
 	public void setRegistrationTimeRequestString(String notUsed) {
-		System.out.println("****** setRegistrationTimeRequestString " + notUsed);
+		//System.out.println("****** setRegistrationTimeRequestString " + notUsed);
 		// not used
 
 	}
 
 	@Override
 	public void setCsr(String notUsed) {
-		System.out.println("****** setCsr " + notUsed);
+		//System.out.println("****** setCsr " + notUsed);
 		// not used
 
 	}
 
 	@Override
 	public void setApprovedDataString(String notUsed) {
-		System.out.println("****** setApprovedDataString " + notUsed);
+		//System.out.println("****** setApprovedDataString " + notUsed);
 		// not used
 
 	}

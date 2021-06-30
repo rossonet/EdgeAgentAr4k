@@ -114,7 +114,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	}
 
 	private void configureMenu() {
-		final MenuItem beaconAgents = menuBar.addItem("Agents");
+		final MenuItem beaconAgents = menuBar.addItem("Remote Agents");
 		final SubMenu agentSubMenu = beaconAgents.getSubMenu();
 		agentSubMenu.addItem("LIST", e -> listBeaconAgents());
 		agentSubMenu.addItem("CREATE NEW AGENT CONFIGURATION", e -> createBeaconAgentConfig());

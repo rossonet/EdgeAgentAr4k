@@ -62,7 +62,7 @@ public class MqttShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "List topics in mqtt client config", group = "MQTT Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("sessionClientOpcOk")
+	@ShellMethodAvailability("sessionClientPahoOk")
 	public Collection<String> mqttClientListNodes() {
 		Collection<String> result = new HashSet<>();
 		for (final MqttTopicConfig singleSubscription : ((PahoClientConfig) getWorkingService()).subscriptions) {
@@ -73,7 +73,7 @@ public class MqttShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Remove topic in mqtt client config", group = "MQTT Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("sessionClientOpcOk")
+	@ShellMethodAvailability("sessionClientPahoOk")
 	public void mqttClientRemoveNode(@ShellOption(help = "topic uuid") String uuid) {
 		MqttTopicConfig target = null;
 		final List<MqttTopicConfig> topics = ((PahoClientConfig) getWorkingService()).subscriptions;
@@ -89,7 +89,7 @@ public class MqttShellInterface extends AbstractShellHelper {
 
 	@ShellMethod(value = "Add topic to mqtt config", group = "MQTT Commands")
 	@ManagedOperation
-	@ShellMethodAvailability("sessionClientOpcOk")
+	@ShellMethodAvailability("sessionClientPahoOk")
 	public void mqttClientAddNode(@ShellOption(optOut = true) @Valid MqttTopicConfig node) {
 		((PahoClientConfig) getWorkingService()).subscriptions.add(node);
 	}
