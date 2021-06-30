@@ -14,7 +14,7 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.1'
 	compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'
 	compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: '0.62.2'
-	compile group: 'org.deeplearning4j', name: 'deeplearning4j-ui', version: '1.0.0-beta6'	
+	compile ("org.deeplearning4j:deeplearning4j-ui:1.0.0-beta6"){ exclude (group:"com.beust",module:"jcommander")}
 	compile("org.springframework.boot:spring-boot-devtools")
 }
 
