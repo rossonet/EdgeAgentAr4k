@@ -1,0 +1,104 @@
+
+### INDUSTRIAL
+
+1. completare client MQTT
+2. completare server OPCUA
+3. ciclo test da opcua server, mqtt client, activemq, mqtt client
+4. completare MODBUS Master
+5. completare MODBUS SLAVE
+6. ciclo test di prima con aggiunta modbus
+
+### CORE
+
+1. meccanismo di routing con i messaggi con spring integration (valutare come configurarlo)
+2. aggiungere gestione configurazione XML
+3. verificare import ed esporto dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
+4. sistemare filtri selezione canali (DataChannelFilter:10)
+5. (bassa priorità) data via beaconserver
+6. (bassa prirità) gestione modem
+7. (bassa priorità) meccanismo di routing con Camel
+8. aggiornamento jar da comando. Implementare specifico comando in Beacon client/server
+9. esecuzioni servizi con parametrizzazione (per cicli di esecuzione e/o timeout). Per esempio per eseguire un comando singolo
+
+### VADDIN
+
+1. gestione varie IDE sviluppo integrata con seed (KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter )
+2. configuratore con output ide integrato
+3. miglioramente progressivo interfaccia console
+
+### TERMINAL
+
+1. comando salvataggio dati in databag
+
+### SEED
+
+1. completare contenitori con interfaccia pubblica per future implementazioni
+2. aggiungere in TERMINAL meccanismo di configurazione dei contenitori per il generico, KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter , spark, openvpn, 4diac Runtime (con verifica su Axon), ProcessMaker, MariaDB , MongoDB, gitlab
+3. aggiungere procedura configurazione open shift da TERMINAL con PXE via sftp/http
+4. integrare esecuzione in OpenShift
+5. integrare esecuzione in GreenGrass
+6. integrare esecuzione in Azure IOT Hub
+7. verifica funzionalita su raspberry
+8. verifica su UNIPI Axon
+
+### KETTLE
+
+1. gestore runtime da TERMINAL (implementare prima IDE Spoon)
+2. gestore servizio da configurazione (implementare prima IDE Spoon)
+3. runtime kettle da repository git e/o file system 
+4. verificare dipendenze disponibili (inserirle commentate in build.gradle)
+ 
+### HAZELCAST (bassa priorità)
+
+1. implementare servizio "cluster beacon server"
+2. provare su OpenShift il cluster
+3. implementare autoscaling del servizio su OpenShift
+
+### AI
+
+1. runtime drools (dopo configurazione IDE)
+2. client per connesione spark
+3. gestione runtime Jupyter (senza il modulo web)
+4. runtime drools da repository git e/o file system
+5. (bassa priorità) esempio utilizzo runtime deeplearning4j in progetto separato
+6. (bassa priorità) esempio utilizzo in ide drools interfaccia a deeplearning4j
+7. (bassa priorità) esempio utilizzo kettle da drools con IDE
+8. utilizzo comandi shell da Drools con IDE
+9. (bassa priorità) esempio utilizzo interfaccia dati da Drools con IDE
+10. (bassa priorità) esempio utilizzo ProcessMaker da Drools con IDE
+11. connessione dati per Drools
+
+### AI-NLP
+1. (bassa priorità) esempio utilizzo opennlp da Drools con IDE
+
+### TELEGRAM
+
+1. realizzare connettore Telegram come sotto progetto
+
+## SOFTWARE DA PROVARE CON SEED
+
+1. activemq
+2. apacheZeppelin
+3. spark
+4. bigBlueButton
+5. apache che
+6. etherpad
+7. gitlab
+8. jenkins
+9. jitsi
+10. kafka
+11. keycloak
+12. kibana
+13. kieWorkbench
+14. mariadb
+15. mongodb
+16. octoPrint
+17. odoo
+18. postgresql
+19. ros (Robot Operating System)
+20. wazuh
+21. wordpress
+22. xpra
+23. zabbix
+24. zimbra
+

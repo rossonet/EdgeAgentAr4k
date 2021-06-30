@@ -1,5 +1,8 @@
 #!/bin/bash
 echo "## TODO LIST" > TODO.md
+cat notes/macro_todo.txt >> TODO.md
+echo "" >> TODO.md
+echo "## TODO LIST ESTESA" >> TODO.md
 echo "" >> TODO.md
 for line in $( grep -R "TODO" ar4k-*/src | sed 's/ /<!sPaCe!>/g' | sed 's/\t//g' )
 do

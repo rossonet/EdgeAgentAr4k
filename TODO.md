@@ -1,4 +1,81 @@
 ## TODO LIST
+### INDUSTRIAL
+
+1. completare client MQTT
+2. completare server OPCUA
+3. ciclo test da opcua server, mqtt client, activemq, mqtt client
+4. completare MODBUS Master
+5. completare MODBUS SLAVE
+6. ciclo test di prima con aggiunta modbus
+
+### CORE
+
+1. meccanismo di routing con i messaggi con spring integration (valutare come configurarlo)
+2. aggiungere gestione configurazione XML
+3. verificare import ed esporto dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
+4. sistemare filtri selezione canali (DataChannelFilter:10)
+5. (bassa priorità) data via beaconserver
+6. (bassa prirità) gestione modem
+7. (bassa priorità) meccanismo di routing con Camel
+8. aggiornamento jar da comando. Implementare specifico comando in Beacon client/server
+9. esecuzioni servizi con parametrizzazione (per cicli di esecuzione e/o timeout). Per esempio per eseguire un comando singolo
+
+### VADDIN
+
+1. gestione varie IDE sviluppo integrata con seed (KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter )
+2. configuratore con output ide integrato
+3. miglioramente progressivo interfaccia console
+
+### TERMINAL
+
+1. comando salvataggio dati in databag
+
+### SEED
+
+1. completare contenitori con interfaccia pubblica per future implementazioni
+2. aggiungere in TERMINAL meccanismo di configurazione dei contenitori per il generico, KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter , spark, openvpn, 4diac Runtime (con verifica su Axon), ProcessMaker, MariaDB , MongoDB, gitlab
+3. aggiungere procedura configurazione open shift da TERMINAL con PXE via sftp/http
+4. integrare esecuzione in OpenShift
+5. integrare esecuzione in GreenGrass
+6. integrare esecuzione in Azure IOT Hub
+7. verifica funzionalita su raspberry
+8. verifica su UNIPI Axon
+
+### KETTLE
+
+1. gestore runtime da TERMINAL (implementare prima IDE Spoon)
+2. gestore servizio da configurazione (implementare prima IDE Spoon)
+3. runtime kettle da repository git e/o file system 
+4. verificare dipendenze disponibili (inserirle commentate in build.gradle)
+ 
+### HAZELCAST (bassa priorità)
+
+1. implementare servizio "cluster beacon server"
+2. provare su OpenShift il cluster
+3. implementare autoscaling del servizio su OpenShift
+
+### AI
+
+1. runtime drools (dopo configurazione IDE)
+2. client per connesione spark
+3. gestione runtime Jupyter (senza il modulo web)
+4. runtime drools da repository git e/o file system
+5. (bassa priorità) esempio utilizzo runtime deeplearning4j in progetto separato
+6. (bassa priorità) esempio utilizzo in ide drools interfaccia a deeplearning4j
+7. (bassa priorità) esempio utilizzo kettle da drools con IDE
+8. utilizzo comandi shell da Drools con IDE
+9. (bassa priorità) esempio utilizzo interfaccia dati da Drools con IDE
+10. (bassa priorità) esempio utilizzo ProcessMaker da Drools con IDE
+11. connessione dati per Drools
+
+### AI-NLP
+1. (bassa priorità) esempio utilizzo opennlp da Drools con IDE
+
+### TELEGRAM
+
+1. realizzare connettore Telegram come sotto progetto
+
+## TODO LIST ESTESA
 
 [ACTIVEMQ verifica stato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-activemq/src/main/java/org/ar4k/agent/activemq/ActiveMqService.java)
 
@@ -22,6 +99,8 @@
 
 [: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java)
 
+[: implementare gestione configurazione in XML ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java)
+
 [verificare bene i filtri con una serie di test](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java)
 
 [implementare spring integration tra i channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java)
@@ -35,8 +114,6 @@
 [completare la gestione del repository su fs locale](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/LocalFileSystemArchive.java)
 
 [Implementare ManagedArchives su AWS S3](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/archives/AwsS3Archive.java)
-
-[implementare versione metodi con argomenti](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/logger/EdgeLogger.java)
 
 [valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/tunnels/http2/beacon/client/RemoteBeaconRpcExecutor.java)
 
@@ -84,8 +161,6 @@
 
 [sviluppare beacon server cluster basato su hazelcast per grandi volumi di client](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-hazelcast/src/main/java/org/ar4k/agent/tunnels/http2/beacon/server/cluster/BeaconServerCluster.java)
 
-[completare sottoscrizione gruppi in opcua](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/client/OpcUaClientService.java)
-
 [sostituire con certificati di sistema in OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
 
 [inserire wrapper autenticazione per OPCUA](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/Ar4kOpcUaServer.java)
@@ -98,15 +173,19 @@
 
 [Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/opcua/server/OpcUaNamespace.java)
 
-[valutare implementazione 4Diac Forte](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/IndustrialShellInterface.java)
+[valutare implementazione 4Diac Forte](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
 
-[integrazione con UNIPI AXON S105](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/IndustrialShellInterface.java)
+[integrazione con UNIPI AXON S105](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
 
-[implementare gestione eventi OPCUA con presa visione e conferma](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/IndustrialShellInterface.java)
+[implementare gestione eventi OPCUA con presa visione e conferma](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/industrial/OpcUaShellInterface.java)
 
-[completare servizio client Paho](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/PahoClientService.java)
+[completare servizio modbus slave](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/slave/ModbusSlaveService.java)
 
-[OPCUA Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/PahoClientService.java)
+[completare servizio modbus master](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/modbus/master/ModbusMasterService.java)
+
+[completare invio messaggi verso core](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttTopicSubscription.java)
+
+[completare scrittura messaggi su coda mqtt](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-industrial/src/main/java/org/ar4k/agent/mqtt/client/MqttWriter.java)
 
 [servizio che mette a disposizione della console job da repository pre configurati (da zip file). Utilizzare l'interfaccia ManagedArchives per implementare i file systems](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-kettle/src/main/java/org/ar4k/agent/core/kettle/Kettle.java)
 
@@ -126,19 +205,13 @@
 
 [completare gestione modulo da OpenShift con creazione cluster via bootp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/openshift/OpenShiftShellInterface.java)
 
-[implementare lo spegnimento di un servizio](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java)
-
-[implementare l'accensione di un servizio](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java)
-
-[implementare la visulizzazione dei dettagli di un servizio](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java)
-
 [Migliorare l'interazione della command line bash](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java)
 
 [salvare databag realmente il dato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/DataShellInterface.java)
 
 [implementare comando di shell per lanciare comandi ssh](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/SshShellInterface.java)
 
-[Metodo per creare la configurazione di un nuovo agente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/console/MainView.java)
+[Metodo per creare la configurazione di un nuovo agente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/console/Ar4kConsoleMainView.java)
 
 [Auto-generated method stub](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-vaadin/src/main/java/org/ar4k/agent/web/main/MainAgentWrapper.java)
 
