@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
-import org.ar4k.agent.industrial.IndustrialShellInterface;
+import org.ar4k.agent.industrial.OpcUaShellInterface;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
@@ -59,7 +59,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
 		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
-		IndustrialShellInterface.class })
+		OpcUaShellInterface.class })
 @TestPropertySource(locations = "classpath:application.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

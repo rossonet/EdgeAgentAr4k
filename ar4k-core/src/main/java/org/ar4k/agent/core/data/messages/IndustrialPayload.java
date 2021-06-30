@@ -15,7 +15,7 @@ public class IndustrialPayload implements Serializable {
 		UNKNOW, String, Integer, Boolean, Double, Float, UUID, Short, Long, Byte, UByte, ByteString, DateTime, UShort,
 		UInteger, ULong, XmlElement
 	}
-
+	private String channel = null;
 	private String value = null;
 	private Quality quality = Quality.UNKNOW;
 	private long receivedTime = new Date().getTime();
@@ -62,10 +62,24 @@ public class IndustrialPayload implements Serializable {
 		this.dataType = dataType;
 	}
 
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("IndustrialPayload [");
+		if (channel != null) {
+			builder.append("channel=");
+			builder.append(channel);
+			builder.append(", ");
+		}
 		if (value != null) {
 			builder.append("value=");
 			builder.append(value);
@@ -78,8 +92,7 @@ public class IndustrialPayload implements Serializable {
 		}
 		builder.append("receivedTime=");
 		builder.append(receivedTime);
-		builder.append(", ");
-		builder.append("productionTime=");
+		builder.append(", productionTime=");
 		builder.append(productionTime);
 		builder.append(", ");
 		if (dataType != null) {

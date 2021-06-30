@@ -15,9 +15,7 @@
 package org.ar4k.agent.industrial;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
-import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -26,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import javax.validation.Valid;
 
@@ -51,24 +48,11 @@ import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
-import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UByte;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.ULong;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.BrowseResult;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -83,7 +67,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  *         Interfaccia da linea di comando per configurazione della connessione
- *         OPC UA e MQTT
+ *         OPC UA
  *
  */
 
@@ -96,8 +80,8 @@ import org.springframework.web.bind.annotation.RestController;
 @ShellCommandGroup("Industrial Commands")
 @ShellComponent
 @RestController
-@RequestMapping("/industrialInterface")
-public class IndustrialShellInterface extends AbstractShellHelper {
+@RequestMapping("/industrialInterfaceOpcua")
+public class OpcUaShellInterface extends AbstractShellHelper {
 
 	protected Availability sessionClientOpcOk() {
 		return (sessionOk().equals(Availability.available()) && getWorkingService() instanceof OpcUaClientConfig)
@@ -163,7 +147,7 @@ public class IndustrialShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Remove node in opcua client config", group = "OPC UA Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionClientOpcOk")
-	public void opcUaClientRemoveNode(@ShellOption(help = "trigger cnc uuid") String uuid) {
+	public void opcUaClientRemoveNode(@ShellOption(help = "node uuid") String uuid) {
 		OpcUaClientNodeConfig target = null;
 		final List<OpcUaClientNodeConfig> nodes = ((OpcUaClientConfig) getWorkingService()).subscriptions;
 		for (final OpcUaClientNodeConfig n : nodes) {

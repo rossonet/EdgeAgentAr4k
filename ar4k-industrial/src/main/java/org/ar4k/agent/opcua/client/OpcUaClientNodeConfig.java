@@ -35,7 +35,7 @@ public class OpcUaClientNodeConfig implements Serializable {
 
 	private static final long serialVersionUID = 970930410169105077L;
 
-	@Parameter(names = "--nodeRegEx", description = "Node ID")
+	@Parameter(names = "--nodeId", description = "Node ID")
 	public String nodeId = null;
 
 	@Parameter(names = "--group", description = "the subscription group")

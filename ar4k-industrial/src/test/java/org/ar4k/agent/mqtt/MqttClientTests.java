@@ -1,4 +1,4 @@
-package org.ar4k.agent.opcua;
+package org.ar4k.agent.mqtt;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.HomunculusSession;
@@ -6,7 +6,7 @@ import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
-import org.ar4k.agent.industrial.IndustrialShellInterface;
+import org.ar4k.agent.industrial.OpcUaShellInterface;
 import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.ar4k.agent.opcua.client.OpcUaClientNodeConfig;
 import org.ar4k.agent.opcua.client.OpcUaClientService;
@@ -47,7 +47,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
 		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class,
-		IndustrialShellInterface.class })
+		OpcUaShellInterface.class })
 @TestPropertySource(locations = "classpath:application-opc-ua.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

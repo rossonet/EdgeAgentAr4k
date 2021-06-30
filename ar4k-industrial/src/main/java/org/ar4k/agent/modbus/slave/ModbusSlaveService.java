@@ -46,7 +46,7 @@ public class ModbusSlaveService implements EdgeComponent {
 
 	@Override
 	public Homunculus getHomunculus() {
-		// TODO OPCUA Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 

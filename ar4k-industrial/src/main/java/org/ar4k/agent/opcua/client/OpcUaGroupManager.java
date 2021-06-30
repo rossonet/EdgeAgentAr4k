@@ -142,7 +142,7 @@ public class OpcUaGroupManager implements AutoCloseable {
 
 	private void addWriteChannel(OpcUaClientNodeConfig singleNode) {
 		final EdgeChannel channelWrite = opcUaClientService.getDataAddress().createOrGetDataChannel(
-				singleNode.writeChannel, IPublishSubscribeChannel.class, "status of Watson connection",
+				singleNode.writeChannel, IPublishSubscribeChannel.class, "opcua write channel to "+"singleNode.topic",
 				singleNode.fatherOfChannels, singleNode.scopeOfChannels,
 				ConfigHelper.mergeTags(singleNode.tags, opcUaClientService.getConfiguration().getTags()),
 				opcUaClientService);
@@ -236,6 +236,7 @@ public class OpcUaGroupManager implements AutoCloseable {
 			industrialPayload.setDataType(DataType.UNKNOW);
 			industrialPayload.setValue(value.toString());
 		}
+		industrialPayload.setChannel(uaMonitoredItem.getReadValueId().getNodeId().toParseableString());
 		final IndustrialMessage message = new IndustrialMessage(industrialPayload);
 		outputChannel.getChannel().send(message);
 	}

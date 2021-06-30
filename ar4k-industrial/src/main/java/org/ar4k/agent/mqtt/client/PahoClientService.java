@@ -7,12 +7,10 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.interfaces.EdgeComponent;
 import org.ar4k.agent.core.interfaces.ServiceConfig;
-import org.ar4k.agent.core.interfaces.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.opcua.client.OpcUaClientConfig;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -26,7 +24,6 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
  *         Servizio di connessione client Paho.
  */
 
-// TODO completare servizio client Paho
 public class PahoClientService implements EdgeComponent {
 
 	private MqttClient mqttClient = null;
@@ -34,7 +31,7 @@ public class PahoClientService implements EdgeComponent {
 	private DataAddress dataAddress = null;
 	private Homunculus homunculus = null;
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
-	private List<MqttNodeSubscription> subscriptions = new ArrayList<>();
+	private List<MqttTopicSubscription> subscriptions = new ArrayList<>();
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(PahoClientService.class);
 
@@ -80,7 +77,7 @@ public class PahoClientService implements EdgeComponent {
 
 	private void subscribeTopics() {
 		for (MqttTopicConfig t : configuration.subscriptions) {
-			subscriptions.add(new MqttNodeSubscription(mqttClient, t));
+			subscriptions.add(new MqttTopicSubscription(this, mqttClient, t));
 		}
 
 	}
