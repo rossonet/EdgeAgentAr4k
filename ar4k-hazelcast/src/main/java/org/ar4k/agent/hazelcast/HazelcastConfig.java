@@ -21,8 +21,8 @@ public class HazelcastConfig extends AbstractServiceConfig {
 	public String groupName = null;
 	@Parameter(names = "--groupPassword", description = "the password of group if it is needed")
 	public String groupPassword = null;
-	@Parameter(names = "--multiCastEnable", description = "is multicast plugin enbled?")
-	public boolean multiCastEnable = true;
+	@Parameter(names = "--multiCastEnabled", description = "is multicast plugin enbled?")
+	public boolean multiCastEnabled = true;
 	@Parameter(names = "--members", description = "the member nodes of the cluster", arity = 0)
 	public List<String> members = new ArrayList<>();
 	@Parameter(names = "--kubernetesEnabled", description = "is kubernetes plugin enabled?")
@@ -59,23 +59,15 @@ public class HazelcastConfig extends AbstractServiceConfig {
 		return kubernetesNameSpace;
 	}
 
-	public boolean isKubernetes() {
-		return kubernetesEnabled;
-	}
-
 	public List<String> getMembers() {
 		return members;
-	}
-
-	public boolean isMultiCast() {
-		return multiCastEnable;
 	}
 
 	public String getGroupPassword() {
 		return groupPassword;
 	}
 
-	public String getGroup() {
+	public String getGroupName() {
 		return groupName;
 	}
 
@@ -96,7 +88,7 @@ public class HazelcastConfig extends AbstractServiceConfig {
 	}
 
 	public void setMultiCastEnable(boolean multiCastEnable) {
-		this.multiCastEnable = multiCastEnable;
+		this.multiCastEnabled = multiCastEnable;
 	}
 
 	public void setMembers(List<String> members) {
@@ -115,12 +107,8 @@ public class HazelcastConfig extends AbstractServiceConfig {
 		return uniqueName;
 	}
 
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public boolean isMultiCastEnable() {
-		return multiCastEnable;
+	public boolean isMultiCastEnabled() {
+		return multiCastEnabled;
 	}
 
 	public boolean isKubernetesEnabled() {
@@ -129,9 +117,9 @@ public class HazelcastConfig extends AbstractServiceConfig {
 
 	@Override
 	public String toString() {
-		return "HazelcastConfig [creationDate=" + getCreationDate() + ", lastUpdate=" + getLastUpdateDate()
+		return "HazelcastConfig [creationDate=" + getCreationDate() + ", lastUpdate=" + getLastUpdate()
 				+ ", uniqueName=" + uniqueName + ", beanName=" + beanName + ", groupName=" + groupName
-				+ ", groupPassword=" + groupPassword + ", multiCastEnable=" + multiCastEnable + ", members=" + members
+				+ ", groupPassword=" + groupPassword + ", multiCastEnabled=" + multiCastEnabled + ", members=" + members
 				+ ", kubernetesEnabled=" + kubernetesEnabled + ", kubernetesNameSpace=" + kubernetesNameSpace + "]";
 	}
 

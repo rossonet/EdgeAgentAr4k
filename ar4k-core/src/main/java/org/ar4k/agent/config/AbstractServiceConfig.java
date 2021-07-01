@@ -46,9 +46,9 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
 	public transient Homunculus homunculus;
 
-	private Instant creationDate = new Instant();
-	private Instant lastUpdate = new Instant();
-	private String uniqueId = UUID.randomUUID().toString();
+	public long creationDate = new Instant().getMillis();
+	public long lastUpdate = new Instant().getMillis();
+	public String uniqueId = UUID.randomUUID().toString();
 
 	@Parameter(names = "--name", description = "service name", required = true)
 	public String name;
@@ -111,7 +111,7 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	 * intervallo esecuzione watchdog su servizio
 	 */
 	@Parameter(names = "--clockRunnableWatchDog", description = "interval for watchdog runnable thread")
-	public int clockRunnableClass = 5000;
+	public int watchDogInterval = 5000;
 
 	@Parameter(names = "--startOnInit", description = "start service on init agent?")
 	public boolean startOnInit = true;
@@ -123,15 +123,15 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	/**
 	 * timeout per il check del servizio regolare (watchdog)
 	 */
-	@Parameter(names = "--timeoutWatchDog", description = "timeout for the watchdog task")
-	public int timeoutWatchDog = 120000;
+	@Parameter(names = "--watchDogTimeout", description = "timeout for the watchdog task")
+	public int watchDogTimeout = 120000;
 
 	/**
 	 * numero massimo di verifiche prima di riavviare in automatico il servizio. Se
 	 * 0 non riavvia mai. (watchdog)
 	 */
-	@Parameter(names = "--watchDogRetries", description = "max watchdog retries before the fault. 0 = no limits")
-	public int watchDogRetries = 0;
+	@Parameter(names = "--maxRestartRetries", description = "max watchdog retries before the fault. 0 = no limits")
+	public int maxRestartRetries = 0;
 
 	@Parameter(names = "--targetRunLevel", description = "the default runlevel for the service when the system start", validateWith = ServiceStatusValidator.class)
 	public ServiceStatus targetRunLevel = ServiceStatus.RUNNING;
@@ -164,12 +164,12 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	}
 
 	@Override
-	public Instant getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
 
 	@Override
-	public Instant getLastUpdateDate() {
+	public long getLastUpdate() {
 		return lastUpdate;
 	}
 
@@ -190,17 +190,17 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
 	@Override
 	public int getWatchDogInterval() {
-		return clockRunnableClass;
+		return watchDogInterval;
 	}
 
 	@Override
 	public int getMaxRestartRetries() {
-		return watchDogRetries;
+		return maxRestartRetries;
 	}
 
 	@Override
 	public int getWatchDogTimeout() {
-		return timeoutWatchDog;
+		return watchDogTimeout;
 	}
 
 	public String getVersion() {
@@ -285,27 +285,27 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	}
 
 	public int getClockRunnableClass() {
-		return clockRunnableClass;
+		return watchDogInterval;
 	}
 
 	public void setClockRunnableClass(int clockRunnableClass) {
-		this.clockRunnableClass = clockRunnableClass;
+		this.watchDogInterval = clockRunnableClass;
 	}
 
 	public int getTimeoutWatchDog() {
-		return timeoutWatchDog;
+		return watchDogTimeout;
 	}
 
 	public void setTimeoutWatchDog(int timeoutWatchDog) {
-		this.timeoutWatchDog = timeoutWatchDog;
+		this.watchDogTimeout = timeoutWatchDog;
 	}
 
 	public int getWatchDogRetries() {
-		return watchDogRetries;
+		return maxRestartRetries;
 	}
 
 	public void setWatchDogRetries(int watchDogRetries) {
-		this.watchDogRetries = watchDogRetries;
+		this.maxRestartRetries = watchDogRetries;
 	}
 
 	public ServiceStatus getTargetRunLevel() {
@@ -360,12 +360,12 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AbstractServiceConfig [");
-		if (creationDate != null) {
+		if (creationDate != 0) {
 			builder.append("creationDate=");
 			builder.append(creationDate);
 			builder.append(", ");
 		}
-		if (lastUpdate != null) {
+		if (lastUpdate != 0) {
 			builder.append("lastUpdate=");
 			builder.append(lastUpdate);
 			builder.append(", ");
@@ -439,13 +439,13 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 			builder.append(", ");
 		}
 		builder.append("clockRunnableClass=");
-		builder.append(clockRunnableClass);
+		builder.append(watchDogInterval);
 		builder.append(", startOnInit=");
 		builder.append(startOnInit);
-		builder.append(", timeoutWatchDog=");
-		builder.append(timeoutWatchDog);
-		builder.append(", watchDogRetries=");
-		builder.append(watchDogRetries);
+		builder.append(", watchDogTimeout=");
+		builder.append(watchDogTimeout);
+		builder.append(", maxRestartRetries=");
+		builder.append(maxRestartRetries);
 		builder.append(", ");
 		if (targetRunLevel != null) {
 			builder.append("targetRunLevel=");

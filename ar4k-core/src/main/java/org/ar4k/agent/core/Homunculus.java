@@ -911,6 +911,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		return new TimerTask() {
 			@Override
 			public void run() {
+				Thread.currentThread().setName("up config dns");
 				final EdgeConfig newTargetConfig = dnsConfigDownload(nextConfigDns,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
@@ -935,6 +936,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		return new TimerTask() {
 			@Override
 			public void run() {
+				Thread.currentThread().setName("up config file");
 				final EdgeConfig newTargetConfig = loadConfigFromFile(nextConfigFile,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
@@ -946,6 +948,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		return new TimerTask() {
 			@Override
 			public void run() {
+				Thread.currentThread().setName("up config http");
 				final EdgeConfig newTargetConfig = webConfigDownload(nextConfigWeb,
 						starterProperties.getKeystoreConfigAlias());
 				elaborateNewConfig(newTargetConfig);
@@ -973,9 +976,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 							? ConfigHelper.fromBase64Crypto(payloadString, cryptoAlias)
 							: null);
 				} else {
-					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
-							? ConfigHelper.fromBase64(payloadString)
-							: null);
+					return elaborateStringConfig(payloadString);
 				}
 			} catch (ClassNotFoundException | IOException | NoSuchAlgorithmException | NoSuchPaddingException
 					| CMSException e) {
@@ -987,6 +988,31 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 			logger.warn("error in dns download using H:" + hostPart + " D:" + domainPart + " -> "
 					+ EdgeLogger.stackTraceToString(e, 4));
 			return null;
+		}
+	}
+
+	private EdgeConfig elaborateStringConfig(final String payloadString) {
+		try {
+			return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
+					? ConfigHelper.fromBase64(payloadString)
+					: null);
+		} catch (Exception noBase64) {
+			logger.info("configuration string is not base64 " + noBase64.toString());
+			try {
+				return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
+						? ConfigHelper.fromJson(payloadString, EdgeConfig.class)
+						: null);
+			} catch (Exception noJson) {
+				logger.info("configuration string is not json " + noJson.toString());
+				try {
+					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
+							? ConfigHelper.fromXml(payloadString)
+							: null);
+				} catch (Exception noXml) {
+					logger.info("configuration string is not xml " + noXml.toString());
+					return null;
+				}
+			}
 		}
 	}
 
@@ -1012,7 +1038,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 			if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
 				resultConfig = (EdgeConfig) ConfigHelper.fromBase64Crypto(config.toString(), cryptoAlias);
 			} else {
-				resultConfig = (EdgeConfig) ConfigHelper.fromBase64(config.toString());
+				resultConfig = elaborateStringConfig(config.toString());
 			}
 			logger.trace("resultConfig\n{}", resultConfig);
 			return resultConfig;

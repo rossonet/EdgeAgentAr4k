@@ -2,6 +2,10 @@ package org.ar4k.agent.core.interfaces;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 /**
  * interfaccia da implementare per una configurazione di servizio valida
  *
@@ -10,10 +14,11 @@ import java.util.List;
  * @author andrea
  *
  */
+@JsonTypeInfo(use = Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class-type")
 public interface ServiceConfig extends ConfigSeed {
 
 	int getMaxRestartRetries();
-	
+
 	boolean startOnInit();
 
 	int getPriority();
@@ -26,8 +31,10 @@ public interface ServiceConfig extends ConfigSeed {
 
 	int getWatchDogTimeout();
 
+	@JsonIgnore
 	EdgeComponent instantiate();
 
+	@JsonIgnore
 	boolean isSpringBean();
 
 }

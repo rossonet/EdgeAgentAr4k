@@ -57,8 +57,8 @@ public class KeystoreConfig implements ConfigSeed {
 
 	private static final long serialVersionUID = 6291742061764165257L;
 
-	public Instant creationDate = new Instant();
-	public Instant lastUpdate = new Instant();
+	public long creationDate = new Instant().getMillis();
+	public long lastUpdate = new Instant().getMillis();
 
 	public String uniqueId = UUID.randomUUID().toString();
 
@@ -323,12 +323,12 @@ public class KeystoreConfig implements ConfigSeed {
 	}
 
 	@Override
-	public Instant getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
 
 	@Override
-	public Instant getLastUpdateDate() {
+	public long getLastUpdate() {
 		return lastUpdate;
 	}
 

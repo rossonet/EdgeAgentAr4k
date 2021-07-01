@@ -88,6 +88,8 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -365,6 +367,13 @@ public class ShellInterface extends AbstractShellHelper {
 		return ConfigHelper.toJson(getWorkingConfig());
 	}
 
+	@ShellMethod("View the selected configuration in xml text")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String getSelectedConfigXml() throws JsonProcessingException {
+		return ConfigHelper.toXml(getWorkingConfig());
+	}
+
 	@ShellMethod("View the selected configuration in Yaml text")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
@@ -377,6 +386,13 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testRuntimeConfigOk")
 	public String getRuntimeConfigJson() {
 		return ConfigHelper.toJson(homunculus.getRuntimeConfig());
+	}
+
+	@ShellMethod("View the runtime configuration in xml text")
+	@ManagedOperation
+	@ShellMethodAvailability("testRuntimeConfigOk")
+	public String getRuntimeConfigXml() throws JsonProcessingException {
+		return ConfigHelper.toXml(homunculus.getRuntimeConfig());
 	}
 
 	@ShellMethod("View the runtime configuration in Yaml text")
@@ -394,6 +410,17 @@ public class ShellInterface extends AbstractShellHelper {
 			throws IOException {
 		Files.write(Paths.get(filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.json.ar4k"),
 				getSelectedConfigJson().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		return "saved";
+	}
+
+	@ShellMethod("Save selected configuration in xml text file")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String saveSelectedConfigXml(
+			@ShellOption(help = "file for saving the configuration. The system will add .conf.xml.ar4k to the string") String filename)
+			throws IOException {
+		Files.write(Paths.get(filename.replaceFirst("^~", System.getProperty("user.home")) + ".conf.xml.ar4k"),
+				getSelectedConfigXml().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		return "saved";
 	}
 
@@ -416,6 +443,15 @@ public class ShellInterface extends AbstractShellHelper {
 		setWorkingConfig((EdgeConfig) ConfigHelper.fromJson(jsonConfig, EdgeConfig.class));
 	}
 
+	@ShellMethod("Import the selected configuration from xml text")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionOk")
+	public void importSelectedConfigXml(
+			@ShellOption(help = "configuration exported by export-selected-config-json") String xmlConfig)
+			throws JsonProcessingException {
+		setWorkingConfig((EdgeConfig) ConfigHelper.fromXml(xmlConfig));
+	}
+
 	@ShellMethod("Import the selected configuration from yaml text")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
@@ -429,17 +465,34 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public void loadSelectedConfigJson(
 			@ShellOption(help = "file in where the configuration is saved. The system will add .conf.json.ar4k to the string") String filename)
-			throws IOException, ClassNotFoundException {
+			throws IOException {
 		final String config = readFromFile(filename, ".conf.json.ar4k");
 		importSelectedConfigJson(config);
+	}
+
+	@ShellMethod("Load selected configuration from a xml text file")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionOk")
+	public void loadSelectedConfigXml(
+			@ShellOption(help = "file in where the configuration is saved. The system will add .conf.xml.ar4k to the string") String filename)
+			throws IOException {
+		final String config = readFromFile(filename, ".conf.xml.ar4k");
+		importSelectedConfigXml(config);
 	}
 
 	@ShellMethod("Load selected configuration from a json string parameter")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
-	public void loadSelectedConfigFromJsonString(@ShellOption(help = "json config") String config)
-			throws IOException, ClassNotFoundException {
+	public void loadSelectedConfigFromJsonString(@ShellOption(help = "json config") String config) {
 		importSelectedConfigJson(config);
+	}
+
+	@ShellMethod("Load selected configuration from a xml string parameter")
+	@ManagedOperation
+	@ShellMethodAvailability("sessionOk")
+	public void loadSelectedConfigFromXmlString(@ShellOption(help = "xml config") String config)
+			throws IOException, ClassNotFoundException {
+		importSelectedConfigXml(config);
 	}
 
 	@ShellMethod("Load selected configuration from a yaml text file")
@@ -447,7 +500,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("sessionOk")
 	public void loadSelectedConfigYaml(
 			@ShellOption(help = "file in where the configuration is saved. The system will add .conf.yaml.ar4k to the string") String filename)
-			throws IOException, ClassNotFoundException {
+			throws IOException {
 		final String config = readFromFile(filename, ".conf.yaml.ar4k");
 		importSelectedConfigYaml(config);
 	}
@@ -455,8 +508,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod("Load selected configuration from a yaml string parameter")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
-	public void loadSelectedConfigFromYamlString(@ShellOption(help = "json config") String config)
-			throws IOException, ClassNotFoundException {
+	public void loadSelectedConfigFromYamlString(@ShellOption(help = "json config") String config) {
 		importSelectedConfigYaml(config);
 	}
 

@@ -120,7 +120,7 @@ public class HazelcastComponent implements EdgeComponent {
 		config.setInstanceName(
 				configuration.getUniqueId() != null ? configuration.getUniqueId() : homunculus.getAgentUniqueName());
 		final JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-		if (configuration.isMultiCast()) {
+		if (configuration.isMultiCastEnabled()) {
 			joinConfig.getMulticastConfig().setEnabled(true);
 		} else {
 			joinConfig.getMulticastConfig().setEnabled(false);
@@ -131,15 +131,15 @@ public class HazelcastComponent implements EdgeComponent {
 		} else {
 			joinConfig.getTcpIpConfig().setEnabled(false);
 		}
-		if (configuration.getGroup() != null && !configuration.getGroup().isEmpty()) {
-			config.getGroupConfig().setName(configuration.getGroup());
+		if (configuration.getGroupName() != null && !configuration.getGroupName().isEmpty()) {
+			config.getGroupConfig().setName(configuration.getGroupName());
 			if (configuration.getGroupPassword() != null && !configuration.getGroupPassword().isEmpty()) {
-				config.setGroupConfig(new GroupConfig(configuration.getGroup(), configuration.getGroupPassword()));
+				config.setGroupConfig(new GroupConfig(configuration.getGroupName(), configuration.getGroupPassword()));
 			} else {
-				config.setGroupConfig(new GroupConfig(configuration.getGroup()));
+				config.setGroupConfig(new GroupConfig(configuration.getGroupName()));
 			}
 		}
-		if (configuration.isKubernetes()) {
+		if (configuration.isKubernetesEnabled()) {
 			joinConfig.getKubernetesConfig().setEnabled(true);
 		} else {
 			joinConfig.getKubernetesConfig().setEnabled(false);

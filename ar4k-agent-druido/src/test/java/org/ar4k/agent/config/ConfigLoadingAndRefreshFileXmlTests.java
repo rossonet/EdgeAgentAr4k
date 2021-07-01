@@ -12,28 +12,42 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.qa.tests;
+package org.ar4k.agent.config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-import org.ar4k.agent.config.EdgeConfig;
+import org.ar4k.agent.activemq.ActiveMqConfig;
+import org.ar4k.agent.camera.usb.StreamCameraConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusEvents;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.data.generator.DataGeneratorConfig;
+import org.ar4k.agent.cortex.drools.DroolsConfig;
+import org.ar4k.agent.hazelcast.HazelcastConfig;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.iot.serial.SerialConfig;
+import org.ar4k.agent.mattermost.service.RossonetChatConfig;
+import org.ar4k.agent.modbus.master.ModbusMasterConfig;
+import org.ar4k.agent.modbus.slave.ModbusSlaveConfig;
+import org.ar4k.agent.mqtt.client.PahoClientConfig;
+import org.ar4k.agent.opcua.client.OpcUaClientConfig;
+import org.ar4k.agent.opcua.server.OpcUaServerConfig;
+import org.ar4k.agent.pcap.service.PcapSnifferConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
+import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
+import org.ar4k.agent.tunnels.sshd.SshdSystemConfig;
+import org.ar4k.agent.watson.WatsonConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -67,16 +81,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ConfigRefreshFromAllChannelTests {
+public class ConfigLoadingAndRefreshFileXmlTests {
 
 	@Autowired
 	Homunculus homunculus;
 
 	final String fileName = "/tmp/test-config.ar4k";
-	final String fileNameSecond = "/tmp/test-second-config.ar4k";
-	final String fileNameEnd = "/tmp/test-end-config.ar4k";
-	final String webConfig = "https://www.rossonet.net/dati/ar4k/config-to-file.ar4k";
-	final String dnsConfig = "config-to-web.bottegaio.net";
 
 	@Before
 	public void setUp() throws Exception {
@@ -84,22 +94,9 @@ public class ConfigRefreshFromAllChannelTests {
 		System.out.println(homunculus.getState());
 	}
 
-	private void deleteDir(File dir) {
-		final File[] files = dir.listFiles();
-		if (files != null) {
-			for (final File file : files) {
-				deleteDir(file);
-			}
-		}
-		dir.delete();
-	}
-
 	@After
 	public void tearDownAfterClass() throws Exception {
 		Files.deleteIfExists(Paths.get(fileName));
-		Files.deleteIfExists(Paths.get(fileNameSecond));
-		Files.deleteIfExists(Paths.get(fileNameEnd));
-		deleteDir(new File("./tmp"));
 	}
 
 	@Rule
@@ -111,62 +108,90 @@ public class ConfigRefreshFromAllChannelTests {
 	};
 
 	@Test
-	public void checkConfigNextInAllChannelWithReloadAndRestart() throws InterruptedException, IOException {
-		Thread.sleep(3000);
-		final EdgeConfig c1 = new EdgeConfig();
-		final String check = UUID.randomUUID().toString();
-		c1.name = "test aggiornamento configurazione";
-		c1.creationDate = 1452797215000L;
-		c1.lastUpdate = 1452797215000L;
-		c1.nextConfigDns = dnsConfig;
-		assertEquals(HomunculusStates.STAMINAL, homunculus.getState());
-		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c1).getBytes(), StandardOpenOption.CREATE,
+	public void checkConfigFileWithReload() throws InterruptedException, IOException {
+		EdgeConfig c = new EdgeConfig();
+		String check = UUID.randomUUID().toString();
+		c.name = "test salvataggio";
+		c.author = check;
+		BeaconServiceConfig bs = new BeaconServiceConfig();
+		bs.name = "active mq";
+		bs.note = check;
+		c.pots.add(bs);
+		ActiveMqConfig amq = new ActiveMqConfig();
+		amq.name = "active mq";
+		amq.note = check;
+		c.pots.add(amq);
+		DataGeneratorConfig dg = new DataGeneratorConfig();
+		dg.name = "data generator";
+		dg.note = check;
+		c.pots.add(dg);
+		DroolsConfig d = new DroolsConfig();
+		d.name = "drools";
+		d.note = check;
+		c.pots.add(d);
+		HazelcastConfig h = new HazelcastConfig();
+		h.name = "hazelcast";
+		h.note = check;
+		c.pots.add(h);
+		ModbusMasterConfig mbm = new ModbusMasterConfig();
+		mbm.name = "modbus master";
+		mbm.note = check;
+		c.pots.add(mbm);
+		ModbusSlaveConfig mbs = new ModbusSlaveConfig();
+		mbs.name = "modbus slave";
+		mbs.note = check;
+		c.pots.add(mbs);
+		OpcUaClientConfig opcc = new OpcUaClientConfig();
+		opcc.name = "opc ua client";
+		opcc.note = check;
+		c.pots.add(opcc);
+		OpcUaServerConfig opcs = new OpcUaServerConfig();
+		opcs.name = "opc ua server";
+		opcs.note = check;
+		c.pots.add(opcs);
+		PahoClientConfig p = new PahoClientConfig();
+		p.name = "paho";
+		p.note = check;
+		c.pots.add(p);
+		PcapSnifferConfig psc = new PcapSnifferConfig();
+		psc.name = "pcap";
+		psc.note = check;
+		c.pots.add(psc);
+		RossonetChatConfig mm = new RossonetChatConfig();
+		mm.name = "matermost";
+		mm.note = check;
+		c.pots.add(mm);
+		SerialConfig sc = new SerialConfig();
+		sc.name = "serial";
+		sc.note = check;
+		c.pots.add(sc);
+		SshdHomunculusConfig sshh = new SshdHomunculusConfig();
+		sshh.name = "ssh homunculus";
+		sshh.note = check;
+		c.pots.add(sshh);
+		SshdSystemConfig sshs = new SshdSystemConfig();
+		sshs.name = "ssh system";
+		sshs.note = check;
+		c.pots.add(sshs);
+		StreamCameraConfig cam = new StreamCameraConfig();
+		cam.name = "camera";
+		cam.note = check;
+		c.pots.add(cam);
+		WatsonConfig watson = new WatsonConfig();
+		watson.name = "watson";
+		watson.note = check;
+		c.pots.add(watson);
+		System.out.println("CONFIGURATION\n" + c);
+		Files.write(Paths.get(fileName), ConfigHelper.toXml(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
+		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-		Thread.sleep(80000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals("configToFile", homunculus.getRuntimeConfig().name);
-		assertEquals(fileNameSecond, homunculus.getRuntimeConfig().nextConfigFile);
-		final EdgeConfig c2 = new EdgeConfig();
-		c2.name = "test aggiornamento configurazione";
-		c2.tagVersion = check;
-		c2.nextConfigFile = fileNameEnd;
-		Files.write(Paths.get(fileNameSecond), ConfigHelper.toBase64(c2).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		Thread.sleep(30000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(homunculus.getRuntimeConfig().tagVersion, check);
-		final EdgeConfig c3 = new EdgeConfig();
-		c3.name = "ultima configurazione";
-		c3.author = check;
-		c3.nextConfigReload = true;
-		Thread.sleep(30000);
-		Files.write(Paths.get(fileNameEnd), ConfigHelper.toBase64(c3).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		Thread.sleep(60000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(check, homunculus.getRuntimeConfig().author);
-	}
-
-	@Test
-	public void createConfigWeb() throws IOException {
-		final EdgeConfig config = new EdgeConfig();
-		config.name = "configToFile";
-		config.nextConfigFile = fileNameSecond;
-		final Path path = Paths.get("config-to-file.ar4k");
-		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		assertTrue(Files.exists(path));
-	}
-
-	@Test
-	public void createConfigDns() throws IOException {
-		final EdgeConfig config = new EdgeConfig();
-		config.name = "DnsToWeb";
-		config.nextConfigWeb = webConfig;
-		final String base64ForDns = ConfigHelper.toBase64ForDns("config-to-web", config);
-		System.out.println(base64ForDns); // bottegaio.net
-		assertTrue(base64ForDns.length() > 20);
+		Thread.sleep(3000);
+		System.out.println(homunculus.getState());
+		Thread.sleep(3000);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		assertEquals(17, homunculus.getRuntimeConfig().pots.size());
 	}
 
 }

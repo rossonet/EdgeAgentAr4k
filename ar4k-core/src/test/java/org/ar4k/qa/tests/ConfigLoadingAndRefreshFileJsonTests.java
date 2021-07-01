@@ -17,10 +17,8 @@ package org.ar4k.qa.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
@@ -34,6 +32,7 @@ import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
+import org.ar4k.gw.studio.tunnels.socket.ssl.SocketFactorySslConfig;
 import org.jline.builtins.Commands;
 import org.junit.After;
 import org.junit.Before;
@@ -67,16 +66,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ConfigRefreshFromAllChannelTests {
+public class ConfigLoadingAndRefreshFileJsonTests {
 
 	@Autowired
 	Homunculus homunculus;
 
 	final String fileName = "/tmp/test-config.ar4k";
-	final String fileNameSecond = "/tmp/test-second-config.ar4k";
-	final String fileNameEnd = "/tmp/test-end-config.ar4k";
-	final String webConfig = "https://www.rossonet.net/dati/ar4k/config-to-file.ar4k";
-	final String dnsConfig = "config-to-web.bottegaio.net";
 
 	@Before
 	public void setUp() throws Exception {
@@ -84,22 +79,9 @@ public class ConfigRefreshFromAllChannelTests {
 		System.out.println(homunculus.getState());
 	}
 
-	private void deleteDir(File dir) {
-		final File[] files = dir.listFiles();
-		if (files != null) {
-			for (final File file : files) {
-				deleteDir(file);
-			}
-		}
-		dir.delete();
-	}
-
 	@After
 	public void tearDownAfterClass() throws Exception {
 		Files.deleteIfExists(Paths.get(fileName));
-		Files.deleteIfExists(Paths.get(fileNameSecond));
-		Files.deleteIfExists(Paths.get(fileNameEnd));
-		deleteDir(new File("./tmp"));
 	}
 
 	@Rule
@@ -111,62 +93,31 @@ public class ConfigRefreshFromAllChannelTests {
 	};
 
 	@Test
-	public void checkConfigNextInAllChannelWithReloadAndRestart() throws InterruptedException, IOException {
-		Thread.sleep(3000);
-		final EdgeConfig c1 = new EdgeConfig();
-		final String check = UUID.randomUUID().toString();
-		c1.name = "test aggiornamento configurazione";
-		c1.creationDate = 1452797215000L;
-		c1.lastUpdate = 1452797215000L;
-		c1.nextConfigDns = dnsConfig;
-		assertEquals(HomunculusStates.STAMINAL, homunculus.getState());
-		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c1).getBytes(), StandardOpenOption.CREATE,
+	public void checkConfigFileWithReload() throws InterruptedException, IOException {
+		EdgeConfig c = new EdgeConfig();
+		String check = UUID.randomUUID().toString();
+		c.name = "test salvataggio";
+		c.author = check;
+		SocketFactorySslConfig s1 = new SocketFactorySslConfig();
+		s1.name = "ssh config";
+		s1.note = check;
+		SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+		s2.name = "stunnel config";
+		s2.note = check;
+		c.pots.add(s1);
+		c.pots.add(s2);
+		System.out.println("CONFIGURATION\n" + c);
+		Files.write(Paths.get(fileName), ConfigHelper.toJson(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
+		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
 		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-		Thread.sleep(80000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals("configToFile", homunculus.getRuntimeConfig().name);
-		assertEquals(fileNameSecond, homunculus.getRuntimeConfig().nextConfigFile);
-		final EdgeConfig c2 = new EdgeConfig();
-		c2.name = "test aggiornamento configurazione";
-		c2.tagVersion = check;
-		c2.nextConfigFile = fileNameEnd;
-		Files.write(Paths.get(fileNameSecond), ConfigHelper.toBase64(c2).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		Thread.sleep(30000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(homunculus.getRuntimeConfig().tagVersion, check);
-		final EdgeConfig c3 = new EdgeConfig();
-		c3.name = "ultima configurazione";
-		c3.author = check;
-		c3.nextConfigReload = true;
-		Thread.sleep(30000);
-		Files.write(Paths.get(fileNameEnd), ConfigHelper.toBase64(c3).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		Thread.sleep(60000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(check, homunculus.getRuntimeConfig().author);
-	}
-
-	@Test
-	public void createConfigWeb() throws IOException {
-		final EdgeConfig config = new EdgeConfig();
-		config.name = "configToFile";
-		config.nextConfigFile = fileNameSecond;
-		final Path path = Paths.get("config-to-file.ar4k");
-		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING);
-		assertTrue(Files.exists(path));
-	}
-
-	@Test
-	public void createConfigDns() throws IOException {
-		final EdgeConfig config = new EdgeConfig();
-		config.name = "DnsToWeb";
-		config.nextConfigWeb = webConfig;
-		final String base64ForDns = ConfigHelper.toBase64ForDns("config-to-web", config);
-		System.out.println(base64ForDns); // bottegaio.net
-		assertTrue(base64ForDns.length() > 20);
+		Thread.sleep(3000);
+		System.out.println(homunculus.getState());
+		Thread.sleep(3000);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
+		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
 	}
 
 }

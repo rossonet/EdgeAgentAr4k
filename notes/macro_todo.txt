@@ -11,7 +11,6 @@
 ### CORE
 
 1. meccanismo di routing con i messaggi con spring integration (valutare come configurarlo)
-2. aggiungere gestione configurazione XML
 3. verificare import ed esporto dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
 4. sistemare filtri selezione canali (DataChannelFilter:10)
 5. (bassa priorità) data via beaconserver

@@ -19,6 +19,7 @@ dependencies {
 	compile project(':ar4k-video')
 	compile project(':ar4k-seed')
 	compile project(':ar4k-vaadin')
+	compile project(':ar4k-watson')
 	compile project(':ar4k-industrial')
 }
 

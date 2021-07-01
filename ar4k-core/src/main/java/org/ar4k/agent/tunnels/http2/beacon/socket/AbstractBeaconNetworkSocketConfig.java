@@ -29,8 +29,8 @@ public abstract class AbstractBeaconNetworkSocketConfig implements NetworkConfig
 	private final int serverPort;
 	private final String serverBindIp;
 	private final String uniqueId;
-	private final Instant lastUpdateData;
-	private final Instant creationDate;
+	private final long lastUpdateData;
+	private final long creationDate;
 	private final List<String> tags;
 	private final String description;
 	private final String name;
@@ -62,8 +62,8 @@ public abstract class AbstractBeaconNetworkSocketConfig implements NetworkConfig
 		serverPort = networkRequest.getSrcPort();
 		serverBindIp = "0.0.0.0";
 		uniqueId = String.valueOf(networkRequest.getTargeId());
-		lastUpdateData = Instant.now();
-		creationDate = Instant.now();
+		lastUpdateData = Instant.now().getMillis();
+		creationDate = Instant.now().getMillis();
 		tags = null;
 		description = "tunnel request from agent " + m.getCaller().getAgentUniqueName();
 		name = "tunnel_" + serverPort + "_" + clientPort + "_" + uniqueId;
@@ -77,8 +77,8 @@ public abstract class AbstractBeaconNetworkSocketConfig implements NetworkConfig
 		serverPort = srcPort;
 		serverBindIp = "0.0.0.0";
 		uniqueId = UUID.randomUUID().toString();
-		lastUpdateData = Instant.now();
-		creationDate = Instant.now();
+		lastUpdateData = Instant.now().getMillis();
+		creationDate = Instant.now().getMillis();
 		tags = null;
 		this.networkProtocol = networkProtocol;
 		this.description = description;
@@ -102,12 +102,12 @@ public abstract class AbstractBeaconNetworkSocketConfig implements NetworkConfig
 	}
 
 	@Override
-	public Instant getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
 
 	@Override
-	public Instant getLastUpdateDate() {
+	public long getLastUpdate() {
 		return lastUpdateData;
 	}
 

@@ -45,6 +45,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OutputEncryptor;
 import org.yaml.snakeyaml.Yaml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Splitter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -184,6 +187,11 @@ public class ConfigHelper {
 		return yaml.load(yamlConfig);
 	}
 
+	public static EdgeConfig fromXml(String xmlConfig) throws JsonMappingException, JsonProcessingException {
+		XmlMapper xmlMapper = new XmlMapper();
+		return xmlMapper.readValue(xmlConfig, EdgeConfig.class);
+	}
+
 	public static String generateNewUniqueName(String nameInParameters, String fileNameInParameters) {
 		String result = null;
 		if (fileNameInParameters != null && !fileNameInParameters.isEmpty()) {
@@ -280,6 +288,11 @@ public class ConfigHelper {
 	public static String toYaml(ConfigSeed workingConfig) {
 		final Yaml yaml = new Yaml();
 		return yaml.dump(workingConfig);
+	}
+
+	public static String toXml(ConfigSeed workingConfig) throws JsonProcessingException {
+		XmlMapper xmlMapper = new XmlMapper();
+		return xmlMapper.writeValueAsString(workingConfig);
 	}
 
 	public static Collection<String> mergeTags(Collection<String> additionalData, Collection<String> tags) {

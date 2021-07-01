@@ -15,12 +15,8 @@
 package org.ar4k.gw.studio.tunnels.socket;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.joda.time.Instant;
-
-import com.beust.jcommander.Parameter;
 
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
@@ -30,43 +26,6 @@ import com.beust.jcommander.Parameter;
 public abstract class AbstractSocketFactoryConfig extends AbstractServiceConfig {
 
   private static final long serialVersionUID = 2256280745924059640L;
-
-  private Instant creationDate = new Instant();
-  private Instant lastUpdate = new Instant();
-  private String uniqueId = UUID.randomUUID().toString();
-
-  @Parameter(names = "--name", description = "tunnel name", required = true)
-  public String name;
-
-  @Parameter(names = "--description", description = "tunnel description", required = false)
-  public String description;
-
-  @Parameter(names = "--tags", description = "tunnel tags (multi selection)", variableArity = true, required = false)
-  public List<String> tags;
-
-  @Parameter(names = "--priority", description = "priority for the tunnel low values are before, high values are after", required = true)
-  public int priority = 0;
-
-  @Parameter(names = "--note", description = "note related to this tunnel", required = false)
-  public String note = null;
-
-  @Override
-  public Instant getCreationDate() {
-    return creationDate;
-  }
-
-  public void setCreationDate(Instant creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  @Override
-  public Instant getLastUpdateDate() {
-    return lastUpdate;
-  }
-
-  public void setLastUpdate(Instant lastUpdate) {
-    this.lastUpdate = lastUpdate;
-  }
 
   @Override
   public String getUniqueId() {

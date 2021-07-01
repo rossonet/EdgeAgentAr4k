@@ -59,64 +59,65 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-file.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class ConfigLoadingAndRefreshFileTests {
+public class ConfigLoadingAndRefreshFileXmlTests {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	Homunculus homunculus;
 
-  final String fileName = "/tmp/test-config.ar4k";
+	final String fileName = "/tmp/test-config.ar4k";
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(homunculus.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
-    Files.deleteIfExists(Paths.get(fileName));
-  }
+	@After
+	public void tearDownAfterClass() throws Exception {
+		Files.deleteIfExists(Paths.get(fileName));
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void checkConfigFileWithReload() throws InterruptedException, IOException {
-    EdgeConfig c = new EdgeConfig();
-    String check = UUID.randomUUID().toString();
-    c.name = "test salvataggio";
-    c.author = check;
-    SocketFactorySslConfig s1 = new SocketFactorySslConfig();
-    s1.name = "ssh config";
-    s1.note = check;
-    SocketFactorySslConfig s2 = new SocketFactorySslConfig();
-    s2.name = "stunnel config";
-    s2.note = check;
-    c.pots.add(s1);
-    c.pots.add(s2);
-    Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING);
-    assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
-    homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-    Thread.sleep(3000);
-    System.out.println(homunculus.getState());
-    Thread.sleep(3000);
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    assertTrue(check.equals(homunculus.getRuntimeConfig().author));
-    assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-    assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
-  }
+	@Test
+	public void checkConfigFileWithReload() throws InterruptedException, IOException {
+		EdgeConfig c = new EdgeConfig();
+		String check = UUID.randomUUID().toString();
+		c.name = "test salvataggio";
+		c.author = check;
+		SocketFactorySslConfig s1 = new SocketFactorySslConfig();
+		s1.name = "ssh config";
+		s1.note = check;
+		SocketFactorySslConfig s2 = new SocketFactorySslConfig();
+		s2.name = "stunnel config";
+		s2.note = check;
+		c.pots.add(s1);
+		c.pots.add(s2);
+		System.out.println("CONFIGURATION\n" + c);
+		Files.write(Paths.get(fileName), ConfigHelper.toXml(c).getBytes(), StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING);
+		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
+		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		Thread.sleep(3000);
+		System.out.println(homunculus.getState());
+		Thread.sleep(3000);
+		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
+		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
+	}
 
 }

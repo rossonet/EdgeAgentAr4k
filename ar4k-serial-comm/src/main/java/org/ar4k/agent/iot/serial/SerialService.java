@@ -113,8 +113,8 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 			comPort.setParity(1);
 		}
 		// apre la porta
-		comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, configuration.clockRunnableClass,
-				configuration.clockRunnableClass);
+		comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, configuration.getClockRunnableClass(),
+				configuration.getClockRunnableClass());
 		comPort.openPort();
 		comPort.addDataListener(this);
 		logger.debug("Serial port " + comPort.getSystemPortName() + " opened");

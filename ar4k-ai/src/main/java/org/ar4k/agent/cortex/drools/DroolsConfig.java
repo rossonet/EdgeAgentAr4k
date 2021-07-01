@@ -51,7 +51,7 @@ public class DroolsConfig extends AbstractServiceConfig {
 	@Parameter(names = "--openNlpEnable", description = "enable open nlp support")
 	public boolean openNlpEnable = false;
 	@Parameter(names = "--openNlpEnable", description = "action called from update", validateWith = DroolsServiceUpdateActionValidator.class)
-	private final DroolsServiceUpdateAction droolsServiceUpdateAction = DroolsServiceUpdateAction.FIRE_UNTIL_HALT;
+	private final DroolsServiceUpdateAction updateAction = DroolsServiceUpdateAction.FIRE_UNTIL_HALT;
 
 	@Override
 	public EdgeComponent instantiate() {
@@ -115,7 +115,7 @@ public class DroolsConfig extends AbstractServiceConfig {
 	}
 
 	public DroolsServiceUpdateAction getUpdateAction() {
-		return droolsServiceUpdateAction;
+		return updateAction;
 	}
 
 	public Collection<String> getSrcPathRules() {
@@ -140,8 +140,8 @@ public class DroolsConfig extends AbstractServiceConfig {
 				+ ", sessionName=" + sessionName + ", urlModules=" + urlModules + ", fileModules=" + fileModules
 				+ ", stringModules=" + stringModules + ", globalData=" + globalData + ", insertHomunculus="
 				+ insertHomunculus + ", insertDataAddress=" + insertDataAddress + ", insertDataStore=" + insertDataStore
-				+ ", basePath=" + basePath + ", openNlpEnable=" + openNlpEnable + ", droolsServiceUpdateAction="
-				+ droolsServiceUpdateAction + "]";
+				+ ", basePath=" + basePath + ", openNlpEnable=" + openNlpEnable + ", updateAction="
+				+ updateAction + "]";
 	}
 
 }

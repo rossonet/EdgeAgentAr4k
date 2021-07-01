@@ -34,21 +34,21 @@ import org.springframework.boot.ansi.AnsiColor;
 
 import com.beust.jcommander.Parameter;
 
+import jakarta.xml.bind.annotation.XmlAnyElement;
+
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
  */
 
 // TODO: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente
-// TODO: implementare gestione configurazione in XML 
 public class EdgeConfig implements ConfigSeed {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(EdgeConfig.class);
 
 	private static final long serialVersionUID = 7447810727276010241L;
-
-	public Instant creationDate = new Instant();
-	public Instant lastUpdate = new Instant();
+	public long creationDate = new Instant().getMillis();
+	public long lastUpdate = new Instant().getMillis();
 	public String uniqueId = UUID.randomUUID().toString();
 
 	@Parameter(names = "--name", description = "name")
@@ -149,7 +149,6 @@ public class EdgeConfig implements ConfigSeed {
 
 	@Parameter(names = "--logoUrl", description = "default log url")
 	public String logoUrl = "/static/img/ar4k.png";
-
 	public Collection<ServiceConfig> pots = new HashSet<>();
 
 	@Override
@@ -158,12 +157,12 @@ public class EdgeConfig implements ConfigSeed {
 	}
 
 	@Override
-	public Instant getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
 
 	@Override
-	public Instant getLastUpdateDate() {
+	public long getLastUpdate() {
 		return lastUpdate;
 	}
 
@@ -184,8 +183,8 @@ public class EdgeConfig implements ConfigSeed {
 
 	public boolean isMoreUpToDateThan(EdgeConfig runtimeConfig) {
 		boolean check = true;
-		if (lastUpdate != null && runtimeConfig != null && runtimeConfig.lastUpdate != null) {
-			check = lastUpdate.isAfter(runtimeConfig.lastUpdate);
+		if (lastUpdate != 0 && runtimeConfig != null && runtimeConfig.lastUpdate != 0) {
+			check = Instant.ofEpochMilli(lastUpdate).isAfter(runtimeConfig.lastUpdate);
 		}
 		logger.warn("compare config time. runtime config: {}, this config: {}, result: {}",
 				(runtimeConfig != null ? runtimeConfig.lastUpdate : "NaN"), lastUpdate, check);
@@ -196,12 +195,12 @@ public class EdgeConfig implements ConfigSeed {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("EdgeConfig [");
-		if (creationDate != null) {
+		if (creationDate != 0) {
 			builder.append("creationDate=");
 			builder.append(creationDate);
 			builder.append(", ");
 		}
-		if (lastUpdate != null) {
+		if (lastUpdate != 0) {
 			builder.append("lastUpdate=");
 			builder.append(lastUpdate);
 			builder.append(", ");
