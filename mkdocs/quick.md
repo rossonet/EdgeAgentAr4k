@@ -4,4 +4,4 @@
 
 [continuous delivery su GitHub](https://github.com/rossonet/EdgeAgentAr4k/actions)
 
-[repository Maven] (https://mvnrepository.com/artifact/net.rossonet)
+[repository Maven](https://mvnrepository.com/artifact/net.rossonet)

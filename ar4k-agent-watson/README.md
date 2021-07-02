@@ -1,8 +1,8 @@
 # Modulo gestione ufficio
 
-## Da completare:
+## Da completare
 
-### Gestione controller laghetto e generici via wifi:
+### Gestione controller laghetto e generici via wifi
 
 https://www.freecodecamp.org/news/how-to-get-started-with-freertos-and-esp8266-7a16035ddd71/
 
