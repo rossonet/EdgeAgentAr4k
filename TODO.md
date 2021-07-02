@@ -12,7 +12,6 @@
 ### CORE
 
 1. meccanismo di routing con i messaggi con spring integration (valutare come configurarlo)
-2. aggiungere gestione configurazione XML
 3. verificare import ed esporto dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
 4. sistemare filtri selezione canali (DataChannelFilter:10)
 5. (bassa priorità) data via beaconserver
@@ -126,9 +125,7 @@
 
 [inserire oggetti per NLP](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-ai/src/main/java/org/ar4k/agent/cortex/drools/DroolsService.java#L249)
 
-[: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java#L42)
-
-[: implementare gestione configurazione in XML ](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java#L43)
+[: impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/config/EdgeConfig.java#L44)
 
 [verificare bene i filtri con una serie di test](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java#L10)
 
@@ -234,7 +231,7 @@
 
 [completare gestione modulo da OpenShift con creazione cluster via bootp](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-seed/src/main/java/org/ar4k/agent/farm/openshift/OpenShiftShellInterface.java#L30)
 
-[Migliorare l'interazione della command line bash](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java#L832)
+[Migliorare l'interazione della command line bash](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/ShellInterface.java#L884)
 
 [salvare databag realmente il dato](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-terminal/src/main/java/org/ar4k/agent/console/DataShellInterface.java#L197)
 
