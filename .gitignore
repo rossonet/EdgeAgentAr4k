@@ -9,6 +9,11 @@ ar4k-agent-druido.tar.gz
 ar4k-agent-druido.tar
 doc-site.tgz
 gradle.properties
+ar4k-agent-*/package.json
+ar4k-agent-*/pnpm-lock.yaml
+ar4k-agent-*/pnpmfile.js
+ar4k-agent-*/webpack.config.js
+ar4k-agent-*/webpack.generated.js
 
 ### OUTPUT ###
 spring-shell.log
