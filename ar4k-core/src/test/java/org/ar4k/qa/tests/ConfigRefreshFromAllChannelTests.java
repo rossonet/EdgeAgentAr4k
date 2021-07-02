@@ -152,6 +152,8 @@ public class ConfigRefreshFromAllChannelTests {
 	public void createConfigWeb() throws IOException {
 		final EdgeConfig config = new EdgeConfig();
 		config.name = "configToFile";
+		config.creationDate = 1625157151652L;
+		config.lastUpdate = 1625157151652L;
 		config.nextConfigFile = fileNameSecond;
 		final Path path = Paths.get("config-to-file.ar4k");
 		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,

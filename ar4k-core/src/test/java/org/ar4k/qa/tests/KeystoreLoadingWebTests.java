@@ -29,6 +29,7 @@ import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
@@ -124,5 +125,16 @@ public class KeystoreLoadingWebTests {
 		config.pots.add(s1);
 		Files.write(Paths.get("crypto.test-config.a.ar4k"), ConfigHelper.toBase64Crypto(config, "ca").getBytes(),
 				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+	}
+
+	private void createKeystore() throws IOException, CertificateEncodingException, CMSException {
+		KeystoreConfig keyStore = new KeystoreConfig();
+		keyStore.keystorePassword = "secA4.rk!8";
+		keyStore.keyStoreAlias = "new-keystore";
+		keyStore.filePathPre = "default-test-config.keystore";
+		// "C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master"
+		keyStore.create("ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master", "Rossonet", "Ar4k", "Imola",
+				"Bologna", "IT", "urn:org.ar4k.agent:ca_rossonet-key-agent", "test.data.com", "0.0.0.0", "ca", true,
+				300 * 10);
 	}
 }

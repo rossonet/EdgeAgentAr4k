@@ -5,3 +5,6 @@ dependencies {
 	compile 'com.ibm.watson:ibm-watson:9.0.2'
 }
 
+bootJar {
+	enabled = false
+}
