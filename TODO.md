@@ -129,6 +129,10 @@
 
 [verificare bene i filtri con una serie di test](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java#L10)
 
+[completare router messaggi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/router/MessagesRouterService.java#L50)
+
+[completare router messaggi](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/router/MessagesRouterConfig.java#L17)
+
 [implementare spring integration tra i channel](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java#L30)
 
 [esempio con endpoint camel in spring integration](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/AbstractChannel.java#L35)
