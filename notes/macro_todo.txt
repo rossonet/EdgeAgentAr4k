@@ -11,8 +11,8 @@
 ### CORE
 
 1. meccanismo di routing con i messaggi con spring integration (valutare come configurarlo)
-3. verificare import ed esporto dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
-4. sistemare filtri selezione canali (DataChannelFilter:10)
+3. verificare import ed esport dei vari formati quando sono completate le altre implementazioni. Aggiungere relativi test
+4. [sistemare filtri selezione canali](https://github.com/rossonet/EdgeAgentAr4k/blob/master/ar4k-core/src/main/java/org/ar4k/agent/core/data/DataChannelFilter.java#L10)
 5. (bassa priorità) data via beaconserver
 6. (bassa prirità) gestione modem
 7. (bassa priorità) meccanismo di routing con Camel
@@ -32,7 +32,7 @@
 ### SEED
 
 1. completare contenitori con interfaccia pubblica per future implementazioni
-2. aggiungere in TERMINAL meccanismo di configurazione dei contenitori per il generico, KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter , spark, openvpn, 4diac Runtime (con verifica su Axon), ProcessMaker, MariaDB , MongoDB, gitlab
+2. aggiungere in TERMINAL meccanismo di configurazione dei contenitori per il generico, KieWorkbench, Kettle Spoon -via xpra-, 4Diac IDE -via xpra-, Jupyter , spark, openvpn, 4diac Runtime (con verifica su Axon), ProcessMaker, MariaDB , MongoDB, gitlabi, NiFi Apache
 3. aggiungere procedura configurazione open shift da TERMINAL con PXE via sftp/http
 4. integrare esecuzione in OpenShift
 5. integrare esecuzione in GreenGrass
@@ -87,17 +87,19 @@
 9. jitsi
 10. kafka
 11. keycloak
-12. kibana
+12. [kibana](https://hub.docker.com/_/kibana/)
 13. kieWorkbench
 14. mariadb
 15. mongodb
 16. octoPrint
 17. odoo
 18. postgresql
-19. ros (Robot Operating System)
-20. wazuh
-21. wordpress
-22. xpra
-23. zabbix
-24. zimbra
+21. [wordpress](https://hub.docker.com/_/wordpress/)
+22. [xpra](https://github.com/Xpra-org/xpra)
+23. [zabbix](https://www.zabbix.com/container_images)
+24. [zimbra](https://github.com/jorgedlcruz/zimbra-docker)
+25. [Flink](https://ci.apache.org/projects/flink/flink-docs-release-1.13/docs/learn-flink/overview/)
+26. [NiFi](https://nifi.apache.org/)
+27. [ProcessMaker](https://github.com/rossonet/ProcessMaker-apache)
+28. [SkyWalking](https://skywalking.apache.org/docs/)
 
