@@ -40,7 +40,7 @@ import com.ibm.watson.assistant.v2.model.RuntimeResponseGeneric;
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Gestore servizio per connessioni sshd.
+ *         Gestore servizio per connessioni verso api IBM Watson.
  *
  */
 public class WatsonService implements EdgeComponent, MessageHandler {
