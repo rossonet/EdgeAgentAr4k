@@ -3,7 +3,7 @@ description = "Rules Engine component"
 dependencies {
 	compile project(':ar4k-core')
 	// rules engine
-	compile group: 'org.drools', name: 'drools-core', version: '7.47.0.Final'
+	compile group: 'org.drools', name: 'drools-core', version: '7.58.0.Final'
 	compile group: 'org.drools', name: 'drools-compiler', version: '7.49.0.t20210118'
 	compile group: 'org.drools', name: 'drools-templates', version: '7.47.0.Final'
 	compile group: 'org.drools', name: 'drools-decisiontables', version: '7.47.0.Final'
