@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'net.rossonet'
-version = '0.9.1005'
+version = '0.9.1006'
 
 ext {
 	sourceCompatibility = 1.8

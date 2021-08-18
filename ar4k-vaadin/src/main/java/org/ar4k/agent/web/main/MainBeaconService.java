@@ -45,7 +45,7 @@ public class MainBeaconService implements AutoCloseable {
 			public void run() {
 				try {
 					try {
-						if (!localAgentConfigured && homunculus != null) {
+						if (!localAgentConfigured && homunculus != null && homunculus.getBeaconClient() != null) {
 							createBaseBeaconClient();
 							localAgentConfigured = true;
 						}
