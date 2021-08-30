@@ -27,5 +27,5 @@
 
 ```
 dnf config-manager --add-repo https://app.rossonet.net/repo/
-dnf install ar4k-agent-small -y
+dnf install ar4k-agent-small --nogpgcheck -y
 ```
