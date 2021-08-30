@@ -10,4 +10,4 @@ while true; do
     break
   fi
 done
-java -jar /opt/rossonet/ar4k-agent --logging.file=/home/rossonet/console.log --logging.level.root=ERROR --server.port=$CANDIDATE --ar4k.consoleOnly=true
+java -jar /opt/rossonet/ar4k-agent --logging.file.name=/home/rossonet/console.log --logging.level.root=ERROR --server.port=$CANDIDATE --ar4k.consoleOnly=true
