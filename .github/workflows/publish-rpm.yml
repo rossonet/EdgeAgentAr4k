@@ -1,4 +1,4 @@
-name: Publish on Maven Central
+name: Publish RPM on app.rossonet.net/repo
 
 on:
   push:
