@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Setup Dependencies
+      run: |
+        lsb_release -a
+        sudo apt-get update -y -qq
+        sudo apt-get install -y -qq createrepo
     - name: Checkout
       uses: actions/checkout@v1
     - name: Set up JDK 1.8
