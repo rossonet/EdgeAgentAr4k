@@ -572,6 +572,37 @@ task makeRpmDruido(type: Rpm){
   link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-druido-${rootProject.version}.jar")
 }
 
+task makeRpmSmall(type: Rpm){
+  makeRpmSmall.dependsOn("ar4kBootJarSmall")
+  requires('java-1.8.0-openjdk')
+  requires('telnet')
+  requires('bash')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Console Build"
+  description 'Builds the Small agent in rpm format'
+  packageName "ar4k-agent-small"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.net'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'Druido agent of Edge System Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  summary 'Ar4k Agent Console'
+  preInstall file('dist-utils/init-small/pre-install.sh')
+  from('dist-utils/init-small/init'){
+    into '/opt/rossonet'
+  }
+  from('ar4k-agent-small/build/libs'){
+    into '/opt/rossonet'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent',"/opt/rossonet/ar4k-agent-small-${rootProject.version}.jar")
+}
+
 task makeRpmWeb(type: Rpm){
   makeRpmWeb.dependsOn("ar4kBootJarWeb")
   requires('java-1.8.0-openjdk')
@@ -586,7 +617,7 @@ task makeRpmWeb(type: Rpm){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.com'
+  url 'www.rossonet.net'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Web agent of Edge System Rossonet'
   license 'AGPL3'
@@ -613,7 +644,7 @@ task makeDebianDruido(type: Deb){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.com'
+  url 'www.rossonet.net'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Druido agent of Edge System Rossonet'
   license 'AGPL3'
@@ -640,7 +671,7 @@ task makeDebianWeb(type: Deb){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.com'
+  url 'www.rossonet.net'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Web agent of Edge System Rossonet'
   license 'AGPL3'
