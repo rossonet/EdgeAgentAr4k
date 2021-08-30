@@ -1,4 +1,4 @@
-description = "Add the JCloud API, Kubernetes and Docker Java API to the Semantic Router"
+description = "Add the cluster functions"
 
 dependencies {
 	compile project(':ar4k-core')
@@ -11,7 +11,6 @@ dependencies {
 	implementation group: 'org.gradle', name: 'gradle-tooling-api', version: '4.3'
 	implementation group: 'io.fabric8', name: 'kubernetes-client', version: '5.1.1'
 	implementation group: 'io.fabric8', name: 'openshift-client', version: '5.1.1'
-	implementation group: 'org.anarres.tftp', name: 'tftp-server-netty', version: '1.0.3'	
 }
 
 bootJar {

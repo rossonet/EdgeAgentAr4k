@@ -89,7 +89,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -110,6 +109,19 @@ public class ShellInterface extends AbstractShellHelper {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@ShellMethod("Install as a service in local system")
+	@ManagedOperation
+	@ShellMethodAvailability("testSelectedConfigOk")
+	public String installLinuxSystemdService(@ShellOption(help = "service name") String serviceName) {
+		installLocalSystemdFiles(serviceName);
+		return "installed";
+	}
+
+	private void installLocalSystemdFiles(String serviceName) {
+		// TODO installazione file per essere un servizio sulla macchina locale
+
+	}
 
 	@ShellMethod(value = "Login in the agent", group = "Authentication Commands")
 	@ManagedOperation

@@ -2,7 +2,6 @@ package org.ar4k.agent.core.data.messages;
 
 import java.awt.image.BufferedImage;
 
-import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.springframework.messaging.MessageHeaders;
 
 public class VideoMessage extends InternalMessage<BufferedImage> {

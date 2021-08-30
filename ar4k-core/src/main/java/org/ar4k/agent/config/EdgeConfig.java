@@ -34,8 +34,6 @@ import org.springframework.boot.ansi.AnsiColor;
 
 import com.beust.jcommander.Parameter;
 
-import jakarta.xml.bind.annotation.XmlAnyElement;
-
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *

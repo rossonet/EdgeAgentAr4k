@@ -1,4 +1,4 @@
-package org.ar4k.agent.farm.commandManaged;
+package org.ar4k.agent.service.commandManaged;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;

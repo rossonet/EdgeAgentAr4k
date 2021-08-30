@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.agent.farm.commandManaged;
+package org.ar4k.agent.service.commandManaged;
 
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.springframework.shell.standard.ShellCommandGroup;

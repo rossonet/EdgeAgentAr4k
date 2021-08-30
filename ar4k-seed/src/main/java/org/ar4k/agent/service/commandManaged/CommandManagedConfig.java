@@ -1,4 +1,4 @@
-package org.ar4k.agent.farm.commandManaged;
+package org.ar4k.agent.service.commandManaged;
 
 import java.util.ArrayList;
 import java.util.List;
