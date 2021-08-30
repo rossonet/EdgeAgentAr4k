@@ -23,3 +23,9 @@
 
 [https://www.rossonet.net](https://www.rossonet.net)
 
+## Repository install on RedHat, CentOS or Fedora
+
+```
+dnf config-manager --add-repo https://app.rossonet.net/repo/
+dnf install ar4k-agent-small -y
+```
