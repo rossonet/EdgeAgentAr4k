@@ -7,7 +7,7 @@ echo copy ar4k console rpm
 cp build/distributions/ar4k-agent-small-*.noarch.rpm build/yum-ar4k-repo/ar4k-console.noarch.rpm
 echo createrepo command
 createrepo --database build/yum-ar4k-repo
-echo sign repo
+echo sign repo with gpg
 gpg -v -a --detach-sign --batch --yes --no-tty --pinentry-mode loopback --passphrase "$GPG_KEY_SIGN" --default-key "F6113733" build/yum-ar4k-repo/repodata/repomd.xml
 echo yum repository created
 echo compress repository
