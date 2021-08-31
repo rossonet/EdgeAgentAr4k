@@ -6,7 +6,6 @@ mkdir -p build/yum-ar4k-repo
 echo copy ar4k console rpm
 cp build/distributions/ar4k-agent-small-*.noarch.rpm build/yum-ar4k-repo/ar4k-console.noarch.rpm
 echo createrepo command
-export GPG_TTY=$(tty)
 createrepo --database build/yum-ar4k-repo
 echo "$GPG_KEY_SIGN" | gpg -a --detach-sign --batch --yes --passphrase-fd 0 --default-key "F6113733" build/yum-ar4k-repo/repodata/repomd.xml
 echo yum repository created
