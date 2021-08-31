@@ -45,4 +45,5 @@ jobs:
     - name: Publish yum repository
       env:
         ROSSOENT_KEY: ${{ secrets.ROSSOENT_KEY }}
+        GPG_KEY_SIGN: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
       run: ./scripts/make-rpm-small-and-publish.sh
