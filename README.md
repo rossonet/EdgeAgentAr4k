@@ -26,6 +26,7 @@
 ## Repository install on RedHat, CentOS or Fedora
 
 ```
+rpm --import https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/master/RPM-GPG-KEY-AR4K
 dnf config-manager --add-repo https://app.rossonet.net/repo/
-dnf install ar4k-agent-small --nogpgcheck -y
+dnf install ar4k-agent-small -y
 ```
