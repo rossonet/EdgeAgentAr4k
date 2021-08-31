@@ -593,6 +593,10 @@ task makeRpmSmall(type: Rpm){
   provides 'ar4k-edge-system'
   summary 'Ar4k Agent Console'
   preInstall file('dist-utils/init-small/pre-install.sh')
+  signingKeyId 'F6113733'
+  signingKeyPassphrase System.getenv('GPG_KEY_SIGN')
+  signingKeyRingFile new File('/home/runner/.gnupg/private.key')
+  sourcePackage 'https://github.com/rossonet/EdgeAgentAr4k'
   from('dist-utils/init-small/init'){
     into '/opt/rossonet'
   }
