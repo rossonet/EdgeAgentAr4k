@@ -8,9 +8,10 @@ cp build/distributions/ar4k-agent-small-*.noarch.rpm build/yum-ar4k-repo/ar4k-co
 echo createrepo command
 createrepo --database build/yum-ar4k-repo
 echo sign repo
-export GPG_TTY=$(tty)
-echo "$GPG_KEY_SIGN" | wc -m
-echo "$GPG_KEY_SIGN" | gpg -v -a --detach-sign --batch --yes --passphrase-fd 0 --default-key "F6113733" build/yum-ar4k-repo/repodata/repomd.xml
+#export GPG_TTY=$(tty)
+#echo "$GPG_KEY_SIGN" | wc -m
+#echo "$GPG_KEY_SIGN" | gpg -v -a --detach-sign --batch --yes --passphrase-fd 0 --default-key "F6113733" build/yum-ar4k-repo/repodata/repomd.xml
+gpg -v -a --detach-sign --batch --yes --no-tty --pinentry-mode loopback --passphrase "$GPG_KEY_SIGN" --default-key "F6113733" build/yum-ar4k-repo/repodata/repomd.xml
 echo yum repository created
 echo compress repository
 cd build
