@@ -62,7 +62,7 @@ import org.ar4k.agent.core.interfaces.ServiceConfig;
 import org.ar4k.agent.core.services.HomunculusService;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
-import org.ar4k.agent.helper.HardwareHelper;
+import org.ar4k.agent.helper.IOUtils;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -969,7 +969,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		final String hostPart = dnsTarget.split("\\.")[0];
 		final String domainPart = dnsTarget.replaceAll("^" + hostPart, "");
 		try {
-			final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 3);
+			final String payloadString = IOUtils.resolveFileFromDns(hostPart, domainPart, 3);
 			try {
 				if (cryptoAlias != null && !cryptoAlias.isEmpty()) {
 					return (EdgeConfig) ((payloadString != null && payloadString.length() > 0)
@@ -1229,7 +1229,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 				if (starterProperties.getWebKeystore() != null && !starterProperties.getWebKeystore().isEmpty()) {
 					try {
 						logger.info("try keystore from web url: {}", webKeystoreResolvedString());
-						HardwareHelper.downloadFileFromUrl(ks.filePathPre, webKeystoreResolvedString());
+						IOUtils.downloadFileFromUrl(ks.filePathPre, webKeystoreResolvedString());
 					} catch (final Exception e) {
 						foundWeb = false;
 						logger.warn("webKeystore " + webKeystoreResolvedString() + " not found");
@@ -1257,7 +1257,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 							logger.info("try keystore from dns: {}", dnsKeystoreResolvedString());
 							final String hostPart = dnsKeystoreResolvedString().split("\\.")[0];
 							final String domainPart = dnsKeystoreResolvedString().replaceAll("^" + hostPart, "");
-							final String payloadString = HardwareHelper.resolveFileFromDns(hostPart, domainPart, 5);
+							final String payloadString = IOUtils.resolveFileFromDns(hostPart, domainPart, 5);
 							final byte[] data = Base64.getDecoder().decode(payloadString);
 							final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 							final byte[] returnData = (byte[]) ois.readObject();

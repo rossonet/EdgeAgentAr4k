@@ -1,0 +1,12 @@
+#!ipxe
+
+set CONFIGURL http://<!server-web!>:8080/okd4/worker.ign
+
+set BASEURL http://<!server-web!>:8080/ipxe
+set IMAGEURL http://<!server-web!>:8080/okd4/fcos.raw.xz
+
+kernel ${BASEURL}/kernel ignition.firstboot ignition.platform.id=metal coreos.inst.ignition_url=${CONFIGURL} systemd.unified_cgroup_hierarchy=0 coreos.inst.image_url=${IMAGEURL} coreos.inst.install_dev=/dev/vda coreos.live.rootfs_url=${BASEURL}/rootfs
+initrd ${BASEURL}/initramfs
+
+
+boot

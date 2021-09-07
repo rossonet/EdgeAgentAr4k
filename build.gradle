@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'net.rossonet'
-version = '0.9.1007'
+version = '0.9.1008'
 
 ext {
 	sourceCompatibility = 1.8
@@ -579,6 +579,7 @@ task makeRpmSmall(type: Rpm){
   requires('bash')
   requires('xterm')
   requires('wget')
+  requires('sudo')
   group "Ar4k Console Build"
   description 'Builds the Small agent in rpm format'
   packageName "ar4k-agent-small"
@@ -597,6 +598,9 @@ task makeRpmSmall(type: Rpm){
   signingKeyPassphrase System.getenv('GPG_KEY_SIGN')
   signingKeyRingFile new File('/home/runner/.gnupg/private.key')
   sourcePackage 'https://github.com/rossonet/EdgeAgentAr4k'
+  from('dist-utils/init-small/sudo'){
+    into '/etc/sudoers.d/'
+  }
   from('dist-utils/init-small/init'){
     into '/opt/rossonet'
   }

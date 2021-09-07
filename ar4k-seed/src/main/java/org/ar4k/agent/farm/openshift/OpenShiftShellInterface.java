@@ -100,8 +100,7 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("clusterTwinSelectedAndConfigured")
 	public String prepareEnviromentForSelectedOpenshiftTwin() {
-		selectedOpenShiftClusterTwin.prepareEnviroment();
-		return selectedOpenShiftClusterTwin.getHumanDescription();
+		return selectedOpenShiftClusterTwin.prepareEnviroment();
 	}
 
 	@ShellMethod(value = "Get public dns data of OpenShift Cluster Twin")
@@ -148,25 +147,25 @@ public class OpenShiftShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "add control node mac address and ip to selected OpenShift Cluster Twin")
 	@ManagedOperation
 	@ShellMethodAvailability("clusterTwinSelected")
-	public void addControlNodeToSelectedOpenshiftTwin(@ShellOption(help = "node mac address") String mac,
-			@ShellOption(help = "node ip") String ip) {
-		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.CONTROL_NODE, mac, ip);
+	public void addControlNodeToSelectedOpenshiftTwin(@ShellOption(help = "node name (used in dns)") String name,
+			@ShellOption(help = "node mac address") String mac, @ShellOption(help = "node ip") String ip) {
+		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.CONTROL_NODE, mac, ip, name);
 	}
 
 	@ShellMethod(value = "add bootstrap node mac address and ip to selected OpenShift Cluster Twin")
 	@ManagedOperation
 	@ShellMethodAvailability("clusterTwinSelected")
-	public void addBootstrapNodeToSelectedOpenshiftTwin(@ShellOption(help = "node mac address") String mac,
-			@ShellOption(help = "node ip") String ip) {
-		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.BOOTSTRAP_NODE, mac, ip);
+	public void addBootstrapNodeToSelectedOpenshiftTwin(@ShellOption(help = "node name (used in dns)") String name,
+			@ShellOption(help = "node mac address") String mac, @ShellOption(help = "node ip") String ip) {
+		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.BOOTSTRAP_NODE, mac, ip, name);
 	}
 
 	@ShellMethod(value = "add worker node mac address and ip to selected OpenShift Cluster Twin")
 	@ManagedOperation
 	@ShellMethodAvailability("clusterTwinSelected")
-	public void addWorkerNodeToSelectedOpenshiftTwin(@ShellOption(help = "node mac address") String mac,
-			@ShellOption(help = "node ip") String ip) {
-		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.WORKER_NODE, mac, ip);
+	public void addWorkerNodeToSelectedOpenshiftTwin(@ShellOption(help = "node name (used in dns)") String name,
+			@ShellOption(help = "node mac address") String mac, @ShellOption(help = "node ip") String ip) {
+		selectedOpenShiftClusterTwin.addMacAddressAndIp(OpenShiftClusterTwin.NodeType.WORKER_NODE, mac, ip, name);
 	}
 
 }

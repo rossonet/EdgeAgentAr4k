@@ -17,6 +17,7 @@ import com.google.protobuf.ByteString;
 
 public class MainAgentWrapper implements IScadaAgent {
 
+	@SuppressWarnings("unused")
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(MainAgentWrapper.class);
 
 	private final Agent agent;

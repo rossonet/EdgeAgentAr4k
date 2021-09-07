@@ -8,10 +8,13 @@ public class ClusterNode {
 	private final String mac;
 	private final String ip;
 
-	public ClusterNode(NodeType nodeType, String mac, String ip) {
+	private final String name;
+
+	public ClusterNode(NodeType nodeType, String mac, String ip, String name) {
 		this.nodeType = nodeType;
 		this.mac = mac;
 		this.ip = ip;
+		this.name = name;
 	}
 
 	public NodeType getNodeType() {
@@ -24,6 +27,14 @@ public class ClusterNode {
 
 	public String getIp() {
 		return ip;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public CharSequence getType() {
+		return nodeType.getIpxeFileName();
 	}
 
 }

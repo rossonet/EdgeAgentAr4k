@@ -112,7 +112,6 @@ public class ShellInterface extends AbstractShellHelper {
 
 	@ShellMethod("Install as a service in local system")
 	@ManagedOperation
-	@ShellMethodAvailability("testSelectedConfigOk")
 	public String installLinuxSystemdService(@ShellOption(help = "service name") String serviceName) {
 		installLocalSystemdFiles(serviceName);
 		return "installed";
