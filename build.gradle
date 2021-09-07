@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'net.rossonet'
-version = '0.9.1009'
+version = '0.9.1010'
 
 ext {
 	sourceCompatibility = 1.8
@@ -256,8 +256,8 @@ subprojects {
 		compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
 		// non toccare le versioni de non consapevolmente sopra
 		compile group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: '3.0.0'
-	    testCompile('org.springframework.boot:spring-boot-starter-test')
-	    testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
+		testCompile('org.springframework.boot:spring-boot-starter-test')
+		testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.7.1'
 
 		// per annotazioni console
 		/*
@@ -589,7 +589,7 @@ task makeRpmSmall(type: Rpm){
   os 'LINUX'
   url 'www.rossonet.net'
   summary 'Ar4k EdgeAgent distribution'
-  packageDescription 'Druido agent of Edge System Rossonet'
+  packageDescription 'Console agent of Edge System by Rossonet'
   license 'AGPL3'
   provides 'ar4k-edge-system'
   summary 'Ar4k Agent Console'
