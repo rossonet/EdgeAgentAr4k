@@ -3,7 +3,7 @@ dependencies {
 	//compile project(':ar4k-ai')
 	//compile project(':ar4k-seed')
 	compile group: 'com.vaadin', name: 'vaadin-material-theme'
-	compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '14.6.3'
+	compile group: 'com.vaadin', name: 'vaadin-spring-boot-starter', version: '21.0.2'
 	compile group: 'com.vaadin', name: 'vaadin-icons-flow'
 	compile group: 'com.vaadin', name: 'vaadin-grid-flow'
 	compile group: 'com.vaadin', name: 'vaadin-app-layout-flow'
