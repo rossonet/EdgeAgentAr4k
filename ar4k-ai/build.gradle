@@ -8,9 +8,10 @@ dependencies {
 	compile group: 'org.drools', name: 'drools-templates', version: '7.47.0.Final'
 	compile group: 'org.drools', name: 'drools-decisiontables', version: '7.47.0.Final'
 	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
+	compile 'nz.ac.waikato.cms.weka:weka-stable:3.8.5'
 	compile group: 'org.rrd4j', name: 'rrd4j', version: '3.8' 
-	compile "org.deeplearning4j:deeplearning4j-core:1.0.0-beta6"
-	compile "org.nd4j:nd4j-native-platform:1.0.0-beta6"
+	compile "org.deeplearning4j:deeplearning4j-core:1.0.0-M1.1"
+	compile "org.nd4j:nd4j-native-platform:1.0.0-M1.1"
 	compile 'org.hyperledger.fabric:fabric-gateway-java:2.2.0'
 	compile 'org.hyperledger.fabric:fabric-gateway-java:2.2.1'
 
