@@ -1,6 +1,8 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.web;
 
 import java.util.Collection;
+
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
 
 public interface IMainView {
 

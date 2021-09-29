@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.messages.SerialStringMessage;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.iot.serial.SerialService;
 import org.springframework.messaging.MessageHeaders;

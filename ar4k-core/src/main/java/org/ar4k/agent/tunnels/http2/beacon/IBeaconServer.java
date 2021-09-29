@@ -1,9 +1,8 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.tunnels.http2.beacon;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;

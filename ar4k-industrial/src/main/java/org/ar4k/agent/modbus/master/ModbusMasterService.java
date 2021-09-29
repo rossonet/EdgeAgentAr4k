@@ -2,8 +2,8 @@ package org.ar4k.agent.modbus.master;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.EdgeComponent;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceInitException;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;

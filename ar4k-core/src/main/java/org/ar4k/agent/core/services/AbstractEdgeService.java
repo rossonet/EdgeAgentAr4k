@@ -31,10 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.core.interfaces.ServiceComponent;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
-import org.ar4k.agent.core.interfaces.EdgeComponent.ServiceStatus;
+import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
@@ -43,8 +40,8 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  *
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- * @see org.ar4k.agent.core.interfaces.EdgeComponent
- * @see org.ar4k.agent.core.interfaces.ServiceComponent
+ * @see org.ar4k.agent.core.services.EdgeComponent
+ * @see org.ar4k.agent.core.services.ServiceComponent
  */
 
 //TODO gestione configurazione isSpringBean

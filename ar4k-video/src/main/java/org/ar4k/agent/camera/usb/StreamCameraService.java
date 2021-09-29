@@ -21,11 +21,11 @@ import javax.imageio.ImageIO;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.VideoMessage;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.EdgeComponent;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;

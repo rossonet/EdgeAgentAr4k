@@ -26,12 +26,12 @@ import java.util.UUID;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
-import org.ar4k.agent.core.interfaces.IBeaconClient;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
 import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClientBuilder;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;

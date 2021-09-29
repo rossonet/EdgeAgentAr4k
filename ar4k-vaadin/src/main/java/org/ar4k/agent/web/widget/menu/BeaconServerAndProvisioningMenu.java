@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.ar4k.agent.console.BeaconServerForm;
 import org.ar4k.agent.console.ProvisioningServerForm;
-import org.ar4k.agent.core.interfaces.AgentWebMenu;
-import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
-import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
-import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
+import org.ar4k.agent.web.AgentWebMenu;
+import org.ar4k.agent.web.IBeaconProvisioningAuthorization;
+import org.ar4k.agent.web.IMainView;
 import org.ar4k.agent.web.interfaces.AgentMenu;
 import org.ar4k.agent.web.main.BeaconClientWrapper;
 

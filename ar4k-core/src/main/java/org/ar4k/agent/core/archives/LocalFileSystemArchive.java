@@ -3,9 +3,6 @@ package org.ar4k.agent.core.archives;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.ar4k.agent.core.interfaces.ManagedArchiveAr4k;
-import org.ar4k.agent.core.interfaces.ManagedArchives;
-
 @ManagedArchiveAr4k
 public class LocalFileSystemArchive implements ManagedArchives {
 

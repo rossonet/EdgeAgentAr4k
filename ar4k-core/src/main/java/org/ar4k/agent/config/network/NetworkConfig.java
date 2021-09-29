@@ -1,6 +1,6 @@
 package org.ar4k.agent.config.network;
 
-import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.ConfigSeed;
 
 public interface NetworkConfig extends ConfigSeed {
 	public static enum NetworkProtocol {

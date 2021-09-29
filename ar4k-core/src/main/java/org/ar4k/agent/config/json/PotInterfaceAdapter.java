@@ -2,7 +2,7 @@ package org.ar4k.agent.config.json;
 
 import java.lang.reflect.Type;
 
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

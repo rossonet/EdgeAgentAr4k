@@ -10,11 +10,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
 import org.ar4k.agent.core.data.messages.HealthMessage;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.helper.HardwareHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;

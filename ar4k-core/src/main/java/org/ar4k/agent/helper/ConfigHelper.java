@@ -24,9 +24,9 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
+import org.ar4k.agent.core.ConfigSeed;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.ConfigSeed;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.bouncycastle.cms.CMSAlgorithm;

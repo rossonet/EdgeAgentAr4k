@@ -1,4 +1,6 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.core.data;
+
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 
 public interface DataAddressChange {
 

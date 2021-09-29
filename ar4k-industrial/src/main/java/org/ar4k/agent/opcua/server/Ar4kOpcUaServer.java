@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import org.ar4k.agent.core.interfaces.EdgeComponent.ServiceStatus;
+import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;

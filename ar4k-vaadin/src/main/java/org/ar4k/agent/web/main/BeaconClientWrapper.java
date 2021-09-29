@@ -7,10 +7,10 @@ import javax.validation.constraints.NotNull;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.core.interfaces.IBeaconClient;
-import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
 
 public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 

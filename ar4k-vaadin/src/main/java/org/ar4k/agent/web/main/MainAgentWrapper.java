@@ -5,12 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.core.interfaces.IBeaconClient;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Command;
+import org.ar4k.agent.web.IScadaAgent;
 import org.json.JSONObject;
 
 import com.google.protobuf.ByteString;

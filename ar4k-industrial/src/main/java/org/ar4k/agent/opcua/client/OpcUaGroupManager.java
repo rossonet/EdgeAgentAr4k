@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.IndustrialMessage;
 import org.ar4k.agent.core.data.messages.IndustrialPayload;
 import org.ar4k.agent.core.data.messages.IndustrialPayload.DataType;
 import org.ar4k.agent.core.data.messages.IndustrialPayload.Quality;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.industrial.Enumerator.DataChangeTrigger;
 import org.ar4k.agent.industrial.Enumerator.DeadbandType;

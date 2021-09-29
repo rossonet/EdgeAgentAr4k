@@ -1,7 +1,7 @@
 package org.ar4k.agent.mqtt.client;
 
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;

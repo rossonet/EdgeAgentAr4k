@@ -2,9 +2,6 @@ package org.ar4k.agent.core.archives;
 
 import java.nio.file.Path;
 
-import org.ar4k.agent.core.interfaces.ManagedArchiveAr4k;
-import org.ar4k.agent.core.interfaces.ManagedArchives;
-
 //TODO Implementare ManagedArchives su AWS S3
 @ManagedArchiveAr4k
 public class AwsS3Archive implements ManagedArchives {

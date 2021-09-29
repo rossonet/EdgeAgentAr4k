@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.core.services;
 
 /**
  * interfaccia gestione servizi da Anima
@@ -6,7 +6,7 @@ package org.ar4k.agent.core.interfaces;
  * @author andrea
  *
  * @param <S> tipo pot
- * @see org.ar4k.agent.core.interfaces.EdgeComponent
+ * @see org.ar4k.agent.core.services.EdgeComponent
  *
  */
 public interface ServiceComponent<S extends EdgeComponent> extends AutoCloseable {

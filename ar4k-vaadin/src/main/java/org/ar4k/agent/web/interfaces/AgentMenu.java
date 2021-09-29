@@ -2,7 +2,7 @@ package org.ar4k.agent.web.interfaces;
 
 import java.util.List;
 
-import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.web.IMainView;
 
 import com.vaadin.flow.component.Component;
 

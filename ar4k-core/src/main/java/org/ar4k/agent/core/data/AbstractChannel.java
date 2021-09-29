@@ -12,8 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ar4k.agent.config.validator.DataTypeValidator;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.DataServiceOwner;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.DataType;

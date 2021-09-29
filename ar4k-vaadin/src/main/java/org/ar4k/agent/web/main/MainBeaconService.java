@@ -10,14 +10,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
-import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Status;
+import org.ar4k.agent.web.IBeaconProvisioningAuthorization;
+import org.ar4k.agent.web.IScadaAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package org.ar4k.agent.web.interfaces;
 
-import org.ar4k.agent.core.interfaces.IScadaAgent;
+import org.ar4k.agent.web.IScadaAgent;
 
 import com.vaadin.flow.component.Component;
 

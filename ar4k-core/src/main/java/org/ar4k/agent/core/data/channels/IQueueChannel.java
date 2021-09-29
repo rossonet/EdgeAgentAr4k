@@ -1,8 +1,7 @@
 package org.ar4k.agent.core.data.channels;
 
 import org.ar4k.agent.core.data.AbstractChannel;
-import org.ar4k.agent.core.interfaces.DataServiceOwner;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.data.DataServiceOwner;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;

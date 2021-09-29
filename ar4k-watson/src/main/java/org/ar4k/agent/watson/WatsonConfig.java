@@ -1,7 +1,7 @@
 package org.ar4k.agent.watson;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.services.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 

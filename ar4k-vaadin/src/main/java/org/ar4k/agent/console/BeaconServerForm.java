@@ -2,10 +2,10 @@ package org.ar4k.agent.console;
 
 import java.util.Arrays;
 
-import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
-import org.ar4k.agent.core.interfaces.IMainView;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
+import org.ar4k.agent.web.IMainView;
 import org.ar4k.agent.web.main.BeaconClientWrapper;
 import org.ar4k.agent.web.widget.menu.BeaconServerAndProvisioningMenu;
 

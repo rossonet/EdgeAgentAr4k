@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import org.ar4k.agent.core.interfaces.ConfigSeed;
+import org.ar4k.agent.core.ConfigSeed;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.RegistrationRequest;

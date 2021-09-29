@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.tunnels.http2.beacon;
 
 import org.ar4k.agent.core.RpcConversation;
 

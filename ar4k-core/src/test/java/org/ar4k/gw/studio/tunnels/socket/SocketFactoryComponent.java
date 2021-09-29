@@ -16,7 +16,7 @@ package org.ar4k.gw.studio.tunnels.socket;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 
 /*

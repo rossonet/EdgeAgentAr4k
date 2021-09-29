@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.SerialJsonMessage;
-import org.ar4k.agent.core.interfaces.EdgeChannel;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.iot.serial.SerialConfig;
 import org.ar4k.agent.iot.serial.SerialService;
 import org.ar4k.agent.logger.EdgeLogger;

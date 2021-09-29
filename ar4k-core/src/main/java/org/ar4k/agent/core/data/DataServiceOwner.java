@@ -1,6 +1,4 @@
-package org.ar4k.agent.core.interfaces;
-
-import org.ar4k.agent.core.data.DataAddress;
+package org.ar4k.agent.core.data;
 
 public interface DataServiceOwner {
 

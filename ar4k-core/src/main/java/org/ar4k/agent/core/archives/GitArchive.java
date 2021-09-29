@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Date;
 
-import org.ar4k.agent.core.interfaces.ManagedArchiveAr4k;
-import org.ar4k.agent.core.interfaces.ManagedArchives;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.eclipse.jgit.api.Git;

@@ -22,8 +22,8 @@ import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.EdgeComponent.ServiceStatus;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
+import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;
@@ -36,7 +36,7 @@ import com.beust.jcommander.Parameter;
  *
  * @see org.ar4k.agent.config.EdgeConfig
  * @see org.ar4k.agent.core.services.AbstractEdgeService
- * @see org.ar4k.agent.core.interfaces.ServiceConfig
+ * @see org.ar4k.agent.core.services.ServiceConfig
  *
  */
 

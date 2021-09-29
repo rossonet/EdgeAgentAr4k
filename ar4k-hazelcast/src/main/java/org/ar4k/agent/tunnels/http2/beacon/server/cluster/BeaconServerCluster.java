@@ -3,10 +3,10 @@ package org.ar4k.agent.tunnels.http2.beacon.server.cluster;
 import java.io.IOException;
 import java.util.List;
 
-import org.ar4k.agent.core.interfaces.IBeaconServer;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;

@@ -3,8 +3,8 @@ package org.ar4k.agent.farm.web.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.core.interfaces.AgentWebMenu;
-import org.ar4k.agent.core.interfaces.IMainView;
+import org.ar4k.agent.web.AgentWebMenu;
+import org.ar4k.agent.web.IMainView;
 import org.ar4k.agent.web.interfaces.AgentMenu;
 
 import com.vaadin.flow.component.Component;

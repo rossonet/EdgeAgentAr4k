@@ -18,7 +18,7 @@ import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;

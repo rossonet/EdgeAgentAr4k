@@ -1,7 +1,8 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.core;
 
 import java.io.Serializable;
 import java.util.List;
+
 
 /**
  * interfaccia da implementare per una configurazione nel sistema

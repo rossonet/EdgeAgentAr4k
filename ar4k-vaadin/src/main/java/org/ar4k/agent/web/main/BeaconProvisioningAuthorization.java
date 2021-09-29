@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 
-import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
+import org.ar4k.agent.web.IBeaconProvisioningAuthorization;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 public class BeaconProvisioningAuthorization implements IBeaconProvisioningAuthorization {

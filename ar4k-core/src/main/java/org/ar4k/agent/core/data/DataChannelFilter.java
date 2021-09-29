@@ -3,7 +3,7 @@ package org.ar4k.agent.core.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.core.interfaces.EdgeChannel;
+import org.ar4k.agent.core.data.channels.EdgeChannel;
 
 public class DataChannelFilter {
 	

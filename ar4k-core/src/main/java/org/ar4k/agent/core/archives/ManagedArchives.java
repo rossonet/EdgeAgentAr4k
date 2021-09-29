@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.core.archives;
 
 import java.nio.file.Path;
 

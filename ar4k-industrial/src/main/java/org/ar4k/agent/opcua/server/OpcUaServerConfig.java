@@ -2,7 +2,7 @@ package org.ar4k.agent.opcua.server;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.industrial.Enumerator.CryptoMode;
 import org.ar4k.agent.industrial.Enumerator.SecurityMode;
 import org.ar4k.agent.industrial.validators.CryptoModeValidator;

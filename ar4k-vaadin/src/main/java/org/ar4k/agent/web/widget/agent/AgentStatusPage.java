@@ -3,8 +3,8 @@ package org.ar4k.agent.web.widget.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ar4k.agent.core.interfaces.AgentWebTab;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
+import org.ar4k.agent.web.AgentWebTab;
+import org.ar4k.agent.web.IScadaAgent;
 import org.ar4k.agent.web.interfaces.AgentTab;
 
 import com.vaadin.flow.component.Component;

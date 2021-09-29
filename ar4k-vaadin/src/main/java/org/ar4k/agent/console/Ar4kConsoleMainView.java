@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.interfaces.AgentWebMenu;
-import org.ar4k.agent.core.interfaces.IBeaconClientScadaWrapper;
-import org.ar4k.agent.core.interfaces.IBeaconProvisioningAuthorization;
-import org.ar4k.agent.core.interfaces.IMainView;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
+import org.ar4k.agent.web.AgentWebMenu;
+import org.ar4k.agent.web.IBeaconProvisioningAuthorization;
+import org.ar4k.agent.web.IMainView;
+import org.ar4k.agent.web.IScadaAgent;
 import org.ar4k.agent.web.interfaces.AgentMenu;
 import org.ar4k.agent.web.main.MainBeaconService;
 import org.springframework.beans.factory.config.BeanDefinition;

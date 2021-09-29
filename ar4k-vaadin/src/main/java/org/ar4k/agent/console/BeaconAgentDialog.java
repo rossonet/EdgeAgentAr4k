@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ar4k.agent.console.AgentTabTemplate.ClickTabEvent;
-import org.ar4k.agent.core.interfaces.AgentWebTab;
-import org.ar4k.agent.core.interfaces.IMainView;
-import org.ar4k.agent.core.interfaces.IScadaAgent;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
+import org.ar4k.agent.web.AgentWebTab;
+import org.ar4k.agent.web.IMainView;
+import org.ar4k.agent.web.IScadaAgent;
 import org.ar4k.agent.web.interfaces.AgentTab;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;

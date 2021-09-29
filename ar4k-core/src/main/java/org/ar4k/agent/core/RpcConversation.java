@@ -9,7 +9,7 @@ import javax.validation.ConstraintViolation;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.data.messages.InternalMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
-import org.ar4k.agent.core.interfaces.ServiceConfig;
+import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;

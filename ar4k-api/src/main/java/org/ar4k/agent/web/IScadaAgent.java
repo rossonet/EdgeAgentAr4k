@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.web;
 
 import java.util.List;
 

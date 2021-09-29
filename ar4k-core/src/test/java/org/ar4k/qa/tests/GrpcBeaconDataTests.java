@@ -16,8 +16,8 @@ package org.ar4k.qa.tests;
 
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
-import org.ar4k.agent.core.interfaces.IBeaconClient;
-import org.ar4k.agent.core.interfaces.IBeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconServer;
 
 public class GrpcBeaconDataTests {
 

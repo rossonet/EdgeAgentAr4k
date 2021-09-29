@@ -1,6 +1,8 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.core.services;
 
 import java.util.List;
+
+import org.ar4k.agent.core.ConfigSeed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

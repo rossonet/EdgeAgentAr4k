@@ -15,7 +15,7 @@
 package org.ar4k.agent.modbus.slave;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.interfaces.EdgeComponent;
+import org.ar4k.agent.core.services.EdgeComponent;
 
 /*
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com

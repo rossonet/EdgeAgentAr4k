@@ -1,4 +1,4 @@
-package org.ar4k.agent.core.interfaces;
+package org.ar4k.agent.web;
 
 public interface IBeaconProvisioningAuthorization {
 
