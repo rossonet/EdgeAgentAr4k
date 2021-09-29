@@ -12,6 +12,7 @@ pluginManagement {
     }
 }
 rootProject.name = 'ar4k-agent'
+include 'ar4k-api'
 include 'ar4k-core'
 include 'ar4k-seed'
 include 'ar4k-hazelcast'
