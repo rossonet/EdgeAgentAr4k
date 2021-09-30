@@ -9,6 +9,8 @@ src/main/resources/models/en-ner-dates.bin
 src/main/resources/models/en-ner-locations.bin
 src/main/resources/models/en-ner-persons.bin
 
+test-model.bin
+
 
 src/main/resources/models/*
 

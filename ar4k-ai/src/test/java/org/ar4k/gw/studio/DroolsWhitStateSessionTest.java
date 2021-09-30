@@ -19,7 +19,7 @@ import org.ar4k.agent.cortex.drools.DroolsService;
 import org.ar4k.agent.cortex.drools.data.DataFactWrapper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
@@ -40,14 +40,14 @@ public class DroolsWhitStateSessionTest {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testInstantiate() {
 		droolsService.init();
 		System.out.println(droolsService.toString());
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testLoggerAndFacts() {
 		testInstantiate();
 		droolsService.insertOrExecute(new DataFactWrapper("first log line"), true);
