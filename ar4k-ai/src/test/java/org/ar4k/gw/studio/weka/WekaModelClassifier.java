@@ -1,4 +1,4 @@
-package org.ar4k.gw.studio;
+package org.ar4k.gw.studio.weka;
 
 import java.util.ArrayList;
 import java.util.logging.Level;

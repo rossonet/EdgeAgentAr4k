@@ -12,7 +12,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.studio;
+package org.ar4k.gw.studio.drools;
 
 import org.ar4k.agent.cortex.drools.DroolsConfig;
 import org.ar4k.agent.cortex.drools.DroolsService;

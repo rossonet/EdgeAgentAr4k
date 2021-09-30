@@ -7,8 +7,6 @@ import java.util.List;
 /**
  * interfaccia da implementare per una configurazione nel sistema
  *
- * @see org.ar4k.agent.config.EdgeConfig
- * @see org.ar4k.agent.core.interfaces.ServiceConfig
  *
  * @author andrea
  *

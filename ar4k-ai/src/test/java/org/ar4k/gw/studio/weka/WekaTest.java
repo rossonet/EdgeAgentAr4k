@@ -12,14 +12,13 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
-package org.ar4k.gw.studio;
+package org.ar4k.gw.studio.weka;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 
 import org.ar4k.agent.helper.IOUtils;
-import org.drools.core.command.assertion.AssertEquals;
 import org.junit.Test;
 
 import com.google.common.io.CharSource;
