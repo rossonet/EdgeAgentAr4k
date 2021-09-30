@@ -18,14 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.RegistrationRequest;
-import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.socket.server.ITunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Timestamp;
@@ -56,15 +57,15 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	int defaultPollTime = 6000;
 	private int defaultBeaconFlashMoltiplicator = 10; // ogni quanti cicli di loop in run emette un flash udp
 
-	final List<BeaconAgent> agents = new ArrayList<>(); // elenco agenti connessi
+	final List<IBeaconAgent> agents = new ArrayList<>(); // elenco agenti connessi
 
 	boolean acceptAllCerts = true; // se true firma in automatico altrimenti gestione della coda di
 	// autorizzazione
 	private boolean running = true;
 
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 
-	final List<TunnelRunnerBeaconServer> tunnels = new LinkedList<>();
+	final List<ITunnelRunnerBeaconServer> tunnels = new LinkedList<>();
 	private Thread process = null;
 	private DatagramSocket socketFlashBeacon = null;
 	final List<RegistrationRequest> listAgentRequest = new ArrayList<>();
@@ -94,7 +95,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			String stringDiscovery, String certChainFile, String certFile, String privateKeyFile,
 			String aliasBeaconServerInKeystore, String caChainPem, String filterActiveCommand,
 			String filterBlackListCertRegister, String aliasBeaconServerSignMaster) throws UnrecoverableKeyException {
-		this.homunculus = homunculusTarget;
+		this.homunculusBase = homunculusTarget;
 		if (aliasBeaconServerInKeystore != null && !aliasBeaconServerInKeystore.isEmpty())
 			this.aliasBeaconServerInKeystore = aliasBeaconServerInKeystore;
 		this.port = port;
@@ -141,8 +142,8 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 
 	@Override
 	public void clearOldData() {
-		final List<BeaconAgent> toDelete = new ArrayList<>();
-		for (final BeaconAgent a : agents) {
+		final List<IBeaconAgent> toDelete = new ArrayList<>();
+		for (final IBeaconAgent a : agents) {
 			if (a.getLastCall().plus(TIMEOUT_AGENT_POOL).isBeforeNow()) {
 				try {
 					logger.info("agent " + a + " doesn't poll data since " + a.getLastCall().toDateTime());
@@ -154,7 +155,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				}
 			}
 		}
-		for (final BeaconAgent atd : toDelete) {
+		for (final IBeaconAgent atd : toDelete) {
 			logger.info("agent will be removed ->\n" + atd);
 			agents.remove(atd);
 		}
@@ -168,11 +169,11 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			getTunnels().clear();
 		}
 		listAgentRequest.clear();
-		homunculus = null;
+		homunculusBase = null;
 	}
 
 	@Override
-	public List<BeaconAgent> getAgentRegistered() {
+	public List<IBeaconAgent> getAgentRegistered() {
 		return agents;
 	}
 
@@ -202,7 +203,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	}
 
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	}
 
 	@Override
-	public List<TunnelRunnerBeaconServer> getTunnels() {
+	public List<ITunnelRunnerBeaconServer> getTunnels() {
 		return tunnels;
 	}
 
@@ -361,7 +362,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	public void stop() {
 		running = false;
 		if (getTunnels() != null && !getTunnels().isEmpty()) {
-			for (final TunnelRunnerBeaconServer t : getTunnels()) {
+			for (final ITunnelRunnerBeaconServer t : getTunnels()) {
 				try {
 					t.close();
 				} catch (final Exception e) {
@@ -371,7 +372,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 			getTunnels().clear();
 		}
 		if (!agents.isEmpty()) {
-			for (final BeaconAgent a : agents) {
+			for (final IBeaconAgent a : agents) {
 				try {
 					a.close();
 				} catch (final Exception e) {
@@ -475,21 +476,21 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 	}
 
 	private void clearTunnelForAgent(String agentUniqueId) {
-		final List<TunnelRunnerBeaconServer> tunnelToDelete = new ArrayList<>();
-		for (final TunnelRunnerBeaconServer t : getTunnels()) {
+		final List<ITunnelRunnerBeaconServer> tunnelToDelete = new ArrayList<>();
+		for (final ITunnelRunnerBeaconServer t : getTunnels()) {
 			if (t.getClientAgent().getAgentUniqueName().equals(agentUniqueId)
 					|| t.getServerAgent().getAgentUniqueName().equals(agentUniqueId)) {
 				tunnelToDelete.add(t);
 			}
 		}
-		for (final TunnelRunnerBeaconServer ttd : tunnelToDelete) {
+		for (final ITunnelRunnerBeaconServer ttd : tunnelToDelete) {
 			logger.info("tunnel will be removed ->\n" + ttd);
 			getTunnels().remove(ttd);
 		}
 	}
 
 	private synchronized void getBeaconServer(Homunculus homunculusTarget, int port) throws UnrecoverableKeyException {
-		if (Boolean.valueOf(homunculus.getStarterProperties().getBeaconClearText())) {
+		if (Boolean.valueOf(homunculusBase.getStarterProperties().getBeaconClearText())) {
 			logger.info("Starting beacon server txt mode");
 			try {
 				final ServerBuilder<?> serverBuilder = NettyServerBuilder.forPort(port)
@@ -532,7 +533,7 @@ public class BeaconServer implements Runnable, AutoCloseable, IBeaconServer {
 				logger.logException(e);
 			}
 		}
-		markThread = "bs-" + String.valueOf(port) + "-" + Homunculus.THREAD_ID;
+		markThread = "bs-" + String.valueOf(port) + "-" + EdgeAgentCore.THREAD_ID;
 		Thread.currentThread().setName(markThread);
 
 	}

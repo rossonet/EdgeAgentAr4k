@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.ar4k.agent.config.validator.ServiceStatusValidator;
+import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.services.ServiceConfig;
-import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.joda.time.Instant;
 
 import com.beust.jcommander.Parameter;

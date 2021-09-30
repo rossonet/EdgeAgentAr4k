@@ -139,7 +139,7 @@ public class DataGeneratorService implements EdgeComponent {
 	private DataGeneratorConfig configuration = null;
 
 	private DataAddress dataspace = null;
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 	private ServiceStatus serviceStatus = ServiceStatus.INIT;
 
 	private Map<EdgeChannel, NextGenerator> simulatedDatas = new HashMap<>();
@@ -163,7 +163,7 @@ public class DataGeneratorService implements EdgeComponent {
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -195,13 +195,13 @@ public class DataGeneratorService implements EdgeComponent {
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		dataspace = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override

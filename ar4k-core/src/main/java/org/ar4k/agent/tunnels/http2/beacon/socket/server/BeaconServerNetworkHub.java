@@ -14,12 +14,12 @@ public class BeaconServerNetworkHub implements StreamObserver<TunnelMessage>, Au
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconServerNetworkHub.class);
 
 	private final StreamObserver<TunnelMessage> responseObserver;
-	private TunnelRunnerBeaconServer tunnel = null;
-	private final List<TunnelRunnerBeaconServer> tunnelsRegister;
+	private ITunnelRunnerBeaconServer tunnel = null;
+	private final List<ITunnelRunnerBeaconServer> tunnelsRegister;
 	private boolean closed = false;
 
 	public BeaconServerNetworkHub(StreamObserver<TunnelMessage> responseObserver,
-			List<TunnelRunnerBeaconServer> tunnels) {
+			List<ITunnelRunnerBeaconServer> tunnels) {
 		this.responseObserver = responseObserver;
 		this.tunnelsRegister = tunnels;
 		if (TRACE_LOG_IN_INFO)
@@ -34,7 +34,7 @@ public class BeaconServerNetworkHub implements StreamObserver<TunnelMessage>, Au
 					logger.info("Received on BeaconServer [session:" + value.getSessionId() + ",target:"
 							+ value.getTunnelId() + ", data:" + value + "]");
 				if (tunnel == null) {
-					for (final TunnelRunnerBeaconServer t : tunnelsRegister) {
+					for (final ITunnelRunnerBeaconServer t : tunnelsRegister) {
 						if (TRACE_LOG_IN_INFO)
 							logger.info("searching target from: {}", t);
 						if (value.getTunnelId() == t.getTunnelId()) {

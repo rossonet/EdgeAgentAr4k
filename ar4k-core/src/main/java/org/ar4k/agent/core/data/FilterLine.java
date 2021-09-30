@@ -2,8 +2,8 @@ package org.ar4k.agent.core.data;
 
 import java.util.List;
 
-import org.ar4k.agent.core.data.DataChannelFilter.Label;
-import org.ar4k.agent.core.data.DataChannelFilter.Operator;
+import org.ar4k.agent.core.data.IDataChannelFilter.Label;
+import org.ar4k.agent.core.data.IDataChannelFilter.Operator;
 
 public final class FilterLine {
 	private final Operator filterGlobalOperator;

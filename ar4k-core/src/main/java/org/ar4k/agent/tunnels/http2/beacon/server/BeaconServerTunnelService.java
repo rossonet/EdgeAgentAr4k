@@ -2,7 +2,7 @@ package org.ar4k.agent.tunnels.http2.beacon.server;
 
 import java.util.UUID;
 
-import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.BeaconServerNetworkHub;
 import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentProxyReply;
@@ -65,7 +65,7 @@ class BeaconServerTunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplB
 	private ResponseNetworkChannel requestNetworkClientToAgent(RequestTunnelMessage request, long idRequest)
 			throws InterruptedException {
 		BeaconServer.logger.debug("searching in " + this.beaconServer.agents.size() + " agents");
-		for (final BeaconAgent at : this.beaconServer.agents) {
+		for (final IBeaconAgent at : this.beaconServer.agents) {
 			if (at.getAgentUniqueName().equals(request.getAgentDestination().getAgentUniqueName())) {
 				final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSource())
 						.setUniqueIdRequest(String.valueOf(idRequest)).setType(CommandType.EXPOSE_PORT)

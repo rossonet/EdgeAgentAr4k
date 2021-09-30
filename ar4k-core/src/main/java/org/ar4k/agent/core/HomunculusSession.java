@@ -14,19 +14,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ar4k.agent.rpc.IHomunculusRpc;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.shell.Shell;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class HomunculusSession implements IHomunculusRpc, SessionRegistry, ApplicationListener<SessionDestroyedEvent> {
+public class HomunculusSession implements IHomunculusRpc {
 
 	@Autowired
-	private Homunculus homunculus;
+	private EdgeAgentCore edgeAgentCore;
 
 	@Autowired
 	private Shell shell;
@@ -155,8 +153,8 @@ public class HomunculusSession implements IHomunculusRpc, SessionRegistry, Appli
 		}
 	}
 
-	public Homunculus getHomunculus() {
-		return homunculus;
+	public EdgeAgentCore getHomunculus() {
+		return edgeAgentCore;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.messages.SerialJsonMessage;
@@ -26,7 +27,7 @@ public class SerialJsonService extends SerialService {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(SerialJsonService.class);
 
-	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+	private Homunculus homunculus = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class);
 
 	private EdgeChannel channelRoot = null;
 	private IPublishSubscribeChannel exceptionChannel = null;

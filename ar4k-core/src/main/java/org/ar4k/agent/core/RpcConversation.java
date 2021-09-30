@@ -7,14 +7,13 @@ import java.util.Map;
 import javax.validation.ConstraintViolation;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.data.messages.InternalMessage;
+import org.ar4k.agent.core.data.messages.EdgeMessage;
 import org.ar4k.agent.core.data.messages.StringMessage;
 import org.ar4k.agent.core.services.ServiceConfig;
-import org.ar4k.agent.keystore.KeystoreConfig;
+import org.ar4k.agent.keystore.IKeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.rpc.IHomunculusRpc;
-import org.ar4k.agent.rpc.RpcExecutor;
 import org.ar4k.agent.rpc.process.AgentProcess;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -31,12 +30,12 @@ import com.beust.jcommander.ParameterException;
  * @author andrea
  *
  */
-public class RpcConversation implements RpcExecutor {
+public class RpcConversation implements IRpcConversation {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(RpcConversation.class);
 
 	private Map<String, EdgeConfig> configurations = new HashMap<>();
-	private Map<String, KeystoreConfig> keyStores = new HashMap<>();
+	private Map<String, IKeystoreConfig> keyStores = new HashMap<>();
 	private Map<String, ServiceConfig> components = new HashMap<>();
 	private Map<String, AgentProcess> scriptSessions = new HashMap<>();
 	private IHomunculusRpc homunculusRpc = null;
@@ -80,7 +79,7 @@ public class RpcConversation implements RpcExecutor {
 	}
 
 	@Override
-	public InternalMessage<? extends String> elaborateMessage(InternalMessage<? extends String> message) {
+	public EdgeMessage<? extends String> elaborateMessage(EdgeMessage<? extends String> message) {
 		StringMessage reply = new StringMessage();
 		reply.setPayload(elaborateMessage(message.getPayload()));
 		return reply;
@@ -109,11 +108,11 @@ public class RpcConversation implements RpcExecutor {
 		this.configurations = configurations;
 	}
 
-	public Map<String, KeystoreConfig> getKeyStores() {
+	public Map<String, IKeystoreConfig> getKeyStores() {
 		return keyStores;
 	}
 
-	public void setKeyStores(Map<String, KeystoreConfig> keyStores) {
+	public void setKeyStores(Map<String, IKeystoreConfig> keyStores) {
 		this.keyStores = keyStores;
 	}
 

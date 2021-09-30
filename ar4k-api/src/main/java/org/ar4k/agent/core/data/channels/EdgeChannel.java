@@ -87,7 +87,7 @@ public interface EdgeChannel extends AutoCloseable {
 
 	void setCreateData(Instant createData);
 
-	void setDataAddress(DataAddress dataAddress);
+	void setDataAddress(DataAddress dataAddressBase);
 
 	void setDataType(DataType dataType);
 

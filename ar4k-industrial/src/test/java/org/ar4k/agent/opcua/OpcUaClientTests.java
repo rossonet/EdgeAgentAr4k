@@ -1,9 +1,10 @@
 package org.ar4k.agent.opcua;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.data.DataAddressBase;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.industrial.OpcUaShellInterface;
@@ -42,7 +43,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -54,7 +55,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class OpcUaClientTests implements MessageHandler {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore homunculus;
 
 	@Autowired
 	Shell shell;
@@ -113,12 +114,12 @@ public class OpcUaClientTests implements MessageHandler {
 		OpcUaClientService service = new OpcUaClientService();
 		service.setConfiguration(opcUaClientConfig);
 		service.setHomunculus(homunculus);
-		final DataAddress dataAddressService = new DataAddress(homunculus, service);
+		final DataAddress dataAddressService = new DataAddressBase(homunculus, service);
 		service.setDataAddress(dataAddressService);
 		homunculus.getDataAddress().registerSlave(service);
 		service.init();
 		Thread.sleep(10000);
-		final DataAddressHomunculus dataAddress = homunculus.getDataAddress();
+		final DataAddressHomunculus dataAddress = (DataAddressHomunculus) homunculus.getDataAddress();
 		System.out.println("channels -> " + dataAddress.listChannels());
 		((IPublishSubscribeChannel) dataAddress.getChannel("test-opc/counter")).subscribe(this);
 		((IPublishSubscribeChannel) dataAddress.getChannel("test-opc/expression")).subscribe(this);

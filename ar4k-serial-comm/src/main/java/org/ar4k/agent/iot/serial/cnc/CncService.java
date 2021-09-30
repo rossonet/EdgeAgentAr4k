@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.messages.SerialStringMessage;
 import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
@@ -39,7 +40,7 @@ public class CncService extends SerialService {
 
 	private CncConfig configuration = null;
 
-	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+	private Homunculus homunculus = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class);
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {

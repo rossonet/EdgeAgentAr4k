@@ -19,6 +19,7 @@ import org.ar4k.agent.camera.CameraShellInterface;
 import org.ar4k.agent.camera.usb.StreamCameraConfig;
 import org.ar4k.agent.camera.usb.StreamCameraService;
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
@@ -51,7 +52,7 @@ import com.github.sarxos.webcam.WebcamMotionListener;
 import com.github.sarxos.webcam.WebcamPanel;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -64,7 +65,7 @@ import com.github.sarxos.webcam.WebcamPanel;
 public class VideoTest implements WebcamMotionListener, WebcamPanel.Painter {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore homunculus;
 
 	public static final String[] drivers = { "JavaCvDriver", "VlcjDriver", "V4l4jDriver", "IpCamDriver" }; // "FFmpegCliDriver"
 

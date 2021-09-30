@@ -22,11 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
@@ -55,64 +55,64 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-file-write.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class ConfigLoadingAndWriteToFileTests {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	EdgeAgentCore edgeAgentCore;
 
-  final String fileName = "/tmp/test-config.ar4k";
+	final String fileName = "/tmp/test-config.ar4k";
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(edgeAgentCore.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
-    Files.deleteIfExists(Paths.get(fileName));
-  }
+	@After
+	public void tearDownAfterClass() throws Exception {
+		Files.deleteIfExists(Paths.get(fileName));
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void checkConfigFileWithReload() throws InterruptedException, IOException {
-    Thread.sleep(3000);
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    Files.deleteIfExists(Paths.get(fileName));
-    assertTrue(!Files.exists(Paths.get(fileName)));
-    homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-    Thread.sleep(30000);
-    assertTrue(Files.exists(Paths.get(fileName)));
-    System.out.println(homunculus.getState());
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
-    Thread.sleep(10000);
-  }
+	@Test
+	public void checkConfigFileWithReload() throws InterruptedException, IOException {
+		Thread.sleep(3000);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		Files.deleteIfExists(Paths.get(fileName));
+		assertTrue(!Files.exists(Paths.get(fileName)));
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		Thread.sleep(30000);
+		assertTrue(Files.exists(Paths.get(fileName)));
+		System.out.println(edgeAgentCore.getState());
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		Thread.sleep(10000);
+	}
 
-  @Test
-  public void createConfigBase64() throws IOException {
-    EdgeConfig config = new EdgeConfig();
-    config.author = "andrea";
-    config.name = "base-config-with-write";
-    config.tagVersion = "tat345";
-    config.nextConfigFile = fileName;
-    config.updateFileConfig = true;
-    System.out.println(ConfigHelper.toBase64(config));
-  }
+	@Test
+	public void createConfigBase64() throws IOException {
+		EdgeConfig config = new EdgeConfig();
+		config.author = "andrea";
+		config.name = "base-config-with-write";
+		config.tagVersion = "tat345";
+		config.nextConfigFile = fileName;
+		config.updateFileConfig = true;
+		System.out.println(ConfigHelper.toBase64(config));
+	}
 
 }

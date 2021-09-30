@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconServer;
-import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.socket.server.ITunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 
@@ -42,7 +42,7 @@ public class BeaconServerCluster implements Runnable, AutoCloseable, IBeaconServ
 	}
 
 	@Override
-	public List<TunnelRunnerBeaconServer> getTunnels() {
+	public List<ITunnelRunnerBeaconServer> getTunnels() {
 		// Auto-generated method stub
 		return null;
 	}
@@ -78,7 +78,7 @@ public class BeaconServerCluster implements Runnable, AutoCloseable, IBeaconServ
 	}
 
 	@Override
-	public List<BeaconAgent> getAgentRegistered() {
+	public List<IBeaconAgent> getAgentRegistered() {
 		// Auto-generated method stub
 		return null;
 	}

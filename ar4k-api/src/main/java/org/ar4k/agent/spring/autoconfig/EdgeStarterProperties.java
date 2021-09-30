@@ -16,7 +16,6 @@ package org.ar4k.agent.spring.autoconfig;
 
 import static org.ar4k.agent.spring.autoconfig.EdgeStarterProperties.AR4K_PREFIX;
 
-import org.ar4k.agent.helper.ConfigHelper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -40,16 +39,16 @@ public class EdgeStarterProperties {
 	private String beaconClearText = "true";
 	private String beaconDiscoveryFilterString = "AR4K";
 	private String beaconDiscoveryPort = "33666";
-	private String confPath = ConfigHelper.USER_HOME + "/.ar4k";
+	private String confPath = System.getProperty("user.home") + "/.ar4k";
 	private String consoleOnly = "false";
 	private String defaultWebPage = "/app/ar4k-console";
 	private String dnsConfig = "";
 	private String dnsConfigOrder = "1";
 	private String dnsKeystore = "";
 	private String dnsRegistrationEndpoint = "";
-	private String fileConfig = ConfigHelper.USER_HOME + "/.ar4k/default.config.base64.ar4k";
+	private String fileConfig = System.getProperty("user.home") + "/.ar4k/default.config.base64.ar4k";
 	private String fileConfigOrder = "0";
-	private String fileKeystore = ConfigHelper.USER_HOME + "/.ar4k/default.keystore";
+	private String fileKeystore = System.getProperty("user.home") + "/.ar4k/default.keystore";
 	private String keystoreBeaconAlias = "";
 	private String keystoreConfigAlias = "";
 	private String keystoreMainAlias = "cert-agent";

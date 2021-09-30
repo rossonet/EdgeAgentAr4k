@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.ar4k.agent.core.ConfigSeed;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.RegistrationRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
@@ -87,7 +88,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void completeCommand(CompleteCommandRequest request, StreamObserver<CompleteCommandReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
 							.setUniqueIdRequest(idRequest).setType(CommandType.COMPLETE_COMMAND)
@@ -118,7 +119,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 			StreamObserver<ElaborateMessageReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
 							.setUniqueIdRequest(idRequest).setType(CommandType.ELABORATE_MESSAGE_COMMAND)
@@ -148,7 +149,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void getConfigRuntime(Agent agent, StreamObserver<ConfigReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
 							.setUniqueIdRequest(idRequest).setType(CommandType.GET_CONFIGURATION).build();
@@ -169,7 +170,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void getRuntimeProvides(Agent agent, StreamObserver<ListStringReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
 							.setUniqueIdRequest(idRequest).setType(CommandType.GET_PROVIDES).build();
@@ -190,7 +191,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void getRuntimeRequired(Agent agent, StreamObserver<ListStringReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(agent.getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(agent)
 							.setUniqueIdRequest(idRequest).setType(CommandType.GET_REQUIRED).build();
@@ -211,7 +212,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void listAgents(Empty request, StreamObserver<ListAgentsReply> responseObserver) {
 		try {
 			final List<Agent> values = new ArrayList<>();
-			for (final BeaconAgent r : this.beaconServer.agents) {
+			for (final IBeaconAgent r : this.beaconServer.agents) {
 				final Agent a = Agent.newBuilder().setAgentUniqueName(r.getAgentUniqueName())
 						.setShortDescription(r.getShortDescription()).setRegisterData(r.getRegisterReply())
 						.setJsonHardwareInfo(r.getHardwareInfoAsJson().toString(2))
@@ -257,7 +258,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void listCommands(ListCommandsRequest request, StreamObserver<ListCommandsReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(request.getAgentTarget().getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgentSender())
 							.setUniqueIdRequest(idRequest).setType(CommandType.LIST_COMMANDS).build();
@@ -288,7 +289,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void pollingCmdQueue(Agent request, StreamObserver<FlowMessage> responseObserver) {
 		try {
 			final List<RequestToAgent> values = new ArrayList<>();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(request.getAgentUniqueName())) {
 					values.addAll(at.getCommandsToBeExecute());
 					break;
@@ -363,7 +364,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void sendConfigRuntime(ConfigReport request, StreamObserver<ConfigReply> responseObserver) {
 		try {
 			final String idRequest = UUID.randomUUID().toString();
-			for (final BeaconAgent at : this.beaconServer.agents) {
+			for (final IBeaconAgent at : this.beaconServer.agents) {
 				if (at.getAgentUniqueName().equals(request.getAgent().getAgentUniqueName())) {
 					final RequestToAgent rta = RequestToAgent.newBuilder().setCaller(request.getAgent())
 							.setUniqueIdRequest(idRequest).setType(CommandType.SET_CONFIGURATION)
@@ -385,7 +386,7 @@ class BeaconServerRpcService extends RpcServiceV1Grpc.RpcServiceV1ImplBase {
 	public void sendHealth(HealthRequest request, io.grpc.stub.StreamObserver<Status> responseObserver) {
 		try {
 			try {
-				for (final BeaconAgent at : this.beaconServer.agents) {
+				for (final IBeaconAgent at : this.beaconServer.agents) {
 					if (at.getAgentUniqueName().equals(request.getAgentSender().getAgentUniqueName())) {
 						at.setHardwareInfo(new JSONObject(request.getJsonHardwareInfo()));
 						break;

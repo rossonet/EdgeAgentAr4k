@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.ServiceConfig;
@@ -81,7 +82,7 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	private void registerBean() {
-		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
 				.registerSingleton(beanName, this);
 	}
 
@@ -105,7 +106,7 @@ public class HazelcastComponent implements EdgeComponent {
 	}
 
 	private void deregisterBean() {
-		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().destroyBean(this);
+		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory().destroyBean(this);
 	}
 
 	public HazelcastInstance createOrGetHazelcastInstance() {

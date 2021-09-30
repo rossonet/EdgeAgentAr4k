@@ -2,11 +2,11 @@ package org.ar4k.agent.tunnels.http2.beacon.client;
 
 import java.security.UnrecoverableKeyException;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.RpcConversation;
 
 public class BeaconClientBuilder {
-	private Homunculus homunculus = null;
+	private EdgeAgentCore edgeAgentCore = null;
 	private RpcConversation rpcConversation = null;
 	private String host = null;
 	private int port = 0;
@@ -20,7 +20,7 @@ public class BeaconClientBuilder {
 	private String beaconCaChainPem = null;
 
 	public BeaconClient build() throws UnrecoverableKeyException {
-		return new BeaconClient(homunculus, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
+		return new BeaconClient(edgeAgentCore, rpcConversation, host, port, discoveryPort, discoveryFilter, uniqueName,
 				certChainFile, certFile, privateFile, aliasBeaconClientInKeystore, beaconCaChainPem);
 	}
 
@@ -44,8 +44,8 @@ public class BeaconClientBuilder {
 		return discoveryPort;
 	}
 
-	public Homunculus getHomunculus() {
-		return homunculus;
+	public EdgeAgentCore getHomunculus() {
+		return edgeAgentCore;
 	}
 
 	public String getHost() {
@@ -98,8 +98,8 @@ public class BeaconClientBuilder {
 		return this;
 	}
 
-	public BeaconClientBuilder setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public BeaconClientBuilder setHomunculus(EdgeAgentCore edgeAgentCore) {
+		this.edgeAgentCore = edgeAgentCore;
 		return this;
 	}
 

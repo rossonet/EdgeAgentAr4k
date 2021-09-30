@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.ServiceConfig;
@@ -221,8 +222,8 @@ public class DroolsService implements EdgeComponent {
 
 	private void registerBean() {
 		try {
-			if (Homunculus.getApplicationContext() != null)
-				((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+			if (EdgeAgentCore.getApplicationContextStatic() != null)
+				((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
 						.registerSingleton(configuration.beanName, this);
 			else
 				logger.warn("Starting without Spring context");
@@ -233,8 +234,8 @@ public class DroolsService implements EdgeComponent {
 
 	private void deregisterBean() {
 		try {
-			if (Homunculus.getApplicationContext() != null)
-				((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+			if (EdgeAgentCore.getApplicationContextStatic() != null)
+				((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
 						.destroyBean(this);
 			else
 				logger.warn("Starting without Spring context");

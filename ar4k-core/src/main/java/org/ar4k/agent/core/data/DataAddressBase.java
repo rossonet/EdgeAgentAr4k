@@ -9,21 +9,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.messaging.MessageChannel;
 
-public class DataAddress implements AutoCloseable {
+public class DataAddressBase implements DataAddress {
 
-	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataAddress.class);
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DataAddressBase.class);
 
 	protected final Homunculus homunculus;
 
 	protected DataServiceOwner serviceOwner;
 
-	public DataAddress(Homunculus homunculus, DataServiceOwner serviceOwner) {
+	public DataAddressBase(Homunculus homunculus, DataServiceOwner serviceOwner) {
 		dataChannels.clear();
 		this.homunculus = homunculus;
 		this.serviceOwner = serviceOwner;
@@ -48,7 +49,7 @@ public class DataAddress implements AutoCloseable {
 		return result;
 	}
 
-	public Collection<EdgeChannel> getDataChannels(DataChannelFilter filter) {
+	public Collection<EdgeChannel> getDataChannels(IDataChannelFilter filter) {
 		final List<EdgeChannel> result = new ArrayList<>();
 		for (final EdgeChannel singleChannel : getDataChannels()) {
 			if (filter.filtersMatch(singleChannel)) {
@@ -173,7 +174,7 @@ public class DataAddress implements AutoCloseable {
 
 	public Collection<String> listSpringIntegrationChannels() {
 		final Collection<String> result = new ArrayList<>();
-		for (final Entry<String, MessageChannel> s : Homunculus.getApplicationContext()
+		for (final Entry<String, MessageChannel> s : EdgeAgentCore.getApplicationContextStatic()
 				.getBeansOfType(MessageChannel.class).entrySet()) {
 			result.add(s.getKey() + " -> " + s.getValue());
 		}
@@ -205,7 +206,7 @@ public class DataAddress implements AutoCloseable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DataAddress [");
+		builder.append("DataAddressBase [");
 		builder.append("serviceOwner=");
 		builder.append(serviceOwner.getServiceName());
 		builder.append(", defaultScope=");

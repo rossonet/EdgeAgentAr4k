@@ -1,2 +1,2 @@
-org.springframework.context.ApplicationListener=org.ar4k.agent.core.Homunculus
+org.springframework.context.ApplicationListener=org.ar4k.agent.core.EdgeAgentCore
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.ar4k.agent.spring.autoconfig.EdgeAutoConfiguration

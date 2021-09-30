@@ -1,4 +1,4 @@
-description = "Rules Engine component"
+description = "Rules Engine and AI components"
 
 dependencies {
 	compile project(':ar4k-core')

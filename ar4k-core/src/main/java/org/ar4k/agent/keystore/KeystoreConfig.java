@@ -33,7 +33,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.core.ConfigSeed;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.exception.EdgeException;
 import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.logger.EdgeLogger;
@@ -51,7 +51,7 @@ import com.beust.jcommander.Parameter;
  *         Classe configurazione per keystore.
  *
  */
-public class KeystoreConfig implements ConfigSeed {
+public class KeystoreConfig implements ConfigSeed, IKeystoreConfig {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(KeystoreConfig.class);
 
@@ -69,7 +69,7 @@ public class KeystoreConfig implements ConfigSeed {
 	public List<String> tags = new ArrayList<>();
 
 	@Parameter(names = "--filePath", description = "file path for the keystore")
-	public String filePathPre = Homunculus.DEFAULT_KS_PATH;
+	public String filePathPre = EdgeAgentCore.DEFAULT_KS_PATH;
 
 	@Parameter(names = "--keystorePassword", description = "keystore password")
 	public String keystorePassword = "secA4.rk!8";
@@ -80,10 +80,12 @@ public class KeystoreConfig implements ConfigSeed {
 	@Parameter(names = "--caAlias", description = "main cert for the keystore")
 	public String keyStoreAlias = "ca";
 
+	@Override
 	public String filePath() {
 		return filePathPre.replace("~", System.getProperty("user.home"));
 	}
 
+	@Override
 	public boolean check() {
 		boolean verifica = false;
 		try {
@@ -108,6 +110,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return verifica;
 	}
 
+	@Override
 	public boolean create(String commonName, String organization, String unit, String locality, String state,
 			String country, String uri, String dns, String ip, String alias, boolean isCa, int validityDays) {
 		boolean verifica = false;
@@ -120,6 +123,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return verifica;
 	}
 
+	@Override
 	public PrivateKey getPrivateKey(String alias) {
 		PrivateKey ritorno = null;
 		try {
@@ -131,6 +135,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public KeyPair getKeyPair(String alias) {
 		KeyPair ritorno = null;
 		try {
@@ -142,6 +147,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String getPrivateKeyBase64(String alias) {
 		String ritorno = null;
 		try {
@@ -153,6 +159,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public X509Certificate getClientCertificate(String alias) {
 		X509Certificate ritorno = null;
 		try {
@@ -165,6 +172,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String getCaPem(String alias) {
 		String ritorno = null;
 		try {
@@ -176,6 +184,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String getClientCertificateBase64(String alias) {
 		String ritorno = null;
 		try {
@@ -187,6 +196,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public PKCS10CertificationRequest getPKCS10CertificationRequest(String alias) {
 		PKCS10CertificationRequest ritorno = null;
 		try {
@@ -198,6 +208,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String getPKCS10CertificationRequestBase64(String alias) {
 		String ritorno = null;
 		try {
@@ -209,18 +220,21 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public boolean setClientKeyPair(String key, String crt, String alias) throws NoSuchAlgorithmException {
 		boolean ritorno = false;
 		ritorno = KeystoreLoader.setClientKeyPair(key, crt, alias, filePath(), keystorePassword);
 		return ritorno;
 	}
 
+	@Override
 	public boolean setCa(String crt, String alias) {
 		boolean ritorno = false;
 		ritorno = KeystoreLoader.setCA(crt, alias, filePath(), keystorePassword);
 		return ritorno;
 	}
 
+	@Override
 	public boolean createSelfSignedCert(String commonName, String organization, String unit, String locality,
 			String state, String country, String uri, String dns, String ip, String alias, boolean isCa,
 			int validityDays) {
@@ -234,6 +248,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
 			String caAlias) {
 		X509Certificate ritorno = null;
@@ -241,6 +256,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public X509Certificate signCertificate(PKCS10CertificationRequest csr, String targetAlias, int validity,
 			String caAlias, PrivateKey privateKey) {
 		X509Certificate ritorno = null;
@@ -249,6 +265,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String signCertificateBase64(PKCS10CertificationRequest csr, String targetAlias, int validity,
 			String caAlias) {
 		String ritorno = null;
@@ -263,6 +280,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String signCertificateBase64(String csr, String targetAlias, int validity, String caAlias) {
 		String ritorno = null;
 		try {
@@ -287,6 +305,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public List<String> listCertificate() {
 		List<String> ritorno = null;
 		try {
@@ -298,6 +317,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return ritorno;
 	}
 
+	@Override
 	public String toBase64() {
 		String risposta = null;
 		try {
@@ -308,6 +328,7 @@ public class KeystoreConfig implements ConfigSeed {
 		return risposta;
 	}
 
+	@Override
 	public void FromBase64(String FileContentBite) {
 		byte[] data = Base64.getDecoder().decode(FileContentBite);
 		try {
@@ -352,6 +373,21 @@ public class KeystoreConfig implements ConfigSeed {
 	@Override
 	public List<String> getTags() {
 		return tags;
+	}
+
+	@Override
+	public String getKeystorePassword() {
+		return keystorePassword;
+	}
+
+	@Override
+	public String getLabel() {
+		return label;
+	}
+
+	@Override
+	public String getFilePathPre() {
+		return filePathPre;
 	}
 
 }

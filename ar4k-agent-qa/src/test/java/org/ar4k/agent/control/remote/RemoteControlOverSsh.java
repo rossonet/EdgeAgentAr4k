@@ -341,11 +341,10 @@ public class RemoteControlOverSsh {
 		sshLeft.password = "password";
 		clientOneConfig.pots.add(sshLeft);
 
-		testAnimas
-				.put(SERVER_LABEL,
-						executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log",
-								keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
-								signServerAliasInKeystore, null)).get());
+		testAnimas.put(SERVER_LABEL,
+				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log",
+						keyStoreServer.getAbsolutePath(), 1124, baseArgs, serverConfig, serverAliasInKeystore,
+						signServerAliasInKeystore, null)).get());
 		testAnimas.put(CLIENT2_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "b.log",
 						keyStoreClient2.getAbsolutePath(), 1125, baseArgsClientTwo, clientTwoConfig,

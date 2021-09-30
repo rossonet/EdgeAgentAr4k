@@ -17,7 +17,7 @@ package org.ar4k.qa.tests;
 import java.io.IOException;
 import java.util.Map;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.mattermost.model.Channel;
@@ -52,7 +52,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -63,12 +63,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class MattermostConnectionAndInteraction {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	@Before
 	public void setUp() throws Exception {
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	@After
@@ -88,20 +88,20 @@ public class MattermostConnectionAndInteraction {
 	@Ignore
 	public void checkTestConnection() throws InterruptedException, IOException {
 		Thread.sleep(5000);
-		System.out.println("***************************** " + homunculus.getMattermostClient().getMe());
+		System.out.println("***************************** " + edgeAgentCore.getMattermostClient().getMe());
 		int counter = 0;
 		boolean activeReport = false;
 		while (counter++ < 100) {
 			if (activeReport) {
 				System.out.println("\n--- REPORT STATUS ---");
 				System.out.println("			teams");
-				final Map<String, Team> teams = homunculus.getMattermostClient().getTeams();
+				final Map<String, Team> teams = edgeAgentCore.getMattermostClient().getTeams();
 				for (final Team t : teams.values()) {
 					System.out.println(t.getDisplayName());
 				}
 				System.out.println("			channels");
-				final Map<String, User> users = homunculus.getMattermostClient().getUsers();
-				final Map<String, Channel> channels = homunculus.getMattermostClient().getChannels();
+				final Map<String, User> users = edgeAgentCore.getMattermostClient().getUsers();
+				final Map<String, Channel> channels = edgeAgentCore.getMattermostClient().getChannels();
 				for (final Channel c : channels.values()) {
 					System.out.println(
 							c.getCreateAt() + " -> " + (c.getDisplayName() != null ? c.getDisplayName() : c.getName())
@@ -113,7 +113,7 @@ public class MattermostConnectionAndInteraction {
 							+ u.getNickname() + "]");
 				}
 				System.out.println("			posts");
-				final Map<String, Post> posts = homunculus.getMattermostClient().getPosts();
+				final Map<String, Post> posts = edgeAgentCore.getMattermostClient().getPosts();
 				for (final Post m : posts.values()) {
 					System.out.println(users.get(m.getUserId()).getUsername() + " -> "
 							+ channels.get(m.getChannelId()).getDisplayName() + " : " + m.getMessage());

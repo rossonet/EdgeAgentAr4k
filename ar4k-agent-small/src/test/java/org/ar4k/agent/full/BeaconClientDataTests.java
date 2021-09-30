@@ -25,7 +25,7 @@ import org.ar4k.agent.config.network.NetworkConfig.NetworkProtocol;
 import org.ar4k.agent.config.network.NetworkTunnel;
 import org.ar4k.agent.console.Ar4kAgentSmall;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.data.DataAddressHomunculus;
+import org.ar4k.agent.core.data.DataAddressSystem;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.KeystoreLoader;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
@@ -311,7 +311,7 @@ public class BeaconClientDataTests {
 			System.out.println("agent found by test -> " + a.getAgentUniqueName());
 			agentToQuery = a.getAgentUniqueName();
 		}
-		final DataAddressHomunculus targetDataAddress = testAnimas.get(SERVER_LABEL).getDataAddress();
+		final DataAddressSystem targetDataAddress = testAnimas.get(SERVER_LABEL).getDataAddress();
 		System.out.println("OBJECT: " + targetDataAddress);
 		System.out.println("listChannels: " + targetDataAddress.listChannels());
 		System.out.println("getDataChannels: " + targetDataAddress.getDataChannels());

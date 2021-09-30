@@ -22,6 +22,7 @@ import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
@@ -54,7 +55,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	private SshdHomunculusConfig configuration = null;
 	private DataAddress dataspace = null;
 
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 
 	private SshServer server = null;
 
@@ -115,7 +116,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -127,7 +128,7 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	public void init() {
 		setDataspace();
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
+		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculusBase);
 		server.setPasswordAuthenticator(passwordAuthenticator);
 		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
@@ -137,8 +138,8 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
 		logger.warn("keys for sshd server generated");
 		final HomunculusShellFactory shellFactory = new HomunculusShellFactory(
-				Homunculus.getApplicationContext().getBean(Homunculus.class),
-				Homunculus.getApplicationContext().getBean(Shell.class));
+				EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class),
+				EdgeAgentCore.getApplicationContextStatic().getBean(Shell.class));
 		server.setShellFactory(shellFactory);
 		server.addCloseFutureListener(this);
 		server.addSessionListener(this);
@@ -155,14 +156,14 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 
 	private void setDataspace() {
 		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"requested command on ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"requested command on ssh", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "request"), getConfiguration().getTags()),
 				this);
 		replyCommandChannel = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
-				"reply command to ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"reply command to ssh", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "reply"), getConfiguration().getTags()), this);
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of ssh connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"status of ssh connection", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-homunculus", "status"), getConfiguration().getTags()), this);
 	}
 
@@ -199,13 +200,13 @@ public class SshdHomunculusService implements EdgeComponent, SshFutureListener<C
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		dataspace = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override

@@ -9,14 +9,13 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.ar4k.agent.core.data.DataChannelFilter;
-import org.ar4k.agent.core.data.DataChannelFilter.Label;
-import org.ar4k.agent.core.data.DataChannelFilter.Operator;
+import org.ar4k.agent.core.data.IDataChannelFilter.Label;
+import org.ar4k.agent.core.data.IDataChannelFilter.Operator;
 import org.ar4k.agent.core.data.FilterLine;
 import org.ar4k.grammar.DataFilterLexer;
 import org.ar4k.grammar.DataFilterParser;
 
 public final class StringUtils {
-
 
 	private StringUtils() {
 		throw new UnsupportedOperationException("Just for static usage");
@@ -114,7 +113,5 @@ public final class StringUtils {
 		}
 		return new FilterLine(filterGlobalOperator, filterLabel, valuesToCheck, filterOperator);
 	}
-
-
 
 }

@@ -29,15 +29,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.data.DataBag;
 import org.ar4k.agent.core.data.DataChannelFilter;
-import org.ar4k.agent.core.data.DataChannelFilter.Label;
-import org.ar4k.agent.core.data.DataChannelFilter.Operator;
+import org.ar4k.agent.core.data.IDataChannelFilter.Label;
+import org.ar4k.agent.core.data.IDataChannelFilter.Operator;
 import org.ar4k.agent.core.data.FilterLine;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
@@ -86,7 +86,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -97,7 +97,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class DataSimulatorTests implements MessageHandler {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	final String fileName = "/tmp/test-data-simulator.ar4k";
 	final String dataBagFile = "/tmp/test-databag.bin";
@@ -108,7 +108,7 @@ public class DataSimulatorTests implements MessageHandler {
 		Files.deleteIfExists(Paths.get(dataBagFile));
 		messages.clear();
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	@After
@@ -151,14 +151,15 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData"))
+				.subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -195,15 +196,15 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestBooleanData"))
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestBooleanData"))
 				.subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(10000);
 		boolean foundTrue = false;
 		boolean foundFalse = false;
@@ -246,14 +247,15 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData"))
+				.subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = true;
 		for (final Object single : messages) {
@@ -299,14 +301,14 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IDirectChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IDirectChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -346,14 +348,14 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IDirectChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IDirectChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = true;
 		for (final Object single : messages) {
@@ -400,14 +402,15 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData"))
+				.subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {
@@ -462,14 +465,14 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s2);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestDataGood"))
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestDataGood"))
 				.subscribe(this);
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestDataBad"))
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestDataBad"))
 				.subscribe(this);
 		final List<FilterLine> filters = new ArrayList<>();
 		final FilterLine tagLine = new FilterLine(Operator.AND, Label.TAG, Lists.list("prova", "single-point", "good"),
@@ -481,9 +484,9 @@ public class DataSimulatorTests implements MessageHandler {
 				Operator.AND);
 		filters.add(nameSpaceLine);
 		final DataChannelFilter dataChannelFilter = new DataChannelFilter(filters);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
-		final Collection<EdgeChannel> allChannels = homunculus.getDataAddress().getDataChannels(dataChannelFilter);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
+		final Collection<EdgeChannel> allChannels = edgeAgentCore.getDataAddress().getDataChannels(dataChannelFilter);
 		for (final EdgeChannel channel : allChannels) {
 			System.out.println("found -> " + channel);
 		}
@@ -512,13 +515,14 @@ public class DataSimulatorTests implements MessageHandler {
 		c3.pots.add(s3);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c3).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		messages.clear();
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
+		System.out.println(edgeAgentCore.getState());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData"))
+				.subscribe(this);
 		Thread.sleep(40000);
-		homunculus.sendEvent(HomunculusEvents.STOP);
+		edgeAgentCore.sendEvent(HomunculusEvents.STOP);
 		for (final Integer checkValue : Lists.newArrayList(5014, 5016, 5018, 5020, 5022, 5024, 5026, 5028, 5030, 5032,
 				5034, 5036, 5038, 5040, 5042, 5044, 5046, 5048, 5050, 5052)) {
 			boolean found = false;
@@ -564,14 +568,15 @@ public class DataSimulatorTests implements MessageHandler {
 		c.pots.add(s1);
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		System.out.println("configured channels -> " + homunculus.getDataAddress().listChannels());
-		((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("data-generator/TestData")).subscribe(this);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
+		System.out.println("configured channels -> " + edgeAgentCore.getDataAddress().listChannels());
+		((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("data-generator/TestData"))
+				.subscribe(this);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
 		Thread.sleep(20000);
 		boolean found = false;
 		for (final Object single : messages) {

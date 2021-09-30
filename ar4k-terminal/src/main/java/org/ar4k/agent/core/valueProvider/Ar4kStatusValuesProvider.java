@@ -37,11 +37,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class Ar4kStatusValuesProvider extends ValueProviderSupport {
 
-  private final static String[] VALUES = Stream.of(HomunculusStates.values()).map(HomunculusStates::name).toArray(String[]::new);
+	private final static String[] VALUES = Stream.of(HomunculusStates.values()).map(HomunculusStates::name)
+			.toArray(String[]::new);
 
-  @Override
-  public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-      String[] hints) {
-    return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
-  }
+	@Override
+	public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
+			String[] hints) {
+		return Arrays.stream(VALUES).map(CompletionProposal::new).collect(Collectors.toList());
+	}
 }

@@ -16,17 +16,17 @@ import org.springframework.security.core.Authentication;
  */
 public class HomunculusPasswordAuthenticator implements PasswordAuthenticator {
 
-	private final Homunculus homunculus;
+	private final Homunculus homunculusBase;
 
-	public HomunculusPasswordAuthenticator(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public HomunculusPasswordAuthenticator(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override
 	public boolean authenticate(String username, String password, ServerSession session)
 			throws PasswordChangeRequiredException, AsyncAuthException {
 		final UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
-		final Authentication result = homunculus.getAuthenticationManager().authenticate(request);
+		final Authentication result = homunculusBase.getAuthenticationManager().authenticate(request);
 		if (result.isAuthenticated()) {
 			return true;
 		} else {

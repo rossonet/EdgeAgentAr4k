@@ -3,7 +3,7 @@ package org.ar4k.agent.rpc;
 import java.util.List;
 import java.util.Map;
 
-import org.ar4k.agent.core.data.messages.InternalMessage;
+import org.ar4k.agent.core.data.messages.EdgeMessage;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.MethodTarget;
@@ -18,7 +18,7 @@ public interface RpcExecutor extends AutoCloseable {
 
   String elaborateMessage(String message);
 
-  InternalMessage<? extends String> elaborateMessage(InternalMessage<? extends String> message);
+  EdgeMessage<? extends String> elaborateMessage(EdgeMessage<? extends String> message);
 
   Map<String, MethodTarget> listCommands();
 

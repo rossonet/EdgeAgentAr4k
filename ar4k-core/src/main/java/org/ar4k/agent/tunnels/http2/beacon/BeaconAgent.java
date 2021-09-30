@@ -13,7 +13,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.RequestToAgent;
 import org.joda.time.Instant;
 import org.json.JSONObject;
 
-public class BeaconAgent implements AutoCloseable {
+public class BeaconAgent implements IBeaconAgent {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconAgent.class);
 
@@ -37,6 +37,7 @@ public class BeaconAgent implements AutoCloseable {
 		}
 	}
 
+	@Override
 	public void addRequestForAgent(RequestToAgent req) {
 		cmdCalls.offer(req);
 	}
@@ -46,10 +47,12 @@ public class BeaconAgent implements AutoCloseable {
 		cmdCalls.clear();
 	}
 
+	@Override
 	public String getAgentUniqueName() {
 		return registerReply.getRegisterCode();
 	}
 
+	@Override
 	public List<RequestToAgent> getCommandsToBeExecute() {
 		List<RequestToAgent> r = new ArrayList<>();
 		while (!cmdCalls.isEmpty()) {
@@ -59,35 +62,43 @@ public class BeaconAgent implements AutoCloseable {
 		return r;
 	}
 
+	@Override
 	public JSONObject getHardwareInfoAsJson() {
 		return hardwareInfo;
 	}
 
+	@Override
 	public Instant getLastCall() {
 		return lastCall;
 	}
 
+	@Override
 	public int getPollingFrequency() {
 		return registerReply.getMonitoringFrequency();
 	}
 
+	@Override
 	public RegisterReply getRegisterReply() {
 		return registerReply;
 	}
 
+	@Override
 	public RegisterRequest getRegisterRequest() {
 		return registerRequest;
 	}
 
+	@Override
 	public String getShortDescription() {
 		return "agent id: " + getAgentUniqueName() + ", last contact: " + lastCall + ", commands queue: "
 				+ cmdCalls.size();
 	}
 
+	@Override
 	public long getTimestampRegistration() {
 		return registerRequest.getTime().getSeconds();
 	}
 
+	@Override
 	public void setHardwareInfo(JSONObject hardwareInfo) {
 		this.hardwareInfo = hardwareInfo;
 	}

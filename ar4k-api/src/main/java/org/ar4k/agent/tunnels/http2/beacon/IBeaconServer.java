@@ -3,7 +3,7 @@ package org.ar4k.agent.tunnels.http2.beacon;
 import java.io.IOException;
 import java.util.List;
 
-import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.socket.server.ITunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 
@@ -17,7 +17,7 @@ public interface IBeaconServer {
 
 	String getStatus();
 
-	List<TunnelRunnerBeaconServer> getTunnels();
+	List<ITunnelRunnerBeaconServer> getTunnels();
 
 	CommandReplyRequest waitReply(String idRequest, long defaultTimeOut) throws InterruptedException;
 
@@ -29,7 +29,7 @@ public interface IBeaconServer {
 
 	void setDefaultPollTime(int defaultPollTime);
 
-	List<BeaconAgent> getAgentRegistered();
+	List<IBeaconAgent> getAgentRegistered();
 
 	void sendFlashUdp();
 

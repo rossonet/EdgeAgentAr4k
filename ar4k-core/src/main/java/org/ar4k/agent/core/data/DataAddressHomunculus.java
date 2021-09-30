@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
 import org.ar4k.agent.core.data.channels.IQueueChannel;
@@ -22,7 +22,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class DataAddressHomunculus extends DataAddress {
+public class DataAddressHomunculus extends DataAddressBase implements DataAddressSystem {
 
 	private static final String TIMER_HEALTH_DATA_ADDRESS = "TimerHealthDataAddress";
 
@@ -38,8 +38,8 @@ public class DataAddressHomunculus extends DataAddress {
 
 	private static final String COMMAND_TAG = "command-rpc";
 
-	public DataAddressHomunculus(Homunculus homunculus) {
-		super(homunculus, homunculus);
+	public DataAddressHomunculus(EdgeAgentCore edgeAgentCore) {
+		super(edgeAgentCore, edgeAgentCore);
 	}
 
 	// task per health
@@ -100,27 +100,27 @@ public class DataAddressHomunculus extends DataAddress {
 		super.close();
 	}
 
-	public void firstStart(Homunculus homunculus) {
+	public void firstStart(EdgeAgentCore edgeAgentCore) {
 		final List<String> tagList = new ArrayList<String>();
 		tagList.add(SYSTEM_TAG);
 		tagList.add(DIRECTORY_TAG);
 		tagList.add("homunculus");
-		tagList.addAll(homunculus.getTags());
+		tagList.addAll(edgeAgentCore.getTags());
 		systemChannel = createOrGetDataChannel("system", IPublishSubscribeChannel.class, "local JVM system",
-				getDefaultScope(), getDefaultScope(), tagList, homunculus);
+				getDefaultScope(), getDefaultScope(), tagList, edgeAgentCore);
 		tagList.add(LOGGER_TAG);
 		createOrGetDataChannel("logger", IPublishSubscribeChannel.class, "logger queue", systemChannel,
-				getDefaultScope(), tagList, homunculus);
+				getDefaultScope(), tagList, edgeAgentCore);
 		tagList.remove(LOGGER_TAG);
 		tagList.add(HEALTH_TAG);
 		createOrGetDataChannel("health", IPublishSubscribeChannel.class, "local machine hardware and software stats",
-				systemChannel, getDefaultScope(), tagList, homunculus);
+				systemChannel, getDefaultScope(), tagList, edgeAgentCore);
 		tagList.remove(HEALTH_TAG);
 		tagList.add(COMMAND_TAG);
 		createOrGetDataChannel("command", IQueueChannel.class, "RPC interface", systemChannel, getDefaultScope(),
-				tagList, homunculus);
+				tagList, edgeAgentCore);
 		// start health regular messages
-		repeatedTask.setHomunculus(homunculus);
+		repeatedTask.setHomunculus(edgeAgentCore);
 		timer.scheduleAtFixedRate(repeatedTask, delay, period);
 	}
 
@@ -136,10 +136,10 @@ public class DataAddressHomunculus extends DataAddress {
 
 	private class HealthTimer extends TimerTask {
 
-		private transient Homunculus homunculus = null;
+		private transient EdgeAgentCore edgeAgentCore = null;
 
-		public void setHomunculus(Homunculus homunculus) {
-			this.homunculus = homunculus;
+		public void setHomunculus(EdgeAgentCore edgeAgentCore) {
+			this.edgeAgentCore = edgeAgentCore;
 		}
 
 		@Override
@@ -154,19 +154,20 @@ public class DataAddressHomunculus extends DataAddress {
 
 		private void sendEvent(Map<String, Object> healthMessage) {
 			try {
-				if (homunculus == null && Homunculus.getApplicationContext() != null
-						&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null
-						&& Homunculus.getApplicationContext().getBean(Homunculus.class).getDataAddress() != null) {
-					homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+				if (edgeAgentCore == null && EdgeAgentCore.getApplicationContextStatic() != null
+						&& EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class) != null
+						&& EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class)
+								.getDataAddress() != null) {
+					edgeAgentCore = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class);
 				}
 			} catch (final Exception ee) {
 				logger.debug(EdgeLogger.stackTraceToString(ee));
 			}
-			if (homunculus != null && homunculus.getDataAddress() != null
-					&& homunculus.getDataAddress().getChannel("health") != null) {
+			if (edgeAgentCore != null && edgeAgentCore.getDataAddress() != null
+					&& edgeAgentCore.getDataAddress().getChannel("health") != null) {
 				final HealthMessage messageObject = new HealthMessage();
 				messageObject.setPayload(gson.toJson(healthMessage));
-				((IPublishSubscribeChannel) homunculus.getDataAddress().getChannel("health")).send(messageObject);
+				((IPublishSubscribeChannel) edgeAgentCore.getDataAddress().getChannel("health")).send(messageObject);
 			}
 		}
 	};

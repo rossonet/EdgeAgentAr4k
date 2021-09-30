@@ -5,7 +5,7 @@ import java.security.UnrecoverableKeyException;
 import org.ar4k.agent.core.Homunculus;
 
 public class BeaconServerBuilder {
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 	private int port = 0;
 	private int discoveryPort = 0;
 	private String broadcastAddress = null;
@@ -22,11 +22,11 @@ public class BeaconServerBuilder {
 	private String aliasBeaconServerSignMaster = null;
 
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
-	public BeaconServerBuilder setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public BeaconServerBuilder setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 		return this;
 	}
 
@@ -139,7 +139,7 @@ public class BeaconServerBuilder {
 	}
 
 	public BeaconServer build() throws UnrecoverableKeyException {
-		return new BeaconServer(homunculus, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
+		return new BeaconServer(homunculusBase, port, discoveryPort, broadcastAddress, acceptCerts, stringDiscovery,
 				certChainFile, certFile, privateKeyFile, aliasBeaconServerInKeystore, caChainPem, filterActiveCommand,
 				filterBlackListCertRegister, aliasBeaconServerSignMaster);
 	}

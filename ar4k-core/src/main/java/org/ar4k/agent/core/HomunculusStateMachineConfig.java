@@ -35,7 +35,7 @@ public class HomunculusStateMachineConfig
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(HomunculusStateMachineConfig.class);
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	@Override
 	public void configure(StateMachineConfigurationConfigurer<HomunculusStates, HomunculusEvents> config)
@@ -95,28 +95,28 @@ public class HomunculusStateMachineConfig
 			public void stateChanged(State<HomunculusStates, HomunculusEvents> from,
 					State<HomunculusStates, HomunculusEvents> to) {
 				// workaround Spring State Machine
-				if (homunculus.getState().equals(HomunculusStates.INIT)) {
-					homunculus.initAgent();
+				if (edgeAgentCore.getState().equals(HomunculusStates.INIT)) {
+					edgeAgentCore.initAgent();
 				}
-				if (homunculus.getState().equals(HomunculusStates.STAMINAL)) {
-					homunculus.startingAgent();
+				if (edgeAgentCore.getState().equals(HomunculusStates.STAMINAL)) {
+					edgeAgentCore.startingAgent();
 				}
-				if (homunculus.getState().equals(HomunculusStates.KILLED)) {
-					homunculus.finalizeAgent();
+				if (edgeAgentCore.getState().equals(HomunculusStates.KILLED)) {
+					edgeAgentCore.finalizeAgent();
 				}
-				if (homunculus.getState().equals(HomunculusStates.CONFIGURED)) {
-					homunculus.configureAgent();
+				if (edgeAgentCore.getState().equals(HomunculusStates.CONFIGURED)) {
+					edgeAgentCore.configureAgent();
 				}
-				if (homunculus.getState().equals(HomunculusStates.RUNNING)) {
-					homunculus.runPreScript();
-					homunculus.runServices();
-					homunculus.runPostScript();
-					homunculus.startCheckingNextConfig();
+				if (edgeAgentCore.getState().equals(HomunculusStates.RUNNING)) {
+					edgeAgentCore.runPreScript();
+					edgeAgentCore.runServices();
+					edgeAgentCore.runPostScript();
+					edgeAgentCore.startCheckingNextConfig();
 				}
-				if (homunculus.getState().equals(HomunculusStates.STASIS)) {
-					homunculus.prepareAgentStasis();
+				if (edgeAgentCore.getState().equals(HomunculusStates.STASIS)) {
+					edgeAgentCore.prepareAgentStasis();
 				}
-				homunculus.stateChanged();
+				edgeAgentCore.stateChanged();
 			}
 		};
 	}
@@ -128,7 +128,7 @@ public class HomunculusStateMachineConfig
 			@Override
 			public boolean evaluate(StateContext<HomunculusStates, HomunculusEvents> context) {
 				if (context.getEvent().equals(HomunculusEvents.SETCONF)) {
-					if (homunculus.getRuntimeConfig() != null) {
+					if (edgeAgentCore.getRuntimeConfig() != null) {
 						return true;
 					} else {
 						logger.error(
@@ -137,11 +137,11 @@ public class HomunculusStateMachineConfig
 					}
 				} else if (context.getEvent().equals(HomunculusEvents.RESTART)) {
 					logger.warn("The agent will be restarted. Please wait...");
-					homunculus.prepareRestart();
+					edgeAgentCore.prepareRestart();
 					return true;
 				} else if (context.getEvent().equals(HomunculusEvents.COMPLETE_RELOAD)) {
 					logger.warn("Agent reload starting. Please wait...");
-					homunculus.reloadAgent();
+					edgeAgentCore.reloadAgent();
 					return true;
 				} else {
 					return true;
@@ -159,8 +159,8 @@ public class HomunculusStateMachineConfig
 		return EnumSet.allOf(HomunculusStates.class);
 	}
 
-	public Homunculus getHomunculus() {
-		return homunculus;
+	public EdgeAgentCore getHomunculus() {
+		return edgeAgentCore;
 	}
 
 }

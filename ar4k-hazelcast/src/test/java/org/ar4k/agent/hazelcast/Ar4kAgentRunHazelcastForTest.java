@@ -28,12 +28,12 @@ import org.springframework.util.StringUtils;
 @ComponentScan("org.ar4k.agent")
 public class Ar4kAgentRunHazelcastForTest {
 
-  static final boolean running = true;
+	static final boolean running = true;
 
-  public static void main(String[] args) {
-    String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
-    String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
-    SpringApplication.run(Ar4kAgentRunHazelcastForTest.class, fullArgs);
-  }
+	public static void main(String[] args) {
+		String[] disabledCommands = { "--spring.shell.command.quit.enabled=false" };
+		String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
+		SpringApplication.run(Ar4kAgentRunHazelcastForTest.class, fullArgs);
+	}
 
 }

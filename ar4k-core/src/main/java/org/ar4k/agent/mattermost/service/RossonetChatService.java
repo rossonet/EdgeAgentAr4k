@@ -42,7 +42,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	// iniettata vedi set/get
 	private RossonetChatConfig configuration = null;
 
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 
 	private DataAddress dataspace = null;
 
@@ -87,26 +87,26 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	private void setDataspace() {
 		newUserChannel = dataspace.createOrGetDataChannel("user", IPublishSubscribeChannel.class,
-				"new users registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"new users registered or changed", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("new_user"), getConfiguration().getTags()), this);
 		newChannelChannel = dataspace.createOrGetDataChannel("channel", IPublishSubscribeChannel.class,
-				"new channel registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"new channel registered or changed", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("new_channel"), getConfiguration().getTags()), this);
 		newTeamChannel = dataspace.createOrGetDataChannel("team", IPublishSubscribeChannel.class,
-				"new team registered or changed", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"new team registered or changed", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("new_team"), getConfiguration().getTags()), this);
 		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"new messages received from remote", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"new messages received from remote", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("request", "received", "new_post", "new_message"),
 						getConfiguration().getTags()),
 				this);
 		writeCommandChannel = dataspace.createOrGetDataChannel("write", IPublishSubscribeChannel.class,
-				"command queue to send message to remote", homunculus.getDataAddress().getSystemChannel(),
+				"command queue to send message to remote", homunculusBase.getDataAddress().getSystemChannel(),
 				(String) null, ConfigHelper.mergeTags(Arrays.asList("send", "write"), getConfiguration().getTags()),
 				this);
 		((SubscribableChannel) writeCommandChannel.getChannel()).subscribe(this);
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of matermost connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"status of matermost connection", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("status", "text"), getConfiguration().getTags()), this);
 
 	}
@@ -147,7 +147,7 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -156,13 +156,13 @@ public class RossonetChatService implements EdgeComponent, MatterMostCallBack, M
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		dataspace = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override

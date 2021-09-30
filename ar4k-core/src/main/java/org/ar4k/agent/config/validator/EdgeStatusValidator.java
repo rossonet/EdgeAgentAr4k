@@ -28,16 +28,16 @@ import com.beust.jcommander.ParameterException;
  */
 public class EdgeStatusValidator implements IParameterValidator {
 
-  @Override
-  public void validate(String name, String value) throws ParameterException {
-    try {
-      HomunculusStates.valueOf(value);
-    } catch (java.lang.IllegalArgumentException aa) {
-      StringBuilder b = new StringBuilder();
-      EnumSet.allOf(HomunculusStates.class).forEach(v -> {
-        b.append(v.toString() + " ");
-      });
-      throw new ParameterException("Parameter " + name + " should be in " + b.toString());
-    }
-  }
+	@Override
+	public void validate(String name, String value) throws ParameterException {
+		try {
+			HomunculusStates.valueOf(value);
+		} catch (java.lang.IllegalArgumentException aa) {
+			StringBuilder b = new StringBuilder();
+			EnumSet.allOf(HomunculusStates.class).forEach(v -> {
+				b.append(v.toString() + " ");
+			});
+			throw new ParameterException("Parameter " + name + " should be in " + b.toString());
+		}
+	}
 }

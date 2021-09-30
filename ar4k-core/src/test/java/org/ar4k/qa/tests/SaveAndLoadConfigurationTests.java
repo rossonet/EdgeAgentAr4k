@@ -26,7 +26,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.ConfigSeed;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.helper.ConfigHelper;
@@ -60,7 +60,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -71,7 +71,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SaveAndLoadConfigurationTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	@Before
 	public void setUp() throws Exception {

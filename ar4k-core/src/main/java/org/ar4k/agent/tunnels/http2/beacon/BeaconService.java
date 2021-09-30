@@ -40,14 +40,14 @@ import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
  */
 public class BeaconService implements EdgeComponent {
 
-	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Homunculus.class);
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(BeaconService.class);
 
 	// iniettata vedi set/get
 	private BeaconServiceConfig configuration = null;
 
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 
-	private DataAddress dataAddress = null;
+	private DataAddress dataAddressBase = null;
 
 	private BeaconServer beaconServer = null;
 
@@ -71,12 +71,12 @@ public class BeaconService implements EdgeComponent {
 
 	@Override
 	public DataAddress getDataAddress() {
-		return dataAddress;
+		return dataAddressBase;
 	}
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class BeaconService implements EdgeComponent {
 		setDataspace();
 		try {
 			if (beaconServer == null) {
-				beaconServer = new BeaconServerBuilder().setHomunculus(homunculus).setPort(configuration.port)
+				beaconServer = new BeaconServerBuilder().setHomunculus(homunculusBase).setPort(configuration.port)
 						.setDiscoveryPort(configuration.discoveryPort).setCaChainPem(configuration.caChainPem)
 						.setAliasBeaconServerInKeystore(configuration.aliasBeaconServerInKeystore)
 						.setPrivateKeyFile(configuration.privateKeyFile).setCertFile(configuration.certFile)
@@ -102,8 +102,8 @@ public class BeaconService implements EdgeComponent {
 	}
 
 	private void setDataspace() {
-		statusChannel = dataAddress.createOrGetDataChannel("statusChannel", IPublishSubscribeChannel.class,
-				"statusChannel of beacon server", homunculus.getDataAddress().getSystemChannel(), (String) null,
+		statusChannel = dataAddressBase.createOrGetDataChannel("statusChannel", IPublishSubscribeChannel.class,
+				"statusChannel of beacon server", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("beacon-service", "status"), getConfiguration().getTags()), this);
 	}
 
@@ -121,13 +121,13 @@ public class BeaconService implements EdgeComponent {
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		this.dataAddress = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		this.dataAddressBase = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override

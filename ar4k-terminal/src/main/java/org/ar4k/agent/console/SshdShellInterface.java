@@ -23,7 +23,7 @@ import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.shell.ProcessShellFactory;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.tunnels.sshd.HomunculusShellFactory;
 import org.ar4k.agent.tunnels.sshd.SshdHomunculusConfig;
@@ -112,7 +112,7 @@ public class SshdShellInterface extends AbstractShellHelper {
 		server.setPort(port);
 		server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
 		HomunculusShellFactory shellFactory = new HomunculusShellFactory(
-				Homunculus.getApplicationContext().getBean(Homunculus.class), this.shell);
+				EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class), this.shell);
 		server.setShellFactory(shellFactory);
 		try {
 			server.start();

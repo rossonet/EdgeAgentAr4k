@@ -5,17 +5,9 @@ import java.util.List;
 
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 
-public class DataChannelFilter {
-	
-	//TODO verificare bene i filtri con una serie di test
+public class DataChannelFilter implements IDataChannelFilter {
 
-	public enum Operator {
-		OR, AND, AND_NOT, OR_NOT
-	}
-
-	public enum Label {
-		TAG, DOMAIN, NAME_SPACE, STATUS, SERVICE_NAME, SERVICE_CLASS, BASE_NAME
-	}
+	// TODO verificare bene i filtri con una serie di test
 
 	private final List<FilterLine> filters;
 

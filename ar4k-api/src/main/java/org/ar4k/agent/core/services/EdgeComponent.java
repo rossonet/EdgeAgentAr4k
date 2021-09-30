@@ -26,9 +26,9 @@ public interface EdgeComponent extends DataServiceOwner, AutoCloseable {
 
 	Homunculus getHomunculus();
 
-	void setDataAddress(DataAddress dataAddress);
+	void setDataAddress(DataAddress dataAddressBase);
 
-	void setHomunculus(Homunculus homunculus);
+	void setHomunculus(Homunculus homunculusBase);
 
 	ServiceConfig getConfiguration();
 

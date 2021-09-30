@@ -2,12 +2,12 @@ package org.ar4k.agent.tunnels.http2.beacon;
 
 import java.util.List;
 
-import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.network.NetworkConfig;
 import org.ar4k.agent.config.network.NetworkTunnel;
-import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.ConfigSeed;
+import org.ar4k.agent.core.IRpcConversation;
 import org.ar4k.agent.core.data.DataServiceOwner;
-import org.ar4k.agent.tunnels.http2.beacon.client.RemoteBeaconRpcExecutor;
+import org.ar4k.agent.tunnels.http2.beacon.client.IRemoteBeaconRpcExecutor;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CompleteCommandReply;
@@ -22,7 +22,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.StatusValue;
 
 import io.grpc.ConnectivityState;
 
-public interface IBeaconClient extends DataServiceOwner {
+public interface IBeaconClient extends DataServiceOwner, AutoCloseable {
 
 	void closeNetworkTunnel(long targetId);
 
@@ -50,7 +50,7 @@ public interface IBeaconClient extends DataServiceOwner {
 
 	String getHostTarget();
 
-	RpcConversation getLocalExecutor();
+	IRpcConversation getLocalExecutor();
 
 	NetworkTunnel getNewNetworkTunnel(String agentId, NetworkConfig config);
 
@@ -62,9 +62,9 @@ public interface IBeaconClient extends DataServiceOwner {
 
 	StatusValue getRegistrationStatus();
 
-	RemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
+	IRemoteBeaconRpcExecutor getRemoteExecutor(Agent agent);
 
-	List<RemoteBeaconRpcExecutor> getRemoteExecutors();
+	List<IRemoteBeaconRpcExecutor> getRemoteExecutors();
 
 	String getReservedUniqueName();
 
@@ -88,7 +88,7 @@ public interface IBeaconClient extends DataServiceOwner {
 
 	CompleteCommandReply runCompletitionOnAgent(String agentUniqueName, String command);
 
-	ConfigReply sendConfigToAgent(String agentId, EdgeConfig newConfig);
+	ConfigReply sendConfigToAgent(String agentId, ConfigSeed newConfig);
 
 	void sendException(Exception message);
 
@@ -98,7 +98,7 @@ public interface IBeaconClient extends DataServiceOwner {
 
 	void setDiscoveryPort(int discoveryPort);
 
-	void setRemoteExecutors(List<RemoteBeaconRpcExecutor> remoteExecutors);
+	void setRemoteExecutors(List<IRemoteBeaconRpcExecutor> remoteExecutors);
 
 	void setReservedUniqueName(String reservedUniqueName);
 

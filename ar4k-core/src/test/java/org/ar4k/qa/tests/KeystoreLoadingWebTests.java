@@ -24,10 +24,10 @@ import java.nio.file.StandardOpenOption;
 import java.security.cert.CertificateEncodingException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
@@ -59,7 +59,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -70,12 +70,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class KeystoreLoadingWebTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	@Before
 	public void setUp() throws Exception {
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	@After
@@ -94,19 +94,22 @@ public class KeystoreLoadingWebTests {
 	@Test
 	public void downloadKeystoreWeb() throws InterruptedException {
 		Thread.sleep(5000L);
-		assertTrue(homunculus.getMyIdentityKeystore().check());
+		assertTrue(edgeAgentCore.getMyIdentityKeystore().check());
 		System.out.println(
-				homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
-		assertEquals(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
+				edgeAgentCore.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
+		assertEquals(
+				edgeAgentCore.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
 				"C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertTrue("pcryptoAA".equals(homunculus.getRuntimeConfig().author));
-		assertTrue("webconfig".equals(homunculus.getRuntimeConfig().name));
-		assertTrue("AFYU8K".equals(homunculus.getRuntimeConfig().tagVersion));
-		System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
-		assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-		System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
-		assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
+		assertEquals(HomunculusStates.RUNNING, edgeAgentCore.getState());
+		assertTrue("pcryptoAA".equals(edgeAgentCore.getRuntimeConfig().author));
+		assertTrue("webconfig".equals(edgeAgentCore.getRuntimeConfig().name));
+		assertTrue("AFYU8K".equals(edgeAgentCore.getRuntimeConfig().tagVersion));
+		System.out.println(
+				"NOTE 0 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note);
+		assertTrue("345F".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note));
+		System.out.println(
+				"NOTE 1 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note);
+		assertTrue("345F".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note));
 	}
 
 	@Test

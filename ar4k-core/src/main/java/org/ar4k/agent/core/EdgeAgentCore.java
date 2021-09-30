@@ -53,7 +53,6 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.commons.io.FileUtils;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.data.DataAddressHomunculus;
-import org.ar4k.agent.core.data.DataServiceOwner;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.HomunculusService;
 import org.ar4k.agent.core.services.ServiceComponent;
@@ -61,6 +60,7 @@ import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.helper.ContextCreationHelper;
 import org.ar4k.agent.helper.IOUtils;
+import org.ar4k.agent.keystore.IKeystoreConfig;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -77,13 +77,10 @@ import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
 import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClientBuilder;
 import org.bouncycastle.cms.CMSException;
 import org.joda.time.Instant;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.jms.annotation.EnableJms;
@@ -114,22 +111,8 @@ import jdbm.RecordManagerFactory;
 @Scope("singleton")
 @EnableJms
 @EnableConfigurationProperties(EdgeStarterProperties.class)
-public class Homunculus implements ApplicationContextAware, ApplicationListener<ApplicationEvent>, BeanNameAware,
-		AutoCloseable, DataServiceOwner {
-
-	public enum HomunculusEvents {
-		BOOTSTRAP, COMPLETE_RELOAD, EXCEPTION, HIBERNATION, PAUSE, RESTART, SETCONF, START, STOP
-	}
-
-	// tipi di router interno supportato per gestire lo scambio dei messagi tra gli
-	// agenti, per la definizione della policy security sul routing public
-	public enum HomunculusRouterType {
-		DEVELOP, NONE, PRODUCTION, ROAD
-	}
-
-	public enum HomunculusStates {
-		CONFIGURED, FAULTED, INIT, KILLED, RUNNING, STAMINAL, STASIS
-	}
+public class EdgeAgentCore
+		implements Homunculus {
 
 	public static final String DEFAULT_KS_PATH = "default-new.ks";
 
@@ -139,7 +122,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 	private static ApplicationContext applicationContext;
 	private static final String DB_DATASTORE_NAME = "datastore";
 
-	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(Homunculus.class);
+	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(EdgeAgentCore.class);
 
 	private static final String REGISTRATION_PIN = ConfigHelper.createRandomRegistryId();
 
@@ -185,7 +168,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 
 	private String myAliasCertInKeystore = "agent";
 
-	private KeystoreConfig myIdentityKeystore = null;
+	private IKeystoreConfig myIdentityKeystore = null;
 
 	private boolean onApplicationEventFlag = false;
 
@@ -234,7 +217,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		}
 	}
 
-	public BeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
+	public IBeaconClient connectToBeaconService(String urlBeacon, String beaconCaChainPem, int discoveryPort,
 			String discoveryFilter, boolean force) {
 		URL urlTarget = null;
 		BeaconClient beaconClientTarget = null;
@@ -396,7 +379,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		return myAliasCertInKeystore;
 	}
 
-	public KeystoreConfig getMyIdentityKeystore() {
+	public IKeystoreConfig getMyIdentityKeystore() {
 		return myIdentityKeystore;
 	}
 
@@ -451,8 +434,8 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 				: HomunculusStates.INIT;
 	}
 
-	public Class<Homunculus> getStaticClass() {
-		return Homunculus.class;
+	public Class<EdgeAgentCore> getStaticClass() {
+		return EdgeAgentCore.class;
 	}
 
 	public List<String> getTags() {
@@ -543,12 +526,12 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		this.myAliasCertInKeystore = myAliasCertInKeystore;
 	}
 
-	public void setMyIdentityKeystore(KeystoreConfig myIdentityKeystore) {
+	public void setMyIdentityKeystore(IKeystoreConfig myIdentityKeystore) {
 		this.myIdentityKeystore = myIdentityKeystore;
 	}
 
-	public void setTargetConfig(EdgeConfig config) {
-		targetConfig = config;
+	public void setTargetConfig(ConfigSeed config) {
+		targetConfig = (EdgeConfig) config;
 	}
 
 	public void terminateSession(String sessionId) {
@@ -559,7 +542,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Homunculus [");
+		builder.append("EdgeAgentCore [");
 		if (agentUniqueName != null)
 			builder.append("agentUniqueName=").append(agentUniqueName).append(", ");
 		if (homunculusStateMachine != null)
@@ -817,10 +800,10 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 						.createRecordManager(ConfigHelper.resolveWorkingString(starterProperties.getConfPath(), true)
 								+ "/" + starterProperties.getHomunculusDatastoreFileName());
 				dataStore = recMan.treeMap(DB_DATASTORE_NAME);
-				logger.info("datastore on Homunculus started");
+				logger.info("datastore on EdgeAgentCore started");
 			}
 		} catch (final IOException e) {
-			logger.logException("datastore on Homunculus problem", e);
+			logger.logException("datastore on EdgeAgentCore problem", e);
 		}
 		setMasterKeystore();
 		bootstrapConfig = resolveBootstrapConfig();
@@ -847,7 +830,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 	// workaround Spring State Machine
 	// @OnStateChanged()
 	synchronized void stateChanged() {
-		logger.info("State change in Homunculus to " + getState());
+		logger.info("State change in EdgeAgentCore to " + getState());
 		statesBefore.put(new Instant(), getState());
 	}
 
@@ -866,7 +849,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 				logger.info("TRY CONNECTION TO BEACON IN CONFIG RUNTIME AT "
 						+ ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
 								false, indexBeaconClient));
-				beaconClient = connectToBeaconService(
+				beaconClient = (BeaconClient) connectToBeaconService(
 						ConfigHelper.resolveWorkingStringSplittedByComma(filterBeaconUrl(runtimeConfig.beaconServer),
 								false, indexBeaconClient),
 						runtimeConfig.beaconServerCertChain, Integer.valueOf(runtimeConfig.beaconDiscoveryPort),
@@ -892,7 +875,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 					}
 					logger.info("TRY CONNECTION TO BEACON AT " + ConfigHelper.resolveWorkingStringSplittedByComma(
 							filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false, indexBeaconClient));
-					beaconClient = connectToBeaconService(
+					beaconClient = (BeaconClient) connectToBeaconService(
 							ConfigHelper.resolveWorkingStringSplittedByComma(
 									filterBeaconUrl(starterProperties.getWebRegistrationEndpoint()), false,
 									indexBeaconClient),
@@ -960,7 +943,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		try {
 			recMan.close();
 		} catch (final IOException e) {
-			logger.info("IOException closing file data map of Homunculus");
+			logger.info("IOException closing file data map of EdgeAgentCore");
 		}
 	}
 
@@ -1295,9 +1278,9 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 			}
 			setMyIdentityKeystore(ks);
 			setMyAliasCertInKeystore(ks.keyStoreAlias);
-			logger.info(
-					"Certificate for Homunculus: " + ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal()
-							+ " - alias " + ks.keyStoreAlias);
+			logger.info("Certificate for EdgeAgentCore: "
+					+ ks.getClientCertificate(ks.keyStoreAlias).getSubjectX500Principal() + " - alias "
+					+ ks.keyStoreAlias);
 		} else {
 			logger.info("Use keystore " + myIdentityKeystore.toString());
 		}
@@ -1356,7 +1339,7 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 		return ConfigHelper.resolveWorkingString(starterProperties.getWebKeystore(), false);
 	}
 
-	public static ApplicationContext getApplicationContext() {
+	public static ApplicationContext getApplicationContextStatic() {
 		return applicationContext;
 	}
 
@@ -1373,11 +1356,16 @@ public class Homunculus implements ApplicationContextAware, ApplicationListener<
 	}
 
 	static synchronized void updateApplicationContext(ApplicationContext applicationContext) {
-		Homunculus.applicationContext = applicationContext;
+		EdgeAgentCore.applicationContext = applicationContext;
 	}
 
 	public HomunculusSession getHomunculusSession() {
 		return homunculusSession;
+	}
+
+	@Override
+	public ApplicationContext getApplicationContext() {
+		return getApplicationContextStatic();
 	}
 
 }

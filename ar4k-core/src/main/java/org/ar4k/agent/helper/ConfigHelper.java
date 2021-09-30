@@ -25,7 +25,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.config.json.PotInterfaceAdapter;
 import org.ar4k.agent.core.ConfigSeed;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -170,7 +170,7 @@ public class ConfigHelper {
 
 	public static ConfigSeed fromBase64Crypto(String base64RsaConfig, String aliasKey)
 			throws ClassNotFoundException, IOException, CMSException, NoSuchAlgorithmException, NoSuchPaddingException {
-		final PrivateKey key = Homunculus.getApplicationContext().getBean(Homunculus.class).getMyIdentityKeystore()
+		final PrivateKey key = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class).getMyIdentityKeystore()
 				.getPrivateKey(aliasKey);
 		return fromBase64(new String(decryptData(Base64.getDecoder().decode(base64RsaConfig), key)));
 	}
@@ -225,7 +225,7 @@ public class ConfigHelper {
 		String resultString = null;
 		if (isFile) {
 			resultString = input.replace(DEFAULT_PATH,
-					Homunculus.getApplicationContext().getBean(Homunculus.class).getStarterProperties().getConfPath())
+					EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class).getStarterProperties().getConfPath())
 					.replace(TILDE, USER_HOME);
 		} else {
 			resultString = input;
@@ -248,7 +248,7 @@ public class ConfigHelper {
 
 	public static String toBase64Crypto(Object configObject, String aliasKey)
 			throws CertificateEncodingException, UnsupportedEncodingException, CMSException, IOException {
-		final X509Certificate certificate = Homunculus.getApplicationContext().getBean(Homunculus.class)
+		final X509Certificate certificate = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class)
 				.getMyIdentityKeystore().getClientCertificate(aliasKey);
 		return Base64.getEncoder().encodeToString(encryptData(toBase64(configObject).getBytes("UTF-8"), certificate));
 	}

@@ -1,7 +1,7 @@
 package org.ar4k.agent.opcua.server;
 
 import org.ar4k.agent.config.AbstractServiceConfig;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.industrial.Enumerator.CryptoMode;
 import org.ar4k.agent.industrial.Enumerator.SecurityMode;
@@ -54,7 +54,8 @@ public class OpcUaServerConfig extends AbstractServiceConfig {
 	public String applicationName = "Agent Rossonet";
 
 	@Parameter(names = "--baseFolderName", description = "base folder name for the opc objects")
-	public String baseFolderName = Homunculus.getApplicationContext().getBean(Homunculus.class).getAgentUniqueName();
+	public String baseFolderName = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class)
+			.getAgentUniqueName();
 
 	@Override
 	public EdgeComponent instantiate() {

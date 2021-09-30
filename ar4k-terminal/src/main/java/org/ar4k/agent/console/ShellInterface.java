@@ -50,10 +50,10 @@ import org.apache.commons.vfs2.provider.webdav4s.Webdav4sFileProvider;
 import org.ar4k.agent.config.EdgeConfig;
 import org.ar4k.agent.core.ConfigSeed;
 import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.ServiceComponent;
 import org.ar4k.agent.core.RpcConversation;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
 import org.ar4k.agent.core.valueProvider.Ar4kEventsValuesProvider;
 import org.ar4k.agent.core.valueProvider.LogLevelValuesProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
@@ -755,7 +755,7 @@ public class ShellInterface extends AbstractShellHelper {
 	public void cloneRuntimeConfig(@ShellOption(help = "the name of the new config") String newName,
 			@ShellOption(help = "the promp for the new config") String newPrompt)
 			throws IOException, ClassNotFoundException {
-		final EdgeConfig target = homunculus.getRuntimeConfig();
+		final EdgeConfig target = (EdgeConfig) homunculus.getRuntimeConfig();
 		final EdgeConfig newTarget = cloneConfigHelper(newName, newPrompt, target);
 		addConfig(newTarget);
 	}

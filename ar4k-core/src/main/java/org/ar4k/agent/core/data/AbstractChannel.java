@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ar4k.agent.config.validator.DataTypeValidator;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -46,7 +46,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 
 	private Instant createData = Instant.now();
 
-	private DataAddress dataAddress = null;
+	private DataAddress dataAddressBase = null;
 
 	@Parameter(names = "--dataType", description = "data type for the channel", validateWith = DataTypeValidator.class)
 	private DataType dataType = DataType.STRING;
@@ -94,7 +94,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	public AbstractChannel(DataServiceOwner serviceOwnerClass) {
 		this.serviceName = serviceOwnerClass.getServiceName();
 		this.serviceOwnerClass = serviceOwnerClass.getClass();
-		this.dataAddress = serviceOwnerClass.getDataAddress();
+		this.dataAddressBase = serviceOwnerClass.getDataAddress();
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	public void close() throws IOException {
 		try {
 			stopFunction();
-			dataAddress = null;
+			dataAddressBase = null;
 			if (getChannel() != null) {
 				try {
 					getChannel().destroy();
@@ -142,7 +142,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		final StringBuilder reply = new StringBuilder();
 		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
 			if (scopeFather.get(scope).getAbsoluteNameByScope(scope) != null) {
-				reply.append(scopeFather.get(scope).getAbsoluteNameByScope(scope) + dataAddress.getLevelSeparator());
+				reply.append(scopeFather.get(scope).getAbsoluteNameByScope(scope) + dataAddressBase.getLevelSeparator());
 			}
 		}
 		reply.append(getBrowseName());
@@ -181,7 +181,7 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 
 	@Override
 	public DataAddress getDataAddress() {
-		return dataAddress;
+		return dataAddressBase;
 	}
 
 	@Override
@@ -284,8 +284,8 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		if (scopeFather.containsKey(scope) && scopeFather.get(scope) != null) {
 			((AbstractChannel) scopeFather.get(scope)).removeChildrenOfScope(scope);
 			scopeFather.remove(scope);
-			if (dataAddress != null) {
-				dataAddress.callAddressSpaceRefresh(this);
+			if (dataAddressBase != null) {
+				dataAddressBase.callAddressSpaceRefresh(this);
 			}
 		}
 	}
@@ -316,9 +316,9 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
+	public void setDataAddress(DataAddress dataAddressBase) {
 		startFunction();
-		this.dataAddress = dataAddress;
+		this.dataAddressBase = dataAddressBase;
 	}
 
 	@Override
@@ -347,12 +347,12 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 	@Override
 	public void setFatherOfScope(String scope, EdgeChannel father) {
 		if (scope == null) {
-			scope = dataAddress.getDefaultScope();
+			scope = dataAddressBase.getDefaultScope();
 		}
 		scopeFather.put(scope, father);
 		((AbstractChannel) father).addChildOfScope(scope, this);
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
+		if (dataAddressBase != null) {
+			dataAddressBase.callAddressSpaceRefresh(this);
 		}
 	}
 
@@ -430,8 +430,8 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 			scopeChildren.put(scope, new ArrayList<>());
 		}
 		scopeChildren.get(scope).add(child);
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
+		if (dataAddressBase != null) {
+			dataAddressBase.callAddressSpaceRefresh(this);
 		}
 	}
 
@@ -444,20 +444,20 @@ public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Cl
 		if (getChannel() != null) {
 			getChannel().setBeanName(getBrowseName());
 			getChannel().setComponentName(getBrowseName());
-			((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+			((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
 					.registerSingleton(getBrowseName(), getChannel());
 		}
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
+		if (dataAddressBase != null) {
+			dataAddressBase.callAddressSpaceRefresh(this);
 		}
 		setStatus(Status.RUNNING);
 	}
 
 	private void stopFunction() {
-		if (dataAddress != null) {
-			dataAddress.callAddressSpaceRefresh(this);
+		if (dataAddressBase != null) {
+			dataAddressBase.callAddressSpaceRefresh(this);
 		}
-		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) Homunculus.getApplicationContext())
+		((DefaultListableBeanFactory) ((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic())
 				.getBeanFactory()).destroySingleton(getBrowseName());
 		setStatus(Status.DETROY);
 	}

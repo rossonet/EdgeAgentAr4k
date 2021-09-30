@@ -25,11 +25,11 @@ import java.util.UUID;
 
 import org.ar4k.agent.activemq.ActiveMqConfig;
 import org.ar4k.agent.camera.usb.StreamCameraConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.data.generator.DataGeneratorConfig;
 import org.ar4k.agent.cortex.drools.DroolsConfig;
 import org.ar4k.agent.hazelcast.HazelcastConfig;
@@ -73,7 +73,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -84,7 +84,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigLoadingAndRefreshFileXmlTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore homunculus;
 
 	final String fileName = "/tmp/test-config.ar4k";
 
@@ -190,8 +190,8 @@ public class ConfigLoadingAndRefreshFileXmlTests {
 		System.out.println(homunculus.getState());
 		Thread.sleep(3000);
 		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
-		assertEquals(17, homunculus.getRuntimeConfig().pots.size());
+		assertTrue(check.equals(((EdgeConfig) homunculus.getRuntimeConfig()).author));
+		assertEquals(17, ((EdgeConfig) homunculus.getRuntimeConfig()).pots.size());
 	}
 
 }

@@ -32,6 +32,7 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.ConfigHelper;
+import org.ar4k.agent.keystore.IKeystoreConfig;
 import org.ar4k.agent.keystore.KeystoreConfig;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testOneKey")
 	public Collection<String> listKeystoreKeys() {
 		List<String> sb = new ArrayList<>();
-		for (Entry<String, KeystoreConfig> ks : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> ks : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
 			for (String k : ks.getValue().listCertificate()) {
 				sb.add(k);
@@ -115,9 +116,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	public Collection<String> listKeysInKeystore(
 			@ShellOption(help = "label assigned to the keystore") String keystoreLabel) {
 		List<String> sb = new ArrayList<>();
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
+			if (t.getValue().getLabel().equals(keystoreLabel) && t.getValue().check()) {
 				sb.addAll(t.getValue().listCertificate());
 				break;
 			}
@@ -143,9 +144,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	@ShellMethodAvailability("testOneKey")
 	public boolean checkKeystore(@ShellOption(help = "label assigned to the keystore") String keystoreLabel) {
 		boolean ok = false;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
+			if (t.getValue().getLabel().equals(keystoreLabel) && t.getValue().check()) {
 				ok = true;
 				break;
 			}
@@ -161,9 +162,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "the alias for the entry to view in the keystore") String entryAlias)
 			throws CertificateParsingException {
 		List<String> returnList = new ArrayList<>();
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
+			if (t.getValue().getLabel().equals(keystoreLabel) && t.getValue().check()) {
 				X509Certificate cert = t.getValue().getClientCertificate(entryAlias);
 				PrivateKey privateKey = t.getValue().getPrivateKey(entryAlias);
 				returnList.add("CERT\t\t\t\t" + cert);
@@ -205,10 +206,10 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	public String getKeystoreForDns(@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
 			@ShellOption(help = "the hostname for this configuration") String name) throws IOException {
 		String returnText = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel) && t.getValue().check()) {
-				File file = new File(t.getValue().filePathPre);
+			if (t.getValue().getLabel().equals(keystoreLabel) && t.getValue().check()) {
+				File file = new File(t.getValue().getFilePathPre());
 				byte[] data = FileUtils.readFileToByteArray(file);
 				returnText = ConfigHelper.toBase64ForDns(name, data);
 				break;
@@ -226,9 +227,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "the alias for the new entry in the keystore") String entryAlias) {
 		boolean ok = false;
 		try {
-			for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+			for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 					.entrySet()) {
-				if (t.getValue().label.equals(keystoreLabel)
+				if (t.getValue().getLabel().equals(keystoreLabel)
 						&& t.getValue().setClientKeyPair(base64Key, base64Crt, entryAlias)) {
 					ok = true;
 					break;
@@ -267,9 +268,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			ok = false;
 		}
 		PKCS10CertificationRequest csr = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				csr = t.getValue().getPKCS10CertificationRequest(entryAlias);
 				x509Cert = t.getValue().signCertificate(csr, signedAlias, Integer.valueOf(validity), caAlias,
 						t.getValue().getPrivateKey(entryAlias));
@@ -301,10 +302,10 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "is the certificate a CA true/false", defaultValue = "false") boolean isCa,
 			@ShellOption(help = "validity of certificate in days", defaultValue = "365") int validityDays) {
 		boolean ok = false;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel) && t.getValue().createSelfSignedCert(commonName, organization,
-					unit, locality, state, country, uri, dns, ip, entryAlias, isCa, validityDays)) {
+			if (t.getValue().getLabel().equals(keystoreLabel) && t.getValue().createSelfSignedCert(commonName,
+					organization, unit, locality, state, country, uri, dns, ip, entryAlias, isCa, validityDays)) {
 				ok = true;
 				break;
 			}
@@ -318,9 +319,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	public String getClientCertificateBase64(@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
 			@ShellOption(help = "the alias for the new entry in the keystore") String entryAlias) {
 		String out = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				out = "-----BEGIN CERTIFICATE-----\n";
 				out += t.getValue().getClientCertificateBase64(entryAlias);
 				out += "\n-----END CERTIFICATE-----";
@@ -335,9 +336,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 	public String getPrivateKeyBase64(@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
 			@ShellOption(help = "the alias for the new entry in the keystore") String entryAlias) {
 		String out = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				out = "-----BEGIN PRIVATE KEY-----\n";
 				out += t.getValue().getPrivateKeyBase64(entryAlias);
 				out += "\n-----END PRIVATE KEY-----";
@@ -353,9 +354,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "label assigned to the keystore") String keystoreLabel,
 			@ShellOption(help = "the alias for the new entry in the keystore") String entryAlias) {
 		String out = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				out = "-----BEGIN CERTIFICATE REQUEST-----\n";
 				out += t.getValue().getPKCS10CertificationRequestBase64(entryAlias);
 				out += "\n-----END CERTIFICATE REQUEST-----";
@@ -373,9 +374,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "label assigned to the keystore with th CA key") String keystoreLabel,
 			@ShellOption(help = "the alias of the CA key") String caAlias) {
 		String out = null;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				out = t.getValue().signCertificateBase64(base64Csr, targetAlias, Integer.valueOf(validity), caAlias);
 			}
 		}
@@ -400,9 +401,9 @@ public class KeystoreShellInterface extends AbstractShellHelper {
 			@ShellOption(help = "is the certificate a CA true/false", defaultValue = "false") boolean isCa,
 			@ShellOption(help = "validity of certificate in days", defaultValue = "365") int validityDays) {
 		boolean ok = false;
-		for (Entry<String, KeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
+		for (Entry<String, IKeystoreConfig> t : ((RpcConversation) homunculus.getRpc(getSessionId())).getKeyStores()
 				.entrySet()) {
-			if (t.getValue().label.equals(keystoreLabel)) {
+			if (t.getValue().getLabel().equals(keystoreLabel)) {
 				ok = t.getValue().create(commonName, organization, unit, locality, state, country, uri, dns, ip, alias,
 						isCa, validityDays);
 			}

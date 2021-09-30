@@ -1,6 +1,6 @@
 package org.ar4k.agent.spring;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,12 +12,12 @@ import reactor.core.publisher.Mono;
 public class EdgeUserDetailsService implements ReactiveUserDetailsService {
 
   @Autowired
-  Homunculus homunculus;
+  EdgeAgentCore edgeAgentCore;
 
   @Override
   public Mono<UserDetails> findByUsername(String username) {
     UserDetails result = null; // anonymous for spring
-    for (EdgeUserDetails q : homunculus.getLocalUsers()) {
+    for (EdgeUserDetails q : edgeAgentCore.getLocalUsers()) {
       if (q.getUsername().equals(username)) {
         result = q;
         break;

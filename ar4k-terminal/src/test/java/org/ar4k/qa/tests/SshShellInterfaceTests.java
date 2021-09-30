@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.ar4k.agent.console.SshShellInterface;
-import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
@@ -54,7 +54,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -69,7 +69,7 @@ public class SshShellInterfaceTests {
 	Shell shell;
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore homunculus;
 
 	@Before
 	public void setUp() throws Exception {

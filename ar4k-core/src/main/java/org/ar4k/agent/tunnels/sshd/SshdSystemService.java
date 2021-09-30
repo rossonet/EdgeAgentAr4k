@@ -72,7 +72,7 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	private SshServer server = null;
 	private final static Gson gson = new GsonBuilder().create();
 
-	private Homunculus homunculus = null;
+	private Homunculus homunculusBase = null;
 
 	private DataAddress dataspace = null;
 
@@ -98,7 +98,7 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	public synchronized void init() {
 		setDataspace();
 		server = SshServer.setUpDefaultServer();
-		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculus);
+		final PasswordAuthenticator passwordAuthenticator = new HomunculusPasswordAuthenticator(homunculusBase);
 		server.setPasswordAuthenticator(passwordAuthenticator);
 		final PublickeyAuthenticator publickeyAuthenticator = new HomunculusPublickeyAuthenticator(
 				Paths.get(ConfigHelper.resolveWorkingString(configuration.authorizedKeys, true)));
@@ -128,13 +128,13 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 
 	private void setDataspace() {
 		requestCommandChannel = dataspace.createOrGetDataChannel("request", IPublishSubscribeChannel.class,
-				"requested command on ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"requested command on ssh", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-system", "request"), getConfiguration().getTags()), this);
 		replyCommandChannel = dataspace.createOrGetDataChannel("reply", IPublishSubscribeChannel.class,
-				"reply command to ssh", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"reply command to ssh", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-system", "reply"), getConfiguration().getTags()), this);
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of ssh connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"status of ssh connection", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("sshd-system", "status"), getConfiguration().getTags()), this);
 	}
 
@@ -165,7 +165,7 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	@Override
@@ -174,13 +174,13 @@ public class SshdSystemService implements EdgeComponent, SshFutureListener<Close
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		dataspace = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	public JSONObject getDescriptionJson() {

@@ -29,8 +29,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.data.DataAddress;
+import org.ar4k.agent.core.EdgeAgentCore;
+import org.ar4k.agent.core.data.DataAddressBase;
 import org.ar4k.agent.core.services.EdgeComponent.ServiceStatus;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -69,17 +69,17 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 
 	private TimerTask watchDogTask = null;
 
-	public AbstractEdgeService(Homunculus homunculus, ServiceConfig serviceConfig, Timer timerScheduler) {
+	public AbstractEdgeService(EdgeAgentCore edgeAgentCore, ServiceConfig serviceConfig, Timer timerScheduler) {
 		this.timerScheduler = timerScheduler;
 		this.maxFaults = serviceConfig.getMaxRestartRetries();
 		try {
 			Method method = serviceConfig.getClass().getMethod("instantiate");
 			pot = (EdgeComponent) method.invoke(serviceConfig);
 			pot.setConfiguration(serviceConfig);
-			pot.setHomunculus(homunculus);
-			pot.setDataAddress(new DataAddress(homunculus, pot));
+			pot.setHomunculus(edgeAgentCore);
+			pot.setDataAddress(new DataAddressBase(edgeAgentCore, pot));
 			if (pot.getDataAddress() != null) {
-				homunculus.getDataAddress().registerSlave(pot);
+				edgeAgentCore.getDataAddress().registerSlave(pot);
 			}
 			watchDogTimeout = serviceConfig.getWatchDogTimeout();
 			watchDogInterval = serviceConfig.getWatchDogInterval();
@@ -97,9 +97,6 @@ public abstract class AbstractEdgeService implements ServiceComponent<EdgeCompon
 			@Override
 			public void run() {
 				try {
-					if (pot.getDataAddress() != null) {
-						pot.getHomunculus().getDataAddress().registerSlave(pot);
-					}
 					pot.close();
 				} catch (Exception e) {
 					logger.logException(e);

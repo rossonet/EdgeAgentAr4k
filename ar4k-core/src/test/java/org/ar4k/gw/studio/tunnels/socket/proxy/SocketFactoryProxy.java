@@ -68,13 +68,13 @@ public class SocketFactoryProxy extends AbstractSocketFactoryComponent {
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
+	public void setDataAddress(DataAddress dataAddressBase) {
 		// Auto-generated method stub
 
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
+	public void setHomunculus(Homunculus homunculusBase) {
 		// Auto-generated method stub
 
 	}

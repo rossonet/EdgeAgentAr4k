@@ -24,8 +24,9 @@ import org.ar4k.agent.config.validator.AnsiColorValidator;
 import org.ar4k.agent.config.validator.EdgeStatusValidator;
 import org.ar4k.agent.config.validator.RouterTypeValidator;
 import org.ar4k.agent.core.ConfigSeed;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.Homunculus.HomunculusRouterType;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -119,7 +120,7 @@ public class EdgeConfig implements ConfigSeed {
 	public List<String> groups = new ArrayList<>();
 
 	@Parameter(names = "--targetRunLevel", description = "target run level at boot of the configuration", validateWith = EdgeStatusValidator.class)
-	public Homunculus.HomunculusStates targetRunLevel = Homunculus.HomunculusStates.RUNNING;
+	public EdgeAgentCore.HomunculusStates targetRunLevel = HomunculusStates.RUNNING;
 
 	@Parameter(names = "--preScript", description = "pre script")
 	public String preScript = null;

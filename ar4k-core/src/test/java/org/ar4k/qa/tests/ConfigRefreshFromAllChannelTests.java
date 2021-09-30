@@ -26,11 +26,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
@@ -59,7 +59,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -70,7 +70,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigRefreshFromAllChannelTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	final String fileName = "/tmp/test-config.ar4k";
 	final String fileNameSecond = "/tmp/test-second-config.ar4k";
@@ -81,7 +81,7 @@ public class ConfigRefreshFromAllChannelTests {
 	@Before
 	public void setUp() throws Exception {
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	private void deleteDir(File dir) {
@@ -119,14 +119,14 @@ public class ConfigRefreshFromAllChannelTests {
 		c1.creationDate = 1452797215000L;
 		c1.lastUpdate = 1452797215000L;
 		c1.nextConfigDns = dnsConfig;
-		assertEquals(HomunculusStates.STAMINAL, homunculus.getState());
+		assertEquals(HomunculusStates.STAMINAL, edgeAgentCore.getState());
 		Files.write(Paths.get(fileName), ConfigHelper.toBase64(c1).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(80000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals("configToFile", homunculus.getRuntimeConfig().name);
-		assertEquals(fileNameSecond, homunculus.getRuntimeConfig().nextConfigFile);
+		assertEquals(HomunculusStates.RUNNING, edgeAgentCore.getState());
+		assertEquals("configToFile", edgeAgentCore.getRuntimeConfig().name);
+		assertEquals(fileNameSecond, edgeAgentCore.getRuntimeConfig().nextConfigFile);
 		final EdgeConfig c2 = new EdgeConfig();
 		c2.name = "test aggiornamento configurazione";
 		c2.tagVersion = check;
@@ -134,8 +134,8 @@ public class ConfigRefreshFromAllChannelTests {
 		Files.write(Paths.get(fileNameSecond), ConfigHelper.toBase64(c2).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 		Thread.sleep(30000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(homunculus.getRuntimeConfig().tagVersion, check);
+		assertEquals(HomunculusStates.RUNNING, edgeAgentCore.getState());
+		assertEquals(edgeAgentCore.getRuntimeConfig().tagVersion, check);
 		final EdgeConfig c3 = new EdgeConfig();
 		c3.name = "ultima configurazione";
 		c3.author = check;
@@ -144,16 +144,16 @@ public class ConfigRefreshFromAllChannelTests {
 		Files.write(Paths.get(fileNameEnd), ConfigHelper.toBase64(c3).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
 		Thread.sleep(60000);
-		assertEquals(HomunculusStates.RUNNING, homunculus.getState());
-		assertEquals(check, homunculus.getRuntimeConfig().author);
+		assertEquals(HomunculusStates.RUNNING, edgeAgentCore.getState());
+		assertEquals(check, edgeAgentCore.getRuntimeConfig().author);
 	}
 
 	@Test
 	public void createConfigWeb() throws IOException {
 		final EdgeConfig config = new EdgeConfig();
 		config.name = "configToFile";
-		config.creationDate = 1625157151652L;
-		config.lastUpdate = 1625157151652L;
+		config.creationDate = 1632952061472L;
+		config.lastUpdate = 1632952061472L;
 		config.nextConfigFile = fileNameSecond;
 		final Path path = Paths.get("config-to-file.ar4k");
 		Files.write(path, ConfigHelper.toBase64(config).getBytes(), StandardOpenOption.CREATE,

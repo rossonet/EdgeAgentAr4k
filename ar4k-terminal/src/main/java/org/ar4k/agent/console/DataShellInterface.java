@@ -21,9 +21,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
-import org.ar4k.agent.core.data.DataChannelFilter;
+import org.ar4k.agent.core.data.IDataChannelFilter;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IDirectChannel;
 import org.ar4k.agent.core.data.channels.IExecutorChannel;
@@ -107,7 +107,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ManagedOperation
 	public Collection<String> searchDataChannels(String filter) throws IOException {
 		Collection<String> result = new HashSet<>();
-		DataChannelFilter objFilter = StringUtils.dataChannelFilterFromString(filter);
+		IDataChannelFilter objFilter = StringUtils.dataChannelFilterFromString(filter);
 		for (EdgeChannel c : homunculus.getDataAddress().getDataChannels(objFilter)) {
 			result.add(c.getBrowseName() + " [" + c.getDescription() + "] " + c.getChannelType() + " " + c.getStatus());
 		}
@@ -129,7 +129,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	@ShellMethod(value = "Get Spring Metrics", group = "Data Manager Commands")
 	@ManagedOperation
 	public String getMetrics() {
-		MeterRegistry m = Homunculus.getApplicationContext().getBean(MeterRegistry.class);
+		MeterRegistry m = EdgeAgentCore.getApplicationContextStatic().getBean(MeterRegistry.class);
 		StringBuilder sb = new StringBuilder();
 		for (Meter d : m.getMeters()) {
 			sb.append(d.getId() + " -> ");

@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.springframework.boot.Banner;
@@ -16,7 +16,7 @@ import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class ContextCreationHelper implements Callable<Homunculus>, ApplicationListener<ApplicationPreparedEvent> {
+public class ContextCreationHelper implements Callable<EdgeAgentCore>, ApplicationListener<ApplicationPreparedEvent> {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ContextCreationHelper.class);
 
@@ -80,7 +80,7 @@ public class ContextCreationHelper implements Callable<Homunculus>, ApplicationL
 	}
 
 	@Override
-	public Homunculus call() throws Exception {
+	public EdgeAgentCore call() throws Exception {
 		try {
 			SpringApplication newCtx = new SpringApplication(startClass);
 			newCtx.setBannerMode(Banner.Mode.LOG);
@@ -97,19 +97,19 @@ public class ContextCreationHelper implements Callable<Homunculus>, ApplicationL
 			}
 			logger.info("found context");
 			while (!context.containsBean("homunculus")) {
-				logger.info("waiting Homunculus");
+				logger.info("waiting EdgeAgentCore");
 				Thread.sleep(500L);
 			}
-			logger.info("found Homunculus");
-			Homunculus homunculus = context.getBean(Homunculus.class);
+			logger.info("found EdgeAgentCore");
+			EdgeAgentCore edgeAgentCore = context.getBean(EdgeAgentCore.class);
 			/*
 			 * while (anima.getState() != null) { logger.info("waiting first state");
 			 * Thread.sleep(500L); }
 			 */
-			logger.info("Homunculus -> " + homunculus.toString() + " [" + homunculus.getState() + "]");
-			logger.info("Enviroment -> " + homunculus.getEnvironmentVariablesAsString());
-			logger.info("Configuration -> " + homunculus.getRuntimeConfig());
-			return context.getBean(Homunculus.class);
+			logger.info("EdgeAgentCore -> " + edgeAgentCore.toString() + " [" + edgeAgentCore.getState() + "]");
+			logger.info("Enviroment -> " + edgeAgentCore.getEnvironmentVariablesAsString());
+			logger.info("Configuration -> " + edgeAgentCore.getRuntimeConfig());
+			return context.getBean(EdgeAgentCore.class);
 		} catch (Exception e) {
 			logger.logException(e);
 			return null;

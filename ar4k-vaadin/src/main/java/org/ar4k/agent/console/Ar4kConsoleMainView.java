@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconClientScadaWrapper;
@@ -53,7 +53,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 
 	public static final String PACKET_SEARCH_BASE = "org.ar4k.agent";
 
-	private transient MainBeaconService mainBeaconService = Homunculus.getApplicationContext()
+	private transient MainBeaconService mainBeaconService = EdgeAgentCore.getApplicationContextStatic()
 			.getBean(MainBeaconService.class);
 
 	private final TextField agentFilterText = new TextField();

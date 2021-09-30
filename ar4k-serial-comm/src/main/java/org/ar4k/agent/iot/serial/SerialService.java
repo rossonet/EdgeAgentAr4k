@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
@@ -50,7 +51,7 @@ public class SerialService implements EdgeComponent, SerialPortDataListener {
 
 	private SerialConfig configuration = null;
 
-	private Homunculus homunculus = Homunculus.getApplicationContext().getBean(Homunculus.class);
+	private Homunculus homunculus = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class);
 
 	public static enum BaudRate {
 		bs150, bs300, bs600, bs1200, bs1800, bs2400, bs4800, bs7200, bs9600, bs14400, bs19200, bs38400, bs56000,

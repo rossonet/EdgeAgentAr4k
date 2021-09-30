@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -316,9 +317,9 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 				}
 			}
 			if (host != null && !host.isEmpty() && port != 0) {
-				if (Homunculus.getApplicationContext() != null
-						&& Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
-					this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class)
+				if (EdgeAgentCore.getApplicationContextStatic() != null
+						&& EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class) != null) {
+					this.beaconClient = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class)
 							.connectToBeaconService("http://" + host + ":" + port, beaconCaChainPem, discoveryPort,
 									discoveryFilter, false);
 				} else {
@@ -326,8 +327,9 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 				}
 			}
 		} else {
-			if (Homunculus.getApplicationContext().getBean(Homunculus.class) != null) {
-				this.beaconClient = Homunculus.getApplicationContext().getBean(Homunculus.class).getBeaconClient();
+			if (EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class) != null) {
+				this.beaconClient = EdgeAgentCore.getApplicationContextStatic().getBean(EdgeAgentCore.class)
+						.getBeaconClient();
 			}
 		}
 	}

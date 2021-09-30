@@ -18,7 +18,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.TunnelMessage;
 
 import io.grpc.stub.StreamObserver;
 
-public class TunnelRunnerBeaconServer implements AutoCloseable {
+public class TunnelRunnerBeaconServer implements ITunnelRunnerBeaconServer {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(TunnelRunnerBeaconServer.class);
 
@@ -148,14 +148,17 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		});
 	}
 
+	@Override
 	public long getTunnelId() {
 		return tunnelId;
 	}
 
+	@Override
 	public Agent getServerAgent() {
 		return serverAgent;
 	}
 
+	@Override
 	public void onNext(TunnelMessage value, StreamObserver<TunnelMessage> responseObserver) {
 		if (!closed)
 			try {
@@ -273,10 +276,12 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 		}
 	}
 
+	@Override
 	public Agent getClientAgent() {
 		return clientAgent;
 	}
 
+	@Override
 	public void onError(Throwable t, StreamObserver<TunnelMessage> responseObserver) {
 		if (responseObserver.equals(serverObserver)) {
 			cleanServer();
@@ -288,6 +293,7 @@ public class TunnelRunnerBeaconServer implements AutoCloseable {
 				t);
 	}
 
+	@Override
 	public void onCompleted(StreamObserver<TunnelMessage> responseObserver) {
 		closeChannelAction();
 		if (TRACE_LOG_IN_INFO)

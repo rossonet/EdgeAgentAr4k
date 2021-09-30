@@ -24,11 +24,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusEvents;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusEvents;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
@@ -58,7 +58,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -69,14 +69,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigLoadingAndRefreshFileXmlTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	final String fileName = "/tmp/test-config.ar4k";
 
 	@Before
 	public void setUp() throws Exception {
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	@After
@@ -109,15 +109,15 @@ public class ConfigLoadingAndRefreshFileXmlTests {
 		System.out.println("CONFIGURATION\n" + c);
 		Files.write(Paths.get(fileName), ConfigHelper.toXml(c).getBytes(), StandardOpenOption.CREATE,
 				StandardOpenOption.TRUNCATE_EXISTING);
-		assertEquals(homunculus.getState(), HomunculusStates.STAMINAL);
-		homunculus.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.STAMINAL);
+		edgeAgentCore.sendEvent(HomunculusEvents.COMPLETE_RELOAD);
 		Thread.sleep(3000);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 		Thread.sleep(3000);
-		assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-		assertTrue(check.equals(homunculus.getRuntimeConfig().author));
-		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-		assertTrue(check.equals(((SocketFactorySslConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue(check.equals(edgeAgentCore.getRuntimeConfig().author));
+		assertTrue(check.equals(((SocketFactorySslConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note));
+		assertTrue(check.equals(((SocketFactorySslConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note));
 	}
 
 }

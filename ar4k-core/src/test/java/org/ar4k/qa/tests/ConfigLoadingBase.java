@@ -20,10 +20,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
@@ -53,7 +53,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
     FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
@@ -64,12 +64,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ConfigLoadingBase {
 
   @Autowired
-  Homunculus homunculus;
+  EdgeAgentCore edgeAgentCore;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
+    System.out.println(edgeAgentCore.getState());
   }
 
   @After
@@ -88,14 +88,14 @@ public class ConfigLoadingBase {
   @Test
   public void checkConfigBase() throws InterruptedException, IOException {
     Thread.sleep(10000);
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    assertTrue("prova56H1".equals(homunculus.getRuntimeConfig().author));
-    assertTrue("base-config".equals(homunculus.getRuntimeConfig().name));
-    assertTrue("EF56T".equals(homunculus.getRuntimeConfig().tagVersion));
-    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
-    assertTrue("345F".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
+    assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+    assertTrue("prova56H1".equals(edgeAgentCore.getRuntimeConfig().author));
+    assertTrue("base-config".equals(edgeAgentCore.getRuntimeConfig().name));
+    assertTrue("EF56T".equals(edgeAgentCore.getRuntimeConfig().tagVersion));
+    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note));
+    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note);
+    assertTrue("345F".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note));
   }
 
   @Test

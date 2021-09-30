@@ -14,7 +14,7 @@
     */
 package org.ar4k.qa.tests;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconServer;
@@ -25,6 +25,6 @@ public class GrpcBeaconDataTests {
   IBeaconClient client = null;
   RpcConversation rpcConversation = null;
   int port = 2569;
-  Homunculus homunculus = new Homunculus();
+  EdgeAgentCore edgeAgentCore = new EdgeAgentCore();
 
 }

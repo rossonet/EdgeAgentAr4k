@@ -5,6 +5,7 @@ import org.apache.activemq.artemis.api.core.client.ClientSession;
 import org.apache.activemq.artemis.api.core.client.ClientSessionFactory;
 import org.apache.activemq.artemis.api.core.client.ServerLocator;
 import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.ServiceConfig;
@@ -32,12 +33,12 @@ public class ActiveMqService implements EdgeComponent {
 	private ActiveMqConfig configuration;
 
 	private void registerBean() {
-		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory()
+		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
 				.registerSingleton(configuration.beanName, this);
 	}
 
 	private void deregisterBean() {
-		((ConfigurableApplicationContext) Homunculus.getApplicationContext()).getBeanFactory().destroyBean(this);
+		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory().destroyBean(this);
 	}
 
 	@Override
@@ -56,12 +57,12 @@ public class ActiveMqService implements EdgeComponent {
 		try {
 			broker = new ActiveMqBroker(configuration.secured ? new ActiveMqSecurityManager() : null,
 					configuration.portMqtt, configuration.portMqttSsl, configuration.portWebService,
-					homunculus.getMyIdentityKeystore().filePath(), homunculus.getMyIdentityKeystore().keystorePassword,
-					configuration.discoveryName, configuration.broadcastPeriod, configuration.clusterName,
-					configuration.groupAddress, configuration.groupPort, configuration.clusterRetryInterval,
-					configuration.trunkPort, configuration.clusterTimeWait, configuration.clusterUnit,
-					configuration.clusterIterations, configuration.clusterServers, configuration.maxHops,
-					configuration.clusterStaticHosts);
+					homunculus.getMyIdentityKeystore().filePath(),
+					homunculus.getMyIdentityKeystore().getKeystorePassword(), configuration.discoveryName,
+					configuration.broadcastPeriod, configuration.clusterName, configuration.groupAddress,
+					configuration.groupPort, configuration.clusterRetryInterval, configuration.trunkPort,
+					configuration.clusterTimeWait, configuration.clusterUnit, configuration.clusterIterations,
+					configuration.clusterServers, configuration.maxHops, configuration.clusterStaticHosts);
 
 			broker.start();
 			registerBean();

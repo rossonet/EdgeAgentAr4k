@@ -15,7 +15,7 @@
 package org.ar4k.agent.config.validator;
 
 import org.ar4k.agent.core.ConfigSeed;
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
@@ -36,10 +36,10 @@ public class PotValidator implements IParameterValidator {
 
 	@Override
 	public void validate(String name, String value) throws ParameterException {
-		Homunculus homunculus = (Homunculus) Homunculus.getApplicationContext().getBean("anima");
+		EdgeAgentCore edgeAgentCore = (EdgeAgentCore) EdgeAgentCore.getApplicationContextStatic().getBean("anima");
 		boolean ok = false;
 		StringBuilder r = new StringBuilder();
-		for (ServiceConfig a : homunculus.getRuntimeConfig().pots) {
+		for (ServiceConfig a : edgeAgentCore.getRuntimeConfig().pots) {
 			try {
 				ConfigSeed b = a;
 				if (b.getName().equals(value)) {

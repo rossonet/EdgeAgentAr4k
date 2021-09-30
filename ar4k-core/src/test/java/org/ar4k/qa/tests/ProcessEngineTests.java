@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.rpc.process.ScriptEngineManagerProcess;
@@ -48,7 +48,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
     JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
     StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
     FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
@@ -59,12 +59,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ProcessEngineTests {
 
   @Autowired
-  Homunculus homunculus;
+  EdgeAgentCore edgeAgentCore;
 
   @Before
   public void setUp() throws Exception {
     Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
+    System.out.println(edgeAgentCore.getState());
   }
 
   @Rule

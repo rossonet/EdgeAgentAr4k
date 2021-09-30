@@ -32,7 +32,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	protected DataAddress dataspace;
 
-	protected Homunculus homunculus;
+	protected Homunculus homunculusBase;
 
 	private JSch jsch = null;
 
@@ -43,7 +43,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	@Override
 	public void init() {
 		statusChannel = dataspace.createOrGetDataChannel("status", IPublishSubscribeChannel.class,
-				"status of ssh connection", homunculus.getDataAddress().getSystemChannel(), (String) null,
+				"status of ssh connection", homunculusBase.getDataAddress().getSystemChannel(), (String) null,
 				ConfigHelper.mergeTags(Arrays.asList("ssh-tunnel", "status"), getConfiguration().getTags()), this);
 	}
 
@@ -64,7 +64,7 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 
 	@Override
 	public Homunculus getHomunculus() {
-		return homunculus;
+		return homunculusBase;
 	}
 
 	public JSch getJsch() {
@@ -94,13 +94,13 @@ public abstract class AbstractSshTunnel implements EdgeComponent {
 	}
 
 	@Override
-	public void setDataAddress(DataAddress dataAddress) {
-		dataspace = dataAddress;
+	public void setDataAddress(DataAddress dataAddressBase) {
+		dataspace = dataAddressBase;
 	}
 
 	@Override
-	public void setHomunculus(Homunculus homunculus) {
-		this.homunculus = homunculus;
+	public void setHomunculus(Homunculus homunculusBase) {
+		this.homunculusBase = homunculusBase;
 	}
 
 	@Override

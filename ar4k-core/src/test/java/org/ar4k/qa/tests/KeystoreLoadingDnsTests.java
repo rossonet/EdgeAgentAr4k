@@ -23,10 +23,10 @@ import java.nio.file.Paths;
 import java.security.cert.CertificateEncodingException;
 
 import org.ar4k.agent.config.EdgeConfig;
-import org.ar4k.agent.core.Homunculus;
-import org.ar4k.agent.core.Homunculus.HomunculusStates;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
+import org.ar4k.agent.core.Homunculus.HomunculusStates;
 import org.ar4k.agent.helper.ConfigHelper;
 import org.ar4k.agent.spring.EdgeAuthenticationManager;
 import org.ar4k.agent.spring.EdgeUserDetailsService;
@@ -57,69 +57,73 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
-    JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
-    StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
-    FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class, EdgeUserDetailsService.class,
-    EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
+		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
+		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
+		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
+		EdgeUserDetailsService.class, EdgeAuthenticationManager.class, BCryptPasswordEncoder.class })
 @TestPropertySource(locations = "classpath:application-kstore-dns.properties")
 @SpringBootConfiguration
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class KeystoreLoadingDnsTests {
 
-  @Autowired
-  Homunculus homunculus;
+	@Autowired
+	EdgeAgentCore edgeAgentCore;
 
-  @Before
-  public void setUp() throws Exception {
-    Thread.sleep(3000L);
-    System.out.println(homunculus.getState());
-  }
+	@Before
+	public void setUp() throws Exception {
+		Thread.sleep(3000L);
+		System.out.println(edgeAgentCore.getState());
+	}
 
-  @After
-  public void tearDownAfterClass() throws Exception {
-    Files.deleteIfExists(Paths.get("removed-keystore.ks"));
-  }
+	@After
+	public void tearDownAfterClass() throws Exception {
+		Files.deleteIfExists(Paths.get("removed-keystore.ks"));
+	}
 
-  @Rule
-  public TestWatcher watcher = new TestWatcher() {
-    @Override
-    protected void starting(Description description) {
-      System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
-    }
-  };
+	@Rule
+	public TestWatcher watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description description) {
+			System.out.println("\n\n\tTEST " + description.getMethodName() + " STARTED\n\n");
+		}
+	};
 
-  @Test
-  public void downloadKeystoreDns() throws InterruptedException {
-    Thread.sleep(5000L);
-    assertTrue(homunculus.getMyIdentityKeystore().check());
-    System.out.println(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
-    assertEquals(homunculus.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
-        "C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
-    assertEquals(homunculus.getState(), HomunculusStates.RUNNING);
-    assertTrue("prova55H1ee".equals(homunculus.getRuntimeConfig().author));
-    assertTrue("dnsconfig".equals(homunculus.getRuntimeConfig().name));
-    assertTrue("AF56T".equals(homunculus.getRuntimeConfig().tagVersion));
-    System.out.println("NOTE 0 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note);
-    assertTrue("345Fa".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[0]).note));
-    System.out.println("NOTE 1 -> " + ((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note);
-    assertTrue("345Fa".equals(((BeaconServiceConfig) homunculus.getRuntimeConfig().pots.toArray()[1]).note));
-  }
+	@Test
+	public void downloadKeystoreDns() throws InterruptedException {
+		Thread.sleep(5000L);
+		assertTrue(edgeAgentCore.getMyIdentityKeystore().check());
+		System.out.println(
+				edgeAgentCore.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName());
+		assertEquals(
+				edgeAgentCore.getMyIdentityKeystore().getClientCertificate("ca").getSubjectX500Principal().getName(),
+				"C=IT,ST=Bologna,L=Imola,OU=Ar4k,O=Rossonet,CN=ciospo.rossonet.net_a58fdf077b864f2bafc3b9b83f2d5143-master");
+		assertEquals(edgeAgentCore.getState(), HomunculusStates.RUNNING);
+		assertTrue("prova55H1ee".equals(edgeAgentCore.getRuntimeConfig().author));
+		assertTrue("dnsconfig".equals(edgeAgentCore.getRuntimeConfig().name));
+		assertTrue("AF56T".equals(edgeAgentCore.getRuntimeConfig().tagVersion));
+		System.out.println(
+				"NOTE 0 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note);
+		assertTrue("345Fa".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[0]).note));
+		System.out.println(
+				"NOTE 1 -> " + ((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note);
+		assertTrue("345Fa".equals(((BeaconServiceConfig) edgeAgentCore.getRuntimeConfig().pots.toArray()[1]).note));
+	}
 
-  @Test
-  public void createConfigDns() throws IOException, CertificateEncodingException, CMSException {
-    EdgeConfig config = new EdgeConfig();
-    config.author = "prova55H1ee";
-    config.name = "dnsconfig";
-    config.tagVersion = "AF56T";
-    BeaconServiceConfig s0 = new BeaconServiceConfig();
-    s0.setNote("345Fa");
-    s0.name = "socket-0";
-    BeaconServiceConfig s1 = new BeaconServiceConfig();
-    s1.setNote("345Fa");
-    s1.name = "socket-1";
-    config.pots.add(s0);
-    config.pots.add(s1);
-    System.out.println(ConfigHelper.toBase64ForDnsCrypto("test-crypto-test-conf", config, "ca")); // bottegaio.net
-  }
+	@Test
+	public void createConfigDns() throws IOException, CertificateEncodingException, CMSException {
+		EdgeConfig config = new EdgeConfig();
+		config.author = "prova55H1ee";
+		config.name = "dnsconfig";
+		config.tagVersion = "AF56T";
+		BeaconServiceConfig s0 = new BeaconServiceConfig();
+		s0.setNote("345Fa");
+		s0.name = "socket-0";
+		BeaconServiceConfig s1 = new BeaconServiceConfig();
+		s1.setNote("345Fa");
+		s1.name = "socket-1";
+		config.pots.add(s0);
+		config.pots.add(s1);
+		System.out.println(ConfigHelper.toBase64ForDnsCrypto("test-crypto-test-conf", config, "ca")); // bottegaio.net
+	}
 }

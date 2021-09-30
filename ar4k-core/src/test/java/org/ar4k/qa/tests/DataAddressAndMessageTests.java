@@ -16,7 +16,7 @@ package org.ar4k.qa.tests;
 
 import java.io.IOException;
 
-import org.ar4k.agent.core.Homunculus;
+import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.HomunculusSession;
 import org.ar4k.agent.core.HomunculusStateMachineConfig;
 import org.ar4k.agent.core.data.channels.INoDataChannel;
@@ -46,7 +46,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, Homunculus.class,
+@Import({ SpringShellAutoConfiguration.class, JLineShellAutoConfiguration.class, EdgeAgentCore.class,
 		JCommanderParameterResolverAutoConfiguration.class, LegacyAdapterAutoConfiguration.class,
 		StandardAPIAutoConfiguration.class, StandardCommandsAutoConfiguration.class, Commands.class,
 		FileValueProvider.class, HomunculusStateMachineConfig.class, HomunculusSession.class,
@@ -57,12 +57,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class DataAddressAndMessageTests {
 
 	@Autowired
-	Homunculus homunculus;
+	EdgeAgentCore edgeAgentCore;
 
 	@Before
 	public void setUp() throws Exception {
 		Thread.sleep(3000L);
-		System.out.println(homunculus.getState());
+		System.out.println(edgeAgentCore.getState());
 	}
 
 	@Rule
@@ -77,29 +77,29 @@ public class DataAddressAndMessageTests {
 	public void checkTreeTest() throws InterruptedException, IOException {
 		Thread.sleep(2000L);
 		String scope = "test-scope";
-		INoDataChannel root = new INoDataChannel(homunculus);
+		INoDataChannel root = new INoDataChannel(edgeAgentCore);
 		root.setBrowseName("root");
-		INoDataChannel a = new INoDataChannel(homunculus);
+		INoDataChannel a = new INoDataChannel(edgeAgentCore);
 		a.setBrowseName("a");
-		INoDataChannel b = new INoDataChannel(homunculus);
+		INoDataChannel b = new INoDataChannel(edgeAgentCore);
 		b.setBrowseName("b");
-		INoDataChannel c = new INoDataChannel(homunculus);
+		INoDataChannel c = new INoDataChannel(edgeAgentCore);
 		c.setBrowseName("c");
-		INoDataChannel a1 = new INoDataChannel(homunculus);
+		INoDataChannel a1 = new INoDataChannel(edgeAgentCore);
 		a1.setBrowseName("a1");
-		INoDataChannel a2 = new INoDataChannel(homunculus);
+		INoDataChannel a2 = new INoDataChannel(edgeAgentCore);
 		a2.setBrowseName("a2");
-		INoDataChannel a3 = new INoDataChannel(homunculus);
+		INoDataChannel a3 = new INoDataChannel(edgeAgentCore);
 		a3.setBrowseName("a3");
-		INoDataChannel b1 = new INoDataChannel(homunculus);
+		INoDataChannel b1 = new INoDataChannel(edgeAgentCore);
 		b1.setBrowseName("b1");
-		INoDataChannel b2 = new INoDataChannel(homunculus);
+		INoDataChannel b2 = new INoDataChannel(edgeAgentCore);
 		b2.setBrowseName("b2");
-		INoDataChannel b2a = new INoDataChannel(homunculus);
+		INoDataChannel b2a = new INoDataChannel(edgeAgentCore);
 		b2a.setBrowseName("b2a");
-		INoDataChannel b2b = new INoDataChannel(homunculus);
+		INoDataChannel b2b = new INoDataChannel(edgeAgentCore);
 		b2b.setBrowseName("b2b");
-		INoDataChannel b2c = new INoDataChannel(homunculus);
+		INoDataChannel b2c = new INoDataChannel(edgeAgentCore);
 		b2c.setBrowseName("b2c");
 		b2c.setFatherOfScope(scope, b2);
 		b2b.setFatherOfScope(scope, b2);

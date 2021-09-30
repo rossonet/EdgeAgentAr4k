@@ -42,15 +42,14 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.valueProvider.Ar4kRemoteAgentProvider;
 import org.ar4k.agent.helper.AbstractShellHelper;
 import org.ar4k.agent.helper.NetworkHelper;
-import org.ar4k.agent.tunnels.http2.beacon.BeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.BeaconServiceConfig;
+import org.ar4k.agent.tunnels.http2.beacon.IBeaconAgent;
 import org.ar4k.agent.tunnels.http2.beacon.IBeaconClient;
-import org.ar4k.agent.tunnels.http2.beacon.client.BeaconClient;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServer;
 import org.ar4k.agent.tunnels.http2.beacon.server.BeaconServerBuilder;
 import org.ar4k.agent.tunnels.http2.beacon.socket.classic.BeaconNetworkClassicConfig;
 import org.ar4k.agent.tunnels.http2.beacon.socket.netty.BeaconNettyNetworkConfig;
-import org.ar4k.agent.tunnels.http2.beacon.socket.server.TunnelRunnerBeaconServer;
+import org.ar4k.agent.tunnels.http2.beacon.socket.server.ITunnelRunnerBeaconServer;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Agent;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.Command;
@@ -96,7 +95,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	private static final CharSequence COMPLETION_CHAR = "?";
 
 	private BeaconServer tmpServer = null;
-	private BeaconClient tmpClient = null;
+	private IBeaconClient tmpClient = null;
 
 	private final Set<Process> openedProcess = new HashSet<>();
 
@@ -160,14 +159,14 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ShellMethod(value = "List Agents connected to the Beacon server", group = "Beacon Server Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconServerRunning")
-	public List<BeaconAgent> listBeaconAgentsConnected() {
+	public List<IBeaconAgent> listBeaconAgentsConnected() {
 		return tmpServer.getAgentRegistered();
 	}
 
 	@ShellMethod(value = "List tunnels running to the Beacon server", group = "Beacon Server Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconServerRunning")
-	public List<TunnelRunnerBeaconServer> listBeaconTunnels() {
+	public List<ITunnelRunnerBeaconServer> listBeaconTunnels() {
 		return tmpServer.getTunnels();
 	}
 
@@ -342,7 +341,7 @@ public class BeaconShellInterface extends AbstractShellHelper implements AutoClo
 	@ShellMethod(value = "Stop the Beacon client connection", group = "Beacon Client Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("testBeaconClientRunningLocal")
-	public void stopBeaconClient() {
+	public void stopBeaconClient() throws Exception {
 		tmpClient.close();
 		tmpClient = null;
 	}
