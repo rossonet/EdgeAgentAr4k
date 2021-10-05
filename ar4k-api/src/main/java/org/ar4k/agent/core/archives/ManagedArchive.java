@@ -2,7 +2,7 @@ package org.ar4k.agent.core.archives;
 
 import java.nio.file.Path;
 
-public interface ManagedArchives {
+public interface ManagedArchive {
 
 	public Path getFileSystemPath();
 

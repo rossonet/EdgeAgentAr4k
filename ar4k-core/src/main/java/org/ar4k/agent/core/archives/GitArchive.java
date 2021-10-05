@@ -11,7 +11,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 @ManagedArchiveAr4k
-public class GitArchive implements ManagedArchives {
+public class GitArchive implements ManagedArchive {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(GitArchive.class);
 

@@ -2,9 +2,9 @@ package org.ar4k.agent.core.archives;
 
 import java.nio.file.Path;
 
-//TODO Implementare ManagedArchives su AWS S3
+//TODO Implementare ManagedArchive su AWS S3
 @ManagedArchiveAr4k
-public class AwsS3Archive implements ManagedArchives {
+public class AwsS3Archive implements ManagedArchive {
 
 	@Override
 	public String getUniqueName() {

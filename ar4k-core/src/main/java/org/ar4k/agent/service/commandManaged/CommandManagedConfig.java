@@ -14,9 +14,8 @@ import com.beust.jcommander.Parameter;
  *         command managed service configuration
  *
  */
-//TODO completare command managed configuration
 public class CommandManagedConfig extends AbstractServiceConfig {
-
+	
 	private static final long serialVersionUID = 5180966181577560906L;
 
 	@Parameter(names = "--installScript", description = "install script runned the first time the service is deployed")
@@ -51,9 +50,18 @@ public class CommandManagedConfig extends AbstractServiceConfig {
 
 	@Parameter(names = "--delayCheckMs", description = "delay time between the execution of the script checkScript")
 	public long delayCheckMs = 60000L;
-	
-	@Parameter(names = "--fieldsOfTheService", description = "List of node to subscribe", variableArity = true)
-	public List<ServiceField> fieldsOfTheService = new ArrayList<>();
+
+	@Parameter(names = "--priority", description = "priority for the command over other services")
+	public int priority = 500;
+
+	@Parameter(names = "--autoStart", description = "automatically start services?")
+	public boolean autoStart = true;
+
+	@Parameter(names = "--fieldsOfTheServices", description = "List of node to subscribe", variableArity = true)
+	public List<ServiceField> fieldsOfTheServices = new ArrayList<>();
+
+	@Parameter(names = "--archives", description = "List of external archives", variableArity = true)
+	public List<ServiceField> archives = new ArrayList<>();
 
 	@Override
 	public EdgeComponent instantiate() {
@@ -64,7 +72,7 @@ public class CommandManagedConfig extends AbstractServiceConfig {
 
 	@Override
 	public int getPriority() {
-		return 130;
+		return priority;
 	}
 
 	@Override

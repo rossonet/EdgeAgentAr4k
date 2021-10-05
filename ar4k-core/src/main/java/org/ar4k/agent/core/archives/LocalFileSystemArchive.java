@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @ManagedArchiveAr4k
-public class LocalFileSystemArchive implements ManagedArchives {
+public class LocalFileSystemArchive implements ManagedArchive {
 
 	private Path path = null;
 

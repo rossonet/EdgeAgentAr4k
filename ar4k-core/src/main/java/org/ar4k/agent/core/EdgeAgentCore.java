@@ -111,8 +111,7 @@ import jdbm.RecordManagerFactory;
 @Scope("singleton")
 @EnableJms
 @EnableConfigurationProperties(EdgeStarterProperties.class)
-public class EdgeAgentCore
-		implements Homunculus {
+public class EdgeAgentCore implements Homunculus {
 
 	public static final String DEFAULT_KS_PATH = "default-new.ks";
 
@@ -148,7 +147,7 @@ public class EdgeAgentCore
 			return Integer.compare(o1.getPriority(), o2.getPriority());
 		}
 	};
-	private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
+	final private Set<ServiceComponent<EdgeComponent>> components = new HashSet<>();
 	private DataAddressHomunculus dataAddress = new DataAddressHomunculus(this);
 	private Map<String, Object> dataStore = null;
 	private boolean firstStateFired = false;
@@ -160,7 +159,7 @@ public class EdgeAgentCore
 
 	private int indexBeaconClient = -1;
 
-	private Collection<EdgeUserDetails> localUsers = new HashSet<>();
+	final private Collection<EdgeUserDetails> localUsers = new HashSet<>();
 
 	private MatterMostClientAr4k mattermostClient = null;
 
@@ -186,7 +185,7 @@ public class EdgeAgentCore
 	@Autowired
 	private EdgeStarterProperties starterProperties;
 
-	private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
+	final private Map<Instant, HomunculusStates> statesBefore = new HashMap<>();
 
 	private HomunculusStates stateTarget = HomunculusStates.RUNNING;
 

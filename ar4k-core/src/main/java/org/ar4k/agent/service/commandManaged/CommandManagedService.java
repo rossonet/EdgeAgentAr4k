@@ -82,5 +82,25 @@ public class CommandManagedService implements EdgeComponent {
 		
 	}
 
+	public void pulse() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getDescriptionStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void saveStatus() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadStatus() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
