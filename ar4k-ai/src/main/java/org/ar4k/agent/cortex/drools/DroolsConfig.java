@@ -18,6 +18,10 @@ import com.beust.jcommander.Parameter;
  */
 public class DroolsConfig extends AbstractServiceConfig {
 	//TODO completare servizio implementazioni regole Drools sui dati e comandi
+	
+	//TODO permettere a Drools di gestire la classificazione e regrassione con Weka
+	
+	//TODO permettere a Drools di gestire deepLearning4J con modelli supervisionati da configurazione, non supervizionati e rinforzo in runtime.
 
 	private static final long serialVersionUID = -5184060109145099045L;
 	@Parameter(names = "--aiName", description = "unique name for the AI")
