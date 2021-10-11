@@ -28,5 +28,5 @@
 ```
 sudo rpm --import https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/master/RPM-GPG-KEY-AR4K
 sudo dnf config-manager --add-repo https://app.rossonet.net/repo/
-sudo nf install ar4k-agent-small -y
+sudo dnf install ar4k-agent-small -y
 ```
