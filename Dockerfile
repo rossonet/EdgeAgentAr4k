@@ -16,6 +16,10 @@ COPY ar4k-vaadin/ /ar4kAgent/ar4k-vaadin/
 COPY ar4k-video/ /ar4kAgent/ar4k-video/
 COPY ar4k-watson/ /ar4kAgent/ar4k-watson/
 COPY ar4k-agent-qa/ /ar4kAgent/ar4k-agent-qa/
+COPY ar4k-agent-web/ /ar4kAgent/ar4k-agent-web/
+COPY ar4k-agent-watson/ /ar4kAgent/ar4k-agent-watson/
+COPY ar4k-agent-small/ /ar4kAgent/ar4k-agent-small/
+COPY ar4k-agent-druido/ /ar4kAgent/ar4k-agent-druido/
 COPY gradlew /ar4kAgent/gradlew
 COPY gradle/ /ar4kAgent/gradle/
 COPY build.gradle /ar4kAgent/build.gradle
