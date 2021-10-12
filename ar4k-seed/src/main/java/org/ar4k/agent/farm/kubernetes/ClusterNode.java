@@ -1,6 +1,6 @@
-package org.ar4k.agent.farm.openshift;
+package org.ar4k.agent.farm.kubernetes;
 
-import org.ar4k.agent.farm.openshift.OpenShiftClusterTwin.NodeType;
+import org.ar4k.agent.farm.kubernetes.OpenShiftClusterTwin.NodeType;
 
 public class ClusterNode {
 
