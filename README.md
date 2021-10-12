@@ -11,6 +11,8 @@
 
 ## Reference
 
+[Template project](https://github.com/rossonet/TemplateEdgeAgentAr4k)
+
 [Italian website with examples](https://app.rossonet.net)
 
 [Documentation](https://www.rossonet.net/dati/edge-docs/doc-site/)

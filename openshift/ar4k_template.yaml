@@ -5,11 +5,11 @@ metadata:
   annotations:
     description: Edge Agent Ar4k by Rossonet. For more information about
       using this template, see https://app.rossonet.net/.
-    iconClass: icon-rh-openjdk
+    iconClass: icon-spring-boot
     openshift.io/display-name: Edge Agent Ar4k
     openshift.io/provider-display-name: Rossonet s.c.a r.l.
     samples.operator.openshift.io/version: 4.7.0-0.okd-2021-08-22-163618
-    tags: java,ar4k
+    tags: java,ar4k,edge,agent,rossonet
     template.openshift.io/documentation-url: https://www.rossonet.net/dati/edge-docs/doc-site/
     template.openshift.io/long-description: This template defines a Edge Agent
     template.openshift.io/support-url: https://www.rossonet.net/
@@ -62,8 +62,8 @@ objects:
     name: ${APPLICATION_NAME}
   spec:
     ports:
-    - port: ${SERVER_PORT}
-      targetPort: ${SERVER_PORT}
+    - port: 9005
+      targetPort: 9005
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
@@ -85,7 +85,7 @@ objects:
     labels:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
-- apiVersion: v1
+- apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
     labels:
@@ -115,7 +115,7 @@ objects:
     - imageChange: {}
       type: ImageChange
     - type: ConfigChange
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -146,19 +146,35 @@ objects:
             value: /tmp/rossonet/ks.cfg
           - name: LOGGING_FILE
             value: /tmp/rossonet/run.log
+          - name: AR4K_WEBREGISTRATIONENDPOINT
+            value: ${AR4K_WEBREGISTRATIONENDPOINT}
           - name: AR4K_WEBCONFIG
             value: ${AR4K_WEBCONFIG}
+          - name: AR4K_DNSCONFIG
+            value: ${AR4K_DNSCONFIG}
+          - name: AR4K_BASECONFIG
+            value: ${AR4K_BASECONFIG}
+          - name: AR4K_WEBKEYSTORE
+            value: ${AR4K_WEBKEYSTORE}
+          - name: AR4K_DNSKEYSTORE
+            value: ${AR4K_DNSKEYSTORE}
+          - name: AR4K_KEYSTOREMAINALIAS
+            value: ${AR4K_KEYSTOREMAINALIAS}
+          - name: AR4K_KEYSTOREPASSWORD
+            value: ${AR4K_KEYSTOREPASSWORD}
+          - name: AR4K_ADMINPASSWORD
+            value: ${AR4K_ADMINPASSWORD}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
           ports:
-          - containerPort: ${SERVER_PORT}
+          - containerPort: 9005
             name: http
             protocol: TCP
           readinessProbe:
             initialDelaySeconds: 5
             tcpSocket:
-              port: ${SERVER_PORT}
+              port: 9005
         terminationGracePeriodSeconds: 75
     triggers:
     - imageChangeParams:
@@ -185,7 +201,7 @@ parameters:
   displayName: Git Repository URL
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: https://github.com/rossonet/TemplateEdgeAgentAr4k.git
+  value: https://github.com/rossonet/EdgeAgentAr4k.git
 - description: Git branch/tag reference
   displayName: Git Reference
   name: SOURCE_REPOSITORY_REF
@@ -194,12 +210,6 @@ parameters:
     e.g.: <application-name>-<project>.<default-domain-suffix>'
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
-- description: 'Container port for web interface'
-  displayName: Container web port
-  from: '[0-9]{1,5}'
-  name: SERVER_PORT
-  required: true
-  value: '9005'
 - description: GitHub trigger secret
   displayName: Github Webhook Secret
   from: '[a-zA-Z0-9]{8}'
@@ -212,6 +222,39 @@ parameters:
   generate: expression
   name: GENERIC_WEBHOOK_SECRET
   required: true
-- description: 'URL for Edge Agent config'
-  displayName: Web Config URL
+- description: Remote Beacon server URL
+  displayName: Beacon URL
+  name: AR4K_WEBREGISTRATIONENDPOINT
+  value:
+- description: URL to get the config via http/https
+  displayName: URL Config
   name: AR4K_WEBCONFIG
+  value:
+- description: Host to get the config via DNS
+  displayName: DNS Config
+  name: AR4K_DNSCONFIG
+  value: 
+- description: Config in Base64 format 
+  displayName: BASE64 Config
+  name: AR4K_BASECONFIG
+  value: 
+- description: URL to get the keystore via http/https
+  displayName: URL keystore
+  name: AR4K_WEBKEYSTORE
+  value: 
+- description: Host to get the kystore via DNS config
+  displayName: DNS keystore
+  name: AR4K_DNSKEYSTORE
+  value: 
+- description: Alias for agent certificate in the keystore
+  displayName: Main alias
+  name: AR4K_KEYSTOREMAINALIAS
+  value: agent
+- description: Password for keystore file
+  displayName: Keystore password
+  name: AR4K_KEYSTOREPASSWORD
+  value: password
+- description: Password for admin user
+  displayName: Admin password
+  name: AR4K_ADMINPASSWORD
+  value: password
