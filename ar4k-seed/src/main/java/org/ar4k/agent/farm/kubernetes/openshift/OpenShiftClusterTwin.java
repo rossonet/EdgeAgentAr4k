@@ -1,4 +1,4 @@
-package org.ar4k.agent.farm.kubernetes;
+package org.ar4k.agent.farm.kubernetes.openshift;
 
 import java.io.File;
 import java.io.FileNotFoundException;

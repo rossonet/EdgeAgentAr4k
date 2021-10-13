@@ -9,7 +9,8 @@ dependencies {
     implementation group: 'software.amazon.awssdk', name: 'ec2', version: '2.17.57'
     implementation group: 'software.amazon.awssdk', name: 's3', version: '2.17.57'
 	implementation group: 'org.gradle', name: 'gradle-tooling-api', version: '4.3'
-	implementation 'io.javaoperatorsdk:operator-framework-samples-common:1.9.8'
+	implementation group: 'io.fabric8', name: 'kubernetes-client', version: '5.8.0'
+	implementation group: 'io.fabric8', name: 'openshift-client', version: '5.8.0'
 }
 
 bootJar {

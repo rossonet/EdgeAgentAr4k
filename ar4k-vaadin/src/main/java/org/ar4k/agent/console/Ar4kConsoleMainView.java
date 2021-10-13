@@ -65,6 +65,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	private final Grid<IScadaAgent> gridClient = new Grid<>(IScadaAgent.class);
 	// private final Board board = new Board();
 	private BeaconAgentDialog beaconAgentForm = null;
+	private AgentConsole consolePage = new AgentConsole();
 
 	public Ar4kConsoleMainView() {
 		addClassName("main-view");
@@ -84,11 +85,13 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 				add(c);
 			}
 		}
-		hideAllCustomObjects();
+		hide();
 		add(agentFilterText);
 		add(gridClient);
+		add(consolePage);
 		gridClient.getColumns().forEach(col -> col.setAutoWidth(true));
-		listBeaconAgents();
+		// listBeaconAgents();
+		mainConsole();
 	}
 
 	private void configureGridClient() {
@@ -114,6 +117,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	}
 
 	private void configureMenu() {
+		menuBar.addItem("CONSOLE", e -> mainConsole());
 		final MenuItem beaconAgents = menuBar.addItem("Remote Agents");
 		final SubMenu agentSubMenu = beaconAgents.getSubMenu();
 		agentSubMenu.addItem("LIST", e -> listBeaconAgents());
@@ -185,10 +189,16 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	}
 
 	private void listBeaconAgents() {
-		hideAllCustomObjects();
+		// hideAllCustomObjects();
+		hide();
 		agentFilterText.setVisible(true);
 		gridClient.setVisible(true);
 		updateListBeaconAgent();
+	}
+
+	private void mainConsole() {
+		hide();
+		consolePage.setVisible(true);
 	}
 
 	private void configureFilterAgents() {
@@ -213,6 +223,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 		hideAllCustomObjects();
 		gridClient.setVisible(false);
 		agentFilterText.setVisible(false);
+		consolePage.setVisible(false);
 		if (beaconAgentForm != null)
 			beaconAgentForm.setVisible(false);
 	}

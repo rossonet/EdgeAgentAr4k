@@ -5,7 +5,6 @@ import java.util.UUID;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.EdgeAgentCore;
 import org.ar4k.agent.core.RpcConversation;
 import org.ar4k.agent.logger.EdgeLogger;

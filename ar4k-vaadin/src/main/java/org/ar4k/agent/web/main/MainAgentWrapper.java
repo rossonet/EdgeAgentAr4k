@@ -140,7 +140,7 @@ public class MainAgentWrapper implements IScadaAgent {
 
 	@Override
 	public boolean isFoundBy(String filter) {
-		// TODO Auto-generated method stub
+		// TODO add filter
 		return true;
 	}
 
