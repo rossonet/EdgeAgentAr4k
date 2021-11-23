@@ -37,6 +37,7 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -75,6 +76,7 @@ public class LeNetMNISTReLu {
 	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + "/mnist";
 	private static final String DATA_URL = "http://github.com/myleott/mnist_png/raw/master/mnist_png.tar.gz";
 
+	@Ignore
 	@Test
 	public void mainTest() throws Exception {
 		int height = 28; // height of the picture in px
