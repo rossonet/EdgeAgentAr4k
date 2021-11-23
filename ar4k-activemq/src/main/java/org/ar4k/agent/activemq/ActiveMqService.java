@@ -18,7 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 /**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Servizio di broker MQTT ActiveMQ
+ *         MQTT ActiveMQ broker service
  */
 public class ActiveMqService implements EdgeComponent {
 
@@ -38,7 +38,8 @@ public class ActiveMqService implements EdgeComponent {
 	}
 
 	private void deregisterBean() {
-		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory().destroyBean(this);
+		((ConfigurableApplicationContext) EdgeAgentCore.getApplicationContextStatic()).getBeanFactory()
+				.destroyBean(this);
 	}
 
 	@Override

@@ -30,6 +30,12 @@ import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager3;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
+/**
+ * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
+ *
+ *         Wrapper ActiveMQ service
+ * 
+ */
 public class ActiveMqBroker implements AutoCloseable {
 
 	private static final String GUEST_MQTT_USER = "guest";

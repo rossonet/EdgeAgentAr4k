@@ -13,6 +13,12 @@ import org.apache.activemq.artemis.spi.core.security.ActiveMQSecurityManager3;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
 
+/**
+ * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
+ *
+ *         MQTT ActiveMQ broker security service. It implements the password
+ *         authentication
+ */
 public class ActiveMqSecurityManager implements ActiveMQSecurityManager3, AutoCloseable {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ActiveMqSecurityManager.class);

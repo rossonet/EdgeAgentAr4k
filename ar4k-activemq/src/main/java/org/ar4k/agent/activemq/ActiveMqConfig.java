@@ -23,10 +23,10 @@ import org.ar4k.agent.core.services.EdgeComponent;
 
 import com.beust.jcommander.Parameter;
 
-/*
+/**
  * @author Andrea Ambrosini Rossonet s.c.a r.l. andrea.ambrosini@rossonet.com
  *
- *         Configurazione server ActiveMQ
+ *         Configuration of ActiveMQ broker service
  */
 public class ActiveMqConfig extends AbstractServiceConfig {
 
