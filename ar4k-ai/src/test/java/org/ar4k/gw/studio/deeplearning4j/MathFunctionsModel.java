@@ -37,6 +37,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -78,6 +79,7 @@ public class MathFunctionsModel {
 	public static final int numInputs = 1;
 	private static final int numOutputs = 1;
 
+	@Ignore
 	@Test
 	public void mainTest() {
 

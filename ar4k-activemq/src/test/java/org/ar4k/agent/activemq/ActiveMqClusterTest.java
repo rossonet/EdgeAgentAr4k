@@ -313,8 +313,7 @@ public class ActiveMqClusterTest implements MqttCallback {
 						client1AliasInKeystore, signClient1AliasInKeystore, "https://localhost:31226")).get());
 		Thread.sleep(6000);
 		for (final Homunculus a : testAnimas.values()) {
-			// String animaName = a.getRuntimeConfig() != null ?
-			// a.getRuntimeConfig().getName() : "no-config";
+			System.out.println("************ Agent -> " + a.getAgentUniqueName());
 			Assert.assertEquals(a.getState(), Homunculus.HomunculusStates.RUNNING);
 		}
 		Thread.sleep(2000);
