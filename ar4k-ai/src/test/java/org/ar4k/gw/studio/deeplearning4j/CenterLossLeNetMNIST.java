@@ -32,6 +32,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -62,6 +63,7 @@ import java.util.List;
 public class CenterLossLeNetMNIST {
 	private static final Logger log = LoggerFactory.getLogger(CenterLossLeNetMNIST.class);
 
+	@Ignore
 	@Test
 	public void mainTest() throws Exception {
 		int outputNum = 10; // The number of possible outcomes
