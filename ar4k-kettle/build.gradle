@@ -3,10 +3,10 @@ description = "Kettle addons"
 dependencies {
 	compile project(':ar4k-core')
 	compile('log4j:log4j:1.2.17')
-	compile (group: 'pentaho-kettle', name: 'kettle-core', version: '9.3.0.0-58'){
+	compile (group: 'pentaho-kettle', name: 'kettle-core', version: '9.3.0.0-200'){
                 exclude group: 'javax.servlet', module: 'servlet-api'
             }
-	compile (group: 'pentaho-kettle', name: 'kettle-engine', version: '9.3.0.0-58'){
+	compile (group: 'pentaho-kettle', name: 'kettle-engine', version: '9.3.0.0-200'){
                 exclude group: 'javax.servlet', module: 'servlet-api'
             }
 	//compile group: 'pentaho-kettle', name: 'pdi-salesforce-plugin', version: '7.1.0.1-34'
