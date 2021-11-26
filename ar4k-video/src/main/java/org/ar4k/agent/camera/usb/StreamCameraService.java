@@ -23,13 +23,13 @@ import org.ar4k.agent.core.Homunculus;
 import org.ar4k.agent.core.data.DataAddress;
 import org.ar4k.agent.core.data.channels.EdgeChannel;
 import org.ar4k.agent.core.data.channels.IPublishSubscribeChannel;
+import org.ar4k.agent.core.data.messages.EdgeMessageHeaders;
 import org.ar4k.agent.core.data.messages.VideoMessage;
 import org.ar4k.agent.core.services.EdgeComponent;
 import org.ar4k.agent.core.services.ServiceConfig;
 import org.ar4k.agent.exception.ServiceWatchDogException;
 import org.ar4k.agent.logger.EdgeLogger;
 import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
-import org.springframework.messaging.MessageHeaders;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamDriver;
@@ -83,7 +83,7 @@ public class StreamCameraService implements EdgeComponent {
 				headersMap.put("size-height", webcam.getViewSize().getHeight());
 				headersMap.put("source", webcam.getName());
 				headersMap.put("type", "video");
-				final MessageHeaders headers = new MessageHeaders(headersMap);
+				final EdgeMessageHeaders headers = new EdgeMessageHeaders(headersMap);
 				m.setHeaders(headers);
 				m.setPayload(webcam.getImage());
 				globalImageQueue.send(m);

@@ -1,21 +1,13 @@
 package org.ar4k.agent.core.data.messages;
 
-import org.springframework.messaging.MessageHeaders;
-
 public class SerialBytesMessage extends InternalMessage<Byte[]> {
 
 	private static final long serialVersionUID = -8317240852093510543L;
 	private Byte[] payload = null;
-	private MessageHeaders headers = null;
 
 	@Override
 	public void setPayload(Byte[] payload) {
 		this.payload = payload;
-	}
-
-	@Override
-	public void setHeaders(MessageHeaders headers) {
-		this.headers = headers;
 	}
 
 	@Override
@@ -24,14 +16,8 @@ public class SerialBytesMessage extends InternalMessage<Byte[]> {
 	}
 
 	@Override
-	public MessageHeaders getHeaders() {
-		return headers;
-	}
-
-	@Override
 	public void close() throws Exception {
 		payload = null;
-		headers = null;
 	}
 
 }

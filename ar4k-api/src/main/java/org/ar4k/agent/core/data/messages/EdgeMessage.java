@@ -11,5 +11,9 @@ public interface EdgeMessage<T> extends Message<T>, AutoCloseable, Serializable,
 
 	public void setObjectPayload(Object object);
 
+	public void setHeaders(EdgeMessageHeaders headers);
+
+	public EdgeMessageHeaders getHeaders();
+
 	public void setHeaders(MessageHeaders headers);
 }
