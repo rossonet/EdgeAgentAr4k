@@ -5,7 +5,7 @@ After=rc-local.service
 Type=simple
 User=root
 ExecStart=java -jar /opt/rossonet/rossonet-rtu.jar --spring.shell.interactive.enabled=false
-PIDFile=/opt/rossonet/ar4k/rtu.pid
+PIDFile=/var/run/rossonet/rtu.pid
 RemainAfterExit=no
 Restart=on-failure
 RestartSec=5s

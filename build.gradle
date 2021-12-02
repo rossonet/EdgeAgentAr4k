@@ -610,7 +610,8 @@ task makeRpmRtu(type: Rpm){
   from('dist-utils/init-rtu'){
     into '/etc/systemd/system'
   }
-  directory('/opt/rossonet/ar4k')
+  directory('/opt/rossonet')
+  directory('/var/run/rossonet')
   link('/opt/rossonet/ar4k-agent-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
   link('/opt/rossonet/rossonet-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
@@ -733,7 +734,8 @@ task makeDebianRtu(type: Deb){
   from('dist-utils/init-rtu'){
     into '/etc/systemd/system'
   }
-  directory('/opt/rossonet/ar4k')
+  directory('/opt/rossonet')
+  directory('/var/run/rossonet')
   link('/opt/rossonet/ar4k-agent-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
   link('/opt/rossonet/rossonet-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
