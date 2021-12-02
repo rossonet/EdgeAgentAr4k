@@ -604,7 +604,7 @@ task makeRpmRtu(type: Rpm){
   packageDescription 'RTU Rossonet'
   license 'AGPL3'
   provides 'ar4k-edge-system'
-  from('ar4k-agent-druido/build/libs'){
+  from('ar4k-agent-rtu/build/libs'){
     into '/opt/rossonet'
   }
   from('dist-utils/init-rtu'){
@@ -727,7 +727,7 @@ task makeDebianRtu(type: Deb){
   packageDescription 'RTU Rossonet'
   license 'AGPL3'
   provides 'ar4k-edge-system'
-  from('ar4k-agent-druido/build/libs'){
+  from('ar4k-agent-rtu/build/libs'){
     into '/opt/rossonet'
   }
   from('dist-utils/init-rtu'){
