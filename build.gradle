@@ -586,7 +586,7 @@ task makeRpmDruido(type: Rpm){
 }
 
 task makeRpmRtu(type: Rpm){
-  makeRpmDruido.dependsOn("ar4kBootJarRtu")
+  makeRpmRtu.dependsOn("ar4kBootJarRtu")
   requires('java-1.8.0-openjdk')
   requires('telnet')
   requires('bash')
@@ -712,7 +712,7 @@ task makeDebianDruido(type: Deb){
 }
 
 task makeDebianRtu(type: Deb){
-  makeDebianDruido.dependsOn("ar4kBootJarRtu")
+  makeDebianRtu.dependsOn("ar4kBootJarRtu")
   requires('default-jdk')
   requires('telnet')
   requires('wget')
@@ -785,6 +785,7 @@ task buildAllDockerContainers {
 	buildAllDockerContainers.dependsOn(":ar4k-agent-small:buildDocker")
 	buildAllDockerContainers.dependsOn(":ar4k-agent-qa:buildDocker")
 	buildAllDockerContainers.dependsOn(":ar4k-agent-druido:buildDocker")
+	buildAllDockerContainers.dependsOn(":ar4k-agent-rtu:buildDocker")
 }
 
 task buildAllBootJars {
@@ -793,6 +794,7 @@ task buildAllBootJars {
 	buildAllBootJars.dependsOn("ar4kBootJarSmall")
 	buildAllBootJars.dependsOn("ar4kBootJarQa")
 	buildAllBootJars.dependsOn("ar4kBootJarWeb")
+	buildAllBootJars.dependsOn("ar4kBootJarRtu")
 }
 
 
