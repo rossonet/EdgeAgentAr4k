@@ -1,0 +1,19 @@
+${AnsiColor.RED}
+  _______     ______    ________  ________   ______    _____  ___    _______  ___________  
+ /"      \   /    " \  /"       )/"       ) /    " \  (\"   \|"  \  /"     "|("     _   ") 
+|:        | // ____  \(:   \___/(:   \___/ // ____  \ |.\\   \    |(: ______) )__/  \\__/  
+|_____/   )/  /    ) :)\___  \   \___  \  /  /    ) :)|: \.   \\  | \/    |      \\_ /     
+ //      /(: (____/ //  __/  \\   __/  \\(: (____/ // |.  \    \. | // ___)_     |.  |     
+|:  __   \ \        /  /" \   :) /" \   :)\        /  |    \    \ |(:      "|    \:  |     
+|__|  \___) \"_____/  (_______/ (_______/  \"_____/    \___|\____\) \_______)     \__|     
+                                                                                           
+${AnsiColor.YELLOW}Rossonet RTU
+
+${AnsiColor.GREEN}BUILD ${application.version}
+${AnsiColor.MAGENTA}based on Spring Boot Framework${spring-boot.formatted-version}
+${AnsiColor.DEFAULT}
+Type ${AnsiColor.RED}help${AnsiColor.DEFAULT} to list the available commands
+
+You can use the ${AnsiColor.RED}TAB completation${AnsiColor.DEFAULT};
+${AnsiColor.RED}the CTRL-R${AnsiColor.DEFAULT} to invoke the reverse-i-search in the history and
+you can run a sequence of commands saved in a file.

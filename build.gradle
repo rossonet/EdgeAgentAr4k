@@ -515,6 +515,13 @@ task ar4kBootJarQa {
 	ar4kBootJarQa.dependsOn(":ar4k-agent-qa:endBootJar")
 }
 
+task ar4kBootJarRtu {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the quality assurance version for testing.'
+	ar4kBootJarRtu.dependsOn(":ar4k-agent-rtu:bootJar")
+	ar4kBootJarRtu.dependsOn(":ar4k-agent-rtu:endBootJar")
+}
+
 task ar4kBootJarWeb {
 	group "Ar4k Semantic Router Build"
 	description 'Build Ar4k Semantic Router as a single fat jar. This is the web Scada version for testing.'
@@ -534,6 +541,12 @@ task ar4kDockerContainerQa {
 	group "Ar4k Semantic Router Build"
 	description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
 	ar4kDockerContainerQa.dependsOn(":ar4k-agent-qa:buildDocker")
+}
+
+task ar4kDockerContainerRtu {
+	group "Ar4k Semantic Router Build"
+	description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
+	ar4kDockerContainerRtu.dependsOn(":ar4k-agent-rtu:buildDocker")
 }
 
 task ar4kBootJarDruido {
@@ -570,6 +583,35 @@ task makeRpmDruido(type: Rpm){
   }
   directory('/opt/rossonet/ar4k')
   link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-druido-${rootProject.version}.jar")
+}
+
+task makeRpmRtu(type: Rpm){
+  makeRpmDruido.dependsOn("ar4kBootJarRtu")
+  requires('java-1.8.0-openjdk')
+  requires('telnet')
+  requires('bash')
+  requires('xterm')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Rtu agent in rpm format'
+  packageName "ar4k-agent-rtu"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.com'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'RTU Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-druido/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('dist-utils/init-druido'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
 
 task makeRpmSmall(type: Rpm){
@@ -665,6 +707,33 @@ task makeDebianDruido(type: Deb){
   }
   directory('/opt/rossonet/ar4k')
   link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-druido-${rootProject.version}.jar")
+}
+
+task makeDebianRtu(type: Deb){
+  makeDebianDruido.dependsOn("ar4kBootJarRtu")
+  requires('default-jdk')
+  requires('telnet')
+  requires('wget')
+  group "Ar4k Semantic Router Build"
+  description 'Builds the Rtu agent in deb package format'
+  packageName "ar4k-agent-rtu"
+  version "${rootProject.version}"
+  release "1"
+  user 'root'
+  os 'LINUX'
+  url 'www.rossonet.net'
+  summary 'Ar4k EdgeAgent distribution'
+  packageDescription 'RTU Rossonet'
+  license 'AGPL3'
+  provides 'ar4k-edge-system'
+  from('ar4k-agent-druido/build/libs'){
+    into '/opt/rossonet'
+  }
+  from('dist-utils/init-druido'){
+    into '/etc/systemd/system'
+  }
+  directory('/opt/rossonet/ar4k')
+  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
 
 task makeDebianWeb(type: Deb){
