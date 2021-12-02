@@ -570,7 +570,7 @@ task makeRpmDruido(type: Rpm){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.com'
+  url 'https://app.rossonet.net/'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Druido agent of Edge System Rossonet'
   license 'AGPL3'
@@ -594,13 +594,13 @@ task makeRpmRtu(type: Rpm){
   requires('wget')
   group "Ar4k Semantic Router Build"
   description 'Builds the RTU agent in rpm format'
-  packageName "ar4k-agent-rtu"
+  packageName "rossonet-rtu"
   version "${rootProject.version}"
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.com'
-  summary 'Ar4k EdgeAgent distribution'
+  url 'https://www.rossonet.net'
+  summary 'Rossonet RTU service'
   packageDescription 'RTU Rossonet'
   license 'AGPL3'
   provides 'ar4k-edge-system'
@@ -630,7 +630,7 @@ task makeRpmSmall(type: Rpm){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.net'
+  url 'https://app.rossonet.net/'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Console agent of Edge System by Rossonet'
   license 'AGPL3'
@@ -668,7 +668,7 @@ task makeRpmWeb(type: Rpm){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.net'
+  url 'https://app.rossonet.net/'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Web agent of Edge System Rossonet'
   license 'AGPL3'
@@ -695,7 +695,7 @@ task makeDebianDruido(type: Deb){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.net'
+  url 'https://app.rossonet.net/'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Druido agent of Edge System Rossonet'
   license 'AGPL3'
@@ -722,8 +722,8 @@ task makeDebianRtu(type: Deb){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.net'
-  summary 'Ar4k EdgeAgent distribution'
+  url 'https://www.rossonet.net'
+  summary 'Rossonet RTU service'
   packageDescription 'RTU Rossonet'
   license 'AGPL3'
   provides 'ar4k-edge-system'
@@ -750,7 +750,7 @@ task makeDebianWeb(type: Deb){
   release "1"
   user 'root'
   os 'LINUX'
-  url 'www.rossonet.net'
+  url 'https://app.rossonet.net/'
   summary 'Ar4k EdgeAgent distribution'
   packageDescription 'Web agent of Edge System Rossonet'
   license 'AGPL3'
