@@ -517,7 +517,7 @@ task ar4kBootJarQa {
 
 task ar4kBootJarRtu {
 	group "Ar4k Semantic Router Build"
-	description 'Build Ar4k Semantic Router as a single fat jar. This is the quality assurance version for testing.'
+	description 'Build Ar4k Semantic Router as a single fat jar. This is the Remote Terminal Unit version'
 	ar4kBootJarRtu.dependsOn(":ar4k-agent-rtu:bootJar")
 	ar4kBootJarRtu.dependsOn(":ar4k-agent-rtu:endBootJar")
 }
@@ -545,7 +545,7 @@ task ar4kDockerContainerQa {
 
 task ar4kDockerContainerRtu {
 	group "Ar4k Semantic Router Build"
-	description 'Build Ar4k Semantic Router as a docker container. This is the quality assurance version fro testing'
+	description 'Build Ar4k Semantic Router as a docker container. This is the Remote Terminal Unit version'
 	ar4kDockerContainerRtu.dependsOn(":ar4k-agent-rtu:buildDocker")
 }
 
@@ -593,7 +593,7 @@ task makeRpmRtu(type: Rpm){
   requires('xterm')
   requires('wget')
   group "Ar4k Semantic Router Build"
-  description 'Builds the Rtu agent in rpm format'
+  description 'Builds the RTU agent in rpm format'
   packageName "ar4k-agent-rtu"
   version "${rootProject.version}"
   release "1"
@@ -607,11 +607,12 @@ task makeRpmRtu(type: Rpm){
   from('ar4k-agent-druido/build/libs'){
     into '/opt/rossonet'
   }
-  from('dist-utils/init-druido'){
+  from('dist-utils/init-rtu'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')
-  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
+  link('/opt/rossonet/ar4k-agent-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
+  link('/opt/rossonet/rossonet-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
 
 task makeRpmSmall(type: Rpm){
@@ -715,7 +716,7 @@ task makeDebianRtu(type: Deb){
   requires('telnet')
   requires('wget')
   group "Ar4k Semantic Router Build"
-  description 'Builds the Rtu agent in deb package format'
+  description 'Builds the RTU agent in deb package format'
   packageName "ar4k-agent-rtu"
   version "${rootProject.version}"
   release "1"
@@ -729,11 +730,12 @@ task makeDebianRtu(type: Deb){
   from('ar4k-agent-druido/build/libs'){
     into '/opt/rossonet'
   }
-  from('dist-utils/init-druido'){
+  from('dist-utils/init-rtu'){
     into '/etc/systemd/system'
   }
   directory('/opt/rossonet/ar4k')
-  link('/opt/rossonet/ar4k-agent-druido.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
+  link('/opt/rossonet/ar4k-agent-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
+  link('/opt/rossonet/rossonet-rtu.jar',"/opt/rossonet/ar4k-agent-rtu-${rootProject.version}.jar")
 }
 
 task makeDebianWeb(type: Deb){

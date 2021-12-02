@@ -1,0 +1,13 @@
+[Unit]
+Description=Rossonet Remote Terminal Unit service
+After=rc-local.service
+[Service]
+Type=simple
+User=root
+ExecStart=java -jar /opt/rossonet/rossonet-rtu.jar --spring.shell.interactive.enabled=false
+PIDFile=/opt/rossonet/ar4k/rtu.pid
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+[Install]
+WantedBy=multi-user.target
