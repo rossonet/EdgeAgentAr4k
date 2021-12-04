@@ -32,3 +32,11 @@ sudo rpm --import https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/maste
 sudo dnf config-manager --add-repo https://app.rossonet.net/repo/
 sudo dnf install ar4k-agent-small -y
 ```
+
+
+## Repository install on Debian, Ubuntu, Raspibian
+
+```
+
+
+```

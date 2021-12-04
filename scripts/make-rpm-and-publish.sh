@@ -3,7 +3,7 @@ echo clean /build/yum-ar4k-repo
 rm -r build/yum-ar4k-repo
 echo create /build/yum-ar4k-repo
 mkdir -p build/yum-ar4k-repo
-echo copy ar4k console rpm
+echo copy ar4k console and rossonet-rtu rpms
 cp build/distributions/ar4k-agent-small-*.noarch.rpm build/yum-ar4k-repo/ar4k-console.noarch.rpm
 cp build/distributions/rossonet-rtu-*.noarch.rpm build/yum-ar4k-repo/rossonet-rtu.noarch.rpm
 echo createrepo command

@@ -718,7 +718,7 @@ task makeDebianRtu(type: Deb){
   requires('wget')
   group "Ar4k Semantic Router Build"
   description 'Builds the RTU agent in deb package format'
-  packageName "ar4k-agent-rtu"
+  packageName "rossonet-rtu"
   version "${rootProject.version}"
   release "1"
   user 'root'
