@@ -30,13 +30,16 @@
 ```
 sudo rpm --import https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/master/RPM-GPG-KEY-AR4K
 sudo dnf config-manager --add-repo https://app.rossonet.net/repo/
-sudo dnf install ar4k-agent-small -y
+sudo dnf install ar4k-agent-small -y # to install small version
+sudo dnf install rossonet-rtu -y # to install rtu version
 ```
 
 
 ## Repository install on Debian, Ubuntu, Raspibian
 
 ```
-
-
+wget -q -O - https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/master/RPM-GPG-KEY-AR4K | apt-key add -
+echo "deb https://app.rossonet.net/debs ./" >> /etc/apt/sources.list
+apt update
+apt install -y rossonet-rtu
 ```
