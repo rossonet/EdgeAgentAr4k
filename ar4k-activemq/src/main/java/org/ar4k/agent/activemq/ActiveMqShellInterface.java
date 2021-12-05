@@ -24,7 +24,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class ActiveMqShellInterface extends AbstractShellHelper {
 
-	ActiveMqService broker = null;
+	private ActiveMqService broker = null;
 
 	protected Availability testActiveMQNull() {
 		return broker == null ? Availability.available()
