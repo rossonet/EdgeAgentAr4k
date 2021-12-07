@@ -35,7 +35,7 @@ sudo dnf install rossonet-rtu -y # to install rtu version
 ```
 
 
-## Repository install on Debian, Ubuntu, Raspibian
+## Repository install on Debian, Ubuntu, Raspbian
 
 ```
 wget -q -O - https://raw.githubusercontent.com/rossonet/EdgeAgentAr4k/master/RPM-GPG-KEY-AR4K | apt-key add -
