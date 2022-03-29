@@ -11,7 +11,7 @@ import org.ar4k.agent.tunnels.http2.beacon.socket.server.ITunnelRunnerBeaconServ
 import org.ar4k.agent.tunnels.http2.grpc.beacon.AgentRequest;
 import org.ar4k.agent.tunnels.http2.grpc.beacon.CommandReplyRequest;
 
-//TO______DO sviluppare beacon server cluster basato su hazelcast per grandi volumi di client
+//TODO sviluppare beacon server cluster basato su hazelcast per grandi volumi di client
 
 public class BeaconServerCluster implements Runnable, AutoCloseable, IBeaconServer {
 

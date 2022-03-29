@@ -105,7 +105,7 @@ public class BeaconClassicEndpointFromObserver implements StreamObserver<TunnelM
 									 * getOutputCachedDataBase64ByMessageId().get(messageUuid) .getCompleteData(),
 									 * totalChunks, value.getOriginalSize(), value.getMessageStatus()));
 									 */
-									// TO______DO cache messages
+									// TODO cache messages
 									getBeaconNetworkTunnel().nextAction();
 								} else {
 									if (containsOutputCachedMessage(messageUuid, sessionId)) {
@@ -206,7 +206,7 @@ public class BeaconClassicEndpointFromObserver implements StreamObserver<TunnelM
 			if (BeaconNetworkClassicTunnel.TRACE_LOG_IN_INFO)
 				logger.info("STATUS: channelInactive ( " + getNetworkReceiver().getMyRoleMode() + " tunnel id "
 						+ getBeaconNetworkTunnel().getTunnelId() + "/" + sessionId + " )");
-			// TO______DO close channel
+			// TODO close channel
 			break;
 		case channelReadComplete:
 			if (BeaconNetworkClassicTunnel.TRACE_LOG_IN_INFO)

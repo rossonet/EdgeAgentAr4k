@@ -26,12 +26,12 @@ import com.beust.jcommander.Parameter;
 
 public abstract class AbstractChannel implements EdgeChannel, MessageChannel, Closeable {
 
-	// TO______DO implementare spring integration tra i channel
+	// TODO implementare spring integration tra i channel
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message.html#message
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/core.html#spring-integration-core-messaging
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message-routing.html#messaging-routing-chapter
 	// https://docs.spring.io/spring-integration/docs/current/reference/html/message-transformation.html#messaging-transformation-chapter
-	// TO______DO esempio con endpoint camel in spring integration
+	// TODO esempio con endpoint camel in spring integration
 	// https://www.baeldung.com/spring-apache-camel-tutorial
 	// https://dzone.com/articles/spring-integration-and-apache
 

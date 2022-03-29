@@ -30,7 +30,7 @@ public class NumberMatcherIT {
 			return Integer.parseInt(candidateNumber.replace(" ", ""));
 		}
 		candidateNumber = candidateNumber.trim().toLowerCase();
-		// TO______DO to be improved, someday
+		// TODO to be improved, someday
 		if (candidateNumber.equals("uno"))
 			return 1;
 		if (candidateNumber.equals("due"))

@@ -44,7 +44,7 @@ import com.hazelcast.core.Member;
 @RestController
 @RequestMapping("/hazelcastInterface")
 
-// TO______DO implementare comandi in console per gestire mappe dati serializzate in json dei servizi hazelcast attivi
+// TODO implementare comandi in console per gestire mappe dati serializzate in json dei servizi hazelcast attivi
 
 public class HazelcastShellInterface extends AbstractShellHelper {
 

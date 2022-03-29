@@ -13,7 +13,7 @@ import org.ar4k.agent.exception.ServiceWatchDogException;
  *         command managed service
  *
  */
-//TO______DO completare command managed service
+//TODO completare command managed service
 public class CommandManagedService implements EdgeComponent {
 
 	@Override
@@ -83,22 +83,22 @@ public class CommandManagedService implements EdgeComponent {
 	}
 
 	public void pulse() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		
 	}
 
 	public String getDescriptionStatus() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void saveStatus() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		
 	}
 
 	public void loadStatus() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		
 	}
 

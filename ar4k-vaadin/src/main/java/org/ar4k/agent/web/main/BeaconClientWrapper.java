@@ -168,7 +168,7 @@ public class BeaconClientWrapper implements IBeaconClientScadaWrapper {
 
 	@Override
 	public boolean isFoundBy(String filter) {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		return true;
 	}
 

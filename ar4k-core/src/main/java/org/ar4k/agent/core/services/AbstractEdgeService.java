@@ -44,7 +44,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  * @see org.ar4k.agent.core.services.ServiceComponent
  */
 
-//TO______DO gestione configurazione isSpringBean
+//TODO gestione configurazione isSpringBean
 public abstract class AbstractEdgeService implements ServiceComponent<EdgeComponent> {
 
 	private class WatchDogTask extends TimerTask {

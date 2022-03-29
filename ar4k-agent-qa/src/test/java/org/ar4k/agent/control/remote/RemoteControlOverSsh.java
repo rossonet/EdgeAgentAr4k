@@ -52,7 +52,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//TO______DO Completare test beacon
+//TODO Completare test beacon
 @Ignore
 public class RemoteControlOverSsh {
 	private static final int VALIDITY_CERT_DAYS = 365 * 3;

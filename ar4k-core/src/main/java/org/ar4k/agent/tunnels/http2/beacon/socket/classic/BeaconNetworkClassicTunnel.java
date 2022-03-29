@@ -62,7 +62,7 @@ public class BeaconNetworkClassicTunnel implements NetworkTunnel {
 		if (TRACE_LOG_IN_INFO)
 			logger.info(me.getAgentUniqueName() + " created BeaconNetworkTunnel tunnel id {} role {}", tunnelId,
 					myRoleMode);
-		// TO______DO Completare e rivedere classe BeaconNetworkClassicTunnel
+		// TODO Completare e rivedere classe BeaconNetworkClassicTunnel
 	}
 
 	public void nextAction() {

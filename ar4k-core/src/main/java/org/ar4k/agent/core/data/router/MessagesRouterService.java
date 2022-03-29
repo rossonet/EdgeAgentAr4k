@@ -15,7 +15,7 @@ import org.ar4k.agent.exception.ServiceWatchDogException;
  *         router messages service
  *
  */
-//TO______DO completare router messaggi
+//TODO completare router messaggi
 public class MessagesRouterService implements EdgeComponent {
 
 	@Override

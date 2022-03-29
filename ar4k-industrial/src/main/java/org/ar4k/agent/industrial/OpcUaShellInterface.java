@@ -71,11 +71,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TO______DO valutare implementazione 4Diac Forte
+//TODO valutare implementazione 4Diac Forte
 
-//TO______DO integrazione con UNIPI AXON S105
+//TODO integrazione con UNIPI AXON S105
 
-//TO______DO implementare gestione eventi OPCUA con presa visione e conferma
+//TODO implementare gestione eventi OPCUA con presa visione e conferma
 
 @ShellCommandGroup("Industrial Commands")
 @ShellComponent

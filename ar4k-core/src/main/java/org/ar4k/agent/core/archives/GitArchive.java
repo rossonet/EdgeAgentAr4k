@@ -65,7 +65,7 @@ public class GitArchive implements ManagedArchive {
 
 	@Override
 	public String getLog() {
-		// TO______DO completare l'implementazione archivio su git con i log
+		// TODO completare l'implementazione archivio su git con i log
 		return null;
 	}
 

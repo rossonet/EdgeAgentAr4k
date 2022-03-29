@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TO______DO completare gestione modulo da GreenGrass Azure
+//TODO completare gestione modulo da GreenGrass Azure
 
 @ShellCommandGroup("Azure IoT Hub Commands")
 @ShellComponent

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TO______DO completare gestione modulo da Docker
+//TODO completare gestione modulo da Docker
 
 @ShellCommandGroup("Docker Commands")
 @ShellComponent

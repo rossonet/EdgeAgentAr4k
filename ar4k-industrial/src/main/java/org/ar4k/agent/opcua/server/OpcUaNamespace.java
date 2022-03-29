@@ -148,19 +148,19 @@ public class OpcUaNamespace extends ManagedNamespace implements DataAddressChang
 
 	@Override
 	public void onDataAddressUpdate(EdgeChannel updatedChannel) {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onDataAddressCreate(EdgeChannel createdChannel) {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onDataAddressDelete(String deletedChannel) {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 

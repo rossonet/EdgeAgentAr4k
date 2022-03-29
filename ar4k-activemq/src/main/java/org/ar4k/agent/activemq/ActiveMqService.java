@@ -49,7 +49,7 @@ public class ActiveMqService implements EdgeComponent {
 
 	@Override
 	public ServiceStatus updateAndGetStatus() throws ServiceWatchDogException {
-		// TO______DO ACTIVEMQ verifica stato
+		// TODO ACTIVEMQ verifica stato
 		return ServiceStatus.RUNNING;
 	}
 

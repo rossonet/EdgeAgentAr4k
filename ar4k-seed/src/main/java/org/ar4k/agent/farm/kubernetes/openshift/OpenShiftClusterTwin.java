@@ -176,22 +176,22 @@ public class OpenShiftClusterTwin {
 	}
 
 	private void createHaProxyConfig() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
 	private void createNamedLocalZone() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
 	private void createNamedReverseZone() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
 	private void createNamedConf() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 
 	}
 
@@ -336,12 +336,12 @@ public class OpenShiftClusterTwin {
 	}
 
 	public String getConfigureWarning() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		return "complete the class first";
 	}
 
 	public String getPublicDnsZone() {
-		// TO______DO Auto-generated method stub
+		// TODO Auto-generated method stub
 		return null;
 	}
 

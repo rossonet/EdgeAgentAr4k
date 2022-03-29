@@ -60,7 +60,7 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider;
 import io.grpc.stub.StreamObserver;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//TO______DO Completare test beacon
+//TODO Completare test beacon
 @Ignore
 public class RemoteControlOverBeaconRpcConfig {
 	private static final int VALIDITY_CERT_DAYS = 365 * 3;

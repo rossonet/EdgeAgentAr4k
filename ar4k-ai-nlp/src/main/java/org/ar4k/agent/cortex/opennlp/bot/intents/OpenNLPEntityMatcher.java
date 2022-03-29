@@ -89,7 +89,7 @@ public class OpenNLPEntityMatcher implements EntityMatcher {
 
         log.debug("Matching for {} against {}", entity.getName(), matches);
 
-        // TO______DO what to do with multi matches?
+        // TODO what to do with multi matches?
         EntityMatch match = entity.match(matches[0]);
         if (match != null) {
           matchedEntities.put(entity, match);

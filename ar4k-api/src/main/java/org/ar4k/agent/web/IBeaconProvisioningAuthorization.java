@@ -24,7 +24,7 @@ public interface IBeaconProvisioningAuthorization {
 
 	String getJsonHealth();
 
-	// TO______DO sistemare il feedback di approved
+	// TODO sistemare il feedback di approved
 	long getApprovedData();
 
 	String getRequestCsr();

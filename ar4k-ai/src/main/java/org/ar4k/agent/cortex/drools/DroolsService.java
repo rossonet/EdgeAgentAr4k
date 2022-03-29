@@ -46,7 +46,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  */
 public class DroolsService implements EdgeComponent {
 
-	// TO______DO aggiungere global data anima se flag true
+	// TODO aggiungere global data anima se flag true
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(DroolsService.class);
 
@@ -247,7 +247,7 @@ public class DroolsService implements EdgeComponent {
 	private void popolateNlp() {
 		if (configuration.isOpenNlpEnable()) {
 			logger.info("starting NLP");
-			// TO______DO inserire oggetti per NLP
+			// TODO inserire oggetti per NLP
 		}
 	}
 

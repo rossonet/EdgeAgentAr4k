@@ -53,7 +53,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
  *
  */
 
-//TO______DO completare gestione modulo da Operatori
+//TODO completare gestione modulo da Operatori
 
 @ShellCommandGroup("Kubernetes Commands")
 @ShellComponent

@@ -7,7 +7,7 @@ import org.ar4k.agent.core.data.channels.EdgeChannel;
 
 public class DataChannelFilter implements IDataChannelFilter {
 
-	// TO______DO verificare bene i filtri con una serie di test
+	// TODO verificare bene i filtri con una serie di test
 
 	private final List<FilterLine> filters;
 

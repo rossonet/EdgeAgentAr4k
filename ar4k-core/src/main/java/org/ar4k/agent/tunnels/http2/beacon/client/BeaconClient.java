@@ -129,7 +129,7 @@ public class BeaconClient implements IBeaconClient {
 	private int discoveryPort = 0; // se diverso da zero prova la connessione e poi ripiega sul discovery
 	private String discoveryFilter = "AR4K";
 	private DatagramSocket socketDiscovery = null;
-	// TO______DO implementare check aggiuntivi in fase di interrogazione con frequenze a
+	// TODO implementare check aggiuntivi in fase di interrogazione con frequenze a
 	// numeri primi rispetto alla frequenza base
 	private final int pollingFrequencyRegular = 1500;
 
@@ -501,7 +501,7 @@ public class BeaconClient implements IBeaconClient {
 		return statusRequest;
 	}
 
-	// TO______DO Implementare discovery peer2peer (viene richiesto in brodcast ai nodi
+	// TODO Implementare discovery peer2peer (viene richiesto in brodcast ai nodi
 	// presenti il beacon server a cui sono connessi e viene utilizzata la risposta
 	// più presente)
 	public synchronized void lookAround() {

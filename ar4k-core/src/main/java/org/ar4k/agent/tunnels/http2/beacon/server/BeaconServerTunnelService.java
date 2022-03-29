@@ -84,7 +84,7 @@ class BeaconServerTunnelService extends TunnelServiceV1Grpc.TunnelServiceV1ImplB
 
 	@Override
 	public void proxyHttpRequest(AgentProxyRequest request, StreamObserver<AgentProxyReply> responseObserver) {
-		// TO______DO Implementare proxy http
+		// TODO Implementare proxy http
 		super.proxyHttpRequest(request, responseObserver);
 	}
 }

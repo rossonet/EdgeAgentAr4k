@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TO______DO completare gestione modulo da GreenGrass AWS
+//TODO completare gestione modulo da GreenGrass AWS
 
 @ShellCommandGroup("AWS GreenGrass Commands")
 @ShellComponent

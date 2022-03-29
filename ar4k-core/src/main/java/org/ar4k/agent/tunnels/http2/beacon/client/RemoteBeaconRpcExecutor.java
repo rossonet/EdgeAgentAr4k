@@ -59,7 +59,7 @@ public class RemoteBeaconRpcExecutor implements IRemoteBeaconRpcExecutor {
 
 	@Override
 	public EdgeMessage<? extends String> elaborateMessage(EdgeMessage<? extends String> message) {
-		// TO______DO valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring
+		// TODO valutare l'implementazione del cmd su RemoteBeaconExecutor via Spring
 		// message
 		return null;
 	}
