@@ -194,7 +194,7 @@ public class DataShellInterface extends AbstractShellHelper implements MessageHa
 	public void registerDataChannel(@ShellOption(help = "channel id (nodeId)") String channelId,
 			@ShellOption(help = "path for file") String file,
 			@ShellOption(help = "message limit for databag's file. 0 = unlimited", defaultValue = "0") long maxValues) {
-		// TODO salvare databag realmente il dato
+		// TO______DO salvare databag realmente il dato
 
 	}
 

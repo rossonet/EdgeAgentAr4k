@@ -15,7 +15,7 @@ import org.ar4k.agent.logger.EdgeStaticLoggerBinder;
  *         Servizio di connessione modbus slave
  */
 
-// TODO completare servizio modbus slave
+// TO______DO completare servizio modbus slave
 public class ModbusSlaveService implements EdgeComponent {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(ModbusSlaveService.class);

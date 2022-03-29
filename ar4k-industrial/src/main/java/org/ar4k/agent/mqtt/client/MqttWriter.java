@@ -16,7 +16,7 @@ public class MqttWriter implements MessageHandler {
 
 	@Override
 	public void handleMessage(Message<?> message) throws MessagingException {
-		// TODO completare scrittura messaggi su coda mqtt
+		// TO______DO completare scrittura messaggi su coda mqtt
 
 	}
 

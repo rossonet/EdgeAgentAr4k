@@ -40,7 +40,7 @@ import com.beust.jcommander.Parameter;
  *
  */
 
-// TODO impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente
+// TO______DO impostare sistema di aggiornamento automatico via http(s) del jar con sostituzione dell'esistente
 public class EdgeConfig implements ConfigSeed {
 
 	private static final EdgeLogger logger = EdgeStaticLoggerBinder.getClassLogger(EdgeConfig.class);

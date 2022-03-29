@@ -32,7 +32,7 @@ public class ScriptEngineManagerProcess implements AgentProcess {
 		engine = factory.getEngineByName(shortEngineName);
 	}
 
-	// TODO binding dati Anima. Valutare binding in boot per pre e post script.
+	// TO______DO binding dati Anima. Valutare binding in boot per pre e post script.
 	public void addParameterToBinding(String parameterName, Object data) {
 		engine.put(parameterName, data);
 	}

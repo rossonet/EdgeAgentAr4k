@@ -55,7 +55,7 @@ public class MqttTopicSubscription implements IMqttMessageListener {
 									.mergeTags(mqttTopicConfig.tags, pahoClientService.getConfiguration().getTags()),
 							pahoClientService);
 			topicCallback = channel;
-			// TODO completare invio messaggi verso core
+			// TO______DO completare invio messaggi verso core
 		}
 
 	}

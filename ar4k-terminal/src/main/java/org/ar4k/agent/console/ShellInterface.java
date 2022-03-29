@@ -118,7 +118,7 @@ public class ShellInterface extends AbstractShellHelper {
 	}
 
 	private void installLocalSystemdFiles(String serviceName) {
-		// TODO installazione file per essere un servizio sulla macchina locale
+		// TO______DO installazione file per essere un servizio sulla macchina locale
 
 	}
 
@@ -892,7 +892,7 @@ public class ShellInterface extends AbstractShellHelper {
 	@ShellMethod(value = "Run shell command on the enviroment in where the agent is running. The default code to terminate the session is CTRL-E exit, you can change it", group = "Jobs Runtime Commands")
 	@ManagedOperation
 	@ShellMethodAvailability("sessionOk")
-	// TODO Migliorare l'interazione della command line bash
+	// TO______DO Migliorare l'interazione della command line bash
 	public String runCommandLine(
 			@ShellOption(help = "the command to start in the shell", defaultValue = ConfigHelper.BASE_BASH_CMD) String shellCommand,
 			@ShellOption(help = "the int number of the end character. 5 is Ctrl+E", defaultValue = "5") String endCharacter) {

@@ -185,7 +185,7 @@ public class Ar4kConsoleMainView extends VerticalLayout implements IMainView {
 	}
 
 	private void createBeaconAgentConfig() {
-		// TODO Metodo per creare la configurazione di un nuovo agente
+		// TO______DO Metodo per creare la configurazione di un nuovo agente
 	}
 
 	private void listBeaconAgents() {

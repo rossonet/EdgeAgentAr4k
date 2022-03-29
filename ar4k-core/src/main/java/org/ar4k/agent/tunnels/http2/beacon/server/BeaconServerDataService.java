@@ -10,7 +10,7 @@ import org.ar4k.agent.tunnels.http2.grpc.beacon.SubscribeRequest;
 
 import io.grpc.stub.StreamObserver;
 
-//TODO DATASERVICE in beacon server/client
+//TO______DO DATASERVICE in beacon server/client
 class BeaconServerDataService extends DataServiceV1Grpc.DataServiceV1ImplBase {
 
 	/**

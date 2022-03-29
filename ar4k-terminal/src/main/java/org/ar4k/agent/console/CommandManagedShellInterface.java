@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 
-//TODO completare gestione modulo da gestione comandi locali come servizi (esempio Staer SG e OpenVPN)
+//TO______DO completare gestione modulo da gestione comandi locali come servizi (esempio Staer SG e OpenVPN)
 
 @ShellCommandGroup("Command Managed Executor Commands")
 @ShellComponent
@@ -75,7 +75,7 @@ public class CommandManagedShellInterface extends AbstractShellHelper {
 	}
 
 	private ServiceComponent<CommandManagedService> configureCommandService(CommandManagedConfig service) {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 		return null;
 	}
 
@@ -103,7 +103,7 @@ public class CommandManagedShellInterface extends AbstractShellHelper {
 	}
 
 	private Collection<ServiceComponent<CommandManagedService>> getAgentCommandServices() {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 		return null;
 	}
 
@@ -114,7 +114,7 @@ public class CommandManagedShellInterface extends AbstractShellHelper {
 	}
 
 	private ServiceComponent<CommandManagedService> findService(String serviceName) {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 		return null;
 	}
 
@@ -171,28 +171,28 @@ public class CommandManagedShellInterface extends AbstractShellHelper {
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public void addOpenvpnService() {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 	}
 
 	@ShellMethod(value = "Add a SmartGateway service to the selected configuration")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public void addSmartgatewayService() {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 	}
 
 	@ShellMethod(value = "Add a dhcpd service to the selected configuration")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public void addDhcpdService() {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 	}
 
 	@ShellMethod(value = "Add a operating system ssh tunnel service to the selected configuration")
 	@ManagedOperation
 	@ShellMethodAvailability("testSelectedConfigOk")
 	public void addSystemSshClientService() {
-		// TODO Auto-generated method stub
+		// TO______DO Auto-generated method stub
 	}
 
 }

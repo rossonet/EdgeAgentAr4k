@@ -327,7 +327,7 @@ public class RemoteControlOverBeaconRegistration {
 		beaconServiceConfig.stringDiscovery = "TEST-REGISTER";
 		serverConfig.pots.add(beaconServiceConfig);
 
-		// TODO provare con firma intermedia, ovvero firmando non con master ma con un
+		// TO______DO provare con firma intermedia, ovvero firmando non con master ma con un
 		// certifico firmato da master
 		testAnimas.put(SERVER_LABEL,
 				executor.submit(new ContextCreationHelper(Ar4kAgentQa.class, executor, "a.log",

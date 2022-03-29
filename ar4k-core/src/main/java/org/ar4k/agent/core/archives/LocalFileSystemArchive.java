@@ -35,7 +35,7 @@ public class LocalFileSystemArchive implements ManagedArchive {
 
 	@Override
 	public String getLog() {
-		// TODO completare la gestione del repository su fs locale
+		// TO______DO completare la gestione del repository su fs locale
 		return null;
 	}
 
