@@ -11,13 +11,17 @@
 
 ## Reference
 
+[Maven Repository](https://mvnrepository.com/artifact/net.rossonet)
+
+[Docker Hub](https://hub.docker.com/u/rossonet)
+
 [Template project](https://github.com/rossonet/TemplateEdgeAgentAr4k)
 
 [Italian website with examples](https://app.rossonet.net)
 
 [Documentation](https://www.rossonet.net/dati/edge-docs/doc-site/)
 
-[TODO](TODO.md)
+[TODO](site/TODO.md)
 
 [CODE STYLE](https://google.github.io/styleguide/javaguide.html)
 
