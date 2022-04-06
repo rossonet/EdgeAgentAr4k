@@ -25,38 +25,23 @@ import com.vaadin.flow.dom.DomEventListener;
 @AgentWebTab
 public class BaseConsolePage implements AgentTab {
 
-	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
-	public static final String ANSI_RED = "\u001B[31m";
-	public static final String ANSI_GREEN = "\u001B[32m";
-	public static final String ANSI_YELLOW = "\u001B[33m";
 	public static final String ANSI_BLUE = "\u001B[34m";
-	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_WHITE = "\u001B[37m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
 
 	private IScadaAgent beaconAgentWrapper = null;
+	private final XTermConsole console = null;
+	private final List<String> history = new ArrayList<String>();
+
 	private XTerm xterm = null;
-	private XTermConsole console = null;
 
-	private List<String> history = new ArrayList<String>();
-
-	@Override
-	public boolean isActive(IScadaAgent beaconAgentWrapper) {
-		return true;
-	}
-
-	@Override
-	public String getTabName() {
-		return "CONSOLE";
-	}
-
-	@Override
-	public String getClassName() {
-		return "console-status";
-	}
-
-	private void elaborateCommand(String line) {
+	private void elaborateCommand(final String line) {
 		final String cleanedLine = line.replace(beaconAgentWrapper.getName() + " >", "");
 		history.add(cleanedLine);
 		if (!cleanedLine.isEmpty()) {
@@ -65,11 +50,11 @@ public class BaseConsolePage implements AgentTab {
 		xterm.write(getPrompt());
 	}
 
-	private void elaborateCompleteCommand(String line) {
+	private void elaborateCompleteCommand(final String line) {
 		final String cleanedLine = line.replace(beaconAgentWrapper.getName() + " >", "");
 		if (!cleanedLine.isEmpty()) {
-			List<String> replies = beaconAgentWrapper.completeCommand(cleanedLine.trim());
-			for (String rl : replies) {
+			final List<String> replies = beaconAgentWrapper.completeCommand(cleanedLine.trim());
+			for (final String rl : replies) {
 				xterm.writeln(rl);
 			}
 			if (replies.size() == 1) {
@@ -81,7 +66,7 @@ public class BaseConsolePage implements AgentTab {
 					String baseLine = null;
 					while (compare && subCounter < 1000) {
 						baseLine = null;
-						for (String s : replies) {
+						for (final String s : replies) {
 							if (baseLine == null) {
 								baseLine = s.substring(0, subCounter);
 							} else {
@@ -104,9 +89,19 @@ public class BaseConsolePage implements AgentTab {
 	}
 
 	@Override
-	public Div getPage(IScadaAgent beaconAgentWrapper) {
+	public int getActivePriority() {
+		return 1000;
+	}
+
+	@Override
+	public String getClassName() {
+		return "console-status";
+	}
+
+	@Override
+	public Div getPage(final IScadaAgent beaconAgentWrapper) {
 		this.beaconAgentWrapper = beaconAgentWrapper;
-		Div div = new Div();
+		final Div div = new Div();
 		xterm = new XTerm();
 		xterm.writeln(ANSI_RESET + "Type " + ANSI_RED + "help" + ANSI_RESET + " to list the available commands\n" + "\n"
 				+ "You can use the " + ANSI_RED + "?" + ANSI_RESET + " for completation;\n" + "the " + ANSI_RED
@@ -128,7 +123,7 @@ public class BaseConsolePage implements AgentTab {
 				private static final long serialVersionUID = -3691030603955654942L;
 
 				@Override
-				public void onComponentEvent(LineEvent event) {
+				public void onComponentEvent(final LineEvent event) {
 					final String line = event.getLine();
 					if (line.contains("?")) {
 						elaborateCompleteCommand(line);
@@ -140,35 +135,35 @@ public class BaseConsolePage implements AgentTab {
 
 		});
 
-		DomEventListener listenerCtrlR = new DomEventListener() {
+		final DomEventListener listenerCtrlR = new DomEventListener() {
 
 			private static final long serialVersionUID = 482487852683589453L;
 
 			@Override
-			public void handleEvent(DomEvent event) {
-				for (String s : history) {
+			public void handleEvent(final DomEvent event) {
+				for (final String s : history) {
 					xterm.writeln(s);
 				}
 			}
 		};
 
-		DomEventListener listenerArraowUp = new DomEventListener() {
+		final DomEventListener listenerArraowUp = new DomEventListener() {
 
 			private static final long serialVersionUID = 482487857683589453L;
 
 			@Override
-			public void handleEvent(DomEvent event) {
+			public void handleEvent(final DomEvent event) {
 				xterm.writeln("Freccia SU");
 
 			}
 		};
 
-		DomEventListener listenerArrowDown = new DomEventListener() {
+		final DomEventListener listenerArrowDown = new DomEventListener() {
 
 			private static final long serialVersionUID = 482497852683589453L;
 
 			@Override
-			public void handleEvent(DomEvent event) {
+			public void handleEvent(final DomEvent event) {
 				xterm.writeln("Freccia GIU");
 
 			}
@@ -193,13 +188,18 @@ public class BaseConsolePage implements AgentTab {
 	}
 
 	@Override
-	public int getActivePriority() {
-		return 1000;
+	public String getTabName() {
+		return "CONSOLE";
 	}
 
 	@Override
 	public Integer getTabOrderNumber() {
 		return 1000;
+	}
+
+	@Override
+	public boolean isActive(final IScadaAgent beaconAgentWrapper) {
+		return true;
 	}
 
 }
