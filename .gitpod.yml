@@ -1,2 +1,13 @@
+
 tasks:
-  - init: ./gradlew ar4kBootJarQa
+  - init: ./gradlew build
+  - name: test
+    command: ./gradlew test
+vscode:
+  extensions:
+    - vscjava.vscode-java-debug
+    - vscjava.vscode-java-pack
+    - redhat.java
+    - vscjava.vscode-maven
+    - vscjava.vscode-java-dependency
+    - vscjava.vscode-java-test
